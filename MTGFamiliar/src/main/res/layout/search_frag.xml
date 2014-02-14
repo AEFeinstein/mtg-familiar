@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+     Copyright 2011 Adam Feinstein This file is part of MTG Familiar. MTG
+	Familiar is free software: you can redistribute it and/or modify it under
+	the terms of the GNU General Public License as published by the Free Software
+	Foundation, either version 3 of the License, or (at your option) any later
+	version. MTG Familiar is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+	more details. You should have received a copy of the GNU General Public License
+	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/master_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <AutoCompleteTextView
+                style="@style/forty_eight"
+                android:id="@+id/namesearch"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:hint="@string/search_name"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:singleLine="true">
+
+                <requestFocus/>
+            </AutoCompleteTextView>
+
+            <LinearLayout
+                android:id="@+id/linearLayout12"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                style="@style/forty_eight">
+
+                <AutoCompleteTextView
+                    android:id="@+id/supertypesearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="@string/search_supertype"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:singleLine="true"/>
+
+                <EditText
+                    android:id="@+id/subtypesearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="@string/search_subtype"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:singleLine="true"/>
+
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/typelogic"
+                android:layout_width="match_parent"
+                style="@style/forty_eight"
+                android:drawSelectorOnTop="true"
+                android:entries="@array/type_spinner"
+                android:imeOptions="actionSearch"/>
+
+            <!-- EditText below by Adam Feinstein -->
+
+            <EditText
+                android:id="@+id/textsearch"
+                android:layout_width="match_parent"
+                style="@style/forty_eight"
+                android:hint="@string/search_text"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:singleLine="true"/>
+
+            <!-- Spinner below by Reuben Kriegel -->
+
+            <Spinner
+                android:id="@+id/textlogic"
+                android:layout_width="match_parent"
+                style="@style/forty_eight"
+                android:drawSelectorOnTop="true"
+                android:entries="@array/text_spinner"
+                android:imeOptions="actionSearch"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                style="@style/forty_eight"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxW"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="@drawable/btn_check_holo_light_w"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout6"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxU"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="@drawable/btn_check_holo_light_u"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout7"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="@drawable/btn_check_holo_light_b"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout8"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxR"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="@drawable/btn_check_holo_light_r"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout9"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxG"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="@drawable/btn_check_holo_light_g"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="@drawable/btn_check_holo_light_l"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/colorlogic"
+                android:layout_width="match_parent"
+                style="@style/forty_eight"
+                android:drawSelectorOnTop="true"
+                android:entries="@array/color_spinner"/>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                style="@style/forty_eight">
+
+                <TextView
+                    android:id="@+id/textView1"
+                    style="@android:style/TextAppearance.Holo"
+                    android:layout_width="125dip"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="@string/search_power"/>
+
+                <Spinner
+                    android:id="@+id/powLogic"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/logic_spinner"/>
+
+                <Spinner
+                    android:id="@+id/powChoice"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/pt_spinner"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                style="@style/forty_eight">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@android:style/TextAppearance.Holo"
+                    android:layout_width="125dip"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="@string/search_toughness"/>
+
+                <Spinner
+                    android:id="@+id/touLogic"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/logic_spinner"/>
+
+                <Spinner
+                    android:id="@+id/touChoice"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/pt_spinner"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="match_parent"
+                style="@style/forty_eight">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    style="@android:style/TextAppearance.Holo"
+                    android:layout_width="125dip"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="@string/search_cmc"/>
+
+                <Spinner
+                    android:id="@+id/cmcLogic"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/logic_spinner"/>
+
+                <Spinner
+                    android:id="@+id/cmcChoice"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/cmc_spinner"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:id="@+id/linearLayout11"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/setsearch"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/search_set"/>
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/formatsearch"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/search_format"/>
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/raritysearch"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/search_rarity"/>
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/setlogic"
+                android:layout_width="match_parent"
+                style="@style/forty_eight"
+                android:drawSelectorOnTop="true"
+                android:entries="@array/set_spinner"/>
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="match_parent"
+                style="@style/forty_eight">
+
+                <EditText
+                    android:id="@+id/flavorsearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="@string/search_flavor_text"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"/>
+
+                <EditText
+                    android:id="@+id/artistsearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:hint="@string/search_artist"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/holo_blue_light"
+        />
+
+    <Button
+        android:id="@+id/searchbutton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/search_search"
+        style="?android:attr/buttonBarButtonStyle"
+        android:textStyle="bold"/>
+
+</LinearLayout>

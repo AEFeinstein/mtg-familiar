@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2011 Adam Feinstein and April King. This file is part of MTG 
+	Familiar. MTG Familiar is free software: you can redistribute it and/or modify 
+	it under the terms of the GNU General Public License as published by the 
+	Free Software Foundation, either version 3 of the License, or (at your option) 
+	any later version. MTG Familiar is distributed in the hope that it will be 
+	useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for 
+	more details. You should have received a copy of the GNU General Public License 
+	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- General preferences -->
+    <PreferenceScreen
+        android:title="@string/pref_screen_general">
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_default_fragment">
+
+            <ListPreference
+                android:entries="@array/default_fragment_array_entries"
+                android:entryValues="@array/default_fragment_array_entries"
+                android:title="@string/pref_default_fragment_mode_title"
+                android:summary="@string/pref_default_fragment_mode_summary"
+                android:key="defaultFragment"
+                android:defaultValue="@string/main_card_search"/>
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_updates">
+
+            <CheckBoxPreference
+                android:key="autoupdate"
+                android:defaultValue="true"
+                android:title="@string/pref_auto_updates_title"
+                android:summary="@string/pref_auto_updates_summary"/>
+
+            <ListPreference
+                android:key="updatefrequency"
+                android:entries="@array/update_frequency_days"
+                android:entryValues="@array/update_frequency_days_values"
+                android:title="@string/pref_update_frequency_title"
+                android:summary="@string/pref_update_frequency_summary"
+                android:defaultValue="3"/>
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_tts">
+
+            <Preference
+                android:title="@string/pref_install_tts_title"
+                android:summary="@string/pref_install_tts_summary">
+
+                <intent android:action="android.speech.tts.engine.INSTALL_TTS_DATA"/>
+
+            </Preference>
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
+    <!-- Search and results preferences -->
+    <PreferenceScreen
+        android:title="@string/pref_screen_search">
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_result_list">
+
+            <CheckBoxPreference
+                android:key="consolidateSearch"
+                android:defaultValue="true"
+                android:title="@string/pref_consolidate_title"
+                android:summary="@string/pref_consolidate_summary"/>
+
+            <CheckBoxPreference
+                android:key="setPref"
+                android:defaultValue="true"
+                android:title="@string/pref_show_set_title"/>
+
+            <CheckBoxPreference
+                android:key="manacostPref"
+                android:defaultValue="true"
+                android:title="@string/pref_show_mana_title"/>
+
+            <CheckBoxPreference
+                android:key="typePref"
+                android:defaultValue="true"
+                android:title="@string/pref_show_type_title"/>
+
+            <CheckBoxPreference
+                android:key="abilityPref"
+                android:defaultValue="true"
+                android:title="@string/pref_show_ability_title"/>
+
+            <CheckBoxPreference
+                android:key="ptPref"
+                android:defaultValue="true"
+                android:title="@string/pref_show_pt_title"/>
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_card_view">
+
+            <CheckBoxPreference
+                android:key="picFirst"
+                android:defaultValue="false"
+                android:title="@string/pref_show_art_title"
+                android:summary="@string/pref_show_art_summary"/>
+
+            <CheckBoxPreference
+                android:key="scrollresults"
+                android:defaultValue="false"
+                android:title="@string/pref_scroll_title"
+                android:summary="@string/pref_scroll_summary"/>
+
+            <ListPreference
+                android:entries="@array/card_language"
+                android:entryValues="@array/card_language_values"
+                android:key="cardlanguage"
+                android:summary="@string/pref_card_language_summary"
+                android:title="@string/pref_card_language_title"
+                android:defaultValue="@string/main_card_language"/>
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
+    <!-- Life counter preferences -->
+    <PreferenceScreen
+        android:title="@string/pref_screen_counter">
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_life_counter">
+
+            <CheckBoxPreference
+                android:key="wakelock"
+                android:defaultValue="true"
+                android:title="@string/pref_wake_lock_title"
+                android:summary="@string/pref_wake_lock_summary"/>
+
+            <ListPreference
+                android:entries="@array/display_array_entries"
+                android:entryValues="@array/display_array_values"
+                android:title="@string/pref_display_mode_title"
+                android:summary="@string/pref_display_mode_summary"
+                android:key="displayMode"
+                android:defaultValue="0"/>
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
+    <!-- Round timer preferences -->
+    <PreferenceScreen
+        android:title="@string/pref_screen_timer">
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_timer">
+
+            <ListPreference
+                android:key="roundLength"
+                android:entries="@array/rt_defaulttimes"
+                android:entryValues="@array/rt_defaulttimesvalues"
+                android:defaultValue="50"
+                android:title="@string/pref_default_time_title"
+                android:summary="@string/pref_default_time_summary"/>
+
+            <RingtonePreference
+                android:key="timerSound"
+                android:ringtoneType="notification"
+                android:showSilent="false"
+                android:title="@string/pref_ringtone_title"
+                android:summary="@string/pref_ringtone_summary"/>
+
+            <CheckBoxPreference
+                android:key="fifteenMinutePref"
+                android:defaultValue="false"
+                android:title="@string/pref_fifteen_minutes_title"/>
+
+            <CheckBoxPreference
+                android:key="tenMinutePref"
+                android:defaultValue="false"
+                android:title="@string/pref_ten_minutes_title"/>
+
+            <CheckBoxPreference
+                android:key="fiveMinutePref"
+                android:defaultValue="false"
+                android:title="@string/pref_five_minutes_title"/>
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
+    <!-- Trade and wishlist preferences -->
+    <PreferenceScreen
+        android:title="@string/pref_screen_trade_wishlist">
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_trade_window">
+
+            <ListPreference
+                android:key="tradePrice"
+                android:entries="@array/trade_option_entries"
+                android:entryValues="@array/trade_option_values"
+                android:defaultValue="1"
+                android:title="@string/pref_trade_price_title"
+                android:summary="@string/pref_trade_price_summary"/>
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:title="@string/pref_cat_wishlist">
+
+            <CheckBoxPreference
+                android:key="showTotalPriceWishlistPref"
+                android:defaultValue="false"
+                android:title="@string/pref_wishlist_totals_title"
+                android:summary="@string/pref_wishlist_totals_summary"/>
+
+            <CheckBoxPreference
+                android:key="showIndividualPricesWishlistPref"
+                android:defaultValue="true"
+                android:title="@string/pref_wishlist_prices_title"
+                android:summary="@string/pref_wishlist_prices_summary"/>
+
+            <CheckBoxPreference
+                android:key="verboseWishlistPref"
+                android:defaultValue="false"
+                android:title="@string/pref_wishlist_details_title"
+                android:summary="@string/pref_wishlist_details_summary"/>
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
+</PreferenceScreen>

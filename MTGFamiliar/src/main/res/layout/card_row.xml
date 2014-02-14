@@ -1,0 +1,124 @@
+<!--
+     Copyright 2011 Adam Feinstein This file is part of MTG Familiar. MTG
+	Familiar is free software: you can redistribute it and/or modify it under
+	the terms of the GNU General Public License as published by the Free Software
+	Foundation, either version 3 of the License, or (at your option) any later
+	version. MTG Familiar is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+	more details. You should have received a copy of the GNU General Public License
+	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:minHeight="48sp"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/cardname"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center_vertical"
+                android:text="Name"
+                style="@android:style/TextAppearance.Holo.Large"/>
+
+            <TextView
+                android:id="@+id/cardtype"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                style="@android:style/TextAppearance.Holo"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/cardcost"
+                android:layout_gravity="right|center_vertical"
+                android:paddingTop="4.5sp"
+                android:text="Cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@android:style/TextAppearance.Holo"/>
+
+            <TextView
+                android:id="@+id/cardset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="Set"
+                style="@android:style/TextAppearance.Holo.Large"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/cardability"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Ability"
+            style="@android:style/TextAppearance.Holo"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cardp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="P"
+                style="@android:style/TextAppearance.Holo"/>
+
+            <TextView
+                android:id="@+id/cardslash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="/"
+                style="@android:style/TextAppearance.Holo"/>
+
+            <TextView
+                android:id="@+id/cardt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="T"
+                style="@android:style/TextAppearance.Holo"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="gson-1.7.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/MTGFamiliar/libs/gson-1.7.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

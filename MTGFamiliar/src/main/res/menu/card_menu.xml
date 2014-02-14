@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2011 Adam Feinstein
+
+This file is part of MTG Familiar.
+
+MTG Familiar is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+MTG Familiar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/ic_action_card_image"
+        android:id="@+id/image"
+        android:showAsAction="ifRoom"
+        android:title="@string/card_view_image"/>
+    <item
+        android:icon="@drawable/ic_action_price"
+        android:id="@+id/price"
+        android:showAsAction="ifRoom"
+        android:title="@string/card_view_price"/>
+    <item
+        android:icon="@drawable/ic_action_change_set"
+        android:id="@+id/changeset"
+        android:showAsAction="ifRoom"
+        android:title="@string/card_view_change_set"/>
+    <item
+        android:icon="@drawable/ic_action_rules"
+        android:id="@+id/cardrulings"
+        android:title="@string/card_view_rulings"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:icon="@drawable/ic_action_wishlist"
+        android:id="@+id/addtowishlist"
+        android:showAsAction="ifRoom"
+        android:title="@string/card_view_wishlist"/>
+    <item
+        android:icon="@drawable/ic_action_legality"
+        android:id="@+id/legality"
+        android:showAsAction="ifRoom"
+        android:title="@string/card_view_legality"/>
+</menu>

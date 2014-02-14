@@ -1,0 +1,184 @@
+package com.gelakinetic.mtgfam.helpers;
+
+import android.content.Context;
+import android.database.Cursor;
+
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.SpiceRequest;
+
+import org.apache.commons.io.IOUtils;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+/**
+ * This class extends SpiceRequest for the type PriceInfo, and is used to fetch and cache price info asynchronously
+ */
+public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
+
+	private String mCardNumber;
+	private final Context mContext;
+	private final String mCardName;
+	private final String mSetCode;
+	private final int mMultiverseID;
+
+	/**
+	 * Default constructor
+	 *
+	 * @param cardName     The name of the card to look up
+	 * @param setCode      The set code (not TCG name) of this card's set
+	 * @param cardNumber   The collector's number of the card to look up
+	 * @param multiverseID The multiverse ID of the card to look up
+	 * @param context      The application context to get database access with
+	 */
+	public PriceFetchRequest(String cardName, String setCode, String cardNumber, int multiverseID, Context context) {
+		super(PriceInfo.class);
+		this.mCardName = cardName;
+		this.mSetCode = setCode;
+		this.mCardNumber = cardNumber;
+		this.mMultiverseID = multiverseID;
+		this.mContext = context;
+	}
+
+	/**
+	 * This runs as a service, builds the TCGplayer.com URL, fetches the data, and parses the XML
+	 *
+	 * @return a PriceInfo object with all the prices
+	 * @throws SpiceException If anything goes wrong with the database, URL, or connection, this will be thrown
+	 */
+	@SuppressWarnings("SpellCheckingInspection")
+	@Override
+	public PriceInfo loadDataFromNetwork() throws SpiceException {
+		CardDbAdapter dbHelper = null;
+		try {
+			dbHelper = new CardDbAdapter(mContext);
+
+			/* If the card number wasn't given, figure it out */
+			if (mCardNumber == null) {
+				Cursor c = dbHelper.fetchCardByNameAndSet(mCardName, mSetCode);
+				mCardNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+				c.close();
+			}
+
+			/* Get the TCGplayer.com set name, why can't everything be consistent? */
+			String tcgName = dbHelper.getTCGname(mSetCode);
+			/* Figure out the tcgCardName, which is tricky for split cards */
+			String tcgCardName;
+			int multiCardType = CardDbAdapter.isMulticard(mCardNumber, mSetCode);
+			if ((multiCardType == CardDbAdapter.TRANSFORM) && mCardNumber.contains("b")) {
+				tcgCardName = dbHelper.getTransformName(mSetCode, mCardNumber.replace("b", "a"));
+			}
+			else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
+					multiCardType == CardDbAdapter.FUSE)) {
+				int multiID = dbHelper.getSplitMultiverseID(mCardName);
+				if (multiID == -1) {
+					throw new FamiliarDbException(null);
+				}
+				tcgCardName = dbHelper.getSplitName(multiID);
+			}
+			else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
+					multiCardType == CardDbAdapter.FUSE)) {
+				tcgCardName = dbHelper.getSplitName(mMultiverseID);
+			}
+			else {
+				tcgCardName = mCardName;
+			}
+			/* Build the URL */
+			URL priceUrl = new URL("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=MTGFAMILIA&s=" +
+					URLEncoder.encode(tcgName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") + "&p=" +
+					URLEncoder.encode(tcgCardName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8")
+			);
+
+			/* Fetch the information from the web */
+			HttpURLConnection urlConnection = (HttpURLConnection) priceUrl.openConnection();
+			String result = IOUtils.toString(urlConnection.getInputStream());
+			urlConnection.disconnect();
+
+			/* Parse the XML */
+			Document document = loadXMLFromString(result);
+			Element element = document.getDocumentElement();
+
+			try {
+				PriceInfo pi = new PriceInfo();
+				pi.mLow = Double.parseDouble(getString("lowprice", element));
+				pi.mAverage = Double.parseDouble(getString("avgprice", element));
+				pi.mHigh = Double.parseDouble(getString("hiprice", element));
+				pi.mFoilAverage = Double.parseDouble(getString("foilavgprice", element));
+				pi.mUrl = getString("link", element);
+				return pi;
+			} catch (NumberFormatException error) {
+				return null;
+			} catch (DOMException e) {
+				return null;
+			}
+		} catch (FamiliarDbException e) {
+			throw new SpiceException("FamiliarDbException");
+		} catch (MalformedURLException e) {
+			throw new SpiceException("MalformedURLException");
+		} catch (IOException e) {
+			throw new SpiceException("IOException");
+		} catch (ParserConfigurationException e) {
+			throw new SpiceException("ParserConfigurationException");
+		} catch (SAXException e) {
+			throw new SpiceException("SAXException");
+		} finally {
+			if (dbHelper != null) {
+				dbHelper.close();
+			}
+		}
+	}
+
+	/**
+	 * This function takes a string of XML information and parses it into a Document object in order to extract prices
+	 *
+	 * @param xml The String of XML
+	 * @return a Document describing the XML
+	 * @throws ParserConfigurationException thrown by factory.newDocumentBuilder()
+	 * @throws SAXException                 thrown by  builder.parse()
+	 * @throws IOException                  thrown by  builder.parse()
+	 */
+	private static Document loadXMLFromString(String xml) throws ParserConfigurationException, SAXException,
+			IOException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		InputSource is = new InputSource(new StringReader(xml));
+		return builder.parse(is);
+	}
+
+	/**
+	 * Get a string value out of an Element given a tag name
+	 *
+	 * @param tagName The name of the XML tag to extract a string from
+	 * @param element The Element containing XML information
+	 * @return The String in the XML with the corresponding tag
+	 */
+	String getString(String tagName, Element element) {
+		NodeList list = element.getElementsByTagName(tagName);
+		if (list != null && list.getLength() > 0) {
+			NodeList subList = list.item(0).getChildNodes();
+
+			if (subList != null) {
+				String returnValue = "";
+				for (int i = 0; i < subList.getLength(); i++) {
+					returnValue += subList.item(i).getNodeValue();
+				}
+				return returnValue;
+			}
+		}
+		return null;
+	}
+}
