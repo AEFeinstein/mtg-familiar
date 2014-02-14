@@ -42,6 +42,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -1002,6 +1003,28 @@ public class FamiliarActivity extends FragmentActivity {
 					showDialogFragment(TTS_DIALOG);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Handle options item presses. In this case, the home button opens and closes the drawer
+	 *
+	 * @param item The item selected
+	 * @return True if the click was acted upon, false otherwise
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				if(mDrawerLayout.isDrawerOpen(mDrawerList)) {
+					mDrawerLayout.closeDrawer(mDrawerList);
+				}
+				else {
+					mDrawerLayout.openDrawer(mDrawerList);
+				}
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 }

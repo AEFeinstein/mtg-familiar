@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MTGFamiliar/MTGFamiliar.iml" filepath="$PROJECT_DIR$/MTGFamiliar/MTGFamiliar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MTGFamiliarProject.iml" filepath="$PROJECT_DIR$/MTGFamiliarProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtg-familiar.iml" filepath="$PROJECT_DIR$/mtg-familiar.iml" />
     </modules>
   </component>
 </project>
