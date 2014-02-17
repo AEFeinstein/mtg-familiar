@@ -64,81 +64,98 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 	@Override
 	public PriceInfo loadDataFromNetwork() throws SpiceException {
 		CardDbAdapter dbHelper = null;
+		int retry = 2; /* try the fetch twice, once with accent marks and again without if it fails */
+		SpiceException exception = null; /* Save the exception during while loops */
 		try {
 			dbHelper = new CardDbAdapter(mContext);
-
-			/* If the card number wasn't given, figure it out */
-			if (mCardNumber == null) {
-				Cursor c = dbHelper.fetchCardByNameAndSet(mCardName, mSetCode);
-				mCardNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-				c.close();
-			}
-
-			/* Get the TCGplayer.com set name, why can't everything be consistent? */
-			String tcgName = dbHelper.getTCGname(mSetCode);
-			/* Figure out the tcgCardName, which is tricky for split cards */
-			String tcgCardName;
-			int multiCardType = CardDbAdapter.isMulticard(mCardNumber, mSetCode);
-			if ((multiCardType == CardDbAdapter.TRANSFORM) && mCardNumber.contains("b")) {
-				tcgCardName = dbHelper.getTransformName(mSetCode, mCardNumber.replace("b", "a"));
-			}
-			else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
-					multiCardType == CardDbAdapter.FUSE)) {
-				int multiID = dbHelper.getSplitMultiverseID(mCardName);
-				if (multiID == -1) {
-					throw new FamiliarDbException(null);
-				}
-				tcgCardName = dbHelper.getSplitName(multiID);
-			}
-			else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
-					multiCardType == CardDbAdapter.FUSE)) {
-				tcgCardName = dbHelper.getSplitName(mMultiverseID);
-			}
-			else {
-				tcgCardName = mCardName;
-			}
-			/* Build the URL */
-			URL priceUrl = new URL("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=MTGFAMILIA&s=" +
-					URLEncoder.encode(tcgName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") + "&p=" +
-					URLEncoder.encode(tcgCardName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8")
-			);
-
-			/* Fetch the information from the web */
-			HttpURLConnection urlConnection = (HttpURLConnection) priceUrl.openConnection();
-			String result = IOUtils.toString(urlConnection.getInputStream());
-			urlConnection.disconnect();
-
-			/* Parse the XML */
-			Document document = loadXMLFromString(result);
-			Element element = document.getDocumentElement();
-
-			try {
-				PriceInfo pi = new PriceInfo();
-				pi.mLow = Double.parseDouble(getString("lowprice", element));
-				pi.mAverage = Double.parseDouble(getString("avgprice", element));
-				pi.mHigh = Double.parseDouble(getString("hiprice", element));
-				pi.mFoilAverage = Double.parseDouble(getString("foilavgprice", element));
-				pi.mUrl = getString("link", element);
-				return pi;
-			} catch (NumberFormatException error) {
-				return null;
-			} catch (DOMException e) {
-				return null;
-			}
 		} catch (FamiliarDbException e) {
 			throw new SpiceException("FamiliarDbException");
-		} catch (MalformedURLException e) {
-			throw new SpiceException("MalformedURLException");
-		} catch (IOException e) {
-			throw new SpiceException("IOException");
-		} catch (ParserConfigurationException e) {
-			throw new SpiceException("ParserConfigurationException");
-		} catch (SAXException e) {
-			throw new SpiceException("SAXException");
-		} finally {
-			if (dbHelper != null) {
-				dbHelper.close();
+		}
+		while (retry > 0) {
+			try {
+				/* If the card number wasn't given, figure it out */
+				if (mCardNumber == null) {
+					Cursor c = dbHelper.fetchCardByNameAndSet(mCardName, mSetCode);
+					mCardNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+					c.close();
+				}
+
+				/* Get the TCGplayer.com set name, why can't everything be consistent? */
+				String tcgName = dbHelper.getTCGname(mSetCode);
+				/* Figure out the tcgCardName, which is tricky for split cards */
+				String tcgCardName;
+				int multiCardType = CardDbAdapter.isMulticard(mCardNumber, mSetCode);
+				if ((multiCardType == CardDbAdapter.TRANSFORM) && mCardNumber.contains("b")) {
+					tcgCardName = dbHelper.getTransformName(mSetCode, mCardNumber.replace("b", "a"));
+				}
+				else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
+						multiCardType == CardDbAdapter.FUSE)) {
+					int multiID = dbHelper.getSplitMultiverseID(mCardName);
+					if (multiID == -1) {
+						throw new FamiliarDbException(null);
+					}
+					tcgCardName = dbHelper.getSplitName(multiID);
+				}
+				else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
+						multiCardType == CardDbAdapter.FUSE)) {
+					tcgCardName = dbHelper.getSplitName(mMultiverseID);
+				}
+				else {
+					tcgCardName = mCardName;
+				}
+
+				if (retry == 1) {
+					tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
+				}
+				/* Build the URL */
+				URL priceUrl = new URL("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=MTGFAMILIA&s=" +
+						URLEncoder.encode(tcgName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") + "&p=" +
+						URLEncoder.encode(tcgCardName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8")
+				);
+
+				/* Fetch the information from the web */
+				HttpURLConnection urlConnection = (HttpURLConnection) priceUrl.openConnection();
+				String result = IOUtils.toString(urlConnection.getInputStream());
+				urlConnection.disconnect();
+
+				/* Parse the XML */
+				Document document = loadXMLFromString(result);
+				Element element = document.getDocumentElement();
+
+				try {
+					PriceInfo pi = new PriceInfo();
+					pi.mLow = Double.parseDouble(getString("lowprice", element));
+					pi.mAverage = Double.parseDouble(getString("avgprice", element));
+					pi.mHigh = Double.parseDouble(getString("hiprice", element));
+					pi.mFoilAverage = Double.parseDouble(getString("foilavgprice", element));
+					pi.mUrl = getString("link", element);
+					return pi;
+				} catch (NumberFormatException error) {
+					exception = new SpiceException("NumberFormatException");
+				} catch (DOMException e) {
+					exception = new SpiceException("DOMException");
+				}
+			} catch (FamiliarDbException e) {
+				exception = new SpiceException("FamiliarDbException");
+			} catch (MalformedURLException e) {
+				exception = new SpiceException("MalformedURLException");
+			} catch (IOException e) {
+				exception = new SpiceException("IOException");
+			} catch (ParserConfigurationException e) {
+				exception = new SpiceException("ParserConfigurationException");
+			} catch (SAXException e) {
+				exception = new SpiceException("SAXException");
 			}
+			retry--;
+		}
+		if (dbHelper != null) {
+			dbHelper.close();
+		}
+		if(exception != null) {
+			throw exception;
+		}
+		else {
+			throw new SpiceException("CardNotFound");
 		}
 	}
 

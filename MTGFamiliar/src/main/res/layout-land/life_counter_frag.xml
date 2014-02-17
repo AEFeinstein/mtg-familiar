@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2011 Adam Feinstein
+
+This file is part of MTG Familiar.
+
+MTG Familiar is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+MTG Familiar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:orientation="horizontal">
+    
+    <LinearLayout
+        android:id="@+id/info_layout"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+	    <HorizontalScrollView
+	        android:id="@+id/playerScrollView"
+	        android:layout_width="fill_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1">
+	
+	        <LinearLayout
+		        android:id="@+id/playerList"
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent" 
+	            android:orientation="horizontal" >
+	            
+	        </LinearLayout>
+	
+	    </HorizontalScrollView>
+	    
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dip"
+        android:layout_height="fill_parent"
+        android:background="@android:color/holo_blue_light" />
+
+    <!-- Command bar: reset, poison, etc. -->
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="48dp"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/poison_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:padding="15dp"
+            android:src="@drawable/lc_poison_enabled" />
+
+        <ImageView
+            android:id="@+id/life_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:padding="15dp"
+            android:src="@drawable/lc_life_enabled" />
+
+        <ImageView
+            android:id="@+id/commander_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:scaleType="center"
+            android:src="@drawable/lc_commander_enabled" />
+
+        <ImageView
+            android:id="@+id/reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:padding="15dp"
+            android:src="@drawable/lc_reset" />
+        
+    </LinearLayout>
+
+</LinearLayout>

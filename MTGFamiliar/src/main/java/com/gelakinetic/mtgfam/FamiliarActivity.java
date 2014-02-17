@@ -56,6 +56,7 @@ import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.fragments.ManaPoolFragment;
 import com.gelakinetic.mtgfam.fragments.MoJhoStoFragment;
 import com.gelakinetic.mtgfam.fragments.PrefsFragment;
@@ -196,10 +197,11 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 		mUpdatingRoundTimer = false;
 
+		// TODO causes onpause onresume to be called twice on rotations
 		/* Check for TTS support, the result will be caught in onActivityResult() */
-		Intent checkIntent = new Intent();
-		checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 		if (mPreferenceAdapter.getTtsShowDialog()) {
+			Intent checkIntent = new Intent();
+			checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 			startActivityForResult(checkIntent, TTS_DATA_CHECK_CODE);
 		}
 
@@ -298,7 +300,7 @@ public class FamiliarActivity extends FragmentActivity {
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle("");
 
-		/* ActionBarDrawerToggle ties together the the proper interactions between the sliding drawer and the action 
+		/* ActionBarDrawerToggle ties together the the proper interactions between the sliding drawer and the action
 		bar app icon */
 		mDrawerToggle = new ActionBarDrawerToggle(
 				this, /* host Activity */
@@ -407,7 +409,7 @@ public class FamiliarActivity extends FragmentActivity {
 		else {
 			/* App launched as regular, show the default fragment TODO (should check preferences) */
 			if (savedInstanceState == null) {
-				selectItem(R.string.main_card_search);
+				selectItem(R.string.main_life_counter);
 				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
@@ -431,10 +433,14 @@ public class FamiliarActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		if (mRoundEndTime != -1) {
 			startUpdatingDisplay();
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
 	}
 
 	/**
@@ -461,7 +467,7 @@ public class FamiliarActivity extends FragmentActivity {
 				break;
 			}
 			case R.string.main_life_counter: {
-				//TODO
+				newFrag = new LifeCounterFragment();
 				break;
 			}
 			case R.string.main_mana_pool: {
@@ -516,13 +522,7 @@ public class FamiliarActivity extends FragmentActivity {
 			ft = fm.beginTransaction();
 
 			/* Replace or add the fragment */
-			Fragment prev = fm.findFragmentByTag(FamiliarActivity.FRAGMENT_TAG);
-			if (prev != null) {
-				ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG);
-			}
-			else {
-				ft.add(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG);
-			}
+			ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG);
 			ft.commit();
 		}
 	}
@@ -995,13 +995,11 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 
 		if (requestCode == TTS_DATA_CHECK_CODE) {
-			if (mPreferenceAdapter.getTtsShowDialog()) {
-				if (resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-					/* So we don't display this dialog again and bother the user */
-					mPreferenceAdapter.setTtsShowDialog(false);
-					/* missing data, install it */
-					showDialogFragment(TTS_DIALOG);
-				}
+			/* So we don't display this dialog again and bother the user */
+			mPreferenceAdapter.setTtsShowDialog(false);
+			if (resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+				/* missing data, install it */
+				showDialogFragment(TTS_DIALOG);
 			}
 		}
 	}
@@ -1016,7 +1014,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				if(mDrawerLayout.isDrawerOpen(mDrawerList)) {
+				if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
 					mDrawerLayout.closeDrawer(mDrawerList);
 				}
 				else {

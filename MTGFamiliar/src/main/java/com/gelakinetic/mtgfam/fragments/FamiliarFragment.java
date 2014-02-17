@@ -48,9 +48,9 @@ public abstract class FamiliarFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setHasOptionsMenu(true);
-		if (getParentFragment() == null) {
-			this.setRetainInstance(true);
-		}
+//		if (getParentFragment() == null) {
+//			this.setRetainInstance(true); TODO necessary?
+//		}
 	}
 
 	/**
