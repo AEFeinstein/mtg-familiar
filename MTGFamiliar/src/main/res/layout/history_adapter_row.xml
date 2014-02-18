@@ -25,13 +25,12 @@
         android:maxLines="1"
         android:singleLine="true"
         android:text="+0"
-        android:textColor="#4fa5d5"
         android:textSize="25sp" />
 
     <View
         android:layout_width="1dp"
         android:layout_height="fill_parent"
-        android:background="#4fa5d5" />
+        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/absolute"
@@ -42,7 +41,6 @@
         android:maxLines="1"
         android:singleLine="true"
         android:text="@string/life_counter_twenty"
-        android:textColor="#4fa5d5"
         android:textSize="25sp" />
 
 </LinearLayout>

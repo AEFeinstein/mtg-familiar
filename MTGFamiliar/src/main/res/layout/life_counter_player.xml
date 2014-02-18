@@ -162,6 +162,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:orientation="vertical">
             <!-- TODO             android:background="@xml/textview_backdrop" -->
             <ListView
+                android:background="@drawable/textview_backdrop"
                 android:id="@+id/player_history"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"

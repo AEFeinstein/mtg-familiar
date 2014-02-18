@@ -467,5 +467,6 @@
     <string name="fifteen_minutes_left">The round will end in fifteen minutes</string>
     <string name="timer_easter_egg">Night of the final day, twelve hours remain</string>
     <string name="install_tts">Install TTS</string>
+    <string name="life_counter_default_name">Player</string>
 
 </resources>

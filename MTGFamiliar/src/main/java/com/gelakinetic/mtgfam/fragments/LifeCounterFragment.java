@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -34,6 +35,10 @@ public class LifeCounterFragment extends FamiliarFragment {
 	private ImageView mPoisonButton;
 	private ImageView mLifeButton;
 	private int mDisplayMode;
+	private int mListSizeWidth = -1;
+	private int mListSizeHeight = -1;
+	private View mScrollView;
+	private int mLargestPlayerNumber = 0;
 
 	/**
 	 * Force the child fragments to override onCreateView
@@ -48,10 +53,27 @@ public class LifeCounterFragment extends FamiliarFragment {
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		mListSizeWidth = -1;
+		mListSizeHeight = -1;
+
 		View myFragmentView = inflater.inflate(R.layout.life_counter_frag, container, false);
 		assert myFragmentView != null;
 
 		mLinearLayout = (LinearLayout) myFragmentView.findViewById(R.id.playerList);
+		mScrollView = myFragmentView.findViewById(R.id.playerScrollView);
+		ViewTreeObserver viewTreeObserver = mScrollView.getViewTreeObserver();
+		assert viewTreeObserver != null;
+		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			public void onGlobalLayout() {
+				if (mListSizeWidth == -1) {
+					mListSizeWidth = mScrollView.getWidth();
+					mListSizeHeight = mScrollView.getHeight();
+					for (LcPlayer player : mPlayers) {
+						player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight);
+					}
+				}
+			}
+		});
 
 		mPoisonButton = (ImageView) myFragmentView.findViewById(R.id.poison_button);
 		mPoisonButton.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +123,7 @@ public class LifeCounterFragment extends FamiliarFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+
 		String playerData = ((FamiliarActivity) getActivity()).mPreferenceAdapter.getPlayerData();
 		if (playerData == null || playerData.length() == 0) {
 			addPlayer();
@@ -221,6 +244,7 @@ public class LifeCounterFragment extends FamiliarFragment {
 										mPlayers.clear();
 
 										/* Add default players */
+										mLargestPlayerNumber = 0;
 										addPlayer();
 										addPlayer();
 
@@ -281,8 +305,16 @@ public class LifeCounterFragment extends FamiliarFragment {
 	 */
 	private void addPlayer() {
 		LcPlayer player = new LcPlayer((FamiliarActivity) getActivity());
+
+		mLargestPlayerNumber++;
+		player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
+
 		mPlayers.add(player);
 		mLinearLayout.addView(player.newView());
+		if (mListSizeHeight != -1) {
+			player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight);
+		}
+
 	}
 
 	/**
@@ -297,7 +329,25 @@ public class LifeCounterFragment extends FamiliarFragment {
 			String[] data = line.split(";");
 
 			player.mName = data[0];
+
+			/* Keep track of the largest numbered player, for adding new players */
+			try {
+				String nameParts[] = player.mName.split(" ");
+				int number = Integer.parseInt(nameParts[nameParts.length - 1]);
+				if (number > mLargestPlayerNumber) {
+					mLargestPlayerNumber = number;
+				}
+			} catch (NumberFormatException e) {
+				/* eat it */
+			}
+
 			player.mLife = Integer.parseInt(data[1]);
+
+			try {
+				player.mDefaultLifeTotal = Integer.parseInt(data[5]);
+			} catch (Exception e) {
+				player.mDefaultLifeTotal = 20; // TODO static const?
+			}
 
 			try {
 				String[] lifeHistory = data[2].split(","); // ArrayIndexOutOfBoundsException??
@@ -310,7 +360,7 @@ public class LifeCounterFragment extends FamiliarFragment {
 						entry.mDelta = entry.mAbsolute - player.mLifeHistory.get(0).mAbsolute;
 					}
 					else {
-						entry.mDelta = 0;
+						entry.mDelta = entry.mAbsolute - player.mDefaultLifeTotal;
 					}
 					player.mLifeHistory.add(0, entry);
 				}
@@ -334,7 +384,7 @@ public class LifeCounterFragment extends FamiliarFragment {
 						entry.mDelta = entry.mAbsolute - player.mPoisonHistory.get(0).mAbsolute;
 					}
 					else {
-						entry.mDelta = 0;
+						entry.mDelta = entry.mAbsolute;
 					}
 					player.mPoisonHistory.add(0, entry);
 				}
@@ -343,12 +393,6 @@ public class LifeCounterFragment extends FamiliarFragment {
 				/* Eat it */
 			} catch (ArrayIndexOutOfBoundsException e) {
 				/* Eat it */
-			}
-
-			try {
-				player.mDefaultLifeTotal = Integer.parseInt(data[5]);
-			} catch (Exception e) {
-				player.mDefaultLifeTotal = 20; // TODO static const?
 			}
 
 			try {
@@ -374,7 +418,14 @@ public class LifeCounterFragment extends FamiliarFragment {
 
 			mPlayers.add(player);
 			mLinearLayout.addView(player.newView());
-		} catch (ArrayIndexOutOfBoundsException e) {
+			if (mListSizeHeight != -1) {
+				player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight);
+			}
+		} catch (
+				ArrayIndexOutOfBoundsException e
+				)
+
+		{
 			/* Eat it */
 		}
 	}

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -55,7 +57,12 @@ public class LcPlayer {
 		@Override
 		public void run() {
 			HistoryEntry entry = new HistoryEntry();
-			entry.mDelta = mLife - mLifeHistory.get(0).mAbsolute;
+			if (mLifeHistory.size() == 0) {
+				entry.mDelta = mLife - mDefaultLifeTotal;
+			}
+			else {
+				entry.mDelta = mLife - mLifeHistory.get(0).mAbsolute;
+			}
 			entry.mAbsolute = mLife;
 			if (entry.mDelta != 0) {
 				mLifeHistory.add(0, entry);
@@ -63,7 +70,12 @@ public class LcPlayer {
 			}
 
 			entry = new HistoryEntry();
-			entry.mDelta = mPoison - mPoisonHistory.get(0).mAbsolute;
+			if (mPoisonHistory.size() == 0) {
+				entry.mDelta = mPoison;
+			}
+			else {
+				entry.mDelta = mPoison - mPoisonHistory.get(0).mAbsolute;
+			}
 			entry.mAbsolute = mPoison;
 			if (entry.mDelta != 0) {
 				mPoisonHistory.add(0, entry);
@@ -79,18 +91,7 @@ public class LcPlayer {
 	 */
 	public LcPlayer(FamiliarActivity activity) {
 		mActivity = activity;
-
-		mName = "Player 1";
-
-		HistoryEntry entry = new HistoryEntry();
-		entry.mDelta = 0;
-		entry.mAbsolute = 20;
-		mLifeHistory.add(entry);
-
-		entry = new HistoryEntry();
-		entry.mDelta = 0;
-		entry.mAbsolute = 0;
-		mPoisonHistory.add(entry);
+		mName = mActivity.getString(R.string.life_counter_default_name) + " 1";
 	}
 
 	/**
@@ -104,10 +105,12 @@ public class LcPlayer {
 			case LIFE:
 				mHistoryList.setAdapter(mHistoryLifeAdapter);
 				mReadoutTextView.setText(mLife + "");
+				mReadoutTextView.setTextColor(mActivity.getResources().getColor(android.R.color.holo_red_dark));
 				break;
 			case POISON:
 				mHistoryList.setAdapter(mHistoryPoisonAdapter);
 				mReadoutTextView.setText(mPoison + "");
+				mReadoutTextView.setTextColor(mActivity.getResources().getColor(android.R.color.holo_green_dark));
 				break;
 		}
 		mHistoryList.invalidate();
@@ -142,8 +145,8 @@ public class LcPlayer {
 	public View newView() {
 		mView = LayoutInflater.from(mActivity).inflate(R.layout.life_counter_player, null);
 		assert mView != null;
-		mNameTextView = (TextView)mView.findViewById(R.id.player_name);
-		if(mName != null) {
+		mNameTextView = (TextView) mView.findViewById(R.id.player_name);
+		if (mName != null) {
 			mNameTextView.setText(mName);
 		}
 		mReadoutTextView = (TextView) mView.findViewById(R.id.player_readout);
@@ -246,16 +249,6 @@ public class LcPlayer {
 		mPoison = 0;
 		mCommanderCasting = 0;
 
-		HistoryEntry entry = new HistoryEntry();
-		entry.mDelta = 0;
-		entry.mAbsolute = mLife;
-		mLifeHistory.add(entry);
-
-		entry = new HistoryEntry();
-		entry.mDelta = 0;
-		entry.mAbsolute = mPoison;
-		mPoisonHistory.add(entry);
-
 		mHistoryLifeAdapter.notifyDataSetChanged();
 		mHistoryPoisonAdapter.notifyDataSetChanged();
 
@@ -265,6 +258,17 @@ public class LcPlayer {
 				break;
 			case POISON:
 				mReadoutTextView.setText(mPoison + "");
+				break;
+		}
+	}
+
+	public void setSize(int orientation, int mListSizeWidth, int mListSizeHeight) {
+		switch (orientation) {
+			case Configuration.ORIENTATION_LANDSCAPE:
+				mView.setLayoutParams(new LinearLayout.LayoutParams(mListSizeWidth/2, mListSizeHeight));
+				break;
+			case Configuration.ORIENTATION_PORTRAIT:
+				mView.setLayoutParams(new LinearLayout.LayoutParams(mListSizeWidth, mListSizeHeight/2));
 				break;
 		}
 	}
@@ -310,12 +314,26 @@ public class LcPlayer {
 			assert view != null;
 			switch (mType) {
 				case LIFE:
-					((TextView) view.findViewById(R.id.relative)).setText(mLifeHistory.get(position).mDelta + "");
 					((TextView) view.findViewById(R.id.absolute)).setText(mLifeHistory.get(position).mAbsolute + "");
+					if (mLifeHistory.get(position).mDelta > 0) {
+						((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
+						((TextView) view.findViewById(R.id.relative)).setTextColor(mActivity.getResources().getColor(android.R.color.holo_green_dark));
+					}
+					else {
+						((TextView) view.findViewById(R.id.relative)).setText("" + mLifeHistory.get(position).mDelta);
+						((TextView) view.findViewById(R.id.relative)).setTextColor(mActivity.getResources().getColor(android.R.color.holo_red_dark));
+					}
 					break;
 				case POISON:
-					((TextView) view.findViewById(R.id.relative)).setText(mPoisonHistory.get(position).mDelta + "");
 					((TextView) view.findViewById(R.id.absolute)).setText(mPoisonHistory.get(position).mAbsolute + "");
+					if (mPoisonHistory.get(position).mDelta > 0) {
+						((TextView) view.findViewById(R.id.relative)).setText("+" + mPoisonHistory.get(position).mDelta);
+						((TextView) view.findViewById(R.id.relative)).setTextColor(mActivity.getResources().getColor(android.R.color.holo_green_dark));
+					}
+					else {
+						((TextView) view.findViewById(R.id.relative)).setText("" + mPoisonHistory.get(position).mDelta);
+						((TextView) view.findViewById(R.id.relative)).setTextColor(mActivity.getResources().getColor(android.R.color.holo_red_dark));
+					}
 					break;
 			}
 			return view;
@@ -368,7 +386,8 @@ public class LcPlayer {
 										}
 										LcPlayer.this.mName = newName;
 										LcPlayer.this.mNameTextView.setText(newName);
-									}})
+									}
+								})
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
 										dialog.dismiss();
