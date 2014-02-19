@@ -468,5 +468,8 @@
     <string name="timer_easter_egg">Night of the final day, twelve hours remain</string>
     <string name="install_tts">Install TTS</string>
     <string name="life_counter_default_name">Player</string>
+    <string formatted="false" name="life_counter_spoken_life">%s has %d life. </string>
+    <string formatted="false" name="life_counter_spoken_poison">%s has %d poison. </string>
+    <string name="life_counter_over_9000">over 9000</string>
 
 </resources>

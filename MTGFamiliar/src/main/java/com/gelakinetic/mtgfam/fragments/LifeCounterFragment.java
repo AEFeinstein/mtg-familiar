@@ -2,8 +2,12 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,16 +23,22 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * TODO save life / poison state on rotation, etc
  */
-public class LifeCounterFragment extends FamiliarFragment {
+public class LifeCounterFragment extends FamiliarFragment implements TextToSpeech.OnInitListener, AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnUtteranceCompletedListener {
 
 	private static final int REMOVE_PLAYER_DIALOG = 0;
 	private static final int RESET_CONFIRM_DIALOG = 1;
 	private static final String DISPLAY_MODE = "display_mode";
+	private static final String LIFE_ANNOUNCE = "life_announce";
+	private static final int IMPROBABLE_NUMBER = 531865548;
+	private static final String OVER_9000_KEY = "@over_9000";
 
 	private LinearLayout mLinearLayout;
 	private ArrayList<LcPlayer> mPlayers = new ArrayList<LcPlayer>();
@@ -39,6 +49,13 @@ public class LifeCounterFragment extends FamiliarFragment {
 	private int mListSizeHeight = -1;
 	private View mScrollView;
 	private int mLargestPlayerNumber = 0;
+
+	/* Stuff for TTS */
+	private TextToSpeech mTts;
+	private boolean mTtsInit;
+	private AudioManager mAudioManager;
+	private MediaPlayer m9000Player;
+	LinkedList<String> mVocalizations = new LinkedList<String>();
 
 	/**
 	 * Force the child fragments to override onCreateView
@@ -101,6 +118,43 @@ public class LifeCounterFragment extends FamiliarFragment {
 	}
 
 	/**
+	 * Assume that every fragment has a menu
+	 * Assume that every fragment wants to retain it's instance state (onCreate/onDestroy called
+	 * once, onCreateView called on rotations etc)
+	 *
+	 * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mTtsInit = false;
+		mTts = new TextToSpeech(getActivity(), this);
+		mTts.setOnUtteranceCompletedListener(this);
+
+		mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+
+		m9000Player = MediaPlayer.create(getActivity(), R.raw.over_9000);
+		m9000Player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			public void onCompletion(MediaPlayer mp) {
+				onUtteranceCompleted(LIFE_ANNOUNCE);
+			}
+		});
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mTts != null) {
+			mTts.stop();
+			mTts.shutdown();
+		}
+		if (m9000Player != null) {
+			m9000Player.reset();
+			m9000Player.release();
+		}
+	}
+
+	/**
 	 * TODO
 	 */
 	@Override
@@ -149,6 +203,22 @@ public class LifeCounterFragment extends FamiliarFragment {
 	}
 
 	/**
+	 * TODO
+	 *
+	 * @param menu
+	 */
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		if (!mTtsInit) {
+			menu.findItem(R.id.announce_life).setVisible(false);
+		}
+		else {
+			menu.findItem(R.id.announce_life).setVisible(true);
+		}
+	}
+
+	/**
 	 * @param item
 	 * @return
 	 */
@@ -163,6 +233,7 @@ public class LifeCounterFragment extends FamiliarFragment {
 				showDialog(REMOVE_PLAYER_DIALOG);
 				return true;
 			case R.id.announce_life:
+				announceLifeTotals();
 				return true;
 			case R.id.change_gathering:
 				return true;
@@ -427,6 +498,100 @@ public class LifeCounterFragment extends FamiliarFragment {
 
 		{
 			/* Eat it */
+		}
+	}
+
+	/**
+	 * When mTts is initialized, set the boolean flag and display the option in the ActionBar
+	 *
+	 * @param i
+	 */
+	@Override
+	public void onInit(int i) {
+		mTtsInit = true;
+		getActivity().invalidateOptionsMenu();
+	}
+
+	/**
+	 * Build a LinkedList of all the things to say, which can include TTS calls and MediaPlayer calls. Then call
+	 * onUtteranceCompleted to start running through the LinkedList, even though no utterance was spoken.
+	 */
+	private void announceLifeTotals() {
+		if (mTtsInit) {
+			mVocalizations.clear();
+			for (LcPlayer p : mPlayers) {
+				switch (mDisplayMode) {
+					case LcPlayer.LIFE:
+						if (p.mLife > 9000) {
+							/* If the life is over 9000, split the string on an IMPROBABLE_NUMBER, and insert a call to the m9000Player */
+							String tmp = String.format(getString(R.string.life_counter_spoken_life), p.mName, IMPROBABLE_NUMBER);
+							String parts[] = tmp.split(Integer.toString(IMPROBABLE_NUMBER));
+							mVocalizations.add(parts[0]);
+							mVocalizations.add(OVER_9000_KEY);
+							mVocalizations.add(parts[1]);
+						}
+						else {
+							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life), p.mName, p.mLife));
+						}
+						break;
+					case LcPlayer.POISON:
+						mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison), p.mName, p.mPoison));
+						break;
+				}
+
+			}
+
+			if (mVocalizations.size() > 0) {
+				int res = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+				if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+					onUtteranceCompleted(LIFE_ANNOUNCE);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Necessary to implement OnAudioFocusChangeListener, ignored
+	 *
+	 * @param i some irrelevant integer
+	 */
+	@Override
+	public void onAudioFocusChange(int i) {
+
+	}
+
+	/**
+	 * This is called every time an utterance is completed, as well as when the m9000Player finishes shouting.
+	 * It polls an item out of the LinkedList and speaks it, or returns audio focus to the system.
+	 *
+	 * @param key A key to determine what was just uttered. This is ignored
+	 */
+	@Override
+	public void onUtteranceCompleted(String key) {
+		if (mVocalizations.size() > 0) {
+			String toSpeak = mVocalizations.poll();
+			if (toSpeak.equals(OVER_9000_KEY)) {
+				try {
+					m9000Player.stop();
+					m9000Player.prepare();
+					m9000Player.start();
+				} catch (IOException e) {
+					/* If the media was not played, fall back to TTSing "over 9000" */
+					HashMap<String, String> ttsParams = new HashMap<String, String>();
+					ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
+					ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
+					mTts.speak(getString(R.string.life_counter_over_9000), TextToSpeech.QUEUE_FLUSH, ttsParams);
+				}
+			}
+			else {
+				HashMap<String, String> ttsParams = new HashMap<String, String>();
+				ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
+				ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
+				mTts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, ttsParams);
+			}
+		}
+		else {
+			mAudioManager.abandonAudioFocus(this);
 		}
 	}
 }
