@@ -136,6 +136,20 @@ public class FamiliarActivity extends FragmentActivity {
 	public PreferenceAdapter mPreferenceAdapter;
 	private int mCurrentFrag;
 
+	/* Timer to determine user inactivity for screen dimming in the life counter */
+	private Handler mInactivityHandler = new Handler();
+	private boolean mUserInactive = false;
+	private Runnable userInactive = new Runnable() {
+		@Override
+		public void run() {
+			mUserInactive = true;
+			Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+			if (fragment instanceof FamiliarFragment) {
+				((FamiliarFragment) fragment).onUserInactive();
+			}
+		}
+	};
+
 	/**
 	 * Start the Spice Manager when the activity starts
 	 */
@@ -412,7 +426,6 @@ public class FamiliarActivity extends FragmentActivity {
 
 				String defaultFragment = mPreferenceAdapter.getDefaultFragment();
 
-				FamiliarFragment frag;
 				if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
 					selectItem(R.string.main_card_search);
 				}
@@ -464,7 +477,7 @@ public class FamiliarActivity extends FragmentActivity {
 	}
 
 	/**
-	 * Check to see if we should display the round timer in the actionbar
+	 * Check to see if we should display the round timer in the actionbar, and start the inactivity timer
 	 */
 	@Override
 	protected void onResume() {
@@ -472,6 +485,7 @@ public class FamiliarActivity extends FragmentActivity {
 		if (mRoundEndTime != -1) {
 			startUpdatingDisplay();
 		}
+		mInactivityHandler.postDelayed(userInactive, 15000);
 	}
 
 	@Override
@@ -1061,5 +1075,24 @@ public class FamiliarActivity extends FragmentActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	/**
+	 * Called whenever the user does anything. On an interaction, reset the inactivity timer and notifies the
+	 * FamiliarFragment if it was inactive. The inactivity timer will notify the FamiliarFragment of inactivity
+	 */
+	@Override
+	public void onUserInteraction() {
+		super.onUserInteraction();
+		if(mUserInactive) {
+			Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+			if (fragment instanceof FamiliarFragment) {
+				mUserInactive = true;
+				((FamiliarFragment) fragment).onUserActive();
+			}
+		}
+		mInactivityHandler.removeCallbacks(userInactive);
+		mInactivityHandler.postDelayed(userInactive, 10000);
+		mUserInactive = false;
 	}
 }

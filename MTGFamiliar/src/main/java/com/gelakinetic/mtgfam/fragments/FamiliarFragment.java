@@ -219,4 +219,14 @@ public abstract class FamiliarFragment extends Fragment {
 			}
 		}
 	}
+
+	/**
+	 * Called from the activity if the user is inactive. May be overridden to do things like dim the screen
+	 */
+	public void onUserInactive() {
+
+	}
+
+	public void onUserActive() {
+	}
 }

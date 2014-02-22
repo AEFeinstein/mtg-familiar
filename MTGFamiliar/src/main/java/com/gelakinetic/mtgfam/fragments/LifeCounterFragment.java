@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
@@ -71,6 +72,9 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	private AudioManager mAudioManager;
 	private MediaPlayer m9000Player;
 	LinkedList<String> mVocalizations = new LinkedList<String>();
+
+	/* For proper dimming during wake lock */
+	private float mDefaultBrightness;
 
 	/**
 	 * When the fragment is created, set up the TTS engine, AudioManager, and MediaPlayer for life total vocalization
@@ -165,8 +169,9 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			}
 		});
 
-		mCommanderButton = (ImageView) myFragmentView.findViewById(R.id.reset_button);
-		mCommanderButton.setOnClickListener(new View.OnClickListener() {
+		mCommanderButton = (ImageView) myFragmentView.findViewById(R.id.commander_button);
+
+		myFragmentView.findViewById(R.id.reset_button).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				showDialog(RESET_CONFIRM_DIALOG);
 			}
@@ -175,6 +180,9 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		if (savedInstanceState != null) {
 			mStatDisplaying = savedInstanceState.getInt(DISPLAY_MODE, LcPlayer.LIFE);
 		}
+
+		WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
+		mDefaultBrightness = layoutParams.screenBrightness;
 
 		return myFragmentView;
 	}
@@ -222,6 +230,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			mGridLayout.removeView(player.mView);
 		}
 		mPlayers.clear();
+
+		getActivity().getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
 	/**
@@ -245,6 +255,31 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			}
 		}
 		setStatDisplaying(mStatDisplaying);
+
+		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getWakelock()) {
+			getActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		}
+	}
+
+	/**
+	 * Called from the activity if the user is inactive. May be overridden to do things like dim the screen
+	 */
+	@Override
+	public void onUserInactive() {
+		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getWakelock()) {
+			WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
+			layoutParams.screenBrightness = 0.0f;
+			getActivity().getWindow().setAttributes(layoutParams);
+		}
+	}
+
+	@Override
+	public void onUserActive() {
+		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getWakelock()) {
+			WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
+			layoutParams.screenBrightness = mDefaultBrightness;
+			getActivity().getWindow().setAttributes(layoutParams);
+		}
 	}
 
 	/**
