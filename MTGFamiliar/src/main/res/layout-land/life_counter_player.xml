@@ -78,6 +78,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/player_history_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="vertical"

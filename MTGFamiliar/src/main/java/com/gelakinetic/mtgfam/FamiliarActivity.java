@@ -90,7 +90,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 	/* PayPal URL */
 	@SuppressWarnings("SpellCheckingInspection")
-	private static final String PAYPAL_URL = "https:// www.paypal.com/cgi-bin/webscr?cmd=_donations" +
+	private static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
 			"&business=SZK4TAH2XBZNC&lc=US&item_name=MTG%20Familiar&currency_code=USD" +
 			"&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
 
@@ -98,7 +98,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public DrawerLayout mDrawerLayout;
 	public ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-	private boolean mIsMenuVisible;
+	public boolean mIsMenuVisible;
 
 	/* Used to pass results between fragments */
 	private Bundle mFragResults;
@@ -197,8 +197,8 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 		mUpdatingRoundTimer = false;
 
-		// TODO causes onpause onresume to be called twice on rotations
-		/* Check for TTS support, the result will be caught in onActivityResult() */
+		/* Check for TTS support, the result will be caught in onActivityResult()
+		 * Launching this intent will cause the activity lifecycle to call onPause() and onResume() twice  */
 		if (mPreferenceAdapter.getTtsShowDialog()) {
 			Intent checkIntent = new Intent();
 			checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
@@ -409,7 +409,43 @@ public class FamiliarActivity extends FragmentActivity {
 		else {
 			/* App launched as regular, show the default fragment TODO (should check preferences) */
 			if (savedInstanceState == null) {
-				selectItem(R.string.main_life_counter);
+
+				String defaultFragment = mPreferenceAdapter.getDefaultFragment();
+
+				FamiliarFragment frag;
+				if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
+					selectItem(R.string.main_card_search);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
+					selectItem(R.string.main_life_counter);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
+					selectItem(R.string.main_mana_pool);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
+					selectItem(R.string.main_dice);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
+					selectItem(R.string.main_trade);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
+					selectItem(R.string.main_wishlist);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
+					selectItem(R.string.main_timer);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
+					selectItem(R.string.main_rules);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
+					selectItem(R.string.main_judges_corner);
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
+					selectItem(R.string.main_mojhosto);
+				}
+				else {
+					selectItem(R.string.main_card_search);
+				}
 				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
@@ -986,11 +1022,12 @@ public class FamiliarActivity extends FragmentActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		/* The ringtone picker in the preference fragment and RoundTimerFragment will send a result here */
-		assert data.getExtras() != null;
-		if (data.getExtras().keySet().contains(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)) {
-			Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-			if (uri != null) {
-				mPreferenceAdapter.setTimerSound(uri.toString());
+		if (data != null && data.getExtras() != null) {
+			if (data.getExtras().keySet().contains(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)) {
+				Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+				if (uri != null) {
+					mPreferenceAdapter.setTimerSound(uri.toString());
+				}
 			}
 		}
 

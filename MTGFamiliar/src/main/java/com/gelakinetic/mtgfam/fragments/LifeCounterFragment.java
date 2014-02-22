@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -15,8 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -28,26 +29,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-/**
- * TODO save life / poison state on rotation, etc
- */
 public class LifeCounterFragment extends FamiliarFragment implements TextToSpeech.OnInitListener, AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnUtteranceCompletedListener {
 
+	/* Dialog Constants */
 	private static final int REMOVE_PLAYER_DIALOG = 0;
 	private static final int RESET_CONFIRM_DIALOG = 1;
+	private static final int DIALOG_CHANGE_DISPLAY = 2;
+
+	/* Constant for persisting data */
 	private static final String DISPLAY_MODE = "display_mode";
+
+	/* Constants for TTS */
 	private static final String LIFE_ANNOUNCE = "life_announce";
 	private static final int IMPROBABLE_NUMBER = 531865548;
 	private static final String OVER_9000_KEY = "@over_9000";
 
-	private LinearLayout mLinearLayout;
-	private ArrayList<LcPlayer> mPlayers = new ArrayList<LcPlayer>();
+	/* constants for display mode */
+	public static final int DISPLAY_NORMAL = 0;
+	public static final int DISPLAY_COMPACT = 1;
+	public static final int DISPLAY_COMMANDER = 2;
+
+	/* UI Elements, measurement */
+	private GridLayout mGridLayout;
 	private ImageView mPoisonButton;
 	private ImageView mLifeButton;
-	private int mDisplayMode;
+	private ImageView mCommanderButton;
+	private View mScrollView;
 	private int mListSizeWidth = -1;
 	private int mListSizeHeight = -1;
-	private View mScrollView;
+
+	private int mDisplayMode = DISPLAY_NORMAL;
+
+	/* Keeping track of players */
+	private ArrayList<LcPlayer> mPlayers = new ArrayList<LcPlayer>();
+	private int mStatDisplaying = LcPlayer.LIFE;
 	private int mLargestPlayerNumber = 0;
 
 	/* Stuff for TTS */
@@ -58,69 +73,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	LinkedList<String> mVocalizations = new LinkedList<String>();
 
 	/**
-	 * Force the child fragments to override onCreateView
-	 *
-	 * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
-	 * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
-	 *                           fragment should not add the view itself, but this can be used to generate the
-	 *                           LayoutParams of the view.
-	 * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
-	 *                           here.
-	 * @return The inflated view
-	 */
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mListSizeWidth = -1;
-		mListSizeHeight = -1;
-
-		View myFragmentView = inflater.inflate(R.layout.life_counter_frag, container, false);
-		assert myFragmentView != null;
-
-		mLinearLayout = (LinearLayout) myFragmentView.findViewById(R.id.playerList);
-		mScrollView = myFragmentView.findViewById(R.id.playerScrollView);
-		ViewTreeObserver viewTreeObserver = mScrollView.getViewTreeObserver();
-		assert viewTreeObserver != null;
-		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			public void onGlobalLayout() {
-				if (mListSizeWidth == -1) {
-					mListSizeWidth = mScrollView.getWidth();
-					mListSizeHeight = mScrollView.getHeight();
-					for (LcPlayer player : mPlayers) {
-						player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight);
-					}
-				}
-			}
-		});
-
-		mPoisonButton = (ImageView) myFragmentView.findViewById(R.id.poison_button);
-		mPoisonButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				setMode(LcPlayer.POISON);
-			}
-		});
-		mLifeButton = (ImageView) myFragmentView.findViewById(R.id.life_button);
-		mLifeButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				setMode(LcPlayer.LIFE);
-			}
-		});
-		myFragmentView.findViewById(R.id.reset_button).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				showDialog(RESET_CONFIRM_DIALOG);
-			}
-		});
-
-		if (savedInstanceState != null) {
-			mDisplayMode = savedInstanceState.getInt(DISPLAY_MODE, LcPlayer.LIFE);
-		}
-
-		return myFragmentView;
-	}
-
-	/**
-	 * Assume that every fragment has a menu
-	 * Assume that every fragment wants to retain it's instance state (onCreate/onDestroy called
-	 * once, onCreateView called on rotations etc)
+	 * When the fragment is created, set up the TTS engine, AudioManager, and MediaPlayer for life total vocalization
 	 *
 	 * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
 	 */
@@ -141,6 +94,9 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		});
 	}
 
+	/**
+	 * When the fragment is destroyed, clean up the TTS engine and MediaPlayer
+	 */
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -155,7 +111,104 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	}
 
 	/**
-	 * TODO
+	 * Set up the base UI, clear the measurement data and attach a ViewTreeObserver to measure the UI when it is drawn.
+	 * Get the life/poison mode from the savedInstanceState if the fragment is persisting.
+	 *
+	 * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+	 * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
+	 *                           fragment should not add the view itself, but this can be used to generate the
+	 *                           LayoutParams of the view.
+	 * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
+	 *                           here.
+	 * @return The inflated view
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		mListSizeWidth = -1;
+		mListSizeHeight = -1;
+
+		View myFragmentView = inflater.inflate(R.layout.life_counter_frag, container, false);
+		assert myFragmentView != null;
+		mGridLayout = (GridLayout) myFragmentView.findViewById(R.id.playerList);
+
+		mDisplayMode = Integer.valueOf(((FamiliarActivity) getActivity()).mPreferenceAdapter.getDisplayMode());
+
+		setColumns();
+
+		mScrollView = myFragmentView.findViewById(R.id.playerScrollView);
+		ViewTreeObserver viewTreeObserver = mScrollView.getViewTreeObserver();
+		assert viewTreeObserver != null;
+		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			public void onGlobalLayout() {
+				if (mListSizeWidth == -1) {
+					mListSizeWidth = mScrollView.getWidth();
+					mListSizeHeight = mScrollView.getHeight();
+					for (LcPlayer player : mPlayers) {
+						player.setSize(getActivity().getResources().getConfiguration().orientation,
+								mListSizeWidth, mListSizeHeight, mDisplayMode);
+					}
+				}
+			}
+		});
+
+		mPoisonButton = (ImageView) myFragmentView.findViewById(R.id.poison_button);
+		mPoisonButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				setStatDisplaying(LcPlayer.POISON);
+			}
+		});
+
+		mLifeButton = (ImageView) myFragmentView.findViewById(R.id.life_button);
+		mLifeButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				setStatDisplaying(LcPlayer.LIFE);
+			}
+		});
+
+		mCommanderButton = (ImageView) myFragmentView.findViewById(R.id.reset_button);
+		mCommanderButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				showDialog(RESET_CONFIRM_DIALOG);
+			}
+		});
+
+		if (savedInstanceState != null) {
+			mStatDisplaying = savedInstanceState.getInt(DISPLAY_MODE, LcPlayer.LIFE);
+		}
+
+		return myFragmentView;
+	}
+
+	private void setColumns() {
+		if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			switch (mDisplayMode) {
+				case DISPLAY_NORMAL:
+					mGridLayout.setColumnCount(1);
+					break;
+				case DISPLAY_COMPACT:
+					mGridLayout.setColumnCount(2);
+					break;
+				case DISPLAY_COMMANDER:
+					break;
+			}
+		}
+	}
+
+	/**
+	 * When the orientation is changed, save mStatDisplaying so that the fragment can display the right thing
+	 * when it is recreated
+	 *
+	 * @param outState Bundle in which to place your saved state.
+	 */
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt(DISPLAY_MODE, mStatDisplaying);
+		super.onSaveInstanceState(outState);
+	}
+
+	/**
+	 * When the fragment is paused, save all the player data to shared preferences, in string form, then remove all
+	 * the player views from the ListView and clear the players ArrayList.
 	 */
 	@Override
 	public void onPause() {
@@ -166,13 +219,15 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		}
 		((FamiliarActivity) getActivity()).mPreferenceAdapter.setPlayerData(playerData);
 		for (LcPlayer player : mPlayers) {
-			mLinearLayout.removeView(player.getView());
+			mGridLayout.removeView(player.mView);
 		}
 		mPlayers.clear();
 	}
 
 	/**
-	 * TODO
+	 * When the fragment is resumed, attempt to populate the life counter with player information in shared preferences.
+	 * If that doesn't exist, add the two default players. Set whether to display life or poison based on persisted
+	 * data.
 	 */
 	@Override
 	public void onResume() {
@@ -189,10 +244,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				addPlayer(line);
 			}
 		}
-		setMode(mDisplayMode);
+		setStatDisplaying(mStatDisplaying);
 	}
 
 	/**
+	 * Inflate the options menu.
+	 *
 	 * @param menu     The options menu in which you place your items.
 	 * @param inflater The inflater to use to inflate the menu
 	 */
@@ -203,24 +260,28 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	}
 
 	/**
-	 * TODO
+	 * If TTS is not initialized, remove it from the menu. If it is initialized, show it.
 	 *
-	 * @param menu
+	 * @param menu The menu to show or hide the "announce life totals" button in.
 	 */
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		if (!mTtsInit) {
-			menu.findItem(R.id.announce_life).setVisible(false);
+		MenuItem menuItem = menu.findItem(R.id.announce_life);
+		assert menuItem != null;
+		if (!mTtsInit || !((FamiliarActivity) getActivity()).mIsMenuVisible) {
+			menuItem.setVisible(false);
 		}
 		else {
-			menu.findItem(R.id.announce_life).setVisible(true);
+			menuItem.setVisible(true);
 		}
 	}
 
 	/**
-	 * @param item
-	 * @return
+	 * Handle menu items being selected
+	 *
+	 * @param item The menu item selected
+	 * @return true if the selection was acted upon, false otherwise
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -236,25 +297,17 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				announceLifeTotals();
 				return true;
 			case R.id.change_gathering:
+				// TODO
 				return true;
 			case R.id.set_gathering:
+				// TODO
 				return true;
 			case R.id.display_mode:
+				showDialog(DIALOG_CHANGE_DISPLAY);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
-
-	/**
-	 * TODO
-	 *
-	 * @param outState Bundle in which to place your saved state.
-	 */
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt(DISPLAY_MODE, mDisplayMode);
-		super.onSaveInstanceState(outState);
 	}
 
 	/**
@@ -281,36 +334,38 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
 				setShowsDialog(true);
 
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				switch (id) {
 					case REMOVE_PLAYER_DIALOG: {
+						/* Get all the player names */
 						String[] names = new String[mPlayers.size()];
 						for (int i = 0; i < mPlayers.size(); i++) {
 							names[i] = mPlayers.get(i).mName;
 						}
 
-						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+						/* Build the dialog */
 						builder.setTitle(getString(R.string.life_counter_remove_player));
 
 						builder.setItems(names, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int item) {
-								mLinearLayout.removeView(mPlayers.get(item).getView());
+								/* Remove the view from the LinearLayout, remove the player from the ArrayList,
+								   redraw */
+								mGridLayout.removeView(mPlayers.get(item).mView);
 								mPlayers.remove(item);
-								mLinearLayout.invalidate();
+								mGridLayout.invalidate();
 							}
 						});
 
 						return builder.create();
 					}
 					case RESET_CONFIRM_DIALOG: {
-						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-						builder
-								.setMessage(getString(R.string.life_counter_clear_dialog_text))
+						builder.setMessage(getString(R.string.life_counter_clear_dialog_text))
 								.setCancelable(true)
 								.setPositiveButton(getString(R.string.dialog_both), new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int id) {
 										/* Remove all players */
 										for (LcPlayer player : mPlayers) {
-											mLinearLayout.removeView(player.getView());
+											mGridLayout.removeView(player.mView);
 										}
 										mPlayers.clear();
 
@@ -321,19 +376,52 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 										dialog.dismiss();
 									}
-								}).setNeutralButton(getString(R.string.dialog_life), new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								for (LcPlayer player : mPlayers) {
-									player.resetStats();
-								}
-								mLinearLayout.invalidate();
-								dialog.dismiss();
-							}
-						}).setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.dismiss();
-							}
-						});
+								})
+								.setNeutralButton(getString(R.string.dialog_life), new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int id) {
+										/* Only reset life totals */
+										for (LcPlayer player : mPlayers) {
+											player.resetStats();
+										}
+										mGridLayout.invalidate();
+										dialog.dismiss();
+									}
+								})
+								.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int id) {
+										dialog.dismiss();
+									}
+								});
+
+						return builder.create();
+					}
+					case DIALOG_CHANGE_DISPLAY: {
+
+						builder.setTitle(R.string.pref_display_mode_title);
+						builder.setSingleChoiceItems(getResources().getStringArray(R.array.display_array_entries), mDisplayMode,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int which) {
+										dialog.dismiss();
+
+										if (mDisplayMode != which) {
+											mDisplayMode = which;
+
+											// And also update the preference
+											((FamiliarActivity) getActivity()).mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
+
+											mGridLayout.removeAllViews();
+
+											setColumns();
+
+											for (LcPlayer player : mPlayers) {
+												mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
+												if (mListSizeHeight != -1) {
+													player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight, mDisplayMode);
+												}
+											}
+										}
+									}
+								});
 
 						return builder.create();
 					}
@@ -348,31 +436,40 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	}
 
 	/**
-	 * TODO
+	 * Change whether life or poison is displayed. This will redraw buttons and notify the LcPlayer objects to show
+	 * different things.
 	 *
-	 * @param displayMode
+	 * @param statMode either LcPlayer.LIFE or LcPlayer.POISON
 	 */
-	private void setMode(int displayMode) {
-		mDisplayMode = displayMode;
+	private void setStatDisplaying(int statMode) {
+		mStatDisplaying = statMode;
 
-		switch (displayMode) {
+		switch (statMode) {
 			case LcPlayer.LIFE:
-				mPoisonButton.setImageResource(R.drawable.lc_poison_enabled);
-				mLifeButton.setImageResource(R.drawable.lc_life_disabled);
-				break;
-			case LcPlayer.POISON:
 				mPoisonButton.setImageResource(R.drawable.lc_poison_disabled);
 				mLifeButton.setImageResource(R.drawable.lc_life_enabled);
+				mCommanderButton.setImageResource(R.drawable.lc_commander_disabled);
+				break;
+			case LcPlayer.POISON:
+				mPoisonButton.setImageResource(R.drawable.lc_poison_enabled);
+				mLifeButton.setImageResource(R.drawable.lc_life_disabled);
+				mCommanderButton.setImageResource(R.drawable.lc_commander_disabled);
+				break;
+			case LcPlayer.COMMANDER:
+				mPoisonButton.setImageResource(R.drawable.lc_poison_disabled);
+				mLifeButton.setImageResource(R.drawable.lc_life_disabled);
+				mCommanderButton.setImageResource(R.drawable.lc_commander_enabled);
 				break;
 		}
 
 		for (LcPlayer player : mPlayers) {
-			player.setMode(displayMode);
+			player.setMode(statMode);
 		}
 	}
 
 	/**
-	 * TODO
+	 * Add a default player. It is added to the ArrayList and the view is added to the LinearLayout. It is given an
+	 * incremented number name i.e. Player N
 	 */
 	private void addPlayer() {
 		LcPlayer player = new LcPlayer((FamiliarActivity) getActivity());
@@ -381,17 +478,20 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
 
 		mPlayers.add(player);
-		mLinearLayout.addView(player.newView());
+		mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
 		if (mListSizeHeight != -1) {
-			player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight);
+			player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight, mDisplayMode);
 		}
 
+		player.setDisplayMode(mDisplayMode);
 	}
 
 	/**
-	 * TODO
+	 * Add a player from a semicolon delimited string of data. The delimited fields are:
+	 * name; life; life History; poison; poison History; default Life; commander History; commander casting
+	 * The history entries are comma delimited
 	 *
-	 * @param line
+	 * @param line The string of player data to build an object from
 	 */
 	private void addPlayer(String line) {
 		try {
@@ -488,9 +588,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			}
 
 			mPlayers.add(player);
-			mLinearLayout.addView(player.newView());
+			mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
+			player.setDisplayMode(mDisplayMode);
+
 			if (mListSizeHeight != -1) {
-				player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight);
+				player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight, mDisplayMode);
 			}
 		} catch (
 				ArrayIndexOutOfBoundsException e
@@ -504,12 +606,14 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	/**
 	 * When mTts is initialized, set the boolean flag and display the option in the ActionBar
 	 *
-	 * @param i
+	 * @param status SUCCESS or ERROR.
 	 */
 	@Override
-	public void onInit(int i) {
-		mTtsInit = true;
-		getActivity().invalidateOptionsMenu();
+	public void onInit(int status) {
+		if (status == TextToSpeech.SUCCESS) {
+			mTtsInit = true;
+			getActivity().invalidateOptionsMenu();
+		}
 	}
 
 	/**
@@ -520,29 +624,34 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		if (mTtsInit) {
 			mVocalizations.clear();
 			for (LcPlayer p : mPlayers) {
-				switch (mDisplayMode) {
+				switch (mStatDisplaying) {
 					case LcPlayer.LIFE:
 						if (p.mLife > 9000) {
-							/* If the life is over 9000, split the string on an IMPROBABLE_NUMBER, and insert a call to the m9000Player */
-							String tmp = String.format(getString(R.string.life_counter_spoken_life), p.mName, IMPROBABLE_NUMBER);
+							/* If the life is over 9000, split the string on an IMPROBABLE_NUMBER, and insert a call to
+							   the m9000Player */
+							String tmp = String
+									.format(getString(R.string.life_counter_spoken_life), p.mName, IMPROBABLE_NUMBER);
 							String parts[] = tmp.split(Integer.toString(IMPROBABLE_NUMBER));
 							mVocalizations.add(parts[0]);
 							mVocalizations.add(OVER_9000_KEY);
 							mVocalizations.add(parts[1]);
 						}
 						else {
-							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life), p.mName, p.mLife));
+							mVocalizations.add(
+									String.format(getString(R.string.life_counter_spoken_life), p.mName, p.mLife));
 						}
 						break;
 					case LcPlayer.POISON:
-						mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison), p.mName, p.mPoison));
+						mVocalizations.add(
+								String.format(getString(R.string.life_counter_spoken_poison), p.mName, p.mPoison));
 						break;
 				}
 
 			}
 
 			if (mVocalizations.size() > 0) {
-				int res = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+				int res = mAudioManager.requestAudioFocus(
+						this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
 				if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 					onUtteranceCompleted(LIFE_ANNOUNCE);
 				}

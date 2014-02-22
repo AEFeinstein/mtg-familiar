@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,7 @@ public class LcPlayer {
 	/* Constants */
 	public final static int LIFE = 0;
 	public final static int POISON = 1;
+	public final static int COMMANDER = 2;
 
 	public final static int NAME_DIALOG = 0;
 
@@ -44,9 +47,10 @@ public class LcPlayer {
 
 	/* UI Elements */
 	private TextView mReadoutTextView;
-	private View mView;
+	public View mView;
 	private ListView mHistoryList;
 	private TextView mNameTextView;
+	private LinearLayout mHistoryListView;
 
 	/* Helper */
 	private Handler mHandler = new Handler();
@@ -66,7 +70,9 @@ public class LcPlayer {
 			entry.mAbsolute = mLife;
 			if (entry.mDelta != 0) {
 				mLifeHistory.add(0, entry);
-				mHistoryLifeAdapter.notifyDataSetChanged();
+				if (mHistoryLifeAdapter != null) {
+					mHistoryLifeAdapter.notifyDataSetChanged();
+				}
 			}
 
 			entry = new HistoryEntry();
@@ -79,7 +85,9 @@ public class LcPlayer {
 			entry.mAbsolute = mPoison;
 			if (entry.mDelta != 0) {
 				mPoisonHistory.add(0, entry);
-				mHistoryPoisonAdapter.notifyDataSetChanged();
+				if (mHistoryPoisonAdapter != null) {
+					mHistoryPoisonAdapter.notifyDataSetChanged();
+				}
 			}
 		}
 	};
@@ -103,17 +111,22 @@ public class LcPlayer {
 		mMode = mode;
 		switch (mMode) {
 			case LIFE:
-				mHistoryList.setAdapter(mHistoryLifeAdapter);
+				if (mHistoryList != null) {
+					mHistoryList.setAdapter(mHistoryLifeAdapter);
+					mHistoryList.invalidate();
+				}
 				mReadoutTextView.setText(mLife + "");
 				mReadoutTextView.setTextColor(mActivity.getResources().getColor(android.R.color.holo_red_dark));
 				break;
 			case POISON:
-				mHistoryList.setAdapter(mHistoryPoisonAdapter);
+				if (mHistoryList != null) {
+					mHistoryList.setAdapter(mHistoryPoisonAdapter);
+					mHistoryList.invalidate();
+				}
 				mReadoutTextView.setText(mPoison + "");
 				mReadoutTextView.setTextColor(mActivity.getResources().getColor(android.R.color.holo_green_dark));
 				break;
 		}
-		mHistoryList.invalidate();
 	}
 
 	/**
@@ -142,18 +155,30 @@ public class LcPlayer {
 	 *
 	 * @return The View for this player
 	 */
-	public View newView() {
-		mView = LayoutInflater.from(mActivity).inflate(R.layout.life_counter_player, null);
+	public View newView(boolean isCompact) {
 		assert mView != null;
+
+		if (isCompact) {
+			mView = LayoutInflater.from(mActivity).inflate(R.layout.life_counter_player_compact, null);
+			mHistoryList = null;
+			mHistoryListView = null;
+			mHistoryLifeAdapter = null;
+			mHistoryPoisonAdapter = null;
+		}
+		else {
+			mView = LayoutInflater.from(mActivity).inflate(R.layout.life_counter_player, null);
+			mHistoryList = (ListView) mView.findViewById(R.id.player_history);
+			mHistoryListView = (LinearLayout) mView.findViewById(R.id.player_history_layout);
+			mHistoryList.setAdapter(mHistoryLifeAdapter);
+			mHistoryLifeAdapter = new HistoryArrayAdapter(mActivity, LIFE);
+			mHistoryPoisonAdapter = new HistoryArrayAdapter(mActivity, POISON);
+		}
+
 		mNameTextView = (TextView) mView.findViewById(R.id.player_name);
 		if (mName != null) {
 			mNameTextView.setText(mName);
 		}
 		mReadoutTextView = (TextView) mView.findViewById(R.id.player_readout);
-		mHistoryList = (ListView) mView.findViewById(R.id.player_history);
-		mHistoryLifeAdapter = new HistoryArrayAdapter(mActivity, LIFE);
-		mHistoryPoisonAdapter = new HistoryArrayAdapter(mActivity, POISON);
-		mHistoryList.setAdapter(mHistoryLifeAdapter);
 
 		mView.findViewById(R.id.player_minus1).setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -190,12 +215,37 @@ public class LcPlayer {
 		return mView;
 	}
 
-	public View getView() {
-		return mView;
+	/**
+	 * Sets the display mode by showing or hiding the history
+	 *
+	 * @param mode either LifeCounterFragment.DISPLAY_COMPACT or LifeCounterFragment.DISPLAY_NORMAL
+	 */
+	public void setDisplayMode(int mode) {
+		if (mHistoryListView != null) {
+			if (mActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+				switch (mode) {
+					case LifeCounterFragment.DISPLAY_NORMAL:
+						mHistoryListView.setVisibility(View.VISIBLE);
+						break;
+					case LifeCounterFragment.DISPLAY_COMPACT:
+						mHistoryListView.setVisibility(View.GONE);
+						break;
+					case LifeCounterFragment.DISPLAY_COMMANDER:
+						break;
+				}
+			}
+		}
 	}
 
+	/**
+	 * Returns a string containing all the player data in the form:
+	 * name; life; life History; poison; poison History; default Life; commander History; commander casting
+	 * The history entries are comma delimited
+	 *
+	 * @return A string of player data
+	 */
 	public String toString() {
-		String data = mName + ";";
+		String data = mName.replace(";", "") + ";";
 
 		boolean first = true;
 		data += mLife + ";";
@@ -241,6 +291,9 @@ public class LcPlayer {
 		return data + ";\n";
 	}
 
+	/**
+	 * Reset the life, poison, and commander damage to default while preserving the name
+	 */
 	public void resetStats() {
 		mLifeHistory.clear();
 		mPoisonHistory.clear();
@@ -262,15 +315,31 @@ public class LcPlayer {
 		}
 	}
 
-	public void setSize(int orientation, int mListSizeWidth, int mListSizeHeight) {
+	/**
+	 * Set the size of the player's view
+	 *
+	 * @param orientation       either Configuration.ORIENTATION_LANDSCAPE Configuration.ORIENTATION_PORTRAIT
+	 * @param mGridLayoutWidth  The width of the GridLayout in which to put the player's view
+	 * @param mGridLayoutHeight The height of the GridLayout in which to put the player's view
+	 * @param mDisplayMode      either LifeCounterFragment.DISPLAY_COMPACT or LifeCounterFragment.DISPLAY_NORMAL
+	 */
+	public void setSize(int orientation, int mGridLayoutWidth, int mGridLayoutHeight, int mDisplayMode) {
+		GridLayout.LayoutParams params = (GridLayout.LayoutParams) mView.getLayoutParams();
+		assert params != null;
 		switch (orientation) {
 			case Configuration.ORIENTATION_LANDSCAPE:
-				mView.setLayoutParams(new LinearLayout.LayoutParams(mListSizeWidth/2, mListSizeHeight));
+				params.width = mGridLayoutWidth / 2;
+				params.height = mGridLayoutHeight;
 				break;
 			case Configuration.ORIENTATION_PORTRAIT:
-				mView.setLayoutParams(new LinearLayout.LayoutParams(mListSizeWidth, mListSizeHeight/2));
+				params.width = mGridLayoutWidth;
+				params.height = mGridLayoutHeight / 2;
 				break;
 		}
+		if (mDisplayMode == LifeCounterFragment.DISPLAY_COMPACT) {
+			params.width /= 2;
+		}
+		mView.setLayoutParams(params);
 	}
 
 	/**
@@ -338,6 +407,7 @@ public class LcPlayer {
 			}
 			return view;
 		}
+
 	}
 
 	/**
@@ -348,11 +418,6 @@ public class LcPlayer {
 	void showDialog(final int id) {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
-
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
-//		if (!this.isVisible()) {
-//			return;
-//		}
 
 		mActivity.removeDialogFragment(mActivity.getSupportFragmentManager());
 
