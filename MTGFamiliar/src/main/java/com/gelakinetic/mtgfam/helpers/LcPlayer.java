@@ -302,8 +302,10 @@ public class LcPlayer {
 		mPoison = 0;
 		mCommanderCasting = 0;
 
-		mHistoryLifeAdapter.notifyDataSetChanged();
-		mHistoryPoisonAdapter.notifyDataSetChanged();
+		if (mHistoryLifeAdapter != null) {
+			mHistoryLifeAdapter.notifyDataSetChanged();
+			mHistoryPoisonAdapter.notifyDataSetChanged();
+		}
 
 		switch (mMode) {
 			case LIFE:
@@ -318,24 +320,25 @@ public class LcPlayer {
 	/**
 	 * Set the size of the player's view
 	 *
-	 * @param orientation       either Configuration.ORIENTATION_LANDSCAPE Configuration.ORIENTATION_PORTRAIT
 	 * @param mGridLayoutWidth  The width of the GridLayout in which to put the player's view
 	 * @param mGridLayoutHeight The height of the GridLayout in which to put the player's view
 	 * @param mDisplayMode      either LifeCounterFragment.DISPLAY_COMPACT or LifeCounterFragment.DISPLAY_NORMAL
 	 */
-	public void setSize(int orientation, int mGridLayoutWidth, int mGridLayoutHeight, int mDisplayMode) {
+	public void setSize(int mGridLayoutWidth, int mGridLayoutHeight, int mDisplayMode) {
 		GridLayout.LayoutParams params = (GridLayout.LayoutParams) mView.getLayoutParams();
 		assert params != null;
-		switch (orientation) {
-			case Configuration.ORIENTATION_LANDSCAPE:
-				params.width = mGridLayoutWidth / 2;
-				params.height = mGridLayoutHeight;
-				break;
-			case Configuration.ORIENTATION_PORTRAIT:
-				params.width = mGridLayoutWidth;
-				params.height = mGridLayoutHeight / 2;
-				break;
+
+		if(mGridLayoutHeight > mGridLayoutWidth) {
+			/* Portrait */
+			params.width = mGridLayoutWidth;
+			params.height = mGridLayoutHeight / 2;
 		}
+		else {
+			/* Landscape */
+			params.width = mGridLayoutWidth / 2;
+			params.height = mGridLayoutHeight;
+		}
+
 		if (mDisplayMode == LifeCounterFragment.DISPLAY_COMPACT) {
 			params.width /= 2;
 		}

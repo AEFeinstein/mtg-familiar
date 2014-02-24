@@ -93,6 +93,20 @@ public abstract class FamiliarFragment extends Fragment {
 	}
 
 	/**
+	 * Called when the Fragment is no longer resumed.  This is generally
+	 * tied to {@link Activity#onPause() Activity.onPause} of the containing
+	 * Activity's lifecycle.
+	 *
+	 * In this case, always remove the dialog, since it can contain stale references to the pre-rotated activity and
+	 * fragment after rotation
+	 */
+	@Override
+	public void onPause() {
+		super.onPause();
+		removeDialog(getFragmentManager());
+	}
+
+	/**
 	 * This will inflate the menu as usual. It also adds a SearchView to the ActionBar if the
 	 * Fragment does not override the search key, or a search button if it does override the key
 	 *

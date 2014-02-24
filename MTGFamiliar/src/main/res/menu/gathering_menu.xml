@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/gsave_gathering"
+        android:showAsAction="ifRoom"
+        android:title="@string/gathering_save"
+        android:icon="@drawable/ic_action_save"/>
+
+    <item
+        android:id="@+id/gload_gathering"
+        android:icon="@drawable/ic_action_collection"
+        android:showAsAction="ifRoom"
+        android:title="@string/gathering_load"/>
+
+    <item
+        android:id="@+id/gdelete_gathering"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_discard"
+        android:title="@string/gathering_delete"/>
+
+    <item
+        android:id="@+id/gadd_player"
+        android:icon="@drawable/ic_action_add"
+        android:showAsAction="ifRoom"
+        android:title="@string/gathering_add_player"/>
+
+    <item
+        android:id="@+id/gremove_player"
+        android:icon="@drawable/ic_action_remove"
+        android:showAsAction="ifRoom"
+        android:title="@string/gathering_remove_player"/>
+
+</menu>

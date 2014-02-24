@@ -19,11 +19,15 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
+import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
+import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
+import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +40,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	private static final int REMOVE_PLAYER_DIALOG = 0;
 	private static final int RESET_CONFIRM_DIALOG = 1;
 	private static final int DIALOG_CHANGE_DISPLAY = 2;
+	private static final int SET_GATHERING_DIALOG = 3;
 
 	/* Constant for persisting data */
 	private static final String DISPLAY_MODE = "display_mode";
@@ -148,8 +153,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 					mListSizeWidth = mScrollView.getWidth();
 					mListSizeHeight = mScrollView.getHeight();
 					for (LcPlayer player : mPlayers) {
-						player.setSize(getActivity().getResources().getConfiguration().orientation,
-								mListSizeWidth, mListSizeHeight, mDisplayMode);
+						player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
 					}
 				}
 			}
@@ -332,10 +336,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				announceLifeTotals();
 				return true;
 			case R.id.change_gathering:
-				// TODO
+				GatheringsFragment rlFrag = new GatheringsFragment();
+				startNewFragment(rlFrag, null);
 				return true;
 			case R.id.set_gathering:
-				// TODO
+				showDialog(SET_GATHERING_DIALOG);
 				return true;
 			case R.id.display_mode:
 				showDialog(DIALOG_CHANGE_DISPLAY);
@@ -451,13 +456,49 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 											for (LcPlayer player : mPlayers) {
 												mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
 												if (mListSizeHeight != -1) {
-													player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight, mDisplayMode);
+													player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
 												}
 											}
 										}
 									}
 								});
 
+						return builder.create();
+					}
+					case SET_GATHERING_DIALOG: {
+						GatheringsIO gIO = new GatheringsIO(getActivity());
+						if (gIO.getNumberOfGatherings() <= 0) {
+							Toast.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist, Toast.LENGTH_LONG).show();
+							setShowsDialog(false);
+							return null;
+						}
+
+						final ArrayList<String> gatherings = gIO.getGatheringFileList();
+						final String[] properNames = new String[gatherings.size()];
+						for (int idx = 0; idx < gatherings.size(); idx++) {
+							properNames[idx] = gIO.ReadGatheringNameFromXML(gatherings.get(idx));
+						}
+
+						builder.setTitle(R.string.life_counter_gathering_dialog_title);
+						builder.setItems(properNames, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialogInterface, final int item) {
+								/* If the user rotates while the dialog is open, the dialog stays open but crashes
+								   because getActivity() will return null for some odd reason. */
+								Gathering gathering = (new GatheringsIO(getActivity())).ReadGatheringXML(gatherings.get(item));
+
+								mDisplayMode = gathering.mDisplayMode;
+								mGridLayout.removeAllViews();
+								mPlayers.clear();
+								setColumns();
+
+								((FamiliarActivity) getActivity()).mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
+
+								ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
+								for (GatheringsPlayerData player : players) {
+									addPlayer(player.mName, player.mStartingLife);
+								}
+							}
+						});
 						return builder.create();
 					}
 					default: {
@@ -515,7 +556,38 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		mPlayers.add(player);
 		mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
 		if (mListSizeHeight != -1) {
-			player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight, mDisplayMode);
+			player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
+		}
+
+		player.setDisplayMode(mDisplayMode);
+	}
+
+	/**
+	 * Add a player from the gatherings
+	 *
+	 * @param name         The player's name
+	 * @param startingLife The player's starting life total
+	 */
+	private void addPlayer(String name, int startingLife) {
+		LcPlayer player = new LcPlayer((FamiliarActivity) getActivity());
+		player.mName = name;
+		player.mDefaultLifeTotal = startingLife;
+		player.mLife = startingLife;
+
+		try {
+			String nameParts[] = player.mName.split(" ");
+			int number = Integer.parseInt(nameParts[nameParts.length - 1]);
+			if (number > mLargestPlayerNumber) {
+				mLargestPlayerNumber = number;
+			}
+		} catch (NumberFormatException e) {
+				/* eat it */
+		}
+
+		mPlayers.add(player);
+		mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
+		if (mListSizeHeight != -1) {
+			player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
 		}
 
 		player.setDisplayMode(mDisplayMode);
@@ -627,7 +699,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			player.setDisplayMode(mDisplayMode);
 
 			if (mListSizeHeight != -1) {
-				player.setSize(getActivity().getResources().getConfiguration().orientation, mListSizeWidth, mListSizeHeight, mDisplayMode);
+				player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
 			}
 		} catch (
 				ArrayIndexOutOfBoundsException e
