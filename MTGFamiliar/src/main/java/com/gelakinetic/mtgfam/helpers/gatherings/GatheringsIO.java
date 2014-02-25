@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.helpers.gatherings;
 
-import android.content.Context;
 import android.util.Xml;
 
 import org.w3c.dom.Document;
@@ -24,43 +23,26 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+/**
+ * This class is full of static methods to do IO for gatherings. The filesDir is a parameter everywhere since it is
+ * gotten with getActivity().getFilesDir(), which cannot be called from a static context
+ */
+@SuppressWarnings("SpellCheckingInspection")
 public class GatheringsIO {
 	final private static String FOLDER_PATH = "Gatherings";
+	/* If someone happens to also name their file this without ever reading this comment I'll donate my latest mythic
+	   rare to them. (Not really.) -Jon Bettger */
 	final private static String DEFAULT_FILE = "KENNESSAS";
-	// If someone happens to also name their file this without ever reading
-	// this comment I'll donate my latest mythic rare to them. (Not really.)
-	Context mContext;
 
-	public GatheringsIO(Context _mContext) {
-		mContext = _mContext;
-	}
-
-	// returns the default Gathering file name.
-	public Gathering getDefaultGathering() {
-		ArrayList<GatheringsPlayerData> players = new ArrayList<GatheringsPlayerData>();
-		Gathering gathering;
-
-		File path = new File(mContext.getFilesDir(), FOLDER_PATH);
-		File defaultFile = new File(path, DEFAULT_FILE + ".xml");
-
-		try {
-			if (!defaultFile.exists()) {
-				throw new FileNotFoundException();
-			}
-
-			gathering = ReadGatheringXML(defaultFile);
-
-		} catch (FileNotFoundException e) {
-			players.add(new GatheringsPlayerData("Player 1", 20));
-			players.add(new GatheringsPlayerData("Player 2", 20));
-			return new Gathering(players, 0);
-		}
-
-		return gathering;
-	}
-
-	public int getNumberOfGatherings() {
-		File path = new File(mContext.getFilesDir(), FOLDER_PATH);
+	/**
+	 * Returns the number of gathering .xml files in the given directory
+	 *
+	 * @param filesDir The absolute path to the directory on the filesystem where files created with
+	 *                 openFileOutput(String, int) are stored.
+	 * @return The number of gatherings .xml files
+	 */
+	public static int getNumberOfGatherings(File filesDir) {
+		File path = new File(filesDir, FOLDER_PATH);
 		if (!path.exists()) {
 			return 0;
 		}
@@ -78,10 +60,17 @@ public class GatheringsIO {
 		return count;
 	}
 
-	public ArrayList<String> getGatheringFileList() {
+	/**
+	 * Returns an ArrayList of Strings of the names of gatherings in filesDir
+	 *
+	 * @param filesDir The absolute path to the directory on the filesystem where files created with
+	 *                 openFileOutput(String, int) are stored.
+	 * @return All the names of the gatherings in filesDir
+	 */
+	public static ArrayList<String> getGatheringFileList(File filesDir) {
 		ArrayList<String> returnList = new ArrayList<String>();
 
-		File path = new File(mContext.getFilesDir(), FOLDER_PATH);
+		File path = new File(filesDir, FOLDER_PATH);
 		if (!path.exists()) {
 			return returnList;
 		}
@@ -99,18 +88,36 @@ public class GatheringsIO {
 		return returnList;
 	}
 
-	public void writeGatheringXML(ArrayList<GatheringsPlayerData> _players, String _gatheringName, int _displayMode) {
+	/**
+	 * Write the given data to a new gatherings .xml file
+	 *
+	 * @param _players       An ArrayList of player data, which includes names and starting life
+	 * @param _gatheringName The name of the gathering to write
+	 * @param _displayMode   The display mode of this gathering (normal, compact, or commander)
+	 * @param filesDir       The absolute path to the directory on the filesystem where files created with
+	 *                       openFileOutput(String, int) are stored.
+	 */
+	public static void writeGatheringXML(ArrayList<GatheringsPlayerData> _players, String _gatheringName,
+										 int _displayMode, File filesDir) {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddkkmmss", Locale.ENGLISH);
-
-		String gathering = sdf.format(date);
-
-		writeGatheringXML(gathering, _players, _gatheringName, _displayMode);
+		String fileName = sdf.format(date);
+		writeGatheringXML(fileName, _players, _gatheringName, _displayMode, filesDir);
 	}
 
-	public void writeGatheringXML(String _fileName, ArrayList<GatheringsPlayerData> _players, String _gatheringName,
-								  int _displayMode) {
-		String dataXML = "";
+	/**
+	 * Write the given data to a new gatherings .xml file
+	 *
+	 * @param _fileName      The name of the gatherings xml file to write, usually the date to the second
+	 * @param _players       An ArrayList of player data, which includes names and starting life
+	 * @param _gatheringName The name of the gathering to write
+	 * @param _displayMode   The display mode of this gathering (normal, compact, or commander)
+	 * @param filesDir       The absolute path to the directory on the filesystem where files created with
+	 *                       openFileOutput(String, int) are stored.
+	 */
+	private static void writeGatheringXML(String _fileName, ArrayList<GatheringsPlayerData> _players,
+										  String _gatheringName, int _displayMode, File filesDir) {
+		String dataXML;
 
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
@@ -159,10 +166,12 @@ public class GatheringsIO {
 		}
 
 		try {
-			File path = new File(mContext.getFilesDir(), FOLDER_PATH);
-			if (!path.exists())
-				if (!path.mkdirs())
+			File path = new File(filesDir, FOLDER_PATH);
+			if (!path.exists()) {
+				if (!path.mkdirs()) {
 					throw new FileNotFoundException("Folders not made");
+				}
+			}
 
 			File file = new File(path, _fileName + ".xml");
 
@@ -177,16 +186,30 @@ public class GatheringsIO {
 		}
 	}
 
-	public Gathering ReadGatheringXML(String _gatheringFile) {
-		File path = new File(mContext.getFilesDir(), FOLDER_PATH);
-		File gathering = new File(path, _gatheringFile);
+	/**
+	 * Read a gathering xml file and return a Gathering object
+	 *
+	 * @param _gatheringFileName The name of the gathering file
+	 * @param filesDir           The absolute path to the directory on the filesystem where files created with
+	 *                           openFileOutput(String, int) are stored.
+	 * @return A Gathering object containing players and a default display mode
+	 */
+	public static Gathering ReadGatheringXML(String _gatheringFileName, File filesDir) {
+		File path = new File(filesDir, FOLDER_PATH);
+		File gathering = new File(path, _gatheringFileName);
 
 		return ReadGatheringXML(gathering);
 	}
 
-	public Gathering ReadGatheringXML(File _gatheringFile) {
+	/**
+	 * Read a gathering xml file and return a Gathering object
+	 *
+	 * @param _gatheringFile A File object for the gathering
+	 * @return A Gathering object containing players and a default display mode
+	 */
+	public static Gathering ReadGatheringXML(File _gatheringFile) {
 		ArrayList<GatheringsPlayerData> playerList = new ArrayList<GatheringsPlayerData>();
-		Document dom = null;
+		Document dom;
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -206,10 +229,6 @@ public class GatheringsIO {
 
 		Element docEle = dom.getDocumentElement();
 
-		// Element playerList = (Element)
-		// docEle.getElementsByTagName("players").item(0);
-		// int numOfPlayers = Integer.parseInt(playerList.getAttribute("number"));
-
 		NodeList nl = docEle.getElementsByTagName("player");
 		if (nl != null && nl.getLength() > 0) {
 			for (int i = 0; i < nl.getLength(); i++) {
@@ -217,7 +236,7 @@ public class GatheringsIO {
 				Element el = (Element) nl.item(i);
 
 				Element name = (Element) el.getElementsByTagName("name").item(0);
-				String customName = "";
+				String customName;
 				customName = name.getChildNodes().item(0).getNodeValue();
 
 				Element life = (Element) el.getElementsByTagName("startinglife").item(0);
@@ -245,16 +264,29 @@ public class GatheringsIO {
 		return new Gathering(playerList, displayMode);
 	}
 
-	public String ReadGatheringNameFromXML(String _gatheringFile) {
-		File path = new File(mContext.getFilesDir(), FOLDER_PATH);
-		File gathering = new File(path, _gatheringFile);
+	/**
+	 * Read just the name of a gathering from a gathering xml file
+	 *
+	 * @param _gatheringFileName The name of the gathering file to read from
+	 * @param filesDir           The absolute path to the directory on the filesystem where files created with
+	 *                           openFileOutput(String, int) are stored.
+	 * @return The name of this gathering
+	 */
+	public static String ReadGatheringNameFromXML(String _gatheringFileName, File filesDir) {
+		File path = new File(filesDir, FOLDER_PATH);
+		File gathering = new File(path, _gatheringFileName);
 
 		return ReadGatheringNameFromXML(gathering);
 	}
 
-	public String ReadGatheringNameFromXML(File _gatheringFile) {
-		String returnString = "";
-		Document dom = null;
+	/**
+	 * Read just the name of a gathering from a gathering xml file
+	 *
+	 * @param _gatheringFile A File object for the gathering
+	 * @return The name of this gathering
+	 */
+	public static String ReadGatheringNameFromXML(File _gatheringFile) {
+		Document dom;
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -262,21 +294,18 @@ public class GatheringsIO {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			dom = db.parse(_gatheringFile);
 		} catch (ParserConfigurationException pce) {
-			return returnString;
+			return null;
 		} catch (SAXException se) {
-			return returnString;
+			return null;
 		} catch (IOException ioe) {
-			return returnString;
+			return null;
 		}
 
-		if (dom == null)
-			return returnString;
+		if (dom == null) {
+			return null;
+		}
 
 		Element docEle = dom.getDocumentElement();
-
-		// Element playerList = (Element)
-		// docEle.getElementsByTagName("players").item(0);
-		// int numOfPlayers = Integer.parseInt(playerList.getAttribute("number"));
 
 		Element name = (Element) docEle.getElementsByTagName("name").item(0);
 
@@ -287,16 +316,31 @@ public class GatheringsIO {
 		return name.getChildNodes().item(0).getNodeValue();
 	}
 
-	public void DeleteGathering(String fileName) {
-		File path = new File(mContext.getFilesDir(), FOLDER_PATH);
+	/**
+	 * Delete a gathering by file name
+	 *
+	 * @param fileName The file name of the gathering to delete
+	 * @param filesDir The absolute path to the directory on the filesystem where files created with
+	 *                 openFileOutput(String, int) are stored.
+	 * @return true if the gathering was deleted, false otherwise
+	 */
+	public static boolean DeleteGathering(String fileName, File filesDir) {
+		File path = new File(filesDir, FOLDER_PATH);
 		File gatheringFile = new File(path, fileName);
-		gatheringFile.delete();
+		return gatheringFile.delete();
 	}
 
-	public void DeleteGatheringByName(String _name) {
-		for (String fileName : getGatheringFileList()) {
-			if (_name.equals(ReadGatheringNameFromXML(fileName))) {
-				DeleteGathering(fileName);
+	/**
+	 * Delete a gathering by gathering name (must be read from xml file)
+	 *
+	 * @param _name    The name of the gathering to delete
+	 * @param filesDir The absolute path to the directory on the filesystem where files created with
+	 *                 openFileOutput(String, int) are stored.
+	 */
+	public static void DeleteGatheringByName(String _name, File filesDir) {
+		for (String fileName : getGatheringFileList(filesDir)) {
+			if (_name.equals(ReadGatheringNameFromXML(fileName, filesDir))) {
+				DeleteGathering(fileName, filesDir);
 			}
 		}
 	}

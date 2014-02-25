@@ -466,17 +466,16 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 						return builder.create();
 					}
 					case SET_GATHERING_DIALOG: {
-						GatheringsIO gIO = new GatheringsIO(getActivity());
-						if (gIO.getNumberOfGatherings() <= 0) {
+						if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
 							Toast.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist, Toast.LENGTH_LONG).show();
 							setShowsDialog(false);
 							return null;
 						}
 
-						final ArrayList<String> gatherings = gIO.getGatheringFileList();
+						final ArrayList<String> gatherings = GatheringsIO.getGatheringFileList(getActivity().getFilesDir());
 						final String[] properNames = new String[gatherings.size()];
 						for (int idx = 0; idx < gatherings.size(); idx++) {
-							properNames[idx] = gIO.ReadGatheringNameFromXML(gatherings.get(idx));
+							properNames[idx] = GatheringsIO.ReadGatheringNameFromXML(gatherings.get(idx), getActivity().getFilesDir());
 						}
 
 						builder.setTitle(R.string.life_counter_gathering_dialog_title);
@@ -484,7 +483,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 							public void onClick(DialogInterface dialogInterface, final int item) {
 								/* If the user rotates while the dialog is open, the dialog stays open but crashes
 								   because getActivity() will return null for some odd reason. */
-								Gathering gathering = (new GatheringsIO(getActivity())).ReadGatheringXML(gatherings.get(item));
+								Gathering gathering = GatheringsIO.ReadGatheringXML(gatherings.get(item), getActivity().getFilesDir());
 
 								mDisplayMode = gathering.mDisplayMode;
 								mGridLayout.removeAllViews();

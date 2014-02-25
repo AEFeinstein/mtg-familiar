@@ -675,7 +675,7 @@ public class SearchViewFragment extends FamiliarFragment {
 	private void checkDialogButtonColors() {
 
 		if (mSetNames == null || mSetChecked == null || mSetSymbols == null || mFormatNames == null ||
-				mRarityNames == null || mRarityChecked == null) {
+				mRarityNames == null || mRarityChecked == null || !isAdded()) {
 			return;
 		}
 

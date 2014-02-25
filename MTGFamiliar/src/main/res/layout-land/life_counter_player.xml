@@ -39,6 +39,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:orientation="vertical" >
 
         <TextView
+            android:textSize="24dp"
             android:id="@+id/player_name"
             style="@android:style/TextAppearance.Holo"
             android:layout_width="fill_parent"
