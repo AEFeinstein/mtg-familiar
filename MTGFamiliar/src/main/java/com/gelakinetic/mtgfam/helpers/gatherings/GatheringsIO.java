@@ -30,9 +30,6 @@ import javax.xml.parsers.ParserConfigurationException;
 @SuppressWarnings("SpellCheckingInspection")
 public class GatheringsIO {
 	final private static String FOLDER_PATH = "Gatherings";
-	/* If someone happens to also name their file this without ever reading this comment I'll donate my latest mythic
-	   rare to them. (Not really.) -Jon Bettger */
-	final private static String DEFAULT_FILE = "KENNESSAS";
 
 	/**
 	 * Returns the number of gathering .xml files in the given directory
@@ -49,15 +46,7 @@ public class GatheringsIO {
 
 		File[] gatheringList = path.listFiles();
 		assert gatheringList != null;
-
-		int count = 0;
-		for (File aGatheringList : gatheringList) {
-			if (aGatheringList.getName().equals(DEFAULT_FILE + ".xml")) {
-				continue;
-			}
-			count++;
-		}
-		return count;
+		return gatheringList.length;
 	}
 
 	/**
@@ -79,9 +68,6 @@ public class GatheringsIO {
 		assert gatheringList != null;
 
 		for (File aGatheringList : gatheringList) {
-			if (aGatheringList.getName().equals(DEFAULT_FILE + ".xml")) {
-				continue;
-			}
 			returnList.add(aGatheringList.getName());
 		}
 
