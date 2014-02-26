@@ -472,5 +472,7 @@
     <string formatted="false" name="life_counter_spoken_poison">%s has %d poison. </string>
     <string name="life_counter_over_9000">over 9000</string>
     <string name="life_counter_no_gatherings_exist">No Gatherings exist.</string>
+    <string name="gathering_toast_no_players">No players to remove</string>
+    <string name="main_export_no_data">No data to save</string>
 
 </resources>

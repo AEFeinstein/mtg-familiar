@@ -277,11 +277,17 @@ public class GatheringsFragment extends FamiliarFragment {
 						}
 						final String[] aNames = names.toArray(new String[names.size()]);
 
+						if(names.size() == 0) {
+							setShowsDialog(false);
+							return null;
+						}
+
 						return new AlertDialog.Builder(getActivity())
-								.setTitle(R.string.gathering_load)
+								.setTitle(R.string.gathering_remove_player)
 								.setItems(aNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {
 										mLinearLayout.removeViewAt(item);
+										getActivity().invalidateOptionsMenu();
 									}
 								})
 								.create();
@@ -318,6 +324,7 @@ public class GatheringsFragment extends FamiliarFragment {
 										for (GatheringsPlayerData player : players) {
 											AddPlayerRowFromData(player);
 										}
+										getActivity().invalidateOptionsMenu();
 									}
 								}).create();
 					}
@@ -465,5 +472,24 @@ public class GatheringsFragment extends FamiliarFragment {
 		((TextView) view.findViewById(R.id.starting_life)).setText(String.valueOf(_player.mStartingLife));
 
 		mLinearLayout.addView(view);
+		getActivity().invalidateOptionsMenu();
+	}
+
+	/**
+	 * If there are no players, remove the "remove players" button
+	 *
+	 * @param menu The menu to show or hide the "announce life totals" button in.
+	 */
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		MenuItem removePlayer = menu.findItem(R.id.gremove_player);
+		assert removePlayer != null;
+		if(mLinearLayout.getChildCount() == 0 || !((FamiliarActivity) getActivity()).mIsMenuVisible) {
+			removePlayer.setVisible(false);
+		}
+		else {
+			removePlayer.setVisible(true);
+		}
 	}
 }

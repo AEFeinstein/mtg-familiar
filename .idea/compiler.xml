@@ -22,6 +22,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="mtg-familiar" />
         <module name="MTGFamiliarProject" />
       </profile>
     </annotationProcessing>

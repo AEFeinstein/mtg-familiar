@@ -44,7 +44,15 @@ public class ZipUtils {
 			zipIt(zipOut, files, context);
 			Toast.makeText(context, context.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
 					Toast.LENGTH_SHORT).show();
-		} catch (IOException e) {
+		} catch (ZipException e) {
+			if (e.getMessage().equals("No entries")) {
+				Toast.makeText(context, context.getString(R.string.main_export_no_data), Toast.LENGTH_SHORT).show();
+			}
+			else {
+				Toast.makeText(context, context.getString(R.string.main_export_fail), Toast.LENGTH_SHORT).show();
+			}
+		}
+		catch (IOException e) {
 			Toast.makeText(context, context.getString(R.string.main_export_fail), Toast.LENGTH_SHORT).show();
 		}
 	}

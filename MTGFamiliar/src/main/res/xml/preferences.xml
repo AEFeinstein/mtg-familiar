@@ -112,12 +112,6 @@
                 android:title="@string/pref_show_art_title"
                 android:summary="@string/pref_show_art_summary"/>
 
-            <CheckBoxPreference
-                android:key="scrollresults"
-                android:defaultValue="false"
-                android:title="@string/pref_scroll_title"
-                android:summary="@string/pref_scroll_summary"/>
-
             <ListPreference
                 android:entries="@array/card_language"
                 android:entryValues="@array/card_language_values"
