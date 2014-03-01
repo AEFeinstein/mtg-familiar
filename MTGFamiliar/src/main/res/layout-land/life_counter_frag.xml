@@ -18,40 +18,48 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:orientation="horizontal">
-    
+              android:id="@+id/linearLayout1"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="horizontal">
+
     <LinearLayout
         android:id="@+id/info_layout"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-	    <HorizontalScrollView
-	        android:id="@+id/playerScrollView"
-	        android:layout_width="fill_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1">
-	
-	        <GridLayout
-		        android:id="@+id/playerList"
-	            android:layout_width="match_parent"
-	            android:layout_height="match_parent"
-	            android:orientation="horizontal">
-	        </GridLayout>
-	
-	    </HorizontalScrollView>
-	    
+        <HorizontalScrollView
+            android:id="@+id/playerScrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <GridLayout
+                android:id="@+id/playerList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            </GridLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/commander_player"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
     </LinearLayout>
 
     <View
         android:id="@+id/divider"
         android:layout_width="1dip"
         android:layout_height="fill_parent"
-        android:background="@android:color/holo_blue_light" />
+        android:background="@android:color/holo_blue_light"/>
 
     <!-- Command bar: reset, poison, etc. -->
 
@@ -60,16 +68,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_width="48dp"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/poison_button"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scaleType="center"
-            android:padding="15dp"
-            android:src="@drawable/lc_poison_enabled" />
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/life_button"
@@ -78,7 +77,16 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_weight="1"
             android:scaleType="center"
             android:padding="15dp"
-            android:src="@drawable/lc_life_enabled" />
+            android:src="@drawable/lc_life_enabled"/>
+
+        <ImageView
+            android:id="@+id/poison_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:padding="15dp"
+            android:src="@drawable/lc_poison_enabled"/>
 
         <ImageView
             android:id="@+id/commander_button"
@@ -87,7 +95,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_weight="1"
             android:padding="15dp"
             android:scaleType="center"
-            android:src="@drawable/lc_commander_enabled" />
+            android:src="@drawable/lc_commander_enabled"/>
 
         <ImageView
             android:id="@+id/reset_button"
@@ -96,8 +104,8 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_weight="1"
             android:scaleType="center"
             android:padding="15dp"
-            android:src="@drawable/lc_reset" />
-        
+            android:src="@drawable/lc_reset"/>
+
     </LinearLayout>
 
 </LinearLayout>

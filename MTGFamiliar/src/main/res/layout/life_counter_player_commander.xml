@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="48dp"
+              android:layout_width="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/edh_player_row"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/player_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/app_name"
+            android:layout_margin="4dp"
+            android:textSize="24sp"/>
+
+        <TextView
+            android:id="@+id/player_readout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center"
+            android:text="@string/mana_pool_zero"
+            android:layout_margin="4dp"
+            android:textSize="24sp"/>
+
+        <View
+            android:id="@+id/dividerV"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/drawer_divider_item"/>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/dividerH"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/drawer_divider_item"/>
+</LinearLayout>

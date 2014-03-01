@@ -47,6 +47,13 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/commander_player"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -62,15 +69,6 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_height="48dp">
 
         <ImageView
-            android:id="@+id/poison_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:scaleType="center"
-            android:padding="15dp"
-            android:src="@drawable/lc_poison_enabled"/>
-
-        <ImageView
             android:id="@+id/life_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -78,6 +76,15 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:scaleType="center"
             android:padding="15dp"
             android:src="@drawable/lc_life_enabled"/>
+
+        <ImageView
+            android:id="@+id/poison_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="center"
+            android:padding="15dp"
+            android:src="@drawable/lc_poison_enabled"/>
 
         <ImageView
             android:id="@+id/commander_button"

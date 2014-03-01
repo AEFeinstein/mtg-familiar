@@ -263,6 +263,7 @@ public class GatheringsFragment extends FamiliarFragment {
 								.setItems(dProperNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {
 										GatheringsIO.DeleteGathering(dfGatherings[item], getActivity().getFilesDir());
+										getActivity().invalidateOptionsMenu();
 									}
 								}).create();
 					}
@@ -412,6 +413,7 @@ public class GatheringsFragment extends FamiliarFragment {
 
 		GatheringsIO.writeGatheringXML(players, _gatheringName, mDisplayModeSpinner.getSelectedItemPosition(),
 				getActivity().getFilesDir());
+		getActivity().invalidateOptionsMenu();
 	}
 
 	/**
@@ -483,13 +485,29 @@ public class GatheringsFragment extends FamiliarFragment {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
+
 		MenuItem removePlayer = menu.findItem(R.id.gremove_player);
+		MenuItem deleteGathering = menu.findItem(R.id.gdelete_gathering);
+		MenuItem loadGathering = menu.findItem(R.id.gload_gathering);
 		assert removePlayer != null;
+		assert deleteGathering != null;
+		assert loadGathering != null;
+
 		if(mLinearLayout.getChildCount() == 0 || !((FamiliarActivity) getActivity()).mIsMenuVisible) {
 			removePlayer.setVisible(false);
 		}
 		else {
 			removePlayer.setVisible(true);
+		}
+
+		if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0 ||
+				!((FamiliarActivity) getActivity()).mIsMenuVisible) {
+			deleteGathering.setVisible(false);
+			loadGathering.setVisible(false);
+		}
+		else {
+			deleteGathering.setVisible(true);
+			loadGathering.setVisible(true);
 		}
 	}
 }

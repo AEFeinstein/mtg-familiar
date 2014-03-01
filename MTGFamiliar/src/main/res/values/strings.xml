@@ -474,5 +474,6 @@
     <string name="life_counter_no_gatherings_exist">No Gatherings exist.</string>
     <string name="gathering_toast_no_players">No players to remove</string>
     <string name="main_export_no_data">No data to save</string>
+    <string name="life_counter_edh_dialog_title">Damage from %s\'s Commander</string>
 
 </resources>

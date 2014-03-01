@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,11 +20,13 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
+import com.gelakinetic.mtgfam.helpers.LcPlayer.CommanderEntry;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
 import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
@@ -57,6 +60,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 	/* UI Elements, measurement */
 	private GridLayout mGridLayout;
+	private LinearLayout mCommanderPlayerView;
 	private ImageView mPoisonButton;
 	private ImageView mLifeButton;
 	private ImageView mCommanderButton;
@@ -142,18 +146,41 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		mDisplayMode = Integer.valueOf(((FamiliarActivity) getActivity()).mPreferenceAdapter.getDisplayMode());
 
-		setColumns();
+		mCommanderPlayerView = (LinearLayout) myFragmentView.findViewById(R.id.commander_player);
 
 		mScrollView = myFragmentView.findViewById(R.id.playerScrollView);
 		ViewTreeObserver viewTreeObserver = mScrollView.getViewTreeObserver();
 		assert viewTreeObserver != null;
 		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			public void onGlobalLayout() {
-				if (mListSizeWidth == -1) {
-					mListSizeWidth = mScrollView.getWidth();
+				boolean changed = false;
+				if (mListSizeHeight < mScrollView.getHeight()) {
 					mListSizeHeight = mScrollView.getHeight();
+					changed = true;
+				}
+				if (mListSizeWidth < mScrollView.getWidth()) {
+					mListSizeWidth = mScrollView.getWidth();
+					changed = true;
+				}
+				if (changed) {
 					for (LcPlayer player : mPlayers) {
-						player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
+						player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+					}
+
+					if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+						if (mDisplayMode == DISPLAY_COMMANDER) {
+							float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getActivity().getResources().getDisplayMetrics());
+
+							if (mGridLayout.getChildCount() > 0) {
+								mGridLayout.removeAllViews();
+							}
+
+							mGridLayout.setRowCount((int) (mListSizeHeight / height));
+
+							for (LcPlayer player : mPlayers) {
+								addPlayerView(player);
+							}
+						}
 					}
 				}
 			}
@@ -174,6 +201,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		});
 
 		mCommanderButton = (ImageView) myFragmentView.findViewById(R.id.commander_button);
+		mCommanderButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				setStatDisplaying(LcPlayer.COMMANDER);
+			}
+		});
 
 		myFragmentView.findViewById(R.id.reset_button).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
@@ -189,21 +221,6 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		mDefaultBrightness = layoutParams.screenBrightness;
 
 		return myFragmentView;
-	}
-
-	private void setColumns() {
-		if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			switch (mDisplayMode) {
-				case DISPLAY_NORMAL:
-					mGridLayout.setColumnCount(1);
-					break;
-				case DISPLAY_COMPACT:
-					mGridLayout.setColumnCount(2);
-					break;
-				case DISPLAY_COMMANDER:
-					break;
-			}
-		}
 	}
 
 	/**
@@ -230,9 +247,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			playerData += player.toString();
 		}
 		((FamiliarActivity) getActivity()).mPreferenceAdapter.setPlayerData(playerData);
-		for (LcPlayer player : mPlayers) {
-			mGridLayout.removeView(player.mView);
-		}
+		mGridLayout.removeAllViews();
 		mPlayers.clear();
 
 		getActivity().getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -258,6 +273,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				addPlayer(line);
 			}
 		}
+
+		setCommanderInfo(-1);
+
+		changeDisplayMode(mDisplayMode);
+
 		setStatDisplaying(mStatDisplaying);
 
 		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getWakelock()) {
@@ -327,7 +347,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		// Handle item selection
 		switch (item.getItemId()) {
 			case R.id.add_player:
+				/* Add the player to the ArrayList, and draw the new view */
 				addPlayer();
+				setCommanderInfo(-1);
+				addPlayerView(mPlayers.get(mPlayers.size() - 1));
 				return true;
 			case R.id.remove_player:
 				showDialog(REMOVE_PLAYER_DIALOG);
@@ -390,9 +413,22 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 							public void onClick(DialogInterface dialog, int item) {
 								/* Remove the view from the LinearLayout, remove the player from the ArrayList,
 								   redraw */
-								mGridLayout.removeView(mPlayers.get(item).mView);
+								if (mDisplayMode == DISPLAY_COMMANDER) {
+									mGridLayout.removeView(mPlayers.get(item).mCommanderRowView);
+								}
+								else {
+									mGridLayout.removeView(mPlayers.get(item).mView);
+								}
 								mPlayers.remove(item);
 								mGridLayout.invalidate();
+
+								setCommanderInfo(item);
+
+								/* Reset the displayed player, in case the displayed player was removed */
+								if(mDisplayMode == DISPLAY_COMMANDER) {
+									mCommanderPlayerView.removeAllViews();
+									mCommanderPlayerView.addView(mPlayers.get(0).mView);
+								}
 							}
 						});
 
@@ -403,17 +439,16 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 								.setCancelable(true)
 								.setPositiveButton(getString(R.string.dialog_both), new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int id) {
-										/* Remove all players */
-										for (LcPlayer player : mPlayers) {
-											mGridLayout.removeView(player.mView);
-										}
+										/* Remove all players, then add defaults */
 										mPlayers.clear();
-
-										/* Add default players */
 										mLargestPlayerNumber = 0;
 										addPlayer();
 										addPlayer();
 
+										setCommanderInfo(-1);
+
+										/* Clear and then add the views */
+										changeDisplayMode(mDisplayMode);
 										dialog.dismiss();
 									}
 								})
@@ -445,20 +480,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 										if (mDisplayMode != which) {
 											mDisplayMode = which;
-
-											// And also update the preference
-											((FamiliarActivity) getActivity()).mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
-
-											mGridLayout.removeAllViews();
-
-											setColumns();
-
-											for (LcPlayer player : mPlayers) {
-												mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
-												if (mListSizeHeight != -1) {
-													player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
-												}
-											}
+											changeDisplayMode(mDisplayMode);
 										}
 									}
 								});
@@ -486,16 +508,15 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 								Gathering gathering = GatheringsIO.ReadGatheringXML(gatherings.get(item), getActivity().getFilesDir());
 
 								mDisplayMode = gathering.mDisplayMode;
-								mGridLayout.removeAllViews();
+
 								mPlayers.clear();
-								setColumns();
-
-								((FamiliarActivity) getActivity()).mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
-
 								ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
 								for (GatheringsPlayerData player : players) {
 									addPlayer(player.mName, player.mStartingLife);
 								}
+
+								setCommanderInfo(-1);
+								changeDisplayMode(mDisplayMode);
 							}
 						});
 						return builder.create();
@@ -508,6 +529,122 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			}
 		};
 		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+	}
+
+	public void setCommanderInfo(int toBeRemoved) {
+		for (LcPlayer player1 : mPlayers) {
+			if (toBeRemoved != -1) {
+				player1.mCommanderDamage.remove(toBeRemoved);
+			}
+			else {
+				for (int i = 0; i < mPlayers.size(); i++) {
+					/* An entry for this player exists, just set the name */
+					if (player1.mCommanderDamage.size() > i) {
+						player1.mCommanderDamage.get(i).mName = mPlayers.get(i).mName;
+					}
+					/* An entry for this player doesn't exist, create one and add it */
+					else {
+						CommanderEntry ce = new CommanderEntry();
+						ce.mName = mPlayers.get(i).mName;
+						ce.mLife = 0;
+						player1.mCommanderDamage.add(ce);
+					}
+				}
+			}
+			/* Redraw the informatino */
+			if (player1.mCommanderDamageAdapter != null) {
+				player1.mCommanderDamageAdapter.notifyDataSetChanged();
+			}
+		}
+	}
+
+	private void changeDisplayMode(int displayMode) {
+		// And also update the preference
+		((FamiliarActivity) getActivity()).mPreferenceAdapter.setDisplayMode(String.valueOf(displayMode));
+
+		mGridLayout.removeAllViews();
+
+		if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			switch (displayMode) {
+				case DISPLAY_NORMAL:
+					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+					mGridLayout.setColumnCount(1);
+					mGridLayout.setRowCount(100);
+					break;
+				case DISPLAY_COMPACT:
+					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+					mGridLayout.setColumnCount(2);
+					mGridLayout.setRowCount(100);
+					break;
+				case DISPLAY_COMMANDER:
+					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+					mGridLayout.setColumnCount(2);
+					mGridLayout.setRowCount(100);
+					break;
+			}
+		}
+		else {
+			switch (displayMode) {
+				case DISPLAY_NORMAL:
+					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+					mGridLayout.setColumnCount(100);
+					mGridLayout.setRowCount(1);
+					break;
+				case DISPLAY_COMPACT:
+					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
+					mGridLayout.setColumnCount(100);
+					mGridLayout.setRowCount(1);
+					break;
+				case DISPLAY_COMMANDER:
+					mGridLayout.setOrientation(GridLayout.VERTICAL);
+					mGridLayout.setColumnCount(100);
+					if (mListSizeHeight != -1) {
+						float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getActivity().getResources().getDisplayMetrics());
+						mGridLayout.setRowCount((int) (mListSizeHeight / height));
+					}
+					else {
+						mGridLayout.setRowCount(100);
+					}
+					break;
+			}
+		}
+
+		for (LcPlayer player : mPlayers) {
+			addPlayerView(player);
+		}
+
+		if (displayMode == DISPLAY_COMMANDER) {
+			mCommanderButton.setVisibility(View.VISIBLE);
+			mCommanderPlayerView.setVisibility(View.VISIBLE);
+			mCommanderPlayerView.removeAllViews();
+			mCommanderPlayerView.addView(mPlayers.get(0).mView);
+			mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, displayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+		}
+		else {
+			mCommanderPlayerView.setVisibility(View.GONE);
+			mCommanderButton.setVisibility(View.GONE);
+			if (mStatDisplaying == LcPlayer.COMMANDER) {
+				setStatDisplaying(LcPlayer.LIFE);
+			}
+		}
+	}
+
+	private void addPlayerView(final LcPlayer player) {
+		mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying));
+		if (mListSizeHeight != -1) {
+			player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+		}
+
+		if (mDisplayMode == DISPLAY_COMMANDER) {
+			player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					mCommanderPlayerView.removeAllViews();
+					mCommanderPlayerView.addView(player.mView);
+					player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+				}
+			});
+		}
 	}
 
 	/**
@@ -547,18 +684,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 * incremented number name i.e. Player N
 	 */
 	private void addPlayer() {
-		LcPlayer player = new LcPlayer((FamiliarActivity) getActivity());
+		final LcPlayer player = new LcPlayer(this);
 
 		mLargestPlayerNumber++;
 		player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
 
 		mPlayers.add(player);
-		mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
-		if (mListSizeHeight != -1) {
-			player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
-		}
-
-		player.setDisplayMode(mDisplayMode);
 	}
 
 	/**
@@ -568,7 +699,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 * @param startingLife The player's starting life total
 	 */
 	private void addPlayer(String name, int startingLife) {
-		LcPlayer player = new LcPlayer((FamiliarActivity) getActivity());
+		LcPlayer player = new LcPlayer(this);
 		player.mName = name;
 		player.mDefaultLifeTotal = startingLife;
 		player.mLife = startingLife;
@@ -584,12 +715,6 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		}
 
 		mPlayers.add(player);
-		mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
-		if (mListSizeHeight != -1) {
-			player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
-		}
-
-		player.setDisplayMode(mDisplayMode);
 	}
 
 	/**
@@ -601,7 +726,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 */
 	private void addPlayer(String line) {
 		try {
-			LcPlayer player = new LcPlayer((FamiliarActivity) getActivity());
+			LcPlayer player = new LcPlayer(this);
 
 			String[] data = line.split(";");
 
@@ -674,12 +799,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 			try {
 				String[] commanderLifeString = data[6].split(",");
-				player.mCommanderHistory = new ArrayList<HistoryEntry>(commanderLifeString.length);
-				HistoryEntry entry;
+				player.mCommanderDamage = new ArrayList<CommanderEntry>(commanderLifeString.length);
+				CommanderEntry entry;
 				for (String aCommanderLifeString : commanderLifeString) {
-					entry = new HistoryEntry();
-					entry.mAbsolute = Integer.parseInt(aCommanderLifeString);
-					player.mCommanderHistory.add(entry);
+					entry = new CommanderEntry();
+					entry.mLife = Integer.parseInt(aCommanderLifeString);
+					player.mCommanderDamage.add(entry);
 				}
 			} catch (NumberFormatException e) {
 				/* Eat it */
@@ -694,17 +819,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			}
 
 			mPlayers.add(player);
-			mGridLayout.addView(player.newView(mDisplayMode == DISPLAY_COMPACT));
-			player.setDisplayMode(mDisplayMode);
-
-			if (mListSizeHeight != -1) {
-				player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode);
-			}
-		} catch (
-				ArrayIndexOutOfBoundsException e
-				)
-
-		{
+		} catch (ArrayIndexOutOfBoundsException e) {
 			/* Eat it */
 		}
 	}

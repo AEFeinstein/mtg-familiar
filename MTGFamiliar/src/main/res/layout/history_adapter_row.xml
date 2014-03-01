@@ -11,36 +11,35 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:weightSum="1" >
+              android:layout_width="fill_parent"
+              android:layout_height="48dp"
+              android:orientation="horizontal"
+              android:weightSum="1">
 
     <TextView
         android:id="@+id/relative"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight=".5"
         android:gravity="center"
-        android:maxLines="1"
-        android:singleLine="true"
         android:text="+0"
-        android:textSize="25sp" />
+        android:textSize="24sp"
+        android:layout_margin="4dp"/>
 
     <View
+        android:id="@+id/divider"
         android:layout_width="1dp"
-        android:layout_height="fill_parent"
-        android:background="@android:color/darker_gray" />
+        android:layout_height="match_parent"
+        android:background="@color/drawer_divider_item"/>
 
     <TextView
         android:id="@+id/absolute"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight=".5"
         android:gravity="center"
-        android:maxLines="1"
-        android:singleLine="true"
         android:text="@string/life_counter_twenty"
-        android:textSize="25sp" />
+        android:textSize="24sp"
+        android:layout_margin="4dp"/>
 
 </LinearLayout>
