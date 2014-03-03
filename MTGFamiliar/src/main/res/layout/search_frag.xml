@@ -206,7 +206,7 @@
 
                 <TextView
                     android:id="@+id/textView1"
-                    style="@android:style/TextAppearance.Holo"
+                    style="@style/text"
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -235,7 +235,7 @@
 
                 <TextView
                     android:id="@+id/textView2"
-                    style="@android:style/TextAppearance.Holo"
+                    style="@style/text"
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -264,7 +264,7 @@
 
                 <TextView
                     android:id="@+id/textView3"
-                    style="@android:style/TextAppearance.Holo"
+                    style="@style/text"
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -361,7 +361,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/holo_blue_light"
+        android:background="@color/holo_blue_light"
         />
 
     <Button

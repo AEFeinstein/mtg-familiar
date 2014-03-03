@@ -27,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import com.gelakinetic.mtgfam.R;
+
 /**
  * This cursor adapter provides suggestions for card names directly from the database
  */
@@ -60,7 +62,7 @@ public class AutocompleteCursorAdapter extends CursorAdapter {
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		return inflater.inflate(android.R.layout.simple_list_item_1, null);
+		return inflater.inflate(R.layout.list_item_1, null);
 
 	}
 
@@ -74,7 +76,7 @@ public class AutocompleteCursorAdapter extends CursorAdapter {
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		String keyword = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-		TextView tv = (TextView) view.findViewById(android.R.id.text1);
+		TextView tv = (TextView) view.findViewById(R.id.text1);
 		tv.setText(keyword);
 	}
 

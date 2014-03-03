@@ -19,6 +19,8 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
+    <color name="black">#ff000000</color>
+
     <color name="common">#ff000000</color>
     <color name="rare">#FDD017</color>
     <color name="uncommon">#ff909090</color>
@@ -30,4 +32,12 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="drawer_text_selected">#FFFFFF</color>
     <color name="drawer_divider_header">#BEBEBE</color>
     <color name="drawer_divider_item">#D7D7D7</color>
+
+    <color name="transparent">#00000000</color>
+
+    <color name="holo_blue_light">#ff33b5e5</color>
+    <color name="holo_blue_dark">#ff0099cc</color>
+    <color name="holo_green_dark">#ff669900</color>
+    <color name="holo_red_dark">#ffcc0000</color>
+
 </resources>

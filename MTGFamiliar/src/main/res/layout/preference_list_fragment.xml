@@ -21,21 +21,20 @@
               android:orientation="vertical"
               android:layout_height="fill_parent"
               android:layout_width="fill_parent"
-              android:background="@android:color/transparent">
+              android:background="@color/transparent">
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="0px"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingTop="0dip"
-        android:paddingBottom="@dimen/preference_fragment_padding_bottom"
         android:paddingLeft="@dimen/preference_fragment_padding_side"
         android:paddingRight="@dimen/preference_fragment_padding_side"
-        android:scrollbarStyle="@integer/preference_fragment_scrollbarStyle"
+        android:scrollbarStyle="outsideOverlay"
         android:clipToPadding="false"
         android:drawSelectorOnTop="false"
-        android:cacheColorHint="@android:color/transparent"
-        android:scrollbarAlwaysDrawVerticalTrack="true"/>
+        android:cacheColorHint="@color/transparent"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        style="@style/list_view_divider"/>
 
 </LinearLayout>

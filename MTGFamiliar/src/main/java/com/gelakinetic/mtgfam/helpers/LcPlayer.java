@@ -120,10 +120,10 @@ public class LcPlayer {
 					mHistoryList.invalidate();
 				}
 				mReadoutTextView.setText(mLife + "");
-				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_red_dark));
+				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mLife + "");
-					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_red_dark));
+					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 				}
 				break;
 			case POISON:
@@ -132,10 +132,10 @@ public class LcPlayer {
 					mHistoryList.invalidate();
 				}
 				mReadoutTextView.setText(mPoison + "");
-				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_green_dark));
+				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mPoison + "");
-					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_green_dark));
+					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
 				}
 				break;
 			case COMMANDER:
@@ -144,10 +144,10 @@ public class LcPlayer {
 					mHistoryList.invalidate();
 				}
 				mReadoutTextView.setText(mLife + "");
-				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_red_dark));
+				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mLife + "");
-					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_red_dark));
+					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 				}
 				break;
 		}
@@ -479,22 +479,22 @@ public class LcPlayer {
 					((TextView) view.findViewById(R.id.absolute)).setText(mLifeHistory.get(position).mAbsolute + "");
 					if (mLifeHistory.get(position).mDelta > 0) {
 						((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
-						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_green_dark));
+						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
 					}
 					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mLifeHistory.get(position).mDelta);
-						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_red_dark));
+						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 					}
 					break;
 				case POISON:
 					((TextView) view.findViewById(R.id.absolute)).setText(mPoisonHistory.get(position).mAbsolute + "");
 					if (mPoisonHistory.get(position).mDelta > 0) {
 						((TextView) view.findViewById(R.id.relative)).setText("+" + mPoisonHistory.get(position).mDelta);
-						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_green_dark));
+						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
 					}
 					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mPoisonHistory.get(position).mDelta);
-						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(android.R.color.holo_red_dark));
+						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 					}
 					break;
 			}

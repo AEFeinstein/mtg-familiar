@@ -6,6 +6,7 @@
               android:orientation="vertical">
 
     <ListView
+        style="@style/list_view_divider"
         android:id="@+id/resultList"
         android:layout_width="fill_parent"
         android:layout_height="0dp"

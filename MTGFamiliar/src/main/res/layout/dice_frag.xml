@@ -35,7 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="6"
-            android:background="@drawable/textview_backdrop"
+            android:background="@drawable/light_grey_border"
             android:gravity="center"
             android:text="@string/mana_pool_zero"
             android:textSize="80sp"/>

@@ -8,10 +8,10 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         style="@style/forty_eight"
-        android:background="@drawable/textview_backdrop">
+        android:background="@drawable/light_grey_border">
 
         <TextView
-            style="@android:style/TextAppearance.Holo"
+            style="@style/text"
             android:id="@+id/delta"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -24,7 +24,7 @@
             android:background="@color/drawer_divider_item"/>
 
         <TextView
-            style="@android:style/TextAppearance.Holo"
+            style="@style/text"
             android:id="@+id/absolute"
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            style="@android:style/TextAppearance.Holo"
+            style="@style/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -26,7 +26,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
-            style="@android:style/TextAppearance.Holo"
+            style="@style/text"
             android:id="@+id/starting_life"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -45,6 +45,6 @@
         android:layout_height="1dp"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/drawer_divider_item" />
 
 </LinearLayout>

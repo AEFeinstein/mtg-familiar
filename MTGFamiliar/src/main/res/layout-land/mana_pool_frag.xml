@@ -48,7 +48,7 @@
 
             <TextView
                 android:id="@+id/white_readout"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
@@ -81,7 +81,7 @@
 
             <TextView
                 android:id="@+id/blue_readout"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
@@ -122,7 +122,7 @@
 
             <TextView
                 android:id="@+id/black_readout"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
@@ -155,7 +155,7 @@
 
             <TextView
                 android:id="@+id/red_readout"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
@@ -196,7 +196,7 @@
 
             <TextView
                 android:id="@+id/green_readout"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
@@ -229,7 +229,7 @@
 
             <TextView
                 android:id="@+id/colorless_readout"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
@@ -269,7 +269,7 @@
 
             <TextView
                 android:id="@+id/spell_readout"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"

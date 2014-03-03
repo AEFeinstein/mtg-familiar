@@ -52,14 +52,14 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             <TextView
                 android:textSize="24sp"
                 android:id="@+id/player_name"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gathering_player"/>
 
             <TextView
                 android:id="@+id/player_readout"
-                style="@android:style/TextAppearance.Holo"
+                style="@style/text"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:maxLines="1"
@@ -139,13 +139,14 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_height="match_parent"
             android:layout_weight=".4"
             android:orientation="vertical"
-            android:background="@drawable/textview_backdrop">
+            android:background="@drawable/light_grey_border">
 
             <ListView
+                style="@style/list_view_divider"
                 android:layout_margin="1dp"
                 android:id="@+id/player_history"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
             </ListView>
         </LinearLayout>
     </LinearLayout>

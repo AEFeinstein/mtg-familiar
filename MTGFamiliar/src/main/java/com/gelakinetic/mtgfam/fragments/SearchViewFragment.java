@@ -246,7 +246,7 @@ public class SearchViewFragment extends FamiliarFragment {
 		/* set the autocomplete for supertypes */
 		String[] supertypes = getResources().getStringArray(R.array.supertypes);
 		ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<String>(this.getActivity(),
-				android.R.layout.simple_list_item_1, supertypes);
+				R.layout.list_item_1, supertypes);
 		mSupertypeField.setThreshold(1);
 		mSupertypeField.setAdapter(supertypeAdapter);
 
@@ -679,20 +679,20 @@ public class SearchViewFragment extends FamiliarFragment {
 			return;
 		}
 
-		mSetButton.setTextColor(getResources().getColor(android.R.color.black));
+		mSetButton.setTextColor(getResources().getColor(R.color.black));
 		for (boolean aSetChecked : mSetChecked) {
 			if (aSetChecked) {
-				mSetButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+				mSetButton.setTextColor(getResources().getColor(R.color.holo_blue_dark));
 			}
 		}
-		mFormatButton.setTextColor(getResources().getColor(android.R.color.black));
+		mFormatButton.setTextColor(getResources().getColor(R.color.black));
 		if (mSelectedFormat != -1) {
-			mFormatButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+			mFormatButton.setTextColor(getResources().getColor(R.color.holo_blue_dark));
 		}
-		mRarityButton.setTextColor(getResources().getColor(android.R.color.black));
+		mRarityButton.setTextColor(getResources().getColor(R.color.black));
 		for (boolean aRarityChecked : mRarityChecked) {
 			if (aRarityChecked) {
-				mRarityButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+				mRarityButton.setTextColor(getResources().getColor(R.color.holo_blue_dark));
 			}
 		}
 	}

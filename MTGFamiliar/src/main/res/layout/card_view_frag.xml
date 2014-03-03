@@ -45,7 +45,7 @@
 
                     <TextView
                         android:id="@+id/name"
-                        style="@android:style/TextAppearance.Holo"
+                        style="@style/text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dip"
@@ -54,7 +54,7 @@
 
                     <TextView
                         android:id="@+id/cost"
-                        style="@android:style/TextAppearance.Holo"
+                        style="@style/text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -73,7 +73,7 @@
 
                     <TextView
                         android:id="@+id/type"
-                        style="@android:style/TextAppearance.Holo"
+                        style="@style/text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dip"
@@ -84,7 +84,7 @@
 
                 <TextView
                     android:id="@+id/set"
-                    style="@android:style/TextAppearance.Holo"
+                    style="@style/text"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -104,7 +104,7 @@
 
                     <TextView
                         android:id="@+id/ability"
-                        style="@android:style/TextAppearance.Holo"
+                        style="@style/text"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dip"
@@ -114,7 +114,7 @@
 
                     <TextView
                         android:id="@+id/flavor"
-                        style="@android:style/TextAppearance.Holo"
+                        style="@style/text"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dip"
@@ -149,7 +149,7 @@
 
                     <TextView
                         android:id="@+id/artist"
-                        style="@android:style/TextAppearance.Holo"
+                        style="@style/text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dip"
@@ -160,7 +160,7 @@
 
                     <TextView
                         android:id="@+id/pt"
-                        style="@android:style/TextAppearance.Holo"
+                        style="@style/text"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_marginBottom="0dip"
@@ -185,7 +185,7 @@
         android:id="@+id/transform_button_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/holo_blue_light"
+        android:background="@color/holo_blue_light"
         />
 
     <Button

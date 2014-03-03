@@ -14,20 +14,20 @@
         android:layout_height="48dp"
         android:text="@string/pref_fifteen_minutes_title"
         android:checked="false"
-        style="@android:style/TextAppearance.Holo"/>
+        style="@style/text"/>
 
     <CheckBox
         android:id="@+id/timer_pref_ten"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:text="@string/pref_ten_minutes_title"
-        style="@android:style/TextAppearance.Holo"/>
+        style="@style/text"/>
 
     <CheckBox
         android:id="@+id/timer_pref_five"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:text="@string/pref_five_minutes_title"
-        style="@android:style/TextAppearance.Holo"/>
+        style="@style/text"/>
 
 </LinearLayout>

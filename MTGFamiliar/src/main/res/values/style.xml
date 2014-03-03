@@ -17,4 +17,17 @@
     <style name="notification_text">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
+
+    <style name="list_view_divider">
+        <item name="android:divider">@color/drawer_divider_item</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <style name="text" parent="android:TextAppearance.Holo">
+
+    </style>
+    <style name="text.large" parent="android:TextAppearance.Holo.Large">
+
+    </style>
+
 </resources>

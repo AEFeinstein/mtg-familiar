@@ -36,14 +36,14 @@
                 android:layout_width="fill_parent"
                 android:gravity="center_vertical"
                 android:text="Name"
-                style="@android:style/TextAppearance.Holo.Large"/>
+                style="@style/text.large"/>
 
             <TextView
                 android:id="@+id/cardtype"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Type"
-                style="@android:style/TextAppearance.Holo"/>
+                style="@style/text"/>
 
         </LinearLayout>
 
@@ -59,7 +59,7 @@
                 android:text="Cost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@android:style/TextAppearance.Holo"/>
+                style="@style/text"/>
 
             <TextView
                 android:id="@+id/cardset"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:text="Set"
-                style="@android:style/TextAppearance.Holo.Large"/>
+                style="@style/text.large"/>
 
         </LinearLayout>
 
@@ -85,7 +85,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Ability"
-            style="@android:style/TextAppearance.Holo"/>
+            style="@style/text"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="P"
-                style="@android:style/TextAppearance.Holo"/>
+                style="@style/text"/>
 
             <TextView
                 android:id="@+id/cardslash"
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="/"
-                style="@android:style/TextAppearance.Holo"/>
+                style="@style/text"/>
 
             <TextView
                 android:id="@+id/cardt"
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="T"
-                style="@android:style/TextAppearance.Holo"/>
+                style="@style/text"/>
 
         </LinearLayout>
 

@@ -37,7 +37,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_weight="1"/>
 
         <TextView
-            style="@android:style/TextAppearance.Holo"
+            style="@style/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -61,7 +61,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/holo_blue_light"
+        android:background="@color/holo_blue_light"
         />
 
     <Button
