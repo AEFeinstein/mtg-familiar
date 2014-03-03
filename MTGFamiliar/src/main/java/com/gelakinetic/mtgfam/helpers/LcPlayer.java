@@ -59,7 +59,6 @@ public class LcPlayer {
 	public View mCommanderRowView;
 
 	private ListView mHistoryList;
-	//private LinearLayout mHistoryListView;
 
 	/* Helper */
 	private Handler mHandler = new Handler();
@@ -194,17 +193,17 @@ public class LcPlayer {
 				mCommanderDamageAdapter = new CommanderDamageAdapter(mFragment.getActivity());
 
 				mCommanderCastingButton = (Button) mView.findViewById(R.id.commanderCast);
-				mCommanderCastingButton.setText(""+mCommanderCasting);
+				mCommanderCastingButton.setText("" + mCommanderCasting);
 
 				/* If it's commander, also inflate the entry to display in the grid */
 				if (displayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
-					mCommanderCastingButton.setVisibility(View.VISIBLE);
 					mView.findViewById(R.id.commanderCastText).setVisibility(View.VISIBLE);
-					mView.findViewById(R.id.commanderCast).setOnClickListener(new View.OnClickListener() {
+					mCommanderCastingButton.setVisibility(View.VISIBLE);
+					mCommanderCastingButton.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
 							mCommanderCasting++;
-							mCommanderCastingButton.setText(""+mCommanderCasting);
+							mCommanderCastingButton.setText("" + mCommanderCasting);
 						}
 					});
 
@@ -217,8 +216,8 @@ public class LcPlayer {
 					mCommanderReadoutTextView = (TextView) mCommanderRowView.findViewById(R.id.player_readout);
 				}
 				else {
-					mCommanderCastingButton.setVisibility(View.GONE);
 					mView.findViewById(R.id.commanderCastText).setVisibility(View.GONE);
+					mCommanderCastingButton.setVisibility(View.GONE);
 				}
 
 				break;
@@ -342,23 +341,28 @@ public class LcPlayer {
 	public void resetStats() {
 		mLifeHistory.clear();
 		mPoisonHistory.clear();
-		mCommanderDamage.clear();
 		mLife = mDefaultLifeTotal;
 		mPoison = 0;
 		mCommanderCasting = 0;
 
-		if (mHistoryLifeAdapter != null) {
-			mHistoryLifeAdapter.notifyDataSetChanged();
-			mHistoryPoisonAdapter.notifyDataSetChanged();
+		for(CommanderEntry entry : mCommanderDamage) {
+			entry.mLife = 0;
 		}
 
-		switch (mMode) {
-			case LIFE:
-				mReadoutTextView.setText(mLife + "");
-				break;
-			case POISON:
-				mReadoutTextView.setText(mPoison + "");
-				break;
+		if (mHistoryLifeAdapter != null) {
+			mHistoryLifeAdapter.notifyDataSetChanged();
+		}
+		if (mHistoryPoisonAdapter != null) {
+			mHistoryPoisonAdapter.notifyDataSetChanged();
+		}
+		if (mCommanderDamageAdapter != null) {
+			mCommanderDamageAdapter.notifyDataSetChanged();
+		}
+
+		/* Redraw life totals */
+		changeValue(0);
+		if(mCommanderCastingButton != null) {
+			mCommanderCastingButton.setText(""+mCommanderCasting);
 		}
 	}
 
@@ -447,7 +451,7 @@ public class LcPlayer {
 		private final int mType;
 
 		public HistoryArrayAdapter(Context context, int type) {
-			super(context, R.layout.history_adapter_row, (type == LIFE) ? mLifeHistory : mPoisonHistory);
+			super(context, R.layout.life_counter_history_adapter_row, (type == LIFE) ? mLifeHistory : mPoisonHistory);
 			mType = type;
 		}
 
@@ -467,7 +471,7 @@ public class LcPlayer {
 				view = convertView;
 			}
 			else {
-				view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.history_adapter_row, null);
+				view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_history_adapter_row, null);
 			}
 			assert view != null;
 			switch (mType) {

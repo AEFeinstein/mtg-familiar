@@ -153,33 +153,25 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		assert viewTreeObserver != null;
 		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			public void onGlobalLayout() {
-				boolean changed = false;
-				if (mListSizeHeight < mScrollView.getHeight()) {
-					mListSizeHeight = mScrollView.getHeight();
-					changed = true;
-				}
-				if (mListSizeWidth < mScrollView.getWidth()) {
-					mListSizeWidth = mScrollView.getWidth();
-					changed = true;
-				}
-				if (changed) {
-					for (LcPlayer player : mPlayers) {
-						player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+				if (isVisible()) {
+					boolean changed = false;
+					if (mListSizeHeight < mScrollView.getHeight()) {
+						mListSizeHeight = mScrollView.getHeight();
+						changed = true;
 					}
-
-					if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-						if (mDisplayMode == DISPLAY_COMMANDER) {
-							float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getActivity().getResources().getDisplayMetrics());
-
-							if (mGridLayout.getChildCount() > 0) {
-								mGridLayout.removeAllViews();
+					if (mListSizeWidth < mScrollView.getWidth()) {
+						mListSizeWidth = mScrollView.getWidth();
+						changed = true;
+					}
+					if (changed) {
+						if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+							if (mDisplayMode == DISPLAY_COMMANDER) {
+								/* Conveniently takes care of re-adding the sized views in the right number of rows */
+								changeDisplayMode(mDisplayMode);
 							}
-
-							mGridLayout.setRowCount((int) (mListSizeHeight / height));
-
-							for (LcPlayer player : mPlayers) {
-								addPlayerView(player);
-							}
+						}
+						for (LcPlayer player : mPlayers) {
+							player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
 						}
 					}
 				}
@@ -350,7 +342,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				/* Add the player to the ArrayList, and draw the new view */
 				addPlayer();
 				setCommanderInfo(-1);
-				addPlayerView(mPlayers.get(mPlayers.size() - 1));
+				addPlayerView(mPlayers.get(mPlayers.size() - 1), true);
 				return true;
 			case R.id.remove_player:
 				showDialog(REMOVE_PLAYER_DIALOG);
@@ -425,7 +417,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 								setCommanderInfo(item);
 
 								/* Reset the displayed player, in case the displayed player was removed */
-								if(mDisplayMode == DISPLAY_COMMANDER) {
+								if (mDisplayMode == DISPLAY_COMMANDER) {
 									mCommanderPlayerView.removeAllViews();
 									mCommanderPlayerView.addView(mPlayers.get(0).mView);
 								}
@@ -551,7 +543,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 					}
 				}
 			}
-			/* Redraw the informatino */
+			/* Redraw the information */
 			if (player1.mCommanderDamageAdapter != null) {
 				player1.mCommanderDamageAdapter.notifyDataSetChanged();
 			}
@@ -569,17 +561,17 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				case DISPLAY_NORMAL:
 					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
 					mGridLayout.setColumnCount(1);
-					mGridLayout.setRowCount(100);
+					mGridLayout.setRowCount(GridLayout.UNDEFINED);
 					break;
 				case DISPLAY_COMPACT:
 					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
 					mGridLayout.setColumnCount(2);
-					mGridLayout.setRowCount(100);
+					mGridLayout.setRowCount(GridLayout.UNDEFINED);
 					break;
 				case DISPLAY_COMMANDER:
 					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
 					mGridLayout.setColumnCount(2);
-					mGridLayout.setRowCount(100);
+					mGridLayout.setRowCount(GridLayout.UNDEFINED);
 					break;
 			}
 		}
@@ -587,30 +579,31 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			switch (displayMode) {
 				case DISPLAY_NORMAL:
 					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
-					mGridLayout.setColumnCount(100);
+					mGridLayout.setColumnCount(GridLayout.UNDEFINED);
 					mGridLayout.setRowCount(1);
 					break;
 				case DISPLAY_COMPACT:
 					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
-					mGridLayout.setColumnCount(100);
+					mGridLayout.setColumnCount(GridLayout.UNDEFINED);
 					mGridLayout.setRowCount(1);
 					break;
 				case DISPLAY_COMMANDER:
 					mGridLayout.setOrientation(GridLayout.VERTICAL);
-					mGridLayout.setColumnCount(100);
+					mGridLayout.setColumnCount(GridLayout.UNDEFINED);
 					if (mListSizeHeight != -1) {
 						float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getActivity().getResources().getDisplayMetrics());
 						mGridLayout.setRowCount((int) (mListSizeHeight / height));
 					}
 					else {
-						mGridLayout.setRowCount(100);
+						mGridLayout.setRowCount(GridLayout.UNDEFINED);
 					}
 					break;
 			}
 		}
 
 		for (LcPlayer player : mPlayers) {
-			addPlayerView(player);
+			player.mDefaultLifeTotal = getDefaultLife();
+			addPlayerView(player, true);
 		}
 
 		if (displayMode == DISPLAY_COMMANDER) {
@@ -629,21 +622,31 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		}
 	}
 
-	private void addPlayerView(final LcPlayer player) {
-		mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying));
-		if (mListSizeHeight != -1) {
-			player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+	private void addPlayerView(final LcPlayer player, boolean isNew) {
+		if (isNew) {
+			mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying));
+			if (mDisplayMode == DISPLAY_COMMANDER) {
+				player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						mCommanderPlayerView.removeAllViews();
+						mCommanderPlayerView.addView(player.mView);
+						player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+					}
+				});
+			}
+		}
+		else {
+			if (mDisplayMode == DISPLAY_COMMANDER) {
+				mGridLayout.addView(player.mCommanderRowView);
+			}
+			else {
+				mGridLayout.addView(player.mView);
+			}
 		}
 
-		if (mDisplayMode == DISPLAY_COMMANDER) {
-			player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					mCommanderPlayerView.removeAllViews();
-					mCommanderPlayerView.addView(player.mView);
-					player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
-				}
-			});
+		if (mListSizeHeight != -1) {
+			player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
 		}
 	}
 
@@ -688,6 +691,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		mLargestPlayerNumber++;
 		player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
+		player.mDefaultLifeTotal = getDefaultLife();
+		player.mLife = player.mDefaultLifeTotal;
 
 		mPlayers.add(player);
 	}
@@ -748,7 +753,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			try {
 				player.mDefaultLifeTotal = Integer.parseInt(data[5]);
 			} catch (Exception e) {
-				player.mDefaultLifeTotal = 20; // TODO static const?
+				player.mDefaultLifeTotal = getDefaultLife();
 			}
 
 			try {
@@ -822,6 +827,13 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		} catch (ArrayIndexOutOfBoundsException e) {
 			/* Eat it */
 		}
+	}
+
+	private int getDefaultLife() {
+		if(mDisplayMode == DISPLAY_COMMANDER) {
+			return 40;
+		}
+		return 20;
 	}
 
 	/**

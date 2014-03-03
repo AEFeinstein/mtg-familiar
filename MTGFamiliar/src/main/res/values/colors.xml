@@ -29,5 +29,5 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="drawer_text_unselected">#58585B</color>
     <color name="drawer_text_selected">#FFFFFF</color>
     <color name="drawer_divider_header">#BEBEBE</color>
-    <color name="drawer_divider_item">#DCDCDC</color>
+    <color name="drawer_divider_item">#D7D7D7</color>
 </resources>
