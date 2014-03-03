@@ -97,7 +97,7 @@ public abstract class PreferenceFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup paramViewGroup,
 							 Bundle paramBundle) {
-		return paramLayoutInflater.inflate(R.layout.preference_list_fragment, paramViewGroup,
+		return paramLayoutInflater.inflate(R.layout.preference_list_frag, paramViewGroup,
 				false);
 	}
 

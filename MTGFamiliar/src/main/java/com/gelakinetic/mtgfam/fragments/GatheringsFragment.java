@@ -125,7 +125,7 @@ public class GatheringsFragment extends FamiliarFragment {
 		mLargestPlayerNumber = 0;
 
 		/* Inflate a view */
-		View myFragmentView = inflater.inflate(R.layout.gathering_create_activity, container, false);
+		View myFragmentView = inflater.inflate(R.layout.gathering_frag, container, false);
 		assert myFragmentView != null;
 		mLinearLayout = (LinearLayout) myFragmentView.findViewById(R.id.gathering_player_list);
 		mDisplayModeSpinner = (Spinner) myFragmentView.findViewById(R.id.gathering_display_mode);

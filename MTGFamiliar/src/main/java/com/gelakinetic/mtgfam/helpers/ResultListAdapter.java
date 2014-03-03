@@ -59,7 +59,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 	 *                Can be null if the cursor is not available yet.
 	 */
 	public ResultListAdapter(Context context, Cursor cursor, String[] from, int[] to) {
-		super(context, R.layout.card_row, cursor, from, to, 0);
+		super(context, R.layout.result_list_card_row, cursor, from, to, 0);
 		this.mFrom = from;
 		this.mTo = to;
 		this.mResources = context.getResources();
@@ -79,7 +79,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		final LayoutInflater inflater = LayoutInflater.from(context);
-		return inflater.inflate(R.layout.card_row, parent, false);
+		return inflater.inflate(R.layout.result_list_card_row, parent, false);
 	}
 
 	/**

@@ -887,7 +887,7 @@ public class CardViewFragment extends FamiliarFragment {
 						Dialog dialog = new Dialog(this.getActivity());
 						dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-						dialog.setContentView(R.layout.image_dialog);
+						dialog.setContentView(R.layout.card_view_image_dialog);
 
 						ImageView dialogImageView = (ImageView) dialog.findViewById(R.id.cardimage);
 						dialogImageView.setImageDrawable(mCardBitmap);
@@ -914,7 +914,7 @@ public class CardViewFragment extends FamiliarFragment {
 							fillMaps.add(map);
 						}
 
-						SimpleAdapter adapter = new SimpleAdapter(this.getActivity(), fillMaps, R.layout.legal_row,
+						SimpleAdapter adapter = new SimpleAdapter(this.getActivity(), fillMaps, R.layout.card_view_legal_row,
 								from, to);
 						ListView lv = new ListView(this.getActivity());
 						lv.setAdapter(adapter);
@@ -930,7 +930,7 @@ public class CardViewFragment extends FamiliarFragment {
 							return null;
 						}
 
-						View v = getActivity().getLayoutInflater().inflate(R.layout.price_dialog, null);
+						View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_price_dialog, null);
 
 						assert v != null; /* Because Android Studio */
 						TextView l = (TextView) v.findViewById(R.id.low);
@@ -982,7 +982,7 @@ public class CardViewFragment extends FamiliarFragment {
 						}
 						ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
 
-						View v = getActivity().getLayoutInflater().inflate(R.layout.rulings_dialog, null);
+						View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null);
 						assert v != null; /* Because Android Studio */
 
 						TextView textViewRules = (TextView) v.findViewById(R.id.rules);

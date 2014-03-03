@@ -255,7 +255,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 
 				switch (id) {
 					case DIALOG_SET_WARNINGS: {
-						final View v = View.inflate(this.getActivity(), R.layout.timer_warning_dialog, null);
+						final View v = View.inflate(this.getActivity(), R.layout.round_timer_warning_dialog, null);
 						final CheckBox chkFifteen = (CheckBox) v.findViewById(R.id.timer_pref_fifteen);
 						final CheckBox chkTen = (CheckBox) v.findViewById(R.id.timer_pref_ten);
 						final CheckBox chkFive = (CheckBox) v.findViewById(R.id.timer_pref_five);

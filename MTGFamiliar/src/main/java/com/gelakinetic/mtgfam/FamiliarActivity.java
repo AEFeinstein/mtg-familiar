@@ -820,7 +820,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						/* Set the custom view, with some images below the text */
 						LayoutInflater inflater = this.getActivity().getLayoutInflater();
-						View dialogLayout = inflater.inflate(R.layout.dialog_about,
+						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
 								(ViewGroup) findViewById(R.id.dialog_layout_root));
 						assert dialogLayout != null;
 						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
@@ -867,7 +867,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						/* Set the custom view */
 						LayoutInflater inflater = this.getActivity().getLayoutInflater();
-						View dialogLayout = inflater.inflate(R.layout.dialog_about,
+						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
 								(ViewGroup) findViewById(R.id.dialog_layout_root));
 
 						/* Set the text */

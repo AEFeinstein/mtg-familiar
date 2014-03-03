@@ -215,7 +215,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 						/* Use a raw dialog with a custom view (ImageView inside LinearLayout) to display the Vanguard*/
 						Dialog dialog = new Dialog(this.getActivity());
 						dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-						dialog.setContentView(R.layout.image_dialog);
+						dialog.setContentView(R.layout.card_view_image_dialog);
 						ImageView image = (ImageView) dialog.findViewById(R.id.cardimage);
 
 						/* These drawables are re-sized on-the-fly, so only a single hi-res version exists in a resource
