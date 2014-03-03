@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/master_layout"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical"
-              android:layout_marginTop="4dp"
-              android:layout_marginRight="16dp"
-              android:layout_marginLeft="16dp">
+    android:id="@+id/master_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="4dp"
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/mjs_momir_portrait"/>
+            android:src="@drawable/mjs_momir_portrait" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -40,13 +40,13 @@
                     style="@style/text"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:text="@string/mojhosto_momir_label"/>
+                    android:text="@string/mojhosto_momir_label" />
 
                 <Spinner
                     android:id="@+id/momir_spinner"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
-                    android:entries="@array/momir_spinner"/>
+                    android:entries="@array/momir_spinner" />
             </LinearLayout>
 
             <Button
@@ -54,7 +54,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:text="@string/mojhosto_random_creature"/>
+                android:text="@string/mojhosto_random_creature"
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -70,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/mjs_stonehewer_portrait"/>
+            android:src="@drawable/mjs_stonehewer_portrait" />
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -90,13 +91,13 @@
                     style="@style/text"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:text="@string/mojhosto_stonehewer_label"/>
+                    android:text="@string/mojhosto_stonehewer_label" />
 
                 <Spinner
                     android:id="@+id/stonehewer_spinner"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
-                    android:entries="@array/momir_spinner"/>
+                    android:entries="@array/momir_spinner" />
             </LinearLayout>
 
             <Button
@@ -104,7 +105,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:text="@string/mojhosto_random_equipment"/>
+                android:text="@string/mojhosto_random_equipment"
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -120,7 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/mjs_jhoira_portrait"/>
+            android:src="@drawable/mjs_jhoira_portrait" />
 
         <LinearLayout
             android:id="@+id/linearLayout6"
@@ -135,14 +137,18 @@
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:text="@string/mojhosto_random_instants"/>
+                android:text="@string/mojhosto_random_instants"
+
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/jhorira_sorcery_button"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:text="@string/mojhosto_random_sorceries"/>
+                android:text="@string/mojhosto_random_sorceries"
+
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

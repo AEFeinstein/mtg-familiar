@@ -63,6 +63,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
+                    android:textSize="14sp"
                     android:text="@string/mojhosto_random_creature"/>
             </LinearLayout>
         </LinearLayout>
@@ -113,6 +114,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
+                    android:textSize="14sp"
                     android:text="@string/mojhosto_random_equipment"/>
             </LinearLayout>
         </LinearLayout>
@@ -144,6 +146,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
+                    android:textSize="14sp"
                     android:text="@string/mojhosto_random_instants"/>
 
                 <Button
@@ -151,6 +154,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
+                    android:textSize="14sp"
                     android:text="@string/mojhosto_random_sorceries"/>
             </LinearLayout>
         </LinearLayout>
