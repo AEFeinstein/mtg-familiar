@@ -602,7 +602,15 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		}
 
 		for (LcPlayer player : mPlayers) {
-			player.mDefaultLifeTotal = getDefaultLife();
+			/* Only reset a player's default life / life if that player is unaltered and doesn't have a noticeably
+			 * custom default life */
+			if (player.mLifeHistory.size() == 0
+					&& player.mPoisonHistory.size() == 0
+					&& player.mLife == player.mDefaultLifeTotal
+					&& (player.mDefaultLifeTotal == 20 || player.mDefaultLifeTotal == 40)) {
+				player.mDefaultLifeTotal = getDefaultLife();
+				player.mLife = player.mDefaultLifeTotal;
+			}
 			addPlayerView(player, true);
 		}
 
@@ -830,7 +838,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	}
 
 	private int getDefaultLife() {
-		if(mDisplayMode == DISPLAY_COMMANDER) {
+		if (mDisplayMode == DISPLAY_COMMANDER) {
 			return 40;
 		}
 		return 20;

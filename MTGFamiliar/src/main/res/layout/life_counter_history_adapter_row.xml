@@ -23,7 +23,7 @@
         android:layout_weight=".5"
         android:gravity="center"
         android:text="+0"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:layout_margin="4dp"/>
 
     <View
@@ -39,7 +39,7 @@
         android:layout_weight=".5"
         android:gravity="center"
         android:text="@string/life_counter_twenty"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:layout_margin="4dp"/>
 
 </LinearLayout>

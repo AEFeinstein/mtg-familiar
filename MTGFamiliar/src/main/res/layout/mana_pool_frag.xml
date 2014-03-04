@@ -10,11 +10,7 @@
 	more details. You should have received a copy of the GNU General Public License
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -295,5 +291,3 @@
                 android:textSize="30sp"/>
         </LinearLayout>
     </LinearLayout>
-
-</ScrollView>

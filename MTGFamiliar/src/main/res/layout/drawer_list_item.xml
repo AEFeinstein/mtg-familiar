@@ -31,7 +31,6 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="56dp"
             android:textColor="@drawable/drawer_text"
             android:textSize="18dp"
             android:duplicateParentState="true"/>
