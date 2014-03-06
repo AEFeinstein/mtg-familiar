@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -652,7 +653,7 @@ public class LcPlayer {
 						assert textEntryView != null;
 						@SuppressLint("CutPasteId")
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
-						nameInput.setText(LcPlayer.this.mName);
+						nameInput.append(LcPlayer.this.mName);
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
@@ -660,7 +661,7 @@ public class LcPlayer {
 							}
 						});
 
-						return new AlertDialog.Builder(getActivity())
+						Dialog dialog = new AlertDialog.Builder(getActivity())
 								.setTitle(R.string.life_counter_edit_name_dialog_title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -687,6 +688,8 @@ public class LcPlayer {
 									}
 								})
 								.create();
+						dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+						return dialog;
 					}
 					case DIALOG_COMMANDER_DAMAGE: {
 						/* inflate a view to add or subtract commander damage, and show it in an AlertDialog */
@@ -751,7 +754,9 @@ public class LcPlayer {
 						@SuppressLint("CutPasteId")
 						final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-						lifeInput.setText(mReadoutTextView.getText());
+						if(mReadoutTextView.getText() != null) {
+							lifeInput.append(mReadoutTextView.getText());
+						}
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
@@ -766,7 +771,8 @@ public class LcPlayer {
 						else {
 							title = getResources().getString(R.string.life_counter_edit_life_dialog_title);
 						}
-						return new AlertDialog.Builder(getActivity())
+
+						Dialog dialog = new AlertDialog.Builder(getActivity())
 								.setTitle(title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -778,7 +784,12 @@ public class LcPlayer {
 										try {
 											/* make sure the life is valid, not empty */
 											int newLife = Integer.parseInt(lifeInput.getText().toString());
-											changeValue(newLife - mLife, true);
+											if (mMode == LifeCounterFragment.STAT_POISON) {
+												changeValue(newLife - mPoison, true);
+											}
+											else {
+												changeValue(newLife - mLife, true);
+											}
 										} catch (NumberFormatException e) {
 											/* eat it */
 										}
@@ -790,6 +801,8 @@ public class LcPlayer {
 									}
 								})
 								.create();
+						dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+						return dialog;
 					}
 					default: {
 						savedInstanceState.putInt("id", id);

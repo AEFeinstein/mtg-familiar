@@ -652,7 +652,7 @@ public class FamiliarActivity extends FragmentActivity {
 	 */
 	public void hideKeyboard() {
 		try {
-			InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+			InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			assert getCurrentFocus() != null;
 			inputManager
 					.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -669,7 +669,7 @@ public class FamiliarActivity extends FragmentActivity {
 	@Override
 	@NotNull
 	public android.app.FragmentManager getFragmentManager() {
-		throw new IllegalAccessError("Use .getSupportFragmentManager");
+		throw new IllegalAccessError("Use .getSupportFragmentManager()");
 	}
 
 	/**
@@ -1084,7 +1084,7 @@ public class FamiliarActivity extends FragmentActivity {
 	@Override
 	public void onUserInteraction() {
 		super.onUserInteraction();
-		if(mUserInactive) {
+		if (mUserInactive) {
 			Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
 			if (fragment instanceof FamiliarFragment) {
 				mUserInactive = true;

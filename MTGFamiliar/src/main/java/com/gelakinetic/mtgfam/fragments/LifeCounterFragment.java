@@ -351,7 +351,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
+		/* Handle item selection */
 		switch (item.getItemId()) {
 			case R.id.add_player:
 				/* Add the player to the ArrayList, set the commander info, and draw the new view */
