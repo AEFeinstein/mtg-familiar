@@ -1092,7 +1092,7 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		}
 		mInactivityHandler.removeCallbacks(userInactive);
-		mInactivityHandler.postDelayed(userInactive, 10000);
+		mInactivityHandler.postDelayed(userInactive, 30000);
 		mUserInactive = false;
 	}
 }

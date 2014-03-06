@@ -187,7 +187,7 @@ public class GatheringsFragment extends FamiliarFragment {
 						LayoutInflater factory = LayoutInflater.from(this.getActivity());
 						final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry, null);
 						assert textEntryView != null;
-						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.player_name);
+						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.setText(mCurrentGatheringName);
 
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {

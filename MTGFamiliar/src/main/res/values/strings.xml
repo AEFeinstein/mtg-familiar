@@ -246,7 +246,6 @@
 
     <!-- Default gathering activity -->
     <string name="gathering_custom_name">Name</string>
-    <string name="gathering_player">Player</string>
     <string name="gathering_starting_life">Starting life:</string>
     <string name="gathering_starting_life_default">20</string>
     <string name="gathering_save">Save Gathering</string>
@@ -475,5 +474,7 @@
     <string name="gathering_toast_no_players">No players to remove</string>
     <string name="main_export_no_data">No data to save</string>
     <string name="life_counter_edh_dialog_title">Damage from %s\'s Commander</string>
+    <string name="life_counter_edit_life_dialog_title">Enter Life</string>
+    <string name="life_counter_edit_poison_dialog_title">Enter Poison</string>
 
 </resources>

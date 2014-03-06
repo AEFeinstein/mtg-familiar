@@ -22,7 +22,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
               android:orientation="horizontal">
 
     <EditText
-        android:id="@+id/player_name"
+        android:id="@+id/text_entry"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

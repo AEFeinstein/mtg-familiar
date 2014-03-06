@@ -39,7 +39,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:title="@string/life_counter_set_gathering"
         android:icon="@drawable/ic_action_group"/>
     <item
-        android:id="@+id/change_gathering" 
+        android:id="@+id/edit_gatherings"
         android:showAsAction="ifRoom"
         android:title="@string/life_counter_change_default_gathering"
         android:icon="@drawable/ic_action_add_group"/>

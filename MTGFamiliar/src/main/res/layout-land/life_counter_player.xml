@@ -47,7 +47,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             style="@style/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/gathering_player"
+            android:text="@string/life_counter_default_name"
             android:layout_gravity="center"/>
 
         <LinearLayout

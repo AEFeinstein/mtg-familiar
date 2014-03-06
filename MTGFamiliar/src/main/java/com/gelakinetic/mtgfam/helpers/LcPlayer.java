@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,15 +27,12 @@ import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import java.util.ArrayList;
 
 public class LcPlayer {
-	/* Constants */
-	public final static int LIFE = 0;
-	public final static int POISON = 1;
-	public final static int COMMANDER = 2;
+	/* Dialog Constants */
+	public final static int DIALOG_SET_NAME = 0;
+	public final static int DIALOG_COMMANDER_DAMAGE = 1;
+	public final static int DIALOG_CHANGE_LIFE = 2;
 
-	public final static int NAME_DIALOG = 0;
-	public final static int COMMANDER_DIALOG = 1;
-
-	/* Game information */
+	/* Histories and adapters for life, poison, commander damage */
 	public ArrayList<HistoryEntry> mLifeHistory = new ArrayList<HistoryEntry>();
 	public ArrayList<HistoryEntry> mPoisonHistory = new ArrayList<HistoryEntry>();
 	public ArrayList<CommanderEntry> mCommanderDamage = new ArrayList<CommanderEntry>();
@@ -42,11 +40,13 @@ public class LcPlayer {
 	private HistoryArrayAdapter mHistoryPoisonAdapter;
 	public CommanderDamageAdapter mCommanderDamageAdapter;
 
+	/* Stats */
 	public int mLife = 20;
 	public int mPoison = 0;
 	public String mName;
 	public int mCommanderCasting = 0;
 	public int mDefaultLifeTotal = 20;
+	private int mMode = LifeCounterFragment.STAT_LIFE;
 
 	/* UI Elements */
 	private TextView mNameTextView;
@@ -54,21 +54,25 @@ public class LcPlayer {
 	private TextView mCommanderNameTextView;
 	private TextView mCommanderReadoutTextView;
 	private Button mCommanderCastingButton;
+	private ListView mHistoryList;
 
+	/* The player's View to be drawn in the LifeCounterFragment */
 	public View mView;
 	public View mCommanderRowView;
 
-	private ListView mHistoryList;
-
-	/* Helper */
+	/* Handler for committing life changes */
 	private Handler mHandler = new Handler();
-	private final LifeCounterFragment mFragment;
-	private int mMode = LIFE;
 
+	/* Reference to parent fragment */
+	private final LifeCounterFragment mFragment;
+
+	/* This runnable will commit any life / poison changes to history, and notify the adapter to display the changes
+	   in the ListView */
 	Runnable mLifePoisonCommitter = new Runnable() {
 		@Override
 		public void run() {
 			HistoryEntry entry = new HistoryEntry();
+			/* If there are no entries, assume life is mDefaultLifeTotal */
 			if (mLifeHistory.size() == 0) {
 				entry.mDelta = mLife - mDefaultLifeTotal;
 			}
@@ -99,22 +103,26 @@ public class LcPlayer {
 			}
 		}
 	};
-	private int mTakingDamageFromCommander;
 
+	/**
+	 * Constructor, save a reference to the parent fragment, and set a default name just in case
+	 *
+	 * @param fragment The parent fragment
+	 */
 	public LcPlayer(LifeCounterFragment fragment) {
 		mFragment = fragment;
-		mName = mFragment.getActivity().getString(R.string.life_counter_default_name) + " 1";
+		mName = mFragment.getActivity().getString(R.string.life_counter_default_name);
 	}
 
 	/**
-	 * Sets the display mode between life and poison. Switches the readout and history
+	 * Sets the display mode between life and poison. Switches the readout, commander readout, color, and history
 	 *
-	 * @param mode either LIFE, POISON, or COMMANDER
+	 * @param mode either STAT_LIFE, STAT_POISON, or STAT_COMMANDER
 	 */
 	public void setMode(int mode) {
 		mMode = mode;
 		switch (mMode) {
-			case LIFE:
+			case LifeCounterFragment.STAT_LIFE:
 				if (mHistoryList != null) {
 					mHistoryList.setAdapter(mHistoryLifeAdapter);
 					mHistoryList.invalidate();
@@ -123,10 +131,11 @@ public class LcPlayer {
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mLife + "");
-					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
+					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
+							.getColor(R.color.holo_red_dark));
 				}
 				break;
-			case POISON:
+			case LifeCounterFragment.STAT_POISON:
 				if (mHistoryList != null) {
 					mHistoryList.setAdapter(mHistoryPoisonAdapter);
 					mHistoryList.invalidate();
@@ -135,10 +144,11 @@ public class LcPlayer {
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mPoison + "");
-					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
+					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
+							.getColor(R.color.holo_green_dark));
 				}
 				break;
-			case COMMANDER:
+			case LifeCounterFragment.STAT_COMMANDER:
 				if (mHistoryList != null) {
 					mHistoryList.setAdapter(mCommanderDamageAdapter);
 					mHistoryList.invalidate();
@@ -147,7 +157,8 @@ public class LcPlayer {
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mLife + "");
-					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
+					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
+							.getColor(R.color.holo_red_dark));
 				}
 				break;
 		}
@@ -159,17 +170,17 @@ public class LcPlayer {
 	 *
 	 * @param delta How much the current value should be changed
 	 */
-	private void changeValue(int delta) {
+	private void changeValue(int delta, boolean immediate) {
 		switch (mMode) {
-			case POISON:
+			case LifeCounterFragment.STAT_POISON:
 				mPoison += delta;
 				mReadoutTextView.setText(mPoison + "");
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mPoison + "");
 				}
 				break;
-			case COMMANDER:
-			case LIFE:
+			case LifeCounterFragment.STAT_COMMANDER:
+			case LifeCounterFragment.STAT_LIFE:
 				mLife += delta;
 				mReadoutTextView.setText(mLife + "");
 				if (mCommanderReadoutTextView != null) {
@@ -178,26 +189,42 @@ public class LcPlayer {
 				break;
 		}
 		mHandler.removeCallbacks(mLifePoisonCommitter);
-		mHandler.postDelayed(mLifePoisonCommitter, 1000);
+		if (immediate) {
+			mHandler.post(mLifePoisonCommitter);
+		}
+		else {
+			mHandler.postDelayed(mLifePoisonCommitter, 1000);
+		}
 	}
 
+	/**
+	 * Inflate the necessary views for this player, set the onClickListeners, and return the view to be added to the
+	 * GridView
+	 *
+	 * @param displayMode The display mode, either DISPLAY_COMMANDER, DISPLAY_COMPACT or DISPLAY_NORMAL
+	 * @param statType    The stat type being displayed, either STAT_POISON, STAT_LIFE, or STAT_COMMANDER
+	 * @return The view to be added to the GridView. Can either be mView or mCommanderRowView
+	 */
 	public View newView(int displayMode, int statType) {
 		switch (displayMode) {
 			case LifeCounterFragment.DISPLAY_COMMANDER:
 			case LifeCounterFragment.DISPLAY_NORMAL: {
+				/* Inflate the player view */
 				mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, null);
 				assert mView != null;
 				mHistoryList = (ListView) mView.findViewById(R.id.player_history);
-				mHistoryLifeAdapter = new HistoryArrayAdapter(mFragment.getActivity(), LIFE);
-				mHistoryPoisonAdapter = new HistoryArrayAdapter(mFragment.getActivity(), POISON);
+				mCommanderCastingButton = (Button) mView.findViewById(R.id.commanderCast);
+
+				/* Make new adapters */
+				mHistoryLifeAdapter = new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_LIFE);
+				mHistoryPoisonAdapter
+						= new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_POISON);
 				mCommanderDamageAdapter = new CommanderDamageAdapter(mFragment.getActivity());
 
-				mCommanderCastingButton = (Button) mView.findViewById(R.id.commanderCast);
-				mCommanderCastingButton.setText("" + mCommanderCasting);
-
-				/* If it's commander, also inflate the entry to display in the grid */
+				/* If it's commander, also inflate the entry to display in the grid, and set up the casting button */
 				if (displayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
 					mView.findViewById(R.id.commanderCastText).setVisibility(View.VISIBLE);
+					mCommanderCastingButton.setText("" + mCommanderCasting);
 					mCommanderCastingButton.setVisibility(View.VISIBLE);
 					mCommanderCastingButton.setOnClickListener(new View.OnClickListener() {
 						@Override
@@ -206,8 +233,20 @@ public class LcPlayer {
 							mCommanderCastingButton.setText("" + mCommanderCasting);
 						}
 					});
+					mCommanderCastingButton.setOnLongClickListener(new View.OnLongClickListener() {
+						@Override
+						public boolean onLongClick(View view) {
+							mCommanderCasting--;
+							if (mCommanderCasting < 0) {
+								mCommanderCasting = 0;
+							}
+							mCommanderCastingButton.setText("" + mCommanderCasting);
+							return true;
+						}
+					});
 
-					mCommanderRowView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, null);
+					mCommanderRowView = LayoutInflater.from(
+							mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, null);
 					assert mCommanderRowView != null;
 					mCommanderNameTextView = (TextView) mCommanderRowView.findViewById(R.id.player_name);
 					if (mName != null) {
@@ -215,6 +254,7 @@ public class LcPlayer {
 					}
 					mCommanderReadoutTextView = (TextView) mCommanderRowView.findViewById(R.id.player_readout);
 				}
+				/* otherwise hide the commander casting button */
 				else {
 					mView.findViewById(R.id.commanderCastText).setVisibility(View.GONE);
 					mCommanderCastingButton.setVisibility(View.GONE);
@@ -223,7 +263,10 @@ public class LcPlayer {
 				break;
 			}
 			case LifeCounterFragment.DISPLAY_COMPACT: {
-				mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, null);
+				/* inflate the compact view */
+				mView = LayoutInflater
+						.from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, null);
+				/* don't bother with adapters */
 				mHistoryList = null;
 				mHistoryLifeAdapter = null;
 				mHistoryPoisonAdapter = null;
@@ -233,41 +276,50 @@ public class LcPlayer {
 		}
 		assert mView != null;
 
+		/* Set the name, will be in either compact or normal mView */
 		mNameTextView = (TextView) mView.findViewById(R.id.player_name);
 		if (mName != null) {
 			mNameTextView.setText(mName);
 		}
+		/* If the user touches the life total, pop a dialog to change it via keyboard */
 		mReadoutTextView = (TextView) mView.findViewById(R.id.player_readout);
+		mReadoutTextView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				showDialog(DIALOG_CHANGE_LIFE, -1);
+			}
+		});
 
+		/* Set the life / poison modifier buttons */
 		mView.findViewById(R.id.player_minus1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				changeValue(-1);
+				changeValue(-1, false);
 			}
 		});
 		mView.findViewById(R.id.player_minus5).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				changeValue(-5);
+				changeValue(-5, false);
 			}
 		});
 		mView.findViewById(R.id.player_plus1).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				changeValue(1);
+				changeValue(1, false);
 			}
 		});
 		mView.findViewById(R.id.player_plus5).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				changeValue(5);
+				changeValue(5, false);
 			}
 		});
 
 		mView.findViewById(R.id.player_name).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				showDialog(NAME_DIALOG);
+				showDialog(DIALOG_SET_NAME, -1);
 			}
 		});
 
@@ -336,7 +388,7 @@ public class LcPlayer {
 	}
 
 	/**
-	 * Reset the life, poison, and commander damage to default while preserving the name
+	 * Reset the life, poison, and commander damage to default while preserving the name and default life
 	 */
 	public void resetStats() {
 		mLifeHistory.clear();
@@ -345,7 +397,7 @@ public class LcPlayer {
 		mPoison = 0;
 		mCommanderCasting = 0;
 
-		for(CommanderEntry entry : mCommanderDamage) {
+		for (CommanderEntry entry : mCommanderDamage) {
 			entry.mLife = 0;
 		}
 
@@ -360,9 +412,9 @@ public class LcPlayer {
 		}
 
 		/* Redraw life totals */
-		changeValue(0);
-		if(mCommanderCastingButton != null) {
-			mCommanderCastingButton.setText(""+mCommanderCasting);
+		changeValue(0, true);
+		if (mCommanderCastingButton != null) {
+			mCommanderCastingButton.setText("" + mCommanderCasting);
 		}
 	}
 
@@ -380,12 +432,10 @@ public class LcPlayer {
 				GridLayout.LayoutParams params = (GridLayout.LayoutParams) mView.getLayoutParams();
 				assert params != null;
 				if (isPortrait) {
-					/* Portrait */
 					params.width = mGridLayoutWidth;
 					params.height = mGridLayoutHeight / 2;
 				}
 				else {
-					/* Landscape */
 					params.width = mGridLayoutWidth / 2;
 					params.height = mGridLayoutHeight;
 				}
@@ -396,12 +446,10 @@ public class LcPlayer {
 				GridLayout.LayoutParams params = (GridLayout.LayoutParams) mView.getLayoutParams();
 				assert params != null;
 				if (isPortrait) {
-					/* Portrait */
 					params.width = mGridLayoutWidth / 2;
 					params.height = mGridLayoutHeight / 2;
 				}
 				else {
-					/* Landscape */
 					params.width = mGridLayoutWidth / 4;
 					params.height = mGridLayoutHeight;
 				}
@@ -409,23 +457,23 @@ public class LcPlayer {
 				break;
 			}
 			case LifeCounterFragment.DISPLAY_COMMANDER: {
+				/* Set the row height to 48dp and the width to some fraction of the screen */
 				GridLayout.LayoutParams rowParams = (GridLayout.LayoutParams) mCommanderRowView.getLayoutParams();
 				assert rowParams != null;
-				rowParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, mFragment.getActivity().getResources().getDisplayMetrics());
+				rowParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
+						mFragment.getActivity().getResources().getDisplayMetrics());
 				if (isPortrait) {
-					/* Portrait */
 					rowParams.width = mGridLayoutWidth / 2;
 				}
 				else {
-					/* Landscape */
 					rowParams.width = mGridLayoutWidth / 4;
 				}
 				mCommanderRowView.setLayoutParams(rowParams);
 
+				/* Then set the player view to half the screen, if in landscape */
 				LinearLayout.LayoutParams viewParams = (LinearLayout.LayoutParams) mView.getLayoutParams();
 				if (viewParams != null) {
 					if (!isPortrait) {
-					/* Landscape */
 						viewParams.width = mGridLayoutWidth / 2;
 					}
 					mView.setLayoutParams(viewParams);
@@ -450,8 +498,15 @@ public class LcPlayer {
 
 		private final int mType;
 
+		/**
+		 * Constructor
+		 *
+		 * @param context a context to use in the superclass constructor
+		 * @param type    either STAT_LIFE or STAT_POISON
+		 */
 		public HistoryArrayAdapter(Context context, int type) {
-			super(context, R.layout.life_counter_history_adapter_row, (type == LIFE) ? mLifeHistory : mPoisonHistory);
+			super(context, R.layout.life_counter_history_adapter_row,
+					(type == LifeCounterFragment.STAT_LIFE) ? mLifeHistory : mPoisonHistory);
 			mType = type;
 		}
 
@@ -459,8 +514,7 @@ public class LcPlayer {
 		 * Called to get a view for an entry in the listView
 		 *
 		 * @param position    The position of the listView to populate
-		 * @param convertView The old view to reuse, if possible. Since the layouts for entries and headers are
-		 *                    different, this will be ignored
+		 * @param convertView The old view to reuse, if possible.
 		 * @param parent      The parent this view will eventually be attached to
 		 * @return The view for the data at this position
 		 */
@@ -471,30 +525,36 @@ public class LcPlayer {
 				view = convertView;
 			}
 			else {
-				view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_history_adapter_row, null);
+				view = LayoutInflater.from(mFragment.getActivity())
+						.inflate(R.layout.life_counter_history_adapter_row, null);
 			}
 			assert view != null;
 			switch (mType) {
-				case LIFE:
+				case LifeCounterFragment.STAT_LIFE:
 					((TextView) view.findViewById(R.id.absolute)).setText(mLifeHistory.get(position).mAbsolute + "");
 					if (mLifeHistory.get(position).mDelta > 0) {
 						((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
-						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
+						((TextView) view.findViewById(R.id.relative)).setTextColor(
+								mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
 					}
 					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mLifeHistory.get(position).mDelta);
-						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
+						((TextView) view.findViewById(R.id.relative)).setTextColor(
+								mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 					}
 					break;
-				case POISON:
+				case LifeCounterFragment.STAT_POISON:
 					((TextView) view.findViewById(R.id.absolute)).setText(mPoisonHistory.get(position).mAbsolute + "");
 					if (mPoisonHistory.get(position).mDelta > 0) {
-						((TextView) view.findViewById(R.id.relative)).setText("+" + mPoisonHistory.get(position).mDelta);
-						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
+						((TextView) view.findViewById(R.id.relative))
+								.setText("+" + mPoisonHistory.get(position).mDelta);
+						((TextView) view.findViewById(R.id.relative)).setTextColor(
+								mFragment.getActivity().getResources().getColor(R.color.holo_green_dark));
 					}
 					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mPoisonHistory.get(position).mDelta);
-						((TextView) view.findViewById(R.id.relative)).setTextColor(mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
+						((TextView) view.findViewById(R.id.relative)).setTextColor(
+								mFragment.getActivity().getResources().getColor(R.color.holo_red_dark));
 					}
 					break;
 			}
@@ -504,19 +564,11 @@ public class LcPlayer {
 	}
 
 	/**
-	 * Inner class to encapsulate an entry in the history list
+	 * Inner class to encapsulate an entry in the commander damage list
 	 */
-	public static class CommanderEntry implements Comparable<CommanderEntry> {
+	public static class CommanderEntry {
 		public int mLife;
-		public String mName = "Test";
-
-		@Override
-		public int compareTo(CommanderEntry commanderEntry) {
-			if (commanderEntry.mName.equals(mName)) {
-				return 0;
-			}
-			return 1;
-		}
+		public String mName;
 	}
 
 	/**
@@ -524,6 +576,11 @@ public class LcPlayer {
 	 */
 	public class CommanderDamageAdapter extends ArrayAdapter<CommanderEntry> {
 
+		/**
+		 * Constructor
+		 *
+		 * @param context a context to use in the superclass constructor
+		 */
 		public CommanderDamageAdapter(Context context) {
 			super(context, R.layout.life_counter_player_commander, mCommanderDamage);
 		}
@@ -532,8 +589,7 @@ public class LcPlayer {
 		 * Called to get a view for an entry in the listView
 		 *
 		 * @param position    The position of the listView to populate
-		 * @param convertView The old view to reuse, if possible. Since the layouts for entries and headers are
-		 *                    different, this will be ignored
+		 * @param convertView The old view to reuse, if possible.
 		 * @param parent      The parent this view will eventually be attached to
 		 * @return The view for the data at this position
 		 */
@@ -544,7 +600,8 @@ public class LcPlayer {
 				view = convertView;
 			}
 			else {
-				view = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, null);
+				view = LayoutInflater.from(mFragment.getActivity())
+						.inflate(R.layout.life_counter_player_commander, null);
 			}
 			assert view != null;
 
@@ -557,8 +614,7 @@ public class LcPlayer {
 			view.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					mTakingDamageFromCommander = position;
-					showDialog(COMMANDER_DIALOG);
+					showDialog(DIALOG_COMMANDER_DAMAGE, position);
 				}
 			});
 			return view;
@@ -569,13 +625,15 @@ public class LcPlayer {
 	/**
 	 * Remove any showing dialogs, and show the requested one
 	 *
-	 * @param id the ID of the dialog to show
+	 * @param id       the ID of the dialog to show
+	 * @param position Which commander the player is taking damage from
 	 */
-	void showDialog(final int id) {
+	void showDialog(final int id, final int position) {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
-		((FamiliarActivity) mFragment.getActivity()).removeDialogFragment(mFragment.getActivity().getSupportFragmentManager());
+		((FamiliarActivity) mFragment.getActivity())
+				.removeDialogFragment(mFragment.getActivity().getSupportFragmentManager());
 
 		/* Create and show the dialog. */
 		final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
@@ -586,10 +644,12 @@ public class LcPlayer {
 				setShowsDialog(true);
 
 				switch (id) {
-					case NAME_DIALOG: {
-						View textEntryView = mFragment.getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry, null);
+					case DIALOG_SET_NAME: {
+						/* Inflate a view to type in the player's name, and show it in an AlertDialog */
+						View textEntryView = mFragment.getActivity().getLayoutInflater()
+								.inflate(R.layout.alert_dialog_text_entry, null);
 						assert textEntryView != null;
-						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.player_name);
+						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.setText(LcPlayer.this.mName);
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
 							@Override
@@ -626,14 +686,16 @@ public class LcPlayer {
 								})
 								.create();
 					}
-					case COMMANDER_DIALOG: {
+					case DIALOG_COMMANDER_DAMAGE: {
+						/* inflate a view to add or subtract commander damage, and show it in an AlertDialog */
 						View view = LayoutInflater.from(getActivity()).inflate(R.layout.life_counter_edh_dialog, null);
 						assert view != null;
 						final TextView deltaText = (TextView) view.findViewById(R.id.delta);
 						final TextView absoluteText = (TextView) view.findViewById(R.id.absolute);
 
+						/* These are strange arrays of length one to have modifiable, yet final, variables */
 						final int[] delta = {0};
-						final int[] absolute = {mCommanderDamage.get(mTakingDamageFromCommander).mLife};
+						final int[] absolute = {mCommanderDamage.get(position).mLife};
 
 						deltaText.setText(((delta[0] >= 0) ? "+" : "-") + delta[0]);
 						absoluteText.setText("" + absolute[0]);
@@ -659,7 +721,8 @@ public class LcPlayer {
 						});
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-						builder.setTitle(String.format(getResources().getString(R.string.life_counter_edh_dialog_title), mCommanderDamage.get(mTakingDamageFromCommander).mName))
+						builder.setTitle(String.format(getResources().getString(R.string.life_counter_edh_dialog_title),
+								mCommanderDamage.get(position).mName))
 								.setView(view)
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									@Override
@@ -670,13 +733,60 @@ public class LcPlayer {
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface arg0, int arg1) {
-										mCommanderDamage.get(mTakingDamageFromCommander).mLife = absolute[0];
+										mCommanderDamage.get(position).mLife = absolute[0];
 										mCommanderDamageAdapter.notifyDataSetChanged();
-										changeValue(-delta[0]);
+										changeValue(-delta[0], true);
 									}
 								});
 
 						return builder.create();
+					}
+					case DIALOG_CHANGE_LIFE: {
+						/* Inflate a view to type in a new life, then show it in an AlertDialog */
+						View textEntryView = mFragment.getActivity().getLayoutInflater()
+								.inflate(R.layout.alert_dialog_text_entry, null);
+						assert textEntryView != null;
+						final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+						lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+						lifeInput.setText(mReadoutTextView.getText());
+						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								lifeInput.setText("");
+							}
+						});
+
+						String title;
+						if (mMode == LifeCounterFragment.STAT_POISON) {
+							title = getResources().getString(R.string.life_counter_edit_poison_dialog_title);
+						}
+						else {
+							title = getResources().getString(R.string.life_counter_edit_life_dialog_title);
+						}
+						return new AlertDialog.Builder(getActivity())
+								.setTitle(title)
+								.setView(textEntryView)
+								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int whichButton) {
+										if (lifeInput == null) {
+											return;
+										}
+										assert lifeInput.getText() != null;
+										try {
+											/* make sure the life is valid, not empty */
+											int newLife = Integer.parseInt(lifeInput.getText().toString());
+											changeValue(newLife - mLife, true);
+										} catch (NumberFormatException e) {
+											/* eat it */
+										}
+									}
+								})
+								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int whichButton) {
+										dialog.dismiss();
+									}
+								})
+								.create();
 					}
 					default: {
 						savedInstanceState.putInt("id", id);
