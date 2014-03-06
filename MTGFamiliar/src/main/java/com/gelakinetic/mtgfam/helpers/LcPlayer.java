@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -28,9 +29,9 @@ import java.util.ArrayList;
 
 public class LcPlayer {
 	/* Dialog Constants */
-	public final static int DIALOG_SET_NAME = 0;
-	public final static int DIALOG_COMMANDER_DAMAGE = 1;
-	public final static int DIALOG_CHANGE_LIFE = 2;
+	private final static int DIALOG_SET_NAME = 0;
+	private final static int DIALOG_COMMANDER_DAMAGE = 1;
+	private final static int DIALOG_CHANGE_LIFE = 2;
 
 	/* Histories and adapters for life, poison, commander damage */
 	public ArrayList<HistoryEntry> mLifeHistory = new ArrayList<HistoryEntry>();
@@ -61,14 +62,14 @@ public class LcPlayer {
 	public View mCommanderRowView;
 
 	/* Handler for committing life changes */
-	private Handler mHandler = new Handler();
+	private final Handler mHandler = new Handler();
 
 	/* Reference to parent fragment */
 	private final LifeCounterFragment mFragment;
 
 	/* This runnable will commit any life / poison changes to history, and notify the adapter to display the changes
 	   in the ListView */
-	Runnable mLifePoisonCommitter = new Runnable() {
+	private final Runnable mLifePoisonCommitter = new Runnable() {
 		@Override
 		public void run() {
 			HistoryEntry entry = new HistoryEntry();
@@ -649,6 +650,7 @@ public class LcPlayer {
 						View textEntryView = mFragment.getActivity().getLayoutInflater()
 								.inflate(R.layout.alert_dialog_text_entry, null);
 						assert textEntryView != null;
+						@SuppressLint("CutPasteId")
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.setText(LcPlayer.this.mName);
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
@@ -746,6 +748,7 @@ public class LcPlayer {
 						View textEntryView = mFragment.getActivity().getLayoutInflater()
 								.inflate(R.layout.alert_dialog_text_entry, null);
 						assert textEntryView != null;
+						@SuppressLint("CutPasteId")
 						final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
 						lifeInput.setText(mReadoutTextView.getText());

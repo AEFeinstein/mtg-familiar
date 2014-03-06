@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * This fragment handles the creation, loading, and saving of Gatherings (default sets of players, lives, and view modes
  * for the life counter
  */
-public class GatheringsFragment extends FamiliarFragment {
+class GatheringsFragment extends FamiliarFragment {
 	/* Dialog constants */
 	private static final int DIALOG_SAVE_GATHERING = 1;
 	private static final int DIALOG_GATHERING_EXIST = 2;

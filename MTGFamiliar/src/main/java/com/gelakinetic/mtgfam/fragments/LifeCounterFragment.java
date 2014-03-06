@@ -76,7 +76,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 
 	/* Keeping track of players, display state */
-	private ArrayList<LcPlayer> mPlayers = new ArrayList<LcPlayer>();
+	private final ArrayList<LcPlayer> mPlayers = new ArrayList<LcPlayer>();
 	private int mStatDisplaying = STAT_LIFE;
 	private int mLargestPlayerNumber = 0;
 	private int mDisplayMode = DISPLAY_NORMAL;
@@ -86,7 +86,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	private boolean mTtsInit;
 	private AudioManager mAudioManager;
 	private MediaPlayer m9000Player;
-	LinkedList<String> mVocalizations = new LinkedList<String>();
+	private final LinkedList<String> mVocalizations = new LinkedList<String>();
 
 	/* For proper dimming during wake lock */
 	private float mDefaultBrightness;
@@ -357,7 +357,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				/* Add the player to the ArrayList, set the commander info, and draw the new view */
 				addPlayer();
 				setCommanderInfo(-1);
-				addPlayerView(mPlayers.get(mPlayers.size() - 1), true);
+				addPlayerView(mPlayers.get(mPlayers.size() - 1));
 				return true;
 			case R.id.remove_player:
 				/* Show a dialog of players to remove */
@@ -659,7 +659,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				player.mLife = player.mDefaultLifeTotal;
 			}
 			/* Draw the player's view */
-			addPlayerView(player, true);
+			addPlayerView(player);
 		}
 
 		if (mDisplayMode == DISPLAY_COMMANDER) {
@@ -685,32 +685,21 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 * mCommanderPlayerView.
 	 *
 	 * @param player The player to be added
-	 * @param isNew  true if a new view should be inflated. False if this method should use the player's existing view
 	 */
-	private void addPlayerView(final LcPlayer player, boolean isNew) {
-		if (isNew) {
-			mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying));
-			if (mDisplayMode == DISPLAY_COMMANDER) {
-				player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
+	private void addPlayerView(final LcPlayer player) {
+		mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying));
+		if (mDisplayMode == DISPLAY_COMMANDER) {
+			player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
 						/* Show this player's info in mCommanderPlayerView */
-						mCommanderPlayerView.removeAllViews();
-						mCommanderPlayerView.addView(player.mView);
-						player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
-								getActivity().getResources().getConfiguration().orientation
-										== Configuration.ORIENTATION_PORTRAIT);
-					}
-				});
-			}
-		}
-		else {
-			if (mDisplayMode == DISPLAY_COMMANDER) {
-				mGridLayout.addView(player.mCommanderRowView);
-			}
-			else {
-				mGridLayout.addView(player.mView);
-			}
+					mCommanderPlayerView.removeAllViews();
+					mCommanderPlayerView.addView(player.mView);
+					player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
+							getActivity().getResources().getConfiguration().orientation
+									== Configuration.ORIENTATION_PORTRAIT);
+				}
+			});
 		}
 
 		/* If the size has already been measured, set the player's size */
