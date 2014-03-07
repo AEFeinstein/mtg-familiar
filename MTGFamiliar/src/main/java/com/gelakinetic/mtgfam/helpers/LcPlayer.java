@@ -486,6 +486,14 @@ public class LcPlayer {
 	}
 
 	/**
+	 * Called when the parent fragment pauses. Use this time to commit all pending transactions
+	 */
+	public void onPause() {
+		mHandler.removeCallbacks(mLifePoisonCommitter);
+		mLifePoisonCommitter.run();
+	}
+
+	/**
 	 * Inner class to encapsulate an entry in the history list
 	 */
 	public static class HistoryEntry {

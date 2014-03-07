@@ -246,6 +246,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		super.onPause();
 		String playerData = "";
 		for (LcPlayer player : mPlayers) {
+			player.onPause();
 			playerData += player.toString();
 		}
 		((FamiliarActivity) getActivity()).mPreferenceAdapter.setPlayerData(playerData);
