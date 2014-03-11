@@ -1,0 +1,10 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:minHeight="56dp"
+                    android:minWidth="272dp"
+                    android:minResizeWidth="56dp"
+                    android:minResizeHeight="56dp"
+                    android:updatePeriodMillis="86400000"
+                    android:initialLayout="@layout/mtgfamiliar_appwidget"
+                    android:resizeMode="horizontal">
+
+</appwidget-provider>

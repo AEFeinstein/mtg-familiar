@@ -82,6 +82,15 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_ROUND_TIMER = "android.intent.action.ROUND_TIMER";
 	private static final int TTS_DATA_CHECK_CODE = 42;
 
+	/* Constant used for action bar quick search */
+//	public static final String ACTION_SEARCH = "android.intent.action.SEARCH";
+
+	/* Constants used for launching from the widget */
+	public static final String ACTION_CARD_SEARCH = "android.intent.action.CARD_SEARCH";
+	public static final String ACTION_LIFE = "android.intent.action.LIFE";
+	public static final String ACTION_DICE = "android.intent.action.DICE";
+	public static final String ACTION_TRADE = "android.intent.action.TRADE";
+
 	/* Constants used for displaying dialogs */
 	public static final int ABOUT_DIALOG = 100;
 	public static final int CHANGE_LOG_DIALOG = 101;
@@ -417,6 +426,34 @@ public class FamiliarActivity extends FragmentActivity {
 			/* User clicked the notification for the round timer in the notification bar */
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_timer);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
+			/* User clicked the notification for the round timer in the notification bar */
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_card_search);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_LIFE.equals(intent.getAction())) {
+			/* User clicked the notification for the round timer in the notification bar */
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_life_counter);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_DICE.equals(intent.getAction())) {
+			/* User clicked the notification for the round timer in the notification bar */
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_dice);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_TRADE.equals(intent.getAction())) {
+			/* User clicked the notification for the round timer in the notification bar */
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_trade);
 				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
