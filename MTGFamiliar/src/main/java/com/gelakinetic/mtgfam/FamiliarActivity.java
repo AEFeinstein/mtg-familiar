@@ -19,9 +19,12 @@ package com.gelakinetic.mtgfam;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -29,6 +32,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
@@ -50,6 +54,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
@@ -64,6 +69,7 @@ import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.RoundTimerFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -90,6 +96,11 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_LIFE = "android.intent.action.LIFE";
 	public static final String ACTION_DICE = "android.intent.action.DICE";
 	public static final String ACTION_TRADE = "android.intent.action.TRADE";
+	public static final String ACTION_MANA = "android.intent.action.MANA";
+	public static final String ACTION_WISH = "android.intent.action.WISH";
+	public static final String ACTION_RULES = "android.intent.action.RULES";
+	public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
+	public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
 
 	/* Constants used for displaying dialogs */
 	public static final int ABOUT_DIALOG = 100;
@@ -208,6 +219,25 @@ public class FamiliarActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mPreferenceAdapter = new PreferenceAdapter(this);
+
+		/* Set up a listener to update the home screen widget whenever the user changes the preference */
+		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(
+				new SharedPreferences.OnSharedPreferenceChangeListener() {
+					@Override
+					public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+						if (s.equals("widgetButtons")) {
+							Intent intent = new Intent(FamiliarActivity.this, MTGFamiliarAppWidgetProvider.class);
+							intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+							/* Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
+							   since it seems the onUpdate() is only fired on that: */
+							int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(
+									new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
+							intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+							sendBroadcast(intent);
+						}
+					}
+				}
+		);
 
 		/* Create the handler to update the timer in the action bar */
 		mRoundTimerUpdateHandler = new Handler();
@@ -423,37 +453,62 @@ public class FamiliarActivity extends FragmentActivity {
 			mDrawerList.setItemChecked(mCurrentFrag, true);
 		}
 		else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
-			/* User clicked the notification for the round timer in the notification bar */
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_timer);
 				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
-			/* User clicked the notification for the round timer in the notification bar */
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_card_search);
 				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_LIFE.equals(intent.getAction())) {
-			/* User clicked the notification for the round timer in the notification bar */
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_life_counter);
 				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_DICE.equals(intent.getAction())) {
-			/* User clicked the notification for the round timer in the notification bar */
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_dice);
 				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_TRADE.equals(intent.getAction())) {
-			/* User clicked the notification for the round timer in the notification bar */
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_trade);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_MANA.equals(intent.getAction())) {
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_mana_pool);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_WISH.equals(intent.getAction())) {
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_wishlist);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_RULES.equals(intent.getAction())) {
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_rules);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_JUDGE.equals(intent.getAction())) {
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_judges_corner);
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+			}
+		}
+		else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
+			if (savedInstanceState == null) {
+				selectItem(R.string.main_mojhosto);
 				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}

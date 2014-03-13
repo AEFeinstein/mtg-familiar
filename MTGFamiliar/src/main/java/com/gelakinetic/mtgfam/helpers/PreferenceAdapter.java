@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 
 import com.gelakinetic.mtgfam.R;
 
+import java.util.Set;
+
 /**
  * Brief guide to adding new preferences to this app:
  * 1. Choose a name for the preference and add it to the list of static final Strings
@@ -72,6 +74,7 @@ public class PreferenceAdapter {
 
 	private static final String CURRENT_ROUND_TIMER = "currentRoundTimer"; //int, default "-1"
 	private static final String BOUNCE_DRAWER = "bounceDrawer";
+	private static final String WIDGET_BUTTONS = "widgetButtons";
 
 	public PreferenceAdapter(Context context) {
 		this.context = context;
@@ -529,6 +532,16 @@ public class PreferenceAdapter {
 
 	public synchronized void setBounceDrawer(boolean value) {
 		this.edit.putBoolean(BOUNCE_DRAWER, value);
+		this.edit.commit();
+	}
+
+	//Bounce Drawer, default true
+	public synchronized Set<String> getWidgetButtons() {
+		return this.prefs.getStringSet(WIDGET_BUTTONS, null);
+	}
+
+	public synchronized void setWidgetButtons(Set<String> buttons) {
+		this.edit.putStringSet(WIDGET_BUTTONS, buttons);
 		this.edit.commit();
 	}
 

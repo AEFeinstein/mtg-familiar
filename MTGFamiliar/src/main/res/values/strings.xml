@@ -476,5 +476,8 @@
     <string name="life_counter_edh_dialog_title">Damage from %s\'s Commander</string>
     <string name="life_counter_edit_life_dialog_title">Enter Life</string>
     <string name="life_counter_edit_poison_dialog_title">Enter Poison</string>
+    <string name="pref_cat_widget">Widget</string>
+    <string name="pref_widget_mode_title">Widget Buttons</string>
+    <string name="pref_widget_mode_summary">The buttons to display in the widget</string>
 
 </resources>

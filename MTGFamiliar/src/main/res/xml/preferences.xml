@@ -49,6 +49,19 @@
         </PreferenceCategory>
 
         <PreferenceCategory
+            android:title="@string/pref_cat_widget">
+
+            <MultiSelectListPreference
+                android:dialogTitle="@string/pref_widget_mode_title"
+                android:key="widgetButtons"
+                android:summary="@string/pref_widget_mode_summary"
+                android:title="@string/pref_widget_mode_title"
+                android:entries="@array/default_fragment_array_entries"
+                android:entryValues="@array/default_fragment_array_entries"
+                android:defaultValue="@array/default_fragment_array_entries"/>
+        </PreferenceCategory>
+
+        <PreferenceCategory
             android:title="@string/pref_cat_tts">
 
             <Preference
