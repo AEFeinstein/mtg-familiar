@@ -8,6 +8,11 @@ import android.preference.PreferenceManager;
 
 import com.gelakinetic.mtgfam.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -535,9 +540,9 @@ public class PreferenceAdapter {
 		this.edit.commit();
 	}
 
-	//Bounce Drawer, default true
 	public synchronized Set<String> getWidgetButtons() {
-		return this.prefs.getStringSet(WIDGET_BUTTONS, null);
+		return this.prefs.getStringSet(WIDGET_BUTTONS,new HashSet<String>(
+				Arrays.asList(context.getResources().getStringArray(R.array.default_widget_buttons_array_entries))));
 	}
 
 	public synchronized void setWidgetButtons(Set<String> buttons) {

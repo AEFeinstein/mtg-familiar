@@ -6,15 +6,30 @@
              android:layout_gravity="center"
              android:foregroundGravity="center">
 
+    <!--<LinearLayout-->
+        <!--android:layout_gravity="center"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:background="@drawable/widget_bg"-->
+        <!--style="?android:attr/buttonBarStyle">-->
+
     <LinearLayout
-        android:layout_gravity="center"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:divider="?android:dividerVertical"
+        android:background="@drawable/widget_bg"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:background="@drawable/widget_bg">
+        android:showDividers="middle"
+        android:dividerPadding="4dp">
 
-        <!--         style="?android:attr/buttonBarStyle" -->
+        <!--
+        android:divider="@color/drawer_divider_item"
+        android:showDividers="middle"
+        android:dividerPadding="4dp"        -->
         <!--
         <FrameLayout
             android:layout_width="1px"
@@ -25,11 +40,11 @@
 
         <ImageButton
             android:id="@+id/widget_search"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_drawer_search"/>
+            android:src="@drawable/ic_drawer_search"
+            style="?android:attr/buttonBarButtonStyle"/>
 
 
         <ImageButton

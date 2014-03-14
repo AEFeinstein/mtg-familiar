@@ -6,9 +6,9 @@
         <item>Search</item>
         <item>Preferences</item>
     </string-array>
+
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-
 
     <!--
          Copyright 2011 Adam Feinstein and April King. This file is part of MTG Familiar.
@@ -21,6 +21,7 @@
         more details. You should have received a copy of the GNU General Public License
         along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     -->
+
 
     <!-- General-purpose strings -->
     <string name="app_name">MTG Familiar</string>
@@ -88,10 +89,8 @@
         So, how generous are you feeling today?</string>
     <string name="main_whats_new_title">What\'s New</string>
     <string name="main_whats_new_in_title">What\'s New in Version</string>
-    <string name="main_whats_new_text">
- 	- Removed search by image (Google removed support)&lt;br />&lt;br />
- 	- Small bugfixes
- 	</string>
+    <string name="main_whats_new_text"> 	- Removed search by image (Google removed support)&lt;br />&lt;br />
+ 	- Small bugfixes</string>
     <string name="main_tts_warning_title">Text-to-Speech</string>
     <string name="main_tts_warning_text">This application has text-to-speech capability for some of its features, but you don\'t seem to have it installed.
         If you want to install it, use the "Install Text-to-Speech" link in the settings menu.</string>
@@ -467,8 +466,8 @@
     <string name="timer_easter_egg">Night of the final day, twelve hours remain</string>
     <string name="install_tts">Install TTS</string>
     <string name="life_counter_default_name">Player</string>
-    <string formatted="false" name="life_counter_spoken_life">%s has %d life. </string>
-    <string formatted="false" name="life_counter_spoken_poison">%s has %d poison. </string>
+    <string name="life_counter_spoken_life" formatted="false">%s has %d life. </string>
+    <string name="life_counter_spoken_poison" formatted="false">%s has %d poison. </string>
     <string name="life_counter_over_9000">over 9000</string>
     <string name="life_counter_no_gatherings_exist">No Gatherings exist.</string>
     <string name="gathering_toast_no_players">No players to remove</string>
@@ -479,5 +478,6 @@
     <string name="pref_cat_widget">Widget</string>
     <string name="pref_widget_mode_title">Widget Buttons</string>
     <string name="pref_widget_mode_summary">The buttons to display in the widget</string>
+    <string name="widget_configure_reminder">Configure the widget in General Settings</string>
 
 </resources>

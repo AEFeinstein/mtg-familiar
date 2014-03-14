@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -18,7 +17,7 @@ import com.gelakinetic.mtgfam.R;
 import java.util.Set;
 
 /**
- * This class sets up the buttons for the homescreen widget
+ * This class sets up the buttons for the home screen widget
  */
 public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
@@ -33,8 +32,8 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			R.id.widget_wish,
 			R.id.widget_timer,
 			R.id.widget_rules,
-			R.id.widget_judge,
-			R.id.widget_mojhosto};
+			R.id.widget_mojhosto,
+			R.id.widget_judge};
 
 	/* An array of String intents for the buttons in the widget. Must stay in order with buttonResources[] above, and
 	   R.array.default_fragment_array_entries in arrays.xml */
@@ -47,13 +46,17 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			FamiliarActivity.ACTION_WISH,
 			FamiliarActivity.ACTION_ROUND_TIMER,
 			FamiliarActivity.ACTION_RULES,
-			FamiliarActivity.ACTION_JUDGE,
-			FamiliarActivity.ACTION_MOJHOSTO};
+			FamiliarActivity.ACTION_MOJHOSTO,
+			FamiliarActivity.ACTION_JUDGE};
 
 	/**
-	 * @param context
-	 * @param appWidgetManager
-	 * @param appWidgetIds
+	 * Called in response to the ACTION_APPWIDGET_UPDATE broadcast when this AppWidget provider is being asked to
+	 * provide RemoteViews for a set of AppWidgets. Override this method to implement your own AppWidget functionality.
+	 *
+	 * @param context          The Context in which this receiver is running.
+	 * @param appWidgetManager A AppWidgetManager object you can call updateAppWidget(ComponentName, RemoteViews) on.
+	 * @param appWidgetIds     The appWidgetIds for which an update is needed. Note that this may be all of the
+	 *                         AppWidget instances for this provider, or just a subset of them.
 	 */
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		/* Perform this loop procedure for each App Widget that belongs to this provider */
@@ -70,16 +73,29 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 				views.setOnClickPendingIntent(buttonResources[i], pendingIntentQuick);
 			}
 
-			showButtonsFromPreferences(context, views);
+			/* 6 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
+			showButtonsFromPreferences(context, views, 6);
 
 			/* Tell the AppWidgetManager to perform an update on the current app widget */
 			appWidgetManager.updateAppWidget(appWidgetId, views);
 		}
 	}
 
-	private void showButtonsFromPreferences(Context context, RemoteViews views) {
+	/**
+	 * This shows the buttons selected by the user, and hides the other ones. It shows a limited number of buttons
+	 *
+	 * @param context       A context used to get the preferences
+	 * @param views         The RemoteViews which holds the widget
+	 * @param maxNumButtons The maximum number of buttons to display, so things don't get too crammed
+	 */
+	private void showButtonsFromPreferences(Context context, RemoteViews views, int maxNumButtons) {
 		String[] entries = context.getResources().getStringArray(R.array.default_fragment_array_entries);
 		Set<String> buttons = (new PreferenceAdapter(context)).getWidgetButtons();
+
+		int buttonsVisible = 0;
+		if (maxNumButtons == 0) {
+			maxNumButtons = 1;
+		}
 
 		/* Set all the buttons as gone */
 		for (int resource : buttonResources) {
@@ -87,50 +103,39 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 		}
 
 		/* Show the buttons selected in preferences */
-		for (String button : buttons) {
-			for (int i = 0; i < entries.length; i++) {
-				if (button.equals(entries[i])) {
-					views.setViewVisibility(buttonResources[i], View.VISIBLE);
-					break;
+		for (int i = 0; i < entries.length; i++) {
+			if (buttons.contains(entries[i])) {
+				views.setViewVisibility(buttonResources[i], View.VISIBLE);
+				buttonsVisible++;
+				if (buttonsVisible == maxNumButtons) {
+					return;
 				}
 			}
 		}
 	}
 
 	/**
-	 * @param context
-	 * @param appWidgetManager
-	 * @param appWidgetId
-	 * @param newOptions
+	 * Called in response to the ACTION_APPWIDGET_OPTIONS_CHANGED broadcast when this widget has been laid out at a new
+	 * size. Only valid for jelly bean and beyond. Sorry ice cream sandwich :(
+	 *
+	 * @param context          The Context in which this receiver is running.
+	 * @param appWidgetManager A AppWidgetManager object you can call updateAppWidget(ComponentName, RemoteViews) on.
+	 * @param appWidgetId      The appWidgetId of the widget who's size changed.
+	 * @param newOptions       The new parameters for the widget
 	 */
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override
-	public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+	public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId,
+										  Bundle newOptions) {
 		super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
 
 		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.mtgfamiliar_appwidget);
 
 		float densityDpi = context.getResources().getDisplayMetrics().densityDpi;
 		float dp = newOptions.getInt("appWidgetMaxWidth") / (densityDpi / 160f);
-		Log.v("widget", dp + "");
+		int maxNumButtons = (int) (dp / 32);
 
-		/* In newOptions:
-			appWidgetMaxHeight: 84
-			appWidgetCategory: 1
-			appWidgetMaxWidth: 302
-			appWidgetMinHeight: 58
-			appWidgetMinWidth: 224
-
-			Anecdotally,
-			6 cells: /388
-			5 cells: /322
-			4 cells: 204dp / 256
-			3 cells: 151dp / 190
-			2 cells: 98dp / 124
-			1 cell : 45dp / 58
-		 */
-
-		showButtonsFromPreferences(context, views);
+		showButtonsFromPreferences(context, views, maxNumButtons);
 
 		/* Tell the AppWidgetManager to perform an update on the current app widget */
 		appWidgetManager.updateAppWidget(appWidgetId, views);
