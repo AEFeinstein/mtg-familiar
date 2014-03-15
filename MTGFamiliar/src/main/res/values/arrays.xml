@@ -191,7 +191,7 @@
     <string-array name="default_widget_buttons_array_entries">
         <item>@string/main_card_search</item>
         <item>@string/main_life_counter</item>
-        <item>@string/main_mana_pool</item>
+        <item>@string/main_rules</item>
         <item>@string/main_dice</item>
         <item>@string/main_trade</item>
     </string-array>
