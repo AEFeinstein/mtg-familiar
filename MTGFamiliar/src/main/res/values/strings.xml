@@ -355,9 +355,9 @@
     You can read the rules at any time from the menu.&lt;br />&lt;br />
     Pen and paper might be useful for tracking the game state. Sadly, MTG Familiar cannot spawn actual cards.&lt;br />&lt;br />
     Good luck, and have fun!</string>
-    <string name="mojhosto_momir_label">CMC: </string>
+    <string name="mojhosto_momir_label">CMC == </string>
     <string name="mojhosto_random_creature">Random Creature</string>
-    <string name="mojhosto_stonehewer_label">CMC: </string>
+    <string name="mojhosto_stonehewer_label">CMC &lt;= </string>
     <string name="mojhosto_random_equipment">Random Equipment</string>
     <string name="mojhosto_random_instants">Random Instants</string>
     <string name="mojhosto_random_sorceries">Random Sorceries</string>
@@ -479,5 +479,6 @@
     <string name="pref_widget_mode_title">Widget Buttons</string>
     <string name="pref_widget_mode_summary">The buttons to display in the widget</string>
     <string name="widget_configure_reminder">Configure the widget in General Settings</string>
+    <string name="judges_corner_error">An error occurred.</string>
 
 </resources>

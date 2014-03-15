@@ -76,7 +76,8 @@ public abstract class FamiliarFragment extends Fragment {
 		super.onResume();
 		if ((getActivity()) != null) {
 			((FamiliarActivity) getActivity()).getFragmentResults();
-			((FamiliarActivity) getActivity()).mDrawerLayout.closeDrawer(((FamiliarActivity) getActivity()).mDrawerList);
+			((FamiliarActivity) getActivity())
+					.mDrawerLayout.closeDrawer(((FamiliarActivity) getActivity()).mDrawerList);
 		}
 	}
 
@@ -94,16 +95,19 @@ public abstract class FamiliarFragment extends Fragment {
 
 	/**
 	 * Called when the Fragment is no longer resumed.  This is generally
-	 * tied to {@link Activity#onPause() Activity.onPause} of the containing
+	 * tied to {@link FamiliarActivity#onPause() Activity.onPause} of the containing
 	 * Activity's lifecycle.
-	 *
+	 * <p/>
 	 * In this case, always remove the dialog, since it can contain stale references to the pre-rotated activity and
-	 * fragment after rotation
+	 * fragment after rotation. The one exception is the change log dialog, which would get removed by TTS checking
+	 * intents on the first install.
 	 */
 	@Override
 	public void onPause() {
 		super.onPause();
-		removeDialog(getFragmentManager());
+		if (((FamiliarActivity) getActivity()).dialogShowing != FamiliarActivity.CHANGE_LOG_DIALOG) {
+			removeDialog(getFragmentManager());
+		}
 	}
 
 	/**

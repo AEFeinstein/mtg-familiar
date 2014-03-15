@@ -54,13 +54,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.fragments.ManaPoolFragment;
 import com.gelakinetic.mtgfam.fragments.MoJhoStoFragment;
@@ -78,6 +78,8 @@ import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 import com.octo.android.robospice.SpiceManager;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class FamiliarActivity extends FragmentActivity {
 	/* Tags for fragments */
@@ -107,6 +109,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final int CHANGE_LOG_DIALOG = 101;
 	public static final int DONATE_DIALOG = 102;
 	public static final int TTS_DIALOG = 103;
+	public int dialogShowing = 0;
 
 	/* PayPal URL */
 	@SuppressWarnings("SpellCheckingInspection")
@@ -228,9 +231,10 @@ public class FamiliarActivity extends FragmentActivity {
 						if (s.equals("widgetButtons")) {
 							Intent intent = new Intent(FamiliarActivity.this, MTGFamiliarAppWidgetProvider.class);
 							intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
-							/* Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
-							   since it seems the onUpdate() is only fired on that: */
-							int ids[] = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(
+							assert AppWidgetManager.getInstance(getApplication()) != null;
+							AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
+							assert appWidgetManager != null;
+							int ids[] = appWidgetManager.getAppWidgetIds(
 									new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
 							intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 							sendBroadcast(intent);
@@ -406,6 +410,14 @@ public class FamiliarActivity extends FragmentActivity {
 				}
 				showDialogFragment(CHANGE_LOG_DIALOG);
 				mPreferenceAdapter.setLastVersion(pInfo.versionCode);
+
+				/* Clear the mtr and ipg on update, to replace them with the newly colored versions */
+				File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
+				File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
+				if (mtr.exists()) {
+					mtr.delete();
+					ipg.delete();
+				}
 			}
 		} catch (PackageManager.NameNotFoundException e) {
 			/* Eat it, don't show change log */
@@ -637,7 +649,7 @@ public class FamiliarActivity extends FragmentActivity {
 				break;
 			}
 			case R.string.main_judges_corner: {
-				//TODO
+				newFrag = new JudgesCornerFragment();
 				break;
 			}
 			case R.string.main_mojhosto: {
@@ -858,6 +870,7 @@ public class FamiliarActivity extends FragmentActivity {
 				ft.commit();
 			}
 		}
+		dialogShowing = 0;
 	}
 
 	/**
@@ -871,6 +884,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 		removeDialogFragment(getSupportFragmentManager());
 
+		dialogShowing = id;
 		/* Create and show the dialog. */
 		FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
@@ -1036,9 +1050,9 @@ public class FamiliarActivity extends FragmentActivity {
 										mDrawerLayout.closeDrawer(mDrawerList);
 										mPreferenceAdapter.setBounceDrawer(false);
 									}
-								}, 1000);
+								}, 2000);
 							}
-						}, 100);
+						}, 500);
 					}
 				}
 			}
