@@ -193,7 +193,7 @@ public class GatheringsIO {
 	 * @param _gatheringFile A File object for the gathering
 	 * @return A Gathering object containing players and a default display mode
 	 */
-	public static Gathering ReadGatheringXML(File _gatheringFile) {
+	private static Gathering ReadGatheringXML(File _gatheringFile) {
 		ArrayList<GatheringsPlayerData> playerList = new ArrayList<GatheringsPlayerData>();
 		Document dom;
 
@@ -271,7 +271,7 @@ public class GatheringsIO {
 	 * @param _gatheringFile A File object for the gathering
 	 * @return The name of this gathering
 	 */
-	public static String ReadGatheringNameFromXML(File _gatheringFile) {
+	private static String ReadGatheringNameFromXML(File _gatheringFile) {
 		Document dom;
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

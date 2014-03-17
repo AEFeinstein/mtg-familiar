@@ -44,8 +44,8 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        style="@style/text.medium"
                         android:id="@+id/name"
-                        style="@style/text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dip"
@@ -53,8 +53,8 @@
                         android:text="Vorinclex, Voice of Hunger"/>
 
                     <TextView
+                        style="@style/text.medium"
                         android:id="@+id/cost"
-                        style="@style/text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -72,19 +72,18 @@
                     android:layout_marginTop="-14sp">
 
                     <TextView
+                        style="@style/text.medium"
                         android:id="@+id/type"
-                        style="@style/text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dip"
                         android:layout_weight="1"
-                        android:text="Legendary Creature - Human Soldier"
-                        android:textSize="20sp"/>
+                        android:text="Legendary Creature - Human Soldier"/>
                 </LinearLayout>
 
                 <TextView
+                    style="@style/text.medium"
                     android:id="@+id/set"
-                    style="@style/text"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -103,8 +102,8 @@
                     android:saveEnabled="true">
 
                     <TextView
+                        style="@style/text.medium"
                         android:id="@+id/ability"
-                        style="@style/text"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dip"
@@ -113,8 +112,8 @@
                         android:text="{T}: Search your library for a legendary card, reveal that card, and put it into your hand. Then shuffle your library."/>
 
                     <TextView
+                        style="@style/text.medium"
                         android:id="@+id/flavor"
-                        style="@style/text"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="3dip"
@@ -123,7 +122,6 @@
                         android:paddingRight="10sp"
                         android:paddingTop="5sp"
                         android:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet flavor text."
-                        android:textSize="20sp"
                         android:textStyle="italic"
                         android:typeface="serif"/>
                 </LinearLayout>
@@ -148,8 +146,8 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/text.medium"
                         android:id="@+id/artist"
-                        style="@style/text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="3dip"
@@ -159,8 +157,8 @@
                         android:text="Zoltan Boros &amp; Gabor Szikszai"/>
 
                     <TextView
+                        style="@style/text.medium"
                         android:id="@+id/pt"
-                        style="@style/text"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_marginBottom="0dip"

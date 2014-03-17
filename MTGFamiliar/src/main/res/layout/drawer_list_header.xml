@@ -16,8 +16,8 @@
         android:layout_marginRight="56dp"
         android:layout_marginBottom="1dp"
         android:textColor="@color/drawer_text_unselected"
-        android:textSize="14dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        style="@style/text.small"/>
 
     <View
         android:id="@+id/divider"

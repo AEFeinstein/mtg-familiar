@@ -206,7 +206,7 @@
 
                 <TextView
                     android:id="@+id/textView1"
-                    style="@style/text"
+                    style="@style/text.medium"
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -235,7 +235,7 @@
 
                 <TextView
                     android:id="@+id/textView2"
-                    style="@style/text"
+                    style="@style/text.medium"
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -264,7 +264,7 @@
 
                 <TextView
                     android:id="@+id/textView3"
-                    style="@style/text"
+                    style="@style/text.medium"
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

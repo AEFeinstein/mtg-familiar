@@ -33,7 +33,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:gravity="center">
 
         <TextView
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"

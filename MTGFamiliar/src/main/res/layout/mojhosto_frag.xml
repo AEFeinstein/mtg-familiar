@@ -35,7 +35,7 @@
 
                 <TextView
                     android:id="@+id/textView1"
-                    style="@style/text"
+                    style="@style/text.small"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:text="@string/mojhosto_momir_label"
@@ -55,7 +55,7 @@
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
                 android:text="@string/mojhosto_random_creature"
-                android:textSize="14sp"/>
+                style="@style/text.small"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -86,7 +86,7 @@
 
                 <TextView
                     android:id="@+id/textView6"
-                    style="@style/text"
+                    style="@style/text.small"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:text="@string/mojhosto_stonehewer_label"
@@ -106,7 +106,7 @@
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
                 android:text="@string/mojhosto_random_equipment"
-                android:textSize="14sp"/>
+                style="@style/text.small"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -136,8 +136,7 @@
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
                 android:text="@string/mojhosto_random_instants"
-
-                android:textSize="14sp"/>
+                style="@style/text.small"/>
 
             <Button
                 android:id="@+id/jhorira_sorcery_button"
@@ -145,8 +144,7 @@
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
                 android:text="@string/mojhosto_random_sorceries"
-
-                android:textSize="14sp"/>
+                style="@style/text.small"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

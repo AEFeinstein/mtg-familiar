@@ -23,12 +23,11 @@
 
         <TextView
             android:id="@+id/aboutfield"
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="5sp"
-            android:text="TextView"
-            android:textSize="20sp"/>
+            android:text="TextView"/>
 
         <ImageView
             android:id="@+id/imageview1"

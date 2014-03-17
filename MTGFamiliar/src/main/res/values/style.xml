@@ -23,11 +23,26 @@
         <item name="android:dividerHeight">1dp</item>
     </style>
 
-    <style name="text" parent="android:TextAppearance.Holo">
-
+    <style name="text.micro" parent="android:TextAppearance.Holo">
+        <item name="android:textSize">12sp</item>
     </style>
-    <style name="text.large" parent="android:TextAppearance.Holo.Large">
-
+    <style name="text.small" parent="android:TextAppearance.Holo">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="text.medium" parent="android:TextAppearance.Holo">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="text.large" parent="android:TextAppearance.Holo">
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="text.xlarge" parent="android:TextAppearance.Holo">
+        <item name="android:textSize">30sp</item>
+    </style>
+    <style name="text.xxlarge" parent="android:TextAppearance.Holo">
+        <item name="android:textSize">45sp</item>
+    </style>
+    <style name="text.xxxlarge" parent="android:TextAppearance.Holo">
+        <item name="android:textSize">60sp</item>
     </style>
 
 </resources>

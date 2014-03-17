@@ -27,7 +27,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
               android:paddingLeft="5dp"
               android:paddingRight="5dp"
               android:paddingTop="0dp"
-              android:weightSum="1" >
+              android:weightSum="1">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -46,9 +46,8 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:paddingRight="5dp">
 
             <TextView
-                android:textSize="24dp"
                 android:id="@+id/player_name"
-                style="@style/text"
+                style="@style/text.large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Player 1"/>
@@ -57,12 +56,11 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
             <TextView
                 android:id="@+id/player_readout"
-                style="@style/text"
+                style="@style/text.xxxlarge"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:maxLines="1"
                 android:text="@string/life_counter_twenty"
-                android:textSize="60sp"
                 android:layout_marginBottom="-10dp"
                 android:layout_marginTop="-10dp"/>
 
@@ -83,7 +81,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/life_counter_plus_one"
-                        android:textSize="18sp"/>
+                        style="@style/text.medium"/>
 
                     <Button
                         android:id="@+id/player_plus5"
@@ -91,7 +89,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/life_counter_plus_five"
-                        android:textSize="18sp"/>
+                        style="@style/text.medium"/>
                 </LinearLayout>
 
                 <!-- -1/-5 buttons -->
@@ -108,7 +106,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/life_counter_minus_one"
-                        android:textSize="18sp"/>
+                        style="@style/text.medium"/>
 
                     <Button
                         android:id="@+id/player_minus5"
@@ -116,7 +114,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/life_counter_minus_five"
-                        android:textSize="18sp"/>
+                        style="@style/text.medium"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -136,7 +134,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mana_pool_zero"
-                android:textSize="18sp"
+                style="@style/text.medium"
                 android:visibility="gone"/>
 
         </LinearLayout>

@@ -13,16 +13,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RulesParser {
+class RulesParser {
 
 	/* Instance variables */
-	private Date mLastUpdated;
-	private CardDbAdapter mDbHelper;
+	private final Date mLastUpdated;
+	private final CardDbAdapter mDbHelper;
 	private InputStream mInputStream;
 	private BufferedReader mBufferedReader;
-	private RulesProgressReporter mProgressReporter;
-	private ArrayList<RuleItem> mRules;
-	private ArrayList<GlossaryItem> mGlossary;
+	private final RulesProgressReporter mProgressReporter;
+	private final ArrayList<RuleItem> mRules;
+	private final ArrayList<GlossaryItem> mGlossary;
 
 	/* URL and delimiting tokens */
 	private static final String SOURCE = "https://sites.google.com/site/mtgfamiliar/rules/MagicCompRules.txt";
@@ -36,17 +36,17 @@ public class RulesParser {
 	/**
 	 * Returned from fetchAndLoad() if everything works correctly.
 	 */
-	public static int SUCCESS = 0;
+	public static final int SUCCESS = 0;
 
 	/**
 	 * Returned from fetchAndLoad() if some of the rules/terms failed, but some succeeded.
 	 */
-	public static int ERRORS = 1;
+	private static final int ERRORS = 1;
 
 	/**
 	 * Returned from fetchAndLoad() if a catastrophic failure occurs.
 	 */
-	public static int FAILURE = 2;
+	private static final int FAILURE = 2;
 
 
 	/**
@@ -239,7 +239,6 @@ public class RulesParser {
 	 *
 	 * @return SUCCESS if nothing goes wrong, ERRORS if some errors occur but some data is loaded, and FAILURE if
 	 * everything fails and no data is loaded.
-	 * @throws FamiliarDbException Thrown if something goes wrong with database writing
 	 */
 	public int loadRulesAndGlossary() {
 		try {
@@ -300,11 +299,11 @@ public class RulesParser {
 	 * Nested class which encapsulates all necessary information about a rule
 	 */
 	private class RuleItem {
-		public int category;
-		public int subcategory;
-		public String entry;
+		public final int category;
+		public final int subcategory;
+		public final String entry;
 		public String text;
-		public int position;
+		public final int position;
 
 		/**
 		 * Constructor which populates the rule
@@ -337,7 +336,7 @@ public class RulesParser {
 	 * Nested class which encapsulates all necessary information about a glossary entry
 	 */
 	private class GlossaryItem {
-		public String term;
+		public final String term;
 		public String definition;
 
 		/**

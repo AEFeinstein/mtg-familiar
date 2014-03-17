@@ -12,7 +12,7 @@
 -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:gravity="center"
         android:orientation="vertical">
@@ -28,33 +28,32 @@
             <Button
                 android:id="@+id/white_minus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_minus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="10dip"
                 android:src="@drawable/glyph_w"/>
 
             <TextView
                 android:id="@+id/white_readout"
-                style="@style/text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="20dip"
                 android:text="@string/mana_pool_zero"
-                android:textSize="45sp"/>
+                style="@style/text.xxlarge"/>
 
             <Button
                 android:id="@+id/white_plus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_plus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
         </LinearLayout>
         <!-- blue -->
 
@@ -67,33 +66,32 @@
             <Button
                 android:id="@+id/blue_minus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_minus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="10dip"
                 android:src="@drawable/glyph_u"/>
 
             <TextView
                 android:id="@+id/blue_readout"
-                style="@style/text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="20dip"
                 android:text="@string/mana_pool_zero"
-                android:textSize="45sp"/>
+                style="@style/text.xxlarge"/>
 
             <Button
                 android:id="@+id/blue_plus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_plus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
         </LinearLayout>
         <!-- black -->
 
@@ -106,33 +104,32 @@
             <Button
                 android:id="@+id/black_minus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_minus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="10dip"
                 android:src="@drawable/glyph_b"/>
 
             <TextView
                 android:id="@+id/black_readout"
-                style="@style/text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="20dip"
                 android:text="@string/mana_pool_zero"
-                android:textSize="45sp"/>
+                style="@style/text.xxlarge"/>
 
             <Button
                 android:id="@+id/black_plus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_plus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
         </LinearLayout>
         <!-- red -->
 
@@ -145,33 +142,32 @@
             <Button
                 android:id="@+id/red_minus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_minus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="10dip"
                 android:src="@drawable/glyph_r"/>
 
             <TextView
                 android:id="@+id/red_readout"
-                style="@style/text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="20dip"
                 android:text="@string/mana_pool_zero"
-                android:textSize="45sp"/>
+                style="@style/text.xxlarge"/>
 
             <Button
                 android:id="@+id/red_plus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_plus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
         </LinearLayout>
         <!-- green -->
 
@@ -184,33 +180,32 @@
             <Button
                 android:id="@+id/green_minus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_minus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="10dip"
                 android:src="@drawable/glyph_g"/>
 
             <TextView
                 android:id="@+id/green_readout"
-                style="@style/text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="20dip"
                 android:text="@string/mana_pool_zero"
-                android:textSize="45sp"/>
+                style="@style/text.xxlarge"/>
 
             <Button
                 android:id="@+id/green_plus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_plus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
         </LinearLayout>
         <!-- colorless -->
 
@@ -223,33 +218,32 @@
             <Button
                 android:id="@+id/colorless_minus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_minus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="10dip"
                 android:src="@drawable/glyph_x"/>
 
             <TextView
                 android:id="@+id/colorless_readout"
-                style="@style/text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="20dip"
                 android:text="@string/mana_pool_zero"
-                android:textSize="45sp"/>
+                style="@style/text.xxlarge"/>
 
             <Button
                 android:id="@+id/colorless_plus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_plus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
         </LinearLayout>
         <!-- spell -->
 
@@ -262,32 +256,31 @@
             <Button
                 android:id="@+id/spell_minus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_minus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="10dip"
                 android:src="@drawable/glyph_spell"/>
 
             <TextView
                 android:id="@+id/spell_readout"
-                style="@style/text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="20dip"
                 android:text="@string/mana_pool_zero"
-                android:textSize="45sp"/>
+                style="@style/text.xxlarge"/>
 
             <Button
                 android:id="@+id/spell_plus"
                 android:layout_width="60sp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="@string/mana_pool_plus"
-                android:textSize="30sp"/>
+                style="@style/text.xlarge"/>
         </LinearLayout>
     </LinearLayout>

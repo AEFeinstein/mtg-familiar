@@ -67,6 +67,7 @@ import com.gelakinetic.mtgfam.fragments.MoJhoStoFragment;
 import com.gelakinetic.mtgfam.fragments.PrefsFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.RoundTimerFragment;
+import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
@@ -105,10 +106,10 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
 
 	/* Constants used for displaying dialogs */
-	public static final int ABOUT_DIALOG = 100;
+	private static final int ABOUT_DIALOG = 100;
 	public static final int CHANGE_LOG_DIALOG = 101;
-	public static final int DONATE_DIALOG = 102;
-	public static final int TTS_DIALOG = 103;
+	private static final int DONATE_DIALOG = 102;
+	private static final int TTS_DIALOG = 103;
 	public int dialogShowing = 0;
 
 	/* PayPal URL */
@@ -127,7 +128,7 @@ public class FamiliarActivity extends FragmentActivity {
 	private Bundle mFragResults;
 
 	/* What the drawer menu will be */
-	final DrawerEntry[] mPageEntries = {
+	private final DrawerEntry[] mPageEntries = {
 			new DrawerEntry(R.string.main_pages, 0, true),
 			new DrawerEntry(R.string.main_card_search, R.drawable.ic_drawer_search, false),
 			new DrawerEntry(R.string.main_life_counter, R.drawable.ic_drawer_life, false),
@@ -150,9 +151,9 @@ public class FamiliarActivity extends FragmentActivity {
 	};
 
 	/* Timer setup */
-	public boolean mUpdatingRoundTimer;
-	public long mRoundEndTime;
-	public Handler mRoundTimerUpdateHandler;
+	private boolean mUpdatingRoundTimer;
+	private long mRoundEndTime;
+	private Handler mRoundTimerUpdateHandler;
 
 	/* Spice setup */
 	public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
@@ -160,9 +161,9 @@ public class FamiliarActivity extends FragmentActivity {
 	private int mCurrentFrag;
 
 	/* Timer to determine user inactivity for screen dimming in the life counter */
-	private Handler mInactivityHandler = new Handler();
+	private final Handler mInactivityHandler = new Handler();
 	private boolean mUserInactive = false;
-	private Runnable userInactive = new Runnable() {
+	private final Runnable userInactive = new Runnable() {
 		@Override
 		public void run() {
 			mUserInactive = true;
@@ -525,7 +526,7 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		}
 		else {
-			/* App launched as regular, show the default fragment TODO (should check preferences) */
+			/* App launched as regular, show the default fragment */
 			if (savedInstanceState == null) {
 
 				String defaultFragment = mPreferenceAdapter.getDefaultFragment();
@@ -592,11 +593,6 @@ public class FamiliarActivity extends FragmentActivity {
 		mInactivityHandler.postDelayed(userInactive, 15000);
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
 	/**
 	 * Select an item from the drawer menu. This will highlight the entry and manage fragment transactions.
 	 *
@@ -645,7 +641,7 @@ public class FamiliarActivity extends FragmentActivity {
 				break;
 			}
 			case R.string.main_rules: {
-				//TODO
+				newFrag = new RulesFragment();
 				break;
 			}
 			case R.string.main_judges_corner: {
@@ -1064,7 +1060,7 @@ public class FamiliarActivity extends FragmentActivity {
 	 * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
 	 * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment
 	 */
-	public final Runnable timerUpdate = new Runnable() {
+	private final Runnable timerUpdate = new Runnable() {
 
 		@Override
 		public void run() {

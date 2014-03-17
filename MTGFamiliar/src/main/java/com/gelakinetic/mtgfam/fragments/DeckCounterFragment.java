@@ -130,7 +130,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
 	public View makeView() {
 		TextView t = new TextView(this.getActivity());
 		t.setGravity(Gravity.CENTER | Gravity.CENTER_HORIZONTAL);
-		t.setTextAppearance(this.getActivity(), R.style.text);
+		t.setTextAppearance(this.getActivity(), R.style.text_medium);
 		t.setTextSize(70);
 		return t;
 	}

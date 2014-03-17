@@ -81,7 +81,7 @@ public class ZipUtils {
 	 * @param dir The root directory
 	 * @return An ArrayList of all the files in the root directory
 	 */
-	static ArrayList<File> findAllFiles(File dir) {
+	private static ArrayList<File> findAllFiles(File dir) {
 		ArrayList<File> files = new ArrayList<File>();
 		File listFiles[] = dir.listFiles();
 		assert listFiles != null;
@@ -103,7 +103,7 @@ public class ZipUtils {
 	 * @param context The application context, for getting files and the like
 	 * @throws IOException Thrown if something goes wrong with unzipping and writing
 	 */
-	public static void unZipIt(ZipFile zipFile, Context context) throws IOException {
+	private static void unZipIt(ZipFile zipFile, Context context) throws IOException {
 		Enumeration<? extends ZipEntry> entries;
 
 		entries = zipFile.entries();
@@ -157,7 +157,7 @@ public class ZipUtils {
 	 * @param context The application context, for getting files and the like
 	 * @throws IOException IOException Thrown if something goes wrong with zipping and reading
 	 */
-	public static void zipIt(File zipFile, ArrayList<File> files, Context context) throws IOException {
+	private static void zipIt(File zipFile, ArrayList<File> files, Context context) throws IOException {
 
 		byte[] buffer = new byte[1024];
 

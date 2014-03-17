@@ -50,11 +50,6 @@
     <string name="update_parse_rules">Parsing comprehensive rules</string>
     <string name="error">Error</string>
     <string name="error_database">A database error occurred. If it persists, try clearing the app data from the Android settings menu.</string>
-    <string name="error_corruption">Whoops! It looks like an important part of this app has been corrupted and doesn\'t work anymore.
-        We\'re trying to figure out exactly what\'s causing this to happen, so please send us an email at
-        &lt;a href="mailto:mtg.familiar@gmail.com">mtg.familiar@gmail.com&lt;/a> so we can track this bug and fix it.
-        In the meantime, if it doesn\'t manage to fix itself, please try clearing the app data in your device\'s settings,
-        and if that doesn\'t work reinstall the app from the Play Store.</string>
     <string name="error_no_email_client">It does not appear that you have an active email client installed. Please configure an email application.</string>
 
     <!-- Placeholder text -->
@@ -338,8 +333,8 @@
     <string name="rules_no_results_toast">No results found.</string>
     <string name="rules_short_key_toast">Your search term must be at least 3 characters long.</string>
     <string name="rules_search_title">Keyword Search</string>
-    <string name="rules_search_all">Search all rules for:</string>
-    <string name="rules_search_cat">Search within %s for:</string>
+    <string name="rules_search_all">Search all rules</string>
+    <string name="rules_search_cat">Search within %s</string>
     <string name="rules_this_cat">this category:</string>
 
     <!-- MoJhoSto activity -->

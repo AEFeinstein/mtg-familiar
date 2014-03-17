@@ -41,13 +41,12 @@ import java.util.HashMap;
  */
 public class JudgesCornerFragment extends FamiliarFragment {
 	/* UI elements */
-	TabHost mTabHost;
-	TabManager mTabManager;
+	private TabHost mTabHost;
 
 	/* Constants to keep track of tabs */
-	public static final String TAG_MTR = "MTR";
-	public static final String TAG_IPG = "IPG";
-	public static final String TAG_COUNTER = "COUNTER";
+	private static final String TAG_MTR = "MTR";
+	private static final String TAG_IPG = "IPG";
+	private static final String TAG_COUNTER = "COUNTER";
 
 	/* Key and constants for displaying the MTR and IPG */
 	public static final String HTML_DOC = "html";
@@ -108,7 +107,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 		mTabHost = (TabHost) myView.findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 
-		mTabManager = new TabManager(this, mTabHost, R.id.realtabcontent);
+		TabManager mTabManager = new TabManager(this, mTabHost);
 
 		Bundle MtrBundle = new Bundle();
 		MtrBundle.putString(HTML_DOC, MTR_LOCAL_FILE);
@@ -211,15 +210,13 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
 		/**
 		 * Constructor
-		 *
-		 * @param fragment    The fragment this TabManager will manage tabs for
+		 *  @param fragment    The fragment this TabManager will manage tabs for
 		 * @param tabHost     A TabHost which exists in the fragment's view
-		 * @param containerId The resource ID in which to display tab content
 		 */
-		public TabManager(FamiliarFragment fragment, TabHost tabHost, int containerId) {
+		public TabManager(FamiliarFragment fragment, TabHost tabHost) {
 			mFragment = fragment;
 			mTabHost = tabHost;
-			mContainerId = containerId;
+			mContainerId = R.id.realtabcontent;
 			mTabHost.setOnTabChangedListener(this);
 		}
 

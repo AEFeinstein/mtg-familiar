@@ -18,7 +18,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -26,7 +26,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
-            style="@style/text"
+            style="@style/text.medium"
             android:id="@+id/starting_life"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

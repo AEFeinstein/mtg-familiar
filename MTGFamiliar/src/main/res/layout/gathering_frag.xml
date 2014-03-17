@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -21,7 +21,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         <Spinner
-            style="@style/text"
+            style="@style/text.medium"
             android:id="@+id/gathering_display_mode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

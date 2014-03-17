@@ -23,14 +23,14 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/card_view_price_dialog_low"/>
 
         <TextView
             android:id="@+id/low"
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dip"
@@ -46,14 +46,14 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/card_view_price_dialog_medium"/>
 
         <TextView
             android:id="@+id/med"
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -70,14 +70,14 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/card_view_price_dialog_high"/>
 
         <TextView
             android:id="@+id/high"
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dip"
@@ -95,14 +95,14 @@
 
         <TextView
             android:id="@+id/foil_label"
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/card_view_price_dialog_foil"/>
 
         <TextView
             android:id="@+id/foil"
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -113,7 +113,7 @@
 
     <TextView
         android:id="@+id/pricelink"
-        style="@style/text"
+        style="@style/text.medium"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -233,6 +233,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 	 *
 	 * @param id the ID of the dialog to show
 	 */
+	@SuppressWarnings("SameParameterValue")
 	void showDialog(final int id) {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */

@@ -25,13 +25,13 @@ public class MTRIPGParser {
 	private static final String IPG_SOURCE =
 			"https://sites.google.com/site/mtgfamiliar/rules/InfractionProcedureGuide.html";
 
-	public static final String MTR_LOCAL_FILE = "MTR.html";
-	public static final String IPG_LOCAL_FILE = "IPG.html";
+	private static final String MTR_LOCAL_FILE = "MTR.html";
+	private static final String IPG_LOCAL_FILE = "IPG.html";
 
 	public enum MTR_IPG_MODE {MODE_IPG, MODE_MTR}
 
-	private Date mLastUpdated;
-	private Context mContext;
+	private final Date mLastUpdated;
+	private final Context mContext;
 
 	/**
 	 * Default constructor

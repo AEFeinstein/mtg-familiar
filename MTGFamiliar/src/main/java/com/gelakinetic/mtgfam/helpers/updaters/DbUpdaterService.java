@@ -245,21 +245,21 @@ public class DbUpdaterService extends IntentService {
 	/**
 	 * Show the notification in the status bar
 	 */
-	protected void showStatusNotification() {
+	void showStatusNotification() {
 		mNotificationManager.notify(STATUS_NOTIFICATION, mBuilder.build());
 	}
 
 	/**
 	 * Hide the notification in the status bar
 	 */
-	protected void cancelStatusNotification() {
+	void cancelStatusNotification() {
 		mNotificationManager.cancel(STATUS_NOTIFICATION);
 	}
 
 	/**
 	 * Set the notification to display "Checking for database updates"
 	 */
-	protected void switchToChecking() {
+	void switchToChecking() {
 		mHandler.removeCallbacks(mProgressUpdater);
 		mBuilder.setContentTitle(getString(R.string.app_name))
 				.setContentText(getString(R.string.update_notification))
@@ -273,7 +273,7 @@ public class DbUpdaterService extends IntentService {
 	 *
 	 * @param title The name of the set being updated
 	 */
-	protected void switchToUpdating(String title) {
+	void switchToUpdating(String title) {
 
 		mBuilder.setContentTitle(title);
 		mNotificationManager.notify(STATUS_NOTIFICATION, mBuilder.build());
@@ -293,7 +293,7 @@ public class DbUpdaterService extends IntentService {
 	 *
 	 * @param newStuff A list of strings corresponding to what was updated
 	 */
-	protected void showUpdatedNotification(List<String> newStuff) {
+	void showUpdatedNotification(List<String> newStuff) {
 		if (newStuff.size() < 1) {
 			return;
 		}

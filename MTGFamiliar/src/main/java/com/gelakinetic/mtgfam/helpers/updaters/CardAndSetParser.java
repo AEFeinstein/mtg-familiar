@@ -37,7 +37,7 @@ import java.util.ArrayList;
 /**
  * This class is used to parse various JSON update files and populate the database
  */
-public class CardAndSetParser {
+class CardAndSetParser {
 
 	/* Indices for returning patch information */
 	static final int SET_CODE = 0;
@@ -392,6 +392,7 @@ public class CardAndSetParser {
 	 * @throws IOException                                        Thrown if something goes wrong with the InputStream
 	 * @throws com.gelakinetic.mtgfam.helpers.FamiliarDbException Thrown if something goes wrong with database writing
 	 */
+	@SuppressWarnings("SameParameterValue")
 	public void readLegalityJsonStream(CardDbAdapter dbHelper, PreferenceAdapter prefAdapter, final boolean RE_PARSE_DB)
 			throws IOException, FamiliarDbException {
 
@@ -480,8 +481,8 @@ public class CardAndSetParser {
 	 * @param mDbHelper   database access
 	 * @param RE_PARSE_DB The date is ignored if we're re-parsing the database
 	 * @throws IOException         Thrown if something goes wrong with the InputStream
-	 * @throws FamiliarDbException Thrown if something goes wrong with database writing
 	 */
+	@SuppressWarnings("SameParameterValue")
 	public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, CardDbAdapter mDbHelper, final boolean RE_PARSE_DB)
 			throws IOException {
 		URL update;

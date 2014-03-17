@@ -43,7 +43,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Type"
-                style="@style/text"/>
+                style="@style/text.medium"/>
 
         </LinearLayout>
 
@@ -59,7 +59,7 @@
                 android:text="Cost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/text"/>
+                style="@style/text.medium"/>
 
             <TextView
                 android:id="@+id/cardset"
@@ -85,7 +85,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Ability"
-            style="@style/text"/>
+            style="@style/text.medium"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="P"
-                style="@style/text"/>
+                style="@style/text.medium"/>
 
             <TextView
                 android:id="@+id/cardslash"
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="/"
-                style="@style/text"/>
+                style="@style/text.medium"/>
 
             <TextView
                 android:id="@+id/cardt"
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="T"
-                style="@style/text"/>
+                style="@style/text.medium"/>
 
         </LinearLayout>
 

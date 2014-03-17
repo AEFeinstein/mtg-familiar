@@ -63,7 +63,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 	@SuppressWarnings("SpellCheckingInspection")
 	@Override
 	public PriceInfo loadDataFromNetwork() throws SpiceException {
-		CardDbAdapter dbHelper = null;
+		CardDbAdapter dbHelper;
 		int retry = 2; /* try the fetch twice, once with accent marks and again without if it fails */
 		SpiceException exception = null; /* Save the exception during while loops */
 		try {
@@ -148,9 +148,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 			}
 			retry--;
 		}
-		if (dbHelper != null) {
-			dbHelper.close();
-		}
+		dbHelper.close();
 		if(exception != null) {
 			throw exception;
 		}

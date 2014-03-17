@@ -32,7 +32,7 @@
             android:gravity="center_vertical"
             android:layout_marginLeft="12dp"
             android:textColor="@drawable/drawer_text"
-            android:textSize="18dp"
+            style="@style/text.medium"
             android:duplicateParentState="true"/>
     </LinearLayout>
 

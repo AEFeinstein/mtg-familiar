@@ -11,7 +11,7 @@
         android:background="@drawable/light_grey_border">
 
         <TextView
-            style="@style/text"
+            style="@style/text.medium"
             android:id="@+id/delta"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -26,7 +26,7 @@
             android:background="@color/drawer_divider_item"/>
 
         <TextView
-            style="@style/text"
+            style="@style/text.medium"
             android:id="@+id/absolute"
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -25,16 +25,15 @@
 
         <TextView
             android:id="@+id/rules"
-            style="@style/text"
+            style="@style/text.medium"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"/>
+            android:layout_height="wrap_content"/>
 
     </ScrollView>
 
     <TextView
         android:id="@+id/url"
-        style="@style/text"
+        style="@style/text.medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
