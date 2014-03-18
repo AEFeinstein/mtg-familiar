@@ -65,19 +65,29 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			/* Get the layout for the App Widget and attach an on-click listener to the buttons */
 			RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.mtgfamiliar_appwidget);
 
-			/* Attach all the intents to all the buttons */
-			for (int i = 0; i < buttonResources.length; i++) {
-				Intent intentQuick = new Intent(context, FamiliarActivity.class);
-				intentQuick.setAction(intents[i]);
-				PendingIntent pendingIntentQuick = PendingIntent.getActivity(context, 0, intentQuick, 0);
-				views.setOnClickPendingIntent(buttonResources[i], pendingIntentQuick);
-			}
+			bindButtons(context, views);
 
 			/* 6 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
 			showButtonsFromPreferences(context, views, 6);
 
 			/* Tell the AppWidgetManager to perform an update on the current app widget */
 			appWidgetManager.updateAppWidget(appWidgetId, views);
+		}
+	}
+
+	/**
+	 * Bind the buttons in the widget to their proper intents
+	 *
+	 * @param context The Context used to create the intents
+	 * @param views   The RemoteViews which holds the widget
+	 */
+	private void bindButtons(Context context, RemoteViews views) {
+		/* Attach all the intents to all the buttons */
+		for (int i = 0; i < buttonResources.length; i++) {
+			Intent intentQuick = new Intent(context, FamiliarActivity.class);
+			intentQuick.setAction(intents[i]);
+			PendingIntent pendingIntentQuick = PendingIntent.getActivity(context, 0, intentQuick, 0);
+			views.setOnClickPendingIntent(buttonResources[i], pendingIntentQuick);
 		}
 	}
 
@@ -132,10 +142,13 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.mtgfamiliar_appwidget);
 
 		float densityDpi = context.getResources().getDisplayMetrics().densityDpi;
-		float dp = newOptions.getInt("appWidgetMaxWidth") / (densityDpi / 160f);
+		float dp = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) / (densityDpi / 160f);
 		int maxNumButtons = (int) (dp / 32);
 
+		/* Show the right number of buttons, and rebind the intents.
+		   Buttons wont work if scaled and rotated otherwise */
 		showButtonsFromPreferences(context, views, maxNumButtons);
+		bindButtons(context, views);
 
 		/* Tell the AppWidgetManager to perform an update on the current app widget */
 		appWidgetManager.updateAppWidget(appWidgetId, views);
