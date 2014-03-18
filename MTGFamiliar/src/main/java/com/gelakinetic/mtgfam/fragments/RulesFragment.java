@@ -41,25 +41,41 @@ import java.util.regex.Pattern;
 
 public class RulesFragment extends FamiliarFragment {
 
+	/* Keys for information in the bundle */
 	private static final String CATEGORY_KEY = "category";
 	private static final String SUBCATEGORY_KEY = "subcategory";
 	private static final String POSITION_KEY = "position";
 	private static final String KEYWORD_KEY = "keyword";
 	private static final String GLOSSARY_KEY = "glossary";
 
-	private static final int SEARCH = 1;
+	/* Dialog constant */
+	private static final int DIALOG_SEARCH = 1;
+
+	/* Result code, to close multiple fragments */
 	private static final int RESULT_QUIT_TO_MAIN = 2;
-	private ArrayList<DisplayItem> rules;
-	private int category;
-	private int subcategory;
 
-	private Pattern underscorePattern;
-	private Pattern examplePattern;
-	private Pattern glyphPattern;
-	private Pattern keywordPattern;
-	private Pattern hyperlinkPattern;
-	private Pattern linkPattern;
+	/* Current rules information */
+	private ArrayList<DisplayItem> mRules;
+	private int mCategory;
+	private int mSubcategory;
 
+	/* Regular expression patterns */
+	private Pattern mUnderscorePattern;
+	private Pattern mExamplePattern;
+	private Pattern mGlyphPattern;
+	private Pattern mKeywordPattern;
+	private Pattern mHyperlinkPattern;
+	private Pattern mLinkPattern;
+
+	/**
+	 * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+	 * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
+	 *                           fragment should not add the view itself, but this can be used to generate the
+	 *                           LayoutParams of the view.
+	 * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
+	 *                           here.
+	 * @return The view to be shown
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		String keyword;
@@ -73,10 +89,11 @@ public class RulesFragment extends FamiliarFragment {
 			return null;
 		}
 
+		/* Inflate the view */
 		View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
-
 		assert myFragmentView != null;
 
+		/* Check if we are returning to the root */
 		Bundle res = ((FamiliarActivity) getActivity()).getFragmentResults();
 		if (res != null) {
 			int resultCode = res.getInt("resultCode");
@@ -88,96 +105,94 @@ public class RulesFragment extends FamiliarFragment {
 			}
 		}
 
+		/* Get arguments to display a rules section, or use defaults */
 		Bundle extras = getArguments();
 		int position;
 		boolean isGlossary;
 		if (extras == null) {
-			category = -1;
-			subcategory = -1;
+			mCategory = -1;
+			mSubcategory = -1;
 			position = 0;
 			keyword = null;
 			isGlossary = false;
 		}
 		else {
-			category = extras.getInt(CATEGORY_KEY, -1);
-			subcategory = extras.getInt(SUBCATEGORY_KEY, -1);
+			mCategory = extras.getInt(CATEGORY_KEY, -1);
+			mSubcategory = extras.getInt(SUBCATEGORY_KEY, -1);
 			position = extras.getInt(POSITION_KEY, 0);
 			keyword = extras.getString(KEYWORD_KEY);
 			isGlossary = extras.getBoolean(GLOSSARY_KEY, false);
 		}
 
 		ListView list = (ListView) myFragmentView.findViewById(R.id.resultList);
-		rules = new ArrayList<DisplayItem>();
-		boolean clickable;
-		Cursor c;
+		mRules = new ArrayList<DisplayItem>();
+		boolean isClickable;
+		Cursor cursor;
 
+		/* Populate the cursor with information from the database */
 		try {
 			if (isGlossary) {
-				c = mDbHelper.getGlossaryTerms();
-				clickable = false;
+				cursor = mDbHelper.getGlossaryTerms();
+				isClickable = false;
 			}
 			else if (keyword == null) {
-				c = mDbHelper.getRules(category, subcategory);
-				clickable = subcategory == -1;
+				cursor = mDbHelper.getRules(mCategory, mSubcategory);
+				isClickable = mSubcategory == -1;
 			}
 			else {
-				c = mDbHelper.getRulesByKeyword(keyword, category, subcategory);
-				clickable = false;
+				cursor = mDbHelper.getRulesByKeyword(keyword, mCategory, mSubcategory);
+				isClickable = false;
 			}
 		} catch (FamiliarDbException e) {
 			handleFamiliarDbException(true);
 			return myFragmentView;
 		}
 
-		if (c != null) {
+		/* Add DisplayItems to mRules */
+		if (cursor != null) {
 			try {
-				if (c.getCount() > 0) {
-					c.moveToFirst();
-					// throw this exception to test the dialog
-					// throw(new SQLiteDatabaseCorruptException("seriously"));
-					while (!c.isAfterLast()) {
+				if (cursor.getCount() > 0) {
+					cursor.moveToFirst();
+					while (!cursor.isAfterLast()) {
 						if (isGlossary) {
-							rules.add(new GlossaryItem(
-									c.getString(c.getColumnIndex(CardDbAdapter.KEY_TERM)),
-									c.getString(c.getColumnIndex(CardDbAdapter.KEY_DEFINITION))));
+							mRules.add(new GlossaryItem(
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TERM)),
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_DEFINITION))));
 						}
 						else {
-							rules
-									.add(new RuleItem(
-											c.getInt(c.getColumnIndex(CardDbAdapter.KEY_CATEGORY)),
-											c.getInt(c.getColumnIndex(CardDbAdapter.KEY_SUBCATEGORY)),
-											c.getString(c.getColumnIndex(CardDbAdapter.KEY_ENTRY)),
-											c.getString(c.getColumnIndex(CardDbAdapter.KEY_RULE_TEXT))));
+							mRules.add(new RuleItem(
+									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_CATEGORY)),
+									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_SUBCATEGORY)),
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ENTRY)),
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_RULE_TEXT))));
 						}
-						c.moveToNext();
+						cursor.moveToNext();
 					}
-					c.close();
-					if (!isGlossary && category == -1 && keyword == null) {
-						// If it's the initial rules page, add a Glossary link to the end
-						rules.add(new GlossaryItem(getString(R.string.rules_glossary)));
+					cursor.close();
+					if (!isGlossary && mCategory == -1 && keyword == null) {
+						/* If it's the initial rules page, add a Glossary link to the end*/
+						mRules.add(new GlossaryItem(getString(R.string.rules_glossary)));
 					}
 					int listItemResource = R.layout.rules_list_item;
-					// These cases can't be exclusive; otherwise keyword search from
-					// anything but a subcategory will use the wrong layout
-					if (isGlossary || subcategory >= 0 || keyword != null) {
+					/* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
+					 * the wrong layout*/
+					if (isGlossary || mSubcategory >= 0 || keyword != null) {
 						listItemResource = R.layout.rules_list_detail_item;
 					}
-					RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, rules);
+					RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
 					list.setAdapter(adapter);
 
-					if (clickable) {
-						// This only happens for rule items with no subcategory, so the cast
-						// should be safe
+					if (isClickable) {
+						/* This only happens for rule items with no subcategory, so the cast, should be safe */
 						list.setOnItemClickListener(new OnItemClickListener() {
 							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-								DisplayItem item = rules.get(position);
+								DisplayItem item = mRules.get(position);
 								Bundle args = new Bundle();
-								if (RuleItem.class.isInstance(item)) {
-									RuleItem ri = (RuleItem) item;
-									args.putInt(CATEGORY_KEY, ri.getCategory());
-									args.putInt(SUBCATEGORY_KEY, ri.getSubcategory());
+								if (item instanceof RuleItem) {
+									args.putInt(CATEGORY_KEY, ((RuleItem) item).getCategory());
+									args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).getSubcategory());
 								}
-								else if (GlossaryItem.class.isInstance(item)) {
+								else if (item instanceof GlossaryItem) {
 									args.putBoolean(GLOSSARY_KEY, true);
 								}
 								RulesFragment frag = new RulesFragment();
@@ -187,7 +202,8 @@ public class RulesFragment extends FamiliarFragment {
 					}
 				}
 				else {
-					c.close();
+					/* Cursor had a size of 0, boring */
+					cursor.close();
 					Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
 					getFragmentManager().popBackStack();
 				}
@@ -197,30 +213,31 @@ public class RulesFragment extends FamiliarFragment {
 			}
 		}
 		else {
+			/* Cursor is null, weird */
 			Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
 			getFragmentManager().popBackStack();
 		}
 
 		list.setSelection(position);
 
-
-		// Explanations for these regular expressions are available upon request.
-		// - Alex
-		underscorePattern = Pattern.compile("_(.+?)_");
-		examplePattern = Pattern.compile("(Example:.+)$");
-		glyphPattern = Pattern.compile("\\{([a-zA-Z0-9/]{1,3})\\}");
+		/* Explanations for these regular expressions are available upon request. - Alex */
+		mUnderscorePattern = Pattern.compile("_(.+?)_");
+		mExamplePattern = Pattern.compile("(Example:.+)$");
+		mGlyphPattern = Pattern.compile("\\{([a-zA-Z0-9/]{1,3})\\}");
 		if (keyword != null && !keyword.contains("{") && !keyword.contains("}")) {
-			keywordPattern = Pattern.compile("(" + Pattern.quote(keyword) + ")", Pattern.CASE_INSENSITIVE);
+			mKeywordPattern = Pattern.compile("(" + Pattern.quote(keyword) + ")", Pattern.CASE_INSENSITIVE);
 		}
 		else {
-			keywordPattern = null;
+			mKeywordPattern = null;
 		}
-		hyperlinkPattern = Pattern.compile("\\<(http://)?(www|gatherer|mtgcommander)(.+?)\\>");
+		mHyperlinkPattern = Pattern.compile("<(http://)?(www|gatherer|mtgcommander)(.+?)>");
 
 		/*
-		 * Regex breakdown for Adam: [1-9]{1}: first character is between 1 and 9
-		 * [0-9]{2}: followed by two characters between 0 and 9 (i.e. a 3-digit
-		 * number) (...)?: maybe followed by the group: \\.: period
+		 * Regex breakdown for Adam:
+		 * [1-9]: first character is between 1 and 9
+		 * [0-9]{2}: followed by two characters between 0 and 9 (i.e. a 3-digit number)
+		 * (...)?: maybe followed by the group:
+		 * \\.: period
 		 * ([a-z0-9]{1,3}(-[a-z]{1})?)?: maybe followed by one to three alphanumeric
 		 * characters, which are maybe followed by a hyphen and an alphabetical
 		 * character \\.?: maybe followed by another period
@@ -229,8 +246,11 @@ public class RulesFragment extends FamiliarFragment {
 		 * make some sense of the regex so I'm not just waving my hands and shouting
 		 * "WIZARDS!". I still reserve the right to do that, though. - Alex
 		 */
-		linkPattern = Pattern.compile("([1-9]{1}[0-9]{2}(\\.([a-z0-9]{1,4}(-[a-z]{1})?)?\\.?)?)");
+		mLinkPattern = Pattern.compile("([1-9][0-9]{2}(\\.([a-z0-9]{1,4}(-[a-z])?)?\\.?)?)");
 
+		if (cursor != null) {
+			cursor.close();
+		}
 		mDbHelper.close();
 
 		return myFragmentView;
@@ -271,7 +291,7 @@ public class RulesFragment extends FamiliarFragment {
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
 				searchArgs = null;
 				switch (id) {
-					case SEARCH: {
+					case DIALOG_SEARCH: {
 						/* Inflate a view to type in the player's name, and show it in an AlertDialog */
 						View textEntryView = getActivity().getLayoutInflater()
 								.inflate(R.layout.alert_dialog_text_entry, null);
@@ -285,14 +305,14 @@ public class RulesFragment extends FamiliarFragment {
 						});
 
 						String title;
-						if (category == -1) {
+						if (mCategory == -1) {
 							title = getString(R.string.rules_search_all);
 						}
 						else {
 							try {
 								CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
 								title = String.format(getString(R.string.rules_search_cat),
-										mDbHelper.getCategoryName(category, subcategory));
+										mDbHelper.getCategoryName(mCategory, mSubcategory));
 								mDbHelper.close();
 							} catch (FamiliarDbException e) {
 								title = String.format(getString(R.string.rules_search_cat),
@@ -317,8 +337,8 @@ public class RulesFragment extends FamiliarFragment {
 										else {
 											searchArgs = new Bundle();
 											searchArgs.putString(KEYWORD_KEY, keyword);
-											searchArgs.putInt(CATEGORY_KEY, category);
-											searchArgs.putInt(SUBCATEGORY_KEY, subcategory);
+											searchArgs.putInt(CATEGORY_KEY, mCategory);
+											searchArgs.putInt(SUBCATEGORY_KEY, mSubcategory);
 										}
 									}
 								})
@@ -341,6 +361,12 @@ public class RulesFragment extends FamiliarFragment {
 		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
 	}
 
+	/**
+	 * Handle a click in the menu
+	 *
+	 * @param item The item clicked
+	 * @return true if the click was handled, false otherwise
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -355,33 +381,49 @@ public class RulesFragment extends FamiliarFragment {
 		}
 	}
 
+	/**
+	 * Called when the user clicks the search key in the menu
+	 *
+	 * @return true, since the click was acted upon
+	 */
 	@Override
 	public boolean onInterceptSearchKey() {
-		showDialog(SEARCH);
+		showDialog(DIALOG_SEARCH);
 		return true;
 	}
 
+	/**
+	 * @return true, since this fragment can intercept the search key
+	 */
 	@Override
 	public boolean canInterceptSearchKey() {
 		return true;
 	}
 
+	/**
+	 * Format text for an entry with glyphs and links to other entries, found using regular expressions
+	 *
+	 * @param input      The entry to format
+	 * @param shouldLink true if links should be added, false otherwise
+	 * @return a SpannableString with glyphs and links
+	 */
 	private SpannableString formatText(String input, boolean shouldLink) {
 		String encodedInput = input;
-		encodedInput = underscorePattern.matcher(encodedInput).replaceAll("\\<i\\>$1\\</i\\>");
-		encodedInput = examplePattern.matcher(encodedInput).replaceAll("\\<i\\>$1\\</i\\>");
-		encodedInput = glyphPattern.matcher(encodedInput).replaceAll("\\<img src=\"$1\"/\\>");
-		if (keywordPattern != null) {
-			encodedInput = keywordPattern.matcher(encodedInput).replaceAll("\\<font color=\"yellow\"\\>$1\\</font\\>");
+		encodedInput = mUnderscorePattern.matcher(encodedInput).replaceAll("\\<i\\>$1\\</i\\>");
+		encodedInput = mExamplePattern.matcher(encodedInput).replaceAll("\\<i\\>$1\\</i\\>");
+		encodedInput = mGlyphPattern.matcher(encodedInput).replaceAll("\\<img src=\"$1\"/\\>");
+		if (mKeywordPattern != null) {
+			encodedInput = mKeywordPattern.matcher(encodedInput).replaceAll("\\<font color=\"yellow\"\\>$1\\</font\\>");
 		}
-		encodedInput = hyperlinkPattern.matcher(encodedInput).replaceAll("\\<a href=\"http://$2$3\"\\>$2$3\\</a\\>");
+		encodedInput = mHyperlinkPattern.matcher(encodedInput).replaceAll("\\<a href=\"http://$2$3\"\\>$2$3\\</a\\>");
 		encodedInput = encodedInput.replace("{", "").replace("}", "");
 
-		CharSequence cs = ImageGetterHelper.formatStringWithGlyphs(encodedInput, ImageGetterHelper.GlyphGetter(getResources()));
+		CharSequence cs = ImageGetterHelper
+				.formatStringWithGlyphs(encodedInput, ImageGetterHelper.GlyphGetter(getResources()));
 		SpannableString result = new SpannableString(cs);
 
 		if (shouldLink) {
-			Matcher m = linkPattern.matcher(cs);
+			Matcher m = mLinkPattern.matcher(cs);
 			while (m.find()) {
 				try {
 					String[] tokens = cs.subSequence(m.start(), m.end()).toString().split("(\\.)");
@@ -403,7 +445,7 @@ public class RulesFragment extends FamiliarFragment {
 					result.setSpan(new ClickableSpan() {
 						@Override
 						public void onClick(View widget) {
-							// Open a new activity instance
+							/* Open a new activity instance*/
 							Bundle args = new Bundle();
 							args.putInt(CATEGORY_KEY, linkCat);
 							args.putInt(SUBCATEGORY_KEY, linkSub);
@@ -413,28 +455,48 @@ public class RulesFragment extends FamiliarFragment {
 						}
 					}, m.start(), m.end(), 0);
 				} catch (Exception e) {
-					// Eat any exceptions; they'll just cause the link to not appear
+					/* Eat any exceptions; they'll just cause the link to not appear*/
 				}
 			}
 		}
-
 		return result;
 	}
 
+	/**
+	 *
+	 */
 	private abstract class DisplayItem {
+		/**
+		 * @return The string text associated with this entry
+		 */
 		public abstract String getText();
 
+		/**
+		 * @return The string header associated with this entry
+		 */
 		public abstract String getHeader();
 
+		/**
+		 * @return True if clicking this entry opens a sub-fragment, false otherwise
+		 */
 		public abstract boolean isClickable();
 	}
 
+	/**
+	 *
+	 */
 	private class RuleItem extends DisplayItem {
 		private final int category;
 		private final int subcategory;
 		private final String entry;
 		private final String rulesText;
 
+		/**
+		 * @param category
+		 * @param subcategory
+		 * @param entry
+		 * @param rulesText
+		 */
 		public RuleItem(int category, int subcategory, String entry, String rulesText) {
 			this.category = category;
 			this.subcategory = subcategory;
@@ -442,18 +504,30 @@ public class RulesFragment extends FamiliarFragment {
 			this.rulesText = rulesText;
 		}
 
+		/**
+		 * @return
+		 */
 		public int getCategory() {
 			return this.category;
 		}
 
+		/**
+		 * @return
+		 */
 		public int getSubcategory() {
 			return this.subcategory;
 		}
 
+		/**
+		 * @return
+		 */
 		public String getText() {
 			return this.rulesText;
 		}
 
+		/**
+		 * @return
+		 */
 		public String getHeader() {
 			if (this.subcategory == -1) {
 				return String.valueOf(this.category) + ".";
@@ -466,47 +540,77 @@ public class RulesFragment extends FamiliarFragment {
 			}
 		}
 
+		/**
+		 * @return
+		 */
 		public boolean isClickable() {
 			return this.entry == null || this.entry.length() == 0;
 		}
 	}
 
+	/**
+	 *
+	 */
 	private class GlossaryItem extends DisplayItem {
 		private final String term;
 		private final String definition;
 		private final boolean clickable;
 
+		/**
+		 * @param term
+		 * @param definition
+		 */
 		public GlossaryItem(String term, String definition) {
 			this.term = term;
 			this.definition = definition;
 			this.clickable = false;
 		}
 
+		/**
+		 * @param term
+		 */
 		public GlossaryItem(String term) {
 			this.term = term;
 			this.definition = "";
 			this.clickable = true;
 		}
 
+		/**
+		 * @return
+		 */
 		public String getText() {
 			return this.definition;
 		}
 
+		/**
+		 * @return
+		 */
 		public String getHeader() {
 			return this.term;
 		}
 
+		/**
+		 * @return
+		 */
 		public boolean isClickable() {
 			return this.clickable;
 		}
 	}
 
+	/**
+	 *
+	 */
 	private class RulesListAdapter extends ArrayAdapter<DisplayItem> implements SectionIndexer {
 		private final int layoutResourceId;
 		private final ArrayList<DisplayItem> items;
 		private final HashMap<String, Integer> alphaIndex;
 		private final String[] sections;
 
+		/**
+		 * @param context
+		 * @param textViewResourceId
+		 * @param items
+		 */
 		public RulesListAdapter(Context context, int textViewResourceId, ArrayList<DisplayItem> items) {
 			super(context, textViewResourceId, items);
 
@@ -531,8 +635,8 @@ public class RulesFragment extends FamiliarFragment {
 				}
 
 				ArrayList<String> letters = new ArrayList<String>(this.alphaIndex.keySet());
-				Collections.sort(letters); // This should do nothing in practice, but
-				// just to be safe
+				Collections.sort(letters); /* This should do nothing in practice, but*/
+				/* just to be safe*/
 
 				sections = new String[letters.size()];
 				letters.toArray(sections);
@@ -543,6 +647,12 @@ public class RulesFragment extends FamiliarFragment {
 			}
 		}
 
+		/**
+		 * @param position
+		 * @param convertView
+		 * @param parent
+		 * @return
+		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
@@ -576,6 +686,10 @@ public class RulesFragment extends FamiliarFragment {
 			return v;
 		}
 
+		/**
+		 * @param section
+		 * @return
+		 */
 		public int getPositionForSection(int section) {
 			if (this.alphaIndex == null) {
 				return 0;
@@ -585,6 +699,10 @@ public class RulesFragment extends FamiliarFragment {
 			}
 		}
 
+		/**
+		 * @param position
+		 * @return
+		 */
 		public int getSectionForPosition(int position) {
 			if (this.alphaIndex == null) {
 				return 0;
@@ -594,6 +712,9 @@ public class RulesFragment extends FamiliarFragment {
 			}
 		}
 
+		/**
+		 * @return
+		 */
 		public Object[] getSections() {
 			if (this.alphaIndex == null) {
 				return null;
@@ -604,6 +725,10 @@ public class RulesFragment extends FamiliarFragment {
 		}
 	}
 
+	/**
+	 * @param menu     The options menu in which you place your items.
+	 * @param inflater The inflater to use to inflate the menu
+	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
