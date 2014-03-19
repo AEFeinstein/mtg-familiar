@@ -36,6 +36,7 @@ import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -619,8 +620,8 @@ public class RulesFragment extends FamiliarFragment {
 		private final int mLayoutResourceId;
 		private final ArrayList<DisplayItem> mItems;
 
-		private int mIndices[] = new int[26];
-		private String mAlphabet[] = new String[26];
+		private Integer mIndices[];
+		private String mAlphabet[];
 
 		/**
 		 * Constructor
@@ -646,24 +647,21 @@ public class RulesFragment extends FamiliarFragment {
 
 			/* Enable fast scrolling for the glossary. Add all the first letters of the entries */
 			if (isGlossary) {
-
-				/* Clear the indices */
-				for (int i = 0; i < 26; i++) {
-					mIndices[i] = -1;
-				}
-
-				/* Build the alphabet, one letter at a time */
-				for (char c = 'A'; c <= 'Z'; c++) {
-					mAlphabet[c - 'A'] = c + "";
-				}
+				LinkedHashSet<Integer> indicesLHS = new LinkedHashSet<Integer>();
+				LinkedHashSet<String> alphabetLHS = new LinkedHashSet<String>();
 
 				/* Find the first index for each letter in the alphabet by looking at all the items */
-				for (int i = 0; i < items.size(); i++) {
-					int index = items.get(i).getHeader().substring(0, 1).toUpperCase().charAt(0) - 'A';
-					if (mIndices[index] == -1) {
-						mIndices[index] = i;
+				for (int index = 0; index < items.size(); index++) {
+					String letter = items.get(index).getHeader().substring(0, 1).toUpperCase();
+					if (!alphabetLHS.contains(letter)) {
+						alphabetLHS.add(letter);
+						indicesLHS.add(index);
 					}
 				}
+				mAlphabet = new String[alphabetLHS.size()];
+				mAlphabet = alphabetLHS.toArray(mAlphabet);
+				mIndices = new Integer[indicesLHS.size()];
+				mIndices = indicesLHS.toArray(mIndices);
 			}
 			else {
 				this.mIndices = null;
