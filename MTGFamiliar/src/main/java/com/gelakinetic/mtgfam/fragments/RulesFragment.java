@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -34,8 +36,6 @@ import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,10 +124,35 @@ public class RulesFragment extends FamiliarFragment {
 			isGlossary = extras.getBoolean(GLOSSARY_KEY, false);
 		}
 
-		ListView list = (ListView) myFragmentView.findViewById(R.id.resultList);
+		ListView list = (ListView) myFragmentView.findViewById(R.id.result_list);
 		mRules = new ArrayList<DisplayItem>();
 		boolean isClickable;
 		Cursor cursor;
+
+		/* Sub-optimal, but KitKat is silly */
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			list.setOnScrollListener(new ListView.OnScrollListener() {
+
+				@Override
+				public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+					switch (scrollState) {
+						case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+							absListView.setFastScrollAlwaysVisible(false);
+							break;
+						case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+							absListView.setFastScrollAlwaysVisible(true);
+							break;
+						default:
+							break;
+					}
+				}
+
+				@Override
+				public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+
+				}
+			});
+		}
 
 		/* Populate the cursor with information from the database */
 		try {
@@ -157,7 +182,7 @@ public class RulesFragment extends FamiliarFragment {
 						if (isGlossary) {
 							mRules.add(new GlossaryItem(
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TERM)),
-									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_DEFINITION))));
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_DEFINITION)), false));
 						}
 						else {
 							mRules.add(new RuleItem(
@@ -171,7 +196,7 @@ public class RulesFragment extends FamiliarFragment {
 					cursor.close();
 					if (!isGlossary && mCategory == -1 && keyword == null) {
 						/* If it's the initial rules page, add a Glossary link to the end*/
-						mRules.add(new GlossaryItem(getString(R.string.rules_glossary)));
+						mRules.add(new GlossaryItem(getString(R.string.rules_glossary), "", true));
 					}
 					int listItemResource = R.layout.rules_list_item;
 					/* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
@@ -183,14 +208,14 @@ public class RulesFragment extends FamiliarFragment {
 					list.setAdapter(adapter);
 
 					if (isClickable) {
-						/* This only happens for rule items with no subcategory, so the cast, should be safe */
+						/* This only happens for rule mItems with no subcategory, so the cast, should be safe */
 						list.setOnItemClickListener(new OnItemClickListener() {
 							public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 								DisplayItem item = mRules.get(position);
 								Bundle args = new Bundle();
 								if (item instanceof RuleItem) {
-									args.putInt(CATEGORY_KEY, ((RuleItem) item).getCategory());
-									args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).getSubcategory());
+									args.putInt(CATEGORY_KEY, ((RuleItem) item).mCategory);
+									args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).mCategory);
 								}
 								else if (item instanceof GlossaryItem) {
 									args.putBoolean(GLOSSARY_KEY, true);
@@ -463,7 +488,7 @@ public class RulesFragment extends FamiliarFragment {
 	}
 
 	/**
-	 *
+	 * This is an abstract class which can be displayed with a RulesListAdapter in the fragment
 	 */
 	private abstract class DisplayItem {
 		/**
@@ -483,139 +508,133 @@ public class RulesFragment extends FamiliarFragment {
 	}
 
 	/**
-	 *
+	 * This is a rule to be displayed in the list view
 	 */
 	private class RuleItem extends DisplayItem {
-		private final int category;
-		private final int subcategory;
-		private final String entry;
-		private final String rulesText;
+		private final int mCategory;
+		private final int mSubcategory;
+		private final String mEntry;
+		private final String mRulesText;
 
 		/**
-		 * @param category
-		 * @param subcategory
-		 * @param entry
-		 * @param rulesText
+		 * Constructor
+		 *
+		 * @param category    The integer category of the rule
+		 * @param subcategory The integer subcategory of the rule
+		 * @param entry       The letter entry of the rule.
+		 * @param rulesText   The rule. Follow it!
 		 */
 		public RuleItem(int category, int subcategory, String entry, String rulesText) {
-			this.category = category;
-			this.subcategory = subcategory;
-			this.entry = entry;
-			this.rulesText = rulesText;
+			this.mCategory = category;
+			this.mSubcategory = subcategory;
+			this.mEntry = entry;
+			this.mRulesText = rulesText;
 		}
 
 		/**
-		 * @return
-		 */
-		public int getCategory() {
-			return this.category;
-		}
-
-		/**
-		 * @return
-		 */
-		public int getSubcategory() {
-			return this.subcategory;
-		}
-
-		/**
-		 * @return
+		 * Returns the rules text to be shown in the list
+		 *
+		 * @return The rules text
 		 */
 		public String getText() {
-			return this.rulesText;
+			return this.mRulesText;
 		}
 
 		/**
-		 * @return
+		 * Returns the header to be shown in the list
+		 *
+		 * @return Some concatenation of the category, subcategory, and entry, depending on what is valid
 		 */
 		public String getHeader() {
-			if (this.subcategory == -1) {
-				return String.valueOf(this.category) + ".";
+			if (this.mSubcategory == -1) {
+				return String.valueOf(this.mCategory) + ".";
 			}
-			else if (this.entry == null) {
-				return String.valueOf((this.category * 100) + this.subcategory) + ".";
+			else if (this.mEntry == null) {
+				return String.valueOf((this.mCategory * 100) + this.mSubcategory) + ".";
 			}
 			else {
-				return String.valueOf((this.category * 100 + this.subcategory)) + "." + this.entry;
+				return String.valueOf((this.mCategory * 100 + this.mSubcategory)) + "." + this.mEntry;
 			}
 		}
 
 		/**
-		 * @return
+		 * This entry is clickable if it does not have rules text, i.e. it is just a header which will open a
+		 * sub-fragment
+		 *
+		 * @return True if it launches a sub-fragment, false otherwise
 		 */
 		public boolean isClickable() {
-			return this.entry == null || this.entry.length() == 0;
+			return this.mEntry == null || this.mEntry.length() == 0;
 		}
 	}
 
 	/**
-	 *
+	 * This is a glossary item to be displayed in the list view
 	 */
 	private class GlossaryItem extends DisplayItem {
-		private final String term;
-		private final String definition;
-		private final boolean clickable;
+		private final String mTerm;
+		private final String mDefinition;
+		private final boolean mClickable;
 
 		/**
-		 * @param term
-		 * @param definition
+		 * Constructor
+		 *
+		 * @param term       The term to be defined
+		 * @param definition The definition of the term
+		 * @param clickable  Whether clicking this entry will start a sub-fragment. In practice, just the main glossary
+		 *                   entry point
 		 */
-		public GlossaryItem(String term, String definition) {
-			this.term = term;
-			this.definition = definition;
-			this.clickable = false;
+		public GlossaryItem(String term, String definition, boolean clickable) {
+			this.mTerm = term;
+			this.mDefinition = definition;
+			this.mClickable = clickable;
 		}
 
 		/**
-		 * @param term
-		 */
-		public GlossaryItem(String term) {
-			this.term = term;
-			this.definition = "";
-			this.clickable = true;
-		}
-
-		/**
-		 * @return
+		 * @return the definition for this glossary entry
 		 */
 		public String getText() {
-			return this.definition;
+			return this.mDefinition;
 		}
 
 		/**
-		 * @return
+		 * @return the header for this glossary entry
 		 */
 		public String getHeader() {
-			return this.term;
+			return this.mTerm;
 		}
 
 		/**
-		 * @return
+		 * @return whether clicking this entry launches a sub fragment
 		 */
 		public boolean isClickable() {
-			return this.clickable;
+			return this.mClickable;
 		}
 	}
 
 	/**
-	 *
+	 * This class displays rules items in the list view. It also enables the fast scrolling with the alphabet
 	 */
 	private class RulesListAdapter extends ArrayAdapter<DisplayItem> implements SectionIndexer {
-		private final int layoutResourceId;
-		private final ArrayList<DisplayItem> items;
-		private final HashMap<String, Integer> alphaIndex;
-		private final String[] sections;
+		private final int mLayoutResourceId;
+		private final ArrayList<DisplayItem> mItems;
+
+		private int mIndices[] = new int[26];
+		private String mAlphabet[] = new String[26];
 
 		/**
-		 * @param context
-		 * @param textViewResourceId
-		 * @param items
+		 * Constructor
+		 *
+		 * @param context            A context to inflate views with
+		 * @param textViewResourceId The layout to inflate, either R.layout.rules_list_detail_item or
+		 *                           R.layout.rules_list_item
+		 * @param items              The DisplayItems to show
 		 */
 		public RulesListAdapter(Context context, int textViewResourceId, ArrayList<DisplayItem> items) {
 			super(context, textViewResourceId, items);
 
-			this.layoutResourceId = textViewResourceId;
-			this.items = items;
+			this.mLayoutResourceId = textViewResourceId;
+			this.mItems = items;
 
 			boolean isGlossary = true;
 			for (DisplayItem item : items) {
@@ -625,43 +644,50 @@ public class RulesFragment extends FamiliarFragment {
 				}
 			}
 
+			/* Enable fast scrolling for the glossary. Add all the first letters of the entries */
 			if (isGlossary) {
-				this.alphaIndex = new HashMap<String, Integer>();
-				for (int i = 0; i < items.size(); i++) {
-					String first = items.get(i).getHeader().substring(0, 1).toUpperCase();
-					if (!this.alphaIndex.containsKey(first)) {
-						this.alphaIndex.put(first, i);
-					}
+
+				/* Clear the indices */
+				for (int i = 0; i < 26; i++) {
+					mIndices[i] = -1;
 				}
 
-				ArrayList<String> letters = new ArrayList<String>(this.alphaIndex.keySet());
-				Collections.sort(letters); /* This should do nothing in practice, but*/
-				/* just to be safe*/
+				/* Build the alphabet, one letter at a time */
+				for (char c = 'A'; c <= 'Z'; c++) {
+					mAlphabet[c - 'A'] = c + "";
+				}
 
-				sections = new String[letters.size()];
-				letters.toArray(sections);
+				/* Find the first index for each letter in the alphabet by looking at all the items */
+				for (int i = 0; i < items.size(); i++) {
+					int index = items.get(i).getHeader().substring(0, 1).toUpperCase().charAt(0) - 'A';
+					if (mIndices[index] == -1) {
+						mIndices[index] = i;
+					}
+				}
 			}
 			else {
-				this.alphaIndex = null;
-				this.sections = null;
+				this.mIndices = null;
+				this.mAlphabet = null;
 			}
 		}
 
 		/**
-		 * @param position
-		 * @param convertView
-		 * @param parent
-		 * @return
+		 * Get a view for a given item's position
+		 *
+		 * @param position    The position of the item to display
+		 * @param convertView A view. If not null, it should be updated with this position's info
+		 * @param parent      The parent this view will eventually be attached to
+		 * @return The view to display
 		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
 			if (v == null) {
 				LayoutInflater inf = getActivity().getLayoutInflater();
-				v = inf.inflate(layoutResourceId, null);
+				v = inf.inflate(mLayoutResourceId, null);
 			}
 			assert v != null;
-			DisplayItem data = items.get(position);
+			DisplayItem data = mItems.get(position);
 			if (data != null) {
 				TextView rulesHeader = (TextView) v.findViewById(R.id.rules_item_header);
 				TextView rulesText = (TextView) v.findViewById(R.id.rules_item_text);
@@ -687,24 +713,36 @@ public class RulesFragment extends FamiliarFragment {
 		}
 
 		/**
-		 * @param section
-		 * @return
+		 * Given the index of a section within the array of section objects, returns the starting position of that
+		 * section within the adapter. If the section's starting position is outside of the adapter bounds, the position
+		 * must be clipped to fall within the size of the adapter.
+		 *
+		 * @param section the index of the section within the array of section objects
+		 * @return the starting position of that section within the adapter, constrained to fall within the adapter
+		 * bounds
 		 */
 		public int getPositionForSection(int section) {
-			if (this.alphaIndex == null) {
+			if (this.mIndices == null) {
 				return 0;
 			}
 			else {
-				return this.alphaIndex.get(this.sections[section]);
+				return mIndices[section];
 			}
 		}
 
 		/**
-		 * @param position
-		 * @return
+		 * Given a position within the adapter, returns the index of the corresponding section within the array of
+		 * section objects. If the section index is outside of the section array bounds, the index must be clipped to
+		 * fall within the size of the section array. For example, consider an indexer where the section at array index
+		 * 0 starts at adapter position 100. Calling this method with position 10, which is before the first section,
+		 * must return index 0.
+		 *
+		 * @param position the position within the adapter for which to return the corresponding section index
+		 * @return the index of the corresponding section within the array of section objects, constrained to fall
+		 * within the array bounds
 		 */
 		public int getSectionForPosition(int position) {
-			if (this.alphaIndex == null) {
+			if (this.mIndices == null) {
 				return 0;
 			}
 			else {
@@ -713,20 +751,25 @@ public class RulesFragment extends FamiliarFragment {
 		}
 
 		/**
-		 * @return
+		 * Returns an array of objects representing sections of the list. The returned array and its contents should be
+		 * non-null. The list view will call toString() on the objects to get the preview text to display while
+		 * scrolling. For example, an adapter may return an array of Strings representing letters of the alphabet. Or,
+		 * it may return an array of objects whose toString() methods return their section titles.
+		 *
+		 * @return the array of section objects
 		 */
 		public Object[] getSections() {
-			if (this.alphaIndex == null) {
+			if (this.mIndices == null) {
 				return null;
 			}
 			else {
-				return sections;
+				return mAlphabet;
 			}
 		}
 	}
 
 	/**
-	 * @param menu     The options menu in which you place your items.
+	 * @param menu     The options menu in which you place your mItems.
 	 * @param inflater The inflater to use to inflate the menu
 	 */
 	@Override

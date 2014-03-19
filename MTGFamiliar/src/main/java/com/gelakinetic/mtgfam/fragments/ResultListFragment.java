@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
 import android.database.MergeCursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -100,9 +102,8 @@ public class ResultListFragment extends FamiliarFragment {
 
 			if (this.isAdded()) {
 				if (mCursor == null || mCursor.getCount() == 0) {
-					Toast.makeText(this.getActivity(), getFragmentManager().getBackStackEntryCount() + " " +
-							getString(R.string.search_toast_no_results),
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(this.getActivity(), getString(R.string.search_toast_no_results), Toast.LENGTH_SHORT
+					).show();
 					if (!getActivity().isTaskRoot()) {
 						getActivity().finish();
 					}
@@ -183,7 +184,32 @@ public class ResultListFragment extends FamiliarFragment {
 		/* Inflate the view */
 		View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
 		assert myFragmentView != null; /* Because Android Studio */
-		mListView = (ListView) myFragmentView.findViewById(R.id.resultList);
+		mListView = (ListView) myFragmentView.findViewById(R.id.result_list);
+
+				/* Sub-optimal, but KitKat is silly */
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			mListView.setOnScrollListener(new ListView.OnScrollListener() {
+
+				@Override
+				public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+					switch (scrollState) {
+						case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+							absListView.setFastScrollAlwaysVisible(false);
+							break;
+						case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+							absListView.setFastScrollAlwaysVisible(true);
+							break;
+						default:
+							break;
+					}
+				}
+
+				@Override
+				public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+
+				}
+			});
+		}
 
 		Bundle res = ((FamiliarActivity) getActivity()).getFragmentResults();
 		if (res != null) {
