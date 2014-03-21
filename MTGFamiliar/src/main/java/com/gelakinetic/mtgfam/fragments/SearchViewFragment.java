@@ -169,7 +169,7 @@ public class SearchViewFragment extends FamiliarFragment {
 		assert myFragmentView != null;
 
 		/* Get references to UI elements. When a search is preformed, these values will be queried */
-		mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.namesearch);
+		mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
 		mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
 		mSupertypeField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
 		mSubtypeField = (EditText) myFragmentView.findViewById(R.id.subtypesearch);

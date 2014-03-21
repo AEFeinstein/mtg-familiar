@@ -28,7 +28,7 @@
 
             <AutoCompleteTextView
                 style="@style/forty_eight"
-                android:id="@+id/namesearch"
+                android:id="@+id/name_search"
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
                 android:hint="@string/search_name"

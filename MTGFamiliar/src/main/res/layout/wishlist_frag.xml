@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/numberInput"
+            android:id="@+id/number_input"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:ems="10"
@@ -23,7 +23,7 @@
         </EditText>
 
         <AutoCompleteTextView
-            android:id="@+id/namesearch"
+            android:id="@+id/name_search"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:hint="@string/wishlist_name"
@@ -48,7 +48,7 @@
         android:background="@color/holo_blue_light"/>
 
     <Button
-        android:id="@+id/addCard"
+        android:id="@+id/add_card"
         android:text="@string/wishlist_add_card"
         android:layout_width="match_parent"
         android:layout_height="46dp"

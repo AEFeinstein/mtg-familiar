@@ -67,8 +67,8 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
 			bindButtons(context, views);
 
-			/* 6 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
-			showButtonsFromPreferences(context, views, 6);
+			/* 100 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
+			showButtonsFromPreferences(context, views, 100);
 
 			/* Tell the AppWidgetManager to perform an update on the current app widget */
 			appWidgetManager.updateAppWidget(appWidgetId, views);
