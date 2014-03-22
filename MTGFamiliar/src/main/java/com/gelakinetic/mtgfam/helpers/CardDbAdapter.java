@@ -478,21 +478,24 @@ public class CardDbAdapter {
 		return mCursor;
 	}
 
-	public Cursor fetchCardByNameAndSet(String name, String setCode)
+	public Cursor fetchCardByNameAndSet(String name, String setCode, String[] fields)
 			throws FamiliarDbException {
 		// replace lowercase ae with Ae
 		name = name.replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0]);
-		String sql = "SELECT " + DATABASE_TABLE_CARDS + "." + KEY_ID + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_NAME + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_SET + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_NUMBER + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_TYPE + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_MANACOST + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_ABILITY + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_POWER + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_LOYALTY + ", "
-				+ DATABASE_TABLE_CARDS + "." + KEY_RARITY + " FROM "
+
+		String sql = "SELECT ";
+		boolean first = true;
+		for (String field : fields) {
+			if (first) {
+				first = false;
+			}
+			else {
+				sql += ", ";
+			}
+			sql += DATABASE_TABLE_CARDS + "." + field;
+		}
+
+		sql += " FROM "
 				+ DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
 				+ " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
 				+ DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
@@ -1278,8 +1281,9 @@ public class CardDbAdapter {
 		Cursor c = null;
 		try {
 			c = mDb.query(DATABASE_TABLE_SETS, new String[]{
-					KEY_NAME_TCGPLAYER, KEY_CODE}, null, null, null, null,
-					KEY_DATE + " DESC");
+							KEY_NAME_TCGPLAYER, KEY_CODE}, null, null, null, null,
+					KEY_DATE + " DESC"
+			);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {

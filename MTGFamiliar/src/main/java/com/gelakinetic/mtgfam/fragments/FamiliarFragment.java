@@ -213,7 +213,7 @@ public abstract class FamiliarFragment extends Fragment {
 	 *
 	 * @param shouldFinish if the current fragment should exit
 	 */
-	void handleFamiliarDbException(boolean shouldFinish) {
+	public void handleFamiliarDbException(boolean shouldFinish) {
 		/* Show a toast on the UI thread */
 		getActivity().runOnUiThread(new Runnable() {
 			@Override
@@ -239,12 +239,22 @@ public abstract class FamiliarFragment extends Fragment {
 	}
 
 	/**
-	 * Called from the activity if the user is inactive. May be overridden to do things like dim the screen
+	 * Override this to be notified when the user is inactive
 	 */
 	public void onUserInactive() {
 
 	}
 
+	/**
+	 * Override this to be notified when the user is active again
+	 */
 	public void onUserActive() {
+	}
+
+	/**
+	 * Override this to be notified when the wishlist changes
+	 */
+	public void onWishlistChanged() {
+
 	}
 }

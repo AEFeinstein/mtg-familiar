@@ -475,5 +475,7 @@
     <string name="pref_widget_mode_summary">The buttons to display in the widget</string>
     <string name="widget_configure_reminder">Configure the widget in General Settings</string>
     <string name="judges_corner_error">An error occurred.</string>
+    <string name="card_view_image_not_found">Image Not Found</string>
+    <string name="wishlist_loading">Loading</string>
 
 </resources>

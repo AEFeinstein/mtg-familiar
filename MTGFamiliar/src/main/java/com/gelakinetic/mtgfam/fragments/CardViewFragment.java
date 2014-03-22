@@ -64,6 +64,7 @@ import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -663,7 +664,7 @@ public class CardViewFragment extends FamiliarFragment {
 				} catch (FileNotFoundException e) {
 					/* internet works, image not found */
 					if (cardLanguage.equalsIgnoreCase("en")) {
-						error = "Image Not Found"; /* TODO move to resources */
+						error = getString(R.string.card_view_image_not_found);
 					}
 					else {
 						/* If image doesn't exist in the preferred language, let's retry with "en" */
@@ -856,19 +857,6 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Create and show the dialog. */
 		final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
-			/* TODO
-						 private WishlistHelpers	wh = new WishlistHelpers();
-
-						@Override
-						public void onDismiss(DialogInterface dialog) {
-							super.onDismiss(dialog);
-							switch(id) {
-								case WISH_LIST_COUNTS:
-									wh.onDialogDismissed();
-									break;
-							}
-						}
-			 */
 			@Override
 			@SuppressWarnings("SpellCheckingInspection")
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -1013,17 +1001,15 @@ public class CardViewFragment extends FamiliarFragment {
 						builder.setView(v);
 						return builder.create();
 					}
-					/* TODO
 					case WISH_LIST_COUNTS: {
 						try {
-							return wh.getDialog(mCardName, CardViewFragment.this, this.getActivity());
+							return WishlistHelpers.getDialog(mCardName, CardViewFragment.this);
 						} catch (FamiliarDbException e) {
-							this.handleFamiliarDbException(false);
+							handleFamiliarDbException(false);
 							setShowsDialog(false);
 							return null;
 						}
 					}
-					*/
 					case PROGRESS: {
 
 						ProgressDialog progressDialog = new ProgressDialog(this.getActivity());

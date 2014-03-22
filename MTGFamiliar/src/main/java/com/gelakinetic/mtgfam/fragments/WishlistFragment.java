@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 
 public class WishlistFragment extends FamiliarFragment {
 
@@ -124,8 +126,13 @@ public class WishlistFragment extends FamiliarFragment {
 				setShowsDialog(true);
 				switch (id) {
 					case DIALOG_UPDATE_CARD: {
-						setShowsDialog(false);
-						return null;
+						try {
+							return WishlistHelpers.getDialog(null, WishlistFragment.this);
+						} catch (FamiliarDbException e) {
+							handleFamiliarDbException(false);
+							setShowsDialog(false);
+							return null;
+						}
 					}
 					case DIALOG_PRICE_SETTING: {
 						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
