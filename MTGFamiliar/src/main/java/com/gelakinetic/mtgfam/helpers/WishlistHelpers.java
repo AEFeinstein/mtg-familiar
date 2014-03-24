@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -231,5 +232,58 @@ public class WishlistHelpers {
 					}
 				})
 				.create();
+	}
+
+
+
+	public static class CompressedWishlistInfo {
+		public MtgCard mCard;
+		public ArrayList<String> mSets;
+		public ArrayList<String> mSetCodes;
+		public ArrayList<String> mNumber;
+
+		public ArrayList<Boolean> mIsFoil;
+		public ArrayList<PriceInfo> mPrice;
+		public ArrayList<String> mMessage;
+		public ArrayList<Integer> mNumberOf;
+
+		public CompressedWishlistInfo(MtgCard card) {
+			mSets = new ArrayList<String>();
+			mSetCodes = new ArrayList<String>();
+			mNumber = new ArrayList<String>();
+			mIsFoil = new ArrayList<Boolean>();
+			mPrice = new ArrayList<PriceInfo>();
+			mMessage = new ArrayList<String>();
+			mNumberOf = new ArrayList<Integer>();
+
+			mCard = card;
+			add(mCard);
+		}
+
+		public void add(MtgCard card) {
+			mSets.add(card.tcgName);
+			mSetCodes.add(card.setCode);
+			mNumber.add(card.number);
+			mIsFoil.add(card.foil);
+			mPrice.add(new PriceInfo());
+			mMessage.add(card.message);
+			mNumberOf.add(card.numberOf);
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof CompressedWishlistInfo) {
+				return mCard.name.equals(((CompressedWishlistInfo) o).mCard.name);
+			}
+			else if (o instanceof MtgCard) {
+				return mCard.name.equals(((MtgCard) o).name);
+			}
+			return false;
+		}
+	}
+
+	public static boolean GetReadableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, boolean includeTcgName) {
+		// TODO implement
+		return false;
 	}
 }

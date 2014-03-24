@@ -151,7 +151,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		assert myFragmentView != null;
 		mGridLayout = (GridLayout) myFragmentView.findViewById(R.id.playerList);
 
-		mDisplayMode = Integer.valueOf(((FamiliarActivity) getActivity()).mPreferenceAdapter.getDisplayMode());
+		mDisplayMode = Integer.valueOf(getFamiliarActivity().mPreferenceAdapter.getDisplayMode());
 
 		mCommanderPlayerView = (LinearLayout) myFragmentView.findViewById(R.id.commander_player);
 
@@ -249,7 +249,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			player.onPause();
 			playerData += player.toString();
 		}
-		((FamiliarActivity) getActivity()).mPreferenceAdapter.setPlayerData(playerData);
+		getFamiliarActivity().mPreferenceAdapter.setPlayerData(playerData);
 		mGridLayout.removeAllViews();
 		mPlayers.clear();
 
@@ -267,7 +267,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	public void onResume() {
 		super.onResume();
 
-		String playerData = ((FamiliarActivity) getActivity()).mPreferenceAdapter.getPlayerData();
+		String playerData = getFamiliarActivity().mPreferenceAdapter.getPlayerData();
 		if (playerData == null || playerData.length() == 0) {
 			addPlayer();
 			addPlayer();
@@ -285,7 +285,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		setStatDisplaying(mStatDisplaying);
 
-		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getWakelock()) {
+		if (getFamiliarActivity().mPreferenceAdapter.getWakelock()) {
 			getActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		}
 	}
@@ -295,7 +295,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 */
 	@Override
 	public void onUserInactive() {
-		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getWakelock()) {
+		if (getFamiliarActivity().mPreferenceAdapter.getWakelock()) {
 			WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
 			layoutParams.screenBrightness = 0.0f;
 			getActivity().getWindow().setAttributes(layoutParams);
@@ -307,7 +307,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 */
 	@Override
 	public void onUserActive() {
-		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getWakelock()) {
+		if (getFamiliarActivity().mPreferenceAdapter.getWakelock()) {
 			WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
 			layoutParams.screenBrightness = mDefaultBrightness;
 			getActivity().getWindow().setAttributes(layoutParams);
@@ -336,7 +336,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		super.onPrepareOptionsMenu(menu);
 		MenuItem menuItem = menu.findItem(R.id.announce_life);
 		assert menuItem != null;
-		if (!mTtsInit || !((FamiliarActivity) getActivity()).mIsMenuVisible) {
+		if (!mTtsInit || !getFamiliarActivity().mIsMenuVisible) {
 			menuItem.setVisible(false);
 		}
 		else {
@@ -599,7 +599,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 */
 	private void changeDisplayMode() {
 		/* update the preference */
-		((FamiliarActivity) getActivity()).mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
+		getFamiliarActivity().mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
 
 		mGridLayout.removeAllViews();
 

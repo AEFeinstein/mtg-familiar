@@ -251,7 +251,7 @@ public class SearchViewFragment extends FamiliarFragment {
 		mSupertypeField.setAdapter(supertypeAdapter);
 
 		/* Do we want to consolidate different printings of the same card in results, or not? */
-		boolean consolidate = ((FamiliarActivity) getActivity()).mPreferenceAdapter.getConsolidateSearch();
+		boolean consolidate = getFamiliarActivity().mPreferenceAdapter.getConsolidateSearch();
 		mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOSTRECENTPRINTING : CardDbAdapter.ALLPRINTINGS);
 
 		/* set the search button! */

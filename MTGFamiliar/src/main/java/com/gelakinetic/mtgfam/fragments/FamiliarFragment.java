@@ -75,9 +75,9 @@ public abstract class FamiliarFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		if ((getActivity()) != null) {
-			((FamiliarActivity) getActivity()).getFragmentResults();
-			((FamiliarActivity) getActivity())
-					.mDrawerLayout.closeDrawer(((FamiliarActivity) getActivity()).mDrawerList);
+			getFamiliarActivity().getFragmentResults();
+			getFamiliarActivity()
+					.mDrawerLayout.closeDrawer(getFamiliarActivity().mDrawerList);
 		}
 	}
 
@@ -105,7 +105,7 @@ public abstract class FamiliarFragment extends Fragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (((FamiliarActivity) getActivity()).dialogShowing != FamiliarActivity.CHANGE_LOG_DIALOG) {
+		if (getFamiliarActivity().dialogShowing != FamiliarActivity.CHANGE_LOG_DIALOG) {
 			removeDialog(getFragmentManager());
 		}
 	}
@@ -195,7 +195,7 @@ public abstract class FamiliarFragment extends Fragment {
 			ft.addToBackStack(null);
 			ft.commit();
 			if (getActivity() != null) {
-				((FamiliarActivity) getActivity()).hideKeyboard();
+				getFamiliarActivity().hideKeyboard();
 			}
 		}
 	}
@@ -204,7 +204,7 @@ public abstract class FamiliarFragment extends Fragment {
 	 * This removes any currently open dialog
 	 */
 	void removeDialog(FragmentManager fm) {
-		((FamiliarActivity) getActivity()).removeDialogFragment(fm);
+		getFamiliarActivity().removeDialogFragment(fm);
 	}
 
 	/**
@@ -257,4 +257,12 @@ public abstract class FamiliarFragment extends Fragment {
 	public void onWishlistChanged() {
 
 	}
+
+	public FamiliarActivity getFamiliarActivity() {
+		if(getActivity() instanceof FamiliarActivity) {
+			return (FamiliarActivity) getActivity();
+		}
+		return null;
+	}
+
 }

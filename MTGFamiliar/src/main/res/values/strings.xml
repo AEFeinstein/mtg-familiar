@@ -477,5 +477,7 @@
     <string name="judges_corner_error">An error occurred.</string>
     <string name="card_view_image_not_found">Image Not Found</string>
     <string name="wishlist_loading">Loading</string>
+    <string name="wishlist_share_title">MTG Familiar Wishlist</string>
+    <string name="wishlist_chooser_title">Share Wishlist</string>
 
 </resources>

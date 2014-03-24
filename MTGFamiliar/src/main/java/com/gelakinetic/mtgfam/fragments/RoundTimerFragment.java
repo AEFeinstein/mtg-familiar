@@ -90,13 +90,13 @@ public class RoundTimerFragment extends FamiliarFragment {
 		mTimerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getRoundTimerEnd() != -1) {
+				if (getFamiliarActivity().mPreferenceAdapter.getRoundTimerEnd() != -1) {
 					/* Commit the endTime as -1 */
-					((FamiliarActivity) getActivity()).mPreferenceAdapter.setRoundTimerEnd(-1);
+					getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(-1);
 					/* Cancel the alarms */
 					setOrCancelAlarms(getActivity(), 0, false);
 					/* Stop the ActionBar timer display*/
-					((FamiliarActivity) getActivity()).stopUpdatingDisplay();
+					getFamiliarActivity().stopUpdatingDisplay();
 					/* Set button text to start again */
 					mTimerButton.setText(R.string.timer_start);
 					/* Cancel the notification */
@@ -118,21 +118,21 @@ public class RoundTimerFragment extends FamiliarFragment {
 					}
 					long endTime = System.currentTimeMillis() + timeInMillis;
 					/* Commit the end time */
-					((FamiliarActivity) getActivity()).mPreferenceAdapter.setRoundTimerEnd(endTime);
+					getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(endTime);
 
 					/* Set the alarm, and any warning alarms if applicable */
 					setOrCancelAlarms(getActivity(), endTime, true);
 					/* Show the notification */
 					showTimerRunningNotification(getActivity(), endTime);
 					/* Start the ActionBar display Timer */
-					((FamiliarActivity) getActivity()).startUpdatingDisplay();
+					getFamiliarActivity().startUpdatingDisplay();
 					/* Set the button text to stop the timer */
 					mTimerButton.setText(R.string.timer_cancel);
 				}
 			}
 		});
 
-		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getRoundTimerEnd() != -1) {
+		if (getFamiliarActivity().mPreferenceAdapter.getRoundTimerEnd() != -1) {
 			mTimerButton.setText(R.string.timer_cancel);
 		}
 
@@ -167,7 +167,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 		if (mPickerMinutes == -1 && mPickerHours == -1) {
 			try {
 				int length = Integer.parseInt(
-						((FamiliarActivity) getActivity()).mPreferenceAdapter.getRoundLength());
+						getFamiliarActivity().mPreferenceAdapter.getRoundLength());
 				mPickerHours = length / 60;
 				mPickerMinutes = length % 60;
 			} catch (Exception ex) {
@@ -209,7 +209,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 		/* Handle item selection */
 		switch (item.getItemId()) {
 			case R.id.set_timer_ringtone:
-				Uri soundFile = Uri.parse(((FamiliarActivity) getActivity()).mPreferenceAdapter.getTimerSound());
+				Uri soundFile = Uri.parse(getFamiliarActivity().mPreferenceAdapter.getTimerSound());
 
 				Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
 				intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
@@ -262,9 +262,9 @@ public class RoundTimerFragment extends FamiliarFragment {
 						final CheckBox chkFive = (CheckBox) v.findViewById(R.id.timer_pref_five);
 
 						boolean fifteen =
-								((FamiliarActivity) getActivity()).mPreferenceAdapter.getFifteenMinutePref();
-						boolean ten = ((FamiliarActivity) getActivity()).mPreferenceAdapter.getTenMinutePref();
-						boolean five = ((FamiliarActivity) getActivity()).mPreferenceAdapter.getFiveMinutePref();
+								getFamiliarActivity().mPreferenceAdapter.getFifteenMinutePref();
+						boolean ten = getFamiliarActivity().mPreferenceAdapter.getTenMinutePref();
+						boolean five = getFamiliarActivity().mPreferenceAdapter.getFiveMinutePref();
 
 						chkFifteen.setChecked(fifteen);
 						chkTen.setChecked(ten);
@@ -275,11 +275,11 @@ public class RoundTimerFragment extends FamiliarFragment {
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 
 									public void onClick(DialogInterface dialog, int which) {
-										((FamiliarActivity) getActivity()).mPreferenceAdapter
+										getFamiliarActivity().mPreferenceAdapter
 												.setFifteenMinutePref(chkFifteen.isChecked());
-										((FamiliarActivity) getActivity()).mPreferenceAdapter
+										getFamiliarActivity().mPreferenceAdapter
 												.setTenMinutePref(chkTen.isChecked());
-										((FamiliarActivity) getActivity()).mPreferenceAdapter
+										getFamiliarActivity().mPreferenceAdapter
 												.setFiveMinutePref(chkFive.isChecked());
 									}
 								})

@@ -156,7 +156,7 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Pass a non-null bundle to the ResultListFragment so it knows to exit if there was a list of 1 card
 		 * If this wasn't launched by a ResultListFragment, it'll get eaten */
 		Bundle args = new Bundle();
-		((FamiliarActivity) getActivity()).setFragmentResult(args);
+		getFamiliarActivity().setFragmentResult(args);
 		if (mAsyncTask != null) {
 			mAsyncTask.cancel(true);
 		}
@@ -200,7 +200,7 @@ public class CardViewFragment extends FamiliarFragment {
 		registerForContextMenu(mFlavorTextView);
 		registerForContextMenu(mArtistTextView);
 
-		if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getPicFirst()) {
+		if (getFamiliarActivity().mPreferenceAdapter.getPicFirst()) {
 			loadTo = MAIN_PAGE;
 		}
 		else {
@@ -550,7 +550,7 @@ public class CardViewFragment extends FamiliarFragment {
 		@Override
 		protected Void doInBackground(Void... params) {
 			error = null;
-			String cardLanguage = ((FamiliarActivity) getActivity()).mPreferenceAdapter.getCardLanguage();
+			String cardLanguage = getFamiliarActivity().mPreferenceAdapter.getCardLanguage();
 			if (cardLanguage == null) {
 				cardLanguage = "en";
 			}
@@ -1126,7 +1126,7 @@ public class CardViewFragment extends FamiliarFragment {
 				PriceFetchRequest priceRequest;
 				priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId,
 						getActivity());
-				((FamiliarActivity) getActivity()).mSpiceManager.execute(priceRequest, mCardName + "-" +
+				getFamiliarActivity().mSpiceManager.execute(priceRequest, mCardName + "-" +
 						mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
 
 					@Override

@@ -95,13 +95,13 @@ public class RulesFragment extends FamiliarFragment {
 		assert myFragmentView != null;
 
 		/* Check if we are returning to the root */
-		Bundle res = ((FamiliarActivity) getActivity()).getFragmentResults();
+		Bundle res = getFamiliarActivity().getFragmentResults();
 		if (res != null) {
 			int resultCode = res.getInt("resultCode");
 			if (resultCode == RESULT_QUIT_TO_MAIN) {
 				Bundle result = new Bundle();
 				result.putInt("resultCode", RESULT_QUIT_TO_MAIN);
-				((FamiliarActivity) getActivity()).setFragmentResult(result);
+				getFamiliarActivity().setFragmentResult(result);
 				getFragmentManager().popBackStack();
 			}
 		}
@@ -399,7 +399,7 @@ public class RulesFragment extends FamiliarFragment {
 			case R.id.rules_menu_exit:
 				Bundle result = new Bundle();
 				result.putInt("resultCode", RESULT_QUIT_TO_MAIN);
-				((FamiliarActivity) getActivity()).setFragmentResult(result);
+				getFamiliarActivity().setFragmentResult(result);
 				getFragmentManager().popBackStack();
 				return true;
 			default:

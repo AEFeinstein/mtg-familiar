@@ -211,7 +211,7 @@ public class ResultListFragment extends FamiliarFragment {
 			});
 		}
 
-		Bundle res = ((FamiliarActivity) getActivity()).getFragmentResults();
+		Bundle res = getFamiliarActivity().getFragmentResults();
 		if (res != null) {
 			if (mCursor.getCount() == 1) {
 				/* Jump back past the result list (it wasn't displayed because this card is a singleton) */
@@ -242,23 +242,23 @@ public class ResultListFragment extends FamiliarFragment {
 			ArrayList<Integer> toList = new ArrayList<Integer>();
 			fromList.add(CardDbAdapter.KEY_NAME);
 			toList.add(R.id.cardname);
-			if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getSetPref()) {
+			if (getFamiliarActivity().mPreferenceAdapter.getSetPref()) {
 				fromList.add(CardDbAdapter.KEY_SET);
 				toList.add(R.id.cardset);
 			}
-			if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getManaCostPref()) {
+			if (getFamiliarActivity().mPreferenceAdapter.getManaCostPref()) {
 				fromList.add(CardDbAdapter.KEY_MANACOST);
 				toList.add(R.id.cardcost);
 			}
-			if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getTypePref()) {
+			if (getFamiliarActivity().mPreferenceAdapter.getTypePref()) {
 				fromList.add(CardDbAdapter.KEY_TYPE);
 				toList.add(R.id.cardtype);
 			}
-			if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getAbilityPref()) {
+			if (getFamiliarActivity().mPreferenceAdapter.getAbilityPref()) {
 				fromList.add(CardDbAdapter.KEY_ABILITY);
 				toList.add(R.id.cardability);
 			}
-			if (((FamiliarActivity) getActivity()).mPreferenceAdapter.getPTPref()) {
+			if (getFamiliarActivity().mPreferenceAdapter.getPTPref()) {
 				fromList.add(CardDbAdapter.KEY_POWER);
 				toList.add(R.id.cardp);
 				fromList.add(CardDbAdapter.KEY_TOUGHNESS);

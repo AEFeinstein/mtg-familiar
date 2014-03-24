@@ -19,7 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
 /**
  * Encapsulate all information about a magic card
@@ -133,7 +133,7 @@ public class MtgCard {
 	}
 
 	public String toString() {
-		return this.name + delimiter + this.setCode + delimiter + this.numberOf + delimiter + this.number + delimiter + ((int)this.rarity) + delimiter + this.foil + '\n';
+		return this.name + delimiter + this.setCode + delimiter + this.numberOf + delimiter + this.number + delimiter + ((int) this.rarity) + delimiter + this.foil + '\n';
 	}
 
 	public String toString(int side) {
@@ -149,8 +149,8 @@ public class MtgCard {
 		if (o instanceof MtgCard) {
 			return this.name.equals(((MtgCard) o).name);
 		}
-		else if(o instanceof WishlistFragment.CompressedWishlistInfo) {
-			return this.name.equals(((WishlistFragment.CompressedWishlistInfo)o).mCard.name);
+		else if (o instanceof CompressedWishlistInfo) {
+			return this.name.equals(((CompressedWishlistInfo) o).mCard.name);
 		}
 		return false;
 	}

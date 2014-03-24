@@ -524,7 +524,7 @@ class GatheringsFragment extends FamiliarFragment {
 		assert deleteGathering != null;
 		assert loadGathering != null;
 
-		if (mLinearLayout.getChildCount() == 0 || !((FamiliarActivity) getActivity()).mIsMenuVisible) {
+		if (mLinearLayout.getChildCount() == 0 || !getFamiliarActivity().mIsMenuVisible) {
 			removePlayer.setVisible(false);
 		}
 		else {
@@ -532,7 +532,7 @@ class GatheringsFragment extends FamiliarFragment {
 		}
 
 		if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0 ||
-				!((FamiliarActivity) getActivity()).mIsMenuVisible) {
+				!getFamiliarActivity().mIsMenuVisible) {
 			deleteGathering.setVisible(false);
 			loadGathering.setVisible(false);
 		}
