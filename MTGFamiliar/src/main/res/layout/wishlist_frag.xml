@@ -13,7 +13,7 @@
 
         <EditText
             android:id="@+id/number_input"
-            android:layout_width="50dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
             android:ems="10"
             android:gravity="center"
@@ -32,13 +32,18 @@
             <requestFocus/>
         </AutoCompleteTextView>
 
-        <CheckBox
-            android:id="@+id/wishlistFoil"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:button="@drawable/btn_check_holo_light_foil"/>
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <CheckBox
+                android:id="@+id/wishlistFoil"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:button="@drawable/btn_check_holo_light_foil"/>
+        </LinearLayout>
 
     </LinearLayout>
 

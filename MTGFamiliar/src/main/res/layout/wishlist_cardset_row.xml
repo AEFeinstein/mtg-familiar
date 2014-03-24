@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:baselineAligned="false">
+
+    <TextView
+        android:id="@+id/wishlistRowSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_set"
+        style="@style/text.small"/>
+    <ImageView
+        android:id="@+id/wishlistSetRowFoil"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/glyph_foil"/>
+
+
+    <TextView
+        android:id="@+id/wishlistRowPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:maxLines="1"
+        android:text="@string/wishlist_default_price"
+        style="@style/text.small"/>
+
+</LinearLayout>

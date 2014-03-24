@@ -58,7 +58,6 @@ public class WishlistHelpers {
 	public static void ResetCards(Context mCtx) {
 
 		String[] files = mCtx.fileList();
-		Boolean wishlistExists = false;
 		for (String fileName : files) {
 			if (fileName.equals(wishlistName)) {
 				mCtx.deleteFile(fileName);
@@ -72,51 +71,45 @@ public class WishlistHelpers {
 	 * @param mCtx
 	 * @throws FamiliarDbException
 	 */
-	public static ArrayList<MtgCard> ReadWishlist(Context mCtx) throws FamiliarDbException {
+	public static ArrayList<MtgCard> ReadWishlist(Context mCtx) {
 
-		CardDbAdapter mDbHelper = new CardDbAdapter(mCtx);
 		ArrayList<MtgCard> lWishlist = new ArrayList<MtgCard>();
 
-		/* Make sure the wishlist exists */
-		String[] files = mCtx.fileList();
-		Boolean wishlistExists = false;
-		for (String fileName : files) {
-			if (fileName.equals(wishlistName)) {
-				wishlistExists = true;
-			}
-		}
-
 		/* If it does, read it into the arrayList */
-		if (wishlistExists) {
-			try {
-				String line;
-				String[] parts;
-				BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(wishlistName)));
+		try {
+			String line;
+			String[] parts;
+			BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(wishlistName)));
 
-				while ((line = br.readLine()) != null) {
-					parts = line.split(MtgCard.delimiter);
+			while ((line = br.readLine()) != null) {
+				parts = line.split(MtgCard.delimiter);
 
-					MtgCard card = TradeListHelpers.FetchMtgCard(mCtx, parts[0], parts[1]);
-					card.numberOf = Integer.parseInt(parts[2]);
+				MtgCard card = new MtgCard();
+				card.name = parts[0];
+				card.setCode = parts[1];
+				card.numberOf = Integer.parseInt(parts[2]);
 
-					/* Parts [3] and [4] are collectors number and rarity, which are populated by the db call */
-					/* "foil" didn't exist in earlier versions, so it may not be part of the string */
-					boolean foil = false;
-					if (parts.length > 5) {
-						foil = Boolean.parseBoolean(parts[5]);
-					}
-					card.foil = foil;
-					card.message = mCtx.getString(R.string.wishlist_loading);
-
-					lWishlist.add(card);
+				/* "foil" didn't exist in earlier versions, so it may not be part of the string */
+				if (parts.length > 3) {
+					card.number = parts[3];
 				}
-			} catch (NumberFormatException e) {
-				Toast.makeText(mCtx, "NumberFormatException", Toast.LENGTH_LONG).show();
-			} catch (IOException e) {
-				Toast.makeText(mCtx, "IOException", Toast.LENGTH_LONG).show();
+				if (parts.length > 4) {
+					card.rarity = (char) Integer.parseInt(parts[4]);
+				}
+				boolean foil = false;
+				if (parts.length > 5) {
+					foil = Boolean.parseBoolean(parts[5]);
+				}
+				card.foil = foil;
+				card.message = mCtx.getString(R.string.wishlist_loading);
+
+				lWishlist.add(card);
 			}
+		} catch (NumberFormatException e) {
+			Toast.makeText(mCtx, "NumberFormatException", Toast.LENGTH_LONG).show();
+		} catch (IOException e) {
+			/* Catches file not found exception when wishlist doesn't exist */
 		}
-		mDbHelper.close();
 		return lWishlist;
 	}
 
@@ -151,6 +144,7 @@ public class WishlistHelpers {
 			String setName = adapter.getTCGname(setCode);
 
 			View wishlistRow = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null);
+			assert wishlistRow != null;
 			((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
 			((EditText) wishlistRow.findViewById(R.id.numberInput)).setText("0");
 			wishlistRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
@@ -160,6 +154,7 @@ public class WishlistHelpers {
 			View wishlistRowFoil = null;
 			if (TradeListHelpers.canBeFoil(setCode, adapter)) {
 				wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null);
+				assert wishlistRowFoil != null;
 				((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
 				((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText("0");
 				wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
