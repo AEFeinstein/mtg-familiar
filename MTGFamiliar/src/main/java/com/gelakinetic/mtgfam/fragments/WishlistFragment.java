@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,6 +64,7 @@ public class WishlistFragment extends FamiliarFragment {
 	/* The wishlist and adapter */
 	private ArrayList<CompressedWishlistInfo> mCompressedWishlist;
 	private WishlistArrayAdapter mWishlistAdapter;
+	private boolean mShowTotalWishlistPrice;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,11 +85,56 @@ public class WishlistFragment extends FamiliarFragment {
 		myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				// TODO actually add the card to the wishlist
-				Toast.makeText(getActivity(), mNumberField.getText() + "x " + mNameField.getText(), Toast.LENGTH_LONG).show();
-				mNumberField.setText("1");
-				mNameField.setText("");
-				mFoilCheckBox.setChecked(false);
+
+				try {
+					CardDbAdapter adapter = new CardDbAdapter(getActivity());
+					/* Make the new card */
+					MtgCard card = new MtgCard();
+					card.name = String.valueOf(mNameField.getText());
+					card.foil = mFoilCheckBox.isChecked();
+					card.numberOf = Integer.parseInt(String.valueOf(mNumberField.getText()));
+					card.message = getString(R.string.wishlist_loading);
+
+					/* Get some extra information */
+					Cursor cardCursor = adapter.fetchCardByName(card.name, new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_SET, CardDbAdapter.KEY_NUMBER});
+					card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
+					card.number = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+					card.tcgName = adapter.getTCGname(card.setCode);
+
+					/* Add it to the wishlist */
+					if (mCompressedWishlist.contains(card)) {
+						CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(card));
+						boolean added = false;
+						for (int i = 0; i < cwi.mSetCodes.size(); i++) {
+							if (cwi.mSetCodes.get(i).equals(card.setCode) && cwi.mIsFoil.get(i).equals(card.foil)) {
+								added = true;
+								cwi.mNumberOf.set(i, cwi.mNumberOf.get(i) + 1);
+							}
+						}
+						if (!added) {
+							cwi.add(card);
+						}
+					}
+					else {
+						mCompressedWishlist.add(new CompressedWishlistInfo(card));
+					}
+					loadPrice(card.name, card.setCode, card.number, -1);
+
+					/* Write the wishlist */
+					WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+
+					/* Clean up */
+					cardCursor.close();
+					adapter.close();
+					mNumberField.setText("1");
+					mNameField.setText("");
+					mFoilCheckBox.setChecked(false);
+
+					mWishlistAdapter.notifyDataSetChanged();
+
+				} catch (FamiliarDbException e) {
+					handleFamiliarDbException(false);
+				}
 			}
 		});
 
@@ -107,10 +154,12 @@ public class WishlistFragment extends FamiliarFragment {
 	public void onResume() {
 		super.onResume();
 
+		mCompressedWishlist.clear();
+
 		/* Get the relevant prices */
 		mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
 		mShowIndividualPrices = getFamiliarActivity().mPreferenceAdapter.getShowIndividualWishlistPrices();
-		boolean showTotalWishlistPrice = getFamiliarActivity().mPreferenceAdapter.getShowTotalWishlistPrice();
+		mShowTotalWishlistPrice = getFamiliarActivity().mPreferenceAdapter.getShowTotalWishlistPrice();
 		mShowCardInfo = getFamiliarActivity().mPreferenceAdapter.getVerboseWishlist();
 
 		/* Read the wishlist, populate set names */
@@ -143,15 +192,15 @@ public class WishlistFragment extends FamiliarFragment {
 		*/
 
 		/* Show the total price, if desired */
-		if (showTotalWishlistPrice) {
+		if (mShowTotalWishlistPrice) {
 			mTotalPriceField.setVisibility(View.VISIBLE);
 		}
 		else {
 			mTotalPriceField.setVisibility(View.GONE);
 		}
 
-		/* Show individual prices, if desired */
-		if (mShowIndividualPrices) {
+		/* Load prices, if desired */
+		if (mShowIndividualPrices || mShowTotalWishlistPrice) {
 			for (CompressedWishlistInfo cwi : mCompressedWishlist) {
 				for (int i = 0; i < cwi.mSetCodes.size(); i++) {
 					loadPrice(cwi.mCard.name, cwi.mSetCodes.get(i), cwi.mNumber.get(i), -1);
@@ -168,13 +217,12 @@ public class WishlistFragment extends FamiliarFragment {
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
 		sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetReadableWishlist(mCompressedWishlist, includeTcgName));
+		sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, includeTcgName));
 		sendIntent.setType("text/plain");
 
 		try {
 			startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_chooser_title)));
-		}
-		catch (android.content.ActivityNotFoundException ex) {
+		} catch (android.content.ActivityNotFoundException ex) {
 			Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
 		}
 
@@ -254,17 +302,19 @@ public class WishlistFragment extends FamiliarFragment {
 					case DIALOG_PRICE_SETTING: {
 						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
-						builder
-								.setTitle(R.string.trader_pricing_dialog_title)
+						builder.setTitle(R.string.trader_pricing_dialog_title)
 								.setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
 												getString(R.string.trader_Average), getString(R.string.trader_High)},
 										mPriceSetting,
 										new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog, int which) {
-												mPriceSetting = which;
-												getFamiliarActivity().mPreferenceAdapter.setTradePrice(
-														String.valueOf(mPriceSetting));
-												mWishlistAdapter.notifyDataSetChanged();
+												if (mPriceSetting != which) {
+													mPriceSetting = which;
+													getFamiliarActivity().mPreferenceAdapter.setTradePrice(
+															String.valueOf(mPriceSetting));
+													mWishlistAdapter.notifyDataSetChanged();
+													sumTotalPrice();
+												}
 												dialog.dismiss();
 											}
 										}
@@ -410,7 +460,7 @@ public class WishlistFragment extends FamiliarFragment {
 				if (mShowIndividualPrices) {
 					if (info.mIsFoil.get(i)) {
 						if (info.mPrice.get(i).mFoilAverage != 0) {
-							priceText.setText(info.mNumberOf.get(i) + "x $" + info.mPrice.get(i).mFoilAverage + "");
+							priceText.setText(String.format("%dx $%.02f", info.mNumberOf.get(i), info.mPrice.get(i).mFoilAverage));
 						}
 						else {
 							priceText.setText(info.mMessage.get(i));
@@ -420,13 +470,13 @@ public class WishlistFragment extends FamiliarFragment {
 						if (info.mPrice.get(i).mAverage != 0) {
 							switch (mPriceSetting) {
 								case LOW_PRICE:
-									priceText.setText(info.mNumberOf.get(i) + "x $" + info.mPrice.get(i).mLow + "");
+									priceText.setText(String.format("%dx $%.02f", info.mNumberOf.get(i), info.mPrice.get(i).mLow));
 									break;
 								case AVG_PRICE:
-									priceText.setText(info.mNumberOf.get(i) + "x $" + info.mPrice.get(i).mAverage + "");
+									priceText.setText(String.format("%dx $%.02f", info.mNumberOf.get(i), info.mPrice.get(i).mAverage));
 									break;
 								case HIGH_PRICE:
-									priceText.setText(info.mNumberOf.get(i) + "x $" + info.mPrice.get(i).mHigh + "");
+									priceText.setText(String.format("%dx $%.02f", info.mNumberOf.get(i), info.mPrice.get(i).mHigh));
 									break;
 							}
 						}
@@ -473,12 +523,40 @@ public class WishlistFragment extends FamiliarFragment {
 							}
 						}
 					}
-					// TODO sum the total price
+					sumTotalPrice();
 				}
 				else {
 					Toast.makeText(getActivity(), R.string.card_view_price_not_found, Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
+	}
+
+	void sumTotalPrice() {
+		if (mShowTotalWishlistPrice) {
+			float totalPrice = 0;
+
+			for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+				for (int i = 0; i < cwi.mSets.size(); i++) {
+					if (cwi.mIsFoil.get(i)) {
+						totalPrice += (cwi.mPrice.get(i).mFoilAverage * cwi.mNumberOf.get(i));
+					}
+					else {
+						switch (mPriceSetting) {
+							case LOW_PRICE:
+								totalPrice += (cwi.mPrice.get(i).mLow * cwi.mNumberOf.get(i));
+								break;
+							case AVG_PRICE:
+								totalPrice += (cwi.mPrice.get(i).mAverage * cwi.mNumberOf.get(i));
+								break;
+							case HIGH_PRICE:
+								totalPrice += (cwi.mPrice.get(i).mHigh * cwi.mNumberOf.get(i));
+								break;
+						}
+					}
+				}
+			}
+			mTotalPriceField.setText(String.format("$%.02f", totalPrice));
+		}
 	}
 }

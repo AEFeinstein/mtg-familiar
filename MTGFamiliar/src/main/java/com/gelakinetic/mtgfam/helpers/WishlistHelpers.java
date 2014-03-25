@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
-import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -41,6 +40,31 @@ public class WishlistHelpers {
 
 			for (MtgCard m : lWishlist) {
 				fos.write(m.toString().getBytes());
+			}
+
+			fos.close();
+		} catch (FileNotFoundException e) {
+			Toast.makeText(mCtx, "FileNotFoundException", Toast.LENGTH_LONG).show();
+		} catch (IOException e) {
+			Toast.makeText(mCtx, "IOException", Toast.LENGTH_LONG).show();
+		}
+	}
+
+
+	public static void WriteCompressedWishlist(Context mCtx, ArrayList<CompressedWishlistInfo> mCompressedWishlist) {
+		try {
+			FileOutputStream fos = mCtx.openFileOutput(wishlistName, Context.MODE_PRIVATE);
+
+			for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+				MtgCard card = cwi.mCard;
+				for (int i = 0; i < cwi.mSetCodes.size(); i++) {
+					card.set = cwi.mSets.get(i);
+					card.setCode = cwi.mSetCodes.get(i);
+					card.number = cwi.mNumber.get(i);
+					card.foil = cwi.mIsFoil.get(i);
+					card.numberOf = cwi.mNumberOf.get(i);
+					fos.write(card.toString().getBytes());
+				}
 			}
 
 			fos.close();
@@ -234,8 +258,6 @@ public class WishlistHelpers {
 				.create();
 	}
 
-
-
 	public static class CompressedWishlistInfo {
 		public MtgCard mCard;
 		public ArrayList<String> mSets;
@@ -282,7 +304,7 @@ public class WishlistHelpers {
 		}
 	}
 
-	public static boolean GetReadableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, boolean includeTcgName) {
+	public static boolean GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, boolean includeTcgName) {
 		// TODO implement
 		return false;
 	}
