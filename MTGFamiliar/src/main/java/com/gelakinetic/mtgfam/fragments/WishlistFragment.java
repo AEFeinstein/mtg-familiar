@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
@@ -163,33 +165,7 @@ public class WishlistFragment extends FamiliarFragment {
 		mShowCardInfo = getFamiliarActivity().mPreferenceAdapter.getVerboseWishlist();
 
 		/* Read the wishlist, populate set names */
-		ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
-		try {
-			CardDbAdapter adapter = new CardDbAdapter(getActivity());
-			for (MtgCard card : wishlist) {
-				card.tcgName = adapter.getTCGname(card.setCode);
-			}
-			adapter.close();
-		} catch (FamiliarDbException e) {
-			e.printStackTrace();
-		}
-
-		/* Compress the wishlist */
-		for (MtgCard card : wishlist) {
-			/* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each other */
-			if (!mCompressedWishlist.contains(card)) {
-				mCompressedWishlist.add(new CompressedWishlistInfo(card));
-			}
-			else {
-				mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
-			}
-		}
-
-		/* Populate the rest of the card info, if desired
-		if (mShowCardInfo) {
-			// TODO a bunch of db calls :(
-		}
-		*/
+		readAndCompressWishlist(null);
 
 		/* Show the total price, if desired */
 		if (mShowTotalWishlistPrice) {
@@ -212,6 +188,60 @@ public class WishlistFragment extends FamiliarFragment {
 		mWishlistAdapter.notifyDataSetChanged();
 	}
 
+	private void readAndCompressWishlist(String changedCardName) {
+		ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
+		try {
+			CardDbAdapter adapter = new CardDbAdapter(getActivity());
+			for (MtgCard card : wishlist) {
+				card.tcgName = adapter.getTCGname(card.setCode);
+				/* TODO this is SUPER SLOW */
+				fillExtraData(adapter, card);
+			}
+			adapter.close();
+		} catch (FamiliarDbException e) {
+			handleFamiliarDbException(false);
+		}
+
+		/* Clear the wishlist, or just the card that changed */
+		if (changedCardName == null) {
+			mCompressedWishlist.clear();
+		}
+		else {
+			for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+				if (cwi.mCard.name.equals(changedCardName)) {
+					cwi.clearCompressedInfo();
+				}
+			}
+		}
+
+		/* Compress the whole wishlist, or just the card that changed */
+		for (MtgCard card : wishlist) {
+			if (changedCardName == null || changedCardName.equals(card.name)) {
+				/* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each other */
+				if (!mCompressedWishlist.contains(card)) {
+					mCompressedWishlist.add(new CompressedWishlistInfo(card));
+				}
+				else {
+					mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
+				}
+				/* If we are changing a card, look up the new price */
+				if (changedCardName != null) {
+					loadPrice(card.name, card.setCode, card.number, -1);
+				}
+			}
+		}
+
+		/* Check for wholly removed cards if one card was modified */
+		if (changedCardName != null) {
+			for (int i = 0; i < mCompressedWishlist.size(); i++) {
+				if (mCompressedWishlist.get(i).mSetCodes.size() == 0) {
+					mCompressedWishlist.remove(i);
+					i--;
+				}
+			}
+		}
+	}
+
 	private void mailWishlist(boolean includeTcgName) {
 		// Use a more generic send text intent. It can also do emails
 		Intent sendIntent = new Intent();
@@ -232,8 +262,8 @@ public class WishlistFragment extends FamiliarFragment {
 	 * Override this to be notified when the wishlist changes
 	 */
 	@Override
-	public void onWishlistChanged() {
-		// TODO reload wishlist
+	public void onWishlistChanged(String cardName) {
+		readAndCompressWishlist(cardName);
 		mWishlistAdapter.notifyDataSetChanged();
 	}
 
@@ -418,15 +448,96 @@ public class WishlistFragment extends FamiliarFragment {
 			/* Show or hide full card information */
 			convertView.findViewById(R.id.cardset).setVisibility(View.GONE);
 			if (mShowCardInfo) {
-				/* TODO populate stuff */
+
 				convertView.findViewById(R.id.cardcost).setVisibility(View.VISIBLE);
 				convertView.findViewById(R.id.cardtype).setVisibility(View.VISIBLE);
 				convertView.findViewById(R.id.cardability).setVisibility(View.VISIBLE);
 				convertView.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
 				convertView.findViewById(R.id.cardslash).setVisibility(View.VISIBLE);
-				convertView.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
-				convertView.findViewById(R.id.cardslash).setVisibility(View.VISIBLE);
 				convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
+
+				Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
+
+				((TextView) convertView.findViewById(R.id.cardtype)).setText(info.mCard.type);
+				((TextView) convertView.findViewById(R.id.cardcost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imgGetter));
+				((TextView) convertView.findViewById(R.id.cardability)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.ability, imgGetter));
+
+				convertView.findViewById(R.id.cardt).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
+
+				try {
+					float p = info.mCard.power;
+					if (p != CardDbAdapter.NOONECARES) {
+						String pow;
+						if (p == CardDbAdapter.STAR)
+							pow = "*";
+						else if (p == CardDbAdapter.ONEPLUSSTAR)
+							pow = "1+*";
+						else if (p == CardDbAdapter.TWOPLUSSTAR)
+							pow = "2+*";
+						else if (p == CardDbAdapter.SEVENMINUSSTAR)
+							pow = "7-*";
+						else if (p == CardDbAdapter.STARSQUARED)
+							pow = "*^2";
+						else {
+							if (p == (int) p) {
+								pow = Integer.valueOf((int) p).toString();
+							}
+							else {
+								pow = Float.valueOf(p).toString();
+							}
+						}
+						((TextView) convertView.findViewById(R.id.cardp)).setText(pow);
+
+						convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
+						convertView.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
+						convertView.findViewById(R.id.cardslash).setVisibility(View.VISIBLE);
+
+					}
+				} catch (NumberFormatException e) {
+					/* eat it ? */
+				}
+				try {
+					float t = info.mCard.toughness;
+					if (t != CardDbAdapter.NOONECARES) {
+						String tou;
+						if (t == CardDbAdapter.STAR)
+							tou = "*";
+						else if (t == CardDbAdapter.ONEPLUSSTAR)
+							tou = "1+*";
+						else if (t == CardDbAdapter.TWOPLUSSTAR)
+							tou = "2+*";
+						else if (t == CardDbAdapter.SEVENMINUSSTAR)
+							tou = "7-*";
+						else if (t == CardDbAdapter.STARSQUARED)
+							tou = "*^2";
+						else {
+							if (t == (int) t) {
+								tou = Integer.valueOf((int) t).toString();
+							}
+							else {
+								tou = Float.valueOf(t).toString();
+							}
+						}
+						((TextView) convertView.findViewById(R.id.cardt)).setText(tou);
+					}
+				} catch (NumberFormatException e) {
+					/* eat it? */
+				}
+
+				float loyalty = info.mCard.loyalty;
+				if (loyalty != -1 && loyalty != CardDbAdapter.NOONECARES) {
+					if (loyalty == (int) loyalty) {
+						((TextView) convertView.findViewById(R.id.cardt)).setText(Integer.toString((int) loyalty));
+					}
+					else {
+						((TextView) convertView.findViewById(R.id.cardt)).setText(Float.toString(loyalty));
+					}
+					convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
+					convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
+					convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
+				}
 			}
 			else {
 				convertView.findViewById(R.id.cardcost).setVisibility(View.GONE);
@@ -445,7 +556,34 @@ public class WishlistFragment extends FamiliarFragment {
 				assert setRow != null;
 
 				/* Write the set name */
+				int color;
+				switch (info.mRarity.get(i)) {
+					case 'c':
+					case 'C':
+						color = R.color.common;
+						break;
+					case 'u':
+					case 'U':
+						color = R.color.uncommon;
+						break;
+					case 'r':
+					case 'R':
+						color = R.color.rare;
+						break;
+					case 'm':
+					case 'M':
+						color = R.color.mythic;
+						break;
+					case 't':
+					case 'T':
+						color = R.color.timeshifted;
+						break;
+					default:
+						color = R.color.black;
+						break;
+				}
 				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(info.mSets.get(i));
+				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(getResources().getColor(color));
 
 				/* Show or hide the foil indicator */
 				if (info.mIsFoil.get(i)) {
@@ -496,6 +634,9 @@ public class WishlistFragment extends FamiliarFragment {
 		}
 	}
 
+	/**
+	 * TODO handle case where price doesn't load (don't just show "loading")
+	 */
 	public void loadPrice(final String mCardName, final String mSetCode, String mCardNumber, int mMultiverseId) {
 		PriceFetchRequest priceRequest;
 		priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId, getActivity());
@@ -558,5 +699,25 @@ public class WishlistFragment extends FamiliarFragment {
 			}
 			mTotalPriceField.setText(String.format("$%.02f", totalPrice));
 		}
+	}
+
+	/**
+	 * card.name, card.setCode, card.numberOf are guaranteed to exist.
+	 * card.number, card.rarity, card.foil might
+	 */
+	void fillExtraData(CardDbAdapter adapter, MtgCard card) throws FamiliarDbException {
+		Cursor cursor = adapter.fetchCardByNameAndSet(card.name, card.setCode, CardDbAdapter.allData);
+
+		card.type = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
+		card.rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
+		card.manaCost = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+		card.power = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
+		card.toughness = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+		card.loyalty = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+		card.ability = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+		card.flavor = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+		card.number = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+
+		cursor.close();
 	}
 }

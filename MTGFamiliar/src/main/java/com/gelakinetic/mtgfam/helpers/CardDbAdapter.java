@@ -117,7 +117,7 @@ public class CardDbAdapter {
 			CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_TYPE,
 			CardDbAdapter.KEY_MANACOST, CardDbAdapter.KEY_ABILITY,
 			CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS,
-			CardDbAdapter.KEY_LOYALTY, CardDbAdapter.KEY_RARITY};
+			CardDbAdapter.KEY_LOYALTY, CardDbAdapter.KEY_RARITY, CardDbAdapter.KEY_FLAVOR};
 
 	private static final String DATABASE_CREATE_CARDS = "create table "
 			+ DATABASE_TABLE_CARDS + "(" + KEY_ID

@@ -254,7 +254,7 @@ public abstract class FamiliarFragment extends Fragment {
 	/**
 	 * Override this to be notified when the wishlist changes
 	 */
-	public void onWishlistChanged() {
+	public void onWishlistChanged(String cardName) {
 
 	}
 

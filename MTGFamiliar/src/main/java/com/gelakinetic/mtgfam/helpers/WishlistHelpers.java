@@ -159,7 +159,7 @@ public class WishlistHelpers {
 		scrollView.addView(linearLayout);
 
 		/* Read the wishlist */
-		final ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
+		ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
 
 		/* Get all potential sets for this card */
 		final ArrayList<String> potentialSetCodes = new ArrayList<String>();
@@ -212,40 +212,52 @@ public class WishlistHelpers {
 				.setPositiveButton(fragment.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int which) {
-						/* Remove any instances of the current card from the wishlist */
-						for (int i = 0; i < wishlist.size(); i++) {
-							if (wishlist.get(i).name.equals(mCardName)) {
-								wishlist.remove(i);
-								i--;
-							}
-						}
+
+						/* Read the wishlist */
+						ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
 
 						/* Add the cards listed in the dialog to the wishlist */
 						for (int i = 0; i < linearLayout.getChildCount(); i++) {
 							View view = linearLayout.getChildAt(i);
-							int numberField;
+
+							/* build the card object */
+							MtgCard card = new MtgCard();
+							card.name = mCardName;
+							card.setCode = potentialSetCodes.get(i);
 							try {
-								numberField = Integer.valueOf(((EditText) view.findViewById(R.id.numberInput)).getText().toString());
+								card.numberOf = Integer.valueOf(((EditText) view.findViewById(R.id.numberInput)).getText().toString());
 							} catch (NumberFormatException e) {
-								numberField = 0;
+								card.numberOf = 0;
 							}
+							card.foil = (view.findViewById(R.id.wishlistDialogFoil).getVisibility() == View.VISIBLE);
 
-							if (numberField > 0) {
-								int visibility = view.findViewById(R.id.wishlistDialogFoil).getVisibility();
-								MtgCard card = new MtgCard();
-								card.name = mCardName;
-								card.setCode = potentialSetCodes.get(i);
-								card.numberOf = numberField;
-								card.foil = (visibility == View.VISIBLE);
-
+							/* Look through the wishlist for each card, set the numberOf or remove it if it exists, or
+							 * add the card if it doesn't */
+							boolean added = false;
+							for (int j = 0; j < wishlist.size(); j++) {
+								if (card.name.equals(wishlist.get(j).name)
+										&& card.setCode.equals(wishlist.get(j).setCode)
+										&& card.foil == wishlist.get(j).foil) {
+									if (card.numberOf == 0) {
+										wishlist.remove(j);
+										j--;
+									}
+									else {
+										wishlist.get(j).numberOf = card.numberOf;
+									}
+									added = true;
+								}
+							}
+							if (!added && card.numberOf > 0) {
 								wishlist.add(card);
 							}
+
 						}
 
 						/* Write the wishlist */
 						WriteWishlist(fragment.getActivity(), wishlist);
 						/* notify the fragment of a change in the wishlist */
-						fragment.onWishlistChanged();
+						fragment.onWishlistChanged(mCardName);
 					}
 				})
 				.setNegativeButton(fragment.getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
@@ -268,6 +280,7 @@ public class WishlistHelpers {
 		public ArrayList<PriceInfo> mPrice;
 		public ArrayList<String> mMessage;
 		public ArrayList<Integer> mNumberOf;
+		public ArrayList<Character> mRarity;
 
 		public CompressedWishlistInfo(MtgCard card) {
 			mSets = new ArrayList<String>();
@@ -277,6 +290,7 @@ public class WishlistHelpers {
 			mPrice = new ArrayList<PriceInfo>();
 			mMessage = new ArrayList<String>();
 			mNumberOf = new ArrayList<Integer>();
+			mRarity = new ArrayList<Character>();
 
 			mCard = card;
 			add(mCard);
@@ -290,6 +304,7 @@ public class WishlistHelpers {
 			mPrice.add(new PriceInfo());
 			mMessage.add(card.message);
 			mNumberOf.add(card.numberOf);
+			mRarity.add(card.rarity);
 		}
 
 		@Override
@@ -301,6 +316,16 @@ public class WishlistHelpers {
 				return mCard.name.equals(((MtgCard) o).name);
 			}
 			return false;
+		}
+
+		public void clearCompressedInfo() {
+			mSets.clear();
+			mSetCodes.clear();
+			mNumber.clear();
+			mIsFoil.clear();
+			mPrice.clear();
+			mMessage.clear();
+			mNumberOf.clear();
 		}
 	}
 
