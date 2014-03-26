@@ -124,6 +124,7 @@
     <LinearLayout
         android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginBottom="4dp"
         android:id="@+id/wishlist_sets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

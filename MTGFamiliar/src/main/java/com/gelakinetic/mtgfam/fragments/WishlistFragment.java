@@ -67,6 +67,7 @@ public class WishlistFragment extends FamiliarFragment {
 	private ArrayList<CompressedWishlistInfo> mCompressedWishlist;
 	private WishlistArrayAdapter mWishlistAdapter;
 	private boolean mShowTotalWishlistPrice;
+	private View mTotalPriceDivider;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,6 +82,7 @@ public class WishlistFragment extends FamiliarFragment {
 		mNumberField.setText("1");
 
 		mTotalPriceField = (TextView) myFragmentView.findViewById(R.id.priceText);
+		mTotalPriceDivider = myFragmentView.findViewById(R.id.divider_total_price);
 		mFoilCheckBox = (CheckBox) myFragmentView.findViewById(R.id.wishlistFoil);
 		ListView listView = (ListView) myFragmentView.findViewById(R.id.wishlist);
 
@@ -98,10 +100,23 @@ public class WishlistFragment extends FamiliarFragment {
 					card.message = getString(R.string.wishlist_loading);
 
 					/* Get some extra information */
-					Cursor cardCursor = adapter.fetchCardByName(card.name, new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_SET, CardDbAdapter.KEY_NUMBER});
-					card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
+					Cursor cardCursor = adapter.fetchCardByName(card.name, CardDbAdapter.allData);
+
+					card.type = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
+					card.rarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
+					card.manaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+					card.power = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_POWER));
+					card.toughness = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+					card.loyalty = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+					card.ability = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+					card.flavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
 					card.number = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+					card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
 					card.tcgName = adapter.getTCGname(card.setCode);
+
+					/* Clean up */
+					cardCursor.close();
+					adapter.close();
 
 					/* Add it to the wishlist */
 					if (mCompressedWishlist.contains(card)) {
@@ -120,14 +135,13 @@ public class WishlistFragment extends FamiliarFragment {
 					else {
 						mCompressedWishlist.add(new CompressedWishlistInfo(card));
 					}
+
 					loadPrice(card.name, card.setCode, card.number, -1);
 
 					/* Write the wishlist */
 					WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
 
 					/* Clean up */
-					cardCursor.close();
-					adapter.close();
 					mNumberField.setText("1");
 					mNameField.setText("");
 					mFoilCheckBox.setChecked(false);
@@ -170,9 +184,11 @@ public class WishlistFragment extends FamiliarFragment {
 		/* Show the total price, if desired */
 		if (mShowTotalWishlistPrice) {
 			mTotalPriceField.setVisibility(View.VISIBLE);
+			mTotalPriceDivider.setVisibility(View.VISIBLE);
 		}
 		else {
 			mTotalPriceField.setVisibility(View.GONE);
+			mTotalPriceDivider.setVisibility(View.GONE);
 		}
 
 		/* Load prices, if desired */
@@ -192,54 +208,57 @@ public class WishlistFragment extends FamiliarFragment {
 		ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
 		try {
 			CardDbAdapter adapter = new CardDbAdapter(getActivity());
+
 			for (MtgCard card : wishlist) {
 				card.tcgName = adapter.getTCGname(card.setCode);
-				/* TODO this is SUPER SLOW */
-				fillExtraData(adapter, card);
 			}
+
+			/* Clear the wishlist, or just the card that changed */
+			if (changedCardName == null) {
+				mCompressedWishlist.clear();
+			}
+			else {
+				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+					if (cwi.mCard.name.equals(changedCardName)) {
+						cwi.clearCompressedInfo();
+					}
+				}
+			}
+
+			/* Compress the whole wishlist, or just the card that changed */
+			for (MtgCard card : wishlist) {
+				if (changedCardName == null || changedCardName.equals(card.name)) {
+					/* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each other */
+					if (!mCompressedWishlist.contains(card)) {
+						mCompressedWishlist.add(new CompressedWishlistInfo(card));
+					}
+					else {
+						mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
+					}
+					/* If we are changing a card, look up the new price */
+					if (changedCardName != null) {
+						loadPrice(card.name, card.setCode, card.number, -1);
+					}
+				}
+			}
+
+			/* Check for wholly removed cards if one card was modified */
+			if (changedCardName != null) {
+				for (int i = 0; i < mCompressedWishlist.size(); i++) {
+					if (mCompressedWishlist.get(i).mSetCodes.size() == 0) {
+						mCompressedWishlist.remove(i);
+						i--;
+					}
+				}
+			}
+
+			adapter.fillExtraWishlistData(mCompressedWishlist, CardDbAdapter.allData);
+
 			adapter.close();
 		} catch (FamiliarDbException e) {
 			handleFamiliarDbException(false);
 		}
 
-		/* Clear the wishlist, or just the card that changed */
-		if (changedCardName == null) {
-			mCompressedWishlist.clear();
-		}
-		else {
-			for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-				if (cwi.mCard.name.equals(changedCardName)) {
-					cwi.clearCompressedInfo();
-				}
-			}
-		}
-
-		/* Compress the whole wishlist, or just the card that changed */
-		for (MtgCard card : wishlist) {
-			if (changedCardName == null || changedCardName.equals(card.name)) {
-				/* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each other */
-				if (!mCompressedWishlist.contains(card)) {
-					mCompressedWishlist.add(new CompressedWishlistInfo(card));
-				}
-				else {
-					mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
-				}
-				/* If we are changing a card, look up the new price */
-				if (changedCardName != null) {
-					loadPrice(card.name, card.setCode, card.number, -1);
-				}
-			}
-		}
-
-		/* Check for wholly removed cards if one card was modified */
-		if (changedCardName != null) {
-			for (int i = 0; i < mCompressedWishlist.size(); i++) {
-				if (mCompressedWishlist.get(i).mSetCodes.size() == 0) {
-					mCompressedWishlist.remove(i);
-					i--;
-				}
-			}
-		}
 	}
 
 	private void mailWishlist(boolean includeTcgName) {
@@ -322,7 +341,7 @@ public class WishlistFragment extends FamiliarFragment {
 				switch (id) {
 					case DIALOG_UPDATE_CARD: {
 						try {
-							return WishlistHelpers.getDialog(cardName, WishlistFragment.this);
+							return WishlistHelpers.getDialog(cardName, WishlistFragment.this, true);
 						} catch (FamiliarDbException e) {
 							handleFamiliarDbException(false);
 							setShowsDialog(false);
@@ -361,6 +380,7 @@ public class WishlistFragment extends FamiliarFragment {
 										WishlistHelpers.ResetCards(WishlistFragment.this.getActivity());
 										mCompressedWishlist.clear();
 										mWishlistAdapter.notifyDataSetChanged();
+										sumTotalPrice();
 										dialog.dismiss();
 									}
 								})
@@ -599,9 +619,11 @@ public class WishlistFragment extends FamiliarFragment {
 					if (info.mIsFoil.get(i)) {
 						if (info.mPrice.get(i).mFoilAverage != 0) {
 							priceText.setText(String.format("%dx $%.02f", info.mNumberOf.get(i), info.mPrice.get(i).mFoilAverage));
+							priceText.setTextColor(getResources().getColor(R.color.black));
 						}
 						else {
 							priceText.setText(info.mMessage.get(i));
+							priceText.setTextColor(getResources().getColor(R.color.holo_red_dark));
 						}
 					}
 					else {
@@ -617,9 +639,11 @@ public class WishlistFragment extends FamiliarFragment {
 									priceText.setText(String.format("%dx $%.02f", info.mNumberOf.get(i), info.mPrice.get(i).mHigh));
 									break;
 							}
+							priceText.setTextColor(getResources().getColor(R.color.black));
 						}
 						else {
 							priceText.setText(info.mMessage.get(i));
+							priceText.setTextColor(getResources().getColor(R.color.holo_red_dark));
 						}
 					}
 				}
@@ -634,9 +658,6 @@ public class WishlistFragment extends FamiliarFragment {
 		}
 	}
 
-	/**
-	 * TODO handle case where price doesn't load (don't just show "loading")
-	 */
 	public void loadPrice(final String mCardName, final String mSetCode, String mCardNumber, int mMultiverseId) {
 		PriceFetchRequest priceRequest;
 		priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId, getActivity());
@@ -645,30 +666,41 @@ public class WishlistFragment extends FamiliarFragment {
 
 			@Override
 			public void onRequestFailure(SpiceException spiceException) {
-				Toast.makeText(getActivity(), spiceException.getMessage(), Toast.LENGTH_SHORT).show();
+				/* Find the compressed wishlist info for this card */
+				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+					if (cwi.mCard.name.equals(mCardName)) {
+						/* Find all foil and non foil compressed items with the same set code */
+						for (int i = 0; i < cwi.mSetCodes.size(); i++) {
+							if (cwi.mSetCodes.get(i).equals(mSetCode)) {
+								/* The message will never be shown with a valid price, so set it as DNE */
+								cwi.mMessage.set(i, spiceException.getLocalizedMessage());
+							}
+						}
+					}
+				}
+				mWishlistAdapter.notifyDataSetChanged();
 			}
 
 			@Override
 			public void onRequestSuccess(final PriceInfo result) {
-				if (result != null) {
-					/* Find the compressed wishlist info for this card */
-					for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-						if (cwi.mCard.name.equals(mCardName)) {
-							/* Find all foil and non foil compressed items with the same set code */
-							for (int i = 0; i < cwi.mSetCodes.size(); i++) {
-								if (cwi.mSetCodes.get(i).equals(mSetCode)) {
-									/* Set the whole price info object */
+				/* Find the compressed wishlist info for this card */
+				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+					if (cwi.mCard.name.equals(mCardName)) {
+						/* Find all foil and non foil compressed items with the same set code */
+						for (int i = 0; i < cwi.mSetCodes.size(); i++) {
+							if (cwi.mSetCodes.get(i).equals(mSetCode)) {
+								/* Set the whole price info object */
+								if (result != null) {
 									cwi.mPrice.set(i, result);
-									mWishlistAdapter.notifyDataSetChanged();
 								}
+								/* The message will never be shown with a valid price, so set it as DNE */
+								cwi.mMessage.set(i, getString(R.string.card_view_price_not_found));
 							}
 						}
 					}
 					sumTotalPrice();
 				}
-				else {
-					Toast.makeText(getActivity(), R.string.card_view_price_not_found, Toast.LENGTH_SHORT).show();
-				}
+				mWishlistAdapter.notifyDataSetChanged();
 			}
 		});
 	}
@@ -699,25 +731,5 @@ public class WishlistFragment extends FamiliarFragment {
 			}
 			mTotalPriceField.setText(String.format("$%.02f", totalPrice));
 		}
-	}
-
-	/**
-	 * card.name, card.setCode, card.numberOf are guaranteed to exist.
-	 * card.number, card.rarity, card.foil might
-	 */
-	void fillExtraData(CardDbAdapter adapter, MtgCard card) throws FamiliarDbException {
-		Cursor cursor = adapter.fetchCardByNameAndSet(card.name, card.setCode, CardDbAdapter.allData);
-
-		card.type = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
-		card.rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-		card.manaCost = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-		card.power = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-		card.toughness = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-		card.loyalty = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-		card.ability = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-		card.flavor = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-		card.number = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-
-		cursor.close();
 	}
 }

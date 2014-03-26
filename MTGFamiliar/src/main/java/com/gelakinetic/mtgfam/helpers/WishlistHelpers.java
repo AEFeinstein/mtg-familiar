@@ -5,14 +5,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 
 import java.io.BufferedReader;
@@ -145,28 +146,54 @@ public class WishlistHelpers {
 	 * @param fragment
 	 * @return
 	 */
-	public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment) throws FamiliarDbException {
+	public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment, boolean showCardButton) throws FamiliarDbException {
 
 		final Context ctx = fragment.getActivity();
 
 		CardDbAdapter adapter = new CardDbAdapter(ctx);
-		Cursor cards = adapter.fetchCardByName(mCardName, new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_SET});
+		Cursor cards = adapter.fetchCardByName(mCardName, new String[]{
+				CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+				CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+				CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
+				CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER});
 
-		ScrollView scrollView = new ScrollView(ctx);
-		final LinearLayout linearLayout = new LinearLayout(ctx);
-		linearLayout.setOrientation(LinearLayout.VERTICAL);
+		View customView = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog, null);
+		assert customView != null;
 
-		scrollView.addView(linearLayout);
+		final LinearLayout linearLayout = (LinearLayout) customView.findViewById(R.id.linear_layout);
 
+		if (showCardButton) {
+			customView.findViewById(R.id.show_card_button).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					Bundle args = new Bundle();
+					try {
+						CardDbAdapter adapter = new CardDbAdapter(ctx);
+						args.putLong(CardViewFragment.CARD_ID, adapter.fetchIdByName(mCardName));
+						CardViewFragment cvFrag = new CardViewFragment();
+						fragment.startNewFragment(cvFrag, args);
+						adapter.close();
+					} catch (FamiliarDbException e) {
+						fragment.handleFamiliarDbException(false);
+					}
+				}
+			});
+		}
+		else {
+			customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
+			customView.findViewById(R.id.divider).setVisibility(View.GONE);
+		}
 		/* Read the wishlist */
 		ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
 
 		/* Get all potential sets for this card */
 		final ArrayList<String> potentialSetCodes = new ArrayList<String>();
+		final ArrayList<Character> potentialRarities = new ArrayList<Character>();
 		cards.moveToFirst();
 		while (!cards.isAfterLast()) {
 			String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
-			String setName = adapter.getTCGname(setCode);
+			String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER));
+			char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
 
 			View wishlistRow = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null);
 			assert wishlistRow != null;
@@ -175,6 +202,7 @@ public class WishlistHelpers {
 			wishlistRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
 			linearLayout.addView(wishlistRow);
 			potentialSetCodes.add(setCode);
+			potentialRarities.add(rarity);
 
 			View wishlistRowFoil = null;
 			if (TradeListHelpers.canBeFoil(setCode, adapter)) {
@@ -185,6 +213,7 @@ public class WishlistHelpers {
 				wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
 				linearLayout.addView(wishlistRowFoil);
 				potentialSetCodes.add(setCode);
+				potentialRarities.add(rarity);
 			}
 
 			/* Set any counts currently in the wishlist */
@@ -208,7 +237,7 @@ public class WishlistHelpers {
 		// make the dialog
 		return new AlertDialog.Builder(ctx)
 				.setTitle(mCardName + " " + fragment.getString(R.string.wishlist_edit_dialog_title_end))
-				.setView(scrollView)
+				.setView(customView)
 				.setPositiveButton(fragment.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int which) {
@@ -230,6 +259,7 @@ public class WishlistHelpers {
 								card.numberOf = 0;
 							}
 							card.foil = (view.findViewById(R.id.wishlistDialogFoil).getVisibility() == View.VISIBLE);
+							card.rarity = potentialRarities.get(i);
 
 							/* Look through the wishlist for each card, set the numberOf or remove it if it exists, or
 							 * add the card if it doesn't */

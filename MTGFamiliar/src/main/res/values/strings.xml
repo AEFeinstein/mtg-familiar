@@ -211,7 +211,7 @@
     <string name="card_view_gatherer_page">Gatherer Page</string>
     <string name="card_view_set_dialog_title">Pick a Set</string>
     <string name="card_view_loading_dialog">Loading. Please wait</string>
-    <string name="card_view_price_not_found">Price not found.</string>
+    <string name="card_view_price_not_found">Price not found</string>
 
     <!-- Life counter activity -->
     <string name="life_counter_twenty">20</string>
@@ -479,5 +479,6 @@
     <string name="wishlist_loading">Loading</string>
     <string name="wishlist_share_title">MTG Familiar Wishlist</string>
     <string name="wishlist_chooser_title">Share Wishlist</string>
+    <string name="wishlist_view_card">View Card</string>
 
 </resources>

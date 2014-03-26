@@ -186,7 +186,7 @@ public abstract class FamiliarFragment extends Fragment {
 	 * @param frag The fragment to start
 	 * @param args Any arguments which the fragment takes
 	 */
-	void startNewFragment(Fragment frag, Bundle args) {
+	public void startNewFragment(Fragment frag, Bundle args) {
 		FragmentManager fm = getActivity().getSupportFragmentManager();
 		if (fm != null) {
 			frag.setArguments(args);

@@ -446,7 +446,9 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
 		   one set */
 		Cursor cCardByName = dbHelper.fetchCardByName(mCardName,
-				new String[]{CardDbAdapter.KEY_SET, CardDbAdapter.KEY_ID});
+				new String[]{
+						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID});
 		mSets = new LinkedHashSet<String>();
 		mCardIds = new LinkedHashSet<Long>();
 		while (!cCardByName.isAfterLast()) {
@@ -1003,7 +1005,7 @@ public class CardViewFragment extends FamiliarFragment {
 					}
 					case WISH_LIST_COUNTS: {
 						try {
-							return WishlistHelpers.getDialog(mCardName, CardViewFragment.this);
+							return WishlistHelpers.getDialog(mCardName, CardViewFragment.this, false);
 						} catch (FamiliarDbException e) {
 							handleFamiliarDbException(false);
 							setShowsDialog(false);

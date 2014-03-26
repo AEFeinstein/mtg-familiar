@@ -33,12 +33,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 
@@ -112,12 +115,13 @@ public class CardDbAdapter {
 	private DatabaseHelper mDbHelper;
 	public SQLiteDatabase mDb;
 
-	public static final String[] allData = {CardDbAdapter.KEY_ID,
-			CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_SET,
-			CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_TYPE,
-			CardDbAdapter.KEY_MANACOST, CardDbAdapter.KEY_ABILITY,
-			CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS,
-			CardDbAdapter.KEY_LOYALTY, CardDbAdapter.KEY_RARITY, CardDbAdapter.KEY_FLAVOR};
+	public static final String[] allData = {DATABASE_TABLE_CARDS + "." + KEY_ID,
+			DATABASE_TABLE_CARDS + "." + KEY_NAME, DATABASE_TABLE_CARDS + "." + KEY_SET,
+			DATABASE_TABLE_CARDS + "." + KEY_NUMBER, DATABASE_TABLE_CARDS + "." + KEY_TYPE,
+			DATABASE_TABLE_CARDS + "." + KEY_MANACOST, DATABASE_TABLE_CARDS + "." + KEY_ABILITY,
+			DATABASE_TABLE_CARDS + "." + KEY_POWER, DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS,
+			DATABASE_TABLE_CARDS + "." + KEY_LOYALTY, DATABASE_TABLE_CARDS + "." + KEY_RARITY,
+			DATABASE_TABLE_CARDS + "." + KEY_FLAVOR};
 
 	private static final String DATABASE_CREATE_CARDS = "create table "
 			+ DATABASE_TABLE_CARDS + "(" + KEY_ID
@@ -417,7 +421,7 @@ public class CardDbAdapter {
 			else {
 				sql += ", ";
 			}
-			sql += DATABASE_TABLE_CARDS + "." + field;
+			sql += field;
 		}
 		sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
 				+ " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
@@ -478,6 +482,94 @@ public class CardDbAdapter {
 		return mCursor;
 	}
 
+	public void fillExtraWishlistData(ArrayList<CompressedWishlistInfo> mCompressedWishlist, String[] fields) throws FamiliarDbException {
+		String sql = "SELECT ";
+
+		boolean first = true;
+		for (String field : fields) {
+			if (first) {
+				first = false;
+			}
+			else {
+				sql += ", ";
+			}
+			sql += field;
+		}
+
+		sql += " FROM " + DATABASE_TABLE_CARDS +
+				" JOIN " + DATABASE_TABLE_SETS +
+				" ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+				" WHERE (";
+
+		first = true;
+		boolean doSql = false;
+		for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+			if (cwi.mCard.type == null || cwi.mCard.type.equals("")) {
+				doSql = true;
+				if (first) {
+					first = false;
+				}
+				else {
+					sql += " OR ";
+				}
+				if(cwi.mCard.setCode != null && !cwi.mSetCodes.equals("")) {
+					sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(cwi.mCard.name) +
+							" AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" + cwi.mCard.setCode + "')";
+				}
+				else {
+					sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(cwi.mCard.name) + ")";
+				}
+			}
+		}
+
+		if (!doSql) {
+			return;
+		}
+
+		sql += ")"; /*  ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC */
+
+		Cursor cursor;
+
+		try {
+			cursor = mDb.rawQuery(sql, null);
+		} catch (SQLiteException e) {
+			throw new FamiliarDbException(e);
+		} catch (IllegalStateException e) {
+			throw new FamiliarDbException(e);
+		}
+
+		if (cursor != null) {
+			cursor.moveToFirst();
+		}
+		else {
+			return;
+		}
+
+		while (!cursor.isAfterLast()) {
+			/* Do stuff */
+			String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+			for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+				if (name.equals(cwi.mCard.name)) {
+					Log.e("match", name);
+					cwi.mCard.type = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
+					cwi.mCard.rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
+					cwi.mCard.manaCost = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+					cwi.mCard.power = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
+					cwi.mCard.toughness = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+					cwi.mCard.loyalty = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+					cwi.mCard.ability = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+					cwi.mCard.flavor = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+					cwi.mCard.number = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+				}
+			}
+			/* NEXT! */
+			cursor.moveToNext();
+		}
+
+		/* Use the cursor to populate stuff */
+		cursor.close();
+	}
+
 	public Cursor fetchCardByNameAndSet(String name, String setCode, String[] fields)
 			throws FamiliarDbException {
 		// replace lowercase ae with Ae
@@ -492,7 +584,7 @@ public class CardDbAdapter {
 			else {
 				sql += ", ";
 			}
-			sql += DATABASE_TABLE_CARDS + "." + field;
+			sql += field;
 		}
 
 		sql += " FROM "
