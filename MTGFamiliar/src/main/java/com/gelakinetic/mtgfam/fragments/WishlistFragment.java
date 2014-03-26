@@ -170,6 +170,10 @@ public class WishlistFragment extends FamiliarFragment {
 	public void onResume() {
 		super.onResume();
 
+		if(!isAdded()) {
+			return;
+		}
+
 		mCompressedWishlist.clear();
 
 		/* Get the relevant prices */
@@ -666,6 +670,10 @@ public class WishlistFragment extends FamiliarFragment {
 
 			@Override
 			public void onRequestFailure(SpiceException spiceException) {
+				/* because this can return when the fragment is in the background */
+				if(!WishlistFragment.this.isAdded()) {
+					return;
+				}
 				/* Find the compressed wishlist info for this card */
 				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
 					if (cwi.mCard.name.equals(mCardName)) {
@@ -683,6 +691,10 @@ public class WishlistFragment extends FamiliarFragment {
 
 			@Override
 			public void onRequestSuccess(final PriceInfo result) {
+				/* because this can return when the fragment is in the background */
+				if(!WishlistFragment.this.isAdded()) {
+					return;
+				}
 				/* Find the compressed wishlist info for this card */
 				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
 					if (cwi.mCard.name.equals(mCardName)) {

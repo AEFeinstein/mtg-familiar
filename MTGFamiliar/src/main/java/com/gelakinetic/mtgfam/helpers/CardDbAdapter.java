@@ -33,7 +33,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
@@ -550,7 +549,6 @@ public class CardDbAdapter {
 			String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
 			for (CompressedWishlistInfo cwi : mCompressedWishlist) {
 				if (name.equals(cwi.mCard.name)) {
-					Log.e("match", name);
 					cwi.mCard.type = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
 					cwi.mCard.rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
 					cwi.mCard.manaCost = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
