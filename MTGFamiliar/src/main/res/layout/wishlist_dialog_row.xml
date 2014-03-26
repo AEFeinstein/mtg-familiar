@@ -15,7 +15,8 @@
               android:layout_height="40dp"
               android:orientation="horizontal"
               android:baselineAligned="false"
-              android:layout_margin="4dp">
+              android:layout_margin="4dp"
+    android:id="@+id/dialog_layout_root">
 
     <EditText
         android:id="@+id/numberInput"

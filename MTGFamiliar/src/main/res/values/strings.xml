@@ -480,5 +480,6 @@
     <string name="wishlist_share_title">MTG Familiar Wishlist</string>
     <string name="wishlist_chooser_title">Share Wishlist</string>
     <string name="wishlist_view_card">View Card</string>
+    <string name="wishlist_foil">foil</string>
 
 </resources>

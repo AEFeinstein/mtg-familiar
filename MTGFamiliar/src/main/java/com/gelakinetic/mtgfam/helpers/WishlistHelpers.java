@@ -26,16 +26,7 @@ import java.util.ArrayList;
 public class WishlistHelpers {
 	private static final String wishlistName = "card.wishlist";
 
-	public static final int DONE = 1;
-	public static final int CANCEL = 2;
-
-	/**
-	 * Write the wishlist to a file
-	 *
-	 * @param mCtx
-	 * @param lWishlist
-	 */
-	public static void WriteWishlist(Context mCtx, ArrayList<MtgCard> lWishlist) {
+	private static void WriteWishlist(Context mCtx, ArrayList<MtgCard> lWishlist) {
 		try {
 			FileOutputStream fos = mCtx.openFileOutput(wishlistName, Context.MODE_PRIVATE);
 
@@ -58,12 +49,12 @@ public class WishlistHelpers {
 
 			for (CompressedWishlistInfo cwi : mCompressedWishlist) {
 				MtgCard card = cwi.mCard;
-				for (int i = 0; i < cwi.mSetCodes.size(); i++) {
-					card.set = cwi.mSets.get(i);
-					card.setCode = cwi.mSetCodes.get(i);
-					card.number = cwi.mNumber.get(i);
-					card.foil = cwi.mIsFoil.get(i);
-					card.numberOf = cwi.mNumberOf.get(i);
+				for (IndividualSetInfo isi : cwi.mInfo) {
+					card.set = isi.mSets;
+					card.setCode = isi.mSetCodes;
+					card.number = isi.mNumber;
+					card.foil = isi.mIsFoil;
+					card.numberOf = isi.mNumberOf;
 					fos.write(card.toString().getBytes());
 				}
 			}
@@ -76,11 +67,6 @@ public class WishlistHelpers {
 		}
 	}
 
-	/**
-	 * Clear the wishlist, i.e. delete it
-	 *
-	 * @param mCtx
-	 */
 	public static void ResetCards(Context mCtx) {
 
 		String[] files = mCtx.fileList();
@@ -91,12 +77,6 @@ public class WishlistHelpers {
 		}
 	}
 
-	/**
-	 * Read the wishlist from a file
-	 *
-	 * @param mCtx
-	 * @throws FamiliarDbException
-	 */
 	public static ArrayList<MtgCard> ReadWishlist(Context mCtx) {
 
 		ArrayList<MtgCard> lWishlist = new ArrayList<MtgCard>();
@@ -139,17 +119,11 @@ public class WishlistHelpers {
 		return lWishlist;
 	}
 
-	/**
-	 * Return a dialog showing all the sets for a card, and which ones exist in the wishlist
-	 *
-	 * @param mCardName
-	 * @param fragment
-	 * @return
-	 */
 	public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment, boolean showCardButton) throws FamiliarDbException {
 
 		final Context ctx = fragment.getActivity();
 
+		/* Create the custom view */
 		CardDbAdapter adapter = new CardDbAdapter(ctx);
 		Cursor cards = adapter.fetchCardByName(mCardName, new String[]{
 				CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
@@ -237,7 +211,7 @@ public class WishlistHelpers {
 		// make the dialog
 		return new AlertDialog.Builder(ctx)
 				.setTitle(mCardName + " " + fragment.getString(R.string.wishlist_edit_dialog_title_end))
-				.setView(customView)
+//				.setView(customView)
 				.setPositiveButton(fragment.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int which) {
@@ -248,13 +222,16 @@ public class WishlistHelpers {
 						/* Add the cards listed in the dialog to the wishlist */
 						for (int i = 0; i < linearLayout.getChildCount(); i++) {
 							View view = linearLayout.getChildAt(i);
+							assert view != null;
 
 							/* build the card object */
 							MtgCard card = new MtgCard();
 							card.name = mCardName;
 							card.setCode = potentialSetCodes.get(i);
 							try {
-								card.numberOf = Integer.valueOf(((EditText) view.findViewById(R.id.numberInput)).getText().toString());
+								EditText numberInput = ((EditText) view.findViewById(R.id.numberInput));
+								assert numberInput.getText() != null;
+								card.numberOf = Integer.valueOf(numberInput.getText().toString());
 							} catch (NumberFormatException e) {
 								card.numberOf = 0;
 							}
@@ -300,41 +277,41 @@ public class WishlistHelpers {
 				.create();
 	}
 
-	public static class CompressedWishlistInfo {
-		public MtgCard mCard;
-		public ArrayList<String> mSets;
-		public ArrayList<String> mSetCodes;
-		public ArrayList<String> mNumber;
+	public static class IndividualSetInfo {
+		public String mSets;
+		public String mSetCodes;
+		public String mNumber;
 
-		public ArrayList<Boolean> mIsFoil;
-		public ArrayList<PriceInfo> mPrice;
-		public ArrayList<String> mMessage;
-		public ArrayList<Integer> mNumberOf;
-		public ArrayList<Character> mRarity;
+		public Boolean mIsFoil;
+		public PriceInfo mPrice;
+		public String mMessage;
+		public Integer mNumberOf;
+		public Character mRarity;
+	}
+
+	public static class CompressedWishlistInfo {
+		public final MtgCard mCard;
+		public final ArrayList<IndividualSetInfo> mInfo;
 
 		public CompressedWishlistInfo(MtgCard card) {
-			mSets = new ArrayList<String>();
-			mSetCodes = new ArrayList<String>();
-			mNumber = new ArrayList<String>();
-			mIsFoil = new ArrayList<Boolean>();
-			mPrice = new ArrayList<PriceInfo>();
-			mMessage = new ArrayList<String>();
-			mNumberOf = new ArrayList<Integer>();
-			mRarity = new ArrayList<Character>();
-
+			mInfo = new ArrayList<IndividualSetInfo>();
 			mCard = card;
 			add(mCard);
 		}
 
 		public void add(MtgCard card) {
-			mSets.add(card.tcgName);
-			mSetCodes.add(card.setCode);
-			mNumber.add(card.number);
-			mIsFoil.add(card.foil);
-			mPrice.add(new PriceInfo());
-			mMessage.add(card.message);
-			mNumberOf.add(card.numberOf);
-			mRarity.add(card.rarity);
+			IndividualSetInfo isi = new IndividualSetInfo();
+
+			isi.mSets = card.tcgName;
+			isi.mSetCodes = card.setCode;
+			isi.mNumber = card.number;
+			isi.mIsFoil = card.foil;
+			isi.mPrice = new PriceInfo();
+			isi.mMessage = card.message;
+			isi.mNumberOf = card.numberOf;
+			isi.mRarity = card.rarity;
+
+			mInfo.add(isi);
 		}
 
 		@Override
@@ -349,18 +326,30 @@ public class WishlistHelpers {
 		}
 
 		public void clearCompressedInfo() {
-			mSets.clear();
-			mSetCodes.clear();
-			mNumber.clear();
-			mIsFoil.clear();
-			mPrice.clear();
-			mMessage.clear();
-			mNumberOf.clear();
+			mInfo.clear();
 		}
 	}
 
-	public static boolean GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, boolean includeTcgName) {
-		// TODO implement
-		return false;
+	public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, Context ctx) {
+		StringBuilder readableWishlist = new StringBuilder();
+
+		for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+			for (IndividualSetInfo isi : cwi.mInfo) {
+				readableWishlist
+						.append(isi.mNumberOf)
+						.append("x ")
+						.append(cwi.mCard.name)
+						.append(", ")
+						.append(isi.mSets);
+				if (isi.mIsFoil) {
+					readableWishlist
+							.append(" (")
+							.append(ctx.getString(R.string.wishlist_foil))
+							.append(")");
+				}
+				readableWishlist.append("\r\n");
+			}
+		}
+		return readableWishlist.toString();
 	}
 }

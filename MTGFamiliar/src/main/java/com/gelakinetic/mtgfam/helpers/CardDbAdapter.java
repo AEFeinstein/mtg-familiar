@@ -511,7 +511,7 @@ public class CardDbAdapter {
 				else {
 					sql += " OR ";
 				}
-				if(cwi.mCard.setCode != null && !cwi.mSetCodes.equals("")) {
+				if (cwi.mCard.setCode != null && !cwi.mCard.setCode.equals("")) {
 					sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(cwi.mCard.name) +
 							" AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" + cwi.mCard.setCode + "')";
 				}
