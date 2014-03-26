@@ -211,7 +211,7 @@ public class WishlistHelpers {
 		// make the dialog
 		return new AlertDialog.Builder(ctx)
 				.setTitle(mCardName + " " + fragment.getString(R.string.wishlist_edit_dialog_title_end))
-//				.setView(customView)
+				.setView(customView)
 				.setPositiveButton(fragment.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int which) {
