@@ -463,7 +463,7 @@ public class PreferenceAdapter {
 
 	//Trade price
 	public synchronized String getTradePrice() {
-		return this.prefs.getString(TRADE_PRICE, "50");
+		return this.prefs.getString(TRADE_PRICE, "1");
 	}
 
 	public synchronized void setTradePrice(String tradePrice) {

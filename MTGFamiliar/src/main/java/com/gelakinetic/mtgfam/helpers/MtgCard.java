@@ -19,6 +19,9 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.content.Context;
+
+import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
 /**
@@ -45,12 +48,12 @@ public class MtgCard {
 	public String tcgName;
 	public String setCode;
 	public int numberOf;
-	public int price;            // In cents
+	public int price; /* In cents */
 	public String message;
-	public boolean customPrice = false; //default is false as all cards should first grab internet prices.
+	/* public boolean customPrice = false; default is false as all cards should first grab internet prices. */
 	public boolean foil = false;
 
-	public static final String delimiter = "%";
+	public static final String DELIMITER = "%";
 
 	/**
 	 * Default constructor, doesn't leave null fields
@@ -74,76 +77,49 @@ public class MtgCard {
 		multiverseId = 0;
 	}
 
-	public MtgCard(String name, String tcgName, String setCode, int numberOf, int price, String message, String number, String type, String cost,
-				   String ability, float p, float t, int loyalty, int rarity) {
-		this.name = name;
-		this.number = number;
-		this.setCode = setCode;
-		this.tcgName = tcgName;
-		this.numberOf = numberOf;
-		this.price = price;
-		this.message = message;
-		this.type = type;
-		this.manaCost = cost;
-		this.ability = ability;
-		this.power = p;
-		this.toughness = t;
-		this.loyalty = loyalty;
-		this.rarity = (char) rarity;
-	}
+	/**
+	 * Constructor when building a MtgCard info from the result of a toString()
+	 *
+	 * @param line Information about this card, in the form of what toString() prints
+	 * @param mCtx A context used for getting localized strings
+	 */
+	public MtgCard(String line, Context mCtx) {
 
-	public MtgCard(String name, String tcgName, String setCode, int numberOf, int price, String message, String number, int rarity) {
-		this.name = name;
-		this.number = number;
-		this.setCode = setCode;
-		this.tcgName = tcgName;
-		this.numberOf = numberOf;
-		this.price = price;
-		this.message = message;
-		this.rarity = (char) rarity;
-	}
+		String[] parts = line.split(MtgCard.DELIMITER);
 
-	public MtgCard(String name, String tcgName, String setCode, int numberOf, int price, String message, String number, int rarity, boolean customPrice, boolean foil) {
-		this.name = name;
-		this.number = number;
-		this.setCode = setCode;
-		this.tcgName = tcgName;
-		this.numberOf = numberOf;
-		this.price = price;
-		this.message = message;
-		this.rarity = (char) rarity;
-		this.customPrice = customPrice;
+		this.name = parts[0];
+		this.setCode = parts[1];
+		this.numberOf = Integer.parseInt(parts[2]);
+
+		/* "foil" didn't exist in earlier versions, so it may not be part of the string */
+		if (parts.length > 3) {
+			this.number = parts[3];
+		}
+		if (parts.length > 4) {
+			this.rarity = (char) Integer.parseInt(parts[4]);
+		}
+		boolean foil = false;
+		if (parts.length > 5) {
+			foil = Boolean.parseBoolean(parts[5]);
+		}
 		this.foil = foil;
+		this.message = mCtx.getString(R.string.wishlist_loading);
+
 	}
 
-	public MtgCard(String cardName, String cardSet, int numberOf, String number, int rarity) {
-		this.name = cardName;
-		this.numberOf = numberOf;
-		this.setCode = cardSet;
-		this.number = number;
-		this.rarity = (char) rarity;
-	}
-
-	public String getPriceString() {
-		return String.format("%d.%02d", this.price / 100, this.price % 100);
-	}
-
-	public boolean hasPrice() {
-		return this.message == null || this.message.length() == 0;
-	}
-
+	/* Prints a bunch of information about this card, predominantly to save it in a plaintext file */
 	public String toString() {
-		return this.name + delimiter + this.setCode + delimiter + this.numberOf + delimiter + this.number + delimiter + ((int) this.rarity) + delimiter + this.foil + '\n';
+		return this.name + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.number + DELIMITER +
+				((int) this.rarity) + DELIMITER + this.foil + '\n';
 	}
 
-	public String toString(int side) {
-		return side + delimiter + this.name + delimiter + this.setCode + delimiter + this.numberOf + delimiter + this.customPrice + delimiter + this.price + delimiter + this.foil + '\n';
-	}
-
-	public String toReadableString(boolean includeTcgName) {
-		return String.valueOf(this.numberOf) + ' ' + this.name + (this.foil ? " - Foil " : "") + (includeTcgName ? " (" + this.tcgName + ')' : "") + '\n';
-	}
-
+	/**
+	 * Check to see if two MtgCard objects are equivalent, or if this is equivalent to a CompressedWishlistInfo
+	 * object. The comparison is done on the MtgCard's name
+	 *
+	 * @param o The object to compare to this one
+	 * @return true if the specified object is equal to this string, false otherwise.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof MtgCard) {

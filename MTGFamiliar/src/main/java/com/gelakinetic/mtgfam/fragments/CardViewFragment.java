@@ -751,7 +751,7 @@ public class CardViewFragment extends FamiliarFragment {
 	 */
 	private class FetchRulingsTask extends AsyncTask<Void, Void, Void> {
 
-		private boolean error = false;
+		String mErrorMessage = null;
 
 		/**
 		 * This function downloads the source of the gatherer page, scans it for rulings, and stores them for display
@@ -789,16 +789,16 @@ public class CardViewFragment extends FamiliarFragment {
 					}
 				}
 			} catch (MalformedURLException mue) {
-				error = true;
+				mErrorMessage = mue.getLocalizedMessage();
 			} catch (IOException ioe) {
-				error = true;
+				mErrorMessage = ioe.getLocalizedMessage();
 			} finally {
 				try {
 					if (is != null) {
 						is.close();
 					}
 				} catch (IOException ioe) {
-					error = true;
+					mErrorMessage = ioe.getLocalizedMessage();
 				}
 			}
 
@@ -813,12 +813,12 @@ public class CardViewFragment extends FamiliarFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 
-			if (!error) {
+			if (mErrorMessage == null) {
 				showDialog(CARD_RULINGS);
 			}
 			else {
 				removeDialog(getFragmentManager());
-				Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), mErrorMessage, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
