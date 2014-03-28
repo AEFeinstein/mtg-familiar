@@ -49,7 +49,7 @@ public class TradeListHelpers {
 	}
 
 	public static boolean canBeFoil(String setCode, CardDbAdapter mDbHelper) throws FamiliarDbException {
-		String[] extraSets = {"UNH", "US", "UL", "6E", "UD", "P3", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
+		String[] extraSets = {"UNH", "US", "UL", "UD", "P3", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
 		ArrayList<String> nonModernLegalSets = new ArrayList<String>(Arrays.asList(extraSets));
 		for (String value : nonModernLegalSets) {
 			if (value.equals(setCode)) {

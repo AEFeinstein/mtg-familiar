@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -32,6 +34,7 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.TradeListHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.IndividualSetInfo;
@@ -89,13 +92,25 @@ public class WishlistFragment extends FamiliarFragment {
 		View myFragmentView = inflater.inflate(R.layout.wishlist_frag, container, false);
 		assert myFragmentView != null;
 
+		TextView.OnEditorActionListener addCardListener = new TextView.OnEditorActionListener() {
+			public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+				if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
+					addCardToWishlist();
+					return true;
+				}
+				return false;
+			}
+		};
+
 		/* set the autocomplete for card names */
 		mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
 		mNameField.setAdapter(new AutocompleteCursorAdapter(this.getActivity()));
+		mNameField.setOnEditorActionListener(addCardListener);
 
 		/* Default the number of cards field */
 		mNumberField = (EditText) myFragmentView.findViewById(R.id.number_input);
 		mNumberField.setText("1");
+		mNumberField.setOnEditorActionListener(addCardListener);
 
 		/* Grab other elements */
 		mTotalPriceField = (TextView) myFragmentView.findViewById(R.id.priceText);
@@ -106,69 +121,7 @@ public class WishlistFragment extends FamiliarFragment {
 		myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
-				try {
-					CardDbAdapter adapter = new CardDbAdapter(getActivity());
-					/* Make the new card */
-					MtgCard card = new MtgCard();
-					card.name = String.valueOf(mNameField.getText());
-					card.foil = mFoilCheckBox.isChecked();
-					card.numberOf = Integer.parseInt(String.valueOf(mNumberField.getText()));
-					card.message = getString(R.string.wishlist_loading);
-
-					/* Get some extra information from the database */
-					Cursor cardCursor = adapter.fetchCardByName(card.name, CardDbAdapter.allData);
-					card.type = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
-					card.rarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-					card.manaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-					card.power = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-					card.toughness = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-					card.loyalty = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-					card.ability = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-					card.flavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-					card.number = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-					card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-					card.tcgName = adapter.getTCGname(card.setCode);
-
-					/* Clean up */
-					cardCursor.close();
-					adapter.close();
-
-					/* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
-					if (mCompressedWishlist.contains(card)) {
-						CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(card));
-						boolean added = false;
-						for (IndividualSetInfo isi : cwi.mInfo) {
-							if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-								added = true;
-								isi.mNumberOf++;
-							}
-						}
-						if (!added) {
-							cwi.add(card);
-						}
-					}
-					else {
-						mCompressedWishlist.add(new CompressedWishlistInfo(card));
-					}
-
-					/* load the price */
-					loadPrice(card.name, card.setCode, card.number);
-
-					/* Save the wishlist */
-					WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
-
-					/* Clean up for the next add */
-					mNumberField.setText("1");
-					mNameField.setText("");
-					mFoilCheckBox.setChecked(false);
-
-					/* Redraw the new wishlist with the new card */
-					mWishlistAdapter.notifyDataSetChanged();
-
-				} catch (FamiliarDbException e) {
-					handleFamiliarDbException(false);
-				}
+				addCardToWishlist();
 			}
 		});
 
@@ -184,6 +137,96 @@ public class WishlistFragment extends FamiliarFragment {
 			}
 		});
 		return myFragmentView;
+	}
+
+	/**
+	 * This function takes care of adding a card to the wishlist from this fragment. It makes sure that fields are
+	 * not null or have bad information.
+	 */
+	private void addCardToWishlist() {
+		/* Do not allow empty fields */
+		String name = String.valueOf(mNameField.getText());
+		String numberOf = (String.valueOf(mNumberField.getText()));
+		if (name == null || name.equals("")) {
+			return;
+		}
+		if (numberOf == null || numberOf.equals("")) {
+			return;
+		}
+
+		try {
+			/* Make the new card */
+			MtgCard card = new MtgCard();
+			card.name = name;
+			card.foil = mFoilCheckBox.isChecked();
+			card.numberOf = Integer.parseInt(numberOf);
+			card.message = getString(R.string.wishlist_loading);
+
+			/* Get some extra information from the database */
+			CardDbAdapter adapter = new CardDbAdapter(getActivity());
+			Cursor cardCursor = adapter.fetchCardByName(card.name, CardDbAdapter.allData);
+			if (cardCursor.getCount() == 0) {
+				Toast.makeText(WishlistFragment.this.getActivity(), getString(R.string.wishlist_toast_no_card),
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+			card.type = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
+			card.rarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
+			card.manaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+			card.power = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_POWER));
+			card.toughness = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+			card.loyalty = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+			card.ability = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+			card.flavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+			card.number = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+			card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
+			card.tcgName = adapter.getTCGname(card.setCode);
+
+			/* Override choice if the card can't be foil */
+			if (!TradeListHelpers.canBeFoil(card.setCode, adapter)) {
+				card.foil = false;
+			}
+			/* Clean up */
+			cardCursor.close();
+			adapter.close();
+
+			/* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
+			if (mCompressedWishlist.contains(card)) {
+				CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(card));
+				boolean added = false;
+				for (IndividualSetInfo isi : cwi.mInfo) {
+					if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
+						added = true;
+						isi.mNumberOf++;
+					}
+				}
+				if (!added) {
+					cwi.add(card);
+				}
+			}
+			else {
+				mCompressedWishlist.add(new CompressedWishlistInfo(card));
+			}
+
+			/* load the price */
+			loadPrice(card.name, card.setCode, card.number);
+
+			/* Save the wishlist */
+			WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+
+			/* Clean up for the next add */
+			mNumberField.setText("1");
+			mNameField.setText("");
+			mFoilCheckBox.setChecked(false);
+
+			/* Redraw the new wishlist with the new card */
+			mWishlistAdapter.notifyDataSetChanged();
+
+		} catch (FamiliarDbException e) {
+			handleFamiliarDbException(false);
+		} catch (NumberFormatException e) {
+			/* eat it */
+		}
 	}
 
 	/**

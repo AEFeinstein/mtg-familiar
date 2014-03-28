@@ -19,7 +19,9 @@
             android:gravity="center"
             android:inputType="number"
             android:maxLength="2"
-            android:selectAllOnFocus="true">
+            android:selectAllOnFocus="true"
+            android:imeOptions="actionSearch"
+            android:singleLine="true">
         </EditText>
 
         <AutoCompleteTextView
@@ -27,7 +29,10 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:hint="@string/wishlist_name"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:singleLine="true">
 
             <requestFocus/>
         </AutoCompleteTextView>
