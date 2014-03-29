@@ -36,7 +36,7 @@ public class CardSearchProvider extends ContentProvider {
 	private CardDbAdapter mDbHelper;
 
 	// The Authority
-	private static final String AUTHORITY = "com.gelakinetic.mtgfam.helpers.CardSearchProvider";
+	public static final String AUTHORITY = "com.gelakinetic.mtgfam.helpers.CardSearchProvider";
 
 	// UriMatcher stuff
 	private static final int SEARCH_SUGGEST = 0;
@@ -90,8 +90,9 @@ public class CardSearchProvider extends ContentProvider {
 		try {
 			switch (sURIMatcher.match(uri)) {
 				case SEARCH_SUGGEST: {
-					if (selectionArgs == null) {
-						throw new IllegalArgumentException("selectionArgs must be provided for the Uri: " + uri);
+					if (selectionArgs == null || selectionArgs[0] == null) {
+						return null;
+						//throw new IllegalArgumentException("selectionArgs must be provided for the Uri: " + uri);
 					}
 					query = selectionArgs[0].toLowerCase();
 

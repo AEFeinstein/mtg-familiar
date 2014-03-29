@@ -56,7 +56,7 @@ public class WishlistFragment extends FamiliarFragment {
 
 	/* Price setting constants */
 	private static final int LOW_PRICE = 0;
-	public static final int AVG_PRICE = 1;
+	private static final int AVG_PRICE = 1;
 	private static final int HIGH_PRICE = 2;
 
 	/* Preferences */
@@ -104,7 +104,7 @@ public class WishlistFragment extends FamiliarFragment {
 
 		/* set the autocomplete for card names */
 		mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
-		mNameField.setAdapter(new AutocompleteCursorAdapter(this.getActivity()));
+		mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
 		mNameField.setOnEditorActionListener(addCardListener);
 
 		/* Default the number of cards field */

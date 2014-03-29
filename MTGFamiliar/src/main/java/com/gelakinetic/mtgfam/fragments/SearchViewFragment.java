@@ -242,7 +242,7 @@ public class SearchViewFragment extends FamiliarFragment {
 		mArtistField.setOnEditorActionListener(doSearchListener);
 
 		/* set the autocomplete for card names */
-		mNameField.setAdapter(new AutocompleteCursorAdapter(this.getActivity()));
+		mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
 		/* set the autocomplete for supertypes */
 		String[] supertypes = getResources().getStringArray(R.array.supertypes);
 		ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<String>(this.getActivity(),

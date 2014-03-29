@@ -19,65 +19,107 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import android.content.Context;
+import android.app.SearchManager;
 import android.database.Cursor;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.TextView;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.AutoCompleteTextView;
+import android.widget.SimpleCursorAdapter;
 
-import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This cursor adapter provides suggestions for card names directly from the database
  */
-public class AutocompleteCursorAdapter extends CursorAdapter {
+public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements LoaderManager.LoaderCallbacks<Cursor> {
 
-	private CardDbAdapter mDbHelper;
+	private static final String[] CARD_NAME_PROJECTION = new String[]{
+			CardDbAdapter.KEY_ID,
+			CardDbAdapter.KEY_NAME,
+	};
+	private static final Uri SEARCH_URI =
+			Uri.parse("content://" + CardSearchProvider.AUTHORITY + "/" + SearchManager.SUGGEST_URI_PATH_QUERY);
+	private final String[] mAutocompleteFilter = new String[1];
+
+	private final FamiliarFragment mFragment;
 
 	/**
-	 * Default constructor. Open a database, then close it. It will be opened/closed on queries later
+	 * Standard constructor.
 	 *
-	 * @param context The context
+	 * @param context  The context where the ListView associated with this SimpleListItemFactory is running
+	 * @param from     A list of column names representing the data to bind to the UI. Can be null if the cursor is not
+	 *                 available yet.
+	 * @param to       The views that should display column in the "from" parameter. These should all be TextViews. The
+	 *                 first N views in this list are given the values of the first N columns in the from parameter.
+	 *                 Can be null if the cursor is not available yet.
+	 * @param textView The text view which we are watching for changes
 	 */
-	public AutocompleteCursorAdapter(Context context) {
-		super(context, null, 0);
-		try {
-			mDbHelper = new CardDbAdapter(context);
-			mDbHelper.close(); // close the immediately opened db
-		} catch (FamiliarDbException e) {
-			// something went wrong
-		}
+	public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, AutoCompleteTextView textView) {
+		super(context.getActivity(), com.gelakinetic.mtgfam.R.layout.list_item_1, null, from, to, 0);
+		mFragment = context;
+		context.getLoaderManager().initLoader(0, null, this);
+		textView.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+				/* Don't care */
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+				/* Don't care */
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				/* Preform a query */
+				mAutocompleteFilter[0] = String.valueOf(editable);
+				mFragment.getLoaderManager().restartLoader(0, null, AutocompleteCursorAdapter.this);
+			}
+		});
 	}
 
 	/**
-	 * Makes a new view to hold the data pointed to by cursor.
+	 * Instantiate and return a new Loader for the given ID.
 	 *
-	 * @param context Interface to application's global information
-	 * @param cursor  The cursor from which to get the data. The cursor is already moved to the correct position.
-	 * @param parent  The parent to which the new view is attached to
-	 * @return the newly created view.
+	 * @param id   The ID whose loader is to be created.
+	 * @param args Any arguments supplied by the caller.
+	 * @return Return a new Loader instance that is ready to start loading.
 	 */
 	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		return inflater.inflate(R.layout.list_item_1, null);
-
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		// Now create and return a CursorLoader that will take care of
+		// creating a Cursor for the data being displayed.
+		String select = "(" + CardDbAdapter.KEY_NAME + ")";
+		return new CursorLoader(mFragment.getActivity(), SEARCH_URI, CARD_NAME_PROJECTION, select, mAutocompleteFilter,
+				CardDbAdapter.KEY_NAME + " COLLATE LOCALIZED ASC");
 	}
 
 	/**
-	 * Bind an existing view to the data pointed to by cursor
+	 * Called when a previously created loader has finished its load.
 	 *
-	 * @param view    Existing view, returned earlier by newView
-	 * @param context Interface to application's global information
-	 * @param cursor  The cursor from which to get the data. The cursor is already moved to the correct position.
+	 * @param loader The Loader that has finished.
+	 * @param data   The data generated by the Loader.
 	 */
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		String keyword = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-		TextView tv = (TextView) view.findViewById(R.id.text1);
-		tv.setText(keyword);
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		this.swapCursor(data);
+	}
+
+	/**
+	 * Called when a previously created loader is being reset, and thus making its data unavailable.
+	 *
+	 * @param loader The Loader that is being reset.
+	 */
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		this.swapCursor(null);
 	}
 
 	/**
@@ -87,41 +129,7 @@ public class AutocompleteCursorAdapter extends CursorAdapter {
 	 * @return a CharSequence representing the value
 	 */
 	@Override
-	public CharSequence convertToString(Cursor cursor) {
+	public CharSequence convertToString(@NotNull Cursor cursor) {
 		return cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-	}
-
-	/**
-	 * Runs a query with the specified constraint. This query is requested by the filter attached to this adapter. The
-	 * query is provided by a FilterQueryProvider. If no provider is specified, the current cursor is not filtered and
-	 * returned. After this method returns the resulting cursor is passed to changeCursor(Cursor) and the previous
-	 * cursor is closed. This method is always executed on a background thread, not on the application's main thread
-	 * (or UI thread.) Contract: when constraint is null or empty, the original results, prior to any filtering, must
-	 * be returned.
-	 *
-	 * @param constraint the constraint with which the query must be filtered
-	 * @return a Cursor representing the results of the new query
-	 */
-	@Override
-	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-		String filter;
-		if (constraint != null) {
-			filter = constraint.toString();
-		}
-		else {
-			return null;
-		}
-
-		Cursor cursor = null;
-		try {
-			if (mDbHelper != null) {
-				mDbHelper.openReadable();
-				cursor = mDbHelper.autoComplete(filter);
-				mDbHelper.close();
-			}
-		} catch (FamiliarDbException e) {
-			return null;
-		}
-		return cursor;
 	}
 }
