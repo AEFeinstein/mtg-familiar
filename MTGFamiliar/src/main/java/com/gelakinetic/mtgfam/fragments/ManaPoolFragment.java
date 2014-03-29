@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
 public class ManaPoolFragment extends FamiliarFragment {
@@ -308,6 +307,7 @@ public class ManaPoolFragment extends FamiliarFragment {
 
 	/**
 	 * Handle menu clicks, in this case, just clear all
+	 *
 	 * @param item The MenuItem which was selected
 	 * @return True if the event was acted upon, false otherwise
 	 */
@@ -332,6 +332,7 @@ public class ManaPoolFragment extends FamiliarFragment {
 
 	/**
 	 * Inflate the options menu
+	 *
 	 * @param menu     The options menu in which you place your items.
 	 * @param inflater The inflater to use to inflate the menu
 	 */

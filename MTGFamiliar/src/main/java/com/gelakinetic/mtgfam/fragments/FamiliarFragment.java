@@ -258,7 +258,7 @@ public abstract class FamiliarFragment extends Fragment {
 
 	}
 
-	public FamiliarActivity getFamiliarActivity() {
+	FamiliarActivity getFamiliarActivity() {
 		if(getActivity() instanceof FamiliarActivity) {
 			return (FamiliarActivity) getActivity();
 		}

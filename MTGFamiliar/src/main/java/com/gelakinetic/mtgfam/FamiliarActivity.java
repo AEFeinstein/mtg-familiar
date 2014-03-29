@@ -118,6 +118,7 @@ public class FamiliarActivity extends FragmentActivity {
 	private static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
 			"&business=SZK4TAH2XBZNC&lc=US&item_name=MTG%20Familiar&currency_code=USD" +
 			"&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
+	private static final String GITHUB_URL = "https://github.com/AEFeinstein/mtg-familiar";
 
 	/* Drawer elements */
 	public DrawerLayout mDrawerLayout;
@@ -929,6 +930,7 @@ public class FamiliarActivity extends FragmentActivity {
 						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
 						text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
 						text.setMovementMethod(LinkMovementMethod.getInstance());
+						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 						builder.setView(dialogLayout);
 
 						return builder.create();
@@ -947,7 +949,26 @@ public class FamiliarActivity extends FragmentActivity {
 							}
 						});
 
-						builder.setMessage(ImageGetterHelper.formatHtmlString(getString(R.string.main_whats_new_text)));
+						/* Set the custom view, with some images below the text */
+						LayoutInflater inflater = this.getActivity().getLayoutInflater();
+						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
+								(ViewGroup) findViewById(R.id.dialog_layout_root));
+						assert dialogLayout != null;
+						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
+						text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_whats_new_text)));
+						text.setMovementMethod(LinkMovementMethod.getInstance());
+
+						dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
+						dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
+						dialogLayout.findViewById(R.id.image_button).setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_URL));
+								startActivity(myIntent);
+							}
+						});
+						builder.setView(dialogLayout);
+
 						return builder.create();
 					}
 					case DONATE_DIALOG: {
@@ -961,8 +982,7 @@ public class FamiliarActivity extends FragmentActivity {
 						});
 						builder.setPositiveButton(R.string.main_donate_title, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri
-										.parse(PAYPAL_URL));
+								Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PAYPAL_URL));
 								startActivity(myIntent);
 								dialog.cancel();
 							}
@@ -992,6 +1012,7 @@ public class FamiliarActivity extends FragmentActivity {
 							}
 						});
 						dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
+						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 
 						builder.setView(dialogLayout);
 						return builder.create();

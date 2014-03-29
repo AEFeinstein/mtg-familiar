@@ -84,8 +84,17 @@
         So, how generous are you feeling today?</string>
     <string name="main_whats_new_title">What\'s New</string>
     <string name="main_whats_new_in_title">What\'s New in Version</string>
-    <string name="main_whats_new_text"> 	- Removed search by image (Google removed support)&lt;br />&lt;br />
- 	- Small bugfixes</string>
+    <string name="main_whats_new_text">
+        - We\'re on GitHub! Tap the Octocat to explore the code and help the project.&lt;br&gt;&lt;br&gt;
+        - New clean, modern look and HD images.&lt;br&gt;&lt;br&gt;
+        - Swipe cards left and right after searching to go forwards and backwards&lt;br&gt;&lt;br&gt;
+        - New landscape layouts for all life counter modes, MoJhoSto&lt;br&gt;&lt;br&gt;
+        - Brand new, configurable home screen widget&lt;br&gt;&lt;br&gt;
+        - Spanish translation, better localization&lt;br&gt;&lt;br&gt;
+ 	    - So many bug fixes&lt;br&gt;&lt;br&gt;
+        - Comments in the code&lt;br&gt;&lt;br&gt;
+        - Removed search by image (Google removed support)
+    </string>
     <string name="main_tts_warning_title">Text-to-Speech</string>
     <string name="main_tts_warning_text">This application has text-to-speech capability for some of its features, but you don\'t seem to have it installed.
         If you want to install it, use the "Install Text-to-Speech" link in the settings menu.</string>
@@ -99,7 +108,7 @@
     <string name="main_about_title">About App</string>
     <string name="main_about_text">This app is my gift to the MTG community.&lt;br />&lt;br />
 		Please send questions, comments, concerns, and praise to &lt;a href="mailto:mtg.familiar@gmail.com">mtg.familiar@gmail.com&lt;/a>.&lt;br />&lt;br />
-		Join the &lt;a href="http://code.google.com/p/mtg-familiar">open source project&lt;/a> on Google Code.&lt;br />&lt;br />
+		Join the &lt;a href="https://github.com/AEFeinstein/mtg-familiar">open source project&lt;/a> on GitHub.&lt;br />&lt;br />
 		Thanks to zagaberoo for beautiful graphics and even more beautiful code.&lt;br />&lt;br />
 		Thanks to April King for the massive QA effort, and learning Java. Shh, don\'t tell anyone about that.&lt;br />&lt;br />
 		Thanks to Toastdeib for being my SQL guru sitting on top of the mountain.&lt;br />&lt;br />

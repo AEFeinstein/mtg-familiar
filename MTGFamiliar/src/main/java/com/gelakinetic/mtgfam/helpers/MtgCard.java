@@ -53,7 +53,7 @@ public class MtgCard {
 	/* public boolean customPrice = false; default is false as all cards should first grab internet prices. */
 	public boolean foil = false;
 
-	public static final String DELIMITER = "%";
+	private static final String DELIMITER = "%";
 
 	/**
 	 * Default constructor, doesn't leave null fields
