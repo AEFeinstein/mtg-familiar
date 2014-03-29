@@ -366,8 +366,8 @@ public class FamiliarActivity extends FragmentActivity {
 				this, /* host Activity */
 				mDrawerLayout, /* DrawerLayout object */
 				R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-				R.string.drawer_open, /* "open drawer" description for accessibility */
-				R.string.drawer_close /* "close drawer" description for accessibility */
+				R.string.main_drawer_open, /* "open drawer" description for accessibility */
+				R.string.main_drawer_close /* "close drawer" description for accessibility */
 		) {
 
 			/**
@@ -1022,7 +1022,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						builder.setTitle(R.string.main_tts_warning_title)
 								.setMessage(R.string.main_tts_warning_text)
-								.setPositiveButton(R.string.install_tts, new DialogInterface.OnClickListener() {
+								.setPositiveButton(R.string.main_install_tts, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
 										Intent installIntent = new Intent();

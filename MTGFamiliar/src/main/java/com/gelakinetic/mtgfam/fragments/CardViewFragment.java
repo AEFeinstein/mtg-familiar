@@ -503,7 +503,7 @@ public class CardViewFragment extends FamiliarFragment {
 							mLegalities[i] = getString(R.string.card_view_banned);
 							break;
 						default:
-							mLegalities[i] = getString(R.string.card_view_error);
+							mLegalities[i] = getString(R.string.error);
 							break;
 					}
 					cFormats.moveToNext();

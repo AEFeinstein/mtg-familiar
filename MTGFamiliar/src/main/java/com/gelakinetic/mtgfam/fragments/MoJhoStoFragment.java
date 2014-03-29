@@ -200,7 +200,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 					case RULES_DIALOG: {
 						/* Use a generic AlertDialog to display the rules text */
 						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-						builder.setNeutralButton(R.string.dialog_play, new DialogInterface.OnClickListener() {
+						builder.setNeutralButton(R.string.mojhosto_dialog_play, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.dismiss();
 							}

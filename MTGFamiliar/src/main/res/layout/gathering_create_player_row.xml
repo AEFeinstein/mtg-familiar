@@ -35,7 +35,7 @@
             android:gravity="center"
             android:inputType="number"
             android:selectAllOnFocus="true"
-            android:text="@string/gathering_starting_life_default" />
+            android:text="@string/life_counter_twenty" />
 
     </LinearLayout>
 

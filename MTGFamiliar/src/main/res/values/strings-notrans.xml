@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General-purpose strings -->
+    <string name="default_price">$0.00</string>
+
+    <!-- Placeholder text -->
+    <string name="ph_type">Type</string>
+    <string name="ph_cost">Cost</string>
+    <string name="ph_ability">Ability</string>
+    <string name="ph_power">P</string>
+    <string name="ph_toughness">T</string>
+
+    <!-- Life counter activity -->
+    <string name="life_counter_twenty">20</string>
+    <string name="life_counter_plus_one">+1</string>
+    <string name="life_counter_plus_five">+5</string>
+    <string name="life_counter_minus_one">-1</string>
+    <string name="life_counter_minus_five">-5</string>
+
+    <!-- Mana pool activity -->
+    <string name="mana_pool_plus">+</string>
+    <string name="mana_pool_minus">-</string>
+    <string name="mana_pool_zero">0</string>
+
+    <!-- Card trading activity -->
+    <string name="trader_default_number_of">1x</string>
+    <string name="trader_edit_dialog_x">x</string>
+
+    <!-- Default language -->
+    <string name="main_card_language">en</string>
+
+    <!-- Judge's corner -->
+    <string name="deck_counter_1">+1</string>
+    <string name="deck_counter_2">+2</string>
+    <string name="deck_counter_3">+3</string>
+    <string name="deck_counter_4">+4</string>
+
+</resources>

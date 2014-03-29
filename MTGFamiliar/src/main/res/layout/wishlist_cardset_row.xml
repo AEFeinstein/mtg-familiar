@@ -25,7 +25,7 @@
         android:layout_weight="1"
         android:gravity="right"
         android:maxLines="1"
-        android:text="@string/wishlist_default_price"
+        android:text="@string/default_price"
         style="@style/text.small"/>
 
 </LinearLayout>

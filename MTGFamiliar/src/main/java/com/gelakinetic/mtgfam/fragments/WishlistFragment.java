@@ -342,7 +342,7 @@ public class WishlistFragment extends FamiliarFragment {
 		sendIntent.setType("text/plain");
 
 		try {
-			startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_chooser_title)));
+			startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
 		} catch (android.content.ActivityNotFoundException ex) {
 			Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
 		}

@@ -73,19 +73,19 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
 			case RoundTimerFragment.TIMER_5_MIN_WARNING:
 				if (preferenceAdapter.getFiveMinutePref()) {
 					context.startService(new Intent(context, TtsService.class)
-							.putExtra(TEXT_TO_SPEAK, R.string.five_minutes_left));
+							.putExtra(TEXT_TO_SPEAK, R.string.timer_five_minutes_left));
 				}
 				break;
 			case RoundTimerFragment.TIMER_10_MIN_WARNING:
 				if (preferenceAdapter.getTenMinutePref()) {
 					context.startService(new Intent(context, TtsService.class)
-							.putExtra(TEXT_TO_SPEAK, R.string.ten_minutes_left));
+							.putExtra(TEXT_TO_SPEAK, R.string.timer_ten_minutes_left));
 				}
 				break;
 			case RoundTimerFragment.TIMER_15_MIN_WARNING:
 				if (preferenceAdapter.getFifteenMinutePref()) {
 					context.startService(new Intent(context, TtsService.class)
-							.putExtra(TEXT_TO_SPEAK, R.string.fifteen_minutes_left));
+							.putExtra(TEXT_TO_SPEAK, R.string.timer_fifteen_minutes_left));
 				}
 				break;
 			case RoundTimerFragment.TIMER_EASTER_EGG:
