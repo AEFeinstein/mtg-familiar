@@ -39,6 +39,12 @@ public class MoJhoStoFragment extends FamiliarFragment {
 	private static final int STONEHEWER_IMAGE = 3;
 	private static final int JHOIRA_IMAGE = 4;
 
+	/* Type constants */
+	private static final String EQUIPMENT = "equipment";
+	private static final String CREATURE = "creature";
+	private static final String INSTANT = "instant";
+	private static final String SORCERY = "sorcery";
+
 	/* UI Elements */
 	private Spinner mMomirCmcChoice;
 	private Spinner mStonehewerCmcChoice;
@@ -91,7 +97,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 			public void onClick(View v) {
 				try {
 					int cmc = Integer.parseInt((String) mMomirCmcChoice.getSelectedItem());
-					getOneSpell("creature", cmc);
+					getOneSpell(CREATURE, cmc);
 				} catch (NumberFormatException e) {
 					/* eat it */
 				}
@@ -102,7 +108,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 			public void onClick(View v) {
 				try {
 					int cmc = Integer.parseInt((String) mStonehewerCmcChoice.getSelectedItem());
-					getOneSpell("equipment", cmc);
+					getOneSpell(EQUIPMENT, cmc);
 				} catch (NumberFormatException e) {
 					/* eat it */
 				}
@@ -111,13 +117,13 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
 		myFragmentView.findViewById(R.id.jhorira_instant_button).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				getThreeSpells("instant");
+				getThreeSpells(INSTANT);
 			}
 		});
 
 		myFragmentView.findViewById(R.id.jhorira_sorcery_button).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				getThreeSpells("sorcery");
+				getThreeSpells(SORCERY);
 			}
 		});
 
@@ -284,12 +290,19 @@ public class MoJhoStoFragment extends FamiliarFragment {
 	 */
 	private void getOneSpell(String type, int cmc) {
 		try {
+			String logic = "=";
+			if (type.equals(EQUIPMENT)) {
+				logic = "<=";
+			}
 			String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
 			CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
 			Cursor permanents = mDbHelper.Search(null, null, type, "wubrgl", 0, null,
-					CardDbAdapter.NOONECARES, null, CardDbAdapter.NOONECARES, null, cmc, "=", null, null, null,
+					CardDbAdapter.NOONECARES, null, CardDbAdapter.NOONECARES, null, cmc, logic, null, null, null,
 					null, 0, 0, CardDbAdapter.MOSTRECENTPRINTING, false, returnTypes, true);
 
+			if(permanents.getCount() == 0) {
+				return;
+			}
 			int pos = mRandom.nextInt(permanents.getCount());
 			permanents.moveToPosition(pos);
 

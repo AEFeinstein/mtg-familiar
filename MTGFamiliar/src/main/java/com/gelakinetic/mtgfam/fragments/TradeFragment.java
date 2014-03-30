@@ -811,7 +811,7 @@ public class TradeFragment extends FamiliarFragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getActivity().getLayoutInflater().inflate(layoutResourceId, parent);
+				convertView = getActivity().getLayoutInflater().inflate(layoutResourceId, null);
 			}
 			MtgCard data = items.get(position);
 			if (data != null) {
