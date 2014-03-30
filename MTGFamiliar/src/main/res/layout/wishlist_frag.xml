@@ -61,7 +61,7 @@
         android:id="@+id/add_card"
         android:text="@string/wishlist_add_card"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="48dp"
         style="?android:attr/buttonBarButtonStyle"
         android:textStyle="bold"/>
 

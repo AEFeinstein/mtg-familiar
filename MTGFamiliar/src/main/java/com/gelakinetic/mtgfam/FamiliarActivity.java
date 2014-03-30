@@ -69,6 +69,7 @@ import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.RoundTimerFragment;
 import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
+import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
@@ -631,7 +632,7 @@ public class FamiliarActivity extends FragmentActivity {
 				break;
 			}
 			case R.string.main_trade: {
-				//TODO
+				newFrag = new TradeFragment();
 				break;
 			}
 			case R.string.main_wishlist: {

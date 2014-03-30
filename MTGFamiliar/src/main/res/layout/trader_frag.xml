@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        style="@style/forty_eight"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/numberInput"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="2"
+            android:selectAllOnFocus="true" />
+
+        <AutoCompleteTextView
+            android:id="@+id/namesearch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:hint="@string/search_name"
+            android:inputType="text">
+
+            <requestFocus/>
+        </AutoCompleteTextView>
+
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <CheckBox
+                android:id="@+id/trader_foil"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:button="@drawable/btn_check_holo_light_foil"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/addCardLeft"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/trader_add_card"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/drawer_divider_item"/>
+
+            <TextView
+                android:id="@+id/priceTextLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="@string/default_price"
+                style="@style/text.medium"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/drawer_divider_item"/>
+
+            <ListView
+                android:id="@+id/tradeListLeft"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="clip_horizontal"
+                tools:listitem="@layout/trader_row"
+                android:divider="@color/drawer_divider_item"
+                android:dividerHeight="1dp"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@color/drawer_divider_item"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/addCardRight"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/trader_add_card"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/drawer_divider_item"/>
+
+            <TextView
+                android:id="@+id/priceTextRight"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="@string/default_price"
+                style="@style/text.medium"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/drawer_divider_item"/>
+
+            <ListView
+                android:id="@+id/tradeListRight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="clip_horizontal"
+                tools:listitem="@layout/trader_row"
+                android:divider="@color/drawer_divider_item"
+                android:dividerHeight="1dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

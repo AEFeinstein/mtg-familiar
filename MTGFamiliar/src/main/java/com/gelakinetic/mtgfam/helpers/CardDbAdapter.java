@@ -99,9 +99,6 @@ public class CardDbAdapter {
 	public static final String KEY_FORMAT = "format";
 	public static final String KEY_LEGALITY = "legality";
 
-	public static final int LEFT = 0;
-	public static final int RIGHT = 1;
-
 	public static final String KEY_CATEGORY = "category";
 	public static final String KEY_SUBCATEGORY = "subcategory";
 	public static final String KEY_ENTRY = "entry";

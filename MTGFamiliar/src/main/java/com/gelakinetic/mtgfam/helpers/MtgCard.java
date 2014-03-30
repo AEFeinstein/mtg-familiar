@@ -50,10 +50,10 @@ public class MtgCard {
 	public int numberOf;
 	public int price; /* In cents */
 	public String message;
-	/* public boolean customPrice = false; default is false as all cards should first grab internet prices. */
+	public boolean customPrice = false; /* default is false as all cards should first grab internet prices. */
 	public boolean foil = false;
 
-	private static final String DELIMITER = "%";
+	public static final String DELIMITER = "%";
 
 	/**
 	 * Default constructor, doesn't leave null fields
@@ -107,10 +107,27 @@ public class MtgCard {
 
 	}
 
+	public MtgCard(String name, String tcgName, String setCode, int numberOf, int price, String message, String number, int rarity, boolean customPrice, boolean foil) {
+		this.name = name;
+		this.number = number;
+		this.setCode = setCode;
+		this.tcgName = tcgName;
+		this.numberOf = numberOf;
+		this.price = price;
+		this.message = message;
+		this.rarity = (char) rarity;
+		this.customPrice = customPrice;
+		this.foil = foil;
+	}
+
 	/* Prints a bunch of information about this card, predominantly to save it in a plaintext file */
 	public String toString() {
 		return this.name + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.number + DELIMITER +
 				((int) this.rarity) + DELIMITER + this.foil + '\n';
+	}
+
+	public String toString(int side) {
+		return side + DELIMITER + this.name + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.customPrice + DELIMITER + this.price + DELIMITER + this.foil + '\n';
 	}
 
 	/**
@@ -130,4 +147,11 @@ public class MtgCard {
 		}
 		return false;
 	}
-}
+
+	public String getPriceString() {
+		return String.format("$%d.%02d", this.price / 100, this.price % 100);
+	}
+
+	public boolean hasPrice() {
+		return this.message == null || this.message.length() == 0;
+	}}
