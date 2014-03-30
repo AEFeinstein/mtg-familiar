@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
@@ -52,8 +53,10 @@ public class MtgCard {
 	public String message;
 	public boolean customPrice = false; /* default is false as all cards should first grab internet prices. */
 	public boolean foil = false;
+	public int mSide;
 
-	public static final String DELIMITER = "%";
+	private static final String DELIMITER = "%";
+	public PriceInfo priceInfo;
 
 	/**
 	 * Default constructor, doesn't leave null fields
@@ -118,6 +121,35 @@ public class MtgCard {
 		this.rarity = (char) rarity;
 		this.customPrice = customPrice;
 		this.foil = foil;
+	}
+
+	public static MtgCard MtgCardFromTradeString(String line, Context context) throws FamiliarDbException {
+
+		MtgCard card = new MtgCard();
+		String[] parts = line.split(DELIMITER);
+
+		/* Parse these parts out of the string */
+		card.mSide = Integer.parseInt(parts[0]);
+		card.name = parts[1];
+		card.setCode = parts[2];
+		card.numberOf = Integer.parseInt(parts[3]);
+
+		/* These parts may not exist */
+		card.customPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
+		if(parts.length > 5) {
+			card.price = Integer.parseInt(parts[5]);
+		}
+		else {
+			card.price = 0;
+		}
+		card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
+
+		/* Defaults regardless */
+		CardDbAdapter mDbHelper = new CardDbAdapter(context);
+		card.tcgName = mDbHelper.getTCGname(card.setCode);
+		mDbHelper.close();
+		card.message = "loading";
+		return card;
 	}
 
 	/* Prints a bunch of information about this card, predominantly to save it in a plaintext file */

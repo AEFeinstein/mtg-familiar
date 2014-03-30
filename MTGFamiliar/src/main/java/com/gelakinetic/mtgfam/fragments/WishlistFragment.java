@@ -166,7 +166,7 @@ public class WishlistFragment extends FamiliarFragment {
 			CardDbAdapter adapter = new CardDbAdapter(getActivity());
 			Cursor cardCursor = adapter.fetchCardByName(card.name, CardDbAdapter.allData);
 			if (cardCursor.getCount() == 0) {
-				Toast.makeText(WishlistFragment.this.getActivity(), getString(R.string.wishlist_toast_no_card),
+				Toast.makeText(WishlistFragment.this.getActivity(), getString(R.string.toast_no_card),
 						Toast.LENGTH_LONG).show();
 				return;
 			}

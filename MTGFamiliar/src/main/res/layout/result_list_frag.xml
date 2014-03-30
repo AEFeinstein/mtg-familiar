@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/master_layout"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
@@ -10,6 +11,9 @@
         android:id="@+id/result_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:fastScrollEnabled="true"/>
+        android:fastScrollEnabled="true"
+        tools:listitem="@layout/result_list_card_row"
+        android:divider="@color/drawer_divider_item"
+        android:dividerHeight="1dp" />
 
 </LinearLayout>
