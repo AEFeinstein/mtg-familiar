@@ -195,7 +195,8 @@ public class LcPlayer {
 			mHandler.post(mLifePoisonCommitter);
 		}
 		else {
-			mHandler.postDelayed(mLifePoisonCommitter, 1000);
+			mHandler.postDelayed(mLifePoisonCommitter,
+					Integer.parseInt(mFragment.getFamiliarActivity().mPreferenceAdapter.getLifeTimer()));
 		}
 	}
 
@@ -762,7 +763,7 @@ public class LcPlayer {
 						@SuppressLint("CutPasteId")
 						final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
-						if(mReadoutTextView.getText() != null) {
+						if (mReadoutTextView.getText() != null) {
 							lifeInput.append(mReadoutTextView.getText());
 						}
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {

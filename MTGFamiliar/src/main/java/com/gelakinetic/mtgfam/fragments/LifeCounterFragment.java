@@ -74,7 +74,6 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	private int mListSizeWidth = -1;
 	private int mListSizeHeight = -1;
 
-
 	/* Keeping track of players, display state */
 	private final ArrayList<LcPlayer> mPlayers = new ArrayList<LcPlayer>();
 	private int mStatDisplaying = STAT_LIFE;

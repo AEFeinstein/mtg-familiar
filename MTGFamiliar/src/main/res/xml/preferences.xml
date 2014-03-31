@@ -158,6 +158,13 @@
                 android:key="displayMode"
                 android:defaultValue="0"/>
 
+            <ListPreference
+                android:defaultValue="1000"
+                android:entries="@array/life_timer_array_entries"
+                android:entryValues="@array/life_timer_array_values"
+                android:key="lifeTimer"
+                android:summary="@string/pref_life_timer_summary"
+                android:title="@string/pref_life_timer_title" />
         </PreferenceCategory>
 
     </PreferenceScreen>
