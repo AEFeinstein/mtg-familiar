@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_name"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            style="@style/text.medium" />
 
     </LinearLayout>
 
@@ -37,14 +37,14 @@
             android:layout_gravity="left"
             android:layout_weight="1"
             android:text="@string/search_set"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/text.small" />
 
         <TextView
             android:id="@+id/traderNumber"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/trader_default_number_of"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            style="@style/text.small"
             android:visibility="visible" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:gravity="right"
             android:maxLines="1"
             android:text="@string/default_price"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/text.small" />
 
     </LinearLayout>
 

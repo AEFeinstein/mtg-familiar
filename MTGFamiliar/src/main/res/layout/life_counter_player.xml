@@ -21,7 +21,6 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
               android:id="@+id/nplayer_row"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:gravity="center_vertical"
               android:orientation="vertical">
 
     <View
@@ -67,73 +66,90 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_marginTop="-10dp"/>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    style="?android:attr/buttonBarStyle"
+                    android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
 
                     <Button
+                        style="?android:attr/buttonBarButtonStyle"
                         android:id="@+id/player_plus1"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="@string/life_counter_plus_one"
-                        style="@style/text.medium"/>
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="@string/life_counter_plus_one"/>
 
                     <Button
+                        style="?android:attr/buttonBarButtonStyle"
                         android:id="@+id/player_plus5"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="@string/life_counter_plus_five"
-                        style="@style/text.medium" />
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="@string/life_counter_plus_five"/>
                 </LinearLayout>
 
-                <LinearLayout
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:background="@color/drawer_divider_item"/>
+                <!-- -1/-5 buttons -->
+
+                <LinearLayout
+                    style="?android:attr/buttonBarStyle"
+                    android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
 
                     <Button
                         android:id="@+id/player_minus1"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
                         android:text="@string/life_counter_minus_one"
-                        style="@style/text.medium"/>
+                        style="?android:attr/buttonBarButtonStyle"/>
 
                     <Button
                         android:id="@+id/player_minus5"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
                         android:text="@string/life_counter_minus_five"
-                        style="@style/text.medium"/>
+                        style="?android:attr/buttonBarButtonStyle"/>
                 </LinearLayout>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/commanderCastText"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/life_counter_commander_cast"
-                android:gravity="center"
-                style="@style/text.medium"/>
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/commanderCast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/mana_pool_zero"
-                style="@style/text.medium"/>
+                <TextView
+                    android:id="@+id/commanderCastText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/life_counter_commander_cast"
+                    android:gravity="center"
+                    style="@style/text.medium"/>
 
+                <Button
+                    android:id="@+id/commanderCast"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="@string/mana_pool_zero"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:background="@drawable/light_grey_border"
+                    android:visibility="visible"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

@@ -17,8 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:hint="@string/gathering_display_mode_title"
-            android:text="@string/gathering_display_mode_title"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:text="@string/gathering_display_mode_title"/>
 
         <Spinner
             style="@style/text.medium"

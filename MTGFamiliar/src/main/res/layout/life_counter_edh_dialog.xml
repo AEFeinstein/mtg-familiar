@@ -36,11 +36,17 @@
     </LinearLayout>
 
     <LinearLayout
-        style="@style/forty_eight"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:layout_width="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle">
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/commander_minus1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -48,6 +54,7 @@
             android:text="@string/life_counter_minus_one"/>
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/commander_plus1"
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -92,6 +92,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         </LinearLayout>
 
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:id="@+id/buttonLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -104,7 +105,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_minus_five"
-                style="@style/text.medium"/>
+                style="?android:attr/buttonBarButtonStyle"/>
 
             <Button
                 android:id="@+id/player_minus1"
@@ -112,7 +113,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_minus_one"
-                style="@style/text.medium"/>
+                style="?android:attr/buttonBarButtonStyle"/>
 
             <Button
                 android:id="@+id/player_plus1"
@@ -120,7 +121,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_plus_one"
-                style="@style/text.medium"/>
+                style="?android:attr/buttonBarButtonStyle"/>
 
             <Button
                 android:id="@+id/player_plus5"
@@ -128,7 +129,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_plus_five"
-                style="@style/text.medium"/>
+                style="?android:attr/buttonBarButtonStyle"/>
 
         </LinearLayout>
 
@@ -145,6 +146,8 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/mana_pool_zero"
-            style="@style/text.medium"/>
+            style="?android:attr/buttonBarButtonStyle"
+            android:background="@drawable/light_grey_border"
+            android:visibility="visible"/>
     </LinearLayout>
 </LinearLayout>

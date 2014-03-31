@@ -23,123 +23,112 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
               android:layout_height="fill_parent"
               android:gravity="center_vertical"
               android:orientation="vertical"
-              android:paddingBottom="2dp"
-              android:paddingLeft="5dp"
-              android:paddingRight="5dp"
-              android:paddingTop="0dp"
+              android:padding="5dp"
               android:weightSum="1">
+    <!-- Health and +/- buttons -->
+
+    <TextView
+        android:id="@+id/player_name"
+        style="@style/text.large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/life_counter_default_name"
+        android:layout_gravity="center"/>
+
+    <!-- +1/+5 buttons -->
+
+    <TextView
+        android:id="@+id/player_readout"
+        style="@style/text.xxxlarge"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:maxLines="1"
+        android:text="@string/life_counter_twenty"
+        android:layout_marginBottom="-10dp"
+        android:layout_marginTop="-10dp"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal"
-        android:paddingTop="2dp"
-        android:baselineAligned="false"> <!-- Health and +/- buttons -->
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight=".6"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="5dp"
-            android:paddingRight="5dp">
-
-            <TextView
-                android:id="@+id/player_name"
-                style="@style/text.large"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Player 1"/>
-
-            <!-- +1/+5 buttons -->
-
-            <TextView
-                android:id="@+id/player_readout"
-                style="@style/text.xxxlarge"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:maxLines="1"
-                android:text="@string/life_counter_twenty"
-                android:layout_marginBottom="-10dp"
-                android:layout_marginTop="-10dp"/>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    android:layout_weight="1">
-
-                    <Button
-                        android:id="@+id/player_plus1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/life_counter_plus_one"
-                        style="@style/text.medium"/>
-
-                    <Button
-                        android:id="@+id/player_plus5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/life_counter_plus_five"
-                        style="@style/text.medium"/>
-                </LinearLayout>
-
-                <!-- -1/-5 buttons -->
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:orientation="horizontal"
-                    android:layout_weight="1">
-
-                    <Button
-                        android:id="@+id/player_minus1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/life_counter_minus_one"
-                        style="@style/text.medium"/>
-
-                    <Button
-                        android:id="@+id/player_minus5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/life_counter_minus_five"
-                        style="@style/text.medium"/>
-                </LinearLayout>
-
-            </LinearLayout>
-            <!-- Health display -->
-
-            <TextView
-                android:id="@+id/commanderCastText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:text="@string/life_counter_commander_cast"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:visibility="gone"/>
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
 
             <Button
-                android:id="@+id/commanderCast"
-                android:layout_width="match_parent"
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/player_plus1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/mana_pool_zero"
-                style="@style/text.medium"
-                android:visibility="gone"/>
+                android:layout_weight="1"
+                android:text="@string/life_counter_plus_one"/>
 
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/player_plus5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/life_counter_plus_five"/>
         </LinearLayout>
-        <!-- History -->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="@color/drawer_divider_item"/>
+        <!-- -1/-5 buttons -->
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/player_minus1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/life_counter_minus_one"
+                style="?android:attr/buttonBarButtonStyle"/>
+
+            <Button
+                android:id="@+id/player_minus5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/life_counter_minus_five"
+                style="?android:attr/buttonBarButtonStyle"/>
+        </LinearLayout>
 
     </LinearLayout>
+    <!-- Health display -->
+
+    <TextView
+        android:id="@+id/commanderCastText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:text="@string/life_counter_commander_cast"
+        style="@style/text.medium"
+        android:layout_gravity="center"
+        android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/commanderCast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mana_pool_zero"
+        style="?android:attr/buttonBarButtonStyle"
+        android:background="@drawable/light_grey_border"
+        android:visibility="visible"/>
 
 </LinearLayout>

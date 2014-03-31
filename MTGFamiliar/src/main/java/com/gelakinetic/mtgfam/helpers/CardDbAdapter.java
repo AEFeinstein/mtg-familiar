@@ -1069,8 +1069,11 @@ public class CardDbAdapter {
 						+ format + "')";
 			}
 			else {
-				statement += " AND NOT " + KEY_SET + "= 'UNH' AND NOT "
-						+ KEY_SET + "= 'UG'";
+				statement += " AND NOT " + KEY_SET + "= 'UNH'" +
+						" AND NOT " + KEY_SET + "= 'UG'" +
+				" AND NOT " + KEY_SET + "= 'ARS'" +
+				" AND NOT " + KEY_SET + "= 'PCP'" +
+				" AND NOT " + KEY_SET + "= 'PP2'";
 			}
 			statement += " AND NOT EXISTS (SELECT * FROM "
 					+ DATABASE_TABLE_BANNED_CARDS + " WHERE "

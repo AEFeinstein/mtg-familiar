@@ -18,7 +18,7 @@
           android:id="@+id/text1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:textAppearance="?android:attr/textAppearanceListItemSmall"
+          style="@style/text.small"
           android:gravity="center_vertical"
           android:minHeight="?android:attr/listPreferredItemHeightSmall"
           android:paddingStart="14.5dp"
