@@ -205,20 +205,12 @@ public class DbUpdaterService extends IntentService {
 		}
 
 		/* Parse the MTR and IPG */
-
-		boolean mtrUpdated = false;
-		long lastMTRUpdate = mPrefAdapter.getLastMTRUpdate();
-		MTRIPGParser mtrParser = new MTRIPGParser(new Date(lastMTRUpdate), this);
-		if (mtrParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MTR_IPG_MODE.MODE_MTR)) {
-			mtrUpdated = true;
+		MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);
+		if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR)) {
 			updatedStuff.add(getString(R.string.update_added_mtr));
 		}
 
-		boolean ipgUpdated = false;
-		long lastIPGUpdate = mPrefAdapter.getLastIPGUpdate();
-		MTRIPGParser ipgParser = new MTRIPGParser(new Date(lastIPGUpdate), this);
-		if (ipgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MTR_IPG_MODE.MODE_IPG)) {
-			ipgUpdated = true;
+		if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG)) {
 			updatedStuff.add(getString(R.string.update_added_ipg));
 		}
 
@@ -232,12 +224,6 @@ public class DbUpdaterService extends IntentService {
 			mPrefAdapter.setLastLegalityUpdate((int) (curTime / 1000));
 			if (newRulesParsed) {
 				mPrefAdapter.setLastRulesUpdate(curTime);
-			}
-			if (mtrUpdated) {
-				mPrefAdapter.setLastMTRUpdate(curTime);
-			}
-			if (ipgUpdated) {
-				mPrefAdapter.setLastIPGUpdate(curTime);
 			}
 		}
 	}

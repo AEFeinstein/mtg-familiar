@@ -189,7 +189,7 @@ public class PreferenceAdapter {
 
 	//Last MTR update
 	public synchronized long getLastMTRUpdate() {
-		return this.prefs.getLong(LAST_MTR_UPDATE, BuildDate.get(this.context).getTime());
+		return this.prefs.getLong(LAST_MTR_UPDATE, 0);
 	}
 
 	public synchronized void setLastMTRUpdate(long lastMTRUpdate) {
@@ -199,7 +199,7 @@ public class PreferenceAdapter {
 
 	//Last IPG update
 	public synchronized long getLastIPGUpdate() {
-		return this.prefs.getLong(LAST_IPG_UPDATE, BuildDate.get(this.context).getTime());
+		return this.prefs.getLong(LAST_IPG_UPDATE, 0);
 	}
 
 	public synchronized void setLastIPGUpdate(long lastIPGUpdate) {
