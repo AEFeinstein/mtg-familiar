@@ -268,7 +268,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="trader_clear_dialog_title">Clear Trade</string>
     <string name="trader_clear_dialog_text">Are you sure you want to clear the current trade?</string>
     <string name="trader_save_dialog_title">Save Trade</string>
-    <string name="trader_save_dialog_text">Enter the trade\'s name</string>
     <string name="trader_select_dialog_title">Select a Trade</string>
     <string name="trader_delete_dialog_title">Delete a Trade</string>
     <string name="trader_edit_dialog_info">Card Info</string>

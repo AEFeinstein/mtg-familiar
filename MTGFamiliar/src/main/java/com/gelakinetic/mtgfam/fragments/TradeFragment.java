@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager.LayoutParams;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -32,7 +32,6 @@ import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.TradeListHelpers;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -201,7 +200,7 @@ public class TradeFragment extends FamiliarFragment {
 			setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
 			tcgName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER));
 			cardNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-			if (foil && !TradeListHelpers.canBeFoil(setCode, mDbHelper)) {
+			if (foil && !mDbHelper.canBeFoil(setCode)) {
 				foil = false;
 			}
 
@@ -398,8 +397,8 @@ public class TradeFragment extends FamiliarFragment {
 										lSide.get(positionForDialog).foil = foilCheckbox.isChecked();
 										try {
 											CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-											if (lSide.get(positionForDialog).foil && !TradeListHelpers.canBeFoil(
-													lSide.get(positionForDialog).setCode, mDbHelper)) {
+											if (lSide.get(positionForDialog).foil && !mDbHelper.canBeFoil(
+													lSide.get(positionForDialog).setCode)) {
 												lSide.get(positionForDialog).foil = false;
 											}
 											mDbHelper.close();
@@ -545,40 +544,51 @@ public class TradeFragment extends FamiliarFragment {
 										}
 								).create();
 					}
-					case DIALOG_SAVE_TRADE: { // TODO clean from here
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-
-						builder.setTitle(R.string.trader_save_dialog_title);
-						builder.setMessage(R.string.trader_save_dialog_text);
-
-						/* Set an EditText view to get user input */
-						final EditText input = new EditText(this.getActivity());
-						input.setText(mCurrentTrade);
-						input.setSingleLine(true);
-						builder.setView(input);
-
-						builder.setPositiveButton(R.string.dialog_save, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								String tradeName = input.getText().toString();
-
-								String FILENAME = tradeName + TRADE_EXTENSION;
-								SaveTrade(FILENAME);
-
-								mCurrentTrade = tradeName;
+					case DIALOG_SAVE_TRADE: {
+						/* Inflate a view to type in the trade's name, and show it in an AlertDialog */
+						View textEntryView = getActivity().getLayoutInflater()
+								.inflate(R.layout.alert_dialog_text_entry, null);
+						assert textEntryView != null;
+						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+						nameInput.append(mCurrentTrade);
+						/* Set the button to clear the text field */
+						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								nameInput.setText("");
 							}
 						});
 
-						builder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								/* Canceled. */
-							}
-						});
+						Dialog dialog = new AlertDialog.Builder(getActivity())
+								.setTitle(R.string.trader_save_dialog_title)
+								.setView(textEntryView)
+								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int whichButton) {
+										if (nameInput.getText() == null) {
+											return;
+										}
+										String tradeName = nameInput.getText().toString();
 
-						Dialog dialog = builder.create();
-						dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+										/* Don't bother saving if there is no name */
+										if (tradeName.length() == 0 || tradeName.equals("")) {
+											return;
+										}
+
+										SaveTrade(tradeName + TRADE_EXTENSION);
+										mCurrentTrade = tradeName;
+									}
+								})
+								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int whichButton) {
+										dialog.dismiss();
+									}
+								})
+								.create();
+						dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 						return dialog;
 					}
 					case DIALOG_LOAD_TRADE: {
+						/* Find all the trade files */
 						String[] files = this.getActivity().fileList();
 						ArrayList<String> validFiles = new ArrayList<String>();
 						for (String fileName : files) {
@@ -587,40 +597,42 @@ public class TradeFragment extends FamiliarFragment {
 							}
 						}
 
-						Dialog dialog;
+						/* If there are no files, don't show the dialog */
 						if (validFiles.size() == 0) {
 							Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG).show();
 							setShowsDialog(false);
 							return null;
 						}
 
+						/* Make an array of the trade file names */
 						final String[] tradeNames = new String[validFiles.size()];
 						validFiles.toArray(tradeNames);
 
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-						builder.setTitle(R.string.trader_select_dialog_title);
-						builder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int whichButton) {
-								/* Canceled. */
-							}
-						});
-						builder.setItems(tradeNames, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface di, int which) {
+						return new AlertDialog.Builder(this.getActivity())
+								.setTitle(R.string.trader_select_dialog_title)
+								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int whichButton) {
+										/* Canceled. */
+										dialog.dismiss();
+									}
+								})
+								.setItems(tradeNames, new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface di, int which) {
+										/* Load the trade, set the current trade name */
+										LoadTrade(tradeNames[which] + TRADE_EXTENSION);
+										mCurrentTrade = tradeNames[which];
 
-								LoadTrade(tradeNames[which] + TRADE_EXTENSION);
-
-								mCurrentTrade = tradeNames[which];
-
-								mLeftAdapter.notifyDataSetChanged();
-								mRightAdapter.notifyDataSetChanged();
-							}
-						});
-
-						dialog = builder.create();
-						return dialog;
+										/* Alert things to update */
+										mLeftAdapter.notifyDataSetChanged();
+										mRightAdapter.notifyDataSetChanged();
+										UpdateTotalPrices(BOTH);
+									}
+								})
+								.create();
 					}
 					case DIALOG_DELETE_TRADE: {
-						String[] files = getActivity().fileList();
+						/* Find all the trade files */
+						String[] files = this.getActivity().fileList();
 						ArrayList<String> validFiles = new ArrayList<String>();
 						for (String fileName : files) {
 							if (fileName.endsWith(TRADE_EXTENSION)) {
@@ -628,25 +640,28 @@ public class TradeFragment extends FamiliarFragment {
 							}
 						}
 
+						/* If there are no files, don't show the dialog */
 						if (validFiles.size() == 0) {
 							Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG).show();
 							setShowsDialog(false);
 							return null;
 						}
 
-						final String[] tradeNamesD = new String[validFiles.size()];
-						validFiles.toArray(tradeNamesD);
+						/* Make an array of the trade file names */
+						final String[] tradeNames = new String[validFiles.size()];
+						validFiles.toArray(tradeNames);
 
 						return new AlertDialog.Builder(this.getActivity())
 								.setTitle(R.string.trader_delete_dialog_title)
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
 										/* Canceled. */
+										dialog.dismiss();
 									}
 								})
-								.setItems(tradeNamesD, new DialogInterface.OnClickListener() {
+								.setItems(tradeNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface di, int which) {
-										File toDelete = new File(getActivity().getFilesDir(), tradeNamesD[which] + TRADE_EXTENSION);
+										File toDelete = new File(getActivity().getFilesDir(), tradeNames[which] + TRADE_EXTENSION);
 										toDelete.delete();
 									}
 								})
@@ -658,18 +673,23 @@ public class TradeFragment extends FamiliarFragment {
 								.setMessage(R.string.trader_clear_dialog_text)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int which) {
+										/* Clear the arrays and tell everything to update */
 										mRightList.clear();
-										mRightAdapter.notifyDataSetChanged();
 										mLeftList.clear();
+										mRightAdapter.notifyDataSetChanged();
 										mLeftAdapter.notifyDataSetChanged();
 										UpdateTotalPrices(BOTH);
 										dialog.dismiss();
 									}
-								}).setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+								})
+								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int which) {
+										/* Canceled */
 										dialog.dismiss();
 									}
-								}).setCancelable(true).create();
+								})
+								.setCancelable(true)
+								.create();
 					}
 					default: {
 						setShowsDialog(false);
@@ -681,10 +701,7 @@ public class TradeFragment extends FamiliarFragment {
 		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
 	}
 
-	/**
-	 * @param _tradeName
-	 */
-	protected void SaveTrade(String _tradeName) {
+	protected void SaveTrade(String _tradeName) { // TODO clean from here
 		FileOutputStream fos;
 
 		try {

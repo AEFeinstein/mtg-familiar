@@ -206,7 +206,7 @@ public class WishlistHelpers {
 
 			/* If this card has a foil version, add that too */
 			View wishlistRowFoil = null;
-			if (TradeListHelpers.canBeFoil(setCode, adapter)) {
+			if (adapter.canBeFoil(setCode)) {
 				wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
 						null);
 				assert wishlistRowFoil != null;

@@ -34,7 +34,6 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.TradeListHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.IndividualSetInfo;
@@ -183,7 +182,7 @@ public class WishlistFragment extends FamiliarFragment {
 			card.tcgName = adapter.getTCGname(card.setCode);
 
 			/* Override choice if the card can't be foil */
-			if (!TradeListHelpers.canBeFoil(card.setCode, adapter)) {
+			if (!adapter.canBeFoil(card.setCode)) {
 				card.foil = false;
 			}
 			/* Clean up */

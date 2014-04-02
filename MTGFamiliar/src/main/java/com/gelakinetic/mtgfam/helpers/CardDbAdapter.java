@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 
@@ -1977,5 +1978,17 @@ public class CardDbAdapter {
 			}
 		}
 		return NOPE;
+	}
+
+	public boolean canBeFoil(String setCode) throws FamiliarDbException {
+		String[] extraSets = {"UNH", "US", "UL", "UD", "P3", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
+		ArrayList<String> nonModernLegalSets = new ArrayList<String>(Arrays.asList(extraSets));
+		for (String value : nonModernLegalSets) {
+			if (value.equals(setCode)) {
+				return true;
+			}
+		}
+
+		return this.isModernLegalSet(setCode);
 	}
 }
