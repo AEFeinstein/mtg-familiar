@@ -17,7 +17,6 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -50,119 +49,140 @@ import java.util.Set;
 
 public class TradeFragment extends FamiliarFragment {
 
-	/* CONSTANTS */
+	/* Price Constants */
 	private static final int LOW_PRICE = 0;
 	private static final int AVG_PRICE = 1;
 	private static final int HIGH_PRICE = 2;
 	private static final int FOIL_PRICE = 3;
 
+	/* Side Constants */
 	private static final int LEFT = 0;
 	private static final int RIGHT = 1;
 	private static final int BOTH = 2;
 
-	private final static int DIALOG_UPDATE_CARD = 1;
-	private final static int DIALOG_PRICE_SETTING = 2;
-	private final static int DIALOG_SAVE_TRADE = 3;
-	private final static int DIALOG_LOAD_TRADE = 4;
-	private final static int DIALOG_DELETE_TRADE = 5;
-	private final static int DIALOG_CONFIRMATION = 6;
+	/* Dialog Constants */
+	private static final int DIALOG_UPDATE_CARD = 1;
+	private static final int DIALOG_PRICE_SETTING = 2;
+	private static final int DIALOG_SAVE_TRADE = 3;
+	private static final int DIALOG_LOAD_TRADE = 4;
+	private static final int DIALOG_DELETE_TRADE = 5;
+	private static final int DIALOG_CONFIRMATION = 6;
+	private static final int DIALOG_CHANGE_SET = 7;
 
+	/* Save file constants */
 	private static final String AUTOSAVE_NAME = "autosave";
 	private static final String TRADE_EXTENSION = ".trade";
 
 	/* Trade information */
-	private TextView tradePriceLeft;
-	private TradeListAdapter aaTradeLeft;
-	private ArrayList<MtgCard> lTradeLeft;
-	private TextView tradePriceRight;
-	private TradeListAdapter aaTradeRight;
-	private ArrayList<MtgCard> lTradeRight;
+	private TextView mTotalPriceLeft;
+	private TradeListAdapter mLeftAdapter;
+	private ArrayList<MtgCard> mLeftList;
+	private TextView mTotalPriceRight;
+	private TradeListAdapter mRightAdapter;
+	private ArrayList<MtgCard> mRightList;
 
 	/* UI Elements */
 	private AutoCompleteTextView mNameEditText;
 	private EditText mNumberEditText;
 	private CheckBox mCheckboxFoil;
 
-	/* TODO sort */
-	private int sideForDialog = LEFT;
-	private int positionForDialog;
-	private int priceSetting;
-	private String currentTrade = "";
-	private boolean doneLoading = false;
+	/* Settings */
+	private int mPriceSetting;
+	private String mCurrentTrade = "";
 
+	/**
+	 * Initialize the view and set up the button actions
+	 *
+	 * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+	 * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
+	 *                           fragment should not add the view itself, but this can be used to generate the
+	 *                           LayoutParams of the view.
+	 * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
+	 *                           here.
+	 * @return The inflated view
+	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
 
+		/* Inflate the view, pull out UI elements */
+		View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
 		assert myFragmentView != null;
 		mNameEditText = (AutoCompleteTextView) myFragmentView.findViewById(R.id.namesearch);
-		mNameEditText.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameEditText));
-
 		mNumberEditText = (EditText) myFragmentView.findViewById(R.id.numberInput);
+		mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.trader_foil);
+		mTotalPriceRight = (TextView) myFragmentView.findViewById(R.id.priceTextRight);
+		mTotalPriceLeft = (TextView) myFragmentView.findViewById(R.id.priceTextLeft);
+
+		/* Set the autocomplete adapter, default number */
+		mNameEditText.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME},
+				new int[]{R.id.text1}, mNameEditText));
 		mNumberEditText.setText("1");
 
-		mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.trader_foil);
-
-		lTradeLeft = new ArrayList<MtgCard>();
-		Button bAddTradeLeft = (Button) myFragmentView.findViewById(R.id.addCardLeft);
-		tradePriceLeft = (TextView) myFragmentView.findViewById(R.id.priceTextLeft);
+		/* Initialize the left list */
+		mLeftList = new ArrayList<MtgCard>();
+		mLeftAdapter = new TradeListAdapter(this.getActivity(), R.layout.trader_row, mLeftList);
 		ListView lvTradeLeft = (ListView) myFragmentView.findViewById(R.id.tradeListLeft);
-		aaTradeLeft = new TradeListAdapter(this.getActivity(), R.layout.trader_row, lTradeLeft);
-		lvTradeLeft.setAdapter(aaTradeLeft);
+		lvTradeLeft.setAdapter(mLeftAdapter);
+		lvTradeLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				showDialog(DIALOG_UPDATE_CARD, LEFT, arg2);
+			}
+		});
 
-		lTradeRight = new ArrayList<MtgCard>();
-		Button bAddTradeRight = (Button) myFragmentView.findViewById(R.id.addCardRight);
-		tradePriceRight = (TextView) myFragmentView.findViewById(R.id.priceTextRight);
+		/* Initialize the right list */
+		mRightList = new ArrayList<MtgCard>();
+		mRightAdapter = new TradeListAdapter(this.getActivity(), R.layout.trader_row, mRightList);
 		ListView lvTradeRight = (ListView) myFragmentView.findViewById(R.id.tradeListRight);
-		aaTradeRight = new TradeListAdapter(this.getActivity(), R.layout.trader_row, lTradeRight);
-		lvTradeRight.setAdapter(aaTradeRight);
+		lvTradeRight.setAdapter(mRightAdapter);
+		lvTradeRight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				showDialog(DIALOG_UPDATE_CARD, RIGHT, arg2);
+			}
+		});
 
-		bAddTradeLeft.setOnClickListener(new View.OnClickListener() {
+		/* Set the buttons to add cards to the left or right */
+		myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				addCardToTrade(LEFT);
 			}
 		});
-
-		bAddTradeRight.setOnClickListener(new View.OnClickListener() {
+		myFragmentView.findViewById(R.id.addCardRight).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				addCardToTrade(RIGHT);
 			}
 		});
 
-		lvTradeLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				sideForDialog = LEFT;
-				positionForDialog = arg2;
-				showDialog(DIALOG_UPDATE_CARD);
-			}
-		});
-		lvTradeRight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				sideForDialog = RIGHT;
-				positionForDialog = arg2;
-				showDialog(DIALOG_UPDATE_CARD);
-			}
-		});
-
+		/* Return the view */
 		return myFragmentView;
 	}
 
 	/**
-	 * @param side
+	 * This helper method adds a card to a side of the wishlist from the user input
+	 *
+	 * @param side RIGHT or LEFT, depending on which side to add the card to
 	 */
 	private void addCardToTrade(int side) {
+		/* Make sure there is something to add */
+		if (mNameEditText.getText() == null || mNumberEditText.getText() == null) {
+			return;
+		}
+
+		/* Get the card info from the UI */
 		String cardName, setCode, tcgName, cardNumber;
 		cardName = mNameEditText.getText().toString();
 		String numberOfFromField = mNumberEditText.getText().toString();
 		boolean foil = mCheckboxFoil.isChecked();
 
-		if (cardName == null || cardName.equals("") || numberOfFromField == null || numberOfFromField.equals("")) {
+		/* Make sure it isn't the empty string */
+		if (cardName.equals("") || numberOfFromField.equals("")) {
 			return;
 		}
 
+		/* Parse the int after the "" check */
 		int numberOf = Integer.parseInt(numberOfFromField);
 
 		try {
+			/* Get the rest of the relevant card info from the database */
 			CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
 			Cursor cardCursor = mDbHelper.fetchCardByName(cardName, new String[]{
 					CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
@@ -170,11 +190,14 @@ public class TradeFragment extends FamiliarFragment {
 					CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
 					CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER});
 
+			/* Make sure there was a database hit */
 			if (cardCursor.getCount() == 0) {
-				Toast.makeText(TradeFragment.this.getActivity(), getString(R.string.toast_no_card),
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(TradeFragment.this.getActivity(), getString(R.string.toast_no_card), Toast.LENGTH_LONG)
+						.show();
 				return;
 			}
+
+			/* Read the information from the cursor, check if the card can be foil */
 			setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
 			tcgName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER));
 			cardNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
@@ -182,70 +205,67 @@ public class TradeFragment extends FamiliarFragment {
 				foil = false;
 			}
 
+			/* Clean up */
 			cardCursor.close();
 			mDbHelper.close();
 
-			final MtgCard data = new MtgCard(cardName, tcgName, setCode, numberOf, 0, "loading", cardNumber, '-', false, foil);
-
+			/* Create the card, add it to a list, start a price fetch */
+			MtgCard data = new MtgCard(cardName, tcgName, setCode, numberOf, 0, getString(R.string.wishlist_loading),
+					cardNumber, '-', false, foil);
 			switch (side) {
 				case LEFT: {
-					lTradeLeft.add(0, data);
-					aaTradeLeft.notifyDataSetChanged();
-					loadPrice(data, aaTradeLeft);
+					mLeftList.add(0, data);
+					mLeftAdapter.notifyDataSetChanged();
+					loadPrice(data, mLeftAdapter);
 					break;
 				}
 				case RIGHT: {
-					lTradeRight.add(0, data);
-					aaTradeRight.notifyDataSetChanged();
-					loadPrice(data, aaTradeRight);
+					mRightList.add(0, data);
+					mRightAdapter.notifyDataSetChanged();
+					loadPrice(data, mRightAdapter);
 					break;
 				}
 			}
 
+			/* Return the input fields to defaults */
 			mNameEditText.setText("");
 			mNumberEditText.setText("1");
 			mCheckboxFoil.setChecked(false);
 
 		} catch (FamiliarDbException e) {
+			/* Something went wrong, but it's not worth quitting */
 			handleFamiliarDbException(false);
 		}
 	}
 
 	/**
-	 * TODO
+	 * When the fragment resumes, get the price preference again and attempt to load the autosave trade
 	 */
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		priceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
-
-		try {
-			// Test to see if the autosave file exist, then load the trade it if does.
-			this.getActivity().openFileInput(AUTOSAVE_NAME + TRADE_EXTENSION);
-			LoadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
-		} catch (FileNotFoundException e) {
-			// Do nothing if the file doesn't exist, but mark it as loaded otherwise prices won't update
-			doneLoading = true;
-		}
+		mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
+		/* Try to load the autosave trade, the function will handle FileNotFoundException */
+		LoadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
 	}
 
 	/**
-	 * TODO
+	 * WHen the fragment pauses, save the trade and cancel all pending price requests
 	 */
 	@Override
 	public void onPause() {
 		super.onPause();
 		SaveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
-		getFamiliarActivity().mSpiceManager.cancelAllRequests();
 	}
 
 	/**
 	 * Remove any showing dialogs, and show the requested one
 	 *
-	 * @param id the ID of the dialog to show
+	 * @param id                The ID of the dialog to show
+	 * @param sideForDialog     If this is for a specific card, this is the side of the trade the card lives in.
+	 * @param positionForDialog If this is for a specific card, this is the position of the card in the list.
 	 */
-	void showDialog(final int id) {
+	void showDialog(final int id, final int sideForDialog, final int positionForDialog) {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -261,62 +281,63 @@ public class TradeFragment extends FamiliarFragment {
 
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
-				setShowsDialog(true); // We're setting this to false if we return null, so we should reset it every time to be safe
+				/* We're setting this to false if we return null, so we should reset it every time to be safe */
+				setShowsDialog(true);
 				switch (id) {
 					case DIALOG_UPDATE_CARD: {
-						final int position = positionForDialog;
-						final int side = sideForDialog;
-						final ArrayList<MtgCard> lSide = (sideForDialog == LEFT ? lTradeLeft : lTradeRight);
-						final TradeListAdapter aaSide = (sideForDialog == LEFT ? aaTradeLeft : aaTradeRight);
-						final int numberOfCards = lSide.get(position).numberOf;
-						final String priceOfCard = lSide.get(position).getPriceString();
-						final boolean foil = lSide.get(position).foil;
+						/* Get some final references */
+						final ArrayList<MtgCard> lSide = (sideForDialog == LEFT ? mLeftList : mRightList);
+						final TradeListAdapter aaSide = (sideForDialog == LEFT ? mLeftAdapter : mRightAdapter);
+						final boolean foil = lSide.get(positionForDialog).foil;
 
+						/* Inflate the view and pull out UI elements */
 						View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog, null);
-						Button removeAll = (Button) view.findViewById(R.id.traderDialogRemove);
-						Button resetPrice = (Button) view.findViewById(R.id.traderDialogResetPrice);
-						Button info = (Button) view.findViewById(R.id.traderDialogInfo);
-						Button changeSet = (Button) view.findViewById(R.id.traderDialogChangeSet);
-						final CheckBox foilbtn = (CheckBox) view.findViewById(R.id.traderDialogFoil);
+						assert view != null;
+						final CheckBox foilCheckbox = (CheckBox) view.findViewById(R.id.traderDialogFoil);
 						final EditText numberOf = (EditText) view.findViewById(R.id.traderDialogNumber);
 						final EditText priceText = (EditText) view.findViewById(R.id.traderDialogPrice);
 
-						String numberOfStr = String.valueOf(numberOfCards);
+						/* Set initial values */
+						String numberOfStr = String.valueOf(lSide.get(positionForDialog).numberOf);
 						numberOf.setText(numberOfStr);
 						numberOf.setSelection(numberOfStr.length());
-						foilbtn.setChecked(foil);
-
-						final String priceNumberStr = lSide.get(position).hasPrice() ? priceOfCard.substring(1) : "";
+						foilCheckbox.setChecked(foil);
+						final String priceNumberStr = lSide.get(positionForDialog).hasPrice() ?
+								lSide.get(positionForDialog).getPriceString().substring(1) : "";
 						priceText.setText(priceNumberStr);
 						priceText.setSelection(priceNumberStr.length());
 
-						removeAll.setOnClickListener(new OnClickListener() {
+						/* Set up the button to remove this card from the trade */
+						view.findViewById(R.id.traderDialogRemove).setOnClickListener(new OnClickListener() {
 							public void onClick(View v) {
-								lSide.remove(position);
+								lSide.remove(positionForDialog);
 								aaSide.notifyDataSetChanged();
-								UpdateTotalPrices(side);
+								UpdateTotalPrices(sideForDialog);
 								removeDialog(getFragmentManager());
 							}
 						});
 
-						if (!lSide.get(position).customPrice) {
-							resetPrice.setVisibility(View.GONE);
+						/* If this has a custom price, show the button to default the price */
+						if (!lSide.get(positionForDialog).customPrice) {
+							view.findViewById(R.id.traderDialogResetPrice).setVisibility(View.GONE);
 						}
 						else {
-							resetPrice.setOnClickListener(new OnClickListener() {
+							view.findViewById(R.id.traderDialogResetPrice).setOnClickListener(new OnClickListener() {
 
 								@Override
 								public void onClick(View v) {
-									lSide.get(position).customPrice = false;
-									loadPrice(lSide.get(position), aaSide);
+									lSide.get(positionForDialog).customPrice = false;
+									priceText.setText("TODO"); // TODO avoid query, set correct price string
+									loadPrice(lSide.get(positionForDialog), aaSide);
+
 									aaSide.notifyDataSetChanged();
-									UpdateTotalPrices(side);
-									removeDialog(getFragmentManager());
+									UpdateTotalPrices(sideForDialog);
 								}
 							});
 						}
 
-						info.setOnClickListener(new OnClickListener() {
+						/* Set up the button to show info about this card */
+						view.findViewById(R.id.traderDialogInfo).setOnClickListener(new OnClickListener() {
 
 							@Override
 							public void onClick(View v) {
@@ -324,120 +345,100 @@ public class TradeFragment extends FamiliarFragment {
 									Bundle args = new Bundle();
 									/* Get the card ID, and send it to a new CardViewFragment */
 									CardDbAdapter adapter = new CardDbAdapter(getActivity());
-									Cursor cursor = adapter.fetchCardByNameAndSet(lSide.get(position).name, lSide.get(position).setCode, new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID});
-									args.putLong(CardViewFragment.CARD_ID, cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID)));
-									CardViewFragment cvFrag = new CardViewFragment();
-									TradeFragment.this.startNewFragment(cvFrag, args);
+									Cursor cursor = adapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
+											lSide.get(positionForDialog).setCode, new String[]{
+													CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}
+									);
+									args.putLong(CardViewFragment.CARD_ID, cursor.getLong(
+											cursor.getColumnIndex(CardDbAdapter.KEY_ID)));
 									cursor.close();
 									adapter.close();
+									CardViewFragment cvFrag = new CardViewFragment();
+									TradeFragment.this.startNewFragment(cvFrag, args);
 								} catch (FamiliarDbException e) {
 									TradeFragment.this.handleFamiliarDbException(false);
 								}
 							}
 						});
 
-						changeSet.setOnClickListener(new OnClickListener() {
+						/* Set up the button to change the set of this card */
+						view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(new OnClickListener() {
 							public void onClick(View v) {
-								removeDialog(getFragmentManager());
-								try {
-									MtgCard data = (side == LEFT ? lTradeLeft.get(position) : lTradeRight.get(position));
-									String name = data.name;
-
-									CardDbAdapter mDbHelper = new CardDbAdapter(TradeFragment.this.getActivity());
-									Cursor cards = mDbHelper.fetchCardByName(name, new String[]{CardDbAdapter.KEY_SET});
-									Set<String> sets = new LinkedHashSet<String>();
-									Set<String> setCodes = new LinkedHashSet<String>();
-									while (!cards.isAfterLast()) {
-										if (sets.add(mDbHelper.getTCGname(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET))))) {
-											setCodes.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)));
-										}
-										cards.moveToNext();
-									}
-									cards.close();
-									mDbHelper.close();
-
-									final String[] aSets = sets.toArray(new String[sets.size()]);
-									final String[] aSetCodes = setCodes.toArray(new String[setCodes.size()]);
-									AlertDialog.Builder builder = new AlertDialog.Builder(TradeFragment.this.getActivity());
-									builder.setTitle(R.string.card_view_set_dialog_title);
-									builder.setItems(aSets, new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialogInterface, int item) {
-											if (side == LEFT) {
-												lTradeLeft.get(position).setCode = (aSetCodes[item]);
-												lTradeLeft.get(position).tcgName = (aSets[item]);
-												lTradeLeft.get(position).message = ("loading");
-												aaTradeLeft.notifyDataSetChanged();
-												loadPrice(lTradeLeft.get(position), aaTradeLeft);
-											}
-											else if (side == RIGHT) {
-												lTradeRight.get(position).setCode = (aSetCodes[item]);
-												lTradeRight.get(position).tcgName = (aSets[item]);
-												lTradeRight.get(position).message = ("loading");
-												aaTradeRight.notifyDataSetChanged();
-												loadPrice(lTradeRight.get(position), aaTradeRight);
-											}
-										}
-									});
-									builder.create().show();
-								} catch (FamiliarDbException e) {
-									handleFamiliarDbException(true);
-								}
+								showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
 							}
 						});
 
 						return new AlertDialog.Builder(this.getActivity())
-								.setTitle(lSide.get(position).name)
+								.setTitle(lSide.get(positionForDialog).name)
 								.setView(view)
 								.setPositiveButton(R.string.dialog_done, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
-										// validate number of cards text
+										/* validate number of cards text */
 										if (numberOf.length() == 0) {
 											return;
 										}
 
-										// validate the price text
+										/* validate the price text */
+										assert priceText.getText() != null;
 										String userInputPrice = priceText.getText().toString();
 
+										/* Check if the user hand-modified the price */
 										if (!userInputPrice.equals(priceNumberStr)) {
-											lSide.get(position).customPrice = true;
+											lSide.get(positionForDialog).customPrice = true;
 										}
 
-										//Hack to regrab price, if the set price is blank.
+										/* If the input price is blank, reset it */
 										if (userInputPrice.length() == 0) {
-											lSide.get(position).customPrice = false;
-											loadPrice(lSide.get(position), aaSide);
+											lSide.get(positionForDialog).customPrice = false;
+											loadPrice(lSide.get(positionForDialog), aaSide); // TODO avoid a query?
 										}
 
-										lSide.get(position).foil = foilbtn.isChecked();
+										/* Set this card's foil option, then make sure it can be foil */
+										lSide.get(positionForDialog).foil = foilCheckbox.isChecked();
 										try {
 											CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-											if (lSide.get(position).foil && !TradeListHelpers.canBeFoil(lSide.get(position).setCode, mDbHelper)) {
-												lSide.get(position).foil = false;
+											if (lSide.get(positionForDialog).foil && !TradeListHelpers.canBeFoil(
+													lSide.get(positionForDialog).setCode, mDbHelper)) {
+												lSide.get(positionForDialog).foil = false;
 											}
 											mDbHelper.close();
 										} catch (FamiliarDbException e) {
-											/* eat it */
-										}
-										if (foil != foilbtn.isChecked()) {
-											loadPrice(lSide.get(position), aaSide);
+											/* I guess it is foil after all */
 										}
 
+										/* If this card changed foil value, and it doesn't have a custom price,
+										 * reload the price. */
+										if (!lSide.get(positionForDialog).customPrice &&
+												foil != foilCheckbox.isChecked()) {
+											loadPrice(lSide.get(positionForDialog), aaSide);
+										}
+
+										/* Attempt to parse the price */
 										double uIP;
 										try {
 											uIP = Double.parseDouble(userInputPrice);
-											// Clear the message so the user's specified price will display
-											lSide.get(position).message = "";
+											/* Clear the message so the user's specified price will display */
+											lSide.get(positionForDialog).message = "";
 										} catch (NumberFormatException e) {
 											uIP = 0;
 										}
 
-										lSide.get(position).numberOf = (Integer.parseInt(numberOf.getEditableText().toString()));
-										lSide.get(position).price = ((int) Math.round(uIP * 100));
-										aaSide.notifyDataSetChanged();
-										UpdateTotalPrices(side);
+										/* Set the price */
+										lSide.get(positionForDialog).price = ((int) Math.round(uIP * 100));
 
-										removeDialog(getFragmentManager());
+										/* Set the numberOf */
+										assert numberOf.getEditableText() != null;
+										String numberOfString = numberOf.getEditableText().toString();
+										try {
+											lSide.get(positionForDialog).numberOf = (Integer.parseInt(numberOfString));
+										} catch (NumberFormatException e) {
+											lSide.get(positionForDialog).numberOf = 1;
+										}
+
+										/* Notify things to update */
+										aaSide.notifyDataSetChanged();
+										UpdateTotalPrices(sideForDialog);
 									}
 								})
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
@@ -448,51 +449,111 @@ public class TradeFragment extends FamiliarFragment {
 								})
 								.create();
 					}
-					case DIALOG_PRICE_SETTING: {
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+					case DIALOG_CHANGE_SET: {
+						/* Get the card */
+						MtgCard data = (sideForDialog == LEFT ?
+								mLeftList.get(positionForDialog) : mRightList.get(positionForDialog));
 
-						return builder
+						try {
+							/* Query the database for all versions of this card */
+							CardDbAdapter mDbHelper = new CardDbAdapter(TradeFragment.this.getActivity());
+							Cursor cards = mDbHelper.fetchCardByName(data.name, new String[]{
+									CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+									CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+									CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER});
+							/* Build set names and set codes */
+							Set<String> sets = new LinkedHashSet<String>();
+							Set<String> setCodes = new LinkedHashSet<String>();
+							while (!cards.isAfterLast()) {
+								if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER)))) {
+									setCodes.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)));
+								}
+								cards.moveToNext();
+							}
+							/* clean up */
+							cards.close();
+							mDbHelper.close();
+
+							/* Turn set names and set codes into arrays */
+							final String[] aSets = sets.toArray(new String[sets.size()]);
+							final String[] aSetCodes = setCodes.toArray(new String[setCodes.size()]);
+
+							/* Build and return the dialog */
+							return new AlertDialog.Builder(getActivity())
+									.setTitle(R.string.card_view_set_dialog_title)
+									.setItems(aSets, new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialogInterface, int item) {
+											/* Change the card's information, and reload the price */
+											if (sideForDialog == LEFT) {
+												mLeftList.get(positionForDialog).setCode = (aSetCodes[item]);
+												mLeftList.get(positionForDialog).tcgName = (aSets[item]);
+												mLeftList.get(positionForDialog).message = (getString(R.string.wishlist_loading));
+												mLeftAdapter.notifyDataSetChanged();
+												loadPrice(mLeftList.get(positionForDialog), mLeftAdapter);
+											}
+											else if (sideForDialog == RIGHT) {
+												mRightList.get(positionForDialog).setCode = (aSetCodes[item]);
+												mRightList.get(positionForDialog).tcgName = (aSets[item]);
+												mRightList.get(positionForDialog).message = (getString(R.string.wishlist_loading));
+												mRightAdapter.notifyDataSetChanged();
+												loadPrice(mRightList.get(positionForDialog), mRightAdapter);
+											}
+										}
+									})
+									.create();
+						} catch (FamiliarDbException e) {
+							/* Don't show the dialog, but pop a toast */
+							setShowsDialog(false);
+							handleFamiliarDbException(true);
+							return null;
+						}
+					}
+					case DIALOG_PRICE_SETTING: {
+						/* Build the dialog with some choices */
+						return new AlertDialog.Builder(this.getActivity())
 								.setTitle(R.string.trader_pricing_dialog_title)
-								.setSingleChoiceItems(new String[]{getString(R.string.trader_Low), getString(R.string.trader_Average), getString(R.string.trader_High)}, priceSetting,
+								.setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
+												getString(R.string.trader_Average),
+												getString(R.string.trader_High)}, mPriceSetting,
 										new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog, int which) {
-												priceSetting = which;
+												if (mPriceSetting != which) {
+													mPriceSetting = which;
+
+													/* Update ALL the prices! */
+													for (MtgCard data : mLeftList) {
+														if (!data.customPrice) {
+															data.message = getString(R.string.wishlist_loading);
+															loadPrice(data, mLeftAdapter); // TODO avoid requery
+														}
+													}
+													mLeftAdapter.notifyDataSetChanged();
+
+													for (MtgCard data : mRightList) {
+														if (!data.customPrice) {
+															data.message = getString(R.string.wishlist_loading);
+															loadPrice(data, mRightAdapter); // TODO avoid requery
+														}
+													}
+													mRightAdapter.notifyDataSetChanged();
+
+													/* And also update the preference */
+													getFamiliarActivity().mPreferenceAdapter.setTradePrice(String.valueOf(mPriceSetting));
+												}
 												dialog.dismiss();
-
-												// Update ALL the prices!
-												for (MtgCard data : lTradeLeft) {
-													if (!data.customPrice) {
-														data.message = "loading";
-														loadPrice(data, aaTradeLeft);
-													}
-												}
-												aaTradeLeft.notifyDataSetChanged();
-
-												for (MtgCard data : lTradeRight) {
-													if (!data.customPrice) {
-														data.message = "loading";
-														loadPrice(data, aaTradeRight);
-													}
-												}
-												aaTradeRight.notifyDataSetChanged();
-
-												// And also update the preference
-												getFamiliarActivity().mPreferenceAdapter.setTradePrice(String.valueOf(priceSetting));
-
-												removeDialog(getFragmentManager());
 											}
 										}
 								).create();
 					}
-					case DIALOG_SAVE_TRADE: {
+					case DIALOG_SAVE_TRADE: { // TODO clean from here
 						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
 						builder.setTitle(R.string.trader_save_dialog_title);
 						builder.setMessage(R.string.trader_save_dialog_text);
 
-						// Set an EditText view to get user input
+						/* Set an EditText view to get user input */
 						final EditText input = new EditText(this.getActivity());
-						input.setText(currentTrade);
+						input.setText(mCurrentTrade);
 						input.setSingleLine(true);
 						builder.setView(input);
 
@@ -503,13 +564,13 @@ public class TradeFragment extends FamiliarFragment {
 								String FILENAME = tradeName + TRADE_EXTENSION;
 								SaveTrade(FILENAME);
 
-								currentTrade = tradeName;
+								mCurrentTrade = tradeName;
 							}
 						});
 
 						builder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
-								// Canceled.
+								/* Canceled. */
 							}
 						});
 
@@ -540,7 +601,7 @@ public class TradeFragment extends FamiliarFragment {
 						builder.setTitle(R.string.trader_select_dialog_title);
 						builder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
-								// Canceled.
+								/* Canceled. */
 							}
 						});
 						builder.setItems(tradeNames, new DialogInterface.OnClickListener() {
@@ -548,10 +609,10 @@ public class TradeFragment extends FamiliarFragment {
 
 								LoadTrade(tradeNames[which] + TRADE_EXTENSION);
 
-								currentTrade = tradeNames[which];
+								mCurrentTrade = tradeNames[which];
 
-								aaTradeLeft.notifyDataSetChanged();
-								aaTradeRight.notifyDataSetChanged();
+								mLeftAdapter.notifyDataSetChanged();
+								mRightAdapter.notifyDataSetChanged();
 							}
 						});
 
@@ -580,7 +641,7 @@ public class TradeFragment extends FamiliarFragment {
 								.setTitle(R.string.trader_delete_dialog_title)
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
-										// Canceled.
+										/* Canceled. */
 									}
 								})
 								.setItems(tradeNamesD, new DialogInterface.OnClickListener() {
@@ -597,10 +658,10 @@ public class TradeFragment extends FamiliarFragment {
 								.setMessage(R.string.trader_clear_dialog_text)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int which) {
-										lTradeRight.clear();
-										aaTradeRight.notifyDataSetChanged();
-										lTradeLeft.clear();
-										aaTradeLeft.notifyDataSetChanged();
+										mRightList.clear();
+										mRightAdapter.notifyDataSetChanged();
+										mLeftList.clear();
+										mLeftAdapter.notifyDataSetChanged();
 										UpdateTotalPrices(BOTH);
 										dialog.dismiss();
 									}
@@ -611,8 +672,8 @@ public class TradeFragment extends FamiliarFragment {
 								}).setCancelable(true).create();
 					}
 					default: {
-						savedInstanceState.putInt("id", id);
-						return super.onCreateDialog(savedInstanceState);
+						setShowsDialog(false);
+						return null;
 					}
 				}
 			}
@@ -621,21 +682,20 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 *
 	 * @param _tradeName
 	 */
 	protected void SaveTrade(String _tradeName) {
 		FileOutputStream fos;
 
 		try {
-			// MODE_PRIVATE will create the file (or replace a file of the
-			// same name)
+			/* MODE_PRIVATE will create the file (or replace a file of the */
+			/* same name) */
 			fos = this.getActivity().openFileOutput(_tradeName, Context.MODE_PRIVATE);
 
-			for (MtgCard cd : lTradeLeft) {
+			for (MtgCard cd : mLeftList) {
 				fos.write(cd.toString(LEFT).getBytes());
 			}
-			for (MtgCard cd : lTradeRight) {
+			for (MtgCard cd : mRightList) {
 				fos.write(cd.toString(RIGHT).getBytes());
 			}
 
@@ -650,16 +710,14 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 *
 	 * @param _tradeName
 	 */
 	protected void LoadTrade(String _tradeName) {
 		try {
-			doneLoading = false;
 			BufferedReader br = new BufferedReader(new InputStreamReader(this.getActivity().openFileInput(_tradeName)));
 
-			lTradeLeft.clear();
-			lTradeRight.clear();
+			mLeftList.clear();
+			mRightList.clear();
 
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -667,23 +725,24 @@ public class TradeFragment extends FamiliarFragment {
 					MtgCard card = MtgCard.MtgCardFromTradeString(line, getActivity());
 
 					if (card.mSide == LEFT) {
-						lTradeLeft.add(card);
+						mLeftList.add(card);
 						if (!card.customPrice)
-							loadPrice(card, aaTradeLeft);
+							loadPrice(card, mLeftAdapter);
 					}
 					else if (card.mSide == RIGHT) {
-						lTradeRight.add(card);
+						mRightList.add(card);
 						if (!card.customPrice)
-							loadPrice(card, aaTradeRight);
+							loadPrice(card, mRightAdapter);
 					}
 				} catch (FamiliarDbException e) {
 					handleFamiliarDbException(false);
 				}
 			}
+		} catch (FileNotFoundException e) {
+			/* Do nothing, the autosave doesn't exist */
 		} catch (IOException e) {
 			Toast.makeText(this.getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
 		}
-		doneLoading = true;
 		UpdateTotalPrices(BOTH);
 	}
 
@@ -691,28 +750,26 @@ public class TradeFragment extends FamiliarFragment {
 	 * @param side
 	 */
 	private void UpdateTotalPrices(int side) {
-		if (doneLoading) {
-			if (side == LEFT || side == BOTH) {
-				int totalPriceLeft = GetPricesFromTradeList(lTradeLeft);
-				int color = PriceListHasBadValues(lTradeLeft) ?
-						this.getActivity().getResources().getColor(R.color.holo_red_dark) :
-						this.getActivity().getResources().getColor(R.color.black);
-				tradePriceLeft.setText(String.format("$%d.%02d", totalPriceLeft / 100, totalPriceLeft % 100));
-				tradePriceLeft.setTextColor(color);
-			}
-			if (side == RIGHT || side == BOTH) {
-				int totalPriceRight = GetPricesFromTradeList(lTradeRight);
-				int color = PriceListHasBadValues(lTradeRight) ?
-						this.getActivity().getResources().getColor(R.color.holo_red_dark) :
-						this.getActivity().getResources().getColor(R.color.black);
-				tradePriceRight.setText(String.format("$%d.%02d", totalPriceRight / 100, totalPriceRight % 100));
-				tradePriceRight.setTextColor(color);
-			}
+		if (side == LEFT || side == BOTH) {
+			int totalPriceLeft = GetPricesFromTradeList(mLeftList);
+			int color = PriceListHasBadValues(mLeftList) ?
+					this.getActivity().getResources().getColor(R.color.holo_red_dark) :
+					this.getActivity().getResources().getColor(R.color.black);
+			mTotalPriceLeft.setText(String.format("$%d.%02d", totalPriceLeft / 100, totalPriceLeft % 100));
+			mTotalPriceLeft.setTextColor(color);
 		}
+		if (side == RIGHT || side == BOTH) {
+			int totalPriceRight = GetPricesFromTradeList(mRightList);
+			int color = PriceListHasBadValues(mRightList) ?
+					this.getActivity().getResources().getColor(R.color.holo_red_dark) :
+					this.getActivity().getResources().getColor(R.color.black);
+			mTotalPriceRight.setText(String.format("$%d.%02d", totalPriceRight / 100, totalPriceRight % 100));
+			mTotalPriceRight.setTextColor(color);
+		}
+
 	}
 
 	/**
-	 *
 	 * @param trade
 	 * @return
 	 */
@@ -726,7 +783,6 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 *
 	 * @param _trade
 	 * @return
 	 */
@@ -741,28 +797,27 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 *
 	 * @param item
 	 * @return
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
+		/* Handle item selection */
 		switch (item.getItemId()) {
 			case R.id.trader_menu_clear:
-				showDialog(DIALOG_CONFIRMATION);
+				showDialog(DIALOG_CONFIRMATION, 0, 0);
 				return true;
 			case R.id.trader_menu_settings:
-				showDialog(DIALOG_PRICE_SETTING);
+				showDialog(DIALOG_PRICE_SETTING, 0, 0);
 				return true;
 			case R.id.trader_menu_save:
-				showDialog(DIALOG_SAVE_TRADE);
+				showDialog(DIALOG_SAVE_TRADE, 0, 0);
 				return true;
 			case R.id.trader_menu_load:
-				showDialog(DIALOG_LOAD_TRADE);
+				showDialog(DIALOG_LOAD_TRADE, 0, 0);
 				return true;
 			case R.id.trader_menu_delete:
-				showDialog(DIALOG_DELETE_TRADE);
+				showDialog(DIALOG_DELETE_TRADE, 0, 0);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -770,7 +825,6 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 *
 	 * @param menu     The options menu in which you place your items.
 	 * @param inflater The inflater to use to inflate the menu
 	 */
@@ -789,7 +843,6 @@ public class TradeFragment extends FamiliarFragment {
 		private ArrayList<MtgCard> items;
 
 		/**
-		 *
 		 * @param context
 		 * @param textViewResourceId
 		 * @param items
@@ -802,7 +855,6 @@ public class TradeFragment extends FamiliarFragment {
 		}
 
 		/**
-		 *
 		 * @param position
 		 * @param convertView
 		 * @param parent
@@ -845,7 +897,6 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 *
 	 * @param data
 	 * @param adapter
 	 */
@@ -878,7 +929,7 @@ public class TradeFragment extends FamiliarFragment {
 						data.price = (int) (result.mFoilAverage * 100);
 					}
 					else {
-						switch (priceSetting) {
+						switch (mPriceSetting) {
 							case LOW_PRICE: {
 								data.price = (int) (result.mLow * 100);
 								break;

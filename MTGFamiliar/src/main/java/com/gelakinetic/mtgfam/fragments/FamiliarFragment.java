@@ -100,7 +100,7 @@ public abstract class FamiliarFragment extends Fragment {
 	 * <p/>
 	 * In this case, always remove the dialog, since it can contain stale references to the pre-rotated activity and
 	 * fragment after rotation. The one exception is the change log dialog, which would get removed by TTS checking
-	 * intents on the first install.
+	 * intents on the first install. It also cleans up any pending spice requests (price loading)
 	 */
 	@Override
 	public void onPause() {
@@ -108,6 +108,7 @@ public abstract class FamiliarFragment extends Fragment {
 		if (getFamiliarActivity().dialogShowing != FamiliarActivity.CHANGE_LOG_DIALOG) {
 			removeDialog(getFragmentManager());
 		}
+		getFamiliarActivity().mSpiceManager.cancelAllRequests();
 	}
 
 	/**
