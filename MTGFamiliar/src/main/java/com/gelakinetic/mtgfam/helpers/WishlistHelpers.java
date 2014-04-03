@@ -42,7 +42,7 @@ public class WishlistHelpers {
 			FileOutputStream fos = mCtx.openFileOutput(WISHLIST_NAME, Context.MODE_PRIVATE);
 
 			for (MtgCard m : lWishlist) {
-				fos.write(m.toString().getBytes());
+				fos.write(m.toWishlistString().getBytes());
 			}
 
 			fos.close();
@@ -72,7 +72,7 @@ public class WishlistHelpers {
 					card.number = isi.mNumber;
 					card.foil = isi.mIsFoil;
 					card.numberOf = isi.mNumberOf;
-					fos.write(card.toString().getBytes());
+					fos.write(card.toWishlistString().getBytes());
 				}
 			}
 

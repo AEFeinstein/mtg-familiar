@@ -22,9 +22,9 @@ import java.util.Calendar;
 public class MTRIPGParser {
 
 	private static final String MTR_SOURCE =
-			"https://sites.google.com/site/mtgfamiliar/rules/MagicTournamentRules.html";
+			"https://sites.google.com/site/mtgfamiliar/rules/MagicTournamentRules-light.html";
 	private static final String IPG_SOURCE =
-			"https://sites.google.com/site/mtgfamiliar/rules/InfractionProcedureGuide.html";
+			"https://sites.google.com/site/mtgfamiliar/rules/InfractionProcedureGuide-light.html";
 
 	private static final String MTR_LOCAL_FILE = "MTR.html";
 	private static final String IPG_LOCAL_FILE = "IPG.html";

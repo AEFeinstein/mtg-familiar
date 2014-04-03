@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +45,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * TODO
+ */
 public class TradeFragment extends FamiliarFragment {
 
 	/* Price Constants */
@@ -119,7 +121,7 @@ public class TradeFragment extends FamiliarFragment {
 
 		/* Initialize the left list */
 		mLeftList = new ArrayList<MtgCard>();
-		mLeftAdapter = new TradeListAdapter(this.getActivity(), R.layout.trader_row, mLeftList);
+		mLeftAdapter = new TradeListAdapter(this.getActivity(), mLeftList);
 		ListView lvTradeLeft = (ListView) myFragmentView.findViewById(R.id.tradeListLeft);
 		lvTradeLeft.setAdapter(mLeftAdapter);
 		lvTradeLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,7 +132,7 @@ public class TradeFragment extends FamiliarFragment {
 
 		/* Initialize the right list */
 		mRightList = new ArrayList<MtgCard>();
-		mRightAdapter = new TradeListAdapter(this.getActivity(), R.layout.trader_row, mRightList);
+		mRightAdapter = new TradeListAdapter(this.getActivity(), mRightList);
 		ListView lvTradeRight = (ListView) myFragmentView.findViewById(R.id.tradeListRight);
 		lvTradeRight.setAdapter(mRightAdapter);
 		lvTradeRight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -249,7 +251,7 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 * WHen the fragment pauses, save the trade and cancel all pending price requests
+	 * When the fragment pauses, save the trade and cancel all pending price requests
 	 */
 	@Override
 	public void onPause() {
@@ -290,7 +292,8 @@ public class TradeFragment extends FamiliarFragment {
 						final boolean foil = lSide.get(positionForDialog).foil;
 
 						/* Inflate the view and pull out UI elements */
-						View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog, null);
+						View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
+								(ViewGroup) getActivity().findViewById(R.id.dialog_layout_root));
 						assert view != null;
 						final CheckBox foilCheckbox = (CheckBox) view.findViewById(R.id.traderDialogFoil);
 						final EditText numberOf = (EditText) view.findViewById(R.id.traderDialogNumber);
@@ -486,14 +489,16 @@ public class TradeFragment extends FamiliarFragment {
 											if (sideForDialog == LEFT) {
 												mLeftList.get(positionForDialog).setCode = (aSetCodes[item]);
 												mLeftList.get(positionForDialog).tcgName = (aSets[item]);
-												mLeftList.get(positionForDialog).message = (getString(R.string.wishlist_loading));
+												mLeftList.get(positionForDialog).message =
+														(getString(R.string.wishlist_loading));
 												mLeftAdapter.notifyDataSetChanged();
 												loadPrice(mLeftList.get(positionForDialog), mLeftAdapter);
 											}
 											else if (sideForDialog == RIGHT) {
 												mRightList.get(positionForDialog).setCode = (aSetCodes[item]);
 												mRightList.get(positionForDialog).tcgName = (aSets[item]);
-												mRightList.get(positionForDialog).message = (getString(R.string.wishlist_loading));
+												mRightList.get(positionForDialog).message =
+														(getString(R.string.wishlist_loading));
 												mRightAdapter.notifyDataSetChanged();
 												loadPrice(mRightList.get(positionForDialog), mRightAdapter);
 											}
@@ -537,7 +542,8 @@ public class TradeFragment extends FamiliarFragment {
 													mRightAdapter.notifyDataSetChanged();
 
 													/* And also update the preference */
-													getFamiliarActivity().mPreferenceAdapter.setTradePrice(String.valueOf(mPriceSetting));
+													getFamiliarActivity().mPreferenceAdapter.setTradePrice(
+															String.valueOf(mPriceSetting));
 												}
 												dialog.dismiss();
 											}
@@ -547,7 +553,8 @@ public class TradeFragment extends FamiliarFragment {
 					case DIALOG_SAVE_TRADE: {
 						/* Inflate a view to type in the trade's name, and show it in an AlertDialog */
 						View textEntryView = getActivity().getLayoutInflater()
-								.inflate(R.layout.alert_dialog_text_entry, null);
+								.inflate(R.layout.alert_dialog_text_entry,
+										(ViewGroup) getActivity().findViewById(R.id.dialog_layout_root));
 						assert textEntryView != null;
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.append(mCurrentTrade);
@@ -599,7 +606,8 @@ public class TradeFragment extends FamiliarFragment {
 
 						/* If there are no files, don't show the dialog */
 						if (validFiles.size() == 0) {
-							Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG).show();
+							Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG)
+									.show();
 							setShowsDialog(false);
 							return null;
 						}
@@ -642,7 +650,8 @@ public class TradeFragment extends FamiliarFragment {
 
 						/* If there are no files, don't show the dialog */
 						if (validFiles.size() == 0) {
-							Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG).show();
+							Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG)
+									.show();
 							setShowsDialog(false);
 							return null;
 						}
@@ -661,7 +670,8 @@ public class TradeFragment extends FamiliarFragment {
 								})
 								.setItems(tradeNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface di, int which) {
-										File toDelete = new File(getActivity().getFilesDir(), tradeNames[which] + TRADE_EXTENSION);
+										File toDelete = new File(getActivity().getFilesDir(), tradeNames[which] +
+												TRADE_EXTENSION);
 										toDelete.delete();
 									}
 								})
@@ -701,19 +711,23 @@ public class TradeFragment extends FamiliarFragment {
 		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
 	}
 
-	protected void SaveTrade(String _tradeName) { // TODO clean from here
+	/**
+	 * Save the current trade to the given filename
+	 *
+	 * @param tradeName The name of the trade, to be used as a file name
+	 */
+	void SaveTrade(String tradeName) {
 		FileOutputStream fos;
 
 		try {
-			/* MODE_PRIVATE will create the file (or replace a file of the */
-			/* same name) */
-			fos = this.getActivity().openFileOutput(_tradeName, Context.MODE_PRIVATE);
+			/* MODE_PRIVATE will create the file (or replace a file of the same name) */
+			fos = this.getActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
 
 			for (MtgCard cd : mLeftList) {
-				fos.write(cd.toString(LEFT).getBytes());
+				fos.write(cd.toTradeString(LEFT).getBytes());
 			}
 			for (MtgCard cd : mRightList) {
-				fos.write(cd.toString(RIGHT).getBytes());
+				fos.write(cd.toTradeString(RIGHT).getBytes());
 			}
 
 			fos.close();
@@ -727,15 +741,18 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 * @param _tradeName
+	 * Load a a trade from the given filename
+	 *
+	 * @param tradeName The name of the trade to load
 	 */
-	protected void LoadTrade(String _tradeName) {
+	void LoadTrade(String tradeName) {
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(this.getActivity().openFileInput(_tradeName)));
-
+			/* Clear the current lists */
 			mLeftList.clear();
 			mRightList.clear();
 
+			/* Read each card, line by line, load prices along the way */
+			BufferedReader br = new BufferedReader(new InputStreamReader(this.getActivity().openFileInput(tradeName)));
 			String line;
 			while ((line = br.readLine()) != null) {
 				try {
@@ -760,62 +777,61 @@ public class TradeFragment extends FamiliarFragment {
 		} catch (IOException e) {
 			Toast.makeText(this.getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
 		}
-		UpdateTotalPrices(BOTH);
 	}
 
 	/**
-	 * @param side
+	 * This function iterates through the cards in the given list and sums together their prices
+	 *
+	 * @param side RIGHT, LEFT, or BOTH, depending on the side to update
 	 */
 	private void UpdateTotalPrices(int side) {
 		if (side == LEFT || side == BOTH) {
-			int totalPriceLeft = GetPricesFromTradeList(mLeftList);
-			int color = PriceListHasBadValues(mLeftList) ?
+			int totalPrice = 0;
+			boolean hasBadValues = false;
+			/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
+			for (MtgCard data : mLeftList) {
+				if (data.hasPrice()) {
+					totalPrice += data.numberOf * data.price;
+				}
+				else {
+					hasBadValues = true;
+				}
+			}
+
+			/* Set the color whether all values are loaded, and write the text */
+			int color = hasBadValues ?
 					this.getActivity().getResources().getColor(R.color.holo_red_dark) :
 					this.getActivity().getResources().getColor(R.color.black);
-			mTotalPriceLeft.setText(String.format("$%d.%02d", totalPriceLeft / 100, totalPriceLeft % 100));
+			mTotalPriceLeft.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
 			mTotalPriceLeft.setTextColor(color);
 		}
 		if (side == RIGHT || side == BOTH) {
-			int totalPriceRight = GetPricesFromTradeList(mRightList);
-			int color = PriceListHasBadValues(mRightList) ?
+			int totalPrice = 0;
+			boolean hasBadValues = false;
+			/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
+			for (MtgCard data : mRightList) {
+				if (data.hasPrice()) {
+					totalPrice += data.numberOf * data.price;
+				}
+				else {
+					hasBadValues = true;
+				}
+			}
+
+			/* Set the color whether all values are loaded, and write the text */
+			int color = hasBadValues ?
 					this.getActivity().getResources().getColor(R.color.holo_red_dark) :
 					this.getActivity().getResources().getColor(R.color.black);
-			mTotalPriceRight.setText(String.format("$%d.%02d", totalPriceRight / 100, totalPriceRight % 100));
+			mTotalPriceRight.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
 			mTotalPriceRight.setTextColor(color);
 		}
-
 	}
 
 	/**
-	 * @param trade
-	 * @return
-	 */
-	private boolean PriceListHasBadValues(ArrayList<MtgCard> trade) {
-		for (MtgCard data : trade) {
-			if (!data.hasPrice()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * @param _trade
-	 * @return
-	 */
-	private int GetPricesFromTradeList(ArrayList<MtgCard> _trade) {
-		int totalPrice = 0;
-		for (MtgCard data : _trade) {
-			if (data.hasPrice()) {
-				totalPrice += data.numberOf * data.price;
-			}
-		}
-		return totalPrice;
-	}
-
-	/**
-	 * @param item
-	 * @return
+	 * Handle an ActionBar item click
+	 *
+	 * @param item the item clicked
+	 * @return true if the click was acted on
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -852,51 +868,125 @@ public class TradeFragment extends FamiliarFragment {
 	}
 
 	/**
-	 * TODO
+	 * Request the price of a card asynchronously from the network. Save all the returned prices
+	 *
+	 * @param data    The card to fetch a price for
+	 * @param adapter The adapter to notify when a price is downloaded
+	 */
+	private void loadPrice(final MtgCard data, final TradeListAdapter adapter) {
+		PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
+		getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode,
+				DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
+					/**
+					 * This is called when the lookup fails. Set the error message and notify the adapter
+					 * @param spiceException The exception thrown when trying to download the price
+					 */
+					@Override
+					public void onRequestFailure(SpiceException spiceException) {
+						data.message = spiceException.getLocalizedMessage();
+						data.priceInfo = null;
+						adapter.notifyDataSetChanged();
+					}
+
+					/**
+					 * This is called when the lookup succeeds. Save all the prices and set the current price
+					 * @param result The PriceInfo object with the low, average, high, and foil prices
+					 */
+					@Override
+					public void onRequestSuccess(final PriceInfo result) {
+				/* Sanity check */
+						if (result == null) {
+							data.priceInfo = null;
+						}
+						else {
+					/* Set the PriceInfo object */
+							data.priceInfo = result;
+
+					/* Only reset the price to the downloaded one if the old price isn't custom */
+							if (!data.customPrice) {
+								if (data.foil) {
+									data.price = (int) (result.mFoilAverage * 100);
+								}
+								else {
+									switch (mPriceSetting) {
+										case LOW_PRICE: {
+											data.price = (int) (result.mLow * 100);
+											break;
+										}
+										default:
+										case AVG_PRICE: {
+											data.price = (int) (result.mAverage * 100);
+											break;
+										}
+										case HIGH_PRICE: {
+											data.price = (int) (result.mHigh * 100);
+											break;
+										}
+										case FOIL_PRICE: {
+											data.price = (int) (result.mFoilAverage * 100);
+											break;
+										}
+									}
+								}
+							}
+					/* Clear the message */
+							data.message = null;
+						}
+				/* Notify the adapter and update total prices */
+						UpdateTotalPrices(BOTH);
+						adapter.notifyDataSetChanged();
+					}
+				}
+		);
+	}
+
+	/**
+	 * This inner class helps to display card information from an ArrayList<> in a ListView
 	 */
 	private class TradeListAdapter extends ArrayAdapter<MtgCard> {
 
-		private int layoutResourceId;
-		private ArrayList<MtgCard> items;
+		private final ArrayList<MtgCard> items;
 
 		/**
-		 * @param context
-		 * @param textViewResourceId
-		 * @param items
+		 * Constructor
+		 *
+		 * @param context A context to pass to super
+		 * @param mItems  The list of items to display
 		 */
-		public TradeListAdapter(Context context, int textViewResourceId, ArrayList<MtgCard> items) {
-			super(context, textViewResourceId, items);
-
-			this.layoutResourceId = textViewResourceId;
-			this.items = items;
+		public TradeListAdapter(Context context, ArrayList<MtgCard> mItems) {
+			super(context, R.layout.trader_row, mItems);
+			this.items = mItems;
 		}
 
 		/**
-		 * @param position
-		 * @param convertView
-		 * @param parent
-		 * @return
+		 * This either inflates or recycles a view for a given row, and populates it with card information
+		 *
+		 * @param position    The position of the row, corresponds to an entry in the ArrayList
+		 * @param convertView The view to recycle, or null if we have to inflate a new one
+		 * @param parent      The parent ViewGroup
+		 * @return The view to display for this row
 		 */
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			/* if the supplied view is null, inflate a new one */
 			if (convertView == null) {
-				convertView = getActivity().getLayoutInflater().inflate(layoutResourceId, null);
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row, null);
 			}
+			/* Get the data from the ArrayList */
 			MtgCard data = items.get(position);
 			if (data != null) {
 				assert convertView != null;
-				TextView nameField = (TextView) convertView.findViewById(R.id.traderRowName);
-				TextView setField = (TextView) convertView.findViewById(R.id.traderRowSet);
-				TextView numberField = (TextView) convertView.findViewById(R.id.traderNumber);
+
+				/* Set the name, set number, and foil indicators */
+				((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.name);
+				((TextView) convertView.findViewById(R.id.traderRowSet)).setText(data.tcgName);
+				((TextView) convertView.findViewById(R.id.traderNumber)).setText(data.hasPrice() ?
+						data.numberOf + "x" : "");
+				convertView.findViewById(R.id.traderRowFoil).setVisibility((data.foil ? View.VISIBLE : View.GONE));
+
+				/* Set the price, and the color depending on custom status */
 				TextView priceField = (TextView) convertView.findViewById(R.id.traderRowPrice);
-				ImageView foilField = (ImageView) convertView.findViewById(R.id.traderRowFoil);
-
-				nameField.setText(data.name);
-				setField.setText(data.tcgName);
-				numberField.setText(data.hasPrice() ? data.numberOf + "x" : "");
 				priceField.setText(data.hasPrice() ? data.getPriceString() : data.message);
-				foilField.setVisibility((data.foil ? View.VISIBLE : View.GONE));
-
 				if (data.hasPrice()) {
 					if (data.customPrice) {
 						priceField.setTextColor(getActivity().getResources().getColor(R.color.holo_green_dark));
@@ -911,66 +1001,5 @@ public class TradeFragment extends FamiliarFragment {
 			}
 			return convertView;
 		}
-	}
-
-	/**
-	 * @param data
-	 * @param adapter
-	 */
-	private void loadPrice(final MtgCard data, final TradeListAdapter adapter) {
-		PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
-		getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-			/**
-			 *
-			 * @param spiceException
-			 */
-			@Override
-			public void onRequestFailure(SpiceException spiceException) {
-				data.message = spiceException.getLocalizedMessage();
-				data.priceInfo = null;
-			}
-
-			/**
-			 *
-			 * @param result
-			 */
-			@Override
-			public void onRequestSuccess(final PriceInfo result) {
-				if (result == null) {
-					data.priceInfo = null;
-				}
-				else {
-					data.priceInfo = result;
-
-					if (data.foil) {
-						data.price = (int) (result.mFoilAverage * 100);
-					}
-					else {
-						switch (mPriceSetting) {
-							case LOW_PRICE: {
-								data.price = (int) (result.mLow * 100);
-								break;
-							}
-							default:
-							case AVG_PRICE: {
-								data.price = (int) (result.mAverage * 100);
-								break;
-							}
-							case HIGH_PRICE: {
-								data.price = (int) (result.mHigh * 100);
-								break;
-							}
-							case FOIL_PRICE: {
-								data.price = (int) (result.mFoilAverage * 100);
-								break;
-							}
-						}
-					}
-					data.message = null;
-				}
-				UpdateTotalPrices(BOTH);
-				adapter.notifyDataSetChanged();
-			}
-		});
 	}
 }

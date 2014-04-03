@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.helpers;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -660,7 +659,6 @@ public class LcPlayer {
 						View textEntryView = mFragment.getActivity().getLayoutInflater()
 								.inflate(R.layout.alert_dialog_text_entry, null);
 						assert textEntryView != null;
-						@SuppressLint("CutPasteId")
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.append(LcPlayer.this.mName);
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
@@ -760,7 +758,6 @@ public class LcPlayer {
 						View textEntryView = mFragment.getActivity().getLayoutInflater()
 								.inflate(R.layout.alert_dialog_text_entry, null);
 						assert textEntryView != null;
-						@SuppressLint("CutPasteId")
 						final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
 						if (mReadoutTextView.getText() != null) {

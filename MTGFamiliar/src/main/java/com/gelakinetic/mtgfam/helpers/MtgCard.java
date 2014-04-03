@@ -20,7 +20,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
@@ -136,7 +135,7 @@ public class MtgCard {
 
 		/* These parts may not exist */
 		card.customPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
-		if(parts.length > 5) {
+		if (parts.length > 5) {
 			card.price = Integer.parseInt(parts[5]);
 		}
 		else {
@@ -153,12 +152,12 @@ public class MtgCard {
 	}
 
 	/* Prints a bunch of information about this card, predominantly to save it in a plaintext file */
-	public String toString() {
+	public String toWishlistString() {
 		return this.name + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.number + DELIMITER +
 				((int) this.rarity) + DELIMITER + this.foil + '\n';
 	}
 
-	public String toString(int side) {
+	public String toTradeString(int side) {
 		return side + DELIMITER + this.name + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.customPrice + DELIMITER + this.price + DELIMITER + this.foil + '\n';
 	}
 
@@ -185,5 +184,6 @@ public class MtgCard {
 	}
 
 	public boolean hasPrice() {
-		return this.message == null || this.message.length() == 0;
-	}}
+		return (this.priceInfo != null || (this.customPrice && this.price != 0));
+	}
+}

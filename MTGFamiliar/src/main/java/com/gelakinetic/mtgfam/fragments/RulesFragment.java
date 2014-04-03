@@ -428,6 +428,7 @@ public class RulesFragment extends FamiliarFragment {
 
 	/**
 	 * Format text for an entry with glyphs and links to other entries, found using regular expressions
+	 * TODO is input.length() == 0? That makes SpannableString unhappy
 	 *
 	 * @param input      The entry to format
 	 * @param shouldLink true if links should be added, false otherwise
