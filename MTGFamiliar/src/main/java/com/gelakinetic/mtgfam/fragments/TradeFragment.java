@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,7 +47,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * TODO
+ * This class manages trades between two users. Trades can be saved and loaded
  */
 public class TradeFragment extends FamiliarFragment {
 
@@ -289,7 +290,7 @@ public class TradeFragment extends FamiliarFragment {
 						/* Get some final references */
 						final ArrayList<MtgCard> lSide = (sideForDialog == LEFT ? mLeftList : mRightList);
 						final TradeListAdapter aaSide = (sideForDialog == LEFT ? mLeftAdapter : mRightAdapter);
-						final boolean foil = lSide.get(positionForDialog).foil;
+						final boolean oldFoil = lSide.get(positionForDialog).foil;
 
 						/* Inflate the view and pull out UI elements */
 						View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
@@ -303,11 +304,39 @@ public class TradeFragment extends FamiliarFragment {
 						String numberOfStr = String.valueOf(lSide.get(positionForDialog).numberOf);
 						numberOf.setText(numberOfStr);
 						numberOf.setSelection(numberOfStr.length());
-						foilCheckbox.setChecked(foil);
-						final String priceNumberStr = lSide.get(positionForDialog).hasPrice() ?
+						foilCheckbox.setChecked(oldFoil);
+						String priceNumberStr = lSide.get(positionForDialog).hasPrice() ?
 								lSide.get(positionForDialog).getPriceString().substring(1) : "";
 						priceText.setText(priceNumberStr);
 						priceText.setSelection(priceNumberStr.length());
+
+						/* Only show the foil checkbox if the card can be foil */
+						try {
+							CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
+							if (mDbHelper.canBeFoil(lSide.get(positionForDialog).setCode)) {
+								view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
+							}
+							else {
+								view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
+							}
+							mDbHelper.close();
+						} catch (FamiliarDbException e) {
+							/* Err on the side of foil */
+							foilCheckbox.setVisibility(View.VISIBLE);
+						}
+
+						/* when the user checks or un-checks the foil box, if the price isn't custom, set it */
+						foilCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+							@Override
+							public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+								lSide.get(positionForDialog).foil = b;
+								if (!lSide.get(positionForDialog).customPrice) {
+									loadPrice(lSide.get(positionForDialog), aaSide);
+									priceText.setText(lSide.get(positionForDialog).hasPrice() ?
+											lSide.get(positionForDialog).getPriceString().substring(1) : "");
+								}
+							}
+						});
 
 						/* Set up the button to remove this card from the trade */
 						view.findViewById(R.id.traderDialogRemove).setOnClickListener(new OnClickListener() {
@@ -320,23 +349,21 @@ public class TradeFragment extends FamiliarFragment {
 						});
 
 						/* If this has a custom price, show the button to default the price */
-						if (!lSide.get(positionForDialog).customPrice) {
-							view.findViewById(R.id.traderDialogResetPrice).setVisibility(View.GONE);
-						}
-						else {
-							view.findViewById(R.id.traderDialogResetPrice).setOnClickListener(new OnClickListener() {
+						view.findViewById(R.id.traderDialogResetPrice).setOnClickListener(new OnClickListener() {
 
-								@Override
-								public void onClick(View v) {
-									lSide.get(positionForDialog).customPrice = false;
-									priceText.setText("TODO"); // TODO avoid query, set correct price string
-									loadPrice(lSide.get(positionForDialog), aaSide);
+							@Override
+							public void onClick(View v) {
+								lSide.get(positionForDialog).customPrice = false;
+								/* This loads the price if necessary, or uses cached info */
+								loadPrice(lSide.get(positionForDialog), aaSide);
+								int price = lSide.get(positionForDialog).price;
+								priceText.setText(String.format("%d.%02d", price / 100, price % 100));
 
-									aaSide.notifyDataSetChanged();
-									UpdateTotalPrices(sideForDialog);
-								}
-							});
-						}
+								aaSide.notifyDataSetChanged();
+								UpdateTotalPrices(sideForDialog);
+							}
+						});
+
 
 						/* Set up the button to show info about this card */
 						view.findViewById(R.id.traderDialogInfo).setOnClickListener(new OnClickListener() {
@@ -376,66 +403,74 @@ public class TradeFragment extends FamiliarFragment {
 								.setPositiveButton(R.string.dialog_done, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
+										/* Grab a reference to the card */
+										MtgCard data = lSide.get(positionForDialog);
+
+										/* Set this card's foil option */
+										data.foil = foilCheckbox.isChecked();
+
 										/* validate number of cards text */
 										if (numberOf.length() == 0) {
-											return;
+											data.numberOf = 1;
+										}
+										else {
+											/* Set the numberOf */
+											assert numberOf.getEditableText() != null;
+											try {
+												data.numberOf =
+														(Integer.parseInt(numberOf.getEditableText().toString()));
+											} catch (NumberFormatException e) {
+												data.numberOf = 1;
+											}
 										}
 
 										/* validate the price text */
 										assert priceText.getText() != null;
 										String userInputPrice = priceText.getText().toString();
 
-										/* Check if the user hand-modified the price */
-										if (!userInputPrice.equals(priceNumberStr)) {
-											lSide.get(positionForDialog).customPrice = true;
-										}
-
 										/* If the input price is blank, reset it */
 										if (userInputPrice.length() == 0) {
-											lSide.get(positionForDialog).customPrice = false;
-											loadPrice(lSide.get(positionForDialog), aaSide); // TODO avoid a query?
+											data.customPrice = false;
+											loadPrice(data, aaSide);
 										}
-
-										/* Set this card's foil option, then make sure it can be foil */
-										lSide.get(positionForDialog).foil = foilCheckbox.isChecked();
-										try {
-											CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-											if (lSide.get(positionForDialog).foil && !mDbHelper.canBeFoil(
-													lSide.get(positionForDialog).setCode)) {
-												lSide.get(positionForDialog).foil = false;
+										else {
+											/* Attempt to parse the price */
+											try {
+												data.price = (int) (Double.parseDouble(userInputPrice) * 100);
+											} catch (NumberFormatException e) {
+												data.price = 0;
 											}
-											mDbHelper.close();
-										} catch (FamiliarDbException e) {
-											/* I guess it is foil after all */
 										}
 
-										/* If this card changed foil value, and it doesn't have a custom price,
-										 * reload the price. */
-										if (!lSide.get(positionForDialog).customPrice &&
-												foil != foilCheckbox.isChecked()) {
-											loadPrice(lSide.get(positionForDialog), aaSide);
+										/* Check if the user hand-modified the price by comparing the current price
+										 * to the cached price */
+										int oldPrice;
+										if (data.foil) {
+											oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
 										}
-
-										/* Attempt to parse the price */
-										double uIP;
-										try {
-											uIP = Double.parseDouble(userInputPrice);
-											/* Clear the message so the user's specified price will display */
-											lSide.get(positionForDialog).message = "";
-										} catch (NumberFormatException e) {
-											uIP = 0;
+										else {
+											switch (mPriceSetting) {
+												case LOW_PRICE: {
+													oldPrice = (int) (data.priceInfo.mLow * 100);
+													break;
+												}
+												default:
+												case AVG_PRICE: {
+													oldPrice = (int) (data.priceInfo.mAverage * 100);
+													break;
+												}
+												case HIGH_PRICE: {
+													oldPrice = (int) (data.priceInfo.mHigh * 100);
+													break;
+												}
+												case FOIL_PRICE: {
+													oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
+													break;
+												}
+											}
 										}
-
-										/* Set the price */
-										lSide.get(positionForDialog).price = ((int) Math.round(uIP * 100));
-
-										/* Set the numberOf */
-										assert numberOf.getEditableText() != null;
-										String numberOfString = numberOf.getEditableText().toString();
-										try {
-											lSide.get(positionForDialog).numberOf = (Integer.parseInt(numberOfString));
-										} catch (NumberFormatException e) {
-											lSide.get(positionForDialog).numberOf = 1;
+										if (oldPrice != data.price) {
+											data.customPrice = true;
 										}
 
 										/* Notify things to update */
@@ -485,23 +520,38 @@ public class TradeFragment extends FamiliarFragment {
 									.setTitle(R.string.card_view_set_dialog_title)
 									.setItems(aSets, new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialogInterface, int item) {
-											/* Change the card's information, and reload the price */
+											/* Figure out what we're updating */
+											MtgCard data;
+											TradeListAdapter adapter;
 											if (sideForDialog == LEFT) {
-												mLeftList.get(positionForDialog).setCode = (aSetCodes[item]);
-												mLeftList.get(positionForDialog).tcgName = (aSets[item]);
-												mLeftList.get(positionForDialog).message =
-														(getString(R.string.wishlist_loading));
-												mLeftAdapter.notifyDataSetChanged();
-												loadPrice(mLeftList.get(positionForDialog), mLeftAdapter);
+												data = mLeftList.get(positionForDialog);
+												adapter = mLeftAdapter;
 											}
-											else if (sideForDialog == RIGHT) {
-												mRightList.get(positionForDialog).setCode = (aSetCodes[item]);
-												mRightList.get(positionForDialog).tcgName = (aSets[item]);
-												mRightList.get(positionForDialog).message =
-														(getString(R.string.wishlist_loading));
-												mRightAdapter.notifyDataSetChanged();
-												loadPrice(mRightList.get(positionForDialog), mRightAdapter);
+											else {
+												data = mRightList.get(positionForDialog);
+												adapter = mRightAdapter;
 											}
+
+											/* Change the card's information, and reload the price */
+											data.setCode = (aSetCodes[item]);
+											data.tcgName = (aSets[item]);
+											data.message = (getString(R.string.wishlist_loading));
+											data.priceInfo = null;
+
+											/* See if the new set can be foil */
+											try {
+												CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
+												if (!mDbHelper.canBeFoil(data.setCode)) {
+													data.foil = false;
+												}
+												mDbHelper.close();
+											} catch (FamiliarDbException e) {
+												data.foil = false;
+											}
+
+											/* Reload and notify the adapter */
+											loadPrice(data, adapter);
+											adapter.notifyDataSetChanged();
 										}
 									})
 									.create();
@@ -528,7 +578,7 @@ public class TradeFragment extends FamiliarFragment {
 													for (MtgCard data : mLeftList) {
 														if (!data.customPrice) {
 															data.message = getString(R.string.wishlist_loading);
-															loadPrice(data, mLeftAdapter); // TODO avoid requery
+															loadPrice(data, mLeftAdapter);
 														}
 													}
 													mLeftAdapter.notifyDataSetChanged();
@@ -536,7 +586,7 @@ public class TradeFragment extends FamiliarFragment {
 													for (MtgCard data : mRightList) {
 														if (!data.customPrice) {
 															data.message = getString(R.string.wishlist_loading);
-															loadPrice(data, mRightAdapter); // TODO avoid requery
+															loadPrice(data, mRightAdapter);
 														}
 													}
 													mRightAdapter.notifyDataSetChanged();
@@ -544,6 +594,8 @@ public class TradeFragment extends FamiliarFragment {
 													/* And also update the preference */
 													getFamiliarActivity().mPreferenceAdapter.setTradePrice(
 															String.valueOf(mPriceSetting));
+
+													UpdateTotalPrices(BOTH);
 												}
 												dialog.dismiss();
 											}
@@ -874,70 +926,102 @@ public class TradeFragment extends FamiliarFragment {
 	 * @param adapter The adapter to notify when a price is downloaded
 	 */
 	private void loadPrice(final MtgCard data, final TradeListAdapter adapter) {
-		PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
-		getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode,
-				DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-					/**
-					 * This is called when the lookup fails. Set the error message and notify the adapter
-					 * @param spiceException The exception thrown when trying to download the price
-					 */
-					@Override
-					public void onRequestFailure(SpiceException spiceException) {
-						data.message = spiceException.getLocalizedMessage();
-						data.priceInfo = null;
-						adapter.notifyDataSetChanged();
+		/* If the priceInfo is already loaded, don't bother performing a query */
+		if (data.priceInfo != null) {
+			if (data.foil) {
+				data.price = (int) (data.priceInfo.mFoilAverage * 100);
+			}
+			else {
+				switch (mPriceSetting) {
+					case LOW_PRICE: {
+						data.price = (int) (data.priceInfo.mLow * 100);
+						break;
 					}
-
-					/**
-					 * This is called when the lookup succeeds. Save all the prices and set the current price
-					 * @param result The PriceInfo object with the low, average, high, and foil prices
-					 */
-					@Override
-					public void onRequestSuccess(final PriceInfo result) {
-				/* Sanity check */
-						if (result == null) {
+					default:
+					case AVG_PRICE: {
+						data.price = (int) (data.priceInfo.mAverage * 100);
+						break;
+					}
+					case HIGH_PRICE: {
+						data.price = (int) (data.priceInfo.mHigh * 100);
+						break;
+					}
+					case FOIL_PRICE: {
+						data.price = (int) (data.priceInfo.mFoilAverage * 100);
+						break;
+					}
+				}
+			}
+		}
+		else {
+			/* priceInfo is null, perform a query */
+			PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
+			getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode,
+					DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
+						/**
+						 * This is called when the lookup fails. Set the error message and notify the adapter
+						 *
+						 * @param spiceException The exception thrown when trying to download the price
+						 */
+						@Override
+						public void onRequestFailure(SpiceException spiceException) {
+							data.message = spiceException.getLocalizedMessage();
 							data.priceInfo = null;
+							adapter.notifyDataSetChanged();
 						}
-						else {
-					/* Set the PriceInfo object */
-							data.priceInfo = result;
 
-					/* Only reset the price to the downloaded one if the old price isn't custom */
-							if (!data.customPrice) {
-								if (data.foil) {
-									data.price = (int) (result.mFoilAverage * 100);
-								}
-								else {
-									switch (mPriceSetting) {
-										case LOW_PRICE: {
-											data.price = (int) (result.mLow * 100);
-											break;
-										}
-										default:
-										case AVG_PRICE: {
-											data.price = (int) (result.mAverage * 100);
-											break;
-										}
-										case HIGH_PRICE: {
-											data.price = (int) (result.mHigh * 100);
-											break;
-										}
-										case FOIL_PRICE: {
-											data.price = (int) (result.mFoilAverage * 100);
-											break;
+						/**
+						 * This is called when the lookup succeeds. Save all the prices and set the current price
+						 *
+						 * @param result The PriceInfo object with the low, average, high, and foil prices
+						 */
+						@Override
+						public void onRequestSuccess(final PriceInfo result) {
+							/* Sanity check */
+							if (result == null) {
+								data.priceInfo = null;
+							}
+							else {
+								/* Set the PriceInfo object */
+								data.priceInfo = result;
+
+								/* Only reset the price to the downloaded one if the old price isn't custom */
+								if (!data.customPrice) {
+									if (data.foil) {
+										data.price = (int) (result.mFoilAverage * 100);
+									}
+									else {
+										switch (mPriceSetting) {
+											case LOW_PRICE: {
+												data.price = (int) (result.mLow * 100);
+												break;
+											}
+											default:
+											case AVG_PRICE: {
+												data.price = (int) (result.mAverage * 100);
+												break;
+											}
+											case HIGH_PRICE: {
+												data.price = (int) (result.mHigh * 100);
+												break;
+											}
+											case FOIL_PRICE: {
+												data.price = (int) (result.mFoilAverage * 100);
+												break;
+											}
 										}
 									}
 								}
+								/* Clear the message */
+								data.message = null;
 							}
-					/* Clear the message */
-							data.message = null;
+							/* Notify the adapter and update total prices */
+							UpdateTotalPrices(BOTH);
+							adapter.notifyDataSetChanged();
 						}
-				/* Notify the adapter and update total prices */
-						UpdateTotalPrices(BOTH);
-						adapter.notifyDataSetChanged();
 					}
-				}
-		);
+			);
+		}
 	}
 
 	/**
