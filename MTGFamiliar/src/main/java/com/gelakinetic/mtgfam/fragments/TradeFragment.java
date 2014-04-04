@@ -724,7 +724,10 @@ public class TradeFragment extends FamiliarFragment {
 									public void onClick(DialogInterface di, int which) {
 										File toDelete = new File(getActivity().getFilesDir(), tradeNames[which] +
 												TRADE_EXTENSION);
-										toDelete.delete();
+										if (!toDelete.delete()) {
+											Toast.makeText(getActivity(), toDelete.getName() + " " +
+													getString(R.string.not_deleted), Toast.LENGTH_LONG).show();
+										}
 									}
 								})
 								.create();
@@ -1054,7 +1057,8 @@ public class TradeFragment extends FamiliarFragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			/* if the supplied view is null, inflate a new one */
 			if (convertView == null) {
-				convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row, null);
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row,
+						(ViewGroup) getActivity().findViewById(R.id.dialog_layout_root));
 			}
 			/* Get the data from the ArrayList */
 			MtgCard data = items.get(position);

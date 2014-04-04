@@ -35,6 +35,12 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/drawer_divider_item"
+        android:layout_margin="8dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

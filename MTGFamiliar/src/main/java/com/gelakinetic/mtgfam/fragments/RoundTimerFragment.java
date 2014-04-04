@@ -221,7 +221,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 				startActivityForResult(intent, RINGTONE_REQUEST_CODE); /* This result is caught in the activity */
 				return true;
 			case R.id.set_timer_warnings:
-				showDialog(DIALOG_SET_WARNINGS);
+				showDialog();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -231,10 +231,8 @@ public class RoundTimerFragment extends FamiliarFragment {
 	/**
 	 * Remove any showing dialogs, and show the requested one
 	 *
-	 * @param id the ID of the dialog to show
 	 */
-	@SuppressWarnings("SameParameterValue")
-	void showDialog(final int id) {
+	void showDialog() {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -254,7 +252,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
 				setShowsDialog(true);
 
-				switch (id) {
+				switch (RoundTimerFragment.DIALOG_SET_WARNINGS) {
 					case DIALOG_SET_WARNINGS: {
 						final View v = View.inflate(this.getActivity(), R.layout.round_timer_warning_dialog, null);
 						final CheckBox chkFifteen = (CheckBox) v.findViewById(R.id.timer_pref_fifteen);

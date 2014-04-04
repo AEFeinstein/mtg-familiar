@@ -285,10 +285,8 @@ public class RulesFragment extends FamiliarFragment {
 	/**
 	 * Remove any showing dialogs, and show the requested one
 	 *
-	 * @param id the ID of the dialog to show
 	 */
-	@SuppressWarnings("SameParameterValue")
-	void showDialog(final int id) {
+	void showDialog() {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -316,11 +314,11 @@ public class RulesFragment extends FamiliarFragment {
 			@Override
 			public Dialog onCreateDialog(Bundle savedInstanceState) {
 				searchArgs = null;
-				switch (id) {
+				switch (RulesFragment.DIALOG_SEARCH) {
 					case DIALOG_SEARCH: {
 						/* Inflate a view to type in the player's name, and show it in an AlertDialog */
-						View textEntryView = getActivity().getLayoutInflater()
-								.inflate(R.layout.alert_dialog_text_entry, null);
+						View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
+								(ViewGroup) getActivity().findViewById(R.id.dialog_layout_root));
 						assert textEntryView != null;
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
@@ -378,7 +376,7 @@ public class RulesFragment extends FamiliarFragment {
 						return dialog;
 					}
 					default: {
-						savedInstanceState.putInt("id", id);
+						savedInstanceState.putInt("id", RulesFragment.DIALOG_SEARCH);
 						return super.onCreateDialog(savedInstanceState);
 					}
 				}
@@ -414,7 +412,7 @@ public class RulesFragment extends FamiliarFragment {
 	 */
 	@Override
 	public boolean onInterceptSearchKey() {
-		showDialog(DIALOG_SEARCH);
+		showDialog();
 		return true;
 	}
 

@@ -392,7 +392,6 @@ class CardAndSetParser {
 	 * @throws IOException                                        Thrown if something goes wrong with the InputStream
 	 * @throws com.gelakinetic.mtgfam.helpers.FamiliarDbException Thrown if something goes wrong with database writing
 	 */
-	@SuppressWarnings("SameParameterValue")
 	public void readLegalityJsonStream(CardDbAdapter dbHelper, PreferenceAdapter prefAdapter, final boolean RE_PARSE_DB)
 			throws IOException, FamiliarDbException {
 
@@ -482,7 +481,6 @@ class CardAndSetParser {
 	 * @param RE_PARSE_DB The date is ignored if we're re-parsing the database
 	 * @throws IOException         Thrown if something goes wrong with the InputStream
 	 */
-	@SuppressWarnings("SameParameterValue")
 	public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, CardDbAdapter mDbHelper, final boolean RE_PARSE_DB)
 			throws IOException {
 		URL update;

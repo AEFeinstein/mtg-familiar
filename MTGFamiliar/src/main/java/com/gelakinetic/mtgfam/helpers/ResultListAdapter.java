@@ -38,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This list adapter is used to display a list of search results. It implements SectionIndexer to enable fast scrolling.
  */
-@SuppressWarnings("ALL")
 public class ResultListAdapter extends SimpleCursorAdapter implements SectionIndexer {
 
 	private final String[] mFrom;

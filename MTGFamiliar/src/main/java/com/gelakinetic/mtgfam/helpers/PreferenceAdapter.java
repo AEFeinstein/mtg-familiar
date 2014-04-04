@@ -21,7 +21,6 @@ import java.util.Set;
  * 5. Profit (or at least sanity)!
  */
 
-@SuppressWarnings("ALL")
 public class PreferenceAdapter {
 
 	private final Context context;

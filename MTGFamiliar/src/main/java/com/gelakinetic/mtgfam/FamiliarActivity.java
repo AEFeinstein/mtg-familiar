@@ -55,6 +55,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
@@ -419,8 +420,14 @@ public class FamiliarActivity extends FragmentActivity {
 				File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
 				File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
 				if (mtr.exists()) {
-					mtr.delete();
-					ipg.delete();
+					if(!mtr.delete()) {
+						Toast.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted), Toast.LENGTH_LONG)
+								.show();
+					}
+					if(!ipg.delete()) {
+						Toast.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted), Toast.LENGTH_LONG)
+								.show();
+					}
 				}
 			}
 		} catch (PackageManager.NameNotFoundException e) {
@@ -611,7 +618,7 @@ public class FamiliarActivity extends FragmentActivity {
 			position++;
 		}
 
-		Fragment newFrag = null;
+		Fragment newFrag;
 		mCurrentFrag = position;
 		/* Pick the new fragment */
 		switch (resId) {
@@ -657,10 +664,6 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 			default:
 				return;
-		}
-
-		if (newFrag == null) {
-			return;
 		}
 
 		FragmentManager fm = getSupportFragmentManager();
@@ -795,7 +798,6 @@ public class FamiliarActivity extends FragmentActivity {
 	 * headers
 	 */
 	public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
-		private final Context context;
 		private final DrawerEntry[] values;
 
 		/**
@@ -807,7 +809,6 @@ public class FamiliarActivity extends FragmentActivity {
 		 */
 		public DrawerEntryArrayAdapter(Context context, DrawerEntry[] values) {
 			super(context, R.layout.drawer_list_item, values);
-			this.context = context;
 			this.values = values;
 		}
 
@@ -829,25 +830,36 @@ public class FamiliarActivity extends FragmentActivity {
 			else {
 				layout = R.layout.drawer_list_item;
 			}
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(layout, parent, false);
+			if(convertView == null) {
+				convertView = getLayoutInflater().inflate(layout, parent, false);
+			}
 
-			assert rowView != null;
+			assert convertView != null;
 			if (values[position].mIsHeader) {
-				((TextView) rowView.findViewById(R.id.drawer_header_name)).setText(values[position].mNameResource);
-				rowView.setFocusable(false);
-				rowView.setFocusableInTouchMode(false);
+				/* Make sure the recycled view is the right type, inflate a new one if necessary */
+				if(convertView.findViewById(R.id.drawer_header_name) == null) {
+					convertView = getLayoutInflater().inflate(layout, parent, false);
+				}
+				assert convertView != null;
+				((TextView) convertView.findViewById(R.id.drawer_header_name)).setText(values[position].mNameResource);
+				convertView.setFocusable(false);
+				convertView.setFocusableInTouchMode(false);
 			}
 			else {
-				((TextView) rowView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
-				((ImageView) rowView.findViewById(R.id.drawer_entry_icon))
+				/* Make sure the recycled view is the right type, inflate a new one if necessary */
+				if(convertView.findViewById(R.id.drawer_entry_name) == null) {
+					convertView = getLayoutInflater().inflate(layout, parent, false);
+				}
+				assert convertView != null;
+				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
+				((ImageView) convertView.findViewById(R.id.drawer_entry_icon))
 						.setImageResource(values[position].mIconResource);
 			}
 
 			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
-				rowView.findViewById(R.id.divider).setVisibility(View.INVISIBLE);
+				convertView.findViewById(R.id.divider).setVisibility(View.INVISIBLE);
 			}
-			return rowView;
+			return convertView;
 		}
 	}
 

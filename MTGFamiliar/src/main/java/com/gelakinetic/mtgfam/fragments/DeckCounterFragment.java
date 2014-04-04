@@ -47,7 +47,6 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
 	 *                           here.
 	 * @return The view to be shown
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -65,7 +64,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
 		/* Restore any state, if available */
 		if (savedInstanceState != null) {
 			mDeckCount = savedInstanceState.getInt(DECK_COUNT_KEY);
-			mDeckCountSequence = (ArrayList<Integer>) savedInstanceState.getSerializable(SEQUENCE_KEY);
+			mDeckCountSequence = StringToArray(savedInstanceState.getString(SEQUENCE_KEY));
 		}
 		else {
 			mDeckCount = 0;
@@ -144,9 +143,42 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
 	public void onSaveInstanceState(Bundle outState) {
 
 		outState.putInt(DECK_COUNT_KEY, mDeckCount);
-		outState.putSerializable(SEQUENCE_KEY, mDeckCountSequence);
+		outState.putString(SEQUENCE_KEY, ArrayToString(mDeckCountSequence));
 
 		super.onSaveInstanceState(outState);
+	}
+
+	/**
+	 * Used to persist an array list through a bundle as a string
+	 *
+	 * @param list The ArrayList to persist
+	 * @return A String representation of the list
+	 */
+	private String ArrayToString(ArrayList<Integer> list) {
+		String string = "";
+		for (Integer i : list) {
+			string += i + ",";
+		}
+		return string;
+	}
+
+	/**
+	 * Used to turn a persisted String into an ArrayList
+	 *
+	 * @param string The persisted String
+	 * @return An ArrayList built from the String
+	 */
+	private ArrayList<Integer> StringToArray(String string) {
+		String parts[] = string.split(",");
+		ArrayList<Integer> list = new ArrayList<Integer>(parts.length - 1);
+		for (String part : parts) {
+			try {
+				list.add(Integer.parseInt(part));
+			} catch (NumberFormatException e) {
+				/* ignore this entry */
+			}
+		}
+		return list;
 	}
 
 	/**

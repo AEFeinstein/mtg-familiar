@@ -444,5 +444,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Widget -->
     <string name="widget_configure_reminder">Configure the widget in General Settings</string>
+    <string name="not_deleted">not deleted</string>
 
 </resources>
