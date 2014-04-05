@@ -1981,7 +1981,7 @@ public class CardDbAdapter {
 	}
 
 	public boolean canBeFoil(String setCode) throws FamiliarDbException {
-		String[] extraSets = {"UNH", "US", "UL", "UD", "P3", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
+		String[] extraSets = {"UNH", "UL", "UD", "P3", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
 		ArrayList<String> nonModernLegalSets = new ArrayList<String>(Arrays.asList(extraSets));
 		for (String value : nonModernLegalSets) {
 			if (value.equals(setCode)) {

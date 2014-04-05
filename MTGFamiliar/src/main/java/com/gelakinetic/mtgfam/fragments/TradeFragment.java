@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -32,6 +31,7 @@ import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -84,7 +84,7 @@ public class TradeFragment extends FamiliarFragment {
 	private ArrayList<MtgCard> mRightList;
 
 	/* UI Elements */
-	private AutoCompleteTextView mNameEditText;
+	private SafeAutoCompleteTextView mNameEditText;
 	private EditText mNumberEditText;
 	private CheckBox mCheckboxFoil;
 
@@ -109,7 +109,7 @@ public class TradeFragment extends FamiliarFragment {
 		/* Inflate the view, pull out UI elements */
 		View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
 		assert myFragmentView != null;
-		mNameEditText = (AutoCompleteTextView) myFragmentView.findViewById(R.id.namesearch);
+		mNameEditText = (SafeAutoCompleteTextView) myFragmentView.findViewById(R.id.namesearch);
 		mNumberEditText = (EditText) myFragmentView.findViewById(R.id.numberInput);
 		mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.trader_foil);
 		mTotalPriceRight = (TextView) myFragmentView.findViewById(R.id.priceTextRight);

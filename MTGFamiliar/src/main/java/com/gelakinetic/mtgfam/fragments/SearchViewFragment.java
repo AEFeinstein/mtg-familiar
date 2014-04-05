@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,6 +28,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
 import java.io.FileInputStream;
@@ -66,9 +66,9 @@ public class SearchViewFragment extends FamiliarFragment {
 	private int mSelectedFormat;
 
 	/* UI Elements */
-	private AutoCompleteTextView mNameField;
+	private SafeAutoCompleteTextView mNameField;
 	private EditText mTextField;
-	private AutoCompleteTextView mSupertypeField;
+	private SafeAutoCompleteTextView mSupertypeField;
 	private EditText mSubtypeField;
 	private CheckBox mCheckboxW;
 	private CheckBox mCheckboxU;
@@ -169,9 +169,9 @@ public class SearchViewFragment extends FamiliarFragment {
 		assert myFragmentView != null;
 
 		/* Get references to UI elements. When a search is preformed, these values will be queried */
-		mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
+		mNameField = (SafeAutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
 		mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
-		mSupertypeField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
+		mSupertypeField = (SafeAutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
 		mSubtypeField = (EditText) myFragmentView.findViewById(R.id.subtypesearch);
 		mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
 		mArtistField = (EditText) myFragmentView.findViewById(R.id.artistsearch);

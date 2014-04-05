@@ -20,7 +20,7 @@
             android:maxLength="2"
             android:selectAllOnFocus="true" />
 
-        <AutoCompleteTextView
+        <com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
             android:id="@+id/namesearch"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -30,7 +30,7 @@
             android:inputType="text">
 
             <requestFocus/>
-        </AutoCompleteTextView>
+        </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
 
         <LinearLayout
             android:layout_width="48dp"

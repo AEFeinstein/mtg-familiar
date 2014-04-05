@@ -28,7 +28,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.AutoCompleteTextView;
 import android.widget.SimpleCursorAdapter;
 
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
@@ -61,10 +60,10 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
 	 *                 Can be null if the cursor is not available yet.
 	 * @param textView The text view which we are watching for changes
 	 */
-	public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, AutoCompleteTextView textView) {
+	public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, SafeAutoCompleteTextView textView) {
 		super(context.getActivity(), com.gelakinetic.mtgfam.R.layout.list_item_1, null, from, to, 0);
 		mFragment = context;
-		context.getLoaderManager().initLoader(0, null, this);
+		mFragment.getLoaderManager().initLoader(0, null, this);
 		textView.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -94,8 +93,8 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
 	 */
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		// Now create and return a CursorLoader that will take care of
-		// creating a Cursor for the data being displayed.
+		/* Now create and return a CursorLoader that will take care of creating a Cursor for the data being displayed.
+		 */
 		String select = "(" + CardDbAdapter.KEY_NAME + ")";
 		return new CursorLoader(mFragment.getActivity(), SEARCH_URI, CARD_NAME_PROJECTION, select, mAutocompleteFilter,
 				CardDbAdapter.KEY_NAME + " COLLATE LOCALIZED ASC");

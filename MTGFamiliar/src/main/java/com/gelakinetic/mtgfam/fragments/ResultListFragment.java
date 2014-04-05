@@ -30,6 +30,10 @@ import java.util.Random;
  */
 public class ResultListFragment extends FamiliarFragment {
 
+	/* Saved instance state bundle keys */
+	private static final String CURSOR_POSITION_OFFSET = "cur_pos";
+	private static final String CURSOR_POSITION = "pos_off";
+
 	/* The cursor with the data and the list view to display it */
 	private Cursor mCursor;
 	private ListView mListView;
@@ -138,16 +142,17 @@ public class ResultListFragment extends FamiliarFragment {
 			mDbHelper.close();
 		}
 	}
-
 	/**
-	 * Save the cursor position when the fragment is paused so that it can be restored in onResume()
+	 * Save the position of the list
+	 *
+	 * @param outState Bundle in which to place your saved state.
 	 */
 	@Override
-	public void onPause() {
-		super.onPause();
-		mCursorPosition = mListView.getFirstVisiblePosition();
-		View cursorPositionView = mListView.getChildAt(0);
-		mCursorPositionOffset = (cursorPositionView == null) ? 0 : cursorPositionView.getTop();
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt(CURSOR_POSITION, mListView.getFirstVisiblePosition());
+		View tmp = mListView.getChildAt(0);
+		outState.putInt(CURSOR_POSITION_OFFSET, (tmp == null) ? 0 : tmp.getTop());
+		super.onSaveInstanceState(outState);
 	}
 
 	/**
@@ -178,6 +183,11 @@ public class ResultListFragment extends FamiliarFragment {
 		if (container == null) {
 			/* Something is happening when the fragment is on the back stack */
 			return null;
+		}
+
+		if (savedInstanceState != null) {
+			mCursorPosition = savedInstanceState.getInt(CURSOR_POSITION);
+			mCursorPositionOffset = savedInstanceState.getInt(CURSOR_POSITION_OFFSET);
 		}
 
 		/* Inflate the view */

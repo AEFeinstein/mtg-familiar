@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
@@ -23,6 +24,7 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 
 	private static final String BACKUP_FILE_NAME = "MTGFamiliarBackup.zip";
+	private static final String SHARED_PREF_DIR = "/data/data/com.gelakinetic.mtgfam/shared_prefs/";
 
 	/**
 	 * This method exports any data in this application's getFilesDir() into a zip file on external storage
@@ -31,7 +33,8 @@ public class ZipUtils {
 	 */
 	public static void exportData(Context context) {
 		assert context.getFilesDir() != null;
-		ArrayList<File> files = findAllFiles(context.getFilesDir());
+		ArrayList<File> files = findAllFiles(context.getFilesDir(),
+				new File(SHARED_PREF_DIR));
 
 		File sdCard = Environment.getExternalStorageDirectory();
 		File zipOut = new File(sdCard, BACKUP_FILE_NAME);
@@ -51,8 +54,7 @@ public class ZipUtils {
 			else {
 				Toast.makeText(context, context.getString(R.string.main_export_fail), Toast.LENGTH_SHORT).show();
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			Toast.makeText(context, context.getString(R.string.main_export_fail), Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -78,19 +80,21 @@ public class ZipUtils {
 	/**
 	 * Recursively crawl through a directory and build a list of all files
 	 *
-	 * @param dir The root directory
+	 * @param dirs The root directories
 	 * @return An ArrayList of all the files in the root directory
 	 */
-	private static ArrayList<File> findAllFiles(File dir) {
+	private static ArrayList<File> findAllFiles(File... dirs) {
 		ArrayList<File> files = new ArrayList<File>();
-		File listFiles[] = dir.listFiles();
-		assert listFiles != null;
-		for (File file : listFiles) {
-			if (file.isDirectory()) {
-				files.addAll(findAllFiles(file));
-			}
-			else {
-				files.add(file);
+		for (File dir : dirs) {
+			File listFiles[] = dir.listFiles();
+			assert listFiles != null;
+			for (File file : listFiles) {
+				if (file.isDirectory()) {
+					files.addAll(findAllFiles(file));
+				}
+				else {
+					files.add(file);
+				}
 			}
 		}
 		return files;
@@ -134,8 +138,17 @@ public class ZipUtils {
 			}
 
 			InputStream in = zipFile.getInputStream(entry);
-			OutputStream out = new BufferedOutputStream(new FileOutputStream(
-					new File(context.getFilesDir(), entry.getName())));
+			OutputStream out;
+			if (entry.getName().contains("_preferences.xml")) {
+				Log.e("pth", SHARED_PREF_DIR + " : " + entry.getName());
+				out = new BufferedOutputStream(new FileOutputStream(
+						new File(SHARED_PREF_DIR, entry.getName())));
+			}
+			else {
+				Log.e("pth", context.getFilesDir() + " : " + entry.getName());
+				out = new BufferedOutputStream(new FileOutputStream(
+						new File(context.getFilesDir(), entry.getName())));
+			}
 			byte[] buffer = new byte[1024];
 			int len;
 			while ((len = in.read(buffer)) >= 0) {
@@ -164,9 +177,8 @@ public class ZipUtils {
 		FileOutputStream fos = new FileOutputStream(zipFile);
 		ZipOutputStream zos = new ZipOutputStream(fos);
 		assert context.getFilesDir() != null;
-		int fileDirLen = context.getFilesDir().getAbsolutePath().length() + 1;
 		for (File file : files) {
-			ZipEntry ze = new ZipEntry(file.getAbsolutePath().substring(fileDirLen));
+			ZipEntry ze = new ZipEntry(file.getName());
 			zos.putNextEntry(ze);
 
 			FileInputStream in = new FileInputStream(file);

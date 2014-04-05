@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <AutoCompleteTextView
+            <com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
                 style="@style/forty_eight"
                 android:id="@+id/name_search"
                 android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                 android:singleLine="true">
 
                 <requestFocus/>
-            </AutoCompleteTextView>
+            </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
 
             <LinearLayout
                 android:id="@+id/linearLayout12"
@@ -45,7 +45,7 @@
                 android:orientation="horizontal"
                 style="@style/forty_eight">
 
-                <AutoCompleteTextView
+                <com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
                     android:id="@+id/supertypesearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

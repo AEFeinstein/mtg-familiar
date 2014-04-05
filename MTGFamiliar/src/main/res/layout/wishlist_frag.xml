@@ -24,7 +24,7 @@
             android:singleLine="true">
         </EditText>
 
-        <AutoCompleteTextView
+        <com.gelakinetic.mtgfam.helpers.Safecom.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
             android:id="@+id/name_search"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -35,7 +35,7 @@
             android:singleLine="true">
 
             <requestFocus/>
-        </AutoCompleteTextView>
+        </com.gelakinetic.mtgfam.helpers.Safecom.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
 
         <LinearLayout
             android:layout_width="48dp"
