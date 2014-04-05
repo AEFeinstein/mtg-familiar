@@ -1,14 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/master_layout"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical"
-              android:layout_marginTop="4dp">
+    android:id="@+id/master_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="4dp"
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/mjs_momir_portrait"/>
+                android:src="@drawable/mjs_momir_portrait" />
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
@@ -48,24 +48,26 @@
                         style="@style/text.small"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
-                        android:text="@string/mojhosto_momir_label"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:text="@string/mojhosto_momir_label" />
 
                     <Spinner
                         android:id="@+id/momir_spinner"
                         android:layout_width="fill_parent"
                         android:layout_height="48dp"
                         android:entries="@array/momir_spinner"
-                        android:gravity="center"/>
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/momir_button"
+                    style="@style/text.small"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
-                    style="@style/text.small"
-                    android:text="@string/mojhosto_random_creature"/>
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mojhosto_random_creature"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
 
@@ -81,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/mjs_stonehewer_portrait"/>
+                android:src="@drawable/mjs_stonehewer_portrait" />
 
             <LinearLayout
 
@@ -100,24 +102,26 @@
                         style="@style/text.small"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
-                        android:text="@string/mojhosto_stonehewer_label"
-                        android:gravity="center"/>
+                        android:gravity="center"
+                        android:text="@string/mojhosto_stonehewer_label" />
 
                     <Spinner
                         android:id="@+id/stonehewer_spinner"
                         android:layout_width="fill_parent"
                         android:layout_height="48dp"
                         android:entries="@array/momir_spinner"
-                        android:gravity="center"/>
+                        android:gravity="center" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/stonehewer_button"
+                    style="@style/text.small"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
-                    style="@style/text.small"
-                    android:text="@string/mojhosto_random_equipment"/>
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mojhosto_random_equipment"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
 
@@ -133,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/mjs_jhoira_portrait"/>
+                android:src="@drawable/mjs_jhoira_portrait" />
 
             <LinearLayout
                 android:id="@+id/linearLayout6"
@@ -145,19 +149,23 @@
 
                 <Button
                     android:id="@+id/jhorira_instant_button"
+                    style="@style/text.small"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
-                    style="@style/text.small"
-                    android:text="@string/mojhosto_random_instants"/>
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mojhosto_random_instants"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/jhorira_sorcery_button"
+                    style="@style/text.small"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
-                    style="@style/text.small"
-                    android:text="@string/mojhosto_random_sorceries"/>
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mojhosto_random_sorceries"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -165,5 +173,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 </LinearLayout>

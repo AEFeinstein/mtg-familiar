@@ -1,115 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:layout_marginLeft="16dp"
-              android:layout_marginRight="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:orientation="vertical">
 
     <TextSwitcher
         android:id="@+id/deck_counter_count"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/holo_blue_light"/>
+        android:background="@color/holo_blue_light" />
 
     <TextView
         android:id="@+id/deck_counter_history"
+        style="@style/text.medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
-        android:singleLine="true"
+        android:layout_marginTop="3dp"
         android:ellipsize="start"
-        style="@style/text.medium"/>
+        android:singleLine="true" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/drawer_divider_item"/>
+        android:background="@color/drawer_divider_item" />
 
     <LinearLayout
+        style="@android:style/Holo.Light.ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        style="@android:style/Holo.Light.ButtonBar">
+        android:orientation="horizontal">
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/deck_counter_1"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/deck_counter_1"/>
+            android:text="@string/deck_counter_1"
+            android:textStyle="bold" />
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/deck_counter_2"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/deck_counter_2"/>
+            android:text="@string/deck_counter_2"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/drawer_divider_item"/>
+        android:background="@color/drawer_divider_item" />
 
     <LinearLayout
+        style="@android:style/Holo.Light.ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        style="@android:style/Holo.Light.ButtonBar">
+        android:orientation="horizontal">
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/deck_counter_3"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/deck_counter_3"/>
+            android:text="@string/deck_counter_3"
+            android:textStyle="bold" />
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/deck_counter_4"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/deck_counter_4"/>
+            android:text="@string/deck_counter_4"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/drawer_divider_item"/>
+        android:background="@color/drawer_divider_item" />
 
     <LinearLayout
+        style="@android:style/Holo.Light.ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="@android:style/Holo.Light.ButtonBar">
+        android:orientation="horizontal">
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/deck_counter_reset"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/deck_counter_reset"/>
+            android:text="@string/deck_counter_reset"
+            android:textStyle="bold" />
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/deck_counter_undo"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/deck_counter_undo"/>
+            android:text="@string/deck_counter_undo"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

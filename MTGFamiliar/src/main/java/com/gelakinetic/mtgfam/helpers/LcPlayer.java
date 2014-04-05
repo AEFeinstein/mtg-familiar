@@ -709,7 +709,7 @@ public class LcPlayer {
 						final int[] delta = {0};
 						final int[] absolute = {mCommanderDamage.get(position).mLife};
 
-						deltaText.setText(((delta[0] >= 0) ? "+" : "-") + delta[0]);
+						deltaText.setText(((delta[0] >= 0) ? "+" : "") + delta[0]);
 						absoluteText.setText("" + absolute[0]);
 
 						view.findViewById(R.id.commander_plus1).setOnClickListener(new View.OnClickListener() {
@@ -717,7 +717,7 @@ public class LcPlayer {
 							public void onClick(View v) {
 								delta[0]++;
 								absolute[0]++;
-								deltaText.setText(((delta[0] >= 0) ? "+" : "-") + delta[0]);
+								deltaText.setText(((delta[0] >= 0) ? "+" : "") + delta[0]);
 								absoluteText.setText("" + absolute[0]);
 							}
 						});
@@ -727,7 +727,7 @@ public class LcPlayer {
 							public void onClick(View v) {
 								delta[0]--;
 								absolute[0]--;
-								deltaText.setText(((delta[0] >= 0) ? "+" : "-") + delta[0]);
+								deltaText.setText(((delta[0] >= 0) ? "+" : "") + delta[0]);
 								absoluteText.setText("" + absolute[0]);
 							}
 						});

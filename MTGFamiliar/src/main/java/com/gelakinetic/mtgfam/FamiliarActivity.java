@@ -857,8 +857,11 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 
 			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
-				convertView.findViewById(R.id.divider).setVisibility(View.INVISIBLE);
+				convertView.findViewById(R.id.divider).setVisibility(View.GONE);
 			}
+            else {
+                convertView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+            }
 			return convertView;
 		}
 	}

@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="C:\Users\Adam Feinstein\mtg-familiar" />
-            <option value="C:\Users\Adam Feinstein\mtg-familiar\MTGFamiliar" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/MTGFamiliar" />
           </set>
         </option>
       </GradleProjectSettings>

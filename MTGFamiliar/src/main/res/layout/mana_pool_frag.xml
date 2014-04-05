@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
      Copyright 2011 Michael Shick This file is part of MTG Familiar. MTG
 	Familiar is free software: you can redistribute it and/or modify it under
@@ -11,486 +12,305 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="center_vertical"
-              android:gravity="center"
-              android:orientation="vertical">
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:layout_marginLeft="56dp"
+    android:layout_marginRight="56dp"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <!-- white -->
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
-
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/white_minus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_minus"
-            android:textSize="30dp"
-            />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/glyph_w"/>
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/glyph_w" />
 
         <TextView
             android:id="@+id/white_readout"
-            android:layout_width="wrap_content"
+            style="@style/text.xxlarge"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="20dip"
-            android:text="@string/mana_pool_zero"
-            style="@style/text.xxlarge"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/mana_pool_zero" />
 
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/white_plus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_plus"
-            android:textSize="30dp"/>
+            android:textStyle="bold" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
     </LinearLayout>
     <!-- blue -->
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
-
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/blue_minus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_minus"
-            android:textSize="30dp"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/glyph_u"/>
+            android:layout_marginLeft="8dp"
+
+            android:src="@drawable/glyph_u" />
 
         <TextView
             android:id="@+id/blue_readout"
-            android:layout_width="wrap_content"
+            style="@style/text.xxlarge"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="20dip"
-            android:text="@string/mana_pool_zero"
-            style="@style/text.xxlarge"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/mana_pool_zero" />
 
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/blue_plus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_plus"
-            android:textSize="30dp"/>
+            android:textStyle="bold" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
     </LinearLayout>
     <!-- black -->
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
-
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/black_minus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_minus"
-            android:textSize="30dp"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/glyph_b"/>
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/glyph_b" />
 
         <TextView
             android:id="@+id/black_readout"
-            android:layout_width="wrap_content"
+            style="@style/text.xxlarge"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="20dip"
-            android:text="@string/mana_pool_zero"
-            style="@style/text.xxlarge"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/mana_pool_zero" />
 
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/black_plus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_plus"
-            android:textSize="30dp"/>
+            android:textStyle="bold" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
     </LinearLayout>
     <!-- red -->
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
-
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/red_minus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_minus"
-            android:textSize="30dp"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/glyph_r"/>
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/glyph_r" />
 
         <TextView
             android:id="@+id/red_readout"
-            android:layout_width="wrap_content"
+            style="@style/text.xxlarge"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="20dip"
-            android:text="@string/mana_pool_zero"
-            style="@style/text.xxlarge"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/mana_pool_zero" />
 
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/red_plus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_plus"
-            android:textSize="30dp"/>
+            android:textStyle="bold" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
     </LinearLayout>
     <!-- green -->
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
-
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/green_minus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_minus"
-            android:textSize="30dp"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/glyph_g"/>
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/glyph_g" />
 
         <TextView
             android:id="@+id/green_readout"
-            android:layout_width="wrap_content"
+            style="@style/text.xxlarge"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="20dip"
-            android:text="@string/mana_pool_zero"
-            style="@style/text.xxlarge"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/mana_pool_zero" />
 
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/green_plus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_plus"
-            android:textSize="30dp"/>
+            android:textStyle="bold" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
     </LinearLayout>
     <!-- colorless -->
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
-
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/colorless_minus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_minus"
-            android:textSize="30dp"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/glyph_x"/>
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/glyph_x" />
 
         <TextView
             android:id="@+id/colorless_readout"
-            android:layout_width="wrap_content"
+            style="@style/text.xxlarge"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="20dip"
-            android:text="@string/mana_pool_zero"
-            style="@style/text.xxlarge"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/mana_pool_zero" />
 
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/colorless_plus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_plus"
-            android:textSize="30dp"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:textStyle="bold" />
     </LinearLayout>
     <!-- spell -->
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
-
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/spell_minus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_minus"
-            android:textSize="30dp"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dip"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/glyph_spell"/>
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/glyph_spell" />
 
         <TextView
             android:id="@+id/spell_readout"
-            android:layout_width="wrap_content"
+            style="@style/text.xxlarge"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="20dip"
-            android:text="@string/mana_pool_zero"
-            style="@style/text.xxlarge"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/mana_pool_zero" />
 
         <Button
-            style="?android:attr/buttonBarStyle"
             android:id="@+id/spell_plus"
-            android:layout_width="60sp"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@drawable/btn_default_custom"
             android:text="@string/mana_pool_plus"
-            android:textSize="30dp"/>
+            android:textStyle="bold" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/holo_blue_dark"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
     </LinearLayout>
 </LinearLayout>

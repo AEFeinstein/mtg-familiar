@@ -13,11 +13,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/dialog_layout_root"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="8dp">
+            android:layout_height="fill_parent">
 
     <LinearLayout
-        android:layout_marginTop="8dp"
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -29,29 +27,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/octocat"
-            style="?android:attr/buttonBarButtonStyle"
-            android:background="@drawable/holo_blue_border"/>
+            android:background="@drawable/btn_default_custom"/>
 
         <TextView
             android:id="@+id/aboutfield"
             style="@style/text.medium"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="5sp"
+            android:padding="8sp"
             android:text="TextView"/>
 
         <ImageView
             android:id="@+id/imageview1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="8dp"
             android:src="@drawable/gpl_logo"/>
 
         <ImageView
             android:id="@+id/imageview2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="8dp"
             android:src="@drawable/cc_logo"/>
     </LinearLayout>
 

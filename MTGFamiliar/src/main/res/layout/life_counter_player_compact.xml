@@ -18,13 +18,13 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/nplayer_row"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:gravity="center_vertical"
-              android:orientation="vertical"
-              android:padding="5dp"
-              android:weightSum="1">
+    android:id="@+id/nplayer_row"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:weightSum="1">
     <!-- Health and +/- buttons -->
 
     <TextView
@@ -32,21 +32,21 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         style="@style/text.large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/life_counter_default_name"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:text="@string/life_counter_default_name" />
 
     <!-- +1/+5 buttons -->
 
     <TextView
         android:id="@+id/player_readout"
         style="@style/text.xxxlarge"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:maxLines="1"
-        android:text="@string/life_counter_twenty"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="-10dp"
-        android:layout_marginTop="-10dp"/>
+        android:layout_marginTop="-10dp"
+        android:maxLines="1"
+        android:text="@string/life_counter_twenty" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -57,56 +57,60 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             style="?android:attr/buttonBarStyle"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <Button
-                style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/player_plus1"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/life_counter_plus_one"/>
+                android:text="@string/life_counter_plus_one"
+                android:textStyle="bold" />
 
             <Button
-                style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/player_plus5"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/life_counter_plus_five"/>
+                android:text="@string/life_counter_plus_five"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
-            android:background="@color/drawer_divider_item"/>
+            android:layout_marginRight="16dp"
+            android:background="@color/drawer_divider_item" />
         <!-- -1/-5 buttons -->
 
         <LinearLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/player_minus1"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_minus_one"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/player_minus5"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_minus_five"
-                style="?android:attr/buttonBarButtonStyle"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

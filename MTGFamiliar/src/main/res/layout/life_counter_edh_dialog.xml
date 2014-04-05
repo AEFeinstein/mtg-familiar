@@ -1,65 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
         style="@style/forty_eight"
-        android:background="@drawable/light_grey_border">
+        android:layout_width="match_parent"
+        android:background="@drawable/light_grey_border"
+        android:orientation="horizontal">
 
         <TextView
-            style="@style/text.medium"
             android:id="@+id/delta"
+            style="@style/text.medium"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"/>
+            android:gravity="center" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
-            android:background="@color/drawer_divider_item"/>
+            android:layout_marginTop="1dp"
+            android:background="@color/drawer_divider_item" />
 
         <TextView
-            style="@style/text.medium"
             android:id="@+id/absolute"
+            style="@style/text.medium"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"/>
+            android:gravity="center" />
 
     </LinearLayout>
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        style="?android:attr/buttonBarStyle">
+        android:orientation="horizontal">
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/commander_minus1"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/life_counter_minus_one"/>
+            android:text="@string/life_counter_minus_one"
+            android:textStyle="bold" />
 
         <Button
-            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/commander_plus1"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/life_counter_plus_one"/>
+            android:text="@string/life_counter_plus_one"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
