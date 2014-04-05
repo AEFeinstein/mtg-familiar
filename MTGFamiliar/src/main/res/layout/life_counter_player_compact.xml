@@ -112,23 +112,4 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     </LinearLayout>
     <!-- Health display -->
 
-    <TextView
-        android:id="@+id/commanderCastText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:text="@string/life_counter_commander_cast"
-        style="@style/text.medium"
-        android:layout_gravity="center"
-        android:visibility="visible"/>
-
-    <Button
-        android:id="@+id/commanderCast"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/mana_pool_zero"
-        style="?android:attr/buttonBarButtonStyle"
-        android:background="@drawable/light_grey_border"
-        android:visibility="visible"/>
-
 </LinearLayout>
