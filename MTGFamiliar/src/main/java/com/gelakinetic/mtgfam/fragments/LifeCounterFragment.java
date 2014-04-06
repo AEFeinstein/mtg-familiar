@@ -284,7 +284,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		setStatDisplaying(mStatDisplaying);
 
-		if (getFamiliarActivity().mPreferenceAdapter.getWakelock()) {
+		if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
 			getActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		}
 	}
@@ -294,7 +294,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 */
 	@Override
 	public void onUserInactive() {
-		if (getFamiliarActivity().mPreferenceAdapter.getWakelock()) {
+		if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
 			WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
 			layoutParams.screenBrightness = 0.0f;
 			getActivity().getWindow().setAttributes(layoutParams);
@@ -306,7 +306,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 */
 	@Override
 	public void onUserActive() {
-		if (getFamiliarActivity().mPreferenceAdapter.getWakelock()) {
+		if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
 			WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
 			layoutParams.screenBrightness = mDefaultBrightness;
 			getActivity().getWindow().setAttributes(layoutParams);

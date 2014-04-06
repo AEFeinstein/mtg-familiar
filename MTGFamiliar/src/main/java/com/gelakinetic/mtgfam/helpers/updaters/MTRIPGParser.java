@@ -19,7 +19,7 @@ import java.util.Calendar;
  * This class handles updating the HTML files for the infraction procedure guide, and magic tournament rules. The files
  * are hosted at the URLs hardcoded below, and the date stamp is the first line of the file.
  */
-public class MTRIPGParser {
+class MTRIPGParser {
 
 	private static final String MTR_SOURCE =
 			"https://sites.google.com/site/mtgfamiliar/rules/MagicTournamentRules-light.html";

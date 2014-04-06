@@ -47,7 +47,7 @@ public class DbUpdaterService extends IntentService {
 	/* Throw this switch to re-parse the entire database from a custom URL (currently UpToRTR.json.gzip
 	 * THIS SHOULD NEVER EVER EVER BE TRUE IN A PLAY STORE RELEASE
 	 */
-	private static final boolean RE_PARSE_DATABASE = false;
+	public static final boolean RE_PARSE_DATABASE = false;
 
 	/* Status Codes */
 	private static final int STATUS_NOTIFICATION = 31;
@@ -122,16 +122,16 @@ public class DbUpdaterService extends IntentService {
 			if (RE_PARSE_DATABASE) {
 				/* Blow up the database and download and build it all over again */
 				dbHelper.dropCreateDB();
-				parser.readLegalityJsonStream(dbHelper, mPrefAdapter, RE_PARSE_DATABASE);
+				parser.readLegalityJsonStream(dbHelper, mPrefAdapter);
 				GZIPInputStream upToGIS = new GZIPInputStream(
 						new URL("https://sites.google.com/site/mtgfamiliar/patches/UpToRTR.json.gzip").openStream());
 				switchToUpdating(String.format(getString(R.string.update_updating_set), "EVERYTHING!!"));
 				parser.readCardJsonStream(upToGIS, reporter, dbHelper);
-				parser.readTCGNameJsonStream(mPrefAdapter, dbHelper, RE_PARSE_DATABASE);
+				parser.readTCGNameJsonStream(mPrefAdapter, dbHelper);
 			}
 			else {
 				/* Look for updates with the banned / restricted lists and formats */
-				parser.readLegalityJsonStream(dbHelper, mPrefAdapter, RE_PARSE_DATABASE);
+				parser.readLegalityJsonStream(dbHelper, mPrefAdapter);
 				/* Look for new cards */
 				ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
 				if (patchInfo != null) {
@@ -157,7 +157,7 @@ public class DbUpdaterService extends IntentService {
 					}
 
 					/* Look for new TCGPlayer.com versions of set names */
-					parser.readTCGNameJsonStream(mPrefAdapter, dbHelper, RE_PARSE_DATABASE);
+					parser.readTCGNameJsonStream(mPrefAdapter, dbHelper);
 				}
 			}
 

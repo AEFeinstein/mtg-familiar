@@ -656,8 +656,9 @@ public class LcPlayer {
 				switch (id) {
 					case DIALOG_SET_NAME: {
 						/* Inflate a view to type in the player's name, and show it in an AlertDialog */
-						View textEntryView = mFragment.getActivity().getLayoutInflater()
-								.inflate(R.layout.alert_dialog_text_entry, null);
+						View textEntryView = mFragment.getActivity().getLayoutInflater().inflate(
+								R.layout.alert_dialog_text_entry,
+								(ViewGroup) mFragment.getActivity().findViewById(R.id.dialog_layout_root));
 						assert textEntryView != null;
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.append(LcPlayer.this.mName);
@@ -700,7 +701,8 @@ public class LcPlayer {
 					}
 					case DIALOG_COMMANDER_DAMAGE: {
 						/* inflate a view to add or subtract commander damage, and show it in an AlertDialog */
-						View view = LayoutInflater.from(getActivity()).inflate(R.layout.life_counter_edh_dialog, null);
+						View view = LayoutInflater.from(getActivity()).inflate(R.layout.life_counter_edh_dialog,
+								(ViewGroup) mFragment.getActivity().findViewById(R.id.dialog_layout_root));
 						assert view != null;
 						final TextView deltaText = (TextView) view.findViewById(R.id.delta);
 						final TextView absoluteText = (TextView) view.findViewById(R.id.absolute);
@@ -755,8 +757,9 @@ public class LcPlayer {
 					}
 					case DIALOG_CHANGE_LIFE: {
 						/* Inflate a view to type in a new life, then show it in an AlertDialog */
-						View textEntryView = mFragment.getActivity().getLayoutInflater()
-								.inflate(R.layout.alert_dialog_text_entry, null);
+						View textEntryView = mFragment.getActivity().getLayoutInflater().inflate(
+								R.layout.alert_dialog_text_entry,
+								(ViewGroup) mFragment.getActivity().findViewById(R.id.dialog_layout_root));
 						assert textEntryView != null;
 						final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);

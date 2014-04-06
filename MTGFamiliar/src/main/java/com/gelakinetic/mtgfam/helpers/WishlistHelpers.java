@@ -140,7 +140,8 @@ public class WishlistHelpers {
 		CardDbAdapter adapter = new CardDbAdapter(ctx);
 
 		/* Create the custom view */
-		View customView = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog, null);
+		View customView = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog,
+				(android.view.ViewGroup) fragment.getActivity().findViewById(R.id.dialog_layout_root));
 		assert customView != null;
 
 		/* Grab the linear layout. Make it final to be accessible from the button later */
@@ -194,7 +195,7 @@ public class WishlistHelpers {
 			String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
 			/* Inflate a row and fill it with stuff */
-			View wishlistRow = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null);
+			View wishlistRow = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, (android.view.ViewGroup) fragment.getActivity().findViewById(R.id.dialog_layout_root));
 			assert wishlistRow != null;
 			((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
 			((EditText) wishlistRow.findViewById(R.id.numberInput)).setText("0");
@@ -208,7 +209,7 @@ public class WishlistHelpers {
 			View wishlistRowFoil = null;
 			if (adapter.canBeFoil(setCode)) {
 				wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
-						null);
+						(android.view.ViewGroup) fragment.getActivity().findViewById(R.id.dialog_layout_root));
 				assert wishlistRowFoil != null;
 				((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
 				((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText("0");

@@ -388,11 +388,10 @@ class CardAndSetParser {
 	 *
 	 * @param dbHelper    Database access
 	 * @param prefAdapter The preference adapter is used to get the last update time
-	 * @param RE_PARSE_DB The date is ignored if we're re-parsing the database
 	 * @throws IOException                                        Thrown if something goes wrong with the InputStream
 	 * @throws com.gelakinetic.mtgfam.helpers.FamiliarDbException Thrown if something goes wrong with database writing
 	 */
-	public void readLegalityJsonStream(CardDbAdapter dbHelper, PreferenceAdapter prefAdapter, final boolean RE_PARSE_DB)
+	public void readLegalityJsonStream(CardDbAdapter dbHelper, PreferenceAdapter prefAdapter)
 			throws IOException, FamiliarDbException {
 
 		String legalSet;
@@ -417,7 +416,7 @@ class CardAndSetParser {
 				/* compare date, maybe return, update shared prefs */
 				String spDate = prefAdapter.getLegalityDate();
 				if (spDate != null && spDate.equals(mCurrentRulesDate)) {
-					if (!RE_PARSE_DB) { /* if we're re-parsing, screw the date */
+					if (!DbUpdaterService.RE_PARSE_DATABASE) { /* if we're re-parsing, screw the date */
 						reader.close();
 						return; /* dates match, nothing new here. */
 					}
@@ -478,10 +477,9 @@ class CardAndSetParser {
 	 *
 	 * @param prefAdapter The preference adapter is used to get the last update time
 	 * @param mDbHelper   database access
-	 * @param RE_PARSE_DB The date is ignored if we're re-parsing the database
 	 * @throws IOException         Thrown if something goes wrong with the InputStream
 	 */
-	public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, CardDbAdapter mDbHelper, final boolean RE_PARSE_DB)
+	public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, CardDbAdapter mDbHelper)
 			throws IOException {
 		URL update;
 		String label;
@@ -499,7 +497,7 @@ class CardAndSetParser {
 			if (label.equals("Date")) {
 				String lastUpdate = prefAdapter.getLastTCGNameUpdate();
 				mCurrentTCGNamePatchDate = reader.nextString();
-				if (lastUpdate.equals(mCurrentTCGNamePatchDate) && !RE_PARSE_DB) {
+				if (lastUpdate.equals(mCurrentTCGNamePatchDate) && !DbUpdaterService.RE_PARSE_DATABASE) {
 					reader.close();
 					return;
 				}
