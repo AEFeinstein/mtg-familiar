@@ -39,6 +39,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="error_database">A database error occurred. If it persists, try clearing the app data from the Android settings menu.</string>
     <string name="error_no_email_client">It does not appear that you have an active email client installed. Please configure an email application.</string>
     <string name="toast_no_card">No card found with that name.</string>
+    <string name="not_deleted">not deleted</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">PAGES</string>
@@ -56,13 +57,13 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="main_force_update_title">Force Update</string>
     <string name="main_settings_title">Settings</string>
     <string name="main_donate_title">Donate</string>
-    <string name="main_donate_dialog_title">Donate to the Devs</string>
+    <string name="main_donate_dialog_title">Donate to the Developers</string>
     <string name="main_donate_text">
-        For a premium M:TG app like this, how much would you pay? $1,000? $10,000?&lt;br />&lt;br />
-        Well, if you\'re reading this, you already know we\'re giving it away for free!&lt;br />&lt;br />
-        Coding is hard work though, and us devs appreciate the extra dollar here or there.&lt;br />&lt;br />
-        We\'ve got a drafting habit to fuel, OK?&lt;br />&lt;br />
-        You can click the button below to donate via PayPal. $1 is cool. $5 is cooler. You get the drift.&lt;br />&lt;br />
+        For a premium M:TG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;&lt;br&gt;
+        Well, if you\'re reading this, you already know we\'re giving it away for free!&lt;br&gt;&lt;br&gt;
+        Coding is hard work though, and us developers appreciate the extra dollar here or there.&lt;br&gt;&lt;br&gt;
+        We\'ve got a drafting habit to fuel, OK?&lt;br&gt;&lt;br&gt;
+        You can click the button below to donate via PayPal. $1 is cool. $5 is cooler. You get the drift.&lt;br&gt;&lt;br&gt;
         So, how generous are you feeling today?</string>
     <string name="main_whats_new_title">What\'s New</string>
     <string name="main_whats_new_in_title">What\'s New in Version</string>
@@ -442,6 +443,5 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Widget -->
     <string name="widget_configure_reminder">Configure the widget in General Settings</string>
-    <string name="not_deleted">not deleted</string>
 
 </resources>
