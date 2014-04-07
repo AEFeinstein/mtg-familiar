@@ -221,7 +221,9 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="life_counter_commander_cast">Commander Casting</string>
     <string name="life_counter_default_name">Player</string>
     <string name="life_counter_spoken_life" formatted="false">%s has %d life. </string>
-    <string name="life_counter_spoken_poison" formatted="false">%s has %d poison. </string>
+    <string name="life_counter_spoken_poison" formatted="false">%s has %d poison counters. </string>
+    <string name="life_counter_spoken_life_single" formatted="false">%s has %d life. </string>
+    <string name="life_counter_spoken_poison_single" formatted="false">%s has %d poison counter. </string>
     <string name="life_counter_over_9000">over 9000</string>
     <string name="life_counter_no_gatherings_exist">No Gatherings exist.</string>
     <string name="life_counter_edh_dialog_title">Damage from %s\'s Commander</string>

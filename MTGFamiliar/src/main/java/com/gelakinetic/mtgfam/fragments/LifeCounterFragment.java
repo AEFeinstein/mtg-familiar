@@ -949,13 +949,25 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 							mVocalizations.add(parts[1]);
 						}
 						else {
-							mVocalizations.add(
-									String.format(getString(R.string.life_counter_spoken_life), p.mName, p.mLife));
+							if(p.mLife == 1) {
+								mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life_single),
+										p.mName, p.mLife));
+							}
+							else {
+								mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life),
+										p.mName, p.mLife));
+							}
 						}
 						break;
 					case STAT_POISON:
-						mVocalizations.add(
-								String.format(getString(R.string.life_counter_spoken_poison), p.mName, p.mPoison));
+						if(p.mPoison == 1) {
+							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison_single),
+									p.mName, p.mPoison));
+						}
+						else {
+							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison),
+									p.mName, p.mPoison));
+						}
 						break;
 				}
 

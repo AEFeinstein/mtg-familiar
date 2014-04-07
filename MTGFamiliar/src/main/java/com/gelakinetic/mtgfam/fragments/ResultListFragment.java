@@ -142,6 +142,7 @@ public class ResultListFragment extends FamiliarFragment {
 			mDbHelper.close();
 		}
 	}
+
 	/**
 	 * Save the position of the list
 	 *
@@ -153,6 +154,17 @@ public class ResultListFragment extends FamiliarFragment {
 		View tmp = mListView.getChildAt(0);
 		outState.putInt(CURSOR_POSITION_OFFSET, (tmp == null) ? 0 : tmp.getTop());
 		super.onSaveInstanceState(outState);
+	}
+
+	/**
+	 * Called when the fragment is paused, save the list location
+	 */
+	@Override
+	public void onPause() {
+		super.onPause();
+		mCursorPosition = mListView.getFirstVisiblePosition();
+		View tmp = mListView.getChildAt(0);
+		mCursorPositionOffset = (tmp == null) ? 0 : tmp.getTop();
 	}
 
 	/**

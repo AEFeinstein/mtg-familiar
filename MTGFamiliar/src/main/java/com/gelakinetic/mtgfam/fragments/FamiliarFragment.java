@@ -20,6 +20,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * This is the superclass for all fragments. It has a bunch of convenient methods
@@ -48,9 +49,6 @@ public abstract class FamiliarFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setHasOptionsMenu(true);
-//		if (getParentFragment() == null) {
-//			this.setRetainInstance(true); TODO necessary?
-//		}
 	}
 
 	/**
@@ -108,7 +106,12 @@ public abstract class FamiliarFragment extends Fragment {
 		if (getFamiliarActivity().dialogShowing != FamiliarActivity.CHANGE_LOG_DIALOG) {
 			removeDialog(getFragmentManager());
 		}
-		getFamiliarActivity().mSpiceManager.cancelAllRequests();
+		try {
+			getFamiliarActivity().mSpiceManager.cancelAllRequests();
+		}
+		catch (RejectedExecutionException e) {
+			/* eat it */
+		}
 	}
 
 	/**
