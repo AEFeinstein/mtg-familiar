@@ -318,7 +318,7 @@ public class RulesFragment extends FamiliarFragment {
 					case DIALOG_SEARCH: {
 						/* Inflate a view to type in the player's name, and show it in an AlertDialog */
 						View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
-								(ViewGroup) getActivity().findViewById(R.id.dialog_layout_root));
+								null, false);
 						assert textEntryView != null;
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {

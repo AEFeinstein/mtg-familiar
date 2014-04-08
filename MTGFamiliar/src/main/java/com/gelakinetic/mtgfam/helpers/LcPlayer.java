@@ -212,7 +212,7 @@ public class LcPlayer {
 			case LifeCounterFragment.DISPLAY_COMMANDER:
 			case LifeCounterFragment.DISPLAY_NORMAL: {
 				/* Inflate the player view */
-				mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, null);
+				mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, null, false);
 				assert mView != null;
 				mHistoryList = (ListView) mView.findViewById(R.id.player_history);
 				mCommanderCastingButton = (Button) mView.findViewById(R.id.commanderCast);
@@ -248,7 +248,7 @@ public class LcPlayer {
 					});
 
 					mCommanderRowView = LayoutInflater.from(
-							mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, null);
+							mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, null, false);
 					assert mCommanderRowView != null;
 					mCommanderNameTextView = (TextView) mCommanderRowView.findViewById(R.id.player_name);
 					if (mName != null) {
@@ -267,7 +267,7 @@ public class LcPlayer {
 			case LifeCounterFragment.DISPLAY_COMPACT: {
 				/* inflate the compact view */
 				mView = LayoutInflater
-						.from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, null);
+						.from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, null, false);
 				/* don't bother with adapters */
 				mHistoryList = null;
 				mHistoryLifeAdapter = null;
@@ -536,7 +536,7 @@ public class LcPlayer {
 			}
 			else {
 				view = LayoutInflater.from(mFragment.getActivity())
-						.inflate(R.layout.life_counter_history_adapter_row, null);
+						.inflate(R.layout.life_counter_history_adapter_row, null, false);
 			}
 			assert view != null;
 			switch (mType) {
@@ -611,7 +611,7 @@ public class LcPlayer {
 			}
 			else {
 				view = LayoutInflater.from(mFragment.getActivity())
-						.inflate(R.layout.life_counter_player_commander, null);
+						.inflate(R.layout.life_counter_player_commander, null, false);
 			}
 			assert view != null;
 
@@ -658,7 +658,7 @@ public class LcPlayer {
 						/* Inflate a view to type in the player's name, and show it in an AlertDialog */
 						View textEntryView = mFragment.getActivity().getLayoutInflater().inflate(
 								R.layout.alert_dialog_text_entry,
-								(ViewGroup) mFragment.getActivity().findViewById(R.id.dialog_layout_root));
+								null, false);
 						assert textEntryView != null;
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.append(LcPlayer.this.mName);
@@ -702,7 +702,7 @@ public class LcPlayer {
 					case DIALOG_COMMANDER_DAMAGE: {
 						/* inflate a view to add or subtract commander damage, and show it in an AlertDialog */
 						View view = LayoutInflater.from(getActivity()).inflate(R.layout.life_counter_edh_dialog,
-								(ViewGroup) mFragment.getActivity().findViewById(R.id.dialog_layout_root));
+								null, false);
 						assert view != null;
 						final TextView deltaText = (TextView) view.findViewById(R.id.delta);
 						final TextView absoluteText = (TextView) view.findViewById(R.id.absolute);
@@ -759,7 +759,7 @@ public class LcPlayer {
 						/* Inflate a view to type in a new life, then show it in an AlertDialog */
 						View textEntryView = mFragment.getActivity().getLayoutInflater().inflate(
 								R.layout.alert_dialog_text_entry,
-								(ViewGroup) mFragment.getActivity().findViewById(R.id.dialog_layout_root));
+								null, false);
 						assert textEntryView != null;
 						final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);

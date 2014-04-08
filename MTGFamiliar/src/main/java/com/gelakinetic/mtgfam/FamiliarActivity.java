@@ -941,7 +941,7 @@ public class FamiliarActivity extends FragmentActivity {
 						/* Set the custom view, with some images below the text */
 						LayoutInflater inflater = this.getActivity().getLayoutInflater();
 						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
-								(ViewGroup) findViewById(R.id.dialog_layout_root));
+								null, false);
 						assert dialogLayout != null;
 						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
 						text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
@@ -968,7 +968,7 @@ public class FamiliarActivity extends FragmentActivity {
 						/* Set the custom view, with some images below the text */
 						LayoutInflater inflater = this.getActivity().getLayoutInflater();
 						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
-								(ViewGroup) findViewById(R.id.dialog_layout_root));
+								null, false);
 						assert dialogLayout != null;
 						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
 						text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_whats_new_text)));
@@ -1007,7 +1007,7 @@ public class FamiliarActivity extends FragmentActivity {
 						/* Set the custom view */
 						LayoutInflater inflater = this.getActivity().getLayoutInflater();
 						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
-								(ViewGroup) findViewById(R.id.dialog_layout_root));
+								null, false);
 
 						/* Set the text */
 						assert dialogLayout != null;

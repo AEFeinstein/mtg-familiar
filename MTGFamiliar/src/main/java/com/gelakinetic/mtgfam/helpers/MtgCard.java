@@ -109,16 +109,16 @@ public class MtgCard {
 
 	}
 
-	public MtgCard(String name, String tcgName, String setCode, int numberOf, int price, String message, String number, int rarity, boolean customPrice, boolean foil) {
+	public MtgCard(String name, String tcgName, String setCode, int numberOf, String message, String number, boolean foil) {
 		this.name = name;
 		this.number = number;
 		this.setCode = setCode;
 		this.tcgName = tcgName;
 		this.numberOf = numberOf;
-		this.price = price;
+		this.price = 0;
 		this.message = message;
-		this.rarity = (char) rarity;
-		this.customPrice = customPrice;
+		this.rarity = (char) (int) '-';
+		this.customPrice = false;
 		this.foil = foil;
 	}
 

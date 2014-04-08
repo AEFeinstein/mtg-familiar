@@ -14,9 +14,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light">
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name="com.gelakinetic.mtgfam.FamiliarActivity"
-            android:configChanges="keyboardHidden"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

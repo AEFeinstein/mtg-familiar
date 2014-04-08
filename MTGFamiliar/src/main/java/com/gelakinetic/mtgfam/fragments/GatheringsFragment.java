@@ -20,11 +20,8 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,9 +29,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,8 +40,6 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -69,10 +63,10 @@ public class GatheringsFragment extends FamiliarFragment {
 	private String mProposedGathering;
 	private String mCurrentGatheringName;
 	private int mLargestPlayerNumber;
-	private ArrayList<GatheringsPlayerData> mPlayerList = new ArrayList<GatheringsPlayerData>();
 
+	/* UI Elements */
+	private LinearLayout mLinearLayout;
 	private Spinner mDisplayModeSpinner;
-	private GatheringsArrayAdapter mAdapter;
 
 	/**
 	 * When the fragment is rotated, save the currently displaying Gathering and pass it to the new onCreate()
@@ -81,63 +75,93 @@ public class GatheringsFragment extends FamiliarFragment {
 	 */
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		Gathering toSave = new Gathering();
-		toSave.mDisplayMode = mDisplayModeSpinner.getSelectedItemPosition();
-		toSave.mPlayerList.addAll(mPlayerList);
-		outState.putSerializable(SAVED_GATHERING_KEY, toSave);
+		Gathering savedGathering = new Gathering();
+
+		savedGathering.mDisplayMode = mDisplayModeSpinner.getSelectedItemPosition();
+
+		/* Pull all the information about players from the linear layout's children */
+		for (int idx = 0; idx < mLinearLayout.getChildCount(); idx++) {
+			View player = mLinearLayout.getChildAt(idx);
+			assert player != null;
+
+			EditText nameField = ((EditText) player.findViewById(R.id.custom_name));
+			assert nameField.getText() != null;
+			String name = nameField.getText().toString().trim();
+
+			int startingLife;
+			try {
+				EditText startingLifeField = ((EditText) player.findViewById(R.id.starting_life));
+				assert startingLifeField.getText() != null;
+				startingLife = Integer.parseInt(startingLifeField.getText().toString().trim());
+			} catch (NumberFormatException e) {
+				startingLife = 20;
+			}
+
+			savedGathering.mPlayerList.add(new GatheringsPlayerData(name, startingLife));
+		}
+		outState.remove(SAVED_GATHERING_KEY);
+		outState.remove(SAVED_NAME_KEY);
+		outState.putSerializable(SAVED_GATHERING_KEY, savedGathering);
 		outState.putString(SAVED_NAME_KEY, mCurrentGatheringName);
 
 		super.onSaveInstanceState(outState);
 	}
 
 	/**
-	 * Create the view, grab the LinearLayout and Spinner, and set the displayed gathering either as default, or what
-	 * was saved before the rotation
+	 * Create the view and grab the LinearLayout and Spinner. Information will be populated later
 	 *
-	 * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
-	 * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
-	 *                           fragment should not add the view itself, but this can be used to generate the
-	 *                           LayoutParams of the view.
+	 * @param inflater		   The LayoutInflater object that can be used to inflate any views in the fragment,
+	 * @param container		  If non-null, this is the parent view that the fragment's UI should be attached to. The
+	 *						   fragment should not add the view itself, but this can be used to generate the
+	 *						   LayoutParams of the view.
 	 * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
-	 *                           here.
+	 *						   here.
 	 * @return The inflated view
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		mLargestPlayerNumber = 0;
 
 		/* Inflate a view */
 		View myFragmentView = inflater.inflate(R.layout.gathering_frag, container, false);
 		assert myFragmentView != null;
-		ListView listView = (ListView) myFragmentView.findViewById(R.id.gathering_player_list);
-
-		listView.setItemsCanFocus(true);
-		listView.setClickable(false);
+		mLinearLayout = (LinearLayout) myFragmentView.findViewById(R.id.gathering_player_list);
 		mDisplayModeSpinner = (Spinner) myFragmentView.findViewById(R.id.gathering_display_mode);
 
-		mPlayerList.clear();
+		return myFragmentView;
+	}
+
+	/**
+	 * Make sure to add any player rows to the LinearLayout *after* the View has been created.
+	 * This avoids a weird bug where text is duplicated across EditTexts
+	 *
+	 * @param savedInstanceState The Bundle containing information about a previous state
+	 */
+	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+
 
 		/* Add some players */
 		if (savedInstanceState == null) {
 			AddPlayerRow(new GatheringsPlayerData(null, 20));
 			AddPlayerRow(new GatheringsPlayerData(null, 20));
-		}
-		else {
-			mCurrentGatheringName = savedInstanceState.getString(SAVED_NAME_KEY);
-			Gathering savedGathering = (Gathering) savedInstanceState.getSerializable(SAVED_GATHERING_KEY);
-			assert savedGathering != null;
-			for (GatheringsPlayerData gpd : savedGathering.mPlayerList) {
-				AddPlayerRow(gpd);
-			}
-			mDisplayModeSpinner.setSelection(savedGathering.mDisplayMode);
-		}
+		} else {
+			mLinearLayout.removeAllViews();
+			mLargestPlayerNumber = 0;
+			Gathering gathering = (Gathering) savedInstanceState.getSerializable(SAVED_GATHERING_KEY);
 
-		mAdapter = new GatheringsArrayAdapter(getActivity(), mPlayerList);
-		mAdapter.notifyDataSetChanged();
-		listView.setAdapter(mAdapter);
-		return myFragmentView;
+			assert gathering != null;
+			mDisplayModeSpinner.setSelection(gathering.mDisplayMode);
+			ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
+			for (GatheringsPlayerData player : players) {
+				AddPlayerRow(player);
+			}
+			getActivity().invalidateOptionsMenu();
+			mCurrentGatheringName = savedInstanceState.getString(SAVED_NAME_KEY);
+		}
 	}
+
 
 	/**
 	 * Remove any showing dialogs, and show the requested one
@@ -168,7 +192,7 @@ public class GatheringsFragment extends FamiliarFragment {
 				switch (id) {
 					case DIALOG_SAVE_GATHERING: {
 						/* If there are no empty fields, try to save the Gathering. If a gathering with the same
- 						name already exists, prompt the user to overwrite it or not. */
+							name already exists, prompt the user to overwrite it or not. */
 
 						if (AreAnyFieldsEmpty()) {
 							Toast.makeText(getActivity(), R.string.gathering_empty_field, Toast.LENGTH_LONG).show();
@@ -177,7 +201,8 @@ public class GatheringsFragment extends FamiliarFragment {
 						}
 
 						LayoutInflater factory = LayoutInflater.from(this.getActivity());
-						final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry, null);
+						final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry,
+								null, false);
 						assert textEntryView != null;
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						if (mCurrentGatheringName != null) {
@@ -242,7 +267,7 @@ public class GatheringsFragment extends FamiliarFragment {
 								.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
 										GatheringsIO.DeleteGatheringByName(mProposedGathering,
-												getActivity().getFilesDir());
+												getActivity().getFilesDir(), getActivity());
 										SaveGathering(mProposedGathering);
 									}
 								})
@@ -273,7 +298,8 @@ public class GatheringsFragment extends FamiliarFragment {
 								.setTitle(R.string.gathering_delete)
 								.setItems(dProperNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {
-										GatheringsIO.DeleteGathering(dfGatherings[item], getActivity().getFilesDir());
+										GatheringsIO.DeleteGathering(dfGatherings[item], getActivity().getFilesDir(),
+												getActivity());
 										getActivity().invalidateOptionsMenu();
 									}
 								}).create();
@@ -281,8 +307,12 @@ public class GatheringsFragment extends FamiliarFragment {
 					case DIALOG_REMOVE_PLAYER: {
 						/* Remove a player from the Gathering and linear layout */
 						ArrayList<String> names = new ArrayList<String>();
-						for (GatheringsPlayerData gpd : mPlayerList) {
-							names.add(gpd.mName);
+						for (int idx = 0; idx < mLinearLayout.getChildCount(); idx++) {
+							View player = mLinearLayout.getChildAt(idx);
+							assert player != null;
+							EditText customName = (EditText) player.findViewById(R.id.custom_name);
+							assert customName.getText() != null;
+							names.add(customName.getText().toString().trim());
 						}
 						final String[] aNames = names.toArray(new String[names.size()]);
 
@@ -295,8 +325,7 @@ public class GatheringsFragment extends FamiliarFragment {
 								.setTitle(R.string.gathering_remove_player)
 								.setItems(aNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {
-										mPlayerList.remove(item);
-										mAdapter.notifyDataSetChanged();
+										mLinearLayout.removeViewAt(item);
 										getActivity().invalidateOptionsMenu();
 									}
 								})
@@ -323,18 +352,18 @@ public class GatheringsFragment extends FamiliarFragment {
 								.setTitle(R.string.gathering_load)
 								.setItems(properNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {
+										mLinearLayout.removeAllViews();
 										mLargestPlayerNumber = 0;
-										Gathering loaded = GatheringsIO.ReadGatheringXML(fGatherings[item],
+										Gathering gathering = GatheringsIO.ReadGatheringXML(fGatherings[item],
 												getActivity().getFilesDir());
 
 										mCurrentGatheringName = GatheringsIO.ReadGatheringNameFromXML(fGatherings[item],
 												getActivity().getFilesDir());
-										mDisplayModeSpinner.setSelection(loaded.mDisplayMode);
-										mPlayerList.clear();
-										for (GatheringsPlayerData gpd : loaded.mPlayerList) {
-											AddPlayerRow(gpd);
+										mDisplayModeSpinner.setSelection(gathering.mDisplayMode);
+										ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
+										for (GatheringsPlayerData player : players) {
+											AddPlayerRow(player);
 										}
-										mAdapter.notifyDataSetChanged();
 										getActivity().invalidateOptionsMenu();
 									}
 								}).create();
@@ -392,7 +421,7 @@ public class GatheringsFragment extends FamiliarFragment {
 	/**
 	 * Inflate the menu, gathering_menu
 	 *
-	 * @param menu     The options menu in which you place your items.
+	 * @param menu	 The options menu in which you place your items.
 	 * @param inflater The inflater to use to inflate the menu
 	 */
 	@Override
@@ -413,9 +442,26 @@ public class GatheringsFragment extends FamiliarFragment {
 		}
 
 		mCurrentGatheringName = _gatheringName;
+		int playersCount = mLinearLayout.getChildCount();
+		ArrayList<GatheringsPlayerData> players = new ArrayList<GatheringsPlayerData>(playersCount);
 
-		GatheringsIO.writeGatheringXML(mPlayerList, _gatheringName,
-				mDisplayModeSpinner.getSelectedItemPosition(), getActivity().getFilesDir());
+		for (int idx = 0; idx < playersCount; idx++) {
+			View player = mLinearLayout.getChildAt(idx);
+			assert player != null;
+
+			EditText customName = (EditText) player.findViewById(R.id.custom_name);
+			assert customName.getText() != null;
+			String name = customName.getText().toString().trim();
+
+			EditText startingLife = (EditText) player.findViewById(R.id.starting_life);
+			assert startingLife.getText() != null;
+			int life = Integer.parseInt(startingLife.getText().toString());
+
+			players.add(new GatheringsPlayerData(name, life));
+		}
+
+		GatheringsIO.writeGatheringXML(players, _gatheringName, mDisplayModeSpinner.getSelectedItemPosition(),
+				getActivity().getFilesDir());
 		getActivity().invalidateOptionsMenu();
 	}
 
@@ -425,10 +471,23 @@ public class GatheringsFragment extends FamiliarFragment {
 	 * @return true if there are empty fields, false otherwise
 	 */
 	private boolean AreAnyFieldsEmpty() {
+		int playersCount = mLinearLayout.getChildCount();
 
-		for (GatheringsPlayerData gpd : mPlayerList) {
+		for (int idx = 0; idx < playersCount; idx++) {
+			View player = mLinearLayout.getChildAt(idx);
 
-			if (gpd.mName.trim().length() == 0) {
+			assert player != null;
+			EditText customName = (EditText) player.findViewById(R.id.custom_name);
+			assert customName.getText() != null;
+			String name = customName.getText().toString().trim();
+			if (name.trim().length() == 0) {
+				return true;
+			}
+
+			EditText startingLife = (EditText) player.findViewById(R.id.starting_life);
+
+			assert startingLife.getText() != null;
+			if (startingLife.getText().toString().trim().length() == 0) {
 				return true;
 			}
 		}
@@ -445,8 +504,7 @@ public class GatheringsFragment extends FamiliarFragment {
 		if (_player.mName == null) {
 			mLargestPlayerNumber++;
 			_player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
-		}
-		else {
+		} else {
 			try {
 				String nameParts[] = _player.mName.split(" ");
 				int number = Integer.parseInt(nameParts[nameParts.length - 1]);
@@ -457,11 +515,13 @@ public class GatheringsFragment extends FamiliarFragment {
 				/* eat it */
 			}
 		}
+		View newView = getLayoutInflater(null).inflate(R.layout.gathering_create_player_row, null, false);
+		assert newView != null;
 
-		mPlayerList.add(_player);
-		if (mAdapter != null) {
-			mAdapter.notifyDataSetChanged();
-		}
+		((TextView) newView.findViewById(R.id.custom_name)).setText(_player.mName);
+		((TextView) newView.findViewById(R.id.starting_life)).setText(String.valueOf(_player.mStartingLife));
+
+		mLinearLayout.addView(newView);
 		getActivity().invalidateOptionsMenu();
 	}
 
@@ -481,10 +541,9 @@ public class GatheringsFragment extends FamiliarFragment {
 		assert deleteGathering != null;
 		assert loadGathering != null;
 
-		if (mPlayerList.size() == 0 || !getFamiliarActivity().mIsMenuVisible) {
+		if (mLinearLayout.getChildCount() == 0 || !getFamiliarActivity().mIsMenuVisible) {
 			removePlayer.setVisible(false);
-		}
-		else {
+		} else {
 			removePlayer.setVisible(true);
 		}
 
@@ -492,81 +551,9 @@ public class GatheringsFragment extends FamiliarFragment {
 				!getFamiliarActivity().mIsMenuVisible) {
 			deleteGathering.setVisible(false);
 			loadGathering.setVisible(false);
-		}
-		else {
+		} else {
 			deleteGathering.setVisible(true);
 			loadGathering.setVisible(true);
-		}
-	}
-
-	/**
-	 * TODO
-	 */
-	private class GatheringsArrayAdapter extends ArrayAdapter<GatheringsPlayerData> {
-
-		/**
-		 * Constructor
-		 *
-		 * @param context A context to pass to super
-		 * @param mItems  The list of items to display
-		 */
-		public GatheringsArrayAdapter(Context context, ArrayList<GatheringsPlayerData> mItems) {
-			super(context, R.layout.gathering_create_player_row, mItems);
-		}
-
-		/**
-		 * @param position
-		 * @param convertView
-		 * @param parent
-		 * @return
-		 */
-		@Nullable
-		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
-			/* TODO Should use holder pattern, but I don't know how to track which TextWatchers to remove before adding the new one */
-			convertView = getActivity().getLayoutInflater()
-					.inflate(R.layout.gathering_create_player_row, parent, false);
-			assert convertView != null;
-			((TextView) convertView.findViewById(R.id.custom_name)).setText(mPlayerList.get(position).mName);
-			((TextView) convertView.findViewById(R.id.custom_name)).addTextChangedListener(new TextWatcher() {
-				@Override
-				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-					/* ignore */
-				}
-
-				@Override
-				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-					/* Ignore */
-				}
-
-				@Override
-				public void afterTextChanged(Editable editable) {
-					mPlayerList.get(position).mName = editable.toString();
-				}
-			});
-			((TextView) convertView.findViewById(R.id.starting_life))
-					.setText(String.valueOf(mPlayerList.get(position).mStartingLife));
-			((TextView) convertView.findViewById(R.id.starting_life)).addTextChangedListener(new TextWatcher() {
-				@Override
-				public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-					/* ignore */
-				}
-
-				@Override
-				public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-					/* ignore */
-				}
-
-				@Override
-				public void afterTextChanged(Editable editable) {
-					try {
-						mPlayerList.get(position).mStartingLife = Integer.parseInt(editable.toString());
-					} catch (NumberFormatException e) {
-						mPlayerList.get(position).mStartingLife = 0;
-					}
-				}
-			});
-			return convertView;
 		}
 	}
 }

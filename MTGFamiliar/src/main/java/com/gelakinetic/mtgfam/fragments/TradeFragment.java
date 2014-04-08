@@ -212,8 +212,8 @@ public class TradeFragment extends FamiliarFragment {
 			mDbHelper.close();
 
 			/* Create the card, add it to a list, start a price fetch */
-			MtgCard data = new MtgCard(cardName, tcgName, setCode, numberOf, 0, getString(R.string.wishlist_loading),
-					cardNumber, '-', false, foil);
+			MtgCard data = new MtgCard(cardName, tcgName, setCode, numberOf, getString(R.string.wishlist_loading),
+					cardNumber, foil);
 			switch (side) {
 				case LEFT: {
 					mLeftList.add(0, data);
@@ -294,7 +294,7 @@ public class TradeFragment extends FamiliarFragment {
 
 						/* Inflate the view and pull out UI elements */
 						View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
-								(ViewGroup) getActivity().findViewById(R.id.dialog_layout_root));
+								null, false);
 						assert view != null;
 						final CheckBox foilCheckbox = (CheckBox) view.findViewById(R.id.traderDialogFoil);
 						final EditText numberOf = (EditText) view.findViewById(R.id.traderDialogNumber);
@@ -606,7 +606,7 @@ public class TradeFragment extends FamiliarFragment {
 						/* Inflate a view to type in the trade's name, and show it in an AlertDialog */
 						View textEntryView = getActivity().getLayoutInflater()
 								.inflate(R.layout.alert_dialog_text_entry,
-										(ViewGroup) getActivity().findViewById(R.id.dialog_layout_root));
+										null, false);
 						assert textEntryView != null;
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.append(mCurrentTrade);
@@ -1058,7 +1058,7 @@ public class TradeFragment extends FamiliarFragment {
 			/* if the supplied view is null, inflate a new one */
 			if (convertView == null) {
 				convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row,
-						(ViewGroup) getActivity().findViewById(R.id.dialog_layout_root));
+						null, false);
 			}
 			/* Get the data from the ArrayList */
 			MtgCard data = items.get(position);
