@@ -120,8 +120,10 @@ public class ResultListFragment extends FamiliarFragment {
 					startCardViewFrag(id);
 				}
 				else {
-					Toast.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
-							mCursor.getCount()), Toast.LENGTH_LONG).show();
+					if(savedInstanceState == null) {
+						Toast.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
+								mCursor.getCount()), Toast.LENGTH_LONG).show();
+					}
 				}
 			}
 		} catch (FamiliarDbException e) {
@@ -207,7 +209,7 @@ public class ResultListFragment extends FamiliarFragment {
 		assert myFragmentView != null; /* Because Android Studio */
 		mListView = (ListView) myFragmentView.findViewById(R.id.result_list);
 
-				/* Sub-optimal, but KitKat is silly */
+		/* Sub-optimal, but KitKat is silly */
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			mListView.setOnScrollListener(new ListView.OnScrollListener() {
 
