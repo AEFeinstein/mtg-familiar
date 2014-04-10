@@ -246,9 +246,11 @@ public class TradeFragment extends FamiliarFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
-		/* Try to load the autosave trade, the function will handle FileNotFoundException */
-		LoadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+		if(this.isVisible()) {
+			mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
+			/* Try to load the autosave trade, the function will handle FileNotFoundException */
+			LoadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+		}
 	}
 
 	/**

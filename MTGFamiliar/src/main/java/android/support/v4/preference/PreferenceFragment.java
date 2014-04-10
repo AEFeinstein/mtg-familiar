@@ -36,6 +36,7 @@ import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
 public abstract class PreferenceFragment extends Fragment implements
@@ -317,5 +318,17 @@ public abstract class PreferenceFragment extends Fragment implements
 
 	};
 
-
+	/**
+	 * Clear any results from the prior fragment. We don't want them persisting past this fragment,
+	 * and they should have been looked at by now anyway
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
+		if ((getActivity()) != null) {
+			((FamiliarActivity)getActivity()).getFragmentResults();
+			((FamiliarActivity)getActivity())
+					.mDrawerLayout.closeDrawer(((FamiliarActivity)getActivity()).mDrawerList);
+		}
+	}
 }

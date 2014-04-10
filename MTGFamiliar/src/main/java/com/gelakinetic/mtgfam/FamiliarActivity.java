@@ -309,7 +309,6 @@ public class FamiliarActivity extends FragmentActivity {
 						ft.addToBackStack(null);
 						ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
 						ft.commit();
-						shouldCloseDrawer = true;
 						break;
 					}
 					case R.string.main_force_update_title: {
