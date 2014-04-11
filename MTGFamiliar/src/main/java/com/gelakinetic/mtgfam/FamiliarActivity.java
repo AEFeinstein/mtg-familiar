@@ -94,10 +94,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_ROUND_TIMER = "android.intent.action.ROUND_TIMER";
 	private static final int TTS_DATA_CHECK_CODE = 42;
 
-	/* Constant used for action bar quick search */
-//	public static final String ACTION_SEARCH = "android.intent.action.SEARCH";
-
-	/* Constants used for launching from the widget */
+	/* Constants used for launching fragments */
 	public static final String ACTION_CARD_SEARCH = "android.intent.action.CARD_SEARCH";
 	public static final String ACTION_LIFE = "android.intent.action.LIFE";
 	public static final String ACTION_DICE = "android.intent.action.DICE";
@@ -114,6 +111,9 @@ public class FamiliarActivity extends FragmentActivity {
 	private static final int DONATE_DIALOG = 102;
 	private static final int TTS_DIALOG = 103;
 	public int dialogShowing = 0;
+
+	/* Constants used for saving state */
+	private static final String CURRENT_FRAG = "CURRENT_FRAG";
 
 	/* PayPal URL */
 	@SuppressWarnings("SpellCheckingInspection")
@@ -288,7 +288,6 @@ public class FamiliarActivity extends FragmentActivity {
 					case R.string.main_extras:
 					case R.string.main_pages: {
 						/* It's a header */
-						mDrawerList.setItemChecked(mCurrentFrag, true);
 						return; /* don't close the drawer or change a selection */
 					}
 					case R.string.main_mana_pool:
@@ -419,11 +418,11 @@ public class FamiliarActivity extends FragmentActivity {
 				File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
 				File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
 				if (mtr.exists()) {
-					if(!mtr.delete()) {
+					if (!mtr.delete()) {
 						Toast.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted), Toast.LENGTH_LONG)
 								.show();
 					}
-					if(!ipg.delete()) {
+					if (!ipg.delete()) {
 						Toast.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted), Toast.LENGTH_LONG)
 								.show();
 					}
@@ -453,7 +452,6 @@ public class FamiliarActivity extends FragmentActivity {
 				ft.commit();
 			}
 			mCurrentFrag = 1;
-			mDrawerList.setItemChecked(mCurrentFrag, true);
 		}
 		else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			/* User clicked a card in the quick search autocomplete, jump right to it */
@@ -472,66 +470,55 @@ public class FamiliarActivity extends FragmentActivity {
 				ft.commit();
 			}
 			mCurrentFrag = 1;
-			mDrawerList.setItemChecked(mCurrentFrag, true);
 		}
 		else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_timer);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_card_search);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_LIFE.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_life_counter);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_DICE.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_dice);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_TRADE.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_trade);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_MANA.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_mana_pool);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_WISH.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_wishlist);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_RULES.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_rules);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_JUDGE.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_judges_corner);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
 			if (savedInstanceState == null) {
 				selectItem(R.string.main_mojhosto);
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
 		}
 		else {
@@ -573,8 +560,11 @@ public class FamiliarActivity extends FragmentActivity {
 				else {
 					selectItem(R.string.main_card_search);
 				}
-				mDrawerList.setItemChecked(mCurrentFrag, true);
 			}
+		}
+
+		if (savedInstanceState == null) {
+			mDrawerList.setItemChecked(mCurrentFrag, true);
 		}
 
 		/* Run the updater service */
@@ -617,8 +607,14 @@ public class FamiliarActivity extends FragmentActivity {
 			position++;
 		}
 
-		Fragment newFrag;
+		if (mCurrentFrag == position) {
+			/* This is the same fragment, just close the menu */
+			mDrawerLayout.closeDrawer(mDrawerList);
+			return;
+		}
+
 		mCurrentFrag = position;
+		Fragment newFrag;
 		/* Pick the new fragment */
 		switch (resId) {
 			case R.string.main_card_search: {
@@ -829,14 +825,14 @@ public class FamiliarActivity extends FragmentActivity {
 			else {
 				layout = R.layout.drawer_list_item;
 			}
-			if(convertView == null) {
+			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(layout, parent, false);
 			}
 
 			assert convertView != null;
 			if (values[position].mIsHeader) {
 				/* Make sure the recycled view is the right type, inflate a new one if necessary */
-				if(convertView.findViewById(R.id.drawer_header_name) == null) {
+				if (convertView.findViewById(R.id.drawer_header_name) == null) {
 					convertView = getLayoutInflater().inflate(layout, parent, false);
 				}
 				assert convertView != null;
@@ -846,7 +842,7 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 			else {
 				/* Make sure the recycled view is the right type, inflate a new one if necessary */
-				if(convertView.findViewById(R.id.drawer_entry_name) == null) {
+				if (convertView.findViewById(R.id.drawer_entry_name) == null) {
 					convertView = getLayoutInflater().inflate(layout, parent, false);
 				}
 				assert convertView != null;
@@ -858,9 +854,9 @@ public class FamiliarActivity extends FragmentActivity {
 			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
 				convertView.findViewById(R.id.divider).setVisibility(View.GONE);
 			}
-            else {
-                convertView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
-            }
+			else {
+				convertView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+			}
 			return convertView;
 		}
 	}
@@ -939,8 +935,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						/* Set the custom view, with some images below the text */
 						LayoutInflater inflater = this.getActivity().getLayoutInflater();
-						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
-								null, false);
+						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
 						assert dialogLayout != null;
 						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
 						text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
@@ -966,8 +961,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						/* Set the custom view, with some images below the text */
 						LayoutInflater inflater = this.getActivity().getLayoutInflater();
-						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
-								null, false);
+						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
 						assert dialogLayout != null;
 						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
 						text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_whats_new_text)));
@@ -1005,8 +999,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						/* Set the custom view */
 						LayoutInflater inflater = this.getActivity().getLayoutInflater();
-						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about,
-								null, false);
+						View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
 
 						/* Set the text */
 						assert dialogLayout != null;
@@ -1233,5 +1226,30 @@ public class FamiliarActivity extends FragmentActivity {
 		mInactivityHandler.removeCallbacks(userInactive);
 		mInactivityHandler.postDelayed(userInactive, 30000);
 		mUserInactive = false;
+	}
+
+	/**
+	 * Save the current fragment.
+	 *
+	 * @param outState a Bundle in which to save the state
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putInt(CURRENT_FRAG, mCurrentFrag);
+		super.onSaveInstanceState(outState);
+	}
+
+	/**
+	 * Restore the current fragment, and highlight it
+	 *
+	 * @param savedInstanceState a Bundle which contains the saved state
+	 */
+	@Override
+	protected void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		if (savedInstanceState.containsKey(CURRENT_FRAG)) {
+			mCurrentFrag = savedInstanceState.getInt(CURRENT_FRAG);
+			mDrawerList.setItemChecked(mCurrentFrag, true);
+		}
 	}
 }
