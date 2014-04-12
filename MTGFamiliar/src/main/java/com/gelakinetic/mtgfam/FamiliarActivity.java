@@ -72,15 +72,14 @@ import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseHelper;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseHelper;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 import com.octo.android.robospice.SpiceManager;
 
@@ -180,7 +179,6 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		}
 	};
-	private static CardDbAdapter mDbAdapter;
 
 	/**
 	 * Start the Spice Manager when the activity starts
@@ -306,7 +304,7 @@ public class FamiliarActivity extends FragmentActivity {
 					case R.string.main_mojhosto:
 					case R.string.main_card_search:
 					case R.string.main_life_counter: {
-						selectItem(mPageEntries[i].mNameResource);
+						selectItem(mPageEntries[i].mNameResource, null);
 						break;
 					}
 					case R.string.main_settings_title: {
@@ -439,137 +437,96 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 
 		/* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
-		Intent intent = getIntent();
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			/* Do a search by name, launched from the quick search */
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			ResultListFragment resultListFragment = new ResultListFragment();
-			Bundle args = new Bundle();
-			SearchCriteria sc = new SearchCriteria();
-			sc.name = query;
-			args.putSerializable(SearchViewFragment.CRITERIA, sc);
-			resultListFragment.setArguments(args);
-
-			FragmentManager fm = getSupportFragmentManager();
-			if (fm != null) {
-				/* Begin a new transaction */
-				FragmentTransaction ft = fm.beginTransaction();
-				ft.add(R.id.fragment_container, resultListFragment, FamiliarActivity.FRAGMENT_TAG);
-				ft.commit();
+		/* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
+		if (savedInstanceState == null) {
+			Intent intent = getIntent();
+			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+				/* Do a search by name, launched from the quick search */
+				String query = intent.getStringExtra(SearchManager.QUERY);
+				Bundle args = new Bundle();
+				SearchCriteria sc = new SearchCriteria();
+				sc.name = query;
+				args.putSerializable(SearchViewFragment.CRITERIA, sc);
+				selectItem(R.string.main_card_search, args);
 			}
-			mCurrentFrag = 1;
-		}
-		else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-			/* User clicked a card in the quick search autocomplete, jump right to it */
-			Uri data = intent.getData();
-			CardViewFragment cardViewFragment = new CardViewFragment();
-			Bundle args = new Bundle();
-			assert data != null;
-			args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
-			cardViewFragment.setArguments(args);
-
-			FragmentManager fm = getSupportFragmentManager();
-			if (fm != null) {
-				/* Begin a new transaction */
-				FragmentTransaction ft = fm.beginTransaction();
-				ft.add(R.id.fragment_container, cardViewFragment, FamiliarActivity.FRAGMENT_TAG);
-				ft.commit();
+			else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+				/* User clicked a card in the quick search autocomplete, jump right to it */
+				Uri data = intent.getData();
+				Bundle args = new Bundle();
+				assert data != null;
+				args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
+				selectItem(R.string.main_card_search, args);
 			}
-			mCurrentFrag = 1;
-		}
-		else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_timer);
+			else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
+				selectItem(R.string.main_timer, null);
 			}
-		}
-		else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_card_search);
+			else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
+				selectItem(R.string.main_card_search, null);
 			}
-		}
-		else if (ACTION_LIFE.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_life_counter);
+			else if (ACTION_LIFE.equals(intent.getAction())) {
+				selectItem(R.string.main_life_counter, null);
 			}
-		}
-		else if (ACTION_DICE.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_dice);
+			else if (ACTION_DICE.equals(intent.getAction())) {
+				selectItem(R.string.main_dice, null);
 			}
-		}
-		else if (ACTION_TRADE.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_trade);
+			else if (ACTION_TRADE.equals(intent.getAction())) {
+				selectItem(R.string.main_trade, null);
 			}
-		}
-		else if (ACTION_MANA.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_mana_pool);
+			else if (ACTION_MANA.equals(intent.getAction())) {
+				selectItem(R.string.main_mana_pool, null);
 			}
-		}
-		else if (ACTION_WISH.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_wishlist);
+			else if (ACTION_WISH.equals(intent.getAction())) {
+				selectItem(R.string.main_wishlist, null);
 			}
-		}
-		else if (ACTION_RULES.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_rules);
+			else if (ACTION_RULES.equals(intent.getAction())) {
+				selectItem(R.string.main_rules, null);
 			}
-		}
-		else if (ACTION_JUDGE.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_judges_corner);
+			else if (ACTION_JUDGE.equals(intent.getAction())) {
+				selectItem(R.string.main_judges_corner, null);
 			}
-		}
-		else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
-			if (savedInstanceState == null) {
-				selectItem(R.string.main_mojhosto);
+			else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
+				selectItem(R.string.main_mojhosto, null);
 			}
-		}
-		else {
+			else {
 			/* App launched as regular, show the default fragment */
-			if (savedInstanceState == null) {
 
 				String defaultFragment = mPreferenceAdapter.getDefaultFragment();
 
 				if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
-					selectItem(R.string.main_card_search);
+					selectItem(R.string.main_card_search, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
-					selectItem(R.string.main_life_counter);
+					selectItem(R.string.main_life_counter, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
-					selectItem(R.string.main_mana_pool);
+					selectItem(R.string.main_mana_pool, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
-					selectItem(R.string.main_dice);
+					selectItem(R.string.main_dice, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
-					selectItem(R.string.main_trade);
+					selectItem(R.string.main_trade, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
-					selectItem(R.string.main_wishlist);
+					selectItem(R.string.main_wishlist, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
-					selectItem(R.string.main_timer);
+					selectItem(R.string.main_timer, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
-					selectItem(R.string.main_rules);
+					selectItem(R.string.main_rules, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
-					selectItem(R.string.main_judges_corner);
+					selectItem(R.string.main_judges_corner, null);
 				}
 				else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
-					selectItem(R.string.main_mojhosto);
+					selectItem(R.string.main_mojhosto, null);
 				}
 				else {
-					selectItem(R.string.main_card_search);
+					selectItem(R.string.main_card_search, null);
 				}
 			}
-		}
 
-		if (savedInstanceState == null) {
 			mDrawerList.setItemChecked(mCurrentFrag, true);
 		}
 
@@ -603,7 +560,7 @@ public class FamiliarActivity extends FragmentActivity {
 	 *
 	 * @param resId The string resource ID of the entry
 	 */
-	private void selectItem(int resId) {
+	private void selectItem(int resId, Bundle args) {
 
 		int position = 0;
 		for (DrawerEntry entry : mPageEntries) {
@@ -624,7 +581,16 @@ public class FamiliarActivity extends FragmentActivity {
 		/* Pick the new fragment */
 		switch (resId) {
 			case R.string.main_card_search: {
-				newFrag = new SearchViewFragment();
+				/* If this is a quicksearch intent, launch either the card view or result list directly */
+				if (args != null && args.containsKey(CardViewFragment.CARD_ID)) {
+					newFrag = new CardViewFragment();
+				}
+				else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
+					newFrag = new ResultListFragment();
+				}
+				else {
+					newFrag = new SearchViewFragment();
+				}
 				break;
 			}
 			case R.string.main_life_counter: {
@@ -665,6 +631,10 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 			default:
 				return;
+		}
+
+		if (args != null) {
+			newFrag.setArguments(args);
 		}
 
 		FragmentManager fm = getSupportFragmentManager();

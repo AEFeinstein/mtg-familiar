@@ -18,11 +18,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
+import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
-import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -119,7 +119,7 @@ public class ResultListFragment extends FamiliarFragment {
 					startCardViewFrag(id);
 				}
 				else {
-					if(savedInstanceState == null) {
+					if (savedInstanceState == null) {
 						Toast.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
 								mCursor.getCount()), Toast.LENGTH_LONG).show();
 					}
@@ -149,9 +149,14 @@ public class ResultListFragment extends FamiliarFragment {
 	 */
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt(CURSOR_POSITION, mListView.getFirstVisiblePosition());
-		View tmp = mListView.getChildAt(0);
-		outState.putInt(CURSOR_POSITION_OFFSET, (tmp == null) ? 0 : tmp.getTop());
+		try {
+			outState.putInt(CURSOR_POSITION, mListView.getFirstVisiblePosition());
+			View tmp = mListView.getChildAt(0);
+			outState.putInt(CURSOR_POSITION_OFFSET, (tmp == null) ? 0 : tmp.getTop());
+		} catch (NullPointerException e) {
+			outState.putInt(CURSOR_POSITION, 0);
+			outState.putInt(CURSOR_POSITION_OFFSET, 0);
+		}
 		super.onSaveInstanceState(outState);
 	}
 
