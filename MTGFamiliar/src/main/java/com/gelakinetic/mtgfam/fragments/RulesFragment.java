@@ -212,7 +212,7 @@ public class RulesFragment extends FamiliarFragment {
 								Bundle args = new Bundle();
 								if (item instanceof RuleItem) {
 									args.putInt(CATEGORY_KEY, ((RuleItem) item).mCategory);
-									args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).mCategory);
+									args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).mSubcategory);
 								}
 								else if (item instanceof GlossaryItem) {
 									args.putBoolean(GLOSSARY_KEY, true);

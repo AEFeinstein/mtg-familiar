@@ -1181,9 +1181,7 @@ public class CardDbAdapter {
 				return mDb.rawQuery(sql, null);
 			}
 			else if (subcategory == -1) {
-				// No subcategory specified; return the subcategories under the
-				// given
-				// category
+				// No subcategory specified; return the subcategories under the given category
 				String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
 						+ " WHERE " + KEY_CATEGORY + " = "
 						+ String.valueOf(category) + " AND " + KEY_SUBCATEGORY

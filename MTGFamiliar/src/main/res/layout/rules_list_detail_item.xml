@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2012 Alex Levine, Michael Shick
 
 This file is part of MTG Familiar.
@@ -18,26 +17,28 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:paddingLeft="16dp"
-              android:paddingRight="16dp"
-              android:paddingTop="4dp"
-              android:paddingBottom="4dp"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="4dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="4dp">
 
     <TextView
-        style="@style/text.large"
         android:id="@+id/rules_item_header"
+        style="@style/text.large"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:textColor="@color/holo_blue_light"/>
+        android:text="@string/app_name"
+        android:textColor="@color/holo_blue_light" />
 
     <TextView
-        style="@style/text.medium"
         android:id="@+id/rules_item_text"
+        style="@style/text.medium"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/app_name" />
 
 </LinearLayout>

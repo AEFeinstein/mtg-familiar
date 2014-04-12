@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2012 Michael Shick
 
 This file is part of MTG Familiar.
@@ -18,31 +17,34 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="47dp"
+    android:orientation="horizontal">
 
     <TextView
-        style="@style/text.large"
         android:id="@+id/rules_item_header"
+        style="@style/text.large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/holo_blue_light"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:text="1"/>
+        android:text="@string/mana_pool_zero"
+        android:textColor="@color/holo_blue_light" />
 
     <TextView
-        style="@style/text.large"
         android:id="@+id/rules_item_text"
+        style="@style/text.large"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:text="asdasdasd"/>
+        android:layout_weight="1"
+        android:text="@string/app_name" />
 
 </LinearLayout>
