@@ -1,11 +1,11 @@
-package com.gelakinetic.mtgfam.helpers;
+package com.gelakinetic.mtgfam.helpers.database;
 
 /**
  * Extend Exception instead of RuntimeException to force the compiler to whine about lack of try/catch blocks
  */
 public class FamiliarDbException extends Exception {
 
-	private final Exception mInnerException;
+	public final Exception mInnerException;
 	private static final long serialVersionUID = 5953780555438726164L;
 
 	/**

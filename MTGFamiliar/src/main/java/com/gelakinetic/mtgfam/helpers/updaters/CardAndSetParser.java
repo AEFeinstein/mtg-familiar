@@ -19,8 +19,10 @@
 
 package com.gelakinetic.mtgfam.helpers.updaters;
 
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -75,10 +77,10 @@ class CardAndSetParser {
 	 *
 	 * @param in               An InputStream containing valid JSON
 	 * @param progressReporter A percentage progress is reported through this class to be shown in the notification
-	 * @param mDbHelper        database access
+	 * @param database         database access
 	 * @throws IOException If something goes wrong with the InputStream, this will be thrown
 	 */
-	public void readCardJsonStream(InputStream in, CardProgressReporter progressReporter, CardDbAdapter mDbHelper)
+	public void readCardJsonStream(InputStream in, CardProgressReporter progressReporter, SQLiteDatabase database)
 			throws IOException {
 
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "ISO-8859-1"));
@@ -295,7 +297,7 @@ class CardAndSetParser {
 									}
 								}
 							}
-							mDbHelper.createCard(c);
+							CardDbAdapter.createCard(c, database);
 							elementsParsed++;
 							progressReporter.reportJsonCardProgress(
 									(int) Math.round(100 * elementsParsed / (double) numTotalElements));
@@ -320,7 +322,7 @@ class CardAndSetParser {
 		/* Add the set information to the database AFTER adding the cards. This way if the update fails while parsing
 		 * cards, the database won't think it has the set already, when it doesn't. */
 		for (MtgSet set : setsAdded) {
-			mDbHelper.createSet(set);
+			CardDbAdapter.createSet(set, database);
 		}
 	}
 
@@ -386,12 +388,12 @@ class CardAndSetParser {
 	 * Parses the legality file and populates the database with the different formats, their respective sets, and their
 	 * banned and restricted lists
 	 *
-	 * @param dbHelper    Database access
+	 * @param database    Database access
 	 * @param prefAdapter The preference adapter is used to get the last update time
 	 * @throws IOException                                        Thrown if something goes wrong with the InputStream
-	 * @throws com.gelakinetic.mtgfam.helpers.FamiliarDbException Thrown if something goes wrong with database writing
+	 * @throws com.gelakinetic.mtgfam.helpers.database.FamiliarDbException Thrown if something goes wrong with database writing
 	 */
-	public void readLegalityJsonStream(CardDbAdapter dbHelper, PreferenceAdapter prefAdapter)
+	public void readLegalityJsonStream(SQLiteDatabase database, PreferenceAdapter prefAdapter)
 			throws IOException, FamiliarDbException {
 
 		String legalSet;
@@ -422,8 +424,8 @@ class CardAndSetParser {
 					}
 				}
 
-				dbHelper.dropLegalTables();
-				dbHelper.createLegalTables();
+				CardDbAdapter.dropLegalTables(database);
+				CardDbAdapter.createLegalTables(database);
 			}
 			else if (jsonTopLevelName.equalsIgnoreCase("Formats")) {
 
@@ -431,7 +433,7 @@ class CardAndSetParser {
 				while (reader.hasNext()) {
 					formatName = reader.nextName();
 
-					dbHelper.createFormat(formatName);
+					CardDbAdapter.createFormat(formatName, database);
 
 					reader.beginObject();
 					while (reader.hasNext()) {
@@ -441,7 +443,7 @@ class CardAndSetParser {
 							reader.beginArray();
 							while (reader.hasNext()) {
 								legalSet = reader.nextString();
-								dbHelper.addLegalSet(legalSet, formatName);
+								CardDbAdapter.addLegalSet(legalSet, formatName, database);
 							}
 							reader.endArray();
 						}
@@ -449,7 +451,7 @@ class CardAndSetParser {
 							reader.beginArray();
 							while (reader.hasNext()) {
 								bannedCard = reader.nextString();
-								dbHelper.addLegalCard(bannedCard, formatName, CardDbAdapter.BANNED);
+								CardDbAdapter.addLegalCard(bannedCard, formatName, CardDbAdapter.BANNED, database);
 							}
 							reader.endArray();
 						}
@@ -457,7 +459,7 @@ class CardAndSetParser {
 							reader.beginArray();
 							while (reader.hasNext()) {
 								restrictedCard = reader.nextString();
-								dbHelper.addLegalCard(restrictedCard, formatName, CardDbAdapter.RESTRICTED);
+								CardDbAdapter.addLegalCard(restrictedCard, formatName, CardDbAdapter.RESTRICTED, database);
 							}
 							reader.endArray();
 						}
@@ -476,10 +478,10 @@ class CardAndSetParser {
 	 * This method parses the mapping between set codes and the names TCGPlayer.com uses
 	 *
 	 * @param prefAdapter The preference adapter is used to get the last update time
-	 * @param mDbHelper   database access
-	 * @throws IOException         Thrown if something goes wrong with the InputStream
+	 * @param database    database access
+	 * @throws IOException Thrown if something goes wrong with the InputStream
 	 */
-	public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, CardDbAdapter mDbHelper)
+	public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, SQLiteDatabase database)
 			throws IOException {
 		URL update;
 		String label;
@@ -515,7 +517,7 @@ class CardAndSetParser {
 							name = reader.nextString();
 						}
 					}
-					mDbHelper.addTCGname(name, code);
+					CardDbAdapter.addTcgName(name, code, database);
 					reader.endObject();
 				}
 				reader.endArray();

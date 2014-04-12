@@ -28,6 +28,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -59,8 +60,9 @@ import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
@@ -252,15 +254,15 @@ public class CardViewFragment extends FamiliarFragment {
 
 		ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
 
-		CardDbAdapter dbHelper = new CardDbAdapter(getActivity());
-		Cursor cCardById = dbHelper.fetchCard(id, null);
+		SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+		Cursor cCardById = CardDbAdapter.fetchCard(id, null, database);
 
 		/* http://magiccards.info/scans/en/mt/55.jpg */
 		mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
 		mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
 
 		mMagicCardsInfoSetCode =
-				dbHelper.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
+				CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)), database);
 		mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
 		switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
@@ -360,7 +362,7 @@ public class CardViewFragment extends FamiliarFragment {
 		}
 
 		boolean isMultiCard = false;
-		switch (CardDbAdapter.isMulticard(mCardNumber,
+		switch (CardDbAdapter.isMultiCard(mCardNumber,
 				cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)))) {
 			case CardDbAdapter.NOPE:
 				isMultiCard = false;
@@ -394,7 +396,7 @@ public class CardViewFragment extends FamiliarFragment {
 			else if (mCardNumber.contains("b")) {
 				mTransformCardNumber = mCardNumber.replace("b", "a");
 			}
-			mTransformId = dbHelper.getTransform(mSetCode, mTransformCardNumber);
+			mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
 			mTransformButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					mCardBitmap = null;
@@ -445,15 +447,15 @@ public class CardViewFragment extends FamiliarFragment {
 
 		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
 		   one set */
-		Cursor cCardByName = dbHelper.fetchCardByName(mCardName,
+		Cursor cCardByName = CardDbAdapter.fetchCardByName(mCardName,
 				new String[]{
 						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID});
+						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
 		mSets = new LinkedHashSet<String>();
 		mCardIds = new LinkedHashSet<Long>();
 		while (!cCardByName.isAfterLast()) {
 			if (mSets.add(
-					dbHelper.getTCGname(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET))))) {
+					CardDbAdapter.getTcgName(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
 				mCardIds.add(cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID)));
 			}
 			cCardByName.moveToNext();
@@ -463,9 +465,7 @@ public class CardViewFragment extends FamiliarFragment {
 		if (mSets.size() == 1) {
 			getActivity().invalidateOptionsMenu();
 		}
-
-		dbHelper.close();
-
+		DatabaseManager.getInstance().closeDatabase();
 	}
 
 	/**
@@ -484,15 +484,15 @@ public class CardViewFragment extends FamiliarFragment {
 		protected Void doInBackground(Void... params) {
 
 			try {
-				CardDbAdapter dbHelper = new CardDbAdapter(getActivity());
-				Cursor cFormats = dbHelper.fetchAllFormats();
+				SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+				Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
 				mFormats = new String[cFormats.getCount()];
 				mLegalities = new String[cFormats.getCount()];
 
 				cFormats.moveToFirst();
 				for (int i = 0; i < cFormats.getCount(); i++) {
 					mFormats[i] = cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
-					switch (dbHelper.checkLegality(mCardName, mFormats[i])) {
+					switch (CardDbAdapter.checkLegality(mCardName, mFormats[i], database)) {
 						case CardDbAdapter.LEGAL:
 							mLegalities[i] = getString(R.string.card_view_legal);
 							break;
@@ -508,9 +508,8 @@ public class CardViewFragment extends FamiliarFragment {
 					}
 					cFormats.moveToNext();
 				}
-
 				cFormats.close();
-				dbHelper.close();
+				DatabaseManager.getInstance().closeDatabase();
 			} catch (FamiliarDbException e) {
 				CardViewFragment.this.handleFamiliarDbException(false);
 				mLegalities = null;

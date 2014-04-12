@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -21,8 +22,9 @@ import android.widget.Spinner;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 
 import java.util.Random;
@@ -295,10 +297,10 @@ public class MoJhoStoFragment extends FamiliarFragment {
 				logic = "<=";
 			}
 			String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
-			CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-			Cursor permanents = mDbHelper.Search(null, null, type, "wubrgl", 0, null,
+			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+			Cursor permanents = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
 					CardDbAdapter.NOONECARES, null, CardDbAdapter.NOONECARES, null, cmc, logic, null, null, null,
-					null, 0, 0, CardDbAdapter.MOSTRECENTPRINTING, false, returnTypes, true);
+					null, 0, 0, CardDbAdapter.MOSTRECENTPRINTING, false, returnTypes, true, database);
 
 			if(permanents.getCount() == 0) {
 				return;
@@ -313,7 +315,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 			startNewFragment(cvFrag, args);
 
 			permanents.close();
-			mDbHelper.close();
+			DatabaseManager.getInstance().closeDatabase();
 		} catch (FamiliarDbException e) {
 			handleFamiliarDbException(true);
 		} catch (SQLiteDatabaseCorruptException e) {
@@ -330,10 +332,10 @@ public class MoJhoStoFragment extends FamiliarFragment {
 	private void getThreeSpells(String type) {
 		try {
 			String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
-			CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-			Cursor spells = mDbHelper.Search(null, null, type, "wubrgl", 0, null,
+			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+			Cursor spells = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
 					CardDbAdapter.NOONECARES, null, CardDbAdapter.NOONECARES, null, -1, null, null, null, null,
-					null, 0, 0, CardDbAdapter.MOSTRECENTPRINTING, false, returnTypes, true);
+					null, 0, 0, CardDbAdapter.MOSTRECENTPRINTING, false, returnTypes, true, database);
 
 			/* Get 3 random, distinct numbers */
 			int pos[] = new int[3];
@@ -361,7 +363,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 			startNewFragment(rlFrag, args);
 
 			spells.close();
-			mDbHelper.close();
+			DatabaseManager.getInstance().closeDatabase();
 		} catch (FamiliarDbException e) {
 			handleFamiliarDbException(true);
 		} catch (SQLiteDatabaseCorruptException e) {

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,8 +27,9 @@ import android.widget.Toast;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
@@ -105,11 +107,10 @@ public class SearchViewFragment extends FamiliarFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		CardDbAdapter dbHelper = null;
 		try {
-			dbHelper = new CardDbAdapter(this.getActivity());
+			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 			/* Query the database for all sets and fill the arrays to populate the list of choices with */
-			Cursor setCursor = dbHelper.fetchAllSets();
+			Cursor setCursor = CardDbAdapter.fetchAllSets(database);
 			setCursor.moveToFirst();
 
 			mSetNames = new String[setCursor.getCount()];
@@ -125,7 +126,7 @@ public class SearchViewFragment extends FamiliarFragment {
 			setCursor.close();
 
             /* Query the database for all formats and fill the arrays to populate the list of choices with */
-			Cursor formatCursor = dbHelper.fetchAllFormats();
+			Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
 			formatCursor.moveToFirst();
 
 			mFormatNames = new String[formatCursor.getCount()];
@@ -135,13 +136,10 @@ public class SearchViewFragment extends FamiliarFragment {
 				formatCursor.moveToNext();
 			}
 			formatCursor.close();
+			DatabaseManager.getInstance().closeDatabase();
 			mSelectedFormat = -1;
 		} catch (FamiliarDbException e) {
 			handleFamiliarDbException(true);
-		} finally {
-			if (dbHelper != null) {
-				dbHelper.close();
-			}
 		}
 
         /* Get the different rarities out of resources to populate the list of choices with */

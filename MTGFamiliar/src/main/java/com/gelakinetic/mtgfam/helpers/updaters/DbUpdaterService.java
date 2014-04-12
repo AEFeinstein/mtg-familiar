@@ -22,13 +22,15 @@ import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import java.io.IOException;
@@ -102,7 +104,6 @@ public class DbUpdaterService extends IntentService {
 	 */
 	@Override
 	public void onHandleIntent(Intent intent) {
-		CardDbAdapter dbHelper;
 		PreferenceAdapter mPrefAdapter = new PreferenceAdapter(this);
 
 		ProgressReporter reporter = new ProgressReporter();
@@ -113,38 +114,36 @@ public class DbUpdaterService extends IntentService {
 
 		try {
 			/* Get database access, which auto-opens it, close it, and open a transactional write */
-			dbHelper = new CardDbAdapter(this);
-			dbHelper.close();
-			dbHelper.openTransactional();
+			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
 
 			showStatusNotification();
 
 			if (RE_PARSE_DATABASE) {
 				/* Blow up the database and download and build it all over again */
-				dbHelper.dropCreateDB();
-				parser.readLegalityJsonStream(dbHelper, mPrefAdapter);
+				CardDbAdapter.dropCreateDB(database);
+				parser.readLegalityJsonStream(database, mPrefAdapter);
 				GZIPInputStream upToGIS = new GZIPInputStream(
 						new URL("https://sites.google.com/site/mtgfamiliar/patches/UpToRTR.json.gzip").openStream());
 				switchToUpdating(String.format(getString(R.string.update_updating_set), "EVERYTHING!!"));
-				parser.readCardJsonStream(upToGIS, reporter, dbHelper);
-				parser.readTCGNameJsonStream(mPrefAdapter, dbHelper);
+				parser.readCardJsonStream(upToGIS, reporter, database);
+				parser.readTCGNameJsonStream(mPrefAdapter, database);
 			}
 			else {
 				/* Look for updates with the banned / restricted lists and formats */
-				parser.readLegalityJsonStream(dbHelper, mPrefAdapter);
+				parser.readLegalityJsonStream(database, mPrefAdapter);
 				/* Look for new cards */
 				ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
 				if (patchInfo != null) {
 					/* Look through the list of available patches, and if it doesn't exist in the database, add it. */
 					for (String[] set : patchInfo) {
-						if (!dbHelper.doesSetExist(set[CardAndSetParser.SET_CODE])) {
+						if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) {
 							try {
 								/* Change the notification to the specific set */
 								switchToUpdating(String.format(getString(R.string.update_updating_set),
 										set[CardAndSetParser.SET_NAME]));
 								GZIPInputStream gis = new GZIPInputStream(
 										new URL(set[CardAndSetParser.SET_URL]).openStream());
-								parser.readCardJsonStream(gis, reporter, dbHelper);
+								parser.readCardJsonStream(gis, reporter, database);
 								updatedStuff.add(set[CardAndSetParser.SET_NAME]);
 							} catch (MalformedURLException e) {
 								/* Eat it */
@@ -157,7 +156,7 @@ public class DbUpdaterService extends IntentService {
 					}
 
 					/* Look for new TCGPlayer.com versions of set names */
-					parser.readTCGNameJsonStream(mPrefAdapter, dbHelper);
+					parser.readTCGNameJsonStream(mPrefAdapter, database);
 				}
 			}
 
@@ -175,11 +174,11 @@ public class DbUpdaterService extends IntentService {
 				lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
 			}
 
-			RulesParser rp = new RulesParser(new Date(lastRulesUpdate), dbHelper, reporter);
+			RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
 			if (rp.needsToUpdate()) {
 				if (rp.parseRules()) {
 					switchToUpdating(getString(R.string.update_updating_rules));
-					int code = rp.loadRulesAndGlossary();
+					int code = rp.loadRulesAndGlossary(database);
 
 					/* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
 					 * should let them know and try again next update.
@@ -193,7 +192,7 @@ public class DbUpdaterService extends IntentService {
 				}
 			}
 
-			dbHelper.closeTransactional();
+			DatabaseManager.getInstance().closeDatabase();
 
 			cancelStatusNotification();
 		} catch (MalformedURLException e1) {

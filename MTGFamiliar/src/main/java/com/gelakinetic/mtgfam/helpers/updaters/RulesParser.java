@@ -1,7 +1,9 @@
 package com.gelakinetic.mtgfam.helpers.updaters;
 
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +19,6 @@ class RulesParser {
 
 	/* Instance variables */
 	private final Date mLastUpdated;
-	private final CardDbAdapter mDbHelper;
 	private InputStream mInputStream;
 	private BufferedReader mBufferedReader;
 	private final RulesProgressReporter mProgressReporter;
@@ -61,12 +62,10 @@ class RulesParser {
 	 * Default Constructor
 	 *
 	 * @param lastUpdated    When the rules were last updated
-	 * @param dbHelper       database access
 	 * @param progressReport Progress is reported to the notification through this object
 	 */
-	public RulesParser(Date lastUpdated, CardDbAdapter dbHelper, RulesProgressReporter progressReport) {
+	public RulesParser(Date lastUpdated, RulesProgressReporter progressReport) {
 		this.mLastUpdated = lastUpdated;
-		this.mDbHelper = dbHelper;
 		this.mInputStream = null;
 		this.mBufferedReader = null;
 		this.mProgressReporter = progressReport;
@@ -240,10 +239,10 @@ class RulesParser {
 	 * @return SUCCESS if nothing goes wrong, ERRORS if some errors occur but some data is loaded, and FAILURE if
 	 * everything fails and no data is loaded.
 	 */
-	public int loadRulesAndGlossary() {
+	public int loadRulesAndGlossary(SQLiteDatabase database) {
 		try {
-			mDbHelper.dropRulesTables();
-			mDbHelper.createRulesTables();
+			CardDbAdapter.dropRulesTables(database);
+			CardDbAdapter.createRulesTables(database);
 
 			int statusCode = SUCCESS;
 			int numTotalElements = mRules.size() + mGlossary.size();
@@ -252,7 +251,7 @@ class RulesParser {
 
 			for (RuleItem rule : mRules) {
 				try {
-					mDbHelper.insertRule(rule.category, rule.subcategory, rule.entry, rule.text, rule.position);
+					CardDbAdapter.insertRule(rule.category, rule.subcategory, rule.entry, rule.text, rule.position, database);
 				} catch (FamiliarDbException sqe) {
 					statusCode = ERRORS;
 				} finally {
@@ -264,7 +263,7 @@ class RulesParser {
 
 			for (GlossaryItem term : mGlossary) {
 				try {
-					mDbHelper.insertGlossaryTerm(term.term, term.definition);
+					CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
 
 				} catch (FamiliarDbException sqe) {
 					statusCode = ERRORS;

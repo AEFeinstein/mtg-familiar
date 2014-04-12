@@ -72,6 +72,9 @@ import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseHelper;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -177,6 +180,7 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		}
 	};
+	private static CardDbAdapter mDbAdapter;
 
 	/**
 	 * Start the Spice Manager when the activity starts
@@ -227,6 +231,8 @@ public class FamiliarActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mPreferenceAdapter = new PreferenceAdapter(this);
+
+		DatabaseManager.initializeInstance(new DatabaseHelper(getApplicationContext()));
 
 		/* Set up a listener to update the home screen widget whenever the user changes the preference */
 		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(

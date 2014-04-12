@@ -17,13 +17,14 @@
  along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.gelakinetic.mtgfam.helpers;
+package com.gelakinetic.mtgfam.helpers.database;
 
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -32,11 +33,8 @@ import android.provider.BaseColumns;
  */
 public class CardSearchProvider extends ContentProvider {
 
-	// Database access
-	private CardDbAdapter mDbHelper;
-
 	// The Authority
-	public static final String AUTHORITY = "com.gelakinetic.mtgfam.helpers.CardSearchProvider";
+	public static final String AUTHORITY = "com.gelakinetic.mtgfam.helpers.database.CardSearchProvider";
 
 	// UriMatcher stuff
 	private static final int SEARCH_SUGGEST = 0;
@@ -49,6 +47,8 @@ public class CardSearchProvider extends ContentProvider {
 		sURIMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
 	}
 
+	private SQLiteDatabase mDatabase;
+
 	/**
 	 * In lieu of a constructor
 	 *
@@ -56,12 +56,8 @@ public class CardSearchProvider extends ContentProvider {
 	 */
 	@Override
 	public synchronized boolean onCreate() {
-		try {
-			// TODO this calls getReadableDatabase(), which is expensive and should be called in insert
-			mDbHelper = new CardDbAdapter(getContext()); // TODO this is never closed. could be a problem?
-		} catch (FamiliarDbException e) {
-			return false;
-		}
+		DatabaseManager.initializeInstance(new DatabaseHelper(getContext().getApplicationContext()));
+		mDatabase = DatabaseManager.getInstance().openDatabase(false); // TODO when to close this?
 		return true;
 	}
 
@@ -96,14 +92,14 @@ public class CardSearchProvider extends ContentProvider {
 					}
 					query = selectionArgs[0].toLowerCase();
 
-					return mDbHelper.getCardsByNamePrefix(query);
+					return CardDbAdapter.getCardsByNamePrefix(query, mDatabase);
 				}
 				case REFRESH_SHORTCUT: {
 					String rowId1 = uri.getLastPathSegment();
 					String[] columns3 = new String[]{BaseColumns._ID, CardDbAdapter.KEY_NAME,
 							SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID};
 
-					return mDbHelper.getCardByRowId(rowId1, columns3);
+					return CardDbAdapter.getCardByRowId(rowId1, columns3, mDatabase);
 				}
 				default:
 					throw new IllegalArgumentException("Unknown Uri: " + uri);

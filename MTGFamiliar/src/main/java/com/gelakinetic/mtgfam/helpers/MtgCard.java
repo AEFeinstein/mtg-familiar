@@ -20,9 +20,13 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 /**
  * Encapsulate all information about a magic card
@@ -122,7 +126,7 @@ public class MtgCard {
 		this.foil = foil;
 	}
 
-	public static MtgCard MtgCardFromTradeString(String line, Context context) throws FamiliarDbException {
+	public static MtgCard MtgCardFromTradeString(String line) throws FamiliarDbException {
 
 		MtgCard card = new MtgCard();
 		String[] parts = line.split(DELIMITER);
@@ -144,9 +148,9 @@ public class MtgCard {
 		card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
 
 		/* Defaults regardless */
-		CardDbAdapter mDbHelper = new CardDbAdapter(context);
-		card.tcgName = mDbHelper.getTCGname(card.setCode);
-		mDbHelper.close();
+		SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+		card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
+		DatabaseManager.getInstance().closeDatabase();
 		card.message = "loading";
 		return card;
 	}

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.KeyEvent;
@@ -27,8 +28,9 @@ import android.widget.Toast;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
@@ -162,8 +164,8 @@ public class WishlistFragment extends FamiliarFragment {
 			card.message = getString(R.string.wishlist_loading);
 
 			/* Get some extra information from the database */
-			CardDbAdapter adapter = new CardDbAdapter(getActivity());
-			Cursor cardCursor = adapter.fetchCardByName(card.name, CardDbAdapter.allData);
+			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+			Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, CardDbAdapter.allData, database);
 			if (cardCursor.getCount() == 0) {
 				Toast.makeText(WishlistFragment.this.getActivity(), getString(R.string.toast_no_card),
 						Toast.LENGTH_LONG).show();
@@ -179,15 +181,15 @@ public class WishlistFragment extends FamiliarFragment {
 			card.flavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
 			card.number = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 			card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-			card.tcgName = adapter.getTCGname(card.setCode);
+			card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
 
 			/* Override choice if the card can't be foil */
-			if (!adapter.canBeFoil(card.setCode)) {
+			if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
 				card.foil = false;
 			}
 			/* Clean up */
 			cardCursor.close();
-			adapter.close();
+			DatabaseManager.getInstance().closeDatabase();
 
 			/* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
 			if (mCompressedWishlist.contains(card)) {
@@ -272,11 +274,10 @@ public class WishlistFragment extends FamiliarFragment {
 		/* Read the wishlist */
 		ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
 		try {
-			CardDbAdapter adapter = new CardDbAdapter(getActivity());
-
+			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 			/* Translate the set code to tcg name, of course it's not saved */
 			for (MtgCard card : wishlist) {
-				card.tcgName = adapter.getTCGname(card.setCode);
+				card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
 			}
 
 			/* Clear the wishlist, or just the card that changed */
@@ -320,9 +321,9 @@ public class WishlistFragment extends FamiliarFragment {
 			}
 
 			/* Fill extra card data from the database, for displaying full card info */
-			adapter.fillExtraWishlistData(mCompressedWishlist, CardDbAdapter.allData);
+			CardDbAdapter.fillExtraWishlistData(mCompressedWishlist, CardDbAdapter.allData, database);
 
-			adapter.close();
+			DatabaseManager.getInstance().closeDatabase();
 		} catch (FamiliarDbException e) {
 			handleFamiliarDbException(false);
 		}

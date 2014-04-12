@@ -32,6 +32,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import org.jetbrains.annotations.NotNull;
 

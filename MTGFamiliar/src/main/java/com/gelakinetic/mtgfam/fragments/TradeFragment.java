@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,8 +27,9 @@ import android.widget.Toast;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
@@ -185,12 +187,12 @@ public class TradeFragment extends FamiliarFragment {
 
 		try {
 			/* Get the rest of the relevant card info from the database */
-			CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-			Cursor cardCursor = mDbHelper.fetchCardByName(cardName, new String[]{
+			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+			Cursor cardCursor = CardDbAdapter.fetchCardByName(cardName, new String[]{
 					CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
 					CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
 					CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-					CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER});
+					CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, database);
 
 			/* Make sure there was a database hit */
 			if (cardCursor.getCount() == 0) {
@@ -203,13 +205,13 @@ public class TradeFragment extends FamiliarFragment {
 			setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
 			tcgName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER));
 			cardNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-			if (foil && !mDbHelper.canBeFoil(setCode)) {
+			if (foil && !CardDbAdapter.canBeFoil(setCode, database)) {
 				foil = false;
 			}
 
 			/* Clean up */
 			cardCursor.close();
-			mDbHelper.close();
+			DatabaseManager.getInstance().closeDatabase();
 
 			/* Create the card, add it to a list, start a price fetch */
 			MtgCard data = new MtgCard(cardName, tcgName, setCode, numberOf, getString(R.string.wishlist_loading),
@@ -314,14 +316,14 @@ public class TradeFragment extends FamiliarFragment {
 
 						/* Only show the foil checkbox if the card can be foil */
 						try {
-							CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-							if (mDbHelper.canBeFoil(lSide.get(positionForDialog).setCode)) {
+							SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+							if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).setCode, database)) {
 								view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
 							}
 							else {
 								view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
 							}
-							mDbHelper.close();
+							DatabaseManager.getInstance().closeDatabase();
 						} catch (FamiliarDbException e) {
 							/* Err on the side of foil */
 							foilCheckbox.setVisibility(View.VISIBLE);
@@ -373,17 +375,17 @@ public class TradeFragment extends FamiliarFragment {
 							@Override
 							public void onClick(View v) {
 								try {
+									SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 									Bundle args = new Bundle();
 									/* Get the card ID, and send it to a new CardViewFragment */
-									CardDbAdapter adapter = new CardDbAdapter(getActivity());
-									Cursor cursor = adapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
+									Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
 											lSide.get(positionForDialog).setCode, new String[]{
-													CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}
+													CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
 									);
 									args.putLong(CardViewFragment.CARD_ID, cursor.getLong(
 											cursor.getColumnIndex(CardDbAdapter.KEY_ID)));
 									cursor.close();
-									adapter.close();
+									DatabaseManager.getInstance().closeDatabase();
 									CardViewFragment cvFrag = new CardViewFragment();
 									TradeFragment.this.startNewFragment(cvFrag, args);
 								} catch (FamiliarDbException e) {
@@ -495,11 +497,11 @@ public class TradeFragment extends FamiliarFragment {
 
 						try {
 							/* Query the database for all versions of this card */
-							CardDbAdapter mDbHelper = new CardDbAdapter(TradeFragment.this.getActivity());
-							Cursor cards = mDbHelper.fetchCardByName(data.name, new String[]{
+							SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+							Cursor cards = CardDbAdapter.fetchCardByName(data.name, new String[]{
 									CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
 									CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-									CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER});
+									CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, database);
 							/* Build set names and set codes */
 							Set<String> sets = new LinkedHashSet<String>();
 							Set<String> setCodes = new LinkedHashSet<String>();
@@ -511,7 +513,7 @@ public class TradeFragment extends FamiliarFragment {
 							}
 							/* clean up */
 							cards.close();
-							mDbHelper.close();
+							DatabaseManager.getInstance().closeDatabase();
 
 							/* Turn set names and set codes into arrays */
 							final String[] aSets = sets.toArray(new String[sets.size()]);
@@ -542,11 +544,11 @@ public class TradeFragment extends FamiliarFragment {
 
 											/* See if the new set can be foil */
 											try {
-												CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-												if (!mDbHelper.canBeFoil(data.setCode)) {
+												SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+												if (!CardDbAdapter.canBeFoil(data.setCode, database)) {
 													data.foil = false;
 												}
-												mDbHelper.close();
+												DatabaseManager.getInstance().closeDatabase();
 											} catch (FamiliarDbException e) {
 												data.foil = false;
 											}
@@ -813,7 +815,7 @@ public class TradeFragment extends FamiliarFragment {
 			String line;
 			while ((line = br.readLine()) != null) {
 				try {
-					MtgCard card = MtgCard.MtgCardFromTradeString(line, getActivity());
+					MtgCard card = MtgCard.MtgCardFromTradeString(line);
 
 					if (card.mSide == LEFT) {
 						mLeftList.add(card);

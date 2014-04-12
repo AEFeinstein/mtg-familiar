@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
 import android.database.MergeCursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,8 +18,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
@@ -40,9 +42,6 @@ public class ResultListFragment extends FamiliarFragment {
 	/* Static integers preserve list position during the fragment's lifecycle */
 	private static int mCursorPosition;
 	private static int mCursorPositionOffset;
-
-	/* Database must be kept open as long as the cursor needs it */
-	private CardDbAdapter mDbHelper;
 
 	/* Constants for bundled arguments */
 	public static final String CARD_ID_0 = "id0";
@@ -76,7 +75,7 @@ public class ResultListFragment extends FamiliarFragment {
 
 		/* Open up the database, search for stuff */
 		try {
-			mDbHelper = new CardDbAdapter(this.getActivity());
+			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 
 			/* If "id0" exists, then it's three cards and they should be merged
 			 * Otherwise, do a search with the given criteria
@@ -85,9 +84,9 @@ public class ResultListFragment extends FamiliarFragment {
 				long id1 = args.getLong(CARD_ID_1);
 				long id2 = args.getLong(CARD_ID_2);
 				Cursor cs[] = new Cursor[3];
-				cs[0] = mDbHelper.fetchCard(id, null);
-				cs[1] = mDbHelper.fetchCard(id1, null);
-				cs[2] = mDbHelper.fetchCard(id2, null);
+				cs[0] = CardDbAdapter.fetchCard(id, null, database);
+				cs[1] = CardDbAdapter.fetchCard(id1, null, database);
+				cs[2] = CardDbAdapter.fetchCard(id2, null, database);
 				mCursor = new MergeCursor(cs);
 			}
 			else {
@@ -96,11 +95,11 @@ public class ResultListFragment extends FamiliarFragment {
 				boolean consolidate = (criteria.setLogic == CardDbAdapter.MOSTRECENTPRINTING ||
 						criteria.setLogic == CardDbAdapter.FIRSTPRINTING);
 
-				mCursor = mDbHelper.Search(criteria.name, criteria.text, criteria.type, criteria.color,
+				mCursor = CardDbAdapter.Search(criteria.name, criteria.text, criteria.type, criteria.color,
 						criteria.colorLogic, criteria.set, criteria.powChoice, criteria.powLogic, criteria.touChoice,
 						criteria.touLogic, criteria.cmc, criteria.cmcLogic, criteria.format, criteria.rarity,
 						criteria.flavor, criteria.artist, criteria.typeLogic, criteria.textLogic, criteria.setLogic,
-						true, returnTypes, consolidate);
+						true, returnTypes, consolidate, database);
 			}
 
 			if (this.isAdded()) {
@@ -140,9 +139,7 @@ public class ResultListFragment extends FamiliarFragment {
 		if (mCursor != null) {
 			mCursor.close();
 		}
-		if (mDbHelper != null) {
-			mDbHelper.close();
-		}
+		DatabaseManager.getInstance().closeDatabase();
 	}
 
 	/**

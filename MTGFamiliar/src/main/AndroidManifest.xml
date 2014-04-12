@@ -58,8 +58,8 @@
 
         <!-- Provides search suggestions for cards by name. -->
         <provider
-            android:name="com.gelakinetic.mtgfam.helpers.CardSearchProvider"
-            android:authorities="com.gelakinetic.mtgfam.helpers.CardSearchProvider"
+            android:name="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
+            android:authorities="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
             android:exported="true"/>
 
         <!-- For the homescreen widget -->

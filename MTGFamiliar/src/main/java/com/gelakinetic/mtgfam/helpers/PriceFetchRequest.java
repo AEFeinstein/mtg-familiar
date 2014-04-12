@@ -2,7 +2,11 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.SpiceRequest;
 
@@ -63,42 +67,37 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 	@SuppressWarnings("SpellCheckingInspection")
 	@Override
 	public PriceInfo loadDataFromNetwork() throws SpiceException {
-		CardDbAdapter dbHelper;
 		int retry = 2; /* try the fetch twice, once with accent marks and again without if it fails */
 		SpiceException exception = null; /* Save the exception during while loops */
-		try {
-			dbHelper = new CardDbAdapter(mContext);
-		} catch (FamiliarDbException e) {
-			throw new SpiceException("FamiliarDbException");
-		}
+		SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 		while (retry > 0) {
 			try {
 				/* If the card number wasn't given, figure it out */
 				if (mCardNumber == null) {
-					Cursor c = dbHelper.fetchCardByNameAndSet(mCardName, mSetCode, CardDbAdapter.allData);
+					Cursor c = CardDbAdapter.fetchCardByNameAndSet(mCardName, mSetCode, CardDbAdapter.allData, database);
 					mCardNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 					c.close();
 				}
 
 				/* Get the TCGplayer.com set name, why can't everything be consistent? */
-				String tcgName = dbHelper.getTCGname(mSetCode);
+				String tcgName = CardDbAdapter.getTcgName(mSetCode, database);
 				/* Figure out the tcgCardName, which is tricky for split cards */
 				String tcgCardName;
-				int multiCardType = CardDbAdapter.isMulticard(mCardNumber, mSetCode);
+				int multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
 				if ((multiCardType == CardDbAdapter.TRANSFORM) && mCardNumber.contains("b")) {
-					tcgCardName = dbHelper.getTransformName(mSetCode, mCardNumber.replace("b", "a"));
+					tcgCardName = CardDbAdapter.getTransformName(mSetCode, mCardNumber.replace("b", "a"), database);
 				}
 				else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
 						multiCardType == CardDbAdapter.FUSE)) {
-					int multiID = dbHelper.getSplitMultiverseID(mCardName);
+					int multiID = CardDbAdapter.getSplitMultiverseID(mCardName, database);
 					if (multiID == -1) {
 						throw new FamiliarDbException(null);
 					}
-					tcgCardName = dbHelper.getSplitName(multiID);
+					tcgCardName = CardDbAdapter.getSplitName(multiID, database);
 				}
 				else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
 						multiCardType == CardDbAdapter.FUSE)) {
-					tcgCardName = dbHelper.getSplitName(mMultiverseID);
+					tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, database);
 				}
 				else {
 					tcgCardName = mCardName;
@@ -131,25 +130,25 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 					pi.mUrl = getString("link", element);
 					return pi;
 				} catch (NumberFormatException error) {
-					exception = new SpiceException("NumberFormatException");
+					exception = new SpiceException(error.getLocalizedMessage());
 				} catch (DOMException e) {
-					exception = new SpiceException("DOMException");
+					exception = new SpiceException(e.getLocalizedMessage());
 				}
 			} catch (FamiliarDbException e) {
-				exception = new SpiceException("FamiliarDbException");
+				exception = new SpiceException(e.getLocalizedMessage());
 			} catch (MalformedURLException e) {
-				exception = new SpiceException("MalformedURLException");
+				exception = new SpiceException(e.getLocalizedMessage());
 			} catch (IOException e) {
-				exception = new SpiceException("IOException");
+				exception = new SpiceException(e.getLocalizedMessage());
 			} catch (ParserConfigurationException e) {
-				exception = new SpiceException("ParserConfigurationException");
+				exception = new SpiceException(e.getLocalizedMessage());
 			} catch (SAXException e) {
-				exception = new SpiceException("SAXException");
+				exception = new SpiceException(e.getLocalizedMessage());
 			}
 			retry--;
 		}
-		dbHelper.close();
-		if(exception != null) {
+		DatabaseManager.getInstance().closeDatabase();
+		if (exception != null) {
 			throw exception;
 		}
 		else {

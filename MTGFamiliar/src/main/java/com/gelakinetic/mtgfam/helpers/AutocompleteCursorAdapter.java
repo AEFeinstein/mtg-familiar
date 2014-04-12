@@ -31,6 +31,8 @@ import android.text.TextWatcher;
 import android.widget.SimpleCursorAdapter;
 
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.CardSearchProvider;
 
 import org.jetbrains.annotations.NotNull;
 

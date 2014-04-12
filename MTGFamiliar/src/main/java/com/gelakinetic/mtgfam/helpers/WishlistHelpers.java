@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +16,9 @@ import android.widget.Toast;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -131,13 +135,12 @@ public class WishlistHelpers {
 	 * @param fragment       The fragment which hosts the dialog and receives onWishlistChanged()
 	 * @param showCardButton Whether the button to launch the CardViewFragment should be shown
 	 * @return A dialog which edits the wishlist
-	 * @throws FamiliarDbException
+	 * @throws com.gelakinetic.mtgfam.helpers.database.FamiliarDbException
 	 */
 	public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment, boolean showCardButton)
 			throws FamiliarDbException {
 
 		final Context ctx = fragment.getActivity();
-		CardDbAdapter adapter = new CardDbAdapter(ctx);
 
 		/* Create the custom view */
 		View customView = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog,
@@ -154,12 +157,13 @@ public class WishlistHelpers {
 				public void onClick(View view) {
 					Bundle args = new Bundle();
 					try {
+						/* Open the database */
+						SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
 						/* Get the card ID, and send it to a new CardViewFragment */
-						CardDbAdapter adapter = new CardDbAdapter(ctx);
-						args.putLong(CardViewFragment.CARD_ID, adapter.fetchIdByName(mCardName));
+						args.putLong(CardViewFragment.CARD_ID, CardDbAdapter.fetchIdByName(mCardName, db));
+						DatabaseManager.getInstance().closeDatabase();
 						CardViewFragment cvFrag = new CardViewFragment();
 						fragment.startNewFragment(cvFrag, args);
-						adapter.close();
 					} catch (FamiliarDbException e) {
 						fragment.handleFamiliarDbException(false);
 					}
@@ -179,13 +183,16 @@ public class WishlistHelpers {
 		final ArrayList<Character> potentialRarities = new ArrayList<Character>();
 		final ArrayList<String> potentialNumbers = new ArrayList<String>();
 
+		/* Open the database */
+		SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
+
 		/* Get all the cards with relevant info from the database */
-		Cursor cards = adapter.fetchCardByName(mCardName, new String[]{
+		Cursor cards = CardDbAdapter.fetchCardByName(mCardName, new String[]{
 				CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
 				CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
 				CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
 				CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-				CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER});
+				CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, db);
 
 		/* For each card, add it to the wishlist view */
 		while (!cards.isAfterLast()) {
@@ -207,7 +214,7 @@ public class WishlistHelpers {
 
 			/* If this card has a foil version, add that too */
 			View wishlistRowFoil = null;
-			if (adapter.canBeFoil(setCode)) {
+			if (CardDbAdapter.canBeFoil(setCode, db)) {
 				wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
 						null, false);
 				assert wishlistRowFoil != null;
@@ -237,7 +244,7 @@ public class WishlistHelpers {
 
 		/* Clean up */
 		cards.close();
-		adapter.close();
+		DatabaseManager.getInstance().closeDatabase();
 
 		/* make and return the actual dialog */
 		return new AlertDialog.Builder(ctx)

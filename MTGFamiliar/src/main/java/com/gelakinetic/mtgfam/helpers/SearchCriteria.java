@@ -1,5 +1,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+
 import java.io.Serializable;
 
 /**

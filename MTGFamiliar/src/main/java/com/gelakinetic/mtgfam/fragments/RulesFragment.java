@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,8 +32,9 @@ import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 
 import java.util.ArrayList;
@@ -82,13 +84,7 @@ public class RulesFragment extends FamiliarFragment {
 		String keyword;
 
 		/* Open a database connection */
-		CardDbAdapter mDbHelper;
-		try {
-			mDbHelper = new CardDbAdapter(getActivity());
-		} catch (FamiliarDbException e) {
-			handleFamiliarDbException(true);
-			return null;
-		}
+		SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 
 		/* Inflate the view */
 		View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
@@ -158,15 +154,15 @@ public class RulesFragment extends FamiliarFragment {
 		/* Populate the cursor with information from the database */
 		try {
 			if (isGlossary) {
-				cursor = mDbHelper.getGlossaryTerms();
+				cursor = CardDbAdapter.getGlossaryTerms(database);
 				isClickable = false;
 			}
 			else if (keyword == null) {
-				cursor = mDbHelper.getRules(mCategory, mSubcategory);
+				cursor = CardDbAdapter.getRules(mCategory, mSubcategory, database);
 				isClickable = mSubcategory == -1;
 			}
 			else {
-				cursor = mDbHelper.getRulesByKeyword(keyword, mCategory, mSubcategory);
+				cursor = CardDbAdapter.getRulesByKeyword(keyword, mCategory, mSubcategory, database);
 				isClickable = false;
 			}
 		} catch (FamiliarDbException e) {
@@ -277,14 +273,13 @@ public class RulesFragment extends FamiliarFragment {
 		if (cursor != null) {
 			cursor.close();
 		}
-		mDbHelper.close();
+		DatabaseManager.getInstance().closeDatabase();
 
 		return myFragmentView;
 	}
 
 	/**
 	 * Remove any showing dialogs, and show the requested one
-	 *
 	 */
 	void showDialog() {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
@@ -334,10 +329,10 @@ public class RulesFragment extends FamiliarFragment {
 						}
 						else {
 							try {
-								CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
+								SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 								title = String.format(getString(R.string.rules_search_cat),
-										mDbHelper.getCategoryName(mCategory, mSubcategory));
-								mDbHelper.close();
+										CardDbAdapter.getCategoryName(mCategory, mSubcategory, database));
+								DatabaseManager.getInstance().closeDatabase();
 							} catch (FamiliarDbException e) {
 								title = String.format(getString(R.string.rules_search_cat),
 										getString(R.string.rules_this_cat));
@@ -463,9 +458,9 @@ public class RulesFragment extends FamiliarFragment {
 						if (dashIndex >= 0) {
 							entry = entry.substring(0, dashIndex);
 						}
-						CardDbAdapter mDbHelper = new CardDbAdapter(getActivity());
-						position = mDbHelper.getRulePosition(linkCat, linkSub, entry);
-						mDbHelper.close();
+						SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+						position = CardDbAdapter.getRulePosition(linkCat, linkSub, entry, database);
+						DatabaseManager.getInstance().closeDatabase();
 					}
 					final int linkPosition = position;
 					result.setSpan(new ClickableSpan() {
