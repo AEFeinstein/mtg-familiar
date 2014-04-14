@@ -15,8 +15,6 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    android:layout_marginLeft="56dp"
-    android:layout_marginRight="56dp"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -45,9 +43,8 @@
         <TextView
             android:id="@+id/white_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -88,9 +85,8 @@
         <TextView
             android:id="@+id/blue_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -130,9 +126,8 @@
         <TextView
             android:id="@+id/black_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -172,9 +167,8 @@
         <TextView
             android:id="@+id/red_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -214,9 +208,8 @@
         <TextView
             android:id="@+id/green_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -256,9 +249,8 @@
         <TextView
             android:id="@+id/colorless_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -297,9 +289,8 @@
         <TextView
             android:id="@+id/spell_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 

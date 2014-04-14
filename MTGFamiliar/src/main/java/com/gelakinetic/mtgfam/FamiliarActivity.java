@@ -237,9 +237,9 @@ public class FamiliarActivity extends FragmentActivity {
 				new SharedPreferences.OnSharedPreferenceChangeListener() {
 					@Override
 					public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-						if (s.equals("widgetButtons")) {
+						if (s.equals(getString(R.string.key_widgetButtons))) {
 							Intent intent = new Intent(FamiliarActivity.this, MTGFamiliarAppWidgetProvider.class);
-							intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+							intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 							assert AppWidgetManager.getInstance(getApplication()) != null;
 							AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
 							assert appWidgetManager != null;

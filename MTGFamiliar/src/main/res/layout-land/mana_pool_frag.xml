@@ -9,7 +9,6 @@
 	more details. You should have received a copy of the GNU General Public License 
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -19,10 +18,8 @@
     android:baselineAligned="false"
     android:gravity="center"
     android:orientation="vertical">
-
     <!-- white -->
     <!-- blue -->
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -47,9 +44,9 @@
         <TextView
             android:id="@+id/white_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -82,9 +79,9 @@
         <TextView
             android:id="@+id/blue_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -99,11 +96,10 @@
     </LinearLayout>
     <!-- black -->
     <!-- red -->
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -125,9 +121,9 @@
         <TextView
             android:id="@+id/black_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -160,9 +156,9 @@
         <TextView
             android:id="@+id/red_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -177,7 +173,6 @@
     </LinearLayout>
     <!-- green -->
     <!-- colorless -->
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
@@ -202,9 +197,9 @@
         <TextView
             android:id="@+id/green_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -237,9 +232,9 @@
         <TextView
             android:id="@+id/colorless_readout"
             style="@style/text.xxlarge"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/mana_pool_zero" />
 
@@ -253,61 +248,43 @@
             android:textStyle="bold" />
     </LinearLayout>
     <!-- spell -->
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="0dp"
+        <Button
+            android:id="@+id/spell_minus"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:background="@drawable/btn_default_custom"
+            android:text="@string/mana_pool_minus"
+            android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dip"
+            android:src="@drawable/glyph_spell" />
+
+        <TextView
+            android:id="@+id/spell_readout"
+            style="@style/text.xxlarge"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2">
+            android:gravity="center"
+            android:text="@string/mana_pool_zero" />
 
-            <Button
-                android:id="@+id/spell_minus"
-                style="@style/text.xlarge"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/btn_default_custom"
-                android:text="@string/mana_pool_minus"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dip"
-                android:src="@drawable/glyph_spell" />
-
-            <TextView
-                android:id="@+id/spell_readout"
-                style="@style/text.xxlarge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/mana_pool_zero" />
-
-            <Button
-                android:id="@+id/spell_plus"
-                style="@style/text.xlarge"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/btn_default_custom"
-                android:text="@string/mana_pool_plus"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="0dp"
+        <Button
+            android:id="@+id/spell_plus"
+            style="@style/text.xlarge"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
-
+            android:background="@drawable/btn_default_custom"
+            android:text="@string/mana_pool_plus"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>
