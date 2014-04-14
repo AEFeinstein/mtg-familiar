@@ -35,7 +35,7 @@
                 android:value="com.gelakinetic.mtgfam.activities.MainActivity"/>
         </activity>
 
-        <activity android:name=".MtgAppWidgetConfigure">
+        <activity android:name=".MtgAppWidgetConfigure" android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>

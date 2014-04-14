@@ -37,7 +37,17 @@ public class PreferenceAdapter {
 		this.edit = this.prefs.edit();
 	}
 
-	/* Last version */
+    public void registerOnSharedPreferenceChangeListener(
+            SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        this.prefs.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    public void unregisterOnSharedPreferenceChangeListener(
+            SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        this.prefs.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    /* Last version */
 	public synchronized int getLastVersion() {
 		return this.prefs.getInt(context.getString(R.string.key_lastVersion), 0);
 	}
@@ -395,4 +405,8 @@ public class PreferenceAdapter {
 				Arrays.asList(context.getResources().getStringArray(R.array.default_widget_buttons_array_entries))));
 	}
 
+    public void setWidgetButtons(Set<String> widgetButtons) {
+        this.edit.putStringSet(context.getString(R.string.key_widgetButtons), widgetButtons);
+        this.edit.commit();
+    }
 }

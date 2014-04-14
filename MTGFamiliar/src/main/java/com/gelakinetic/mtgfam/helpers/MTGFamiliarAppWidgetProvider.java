@@ -49,7 +49,9 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			FamiliarActivity.ACTION_MOJHOSTO,
 			FamiliarActivity.ACTION_JUDGE};
 
-	/**
+    private int mMaxNumButtons = 100;
+
+    /**
 	 * Called in response to the ACTION_APPWIDGET_UPDATE broadcast when this AppWidget provider is being asked to
 	 * provide RemoteViews for a set of AppWidgets. Override this method to implement your own AppWidget functionality.
 	 *
@@ -68,7 +70,7 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			bindButtons(context, views);
 
 			/* 100 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
-			showButtonsFromPreferences(context, views, 100);
+			showButtonsFromPreferences(context, views, mMaxNumButtons);
 
 			/* Tell the AppWidgetManager to perform an update on the current app widget */
 			appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -143,11 +145,11 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
 		float densityDpi = context.getResources().getDisplayMetrics().densityDpi;
 		float dp = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) / (densityDpi / 160f);
-		int maxNumButtons = (int) (dp / 32);
+		mMaxNumButtons = (int) (dp / 32);
 
 		/* Show the right number of buttons, and rebind the intents.
 		   Buttons wont work if scaled and rotated otherwise */
-		showButtonsFromPreferences(context, views, maxNumButtons);
+		showButtonsFromPreferences(context, views, mMaxNumButtons);
 		bindButtons(context, views);
 
 		/* Tell the AppWidgetManager to perform an update on the current app widget */
