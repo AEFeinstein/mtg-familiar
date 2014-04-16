@@ -6,5 +6,5 @@
     For more on layout aliases, see:
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
-    <item type="layout" name="activity_card_list">@layout/activity_main_tablet</item>
+    <!--<item type="layout" name="activity_card_list">@layout/activity_main_tablet</item>-->
 </resources>

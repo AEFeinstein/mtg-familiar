@@ -27,11 +27,11 @@ import android.widget.Toast;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
+import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
-import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -258,7 +258,14 @@ public class SearchViewFragment extends FamiliarFragment {
 				doSearch();
 			}
 		});
-
+		/* TODO This is just for debug, or is it? */
+		searchButton.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				getFamiliarActivity().setLoading();
+				return true;
+			}
+		});
 		return myFragmentView;
 	}
 
@@ -748,10 +755,11 @@ public class SearchViewFragment extends FamiliarFragment {
 							mFormatDialog = new AlertDialog.Builder(this.getActivity()).
 									setTitle(R.string.search_formats).setSingleChoiceItems(mFormatNames,
 									mSelectedFormat, new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int which) {
-									mSelectedFormat = which;
-								}
-							}).setPositiveButton(R.string.dialog_ok, clickListener).create();
+										public void onClick(DialogInterface dialog, int which) {
+											mSelectedFormat = which;
+										}
+									}
+							).setPositiveButton(R.string.dialog_ok, clickListener).create();
 							return mFormatDialog;
 						}
 						case RARITY_LIST: {

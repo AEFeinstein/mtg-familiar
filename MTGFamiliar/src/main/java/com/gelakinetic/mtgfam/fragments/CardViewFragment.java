@@ -21,7 +21,6 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
@@ -60,13 +59,13 @@ import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -96,7 +95,6 @@ public class CardViewFragment extends FamiliarFragment {
 	private static final int CARD_RULINGS = 4;
 	private static final int WISH_LIST_COUNTS = 6;
 	private static final int GET_LEGALITY = 7;
-	private static final int PROGRESS = 8;
 
 	/* Where the card image is loaded to */
 	private static final int MAIN_PAGE = 1;
@@ -424,7 +422,7 @@ public class CardViewFragment extends FamiliarFragment {
 			mArtistTextView.setVisibility(View.GONE);
 			mFrameLayout.setVisibility(View.GONE);
 
-			showDialog(PROGRESS);
+			getFamiliarActivity().setLoading();
 			mAsyncTask = new FetchPictureTask();
 			mAsyncTask.execute((Void[]) null);
 		}
@@ -450,7 +448,8 @@ public class CardViewFragment extends FamiliarFragment {
 		Cursor cCardByName = CardDbAdapter.fetchCardByName(mCardName,
 				new String[]{
 						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
+		);
 		mSets = new LinkedHashSet<String>();
 		mCardIds = new LinkedHashSet<Long>();
 		while (!cCardByName.isAfterLast()) {
@@ -526,6 +525,7 @@ public class CardViewFragment extends FamiliarFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			showDialog(GET_LEGALITY);
+			getFamiliarActivity().clearLoading();
 		}
 	}
 
@@ -723,6 +723,7 @@ public class CardViewFragment extends FamiliarFragment {
 				}
 				Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
 			}
+			getFamiliarActivity().clearLoading();
 		}
 
 		/**
@@ -819,6 +820,7 @@ public class CardViewFragment extends FamiliarFragment {
 				removeDialog(getFragmentManager());
 				Toast.makeText(getActivity(), mErrorMessage, Toast.LENGTH_SHORT).show();
 			}
+			getFamiliarActivity().clearLoading();
 		}
 	}
 
@@ -997,7 +999,8 @@ public class CardViewFragment extends FamiliarFragment {
 						textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
 						textViewUrl.setText(Html.fromHtml(
 								"<a href=http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
-										mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"));
+										mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
+						));
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 						builder.setTitle(R.string.card_view_rulings_dialog_title);
@@ -1012,22 +1015,6 @@ public class CardViewFragment extends FamiliarFragment {
 							setShowsDialog(false);
 							return null;
 						}
-					}
-					case PROGRESS: {
-
-						ProgressDialog progressDialog = new ProgressDialog(this.getActivity());
-						progressDialog.setIndeterminate(true);
-						progressDialog.setCancelable(true);
-						progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							public void onCancel(DialogInterface pd) {
-								/* when the dialog is dismissed */
-								if (mAsyncTask != null) {
-									mAsyncTask.cancel(true);
-								}
-							}
-						});
-
-						return progressDialog;
 					}
 					default: {
 						setShowsDialog(false);
@@ -1118,13 +1105,13 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Handle item selection */
 		switch (item.getItemId()) {
 			case R.id.image: {
-				showDialog(PROGRESS);
+				getFamiliarActivity().setLoading();
 				mAsyncTask = new FetchPictureTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
 			}
 			case R.id.price: {
-				showDialog(PROGRESS);
+				getFamiliarActivity().setLoading();
 
 				PriceFetchRequest priceRequest;
 				priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId,
@@ -1134,12 +1121,16 @@ public class CardViewFragment extends FamiliarFragment {
 
 					@Override
 					public void onRequestFailure(SpiceException spiceException) {
+						getFamiliarActivity().clearLoading();
+
 						CardViewFragment.this.removeDialog(getFragmentManager());
 						Toast.makeText(getActivity(), spiceException.getMessage(), Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
 					public void onRequestSuccess(final PriceInfo result) {
+						getFamiliarActivity().clearLoading();
+
 						if (result != null) {
 							mPriceInfo = result;
 							showDialog(GET_PRICE);
@@ -1158,13 +1149,13 @@ public class CardViewFragment extends FamiliarFragment {
 				return true;
 			}
 			case R.id.legality: {
-				showDialog(PROGRESS);
+				getFamiliarActivity().setLoading();
 				mAsyncTask = new FetchLegalityTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
 			}
 			case R.id.cardrulings: {
-				showDialog(PROGRESS);
+				getFamiliarActivity().setLoading();
 				mAsyncTask = new FetchRulingsTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
