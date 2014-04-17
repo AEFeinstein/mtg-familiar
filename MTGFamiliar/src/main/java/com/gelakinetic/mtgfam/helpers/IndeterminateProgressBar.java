@@ -52,7 +52,6 @@ public final class IndeterminateProgressBar {
 
 	private final Paint mPaint = new Paint();
 	private final RectF mClipRect = new RectF();
-	private float mTriggerPercentage;
 	private long mStartTime;
 	private long mFinishTime;
 	private boolean mRunning;
@@ -92,22 +91,10 @@ public final class IndeterminateProgressBar {
 	}
 
 	/**
-	 * Update the progress the user has made toward triggering the swipe
-	 * gesture. and use this value to update the percentage of the trigger that
-	 * is shown.
-	 */
-	public void setTriggerPercentage(float triggerPercentage) {
-		mTriggerPercentage = triggerPercentage;
-		mStartTime = 0;
-		ViewCompat.postInvalidateOnAnimation(mParent);
-	}
-
-	/**
 	 * Start showing the progress animation.
 	 */
 	public void start() {
 		if (!mRunning) {
-			mTriggerPercentage = 0;
 			mStartTime = AnimationUtils.currentAnimationTimeMillis();
 			mRunning = true;
 			mParent.postInvalidate();
@@ -119,7 +106,6 @@ public final class IndeterminateProgressBar {
 	 */
 	public void stop() {
 		if (mRunning) {
-			mTriggerPercentage = 0;
 			mFinishTime = AnimationUtils.currentAnimationTimeMillis();
 			mRunning = false;
 			mParent.postInvalidate();
@@ -131,7 +117,6 @@ public final class IndeterminateProgressBar {
 		final int height = mBounds.height();
 		final int cx = width / 2;
 		final int cy = height / 2;
-		boolean drawTriggerWhileFinishing = false;
 		int restoreCount = canvas.save();
 		canvas.clipRect(mBounds);
 
@@ -141,11 +126,9 @@ public final class IndeterminateProgressBar {
 			long iterations = (now - mStartTime) / ANIMATION_DURATION_MS;
 			float rawProgress = (elapsed / (ANIMATION_DURATION_MS / 100f));
 
-			// If we're not running anymore, that means we're running through
-			// the finish animation.
+			// If we're not running anymore, that means we're running through the finish animation.
 			if (!mRunning) {
-				// If the finish animation is done, don't draw anything, and
-				// don't re-post.
+				// If the finish animation is done, don't draw anything, and don't re-post.
 				if ((now - mFinishTime) >= FINISH_ANIMATION_DURATION_MS) {
 					mFinishTime = 0;
 					return;
@@ -161,30 +144,19 @@ public final class IndeterminateProgressBar {
 				float clearRadius = width / 2 * INTERPOLATOR.getInterpolation(pct);
 				mClipRect.set(cx - clearRadius, 0, cx + clearRadius, height);
 				canvas.saveLayerAlpha(mClipRect, 0, 0);
-				// Only draw the trigger if there is a space in the center of
-				// this refreshing view that needs to be filled in by the
-				// trigger. If the progress view is just still animating, let it
-				// continue animating.
-				drawTriggerWhileFinishing = true;
 			}
 
-			// First fill in with the last color that would have finished drawing.
-			if (iterations == 0) {
+			if (rawProgress >= 0 && rawProgress < 25) {
+				canvas.drawColor(mColor4);
+			}
+			else if (rawProgress >= 25 && rawProgress < 50) {
 				canvas.drawColor(mColor1);
 			}
+			else if (rawProgress >= 50 && rawProgress < 75) {
+				canvas.drawColor(mColor2);
+			}
 			else {
-				if (rawProgress >= 0 && rawProgress < 25) {
-					canvas.drawColor(mColor4);
-				}
-				else if (rawProgress >= 25 && rawProgress < 50) {
-					canvas.drawColor(mColor1);
-				}
-				else if (rawProgress >= 50 && rawProgress < 75) {
-					canvas.drawColor(mColor2);
-				}
-				else {
-					canvas.drawColor(mColor3);
-				}
+				canvas.drawColor(mColor3);
 			}
 
 			// Then draw up to 4 overlapping concentric circles of varying radii, based on how far
@@ -213,31 +185,10 @@ public final class IndeterminateProgressBar {
 				float pct = (((rawProgress - 75) * 2) / 100f);
 				drawCircle(canvas, cx, cy, mColor1, pct);
 			}
-			if (mTriggerPercentage > 0 && drawTriggerWhileFinishing) {
-				// There is some portion of trigger to draw. Restore the canvas,
-				// then draw the trigger. Otherwise, the trigger does not appear
-				// until after the bar has finished animating and appears to
-				// just jump in at a larger width than expected.
-				canvas.restoreToCount(restoreCount);
-				restoreCount = canvas.save();
-				canvas.clipRect(mBounds);
-				drawTrigger(canvas, cx, cy);
-			}
 			// Keep running until we finish out the last cycle.
 			ViewCompat.postInvalidateOnAnimation(mParent);
 		}
-		else {
-			// Otherwise if we're in the middle of a trigger, draw that.
-			if (mTriggerPercentage > 0 && mTriggerPercentage <= 1.0) {
-				drawTrigger(canvas, cx, cy);
-			}
-		}
 		canvas.restoreToCount(restoreCount);
-	}
-
-	private void drawTrigger(Canvas canvas, int cx, int cy) {
-		mPaint.setColor(mColor1);
-		canvas.drawCircle(cx, cy, cx * mTriggerPercentage, mPaint);
 	}
 
 	/**
@@ -318,9 +269,7 @@ public final class IndeterminateProgressBar {
 				return 0f;
 			}
 
-			int position = Math.min(
-					(int) (input * (VALUES.length - 1)),
-					VALUES.length - 2);
+			int position = Math.min((int) (input * (VALUES.length - 1)), VALUES.length - 2);
 
 			float quantized = position * STEP_SIZE;
 			float difference = input - quantized;
@@ -330,5 +279,4 @@ public final class IndeterminateProgressBar {
 		}
 
 	}
-
 }

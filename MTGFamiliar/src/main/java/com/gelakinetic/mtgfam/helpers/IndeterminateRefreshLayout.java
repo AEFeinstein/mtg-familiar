@@ -24,12 +24,6 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Transformation;
-
-import com.gelakinetic.mtgfam.helpers.IndeterminateProgressBar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,106 +49,13 @@ import org.jetbrains.annotations.NotNull;
  * refresh of the content wherever this gesture is used.</p>
  */
 public class IndeterminateRefreshLayout extends ViewGroup {
-	private static final float DECELERATE_INTERPOLATION_FACTOR = 2f;
 	private static final float PROGRESS_BAR_HEIGHT = 4;
-	private static final float MAX_SWIPE_DISTANCE_FACTOR = .6f;
-	private static final int REFRESH_TRIGGER_DISTANCE = 120;
 
 	private IndeterminateProgressBar mProgressBar; //the thing that shows progress is going
 	private View mTarget; //the content that gets pulled down
-	private int mOriginalOffsetTop;
-	private int mFrom;
 	private boolean mRefreshing = false;
-	private float mDistanceToTriggerSync = -1;
-	private int mMediumAnimationDuration;
-	private float mFromPercentage = 0;
-	private float mCurrPercentage = 0;
 	private int mProgressBarHeight;
-	private int mCurrentTargetOffsetTop;
-	private final DecelerateInterpolator mDecelerateInterpolator;
-	private static final int[] LAYOUT_ATTRS = new int[]{
-			android.R.attr.enabled
-	};
-
-	private final Animation mAnimateToStartPosition = new Animation() {
-		@Override
-		public void applyTransformation(float interpolatedTime, Transformation t) {
-			int targetTop = 0;
-			if (mFrom != mOriginalOffsetTop) {
-				targetTop = (mFrom + (int) ((mOriginalOffsetTop - mFrom) * interpolatedTime));
-			}
-			int offset = targetTop - mTarget.getTop();
-			final int currentTop = mTarget.getTop();
-			if (offset + currentTop < 0) {
-				offset = 0 - currentTop;
-			}
-			setTargetOffsetTopAndBottom(offset);
-		}
-	};
-
-	private Animation mShrinkTrigger = new Animation() {
-		@Override
-		public void applyTransformation(float interpolatedTime, Transformation t) {
-			float percent = mFromPercentage + ((0 - mFromPercentage) * interpolatedTime);
-			mProgressBar.setTriggerPercentage(percent);
-		}
-	};
-
-	private final AnimationListener mReturnToStartPositionListener = new BaseAnimationListener() {
-		@Override
-		public void onAnimationEnd(Animation animation) {
-			// Once the target content has returned to its start position, reset
-			// the target offset to 0
-			mCurrentTargetOffsetTop = 0;
-		}
-	};
-
-	private final AnimationListener mShrinkAnimationListener = new BaseAnimationListener() {
-		@Override
-		public void onAnimationEnd(Animation animation) {
-			mCurrPercentage = 0;
-		}
-	};
-
-	private final Runnable mReturnToStartPosition = new Runnable() {
-
-		@Override
-		public void run() {
-			animateOffsetToStartPosition(mCurrentTargetOffsetTop + getPaddingTop(),
-					mReturnToStartPositionListener);
-		}
-
-	};
-
-	// Cancel the refresh gesture and animate everything back to its original state.
-	private final Runnable mCancel = new Runnable() {
-
-		@Override
-		public void run() {
-			// Timeout fired since the user last moved their finger; animate the
-			// trigger to 0 and put the target back at its original position
-			if (mProgressBar != null) {
-				mFromPercentage = mCurrPercentage;
-				mShrinkTrigger.setDuration(mMediumAnimationDuration);
-				mShrinkTrigger.setAnimationListener(mShrinkAnimationListener);
-				mShrinkTrigger.reset();
-				mShrinkTrigger.setInterpolator(mDecelerateInterpolator);
-				startAnimation(mShrinkTrigger);
-			}
-			animateOffsetToStartPosition(mCurrentTargetOffsetTop + getPaddingTop(),
-					mReturnToStartPositionListener);
-		}
-
-	};
-
-	/**
-	 * Simple constructor to use when creating a IndeterminateRefreshLayout from code.
-	 *
-	 * @param context A Context to pass to Super
-	 */
-//	public IndeterminateRefreshLayout(Context context) {
-//		this(context, null);
-//	}
+	private static final int[] LAYOUT_ATTRS = new int[]{android.R.attr.enabled};
 
 	/**
 	 * Constructor that is called when inflating IndeterminateRefreshLayout from XML.
@@ -166,41 +67,16 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 		super(context, attrs);
 
 		assert getResources() != null;
-		mMediumAnimationDuration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
 		setWillNotDraw(false);
 		mProgressBar = new IndeterminateProgressBar(this);
 		final DisplayMetrics metrics = getResources().getDisplayMetrics();
 		mProgressBarHeight = (int) (metrics.density * PROGRESS_BAR_HEIGHT);
-		mDecelerateInterpolator = new DecelerateInterpolator(DECELERATE_INTERPOLATION_FACTOR);
 
 		final TypedArray typedArray = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS);
 		assert typedArray != null;
 		setEnabled(typedArray.getBoolean(0, true));
 		typedArray.recycle();
-	}
-
-	@Override
-	public void onAttachedToWindow() {
-		super.onAttachedToWindow();
-		removeCallbacks(mCancel);
-		removeCallbacks(mReturnToStartPosition);
-	}
-
-	@Override
-	public void onDetachedFromWindow() {
-		super.onDetachedFromWindow();
-		removeCallbacks(mReturnToStartPosition);
-		removeCallbacks(mCancel);
-	}
-
-	private void animateOffsetToStartPosition(int from, AnimationListener listener) {
-		mFrom = from;
-		mAnimateToStartPosition.reset();
-		mAnimateToStartPosition.setDuration(mMediumAnimationDuration);
-		mAnimateToStartPosition.setAnimationListener(listener);
-		mAnimateToStartPosition.setInterpolator(mDecelerateInterpolator);
-		mTarget.startAnimation(mAnimateToStartPosition);
 	}
 
 	/**
@@ -212,7 +88,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 	public void setRefreshing(boolean refreshing) {
 		if (mRefreshing != refreshing) {
 			ensureTarget();
-			mCurrPercentage = 0;
 			mRefreshing = refreshing;
 			if (mRefreshing) {
 				mProgressBar.start();
@@ -252,18 +127,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 						"IndeterminateRefreshLayout can host only one direct child");
 			}
 			mTarget = getChildAt(0);
-			if (mTarget != null) {
-				mOriginalOffsetTop = mTarget.getTop() + getPaddingTop();
-			}
-		}
-		if (mDistanceToTriggerSync == -1) {
-			if (getParent() != null && ((View) getParent()).getHeight() > 0) {
-				assert getResources() != null;
-				final DisplayMetrics metrics = getResources().getDisplayMetrics();
-				mDistanceToTriggerSync = (int) Math.min(
-						((View) getParent()).getHeight() * MAX_SWIPE_DISTANCE_FACTOR,
-						REFRESH_TRIGGER_DISTANCE * metrics.density);
-			}
 		}
 	}
 
@@ -283,7 +146,7 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 		}
 		final View child = getChildAt(0);
 		final int childLeft = getPaddingLeft();
-		final int childTop = mCurrentTargetOffsetTop + getPaddingTop();
+		final int childTop = getPaddingTop();
 		final int childWidth = width - getPaddingLeft() - getPaddingRight();
 		final int childHeight = height - getPaddingTop() - getPaddingBottom();
 		assert child != null;
@@ -306,29 +169,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 			View child = getChildAt(0);
 			assert child != null;
 			child.measure(width, height);
-		}
-	}
-
-	private void setTargetOffsetTopAndBottom(int offset) {
-		mTarget.offsetTopAndBottom(offset);
-		mCurrentTargetOffsetTop = mTarget.getTop();
-	}
-
-	/**
-	 * Simple AnimationListener to avoid having to implement unneeded methods in
-	 * AnimationListeners.
-	 */
-	private class BaseAnimationListener implements AnimationListener {
-		@Override
-		public void onAnimationStart(Animation animation) {
-		}
-
-		@Override
-		public void onAnimationEnd(Animation animation) {
-		}
-
-		@Override
-		public void onAnimationRepeat(Animation animation) {
 		}
 	}
 }

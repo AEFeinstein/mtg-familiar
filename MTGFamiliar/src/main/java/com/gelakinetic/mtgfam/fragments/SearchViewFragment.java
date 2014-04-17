@@ -258,14 +258,6 @@ public class SearchViewFragment extends FamiliarFragment {
 				doSearch();
 			}
 		});
-		/* TODO This is just for debug, or is it? */
-		searchButton.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View view) {
-				getFamiliarActivity().setLoading();
-				return true;
-			}
-		});
 		return myFragmentView;
 	}
 
