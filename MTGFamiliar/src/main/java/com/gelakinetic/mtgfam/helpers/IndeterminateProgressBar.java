@@ -61,9 +61,9 @@ public final class IndeterminateProgressBar {
 	private int mColor2;
 	private int mColor3;
 	private int mColor4;
-	private View mParent;
+	private final View mParent;
 
-	private Rect mBounds = new Rect();
+	private final Rect mBounds = new Rect();
 
 	public IndeterminateProgressBar(View parent) {
 		mParent = parent;
@@ -123,7 +123,6 @@ public final class IndeterminateProgressBar {
 		if (mRunning || (mFinishTime > 0)) {
 			long now = AnimationUtils.currentAnimationTimeMillis();
 			long elapsed = (now - mStartTime) % ANIMATION_DURATION_MS;
-			long iterations = (now - mStartTime) / ANIMATION_DURATION_MS;
 			float rawProgress = (elapsed / (ANIMATION_DURATION_MS / 100f));
 
 			// If we're not running anymore, that means we're running through the finish animation.
@@ -213,9 +212,9 @@ public final class IndeterminateProgressBar {
 	/**
 	 * Set the drawing bounds of this IndeterminateProgressBar.
 	 */
-	public void setBounds(int left, int top, int right, int bottom) {
-		mBounds.left = left;
-		mBounds.top = top;
+	public void setBounds(int right, int bottom) {
+		mBounds.left = 0;
+		mBounds.top = 0;
 		mBounds.right = right;
 		mBounds.bottom = bottom;
 	}

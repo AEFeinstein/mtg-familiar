@@ -84,16 +84,16 @@ public class ResultListFragment extends FamiliarFragment {
 				long id1 = args.getLong(CARD_ID_1);
 				long id2 = args.getLong(CARD_ID_2);
 				Cursor cs[] = new Cursor[3];
-				cs[0] = CardDbAdapter.fetchCard(id, null, database);
-				cs[1] = CardDbAdapter.fetchCard(id1, null, database);
-				cs[2] = CardDbAdapter.fetchCard(id2, null, database);
+				cs[0] = CardDbAdapter.fetchCard(id, database);
+				cs[1] = CardDbAdapter.fetchCard(id1, database);
+				cs[2] = CardDbAdapter.fetchCard(id2, database);
 				mCursor = new MergeCursor(cs);
 			}
 			else {
 				SearchCriteria criteria = (SearchCriteria) args.getSerializable(SearchViewFragment.CRITERIA);
 				assert criteria != null; /* Because Android Studio */
-				boolean consolidate = (criteria.setLogic == CardDbAdapter.MOSTRECENTPRINTING ||
-						criteria.setLogic == CardDbAdapter.FIRSTPRINTING);
+				boolean consolidate = (criteria.setLogic == CardDbAdapter.MOST_RECENT_PRINTING ||
+						criteria.setLogic == CardDbAdapter.FIRST_PRINTING);
 
 				mCursor = CardDbAdapter.Search(criteria.name, criteria.text, criteria.type, criteria.color,
 						criteria.colorLogic, criteria.set, criteria.powChoice, criteria.powLogic, criteria.touChoice,

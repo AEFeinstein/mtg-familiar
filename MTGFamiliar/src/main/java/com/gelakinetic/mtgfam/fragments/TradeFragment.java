@@ -962,7 +962,7 @@ public class TradeFragment extends FamiliarFragment {
 		}
 		else {
 			/* priceInfo is null, perform a query */
-			PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
+			PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1);
 			getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode,
 					DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
 						/**

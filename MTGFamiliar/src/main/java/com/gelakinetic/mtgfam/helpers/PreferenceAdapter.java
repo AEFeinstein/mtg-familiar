@@ -172,7 +172,7 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_ttsShowDialog), true);
 	}
 
-	public synchronized void setTtsShowDialog(boolean ttsShowDialog) {
+	public synchronized void setTtsShowDialog(@SuppressWarnings("SameParameterValue") boolean ttsShowDialog) {
 		this.edit.putBoolean(context.getString(R.string.key_ttsShowDialog), ttsShowDialog);
 		this.edit.commit();
 	}
@@ -272,7 +272,7 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_mojhostoFirstTime), true);
 	}
 
-	public synchronized void setMojhostoFirstTime(boolean mojhostoFirstTime) {
+	public synchronized void setMojhostoFirstTime(@SuppressWarnings("SameParameterValue") boolean mojhostoFirstTime) {
 		this.edit.putBoolean(context.getString(R.string.key_mojhostoFirstTime), mojhostoFirstTime);
 		this.edit.commit();
 	}
@@ -395,7 +395,7 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_bounceDrawer), true);
 	}
 
-	public synchronized void setBounceDrawer(boolean value) {
+	public synchronized void setBounceDrawer(@SuppressWarnings("SameParameterValue") boolean value) {
 		this.edit.putBoolean(context.getString(R.string.key_bounceDrawer), value);
 		this.edit.commit();
 	}

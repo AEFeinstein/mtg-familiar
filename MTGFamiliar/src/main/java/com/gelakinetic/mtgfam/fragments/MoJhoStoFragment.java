@@ -299,8 +299,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
 			String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
 			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 			Cursor permanents = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
-					CardDbAdapter.NOONECARES, null, CardDbAdapter.NOONECARES, null, cmc, logic, null, null, null,
-					null, 0, 0, CardDbAdapter.MOSTRECENTPRINTING, false, returnTypes, true, database);
+					CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, cmc, logic, null, null, null,
+					null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
 
 			if(permanents.getCount() == 0) {
 				return;
@@ -334,8 +334,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
 			String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
 			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 			Cursor spells = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
-					CardDbAdapter.NOONECARES, null, CardDbAdapter.NOONECARES, null, -1, null, null, null, null,
-					null, 0, 0, CardDbAdapter.MOSTRECENTPRINTING, false, returnTypes, true, database);
+					CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, -1, null, null, null, null,
+					null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
 
 			/* Get 3 random, distinct numbers */
 			int pos[] = new int[3];

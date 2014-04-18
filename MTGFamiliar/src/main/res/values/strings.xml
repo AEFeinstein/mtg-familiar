@@ -443,7 +443,4 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="deck_counter_reset">Reset</string>
     <string name="deck_counter_undo">Undo</string>
 
-    <!-- Widget -->
-    <string name="widget_configure_reminder">Configure the widget in General Settings</string>
-
 </resources>

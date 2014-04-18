@@ -250,7 +250,7 @@ public class SearchViewFragment extends FamiliarFragment {
 
 		/* Do we want to consolidate different printings of the same card in results, or not? */
 		boolean consolidate = getFamiliarActivity().mPreferenceAdapter.getConsolidateSearch();
-		mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOSTRECENTPRINTING : CardDbAdapter.ALLPRINTINGS);
+		mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
 
 		/* set the search button! */
 		searchButton.setOnClickListener(new View.OnClickListener() {
@@ -389,7 +389,7 @@ public class SearchViewFragment extends FamiliarFragment {
 		String power = getResources().getStringArray(R.array.pt_spinner)[mPowChoice.getSelectedItemPosition()];
 		String toughness = getResources().getStringArray(R.array.pt_spinner)[mTouChoice.getSelectedItemPosition()];
 
-		float pow = CardDbAdapter.NOONECARES;
+		float pow = CardDbAdapter.NO_ONE_CARES;
 		try {
 			pow = Float.parseFloat(power);
 		} catch (NumberFormatException e) {
@@ -397,22 +397,22 @@ public class SearchViewFragment extends FamiliarFragment {
 				pow = CardDbAdapter.STAR;
 			}
 			else if (power.equals("1+*")) {
-				pow = CardDbAdapter.ONEPLUSSTAR;
+				pow = CardDbAdapter.ONE_PLUS_STAR;
 			}
 			else if (power.equals("2+*")) {
-				pow = CardDbAdapter.TWOPLUSSTAR;
+				pow = CardDbAdapter.TWO_PLUS_STAR;
 			}
 			else if (power.equals("7-*")) {
-				pow = CardDbAdapter.SEVENMINUSSTAR;
+				pow = CardDbAdapter.SEVEN_MINUS_STAR;
 			}
 			else if (power.equals("*^2")) {
-				pow = CardDbAdapter.STARSQUARED;
+				pow = CardDbAdapter.STAR_SQUARED;
 			}
 		}
 		searchCriteria.powChoice = pow;
 		searchCriteria.powLogic = logicChoices[mPowLogic.getSelectedItemPosition()];
 
-		float tou = CardDbAdapter.NOONECARES;
+		float tou = CardDbAdapter.NO_ONE_CARES;
 		try {
 			tou = Float.parseFloat(toughness);
 		} catch (NumberFormatException e) {
@@ -420,16 +420,16 @@ public class SearchViewFragment extends FamiliarFragment {
 				tou = CardDbAdapter.STAR;
 			}
 			else if (toughness.equals("1+*")) {
-				tou = CardDbAdapter.ONEPLUSSTAR;
+				tou = CardDbAdapter.ONE_PLUS_STAR;
 			}
 			else if (toughness.equals("2+*")) {
-				tou = CardDbAdapter.TWOPLUSSTAR;
+				tou = CardDbAdapter.TWO_PLUS_STAR;
 			}
 			else if (toughness.equals("7-*")) {
-				tou = CardDbAdapter.SEVENMINUSSTAR;
+				tou = CardDbAdapter.SEVEN_MINUS_STAR;
 			}
 			else if (toughness.equals("*^2")) {
-				tou = CardDbAdapter.STARSQUARED;
+				tou = CardDbAdapter.STAR_SQUARED;
 			}
 		}
 		searchCriteria.touChoice = tou;
@@ -549,16 +549,16 @@ public class SearchViewFragment extends FamiliarFragment {
 			mPowLogic.setSelection(logicChoices.indexOf(criteria.powLogic));
 			List<String> ptList = Arrays.asList(getResources().getStringArray(R.array.pt_spinner));
 			float p = criteria.powChoice;
-			if (p != CardDbAdapter.NOONECARES) {
+			if (p != CardDbAdapter.NO_ONE_CARES) {
 				if (p == CardDbAdapter.STAR)
 					mPowChoice.setSelection(ptList.indexOf("*"));
-				else if (p == CardDbAdapter.ONEPLUSSTAR)
+				else if (p == CardDbAdapter.ONE_PLUS_STAR)
 					mPowChoice.setSelection(ptList.indexOf("1+*"));
-				else if (p == CardDbAdapter.TWOPLUSSTAR)
+				else if (p == CardDbAdapter.TWO_PLUS_STAR)
 					mPowChoice.setSelection(ptList.indexOf("2+*"));
-				else if (p == CardDbAdapter.SEVENMINUSSTAR)
+				else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
 					mPowChoice.setSelection(ptList.indexOf("7-*"));
-				else if (p == CardDbAdapter.STARSQUARED)
+				else if (p == CardDbAdapter.STAR_SQUARED)
 					mPowChoice.setSelection(ptList.indexOf("*^2"));
 				else {
 					if (p == (int) p) {
@@ -571,16 +571,16 @@ public class SearchViewFragment extends FamiliarFragment {
 			}
 			mTouLogic.setSelection(logicChoices.indexOf(criteria.touLogic));
 			float t = criteria.touChoice;
-			if (t != CardDbAdapter.NOONECARES) {
+			if (t != CardDbAdapter.NO_ONE_CARES) {
 				if (t == CardDbAdapter.STAR)
 					mTouChoice.setSelection(ptList.indexOf("*"));
-				else if (t == CardDbAdapter.ONEPLUSSTAR)
+				else if (t == CardDbAdapter.ONE_PLUS_STAR)
 					mTouChoice.setSelection(ptList.indexOf("1+*"));
-				else if (t == CardDbAdapter.TWOPLUSSTAR)
+				else if (t == CardDbAdapter.TWO_PLUS_STAR)
 					mTouChoice.setSelection(ptList.indexOf("2+*"));
-				else if (t == CardDbAdapter.SEVENMINUSSTAR)
+				else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
 					mTouChoice.setSelection(ptList.indexOf("7-*"));
-				else if (t == CardDbAdapter.STARSQUARED)
+				else if (t == CardDbAdapter.STAR_SQUARED)
 					mTouChoice.setSelection(ptList.indexOf("*^2"));
 				else {
 					if (t == (int) t) {

@@ -208,16 +208,16 @@ class CardAndSetParser {
 											c.power = CardDbAdapter.STAR;
 										}
 										else if (pouTouStr.equals("1+*")) {
-											c.power = CardDbAdapter.ONEPLUSSTAR;
+											c.power = CardDbAdapter.ONE_PLUS_STAR;
 										}
 										else if (pouTouStr.equals("2+*")) {
-											c.power = CardDbAdapter.TWOPLUSSTAR;
+											c.power = CardDbAdapter.TWO_PLUS_STAR;
 										}
 										else if (pouTouStr.equals("7-*")) {
-											c.power = CardDbAdapter.SEVENMINUSSTAR;
+											c.power = CardDbAdapter.SEVEN_MINUS_STAR;
 										}
 										else if (pouTouStr.equals("*{^2}")) {
-											c.power = CardDbAdapter.STARSQUARED;
+											c.power = CardDbAdapter.STAR_SQUARED;
 										}
 										else if (pouTouStr.equals("{1/2}")) {
 											c.power = 0.5f;
@@ -242,16 +242,16 @@ class CardAndSetParser {
 											c.toughness = CardDbAdapter.STAR;
 										}
 										else if (pouTouStr.equals("1+*")) {
-											c.toughness = CardDbAdapter.ONEPLUSSTAR;
+											c.toughness = CardDbAdapter.ONE_PLUS_STAR;
 										}
 										else if (pouTouStr.equals("2+*")) {
-											c.toughness = CardDbAdapter.TWOPLUSSTAR;
+											c.toughness = CardDbAdapter.TWO_PLUS_STAR;
 										}
 										else if (pouTouStr.equals("7-*")) {
-											c.toughness = CardDbAdapter.SEVENMINUSSTAR;
+											c.toughness = CardDbAdapter.SEVEN_MINUS_STAR;
 										}
 										else if (pouTouStr.equals("*{^2}")) {
-											c.toughness = CardDbAdapter.STARSQUARED;
+											c.toughness = CardDbAdapter.STAR_SQUARED;
 										}
 										else if (pouTouStr.equals("{1/2}")) {
 											c.toughness = 0.5f;

@@ -258,10 +258,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 		DatabaseManager.initializeInstance(new DatabaseHelper(getApplicationContext()));
 		((IndeterminateRefreshLayout) findViewById(R.id.fragment_container)).setColorScheme(
-				R.color.common,
-				R.color.uncommon,
-				R.color.rare,
-				R.color.mythic);
+		);
 
 		/* Set up a listener to update the home screen widget whenever the user changes the preference */
 		mPreferenceAdapter.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
@@ -595,7 +592,7 @@ public class FamiliarActivity extends FragmentActivity {
 		/* Pick the new fragment */
 		switch (resId) {
 			case R.string.main_card_search: {
-				/* If this is a quicksearch intent, launch either the card view or result list directly */
+				/* If this is a quick search intent, launch either the card view or result list directly */
 				if (args != null && args.containsKey(CardViewFragment.CARD_ID)) {
 					newFrag = new CardViewFragment();
 				}

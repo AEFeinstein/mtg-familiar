@@ -321,7 +321,7 @@ public class WishlistFragment extends FamiliarFragment {
 			}
 
 			/* Fill extra card data from the database, for displaying full card info */
-			CardDbAdapter.fillExtraWishlistData(mCompressedWishlist, CardDbAdapter.allData, database);
+			CardDbAdapter.fillExtraWishlistData(mCompressedWishlist, database);
 
 			DatabaseManager.getInstance().closeDatabase();
 		} catch (FamiliarDbException e) {
@@ -563,17 +563,17 @@ public class WishlistFragment extends FamiliarFragment {
 				try {
 					/* Figure out what power the card has, including special ones */
 					float p = info.mCard.power;
-					if (p != CardDbAdapter.NOONECARES) {
+					if (p != CardDbAdapter.NO_ONE_CARES) {
 						String pow;
 						if (p == CardDbAdapter.STAR)
 							pow = "*";
-						else if (p == CardDbAdapter.ONEPLUSSTAR)
+						else if (p == CardDbAdapter.ONE_PLUS_STAR)
 							pow = "1+*";
-						else if (p == CardDbAdapter.TWOPLUSSTAR)
+						else if (p == CardDbAdapter.TWO_PLUS_STAR)
 							pow = "2+*";
-						else if (p == CardDbAdapter.SEVENMINUSSTAR)
+						else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
 							pow = "7-*";
-						else if (p == CardDbAdapter.STARSQUARED)
+						else if (p == CardDbAdapter.STAR_SQUARED)
 							pow = "*^2";
 						else {
 							if (p == (int) p) {
@@ -595,17 +595,17 @@ public class WishlistFragment extends FamiliarFragment {
 				try {
 					/* figure out what toughness the card has, including special ones */
 					float t = info.mCard.toughness;
-					if (t != CardDbAdapter.NOONECARES) {
+					if (t != CardDbAdapter.NO_ONE_CARES) {
 						String tou;
 						if (t == CardDbAdapter.STAR)
 							tou = "*";
-						else if (t == CardDbAdapter.ONEPLUSSTAR)
+						else if (t == CardDbAdapter.ONE_PLUS_STAR)
 							tou = "1+*";
-						else if (t == CardDbAdapter.TWOPLUSSTAR)
+						else if (t == CardDbAdapter.TWO_PLUS_STAR)
 							tou = "2+*";
-						else if (t == CardDbAdapter.SEVENMINUSSTAR)
+						else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
 							tou = "7-*";
-						else if (t == CardDbAdapter.STARSQUARED)
+						else if (t == CardDbAdapter.STAR_SQUARED)
 							tou = "*^2";
 						else {
 							if (t == (int) t) {
@@ -623,7 +623,7 @@ public class WishlistFragment extends FamiliarFragment {
 
 				/* Show the loyalty, if the card has any (traitor...) */
 				float loyalty = info.mCard.loyalty;
-				if (loyalty != -1 && loyalty != CardDbAdapter.NOONECARES) {
+				if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
 					if (loyalty == (int) loyalty) {
 						((TextView) convertView.findViewById(R.id.cardt)).setText(Integer.toString((int) loyalty));
 					}
@@ -760,7 +760,7 @@ public class WishlistFragment extends FamiliarFragment {
 	 */
 	void loadPrice(final String mCardName, final String mSetCode, String mCardNumber) {
 		PriceFetchRequest priceRequest;
-		priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, -1, getActivity());
+		priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, -1);
 		getFamiliarActivity().mSpiceManager.execute(priceRequest, mCardName + "-" +
 				mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
 

@@ -53,20 +53,20 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
 	public static final int STAR = -1000;
-	public static final int ONEPLUSSTAR = -1001;
-	public static final int TWOPLUSSTAR = -1002;
-	public static final int SEVENMINUSSTAR = -1003;
-	public static final int STARSQUARED = -1004;
-	public static final int NOONECARES = -1005;
+	public static final int ONE_PLUS_STAR = -1001;
+	public static final int TWO_PLUS_STAR = -1002;
+	public static final int SEVEN_MINUS_STAR = -1003;
+	public static final int STAR_SQUARED = -1004;
+	public static final int NO_ONE_CARES = -1005;
 
-	public static final int MOSTRECENTPRINTING = 0;
-	public static final int FIRSTPRINTING = 1;
-	public static final int ALLPRINTINGS = 2;
+	public static final int MOST_RECENT_PRINTING = 0;
+	public static final int FIRST_PRINTING = 1;
+	public static final int ALL_PRINTINGS = 2;
 
 	public static final String DATABASE_NAME = "data";
 	public static final String DATABASE_TABLE_CARDS = "cards";
 	public static final String DATABASE_TABLE_SETS = "sets";
-	public static final String DATABASE_TABLE_FORMATS = "formats";
+	private static final String DATABASE_TABLE_FORMATS = "formats";
 	private static final String DATABASE_TABLE_LEGAL_SETS = "legal_sets";
 	private static final String DATABASE_TABLE_BANNED_CARDS = "banned_cards";
 	private static final String DATABASE_TABLE_RULES = "rules";
@@ -79,9 +79,9 @@ public class CardDbAdapter {
 	public static final String KEY_SET = "expansion";
 	public static final String KEY_TYPE = "type";
 	public static final String KEY_ABILITY = "cardtext";
-	public static final String KEY_COLOR = "color";
+	private static final String KEY_COLOR = "color";
 	public static final String KEY_MANACOST = "manacost";
-	public static final String KEY_CMC = "cmc";
+	private static final String KEY_CMC = "cmc";
 	public static final String KEY_POWER = "power";
 	public static final String KEY_TOUGHNESS = "toughness";
 	public static final String KEY_RARITY = "rarity";
@@ -90,21 +90,21 @@ public class CardDbAdapter {
 	public static final String KEY_ARTIST = "artist";
 	public static final String KEY_NUMBER = "number";
 	public static final String KEY_MULTIVERSEID = "multiverseID";
-	public static final String KEY_RULINGS = "rulings";
+	private static final String KEY_RULINGS = "rulings";
 
 	public static final String KEY_CODE = "code";
-	public static final String KEY_CODE_MTGI = "code_mtgi";
+	private static final String KEY_CODE_MTGI = "code_mtgi";
 	public static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
-	public static final String KEY_DATE = "date";
+	private static final String KEY_DATE = "date";
 
-	public static final String KEY_FORMAT = "format";
-	public static final String KEY_LEGALITY = "legality";
+	private static final String KEY_FORMAT = "format";
+	private static final String KEY_LEGALITY = "legality";
 
 	public static final String KEY_CATEGORY = "category";
 	public static final String KEY_SUBCATEGORY = "subcategory";
 	public static final String KEY_ENTRY = "entry";
 	public static final String KEY_RULE_TEXT = "rule_text";
-	public static final String KEY_POSITION = "position";
+	private static final String KEY_POSITION = "position";
 
 	public static final String KEY_TERM = "term";
 	public static final String KEY_DEFINITION = "definition";
@@ -164,8 +164,8 @@ public class CardDbAdapter {
 			+ " integer primary key autoincrement, " + KEY_TERM
 			+ " text not null, " + KEY_DEFINITION + " text not null);";
 
-	public static final String EXCLUDE_TOKEN = "!";
-	public static final int EXCLUDE_TOKEN_START = 1;
+	private static final String EXCLUDE_TOKEN = "!";
+	private static final int EXCLUDE_TOKEN_START = 1;
 
 	public static final int LEGAL = 0;
 	public static final int BANNED = 1;
@@ -174,8 +174,8 @@ public class CardDbAdapter {
 	// use a hash map for performance
 	private static final HashMap<String, String> mColumnMap = buildColumnMap();
 
-	public static final String DB_PATH = "/data/data/com.gelakinetic.mtgfam/databases/";
-	public static final String DB_NAME = "data";
+	private static final String DB_PATH = "/data/data/com.gelakinetic.mtgfam/databases/";
+	private static final String DB_NAME = "data";
 
 	public static final int NOPE = 0;
 	public static final int TRANSFORM = 1;
@@ -298,15 +298,13 @@ public class CardDbAdapter {
 		return returnVal;
 	}
 
-	public static Cursor fetchCard(long id, String[] columns, SQLiteDatabase mDb)
+	public static Cursor fetchCard(long id, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 
-		if (columns == null) {
-			columns = new String[]{KEY_ID, KEY_NAME, KEY_SET, KEY_TYPE,
-					KEY_RARITY, KEY_MANACOST, KEY_CMC, KEY_POWER,
-					KEY_TOUGHNESS, KEY_LOYALTY, KEY_ABILITY, KEY_FLAVOR,
-					KEY_ARTIST, KEY_NUMBER, KEY_COLOR, KEY_MULTIVERSEID};
-		}
+		String columns[] = new String[]{KEY_ID, KEY_NAME, KEY_SET, KEY_TYPE,
+				KEY_RARITY, KEY_MANACOST, KEY_CMC, KEY_POWER,
+				KEY_TOUGHNESS, KEY_LOYALTY, KEY_ABILITY, KEY_FLAVOR,
+				KEY_ARTIST, KEY_NUMBER, KEY_COLOR, KEY_MULTIVERSEID};
 		Cursor mCursor;
 		try {
 			mCursor = mDb.query(true, DATABASE_TABLE_CARDS, columns, KEY_ID
@@ -361,13 +359,12 @@ public class CardDbAdapter {
 		return mCursor;
 	}
 
-	public static void fillExtraWishlistData(ArrayList<CompressedWishlistInfo> mCompressedWishlist, String[] fields,
-											 SQLiteDatabase mDb)
-			throws FamiliarDbException {
+	public static void fillExtraWishlistData(ArrayList<CompressedWishlistInfo> mCompressedWishlist,
+											 SQLiteDatabase mDb) throws FamiliarDbException {
 		String sql = "SELECT ";
 
 		boolean first = true;
-		for (String field : fields) {
+		for (String field : CardDbAdapter.allData) {
 			if (first) {
 				first = false;
 			}
@@ -519,11 +516,11 @@ public class CardDbAdapter {
 	}
 
 	public static Cursor Search(String cardname, String cardtext, String cardtype,
-						 String color, int colorlogic, String sets, float pow_choice,
-						 String pow_logic, float tou_choice, String tou_logic, int cmc,
-						 String cmcLogic, String format, String rarity, String flavor,
-						 String artist, int type_logic, int text_logic, int set_logic,
-						 boolean backface, String[] returnTypes, boolean consolidate, SQLiteDatabase mDb)
+								String color, int colorlogic, String sets, float pow_choice,
+								String pow_logic, float tou_choice, String tou_logic, int cmc,
+								String cmcLogic, String format, String rarity, String flavor,
+								String artist, int type_logic, int text_logic, int set_logic,
+								boolean backface, String[] returnTypes, boolean consolidate, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		Cursor mCursor;
 
@@ -854,7 +851,7 @@ public class CardDbAdapter {
 			statement += ")";
 		}
 
-		if (pow_choice != NOONECARES) {
+		if (pow_choice != NO_ONE_CARES) {
 			statement += " AND (";
 
 			if (pow_choice > STAR) {
@@ -872,7 +869,7 @@ public class CardDbAdapter {
 			statement += ")";
 		}
 
-		if (tou_choice != NOONECARES) {
+		if (tou_choice != NO_ONE_CARES) {
 			statement += " AND (";
 
 			if (tou_choice > STAR) {
@@ -945,7 +942,7 @@ public class CardDbAdapter {
 					+ " NOT LIKE '%b%')";
 		}
 
-		if (set_logic != MOSTRECENTPRINTING && set_logic != ALLPRINTINGS) {
+		if (set_logic != MOST_RECENT_PRINTING && set_logic != ALL_PRINTINGS) {
 			statement = " JOIN (SELECT iT" + DATABASE_TABLE_CARDS + "."
 					+ KEY_NAME + ", MIN(" + DATABASE_TABLE_SETS + "."
 					+ KEY_DATE + ") AS " + KEY_DATE + " FROM "
@@ -956,7 +953,7 @@ public class CardDbAdapter {
 					+ DATABASE_TABLE_CARDS + "." + KEY_NAME
 					+ ") AS FirstPrints" + " ON " + DATABASE_TABLE_CARDS + "."
 					+ KEY_NAME + " = FirstPrints." + KEY_NAME + statement;
-			if (set_logic == FIRSTPRINTING)
+			if (set_logic == FIRST_PRINTING)
 				statement = " AND " + DATABASE_TABLE_SETS + "." + KEY_DATE
 						+ " = FirstPrints." + KEY_DATE + statement;
 			else
@@ -1158,7 +1155,7 @@ public class CardDbAdapter {
 		}
 	}
 
-	public static boolean isModernLegalSet(String setName, SQLiteDatabase mDb) throws FamiliarDbException {
+	private static boolean isModernLegalSet(String setName, SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			String sql = "SELECT " + KEY_SET + " FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_SET + " = '" + setName.replace("'", "''") + "';";
 			Cursor c = mDb.rawQuery(sql, null);

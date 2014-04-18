@@ -674,9 +674,6 @@ public class LcPlayer {
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
-										if (nameInput == null) {
-											return;
-										}
 										assert nameInput.getText() != null;
 										String newName = nameInput.getText().toString();
 										if (newName.equals("")) {
@@ -758,8 +755,7 @@ public class LcPlayer {
 					case DIALOG_CHANGE_LIFE: {
 						/* Inflate a view to type in a new life, then show it in an AlertDialog */
 						View textEntryView = mFragment.getActivity().getLayoutInflater().inflate(
-								R.layout.alert_dialog_text_entry,
-								null, false);
+								R.layout.alert_dialog_text_entry, null, false);
 						assert textEntryView != null;
 						final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
@@ -786,9 +782,6 @@ public class LcPlayer {
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
-										if (lifeInput == null) {
-											return;
-										}
 										assert lifeInput.getText() != null;
 										try {
 											/* make sure the life is valid, not empty */

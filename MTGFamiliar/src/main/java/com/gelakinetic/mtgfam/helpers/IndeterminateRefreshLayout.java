@@ -102,20 +102,15 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 	 * Set the four colors used in the progress animation. The first color will
 	 * also be the color of the bar that grows in response to a user swipe
 	 * gesture.
-	 *
-	 * @param colorRes1 Color resource.
-	 * @param colorRes2 Color resource.
-	 * @param colorRes3 Color resource.
-	 * @param colorRes4 Color resource.
 	 */
-	public void setColorScheme(int colorRes1, int colorRes2, int colorRes3, int colorRes4) {
+	public void setColorScheme() {
 		ensureTarget();
 		final Resources res = getResources();
 		assert res != null;
-		final int color1 = res.getColor(colorRes1);
-		final int color2 = res.getColor(colorRes2);
-		final int color3 = res.getColor(colorRes3);
-		final int color4 = res.getColor(colorRes4);
+		final int color1 = res.getColor(com.gelakinetic.mtgfam.R.color.common);
+		final int color2 = res.getColor(com.gelakinetic.mtgfam.R.color.uncommon);
+		final int color3 = res.getColor(com.gelakinetic.mtgfam.R.color.rare);
+		final int color4 = res.getColor(com.gelakinetic.mtgfam.R.color.mythic);
 		mProgressBar.setColorScheme(color1, color2, color3, color4);
 	}
 
@@ -140,7 +135,7 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		final int width = getMeasuredWidth();
 		final int height = getMeasuredHeight();
-		mProgressBar.setBounds(0, 0, width, mProgressBarHeight);
+		mProgressBar.setBounds(width, mProgressBarHeight);
 		if (getChildCount() == 0) {
 			return;
 		}

@@ -15,9 +15,9 @@ public class SearchCriteria implements Serializable {
 	public String color = "wubrgl";
 	public int colorLogic = 0;
 	public String set;
-	public Float powChoice = (float) CardDbAdapter.NOONECARES;
+	public Float powChoice = (float) CardDbAdapter.NO_ONE_CARES;
 	public String powLogic;
-	public Float touChoice = (float) CardDbAdapter.NOONECARES;
+	public Float touChoice = (float) CardDbAdapter.NO_ONE_CARES;
 	public String touLogic;
 	public int cmc = -1;
 	public String cmcLogic;

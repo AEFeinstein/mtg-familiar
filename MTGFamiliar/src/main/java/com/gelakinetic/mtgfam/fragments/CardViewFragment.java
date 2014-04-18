@@ -253,7 +253,7 @@ public class CardViewFragment extends FamiliarFragment {
 		ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
 
 		SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
-		Cursor cCardById = CardDbAdapter.fetchCard(id, null, database);
+		Cursor cCardById = CardDbAdapter.fetchCard(id, database);
 
 		/* http://magiccards.info/scans/en/mt/55.jpg */
 		mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
@@ -306,22 +306,22 @@ public class CardViewFragment extends FamiliarFragment {
 		int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
 		float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
 		float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-		if (loyalty != CardDbAdapter.NOONECARES) {
+		if (loyalty != CardDbAdapter.NO_ONE_CARES) {
 			mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
 		}
-		else if (p != CardDbAdapter.NOONECARES && t != CardDbAdapter.NOONECARES) {
+		else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
 			String powTouStr = "";
 
 			if (p == CardDbAdapter.STAR)
 				powTouStr += "*";
-			else if (p == CardDbAdapter.ONEPLUSSTAR)
+			else if (p == CardDbAdapter.ONE_PLUS_STAR)
 				powTouStr += "1+*";
-			else if (p == CardDbAdapter.TWOPLUSSTAR)
+			else if (p == CardDbAdapter.TWO_PLUS_STAR)
 				powTouStr += "2+*";
-			else if (p == CardDbAdapter.SEVENMINUSSTAR)
+			else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
 				powTouStr += "7-*";
-			else if (p == CardDbAdapter.STARSQUARED)
+			else if (p == CardDbAdapter.STAR_SQUARED)
 				powTouStr += "*^2";
 			else {
 				if (p == (int) p) {
@@ -336,13 +336,13 @@ public class CardViewFragment extends FamiliarFragment {
 
 			if (t == CardDbAdapter.STAR)
 				powTouStr += "*";
-			else if (t == CardDbAdapter.ONEPLUSSTAR)
+			else if (t == CardDbAdapter.ONE_PLUS_STAR)
 				powTouStr += "1+*";
-			else if (t == CardDbAdapter.TWOPLUSSTAR)
+			else if (t == CardDbAdapter.TWO_PLUS_STAR)
 				powTouStr += "2+*";
-			else if (t == CardDbAdapter.SEVENMINUSSTAR)
+			else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
 				powTouStr += "7-*";
-			else if (t == CardDbAdapter.STARSQUARED)
+			else if (t == CardDbAdapter.STAR_SQUARED)
 				powTouStr += "*^2";
 			else {
 				if (t == (int) t) {
@@ -1114,8 +1114,8 @@ public class CardViewFragment extends FamiliarFragment {
 				getFamiliarActivity().setLoading();
 
 				PriceFetchRequest priceRequest;
-				priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId,
-						getActivity());
+				priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId
+				);
 				getFamiliarActivity().mSpiceManager.execute(priceRequest, mCardName + "-" +
 						mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
 

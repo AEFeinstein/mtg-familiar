@@ -15,7 +15,7 @@
  */
 
 /*
- * Courtesy of https://github.com/kolavar/android-support-v4-preferencefragment
+ * Courtesy of https://github.com/kolavar/android-support-v4-preferenceFragment
  */
 
 package android.support.v4.preference;
@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.Preference;
-import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
@@ -52,10 +51,10 @@ public abstract class PreferenceFragment extends Fragment implements
 	/**
 	 * The starting request code given out to preference framework.
 	 */
-	private static final int FIRST_REQUEST_CODE = 100;
+	static final int FIRST_REQUEST_CODE = 100;
 
 	private static final int MSG_BIND_PREFERENCES = 1;
-	private Handler mHandler = new Handler() {
+	private final Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -91,8 +90,7 @@ public abstract class PreferenceFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle paramBundle) {
 		super.onCreate(paramBundle);
-		mPreferenceManager = PreferenceManagerCompat.newInstance(getActivity(), FIRST_REQUEST_CODE);
-		PreferenceManagerCompat.setFragment(mPreferenceManager, this);
+		mPreferenceManager = PreferenceManagerCompat.newInstance(getActivity());
 	}
 
 	@Override
@@ -170,20 +168,11 @@ public abstract class PreferenceFragment extends Fragment implements
 	}
 
 	/**
-	 * Returns the {@link PreferenceManager} used by this fragment.
-	 *
-	 * @return The {@link PreferenceManager}.
-	 */
-	public PreferenceManager getPreferenceManager() {
-		return mPreferenceManager;
-	}
-
-	/**
 	 * Sets the root of the preference hierarchy that this fragment is showing.
 	 *
 	 * @param preferenceScreen The root {@link PreferenceScreen} of the preference hierarchy.
 	 */
-	public void setPreferenceScreen(PreferenceScreen preferenceScreen) {
+	void setPreferenceScreen(PreferenceScreen preferenceScreen) {
 		if (PreferenceManagerCompat.setPreferences(mPreferenceManager, preferenceScreen) && preferenceScreen != null) {
 			mHavePrefs = true;
 			if (mInitDone) {
@@ -198,19 +187,8 @@ public abstract class PreferenceFragment extends Fragment implements
 	 * @return The {@link PreferenceScreen} that is the root of the preference
 	 * hierarchy.
 	 */
-	public PreferenceScreen getPreferenceScreen() {
+	PreferenceScreen getPreferenceScreen() {
 		return PreferenceManagerCompat.getPreferenceScreen(mPreferenceManager);
-	}
-
-	/**
-	 * Adds preferences from activities that match the given {@link Intent}.
-	 *
-	 * @param intent The {@link Intent} to query activities.
-	 */
-	public void addPreferencesFromIntent(Intent intent) {
-		requirePreferenceManager();
-
-		setPreferenceScreen(PreferenceManagerCompat.inflateFromIntent(mPreferenceManager, intent, getPreferenceScreen()));
 	}
 
 	/**
@@ -229,29 +207,10 @@ public abstract class PreferenceFragment extends Fragment implements
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-										 Preference preference) {
+	public boolean onPreferenceTreeClick(Preference preference) {
 		//if (preference.getFragment() != null &&
-		if (
-				getActivity() instanceof OnPreferenceStartFragmentCallback) {
-			return ((OnPreferenceStartFragmentCallback) getActivity()).onPreferenceStartFragment(
-					this, preference);
-		}
-		return false;
-	}
-
-	/**
-	 * Finds a {@link Preference} based on its key.
-	 *
-	 * @param key The key of the preference to retrieve.
-	 * @return The {@link Preference} with the key, or null.
-	 * @see PreferenceGroup#findPreference(CharSequence)
-	 */
-	public Preference findPreference(CharSequence key) {
-		if (mPreferenceManager == null) {
-			return null;
-		}
-		return mPreferenceManager.findPreference(key);
+		return getActivity() instanceof OnPreferenceStartFragmentCallback &&
+				((OnPreferenceStartFragmentCallback) getActivity()).onPreferenceStartFragment(this, preference);
 	}
 
 	private void requirePreferenceManager() {
@@ -272,7 +231,7 @@ public abstract class PreferenceFragment extends Fragment implements
 		}
 	}
 
-	public ListView getListView() {
+	ListView getListView() {
 		ensureList();
 		return mList;
 	}
@@ -292,25 +251,16 @@ public abstract class PreferenceFragment extends Fragment implements
 							+ "that is not a ListView class");
 		}
 		mList = (ListView) rawListView;
-		if (mList == null) {
-			throw new RuntimeException(
-					"Your content must have a ListView whose id attribute is " +
-							"'android.R.id.list'");
-		}
 		mList.setOnKeyListener(mListOnKeyListener);
 		mHandler.post(mRequestFocus);
 	}
 
-	private OnKeyListener mListOnKeyListener = new OnKeyListener() {
+	private final OnKeyListener mListOnKeyListener = new OnKeyListener() {
 
 		@Override
 		public boolean onKey(View v, int keyCode, KeyEvent event) {
 			Object selectedItem = mList.getSelectedItem();
 			if (selectedItem instanceof Preference) {
-				@SuppressWarnings("unused")
-				View selectedView = mList.getSelectedView();
-				//return ((Preference)selectedItem).onKey(
-				//        selectedView, keyCode, event);
 				return false;
 			}
 			return false;

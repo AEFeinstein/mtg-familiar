@@ -30,7 +30,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-public class PreferenceManagerCompat {
+class PreferenceManagerCompat {
 
 	private static final String TAG = PreferenceManagerCompat.class.getSimpleName();
 
@@ -44,30 +44,21 @@ public class PreferenceManagerCompat {
 		 * Called when a preference in the tree rooted at this
 		 * {@link PreferenceScreen} has been clicked.
 		 *
-		 * @param preferenceScreen The {@link PreferenceScreen} that the
-		 *                         preference is located in.
-		 * @param preference       The preference that was clicked.
+		 * @param preference The preference that was clicked.
 		 * @return Whether the click was handled.
 		 */
-		boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference);
+		boolean onPreferenceTreeClick(Preference preference);
 	}
 
-	static PreferenceManager newInstance(Activity activity, int firstRequestCode) {
+	static PreferenceManager newInstance(Activity activity) {
 		try {
 			Constructor<PreferenceManager> c = PreferenceManager.class.getDeclaredConstructor(Activity.class, int.class);
 			c.setAccessible(true);
-			return c.newInstance(activity, firstRequestCode);
+			return c.newInstance(activity, PreferenceFragment.FIRST_REQUEST_CODE);
 		} catch (Exception e) {
 			Log.w(TAG, "Couldn't call constructor PreferenceManager by reflection", e);
 		}
 		return null;
-	}
-
-	/**
-	 * Sets the owning preference fragment
-	 */
-	static void setFragment(PreferenceManager manager, PreferenceFragment fragment) {
-		// stub
 	}
 
 	/**
@@ -87,13 +78,14 @@ public class PreferenceManagerCompat {
 						new InvocationHandler() {
 							public Object invoke(Object proxy, Method method, Object[] args) {
 								if (method.getName().equals("onPreferenceTreeClick")) {
-									return Boolean.valueOf(listener.onPreferenceTreeClick((PreferenceScreen) args[0], (Preference) args[1]));
+									return listener.onPreferenceTreeClick((Preference) args[1]);
 								}
 								else {
 									return null;
 								}
 							}
-						});
+						}
+				);
 				onPreferenceTreeClickListener.set(manager, proxy);
 			}
 			else {
@@ -105,50 +97,21 @@ public class PreferenceManagerCompat {
 	}
 
 	/**
-	 * Inflates a preference hierarchy from the preference hierarchies of
-	 * {@link Activity Activities} that match the given {@link Intent}. An
-	 * {@link Activity} defines its preference hierarchy with meta-data using
-	 * the {@link #METADATA_KEY_PREFERENCES} key.
-	 * <p/>
-	 * If a preference hierarchy is given, the new preference hierarchies will
-	 * be merged in.
-	 *
-	 * @param queryIntent     The intent to match activities.
-	 * @param rootPreferences Optional existing hierarchy to merge the new
-	 *                        hierarchies into.
-	 * @return The root hierarchy (if one was not provided, the new hierarchy's
-	 * root).
-	 */
-	static PreferenceScreen inflateFromIntent(PreferenceManager manager, Intent intent, PreferenceScreen screen) {
-		try {
-			Method m = PreferenceManager.class.getDeclaredMethod("inflateFromIntent", Intent.class, PreferenceScreen.class);
-			m.setAccessible(true);
-			PreferenceScreen prefScreen = (PreferenceScreen) m.invoke(manager, intent, screen);
-			return prefScreen;
-		} catch (Exception e) {
-			Log.w(TAG, "Couldn't call PreferenceManager.inflateFromIntent by reflection", e);
-		}
-		return null;
-	}
-
-	/**
+	 * Calls PreferenceManager.inflateFromResource by reflection
 	 * Inflates a preference hierarchy from XML. If a preference hierarchy is
 	 * given, the new preference hierarchies will be merged in.
 	 *
-	 * @param context         The context of the resource.
-	 * @param resId           The resource ID of the XML to inflate.
-	 * @param rootPreferences Optional existing hierarchy to merge the new
-	 *                        hierarchies into.
-	 * @return The root hierarchy (if one was not provided, the new hierarchy's
-	 * root).
-	 * @hide
+	 * @param manager  The PreferenceManager to reflect
+	 * @param activity The context of the resource.
+	 * @param resId    The resource ID of the XML to inflate.
+	 * @param screen   Optional existing hierarchy to merge the new hierarchies into.
+	 * @return The root hierarchy (if one was not provided, the new hierarchy's root).
 	 */
 	static PreferenceScreen inflateFromResource(PreferenceManager manager, Activity activity, int resId, PreferenceScreen screen) {
 		try {
 			Method m = PreferenceManager.class.getDeclaredMethod("inflateFromResource", Context.class, int.class, PreferenceScreen.class);
 			m.setAccessible(true);
-			PreferenceScreen prefScreen = (PreferenceScreen) m.invoke(manager, activity, resId, screen);
-			return prefScreen;
+			return (PreferenceScreen) m.invoke(manager, activity, resId, screen);
 		} catch (Exception e) {
 			Log.w(TAG, "Couldn't call PreferenceManager.inflateFromResource by reflection", e);
 		}
@@ -172,7 +135,7 @@ public class PreferenceManagerCompat {
 	}
 
 	/**
-	 * Called by the {@link PreferenceManager} to dispatch a subactivity result.
+	 * Called by the {@link PreferenceManager} to dispatch a sub-activity result.
 	 */
 	static void dispatchActivityResult(PreferenceManager manager, int requestCode, int resultCode, Intent data) {
 		try {
@@ -213,9 +176,11 @@ public class PreferenceManagerCompat {
 	}
 
 	/**
+	 * Calls PreferenceManager.setPreferences by reflection
 	 * Sets the root of the preference hierarchy.
 	 *
-	 * @param preferenceScreen The root {@link PreferenceScreen} of the preference hierarchy.
+	 * @param manager the PreferenceManager to reflect
+	 * @param screen  The root {@link PreferenceScreen} of the preference hierarchy.
 	 * @return Whether the {@link PreferenceScreen} given is different than the previous.
 	 */
 	static boolean setPreferences(PreferenceManager manager, PreferenceScreen screen) {

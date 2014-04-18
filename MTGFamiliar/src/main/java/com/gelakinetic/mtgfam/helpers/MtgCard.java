@@ -72,9 +72,9 @@ public class MtgCard {
 		rarity = '\0';
 		manaCost = "";
 		cmc = 0;
-		power = CardDbAdapter.NOONECARES;
-		toughness = CardDbAdapter.NOONECARES;
-		loyalty = CardDbAdapter.NOONECARES;
+		power = CardDbAdapter.NO_ONE_CARES;
+		toughness = CardDbAdapter.NO_ONE_CARES;
+		loyalty = CardDbAdapter.NO_ONE_CARES;
 		ability = "";
 		flavor = "";
 		artist = "";

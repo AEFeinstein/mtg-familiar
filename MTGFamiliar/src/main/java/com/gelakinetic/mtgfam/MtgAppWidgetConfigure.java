@@ -21,8 +21,8 @@ import java.util.Set;
 public class MtgAppWidgetConfigure extends Activity {
 
     private PreferenceAdapter mPrefAdapter;
-    String mLaunchers[];
-    boolean mSelected[];
+    private String[] mLaunchers;
+    private boolean[] mSelected;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class MtgAppWidgetConfigure extends Activity {
     /**
      * This finishes the Activity and updates the widget. Appropriately named.
      */
-    public void finishAndUpdateWidget() {
+	void finishAndUpdateWidget() {
         /* Set the preferences from the dialog */
         HashSet<String> selectedButtons = new HashSet<String>();
         for (int i = 0; i < mSelected.length; i++) {

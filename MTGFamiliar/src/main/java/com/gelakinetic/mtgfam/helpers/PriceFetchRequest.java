@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.helpers;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -35,7 +34,6 @@ import javax.xml.parsers.ParserConfigurationException;
 public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 
 	private String mCardNumber;
-	private final Context mContext;
 	private final String mCardName;
 	private final String mSetCode;
 	private final int mMultiverseID;
@@ -47,15 +45,13 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 	 * @param setCode      The set code (not TCG name) of this card's set
 	 * @param cardNumber   The collector's number of the card to look up
 	 * @param multiverseID The multiverse ID of the card to look up
-	 * @param context      The application context to get database access with
 	 */
-	public PriceFetchRequest(String cardName, String setCode, String cardNumber, int multiverseID, Context context) {
+	public PriceFetchRequest(String cardName, String setCode, String cardNumber, int multiverseID) {
 		super(PriceInfo.class);
 		this.mCardName = cardName;
 		this.mSetCode = setCode;
 		this.mCardNumber = cardNumber;
 		this.mMultiverseID = multiverseID;
-		this.mContext = context;
 	}
 
 	/**

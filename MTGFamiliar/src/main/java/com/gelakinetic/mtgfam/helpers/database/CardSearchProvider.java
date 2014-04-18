@@ -56,6 +56,7 @@ public class CardSearchProvider extends ContentProvider {
 	 */
 	@Override
 	public synchronized boolean onCreate() {
+		assert getContext() != null;
 		DatabaseManager.initializeInstance(new DatabaseHelper(getContext().getApplicationContext()));
 		mDatabase = DatabaseManager.getInstance().openDatabase(false); // TODO when to close this?
 		return true;

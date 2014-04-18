@@ -161,18 +161,18 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 			}
 			else if (CardDbAdapter.KEY_POWER.equals(mFrom[i])) {
 				float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-				if (p != CardDbAdapter.NOONECARES) {
+				if (p != CardDbAdapter.NO_ONE_CARES) {
 					String pow;
 					hidePT = false;
 					if (p == CardDbAdapter.STAR)
 						pow = "*";
-					else if (p == CardDbAdapter.ONEPLUSSTAR)
+					else if (p == CardDbAdapter.ONE_PLUS_STAR)
 						pow = "1+*";
-					else if (p == CardDbAdapter.TWOPLUSSTAR)
+					else if (p == CardDbAdapter.TWO_PLUS_STAR)
 						pow = "2+*";
-					else if (p == CardDbAdapter.SEVENMINUSSTAR)
+					else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
 						pow = "7-*";
-					else if (p == CardDbAdapter.STARSQUARED)
+					else if (p == CardDbAdapter.STAR_SQUARED)
 						pow = "*^2";
 					else {
 						if (p == (int) p) {
@@ -187,18 +187,18 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 			}
 			else if (CardDbAdapter.KEY_TOUGHNESS.equals(mFrom[i])) {
 				float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-				if (t != CardDbAdapter.NOONECARES) {
+				if (t != CardDbAdapter.NO_ONE_CARES) {
 					hidePT = false;
 					String tou;
 					if (t == CardDbAdapter.STAR)
 						tou = "*";
-					else if (t == CardDbAdapter.ONEPLUSSTAR)
+					else if (t == CardDbAdapter.ONE_PLUS_STAR)
 						tou = "1+*";
-					else if (t == CardDbAdapter.TWOPLUSSTAR)
+					else if (t == CardDbAdapter.TWO_PLUS_STAR)
 						tou = "2+*";
-					else if (t == CardDbAdapter.SEVENMINUSSTAR)
+					else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
 						tou = "7-*";
-					else if (t == CardDbAdapter.STARSQUARED)
+					else if (t == CardDbAdapter.STAR_SQUARED)
 						tou = "*^2";
 					else {
 						if (t == (int) t) {
@@ -213,7 +213,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 			}
 			else if (CardDbAdapter.KEY_LOYALTY.equals(mFrom[i])) {
 				float l = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-				if (l != CardDbAdapter.NOONECARES) {
+				if (l != CardDbAdapter.NO_ONE_CARES) {
 					hideLoyalty = false;
 					if (l == (int) l) {
 						textField.setText(Integer.toString((int) l));
