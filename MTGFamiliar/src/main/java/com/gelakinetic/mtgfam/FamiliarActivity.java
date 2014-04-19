@@ -116,6 +116,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 	/* Constants used for saving state */
 	private static final String CURRENT_FRAG = "CURRENT_FRAG";
+	private static final String IS_REFRESHING = "IS_REFRESHING";
 
 	/* PayPal URL */
 	@SuppressWarnings("SpellCheckingInspection")
@@ -129,6 +130,9 @@ public class FamiliarActivity extends FragmentActivity {
 	public ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	public boolean mIsMenuVisible;
+
+	/* UI elements */
+	private IndeterminateRefreshLayout mRefreshLayout;
 
 	/* Used to pass results between fragments */
 	private Bundle mFragResults;
@@ -179,8 +183,6 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		}
 	};
-
-	/* UI Elements */
 
 	/* Listen for changes to preferences */
 	private final SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -257,8 +259,8 @@ public class FamiliarActivity extends FragmentActivity {
 		mPreferenceAdapter = new PreferenceAdapter(this);
 
 		DatabaseManager.initializeInstance(new DatabaseHelper(getApplicationContext()));
-		((IndeterminateRefreshLayout) findViewById(R.id.fragment_container)).setColorScheme(
-		);
+
+		mRefreshLayout = ((IndeterminateRefreshLayout)findViewById(R.id.fragment_container));
 
 		/* Set up a listener to update the home screen widget whenever the user changes the preference */
 		mPreferenceAdapter.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
@@ -1223,6 +1225,8 @@ public class FamiliarActivity extends FragmentActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putInt(CURRENT_FRAG, mCurrentFrag);
+		outState.putBoolean(IS_REFRESHING, mRefreshLayout.mRefreshing);
+		mRefreshLayout.setRefreshing(false);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -1237,6 +1241,8 @@ public class FamiliarActivity extends FragmentActivity {
 		if (savedInstanceState.containsKey(CURRENT_FRAG)) {
 			mCurrentFrag = savedInstanceState.getInt(CURRENT_FRAG);
 			mDrawerList.setItemChecked(mCurrentFrag, true);
+
+			mRefreshLayout.setRefreshing(savedInstanceState.getBoolean(IS_REFRESHING));
 		}
 	}
 
@@ -1244,13 +1250,13 @@ public class FamiliarActivity extends FragmentActivity {
 	 * Show the indeterminate loading bar
 	 */
 	public void setLoading() {
-		((IndeterminateRefreshLayout) findViewById(R.id.fragment_container)).setRefreshing(true);
+		mRefreshLayout.setRefreshing(true);
 	}
 
 	/**
 	 * Hide the indeterminate loading bar
 	 */
 	public void clearLoading() {
-		((IndeterminateRefreshLayout) findViewById(R.id.fragment_container)).setRefreshing(false);
+		mRefreshLayout.setRefreshing(false);
 	}
 }

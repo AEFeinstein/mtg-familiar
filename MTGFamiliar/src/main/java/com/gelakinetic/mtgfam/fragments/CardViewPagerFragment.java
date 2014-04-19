@@ -14,29 +14,11 @@ import com.gelakinetic.mtgfam.R;
 /**
  * This class will nest the CardViewFragments found by a search in a ViewPager
  */
-class CardViewPagerFragment extends Fragment {
+class CardViewPagerFragment extends FamiliarFragment {
 
 	/* Bundle keys */
 	public static final String CARD_ID_ARRAY = "card_id_array";
 	public static final String STARTING_CARD_POSITION = "starting_card_id";
-
-	/**
-	 * Empty constructor
-	 */
-	public CardViewPagerFragment() {
-	}
-
-	/**
-	 * first saving my state, so the bundle wont be empty.
-	 * http://code.google.com/p/android/issues/detail?id=19917
-	 *
-	 * @param outState Bundle in which to place your saved state.
-	 */
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
-		super.onSaveInstanceState(outState);
-	}
 
 	/**
 	 * Grab the array of card IDs and the current position, then create the view amd attach the pager adapter
@@ -51,7 +33,6 @@ class CardViewPagerFragment extends Fragment {
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
 
 		Bundle args = getArguments();
 		long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
@@ -124,8 +105,9 @@ class CardViewPagerFragment extends Fragment {
 		private final float MIN_SCALE = 0.75f;
 
 		/**
-		 * A custom transformer to get a sweet page effect 
-		 * @param view The view being transformed
+		 * A custom transformer to get a sweet page effect
+		 *
+		 * @param view     The view being transformed
 		 * @param position Where the view currently is
 		 */
 		public void transformPage(View view, float position) {

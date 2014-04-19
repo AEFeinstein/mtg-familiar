@@ -53,7 +53,7 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 
 	private IndeterminateProgressBar mProgressBar; //the thing that shows progress is going
 	private View mTarget; //the content that gets pulled down
-	private boolean mRefreshing = false;
+	public boolean mRefreshing = false;
 	private int mProgressBarHeight;
 	private static final int[] LAYOUT_ATTRS = new int[]{android.R.attr.enabled};
 
@@ -77,6 +77,18 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 		assert typedArray != null;
 		setEnabled(typedArray.getBoolean(0, true));
 		typedArray.recycle();
+
+		/*
+		 * Set the four colors used in the progress animation. The first color will
+		 * also be the color of the bar that grows in response to a user swipe
+		 * gesture.
+		 */
+		final Resources res = getResources();
+		mProgressBar.setColorScheme(
+				res.getColor(com.gelakinetic.mtgfam.R.color.common),
+				res.getColor(com.gelakinetic.mtgfam.R.color.uncommon),
+				res.getColor(com.gelakinetic.mtgfam.R.color.rare),
+				res.getColor(com.gelakinetic.mtgfam.R.color.mythic));
 	}
 
 	/**
@@ -96,22 +108,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 				mProgressBar.stop();
 			}
 		}
-	}
-
-	/**
-	 * Set the four colors used in the progress animation. The first color will
-	 * also be the color of the bar that grows in response to a user swipe
-	 * gesture.
-	 */
-	public void setColorScheme() {
-		ensureTarget();
-		final Resources res = getResources();
-		assert res != null;
-		final int color1 = res.getColor(com.gelakinetic.mtgfam.R.color.common);
-		final int color2 = res.getColor(com.gelakinetic.mtgfam.R.color.uncommon);
-		final int color3 = res.getColor(com.gelakinetic.mtgfam.R.color.rare);
-		final int color4 = res.getColor(com.gelakinetic.mtgfam.R.color.mythic);
-		mProgressBar.setColorScheme(color1, color2, color3, color4);
 	}
 
 	private void ensureTarget() {

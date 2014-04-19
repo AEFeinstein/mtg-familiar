@@ -86,6 +86,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * This class handles displaying card info
+ * WARNING! Because this fragment is nested in a CardViewPagerFragment, always get the parent fragment's activity
+ */
 public class CardViewFragment extends FamiliarFragment {
 
 	/* Dialogs */
@@ -146,6 +150,9 @@ public class CardViewFragment extends FamiliarFragment {
 	private LinkedHashSet<String> mSets;
 	private LinkedHashSet<Long> mCardIds;
 
+	/* Easier than calling getActivity() all the time, and handles being nested */
+	private FamiliarActivity mActivity;
+
 	/**
 	 * Kill any AsyncTask if it is still running
 	 */
@@ -156,10 +163,19 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Pass a non-null bundle to the ResultListFragment so it knows to exit if there was a list of 1 card
 		 * If this wasn't launched by a ResultListFragment, it'll get eaten */
 		Bundle args = new Bundle();
-		getFamiliarActivity().setFragmentResult(args);
+		mActivity.setFragmentResult(args);
 		if (mAsyncTask != null) {
 			mAsyncTask.cancel(true);
 		}
+	}
+
+	/**
+	 * Called when the Fragment is no longer resumed. Clear the loading bar just in case
+	 */
+	@Override
+	public void onPause() {
+		super.onPause();
+		mActivity.clearLoading();
 	}
 
 	/**
@@ -175,6 +191,13 @@ public class CardViewFragment extends FamiliarFragment {
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		try {
+			mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
+		} catch (NullPointerException e) {
+			mActivity = getFamiliarActivity();
+		}
+
 		View myFragmentView = inflater.inflate(R.layout.card_view_frag, container, false);
 
 		assert myFragmentView != null; /* Because Android Studio */
@@ -200,7 +223,7 @@ public class CardViewFragment extends FamiliarFragment {
 		registerForContextMenu(mFlavorTextView);
 		registerForContextMenu(mArtistTextView);
 
-		if (getFamiliarActivity().mPreferenceAdapter.getPicFirst()) {
+		if (mActivity.mPreferenceAdapter.getPicFirst()) {
 			loadTo = MAIN_PAGE;
 		}
 		else {
@@ -260,7 +283,8 @@ public class CardViewFragment extends FamiliarFragment {
 		mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
 
 		mMagicCardsInfoSetCode =
-				CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)), database);
+				CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
+						database);
 		mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
 		switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
@@ -422,7 +446,7 @@ public class CardViewFragment extends FamiliarFragment {
 			mArtistTextView.setVisibility(View.GONE);
 			mFrameLayout.setVisibility(View.GONE);
 
-			getFamiliarActivity().setLoading();
+			mActivity.setLoading();
 			mAsyncTask = new FetchPictureTask();
 			mAsyncTask.execute((Void[]) null);
 		}
@@ -453,8 +477,8 @@ public class CardViewFragment extends FamiliarFragment {
 		mSets = new LinkedHashSet<String>();
 		mCardIds = new LinkedHashSet<Long>();
 		while (!cCardByName.isAfterLast()) {
-			if (mSets.add(
-					CardDbAdapter.getTcgName(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
+			if (mSets.add(CardDbAdapter
+					.getTcgName(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
 				mCardIds.add(cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID)));
 			}
 			cCardByName.moveToNext();
@@ -462,7 +486,7 @@ public class CardViewFragment extends FamiliarFragment {
 		cCardByName.close();
 		/* If it exists in only one set, remove the button from the menu */
 		if (mSets.size() == 1) {
-			getActivity().invalidateOptionsMenu();
+			mActivity.invalidateOptionsMenu();
 		}
 		DatabaseManager.getInstance().closeDatabase();
 	}
@@ -525,7 +549,7 @@ public class CardViewFragment extends FamiliarFragment {
 		@Override
 		protected void onPostExecute(Void result) {
 			showDialog(GET_LEGALITY);
-			getFamiliarActivity().clearLoading();
+			mActivity.clearLoading();
 		}
 	}
 
@@ -551,7 +575,8 @@ public class CardViewFragment extends FamiliarFragment {
 		@Override
 		protected Void doInBackground(Void... params) {
 			error = null;
-			String cardLanguage = getFamiliarActivity().mPreferenceAdapter.getCardLanguage();
+			String cardLanguage =
+					mActivity.mPreferenceAdapter.getCardLanguage();
 			if (cardLanguage == null) {
 				cardLanguage = "en";
 			}
@@ -606,7 +631,7 @@ public class CardViewFragment extends FamiliarFragment {
 
 					URL u = new URL(picURL);
 					try {
-						mCardBitmap = new BitmapDrawable(getActivity().getResources(), u.openStream());
+						mCardBitmap = new BitmapDrawable(mActivity.getResources(),u.openStream());
 					} catch (FileNotFoundException e) {
 						if (!triedEn) {
 							/* Let the catch block take care of it */
@@ -616,7 +641,7 @@ public class CardViewFragment extends FamiliarFragment {
 							/* Ok, it doesn't exist on MagicCards.info in English. Fall back to Gatherer */
 							URL u2 = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
 									+ mMultiverseId + "&type=card");
-							mCardBitmap = new BitmapDrawable(getActivity().getResources(), u2.openStream());
+							mCardBitmap = new BitmapDrawable(mActivity.getResources(),u2.openStream());
 						}
 					}
 
@@ -628,17 +653,16 @@ public class CardViewFragment extends FamiliarFragment {
 							TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
 					if (loadTo == MAIN_PAGE) {
 						Rect rectangle = new Rect();
-						Window window = getActivity().getWindow();
+						Window window = mActivity.getWindow();
 						window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
 
-						assert getActivity().getActionBar() != null; /* Because Android Studio */
-						height = ((rectangle.bottom - rectangle.top) - getActivity().getActionBar().getHeight())
-								- border;
+						assert mActivity.getActionBar() != null; /* Because Android Studio */
+						height = ((rectangle.bottom - rectangle.top) -mActivity.getActionBar().getHeight()) - border;
 						width = (rectangle.right - rectangle.left) - border;
 					}
 					else if (loadTo == DIALOG) {
-						Display display = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE))
-								.getDefaultDisplay();
+						Display display = ((WindowManager) mActivity
+								.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 						Point p = new Point();
 						display.getSize(p);
 						height = p.y - border;
@@ -661,7 +685,7 @@ public class CardViewFragment extends FamiliarFragment {
 
 					Bitmap d = mCardBitmap.getBitmap();
 					Bitmap bitmapOrig = Bitmap.createScaledBitmap(d, newWidth, newHeight, true);
-					mCardBitmap = new BitmapDrawable(getActivity().getResources(), bitmapOrig);
+					mCardBitmap = new BitmapDrawable(mActivity.getResources(), bitmapOrig);
 				} catch (FileNotFoundException e) {
 					/* internet works, image not found */
 					if (cardLanguage.equalsIgnoreCase("en")) {
@@ -704,7 +728,8 @@ public class CardViewFragment extends FamiliarFragment {
 				else if (loadTo == MAIN_PAGE) {
 					removeDialog(getFragmentManager());
 					mCardImageView.setImageDrawable(mCardBitmap);
-					getActivity().invalidateOptionsMenu(); /* remove the image load button if it is the main page */
+					/* remove the image load button if it is the main page */
+					mActivity.invalidateOptionsMenu();
 				}
 			}
 			else {
@@ -721,9 +746,9 @@ public class CardViewFragment extends FamiliarFragment {
 					mArtistTextView.setVisibility(View.VISIBLE);
 					mFrameLayout.setVisibility(View.VISIBLE);
 				}
-				Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+				Toast.makeText(mActivity, error, Toast.LENGTH_LONG).show();
 			}
-			getFamiliarActivity().clearLoading();
+			mActivity.clearLoading();
 		}
 
 		/**
@@ -818,9 +843,9 @@ public class CardViewFragment extends FamiliarFragment {
 			}
 			else {
 				removeDialog(getFragmentManager());
-				Toast.makeText(getActivity(), mErrorMessage, Toast.LENGTH_SHORT).show();
+				Toast.makeText(mActivity, mErrorMessage, Toast.LENGTH_SHORT).show();
 			}
-			getFamiliarActivity().clearLoading();
+			mActivity.clearLoading();
 		}
 	}
 
@@ -875,7 +900,7 @@ public class CardViewFragment extends FamiliarFragment {
 							return null;
 						}
 
-						Dialog dialog = new Dialog(this.getActivity());
+						Dialog dialog = new Dialog(mActivity);
 						dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 						dialog.setContentView(R.layout.card_view_image_dialog);
@@ -905,12 +930,12 @@ public class CardViewFragment extends FamiliarFragment {
 							fillMaps.add(map);
 						}
 
-						SimpleAdapter adapter = new SimpleAdapter(this.getActivity(), fillMaps, R.layout.card_view_legal_row,
+						SimpleAdapter adapter = new SimpleAdapter(mActivity, fillMaps,R.layout.card_view_legal_row,
 								from, to);
-						ListView lv = new ListView(this.getActivity());
+						ListView lv = new ListView(mActivity);
 						lv.setAdapter(adapter);
 
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+						AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 						builder.setView(lv);
 						builder.setTitle(R.string.card_view_legality);
 						return builder.create();
@@ -921,8 +946,7 @@ public class CardViewFragment extends FamiliarFragment {
 							return null;
 						}
 
-						View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_price_dialog,
-								null, false);
+						View v = mActivity.getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
 
 						assert v != null; /* Because Android Studio */
 						TextView l = (TextView) v.findViewById(R.id.low);
@@ -946,7 +970,7 @@ public class CardViewFragment extends FamiliarFragment {
 						priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + mPriceInfo.mUrl + "\">" +
 								getString(R.string.card_view_price_dialog_link) + "</a>"));
 
-						AlertDialog.Builder adb = new AlertDialog.Builder(this.getActivity());
+						AlertDialog.Builder adb = new AlertDialog.Builder(mActivity);
 						adb.setView(v);
 						adb.setTitle(R.string.card_view_price_dialog_title);
 						return adb.create();
@@ -954,7 +978,7 @@ public class CardViewFragment extends FamiliarFragment {
 					case CHANGE_SET: {
 						final String[] aSets = mSets.toArray(new String[mSets.size()]);
 						final Long[] aIds = mCardIds.toArray(new Long[mCardIds.size()]);
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+						AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 						builder.setTitle(R.string.card_view_set_dialog_title);
 						builder.setItems(aSets, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialogInterface, int item) {
@@ -974,8 +998,7 @@ public class CardViewFragment extends FamiliarFragment {
 						}
 						ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
 
-						View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_rulings_dialog,
-								null, false);
+						View v = mActivity.getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null, false);
 						assert v != null; /* Because Android Studio */
 
 						TextView textViewRules = (TextView) v.findViewById(R.id.rules);
@@ -1002,7 +1025,7 @@ public class CardViewFragment extends FamiliarFragment {
 										mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
 						));
 
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+						AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 						builder.setTitle(R.string.card_view_rulings_dialog_title);
 						builder.setView(v);
 						return builder.create();
@@ -1043,7 +1066,7 @@ public class CardViewFragment extends FamiliarFragment {
 		assert tv.getText() != null;
 		mCopyString = tv.getText().toString();
 
-		android.view.MenuInflater inflater = this.getActivity().getMenuInflater();
+		android.view.MenuInflater inflater = this.mActivity.getMenuInflater();
 		inflater.inflate(R.menu.copy_menu, menu);
 	}
 
@@ -1081,7 +1104,7 @@ public class CardViewFragment extends FamiliarFragment {
 				return super.onContextItemSelected(item);
 			}
 		}
-		ClipboardManager clipboard = (ClipboardManager) (this.getActivity().
+		ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
 				getSystemService(android.content.Context.CLIPBOARD_SERVICE));
 		String label = getResources().getString(R.string.app_name);
 		String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
@@ -1105,42 +1128,42 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Handle item selection */
 		switch (item.getItemId()) {
 			case R.id.image: {
-				getFamiliarActivity().setLoading();
+				mActivity.setLoading();
 				mAsyncTask = new FetchPictureTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
 			}
 			case R.id.price: {
-				getFamiliarActivity().setLoading();
+				mActivity.setLoading();
 
 				PriceFetchRequest priceRequest;
-				priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId
+				priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId);
+				mActivity.mSpiceManager.execute(priceRequest,
+						mCardName + "-" + mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
+
+							@Override
+							public void onRequestFailure(SpiceException spiceException) {
+								mActivity.clearLoading();
+
+								CardViewFragment.this.removeDialog(getFragmentManager());
+								Toast.makeText(mActivity, spiceException.getMessage(),Toast.LENGTH_SHORT).show();
+							}
+
+							@Override
+							public void onRequestSuccess(final PriceInfo result) {
+								mActivity.clearLoading();
+
+								if (result != null) {
+									mPriceInfo = result;
+									showDialog(GET_PRICE);
+								}
+								else {
+									Toast.makeText(mActivity, R.string.card_view_price_not_found,
+											Toast.LENGTH_SHORT).show();
+								}
+							}
+						}
 				);
-				getFamiliarActivity().mSpiceManager.execute(priceRequest, mCardName + "-" +
-						mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-
-					@Override
-					public void onRequestFailure(SpiceException spiceException) {
-						getFamiliarActivity().clearLoading();
-
-						CardViewFragment.this.removeDialog(getFragmentManager());
-						Toast.makeText(getActivity(), spiceException.getMessage(), Toast.LENGTH_SHORT).show();
-					}
-
-					@Override
-					public void onRequestSuccess(final PriceInfo result) {
-						getFamiliarActivity().clearLoading();
-
-						if (result != null) {
-							mPriceInfo = result;
-							showDialog(GET_PRICE);
-						}
-						else {
-							Toast.makeText(getActivity(), R.string.card_view_price_not_found, Toast.LENGTH_SHORT)
-									.show();
-						}
-					}
-				});
 
 				return true;
 			}
@@ -1149,13 +1172,13 @@ public class CardViewFragment extends FamiliarFragment {
 				return true;
 			}
 			case R.id.legality: {
-				getFamiliarActivity().setLoading();
+				mActivity.setLoading();
 				mAsyncTask = new FetchLegalityTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
 			}
 			case R.id.cardrulings: {
-				getFamiliarActivity().setLoading();
+				mActivity.setLoading();
 				mAsyncTask = new FetchRulingsTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
