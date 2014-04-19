@@ -2,7 +2,6 @@
 <resources>
 <string name="app_name">MTG Familiar</string>
 <string name="name_search_hint">Wyszukaj</string>
-<string name="slash">/</string>
 <string name="dialog_ok">OK</string>
 <string name="dialog_cancel">Anuluj</string>
 <string name="dialog_yes">Tak</string>
@@ -13,36 +12,28 @@
 <string name="dialog_thanks">Dzięki!</string>
 <string name="dialog_thanks_anyway">Tak czy inaczej, dzięki!</string>
 <string name="dialog_enjoy">Miłej zabawy!</string>
-<string name="dialog_play">Zagrajmy!</string>
 <string name="dialog_save">Zapisz</string>
 <string name="update_notification">Sprawdzanie aktualizacji</string>
-<string name="update_updating_set">Dodawanie %s...</string>
+<string name="update_updating_set">Dodawanie %s</string>
 <string name="update_updating_rules">Aktualizacja kompleksowych zasad</string>
 <string name="update_added">Dodano</string>
 <string name="update_added_rules">nowe kompleksowe zasady</string>
 <string name="update_added_mtr">nowe Zasady Turniejowe (MTR)</string>
-<string name="update_added_ipg">nowy Przewodnik Naruszeń Procedury (IPG)</string>
+<string name="update_added_ipg">nowy Przewodnik Naruszeń Procedur (IPG)</string>
 <string name="update_parse_cards">Analizuj %s</string>
 <string name="update_parse_rules">Analizowanie kompleksowych zasad...</string>
 <string name="error">Błąd</string>
 <string name="error_database">Wystąpił błąd bazy danych. Jeśli będzie się to powtarzać, spróbuj wyczyścić dane aplikacji w ustawieniach Androida.</string>
-<string name="error_corruption">Ups! Wygląda na to, że ważna część aplikacji uległa uszkodzeniu i przestała działać. Postaramy się rozgryźć co dokładnie 
-się stało, więc prosimy wyślij nam maila na &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt; żebyśmy mogli 
-znaleźć błąd i go naprawić. W międzyczasie, jeśli błąd sam się nie naprawi, spróbuj wyczyścić dane aplikacji w opcjach swojego 
-urządzenia, a jeśli to nie zadziała to przeinstaluj aplikację z Google Play.</string>
 <string name="error_no_email_client">Wygląda na to, że nie masz zainstalowanego klienta poczty. Skonfiguruj aplikację e-mail.</string>
-<string name="ph_type">Typ</string>
-<string name="ph_cost">Koszt</string>
-<string name="ph_ability">Zdolność</string>
-<string name="ph_power">S</string>
-<string name="ph_toughness">W</string>
+<string name="toast_no_card">Nie znaleziono karty o tej nazwie.</string>
+<string name="not_deleted">nie usunięty</string>
 <string name="main_pages">ZAKŁADKI</string>
 <string name="main_extras">POZOSTAŁE</string>
-<string name="main_card_search">Wyszukiwarka kart</string>
+<string name="main_card_search">Wyszukaj karty</string>
 <string name="main_life_counter">Licznik Życia</string>
 <string name="main_mana_pool">Licznik many</string>
 <string name="main_dice">Kości</string>
-<string name="main_trade">Wymiana kart</string>
+<string name="main_trade">Okno wymiany</string>
 <string name="main_wishlist">Lista Życzeń</string>
 <string name="main_timer">Licznik Czasu</string>
 <string name="main_rules">Zasady (en)</string>
@@ -52,20 +43,25 @@ urządzenia, a jeśli to nie zadziała to przeinstaluj aplikację z Google Play.
 <string name="main_settings_title">Ustawienia</string>
 <string name="main_donate_title">Wspomóż nas</string>
 <string name="main_donate_dialog_title">Wspomóż Programistów</string>
-<string name="main_donate_text">Ile jesteś gotów zapłacić za wersję premium aplikacji M:TG takiej jak ta? $1,000? $10,000?&lt;br /&gt;&lt;br /&gt;
-Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br /&gt;&lt;br /&gt;
-Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br /&gt;&lt;br /&gt;
-Mamy programistyczny nawyk do pracy, ok?&lt;br /&gt;&lt;br /&gt;
+<string name="main_donate_text">Ile jesteś gotów zapłacić za wersję premium aplikacji M:TG takiej jak ta? $1,000? $10,000?&lt;br&gt;&lt;br&gt;
+Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;&lt;br&gt;
+Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br&gt;&lt;br&gt;
+Mamy programistyczny nawyk do pracy, ok?&lt;br&gt;&lt;br&gt;
 
 Możesz kliknąć przycisk poniżej aby wpłacić dotację przez PayPal. $1 jest w porządku.
-$5 jeszcze lepiej. Łapiesz o co chodzi.&lt;br /&gt;&lt;br /&gt;
+$5 jeszcze lepiej. Łapiesz o co chodzi.&lt;br&gt;&lt;br&gt;
 Więc, na jak dużą hojność stać cię dzisiaj?</string>
 <string name="main_whats_new_title">Nowości</string>
 <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
-<string name="main_whats_new_text">- Możliwość zamiennego stosowania Ae oraz Æ w wyszukiwarce&lt;br /&gt;&lt;br /&gt;
-         - Polskie tłumaczenie&lt;br /&gt;&lt;br /&gt;
-         - Zaktualizowano tekst Oracle&lt;br /&gt;&lt;br /&gt;
-         - Poprawiono błędy dla Androida 4.3</string>
+<string name="main_whats_new_text">- Jesteśmy na GitHub! Kliknij na maskotkę Octocata aby móc analizować kod i wspomóc projekt. &lt;br&gt;&lt;br&gt;
+- Nowoczesny, odświeżony wygląd i obrazki w HD.&lt;br&gt;&lt;br&gt;
+- Po wyszukiwaniu, przewijaj karty w lewo i w prawo aby przejść wstecz lub dalej&lt;br&gt;&lt;br&gt;
+- Nowo zaprojektowane układy graficzne dla wszystkich trybów wyświetlania oraz MoJhoSto&lt;br&gt;&lt;br&gt;
+- Zupełnie nowy widget dla ekranu głównego z możliwością konfiguracji&lt;br&gt;&lt;br&gt;
+- Hiszpańskie tłumaczenie, lepsza lokalizacja&lt;br&gt;&lt;br&gt;
+- Wiele naprawionych błędów&lt;br&gt;&lt;br&gt;
+- Komentarze w kodzie&lt;br&gt;&lt;br&gt;
+- Usunięto wyszukiwanie obrazem (Google usunęło wsparcie)</string>
 <string name="main_tts_warning_title">Syntezator mowy</string>
 <string name="main_tts_warning_text">Ta aplikacja posiada możliwość zainstalowania Syntezatora mowy i korzystania z niektórych jego właściwości, ale wygląda na to, że nie masz go zainstalowanego. Jeśli chcesz go zainstalować użyj linka \'Zainstaluj Syntezator mowy\' z menu Ustawienia.</string>
 <string name="main_export_data_title">Eksportuj dane na kartę SD</string>
@@ -75,34 +71,31 @@ Więc, na jak dużą hojność stać cię dzisiaj?</string>
 <string name="main_import_success">Import zakończony powodzeniem</string>
 <string name="main_import_fail">Nie udało się zaimportować danych. Proszę wstawić MTGFamiliarBackup.zip w root\'a swojej karty SD</string>
 <string name="main_about">O aplikacji</string>
-<string name="main_about_title">O aplikacji</string>
-<string name="main_about_text">Ta aplikacja jest moim darem dla społeczności M:TG&lt;br /&gt;&lt;br /&gt;
-Jeśli masz jakieś pytania, komentarze lub prośby to wyślij je na:&lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;
-Dołącz do &lt;a href=\"http://code.google.com/p/mtg-familiar\"&gt;projektu open source &lt;/a&gt; na Google Code.&lt;br /&gt;&lt;br /&gt;
-Podziękowania dla zagaberoo za piękne grafiki i jeszcze piękniejszy kod.&lt;br /&gt;&lt;br /&gt;
-Podziękowania dla April King za zapewnienie jakości i naukę Javy. Ciii, nie mówcie o tym nikomu.&lt;br /&gt;&lt;br /&gt;
-Podziękowania dla Toastdeib za bycie moim SQL guru siedzącym na czubku góry.&lt;br /&gt;&lt;br /&gt;
-Podziękowania dla Reuben za bycie najlepszym użytkownikiem. Sami wiecie, takim który później staje się programistą!&lt;br /&gt;&lt;br /&gt;
-Podziękowania dla Lotier z Reddit za pojawienie się znikąd z dodatkiem wymiany kart!&lt;br /&gt;&lt;br /&gt;
-Podziękowania dla Daniel najpierw za naukę Androida, a następnie za zrobienie Listy Życzeń!&lt;br /&gt;&lt;br /&gt;
-Podziękowania dla Aethys za francuskie tłumaczenie i jego interfejs do wyszukiwania kart przy pomocy aparatu.&lt;br /&gt;&lt;br /&gt;
-Podziękowania dla chaudakh za cudowny program &lt;a href=\"http://forums.mtgsalvation.com/showthread.php?t=303454\"&gt;Gatherer Extractor&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;
-
-Podziękowania dla reddit\'owego &lt;a href=\"http://www.reddit.com/r/magicTCG/\"&gt;/r/magictcg&lt;/a&gt; za testy i rady.&lt;br /&gt;&lt;br /&gt;
+<string name="main_about_text">Ta aplikacja jest moim darem dla społeczności M:TG&lt;br&gt;&lt;br&gt;
+Jeśli masz jakieś pytania, komentarze lub prośby to wyślij je na:&lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+Dołącz do &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;projektu open source&lt;/a&gt; na GitHub.&lt;br&gt;&lt;br&gt;
+Podziękowania dla zagaberoo za piękne grafiki i jeszcze piękniejszy kod.&lt;br&gt;&lt;br&gt;
+Podziękowania dla April King za zapewnienie jakości i naukę Javy. Ciii, nie mówcie o tym nikomu.&lt;br&gt;&lt;br&gt;
+Podziękowania dla Toastdeib za bycie moim SQL guru siedzącym na czubku góry.&lt;br&gt;&lt;br&gt;
+Podziękowania dla Reuben za bycie najlepszym użytkownikiem. Sami wiecie, takim który później staje się programistą!&lt;br&gt;&lt;br&gt;
+Podziękowania dla Lotier z Reddit za pojawienie się znikąd z dodatkiem wymiany kart!&lt;br&gt;&lt;br&gt;
+Podziękowania dla Daniela najpierw za naukę Androida, a następnie za zrobienie Listy Życzeń!&lt;br&gt;&lt;br&gt;
+Podziękowania dla chaudakh za cudowny program &lt;a href=\"http://forums.mtgsalvation.com/showthread.php?t=303454\"&gt;Gatherer Extractor&lt;/a&gt; program.&lt;br&gt;&lt;br&gt;
+Podziękowania dla Ghislaina, Piotra, Víctora i Emilio za tłumaczenia.&lt;br&gt;&lt;br&gt;
+Podziękowania dla Ryana Stapletona (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard&lt;/a&gt;) za dokumenty sędziów&lt;br&gt;&lt;br&gt;
+Podziękowania dla redditowego &lt;a href=\"http://www.reddit.com/r/magicTCG/\"&gt;/r/magictcg&lt;/a&gt; za testy i rady.&lt;br&gt;&lt;br&gt;
 Podziękowania dla mojego brata za ikonę.&lt;br /&gt;&lt;br /&gt;
-
-Podziękowania dla Chedy z &lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt; za interfejs cen.&lt;br /&gt;&lt;br /&gt;
-Specjalne podziękowania dla Richard\'a Garfield\'a i pozostałych ludzi z &lt;a href=\"http://www.wizards.com/magic\"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;
--gelakinetic&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;
-
-Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br /&gt;&lt;br /&gt;
-The Android robot is © Google &lt;br /&gt;&lt;br /&gt;
-
-&lt;a href=\"http://actionbarsherlock.com/index.html\"&gt;ActionBarSherlock&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;
-&lt;a href=\"https://github.com/octo-online/robospice\"&gt;Robospice&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;
-&lt;a href=\"https://github.com/jfeinstein10/SlidingMenu\"&gt;SlidingMenu&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;
-Program licenced under the &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;
+Podziękowania dla Chedy z &lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt; za interfejs cen.&lt;br&gt;&lt;br&gt;
+Specjalne podziękowania dla Richarda Garfielda i pozostałych ludzi z &lt;a href=\"http://www.wizards.com/magic\"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+-gelakinetic&lt;br&gt;&lt;br&gt;&lt;br&gt;
+Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;&lt;br&gt;
+&lt;a href=\"https://github.com/octo-online/robospice\"&gt;Robospice&lt;/a&gt; został użyty zgodnie z licencją Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+Program licenced under the &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
 Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.</string>
+<string name="main_drawer_open">Otwórz menu nawigacji</string>
+<string name="main_drawer_close">Zamknij menu nawigacji</string>
+<string name="main_install_tts">Zainstaluj TTS (Text-To-Speech)</string>
+<string name="main_export_no_data">Brak danych do zapisania</string>
 <string name="search_name">Nazwa</string>
 <string name="search_supertype">Typ</string>
 <string name="search_subtype">Podtyp</string>
@@ -165,8 +158,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_transform">Transformuj</string>
 <string name="card_view_fuse">Połącz</string>
 <string name="card_view_other_half">Druga Połowa</string>
-<string name="card_view_left">&lt;</string>
-<string name="card_view_right">&gt;</string>
 <string name="card_view_copy">Kopiuj do schowka</string>
 <string name="card_view_copy_all">Skopiuj kartę do schowka</string>
 <string name="card_view_image">Obrazek karty</string>
@@ -178,7 +169,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_legal">Dozwolona</string>
 <string name="card_view_restricted">Ograniczona</string>
 <string name="card_view_banned">Zakazana</string>
-<string name="card_view_error">Błąd</string>
 <string name="card_view_price_dialog_title">Ceny TCGPlayer.com</string>
 <string name="card_view_price_dialog_low">Niska:</string>
 <string name="card_view_price_dialog_medium">Średnia</string>
@@ -189,13 +179,8 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_no_rulings">Brak zasad dla tej karty</string>
 <string name="card_view_gatherer_page">Strona karty</string>
 <string name="card_view_set_dialog_title">Wybierz edycję</string>
-<string name="card_view_loading_dialog">Wczytywanie. Proszę czekać...</string>
 <string name="card_view_price_not_found">Nie znaleziono ceny.</string>
-<string name="life_counter_twenty">20</string>
-<string name="life_counter_plus_one">1</string>
-<string name="life_counter_plus_five">5</string>
-<string name="life_counter_minus_one">-1</string>
-<string name="life_counter_minus_five">-5</string>
+<string name="card_view_image_not_found">Nie znaleziono obrazka</string>
 <string name="life_counter_announce_life">Komunikat o ilości życia</string>
 <string name="life_counter_change_default_gathering">Edytuj Pojedynek</string>
 <string name="life_counter_set_gathering">Wybierz Pojedynek</string>
@@ -203,21 +188,24 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="life_counter_remove_player">Usuń Gracza</string>
 <string name="life_counter_add_player">Dodaj gracza</string>
 <string name="life_counter_gathering_dialog_title">Wczytaj Pojedynek</string>
-<string name="life_counter_clear_dialog_text">Wyczyścić pole życia i graczy?nLicznik many także ulegnie wyczyszczeniu.</string>
+<string name="life_counter_clear_dialog_text">Wyzerować licznik życia i nazwy graczy? Licznik many także ulegnie wyczyszczeniu.</string>
 <string name="life_counter_edit_name_dialog_title">Wpisz imię</string>
-<string name="life_counter_tts_has">ma</string>
-<string name="life_counter_tts_life">życie</string>
-<string name="life_counter_tts_lifes">Życie</string>
-<string name="life_counter_tts_poison_counter">Znacznik zatrucia</string>
-<string name="life_counter_tts_poison_counters">Znaczniki zatrucia</string>
 <string name="life_counter_Commander">Commander</string>
 <string name="life_counter_Compact">Kompaktowy</string>
 <string name="life_counter_Normal">Zwykły</string>
-<string name="life_counter_commander_cast">Wywołania Commander\'a</string>
+<string name="life_counter_commander_cast">Wywołania Commandera</string>
+<string name="life_counter_default_name">Gracz</string>
+<string name="life_counter_spoken_life" formatted="false">%s ma %d życia.</string>
+<string name="life_counter_spoken_poison" formatted="false">%s ma %d znaczników trucizny.</string>
+<string name="life_counter_spoken_life_singular" formatted="false">%s ma %d życia. </string>
+<string name="life_counter_spoken_poison_singular" formatted="false">%s ma %d znacznik trucizny.</string>
+<string name="life_counter_over_9000">ponad 9000</string>
+<string name="life_counter_no_gatherings_exist">Takie pojedynki nie istnieją.</string>
+<string name="life_counter_edh_dialog_title">Obrażenia od %s Commandera</string>
+<string name="life_counter_edit_life_dialog_title">Wprowadź Życie</string>
+<string name="life_counter_edit_poison_dialog_title">Wprowadź Truciznę</string>
 <string name="gathering_custom_name">Nazwa</string>
-<string name="gathering_player">Gracz</string>
-<string name="gathering_starting_life">Życie początkowe</string>
-<string name="gathering_starting_life_default">20</string>
+<string name="gathering_starting_life">Życie początkowe:</string>
 <string name="gathering_save">Zapisz Pojedynek</string>
 <string name="gathering_enter_name">Wpisz nazwę Pojedynku</string>
 <string name="gathering_dialog_overwrite_title">Potwierdź nadpisanie</string>
@@ -230,33 +218,27 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="gathering_toast_no_name">Proszę wpisać nazwę dla Pojedynku.</string>
 <string name="gathering_empty_field">Pola nie mogą pozostać puste. Sprawdź wszystkie pola.</string>
 <string name="gathering_display_mode_title">Tryb wyświetlania</string>
+<string name="gathering_toast_no_players">Brak graczy do usunięcia</string>
 <string name="dice_heads">Orzeł</string>
 <string name="dice_tails">Reszka</string>
-<string name="mana_pool_plus">+</string>
-<string name="mana_pool_minus">-</string>
-<string name="mana_pool_zero">0</string>
 <string name="mana_pool_clear_all">Wyczyść wszystko</string>
 <string name="mana_pool_error_toast">Nie udało się wczytać licznika many!</string>
 <string name="trader_add_card">Dodaj kartę</string>
-<string name="trader_default_price">$0</string>
-<string name="trader_default_number_of">1x</string>
 <string name="trader_save">Zapisz Wymianę</string>
 <string name="trader_load">Wczytaj Wymianę</string>
 <string name="trader_delete">Usuń Wymianę</string>
 <string name="trader_clear_fields">Wyczyść pola</string>
 <string name="trader_set_pricing">Ustaw opcje cen</string>
 <string name="trader_toast_select_card">Najpierw wpisz nazwę karty.</string>
-<string name="trader_edit_dialog_x">x</string>
 <string name="trader_edit_dialog_change_set">Zmień edycję</string>
 <string name="trader_edit_dialog_remove">Usuń</string>
 <string name="trader_edit_dialog_reset_price">Zeruj Cenę</string>
 <string name="trader_clear_dialog_title">Wyczyść Wymianę</string>
-<string name="trader_clear_dialog_text">Czy na pewno chcesz wyczyścić pole wymiany?</string>
+<string name="trader_clear_dialog_text">Czy na pewno chcesz wyczyścić obecną wymianę?</string>
 <string name="trader_save_dialog_title">Zapisz Wymianę</string>
-<string name="trader_save_dialog_text">Wprowadź nazwę wymiany</string>
 <string name="trader_select_dialog_title">Wybierz Wymianę</string>
 <string name="trader_delete_dialog_title">Usuń Wymianę</string>
-<string name="trader_edit_dialog_info">Info o karcie</string>
+<string name="trader_edit_dialog_info">Informacja o karcie</string>
 <string name="trader_toast_no_trades">Nie masz zapisanych wymian.</string>
 <string name="trader_toast_save_error">Nie można zapisać wymiany, spróbuj ponownie.</string>
 <string name="trader_toast_invalid_chars">Nazwy Wymian nie mogą zawierać znaku separatora ścieżek (\'/\').</string>
@@ -267,19 +249,20 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="trader_pricing_dialog_title">Opcje Cen</string>
 <string name="wishlist_name">Nazwa</string>
 <string name="wishlist_add_card">Dodaj</string>
-<string name="wishlist_default_price">0</string>
 <string name="wishlist_clear_fields">Wyczyść pola</string>
 <string name="wishlist_set_pricing">Ustaw opcje cen</string>
 <string name="wishlist_toast_select_card">Najpierw wybierz kartę.</string>
-<string name="wishlist_toast_no_card">Nie znaleziono karty o tej nazwie.</string>
 <string name="wishlist_share">Udostępnij Listę Życzeń</string>
 <string name="wishlist_share_include_set">Dołączyć nazwy edycji?</string>
 <string name="wishlist_empty_dialog_title">Wyczyść Listę Życzeń</string>
 <string name="wishlist_empty_dialog_text">Czy na pewno chcesz wyczyścić swoją Listę Życzeń?</string>
 <string name="wishlist_edit_dialog_title_foil">Foliowane</string>
 <string name="wishlist_edit_dialog_title_end">na Liście Życzeń</string>
-<string name="timer_how_long">Podaj czas rundyn(HH:MM)</string>
-<string name="timer_how_long_landscape">Ile trwa runda? (HH:MM)</string>
+<string name="wishlist_loading">Wczytuję</string>
+<string name="wishlist_share_title">Lista Życzeń MTG Familiar</string>
+<string name="wishlist_view_card">Zobacz kartę</string>
+<string name="wishlist_foil">foliowane</string>
+<string name="timer_how_long">Podaj czas rundy (HH:MM)</string>
 <string name="timer_start">Start licznika</string>
 <string name="timer_cancel">Anuluj odliczanie</string>
 <string name="timer_set_ringtone">Ustaw dźwięk licznika</string>
@@ -293,6 +276,13 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="timer_50_minutes">50 minut</string>
 <string name="timer_55_minutes">55 minut</string>
 <string name="timer_1_hour">1 godzina</string>
+<string name="timer_notification_ongoing">Runda skończy się o %1$tl:%1$tM %1$Tp.</string>
+<string name="timer_five_minutes_left">Runda skończy się za pięć minut</string>
+<string name="timer_ten_minutes_left">Runda skończy się za dziesięć minut</string>
+<string name="timer_fifteen_minutes_left">Runda skończy się za piętnaście minut</string>
+<string name="timer_ended">Runda została zakończona.</string>
+<string name="timer_easter_egg">Oto noc ostatniego dnia, dwanaście godzin pozostało
+</string>
 <string name="rules_exit">Wyjdź z Zasad</string>
 <string name="rules_glossary">Słowniczek</string>
 <string name="rules_no_results_toast">Nic nie znaleziono.</string>
@@ -302,22 +292,22 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="rules_search_cat">Wyszukaj w %s:</string>
 <string name="rules_this_cat">ta kategoria:</string>
 <string name="mojhosto_rules_title">Zasady MoJhoSto Basic</string>
-<string name="mojhosto_rules_text">MoJhoSto jest nieformalną odmianą formatu Vanguard z Magic Online.&lt;br /&gt;&lt;br /&gt;
-Aby móc zagrać, każdy z graczy potrzebuje podstawowej talii zawierającej wyłącznie 60 podstawowych landów.&lt;br /&gt;&lt;br /&gt;
-Każdy gracz zaczyna grę z trzema Vanguard\'ami: Momir Vig, Jhoira i Stonehewer Giant.&lt;br /&gt;&lt;br /&gt;
+<string name="mojhosto_rules_text">MoJhoSto jest nieformalną odmianą formatu Vanguard z Magic Online.&lt;br&gt;&lt;br&gt;
+Aby móc zagrać, każdy z graczy potrzebuje podstawowej talii zawierającej wyłącznie 60 podstawowych landów.&lt;br&gt;&lt;br&gt;
+Każdy gracz zaczyna grę z trzema Vanguard\'ami: Momir Vig, Jhoira i Stonehewer Giant.&lt;br&gt;&lt;br&gt;
 
 Powyższe Vanguardy ustanawiają początkową i maksymalną rękę gracza
-(9) oraz całkowite życie początkowe (19).&lt;br /&gt;&lt;br /&gt;
-Wszystkie zdolności umieszczone na kartach Vanguard są zagrywane tak samo jak zdolności z innych kart M:TG obecnych w grze.&lt;br /&gt;&lt;br /&gt;
+(9) oraz całkowite życie początkowe (19).&lt;br&gt;&lt;br&gt;
+Wszystkie zdolności umieszczone na kartach Vanguard są zagrywane tak samo jak zdolności z innych kart M:TG obecnych w grze.&lt;br&gt;&lt;br&gt;
 
 Jednakże zdolności te nie posiadają koloru, a obrażenia przez nie zadane nie są traktowane jako obrażenia zadawane przez permanenty dowolnego rodzaju lub źródła dowolnego koloru.&lt;br 
-/&gt;&lt;br /&gt;
-Karty Vanguard\'ów nie są kartami M:TG, więc nie mogą być celem zaklęć lub zdolności.&lt;br /&gt;&lt;br /&gt;
-Możesz zatapować każdy obrazek aby zobaczyć pełną kartę Vanguard\'a.&lt;br /&gt;&lt;br /&gt;
-W każdej chwili możesz zajrzeć do menu aby przeczytać zasady.&lt;br /&gt;&lt;br /&gt;
+/&gt;&lt;br&gt;
+Karty Vanguard\'ów nie są kartami M:TG, więc nie mogą być celem zaklęć lub zdolności.&lt;br&gt;&lt;br&gt;
+Możesz zatapować każdy obrazek aby zobaczyć pełną kartę Vanguard\'a.&lt;br&gt;&lt;br&gt;
+W każdej chwili możesz zajrzeć do menu aby przeczytać zasady.&lt;br&gt;&lt;br&gt;
 
 Kartka i długopis mogą być przydatne aby śledzić przebieg gry. Niestety, 
-MTG Familiar nie może powielać rzeczywistych kart.&lt;br /&gt;&lt;br /&gt;
+MTG Familiar nie może powielać rzeczywistych kart.&lt;br&gt;&lt;br&gt;
 Powodzenia i miłej zabawy!</string>
 <string name="mojhosto_momir_label">CMC=</string>
 <string name="mojhosto_random_creature">Losowa Kreatura</string>
@@ -325,6 +315,7 @@ Powodzenia i miłej zabawy!</string>
 <string name="mojhosto_random_equipment">Losowe wyposażenie</string>
 <string name="mojhosto_random_instants">Trzy losowe Instanty</string>
 <string name="mojhosto_random_sorceries">Trzy losowe Sorcery</string>
+<string name="mojhosto_dialog_play">Zagrajmy!</string>
 <string name="pref_screen_general">Ustawienia ogólne</string>
 <string name="pref_screen_search">Wyszukiwanie i Rezultaty</string>
 <string name="pref_screen_counter">Licznik Życia</string>
@@ -349,7 +340,7 @@ Powodzenia i miłej zabawy!</string>
 <string name="pref_d2_as_coin_title">Użyj K2 jak monetę</string>
 <string name="pref_cat_life_counter">Licznik Życia</string>
 <string name="pref_wake_lock_title">Aktywny wyświetlacz</string>
-<string name="pref_wake_lock_summary">Licznik Życia zapobiega aby ekran przeszedł w tryb uśpienia</string>
+<string name="pref_wake_lock_summary">Licznik Życia będzie zapobiegał aby ekran przechodził w tryb uśpienia</string>
 <string name="pref_display_mode_title">Tryb wyświetlania</string>
 <string name="pref_display_mode_summary">Wybierz tryb wyświetlania dla Licznika Życia</string>
 <string name="pref_cat_timer">Licznik Czasu</string>
@@ -401,17 +392,14 @@ Powodzenia i miłej zabawy!</string>
 <string name="pref_3_seconds">3 sekundy</string>
 <string name="pref_4_seconds">4 sekundy</string>
 <string name="pref_5_seconds">5 sekund</string>
-<string name="main_card_language">en</string>
-<string name="goggles_photo_analysis">Analiza fotografii...</string>
-<string name="goggles_no_card_on_photo">Nie znaleziono żadnej karty odpowiadającej fotografii</string>
+<string name="pref_cat_widget">Widget</string>
+<string name="pref_widget_mode_title">Przyciski Widgetu</string>
+<string name="pref_widget_mode_summary">Przyciski do wyświetlania w Widgecie</string>
 <string name="judges_corner_MTR">MTR</string>
 <string name="judges_corner_IPG">IPG</string>
 <string name="judges_corner_jump_to_top">Skocz do góry</string>
 <string name="judges_corner_counter">Znacznik</string>
-<string name="deck_counter_1">1</string>
-<string name="deck_counter_2">2</string>
-<string name="deck_counter_3">3</string>
-<string name="deck_counter_4">4</string>
+<string name="judges_corner_error">Wystąpił błąd.</string>
 <string name="deck_counter_reset">Wyczyść</string>
 <string name="deck_counter_undo">Cofnij</string>
 </resources>
