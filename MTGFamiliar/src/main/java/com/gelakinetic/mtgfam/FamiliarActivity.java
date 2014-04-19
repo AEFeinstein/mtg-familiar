@@ -260,7 +260,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 		DatabaseManager.initializeInstance(new DatabaseHelper(getApplicationContext()));
 
-		mRefreshLayout = ((IndeterminateRefreshLayout)findViewById(R.id.fragment_container));
+		mRefreshLayout = ((IndeterminateRefreshLayout) findViewById(R.id.fragment_container));
 
 		/* Set up a listener to update the home screen widget whenever the user changes the preference */
 		mPreferenceAdapter.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
@@ -431,17 +431,20 @@ public class FamiliarActivity extends FragmentActivity {
 				showDialogFragment(CHANGE_LOG_DIALOG);
 				mPreferenceAdapter.setLastVersion(pInfo.versionCode);
 
-				/* Clear the mtr and ipg on update, to replace them with the newly colored versions */
-				File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
-				File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
-				if (mtr.exists()) {
-					if (!mtr.delete()) {
-						Toast.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted), Toast.LENGTH_LONG)
-								.show();
-					}
-					if (!ipg.delete()) {
-						Toast.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted), Toast.LENGTH_LONG)
-								.show();
+				/* Clear the mtr and ipg on update, to replace them with the newly colored versions, but only if we're
+				 * updating to 3.0 (v23) */
+				if (pInfo.versionCode == 23) {
+					File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
+					File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
+					if (mtr.exists()) {
+						if (!mtr.delete()) {
+							Toast.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted),
+									Toast.LENGTH_LONG).show();
+						}
+						if (!ipg.delete()) {
+							Toast.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+									Toast.LENGTH_LONG).show();
+						}
 					}
 				}
 			}

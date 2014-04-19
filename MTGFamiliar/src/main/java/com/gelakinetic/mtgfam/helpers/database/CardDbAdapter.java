@@ -72,7 +72,7 @@ public class CardDbAdapter {
 	private static final String DATABASE_TABLE_RULES = "rules";
 	private static final String DATABASE_TABLE_GLOSSARY = "glossary";
 
-	public static final int DATABASE_VERSION = 41;
+	public static final int DATABASE_VERSION = 42;
 
 	public static final String KEY_ID = "_id";
 	public static final String KEY_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1; // "name";
@@ -1503,8 +1503,7 @@ public class CardDbAdapter {
 			}
 			if (!dbFile.exists()) {
 
-				GZIPInputStream gis = new GZIPInputStream(ctx.getResources()
-						.openRawResource(R.raw.db));
+				GZIPInputStream gis = new GZIPInputStream(ctx.getResources().openRawResource(R.raw.datagz));
 				FileOutputStream fos = new FileOutputStream(dbFile);
 
 				byte[] buffer = new byte[1024];

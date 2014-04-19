@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.helpers.updaters;
 
 import android.content.Context;
 
+import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import java.io.BufferedReader;
@@ -55,10 +56,33 @@ class MTRIPGParser {
 	 */
 	public boolean performMtrIpgUpdateIfNeeded(final int mode) {
 		boolean updated = false;
-		InputStream is = null;
-		BufferedReader reader = null;
-		FileOutputStream fos = null;
 
+		/* First, inflate local files if they do not exist */
+		File output = null;
+		switch (mode) {
+			case MODE_IPG:
+				output = new File(mContext.getFilesDir(), IPG_LOCAL_FILE);
+				break;
+			case MODE_MTR:
+				output = new File(mContext.getFilesDir(), MTR_LOCAL_FILE);
+				break;
+		}
+		try {
+			if (output != null && !output.exists()) {
+				switch (mode) {
+					case MODE_IPG:
+						parseDocument(mode, mContext.getResources().openRawResource(R.raw.ipg));
+						break;
+					case MODE_MTR:
+						parseDocument(mode, mContext.getResources().openRawResource(R.raw.mtr));
+						break;
+				}
+			}
+		} catch (IOException e) {
+			/* eat it */
+		}
+
+		/* Then update via the interntet */
 		try {
 			URL url;
 			switch (mode) {
@@ -71,77 +95,85 @@ class MTRIPGParser {
 				default:
 					throw new FileNotFoundException("Invalid switch"); /* handled below */
 			}
-
-			is = url.openStream();
-			reader = new BufferedReader(new InputStreamReader(is));
-
-			String line = reader.readLine();
-			String[] parts = line.split("-");
-			Calendar c = Calendar.getInstance();
-			c.clear();
-			c.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
-			long documentDate = c.getTimeInMillis();
-
-			long ipgLastUpdated = mPrefAdapter.getLastIPGUpdate();
-			long mtrLastUpdated = mPrefAdapter.getLastMTRUpdate();
-
-			if ((mode == MODE_IPG && documentDate != ipgLastUpdated) ||
-					(mode == MODE_MTR && documentDate != mtrLastUpdated)) {
-				StringBuilder sb = new StringBuilder();
-				line = reader.readLine();
-				while (line != null) {
-					sb.append(line.trim());
-					line = reader.readLine();
-				}
-
-				File output;
-				switch (mode) {
-					case MODE_IPG:
-						output = new File(mContext.getFilesDir(), IPG_LOCAL_FILE);
-						break;
-					case MODE_MTR:
-						output = new File(mContext.getFilesDir(), MTR_LOCAL_FILE);
-						break;
-					default:
-						throw new FileNotFoundException("Invalid switch"); /* handled below */
-				}
-				fos = new FileOutputStream(output);
-				fos.write(sb.toString().getBytes());
-				fos.flush();
-				updated = true;
-
-				switch (mode) {
-					case MODE_IPG:
-						mPrefAdapter.setLastIPGUpdate(documentDate);
-						break;
-					case MODE_MTR:
-						mPrefAdapter.setLastMTRUpdate(documentDate);
-						break;
-					default:
-						throw new FileNotFoundException("Invalid switch"); /* handled below */
-				}
-			}
+			updated = parseDocument(mode, url.openStream());
 		} catch (MalformedURLException e) {
 			/* eat it */
 		} catch (FileNotFoundException e) {
 			/* eat it */
 		} catch (IOException e) {
 			/* eat it */
-		} finally {
-			try {
-				if (is != null) {
-					is.close();
-				}
-				if (reader != null) {
-					reader.close();
-				}
-				if (fos != null) {
-					fos.close();
-				}
-			} catch (IOException e) {
-				/* eat it */
+		}
+		return updated;
+	}
+
+	private boolean parseDocument(int mode, InputStream is) throws IOException {
+		boolean updated = false;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+		String line = reader.readLine();
+		String[] parts = line.split("-");
+		Calendar c = Calendar.getInstance();
+		c.clear();
+		c.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
+		long documentDate = c.getTimeInMillis();
+
+		boolean shouldUpdate;
+		switch (mode) {
+			case MODE_IPG: {
+				shouldUpdate = documentDate != mPrefAdapter.getLastIPGUpdate();
+				break;
+			}
+			case MODE_MTR: {
+				shouldUpdate = documentDate != mPrefAdapter.getLastMTRUpdate();
+				break;
+			}
+			default: {
+				shouldUpdate = false;
 			}
 		}
+
+		if (shouldUpdate) {
+			StringBuilder sb = new StringBuilder();
+			line = reader.readLine();
+			while (line != null) {
+				sb.append(line.trim());
+				line = reader.readLine();
+			}
+
+			File output;
+			switch (mode) {
+				case MODE_IPG:
+					output = new File(mContext.getFilesDir(), IPG_LOCAL_FILE);
+					break;
+				case MODE_MTR:
+					output = new File(mContext.getFilesDir(), MTR_LOCAL_FILE);
+					break;
+				default:
+					throw new FileNotFoundException("Invalid switch"); /* handled below */
+			}
+			FileOutputStream fos = new FileOutputStream(output);
+			fos.write(sb.toString().getBytes());
+			fos.flush();
+			fos.close();
+			updated = true;
+
+			switch (mode) {
+				case MODE_IPG:
+					mPrefAdapter.setLastIPGUpdate(documentDate);
+					break;
+				case MODE_MTR:
+					mPrefAdapter.setLastMTRUpdate(documentDate);
+					break;
+				default:
+					throw new FileNotFoundException("Invalid switch"); /* handled below */
+			}
+		}
+
+		if (is != null) {
+			is.close();
+		}
+		reader.close();
+
 		return updated;
 	}
 }

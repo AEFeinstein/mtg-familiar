@@ -54,41 +54,6 @@ public class JudgesCornerFragment extends FamiliarFragment {
 	public static final String IPG_LOCAL_FILE = "IPG.html";
 
 	/**
-	 * Make sure the MTR and IPG files exist, copy them if they do not
-	 *
-	 * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		File mtr = new File(getActivity().getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
-		File ipg = new File(getActivity().getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
-		if (!mtr.exists()) {
-			try {
-				InputStream in = getResources().openRawResource(R.raw.mtr);
-				FileOutputStream fos = new FileOutputStream(mtr);
-				IOUtils.copy(in, fos);
-			} catch (FileNotFoundException e) {
-				/* eat it */
-			} catch (IOException e) {
-				/* eat it */
-			}
-		}
-		if (!ipg.exists()) {
-			try {
-				InputStream in = getResources().openRawResource(R.raw.ipg);
-				FileOutputStream fos = new FileOutputStream(ipg);
-				IOUtils.copy(in, fos);
-			} catch (FileNotFoundException e) {
-				/* eat it */
-			} catch (IOException e) {
-				/* eat it */
-			}
-		}
-	}
-
-	/**
 	 * Set up the tab UI and the tabs
 	 *
 	 * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
