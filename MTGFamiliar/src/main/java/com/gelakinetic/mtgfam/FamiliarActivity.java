@@ -921,7 +921,7 @@ public class FamiliarActivity extends FragmentActivity {
 						/* Set the neutral button */
 						builder.setNeutralButton(R.string.dialog_thanks, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
+								/* Just close the dialog */
 							}
 						});
 
@@ -947,7 +947,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						builder.setNeutralButton(R.string.dialog_enjoy, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
+								/* Just close the dialog */
 							}
 						});
 
@@ -978,14 +978,13 @@ public class FamiliarActivity extends FragmentActivity {
 						/* Set the buttons button */
 						builder.setNegativeButton(R.string.dialog_thanks_anyway, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
+								/* Just close the dialog */
 							}
 						});
 						builder.setPositiveButton(R.string.main_donate_title, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PAYPAL_URL));
 								startActivity(myIntent);
-								dialog.cancel();
 							}
 						});
 
