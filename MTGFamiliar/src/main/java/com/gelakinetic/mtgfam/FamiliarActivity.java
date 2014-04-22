@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -200,6 +201,9 @@ public class FamiliarActivity extends FragmentActivity {
 				intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 				sendBroadcast(intent);
 			}
+			else if (s.equals(getString(R.string.key_theme))) {
+				FamiliarActivity.this.recreate();
+			}
 		}
 	};
 
@@ -258,9 +262,29 @@ public class FamiliarActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		mPreferenceAdapter = new PreferenceAdapter(this);
 
-		if (savedInstanceState != null) {
-			mThemeId = mPreferenceAdapter.getTheme();
-			this.setTheme(mThemeId);
+		/* Figure out what theme the app is currently in, and change it if necessary */
+		assert getTheme() != null;
+		TypedArray ta = getTheme().obtainStyledAttributes(new int[]{R.attr.color_drawer_background});
+		assert ta != null;
+		int resourceId = ta.getResourceId(0, 0);
+		ta.recycle();
+		String themeString = "";
+		int otherTheme = 0;
+		if (resourceId == R.color.drawer_background_dark) {
+			mThemeId = R.style.Theme_dark;
+			otherTheme = R.style.Theme_light;
+			themeString = getString(R.string.pref_theme_dark);
+		}
+		else if (resourceId == R.color.drawer_background_light) {
+			mThemeId = R.style.Theme_light;
+			otherTheme = R.style.Theme_dark;
+			themeString = getString(R.string.pref_theme_light);
+		}
+
+		/* Switch the theme if the preference does not match the current theme */
+		if (!themeString.equals(mPreferenceAdapter.getTheme())) {
+			this.setTheme(otherTheme);
+			mThemeId = otherTheme;
 		}
 
 		setContentView(R.layout.activity_main);
@@ -328,20 +352,10 @@ public class FamiliarActivity extends FragmentActivity {
 						break;
 					}
 					case R.string.main_settings_title: {
-						if (mThemeId == R.style.Theme_dark) {
-							mThemeId = R.style.Theme_light;
-						} else {
-							mThemeId = R.style.Theme_dark;
-						}
-						mDrawerLayout.closeDrawer(mDrawerList);
-						mPreferenceAdapter.setTheme(mThemeId);
-						FamiliarActivity.this.recreate();
-
-
-//						FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//						ft.addToBackStack(null);
-//						ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
-//						ft.commit();
+						FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+						ft.addToBackStack(null);
+						ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
+						ft.commit();
 						break;
 					}
 					case R.string.main_force_update_title: {

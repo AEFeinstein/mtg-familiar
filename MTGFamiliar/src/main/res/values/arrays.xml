@@ -228,4 +228,9 @@
         <item>4000</item>
         <item>5000</item>
     </string-array>
+    <string-array name="pref_themes">
+        <item>@string/pref_theme_light</item>
+        <item>@string/pref_theme_dark</item>
+    </string-array>
+
 </resources>

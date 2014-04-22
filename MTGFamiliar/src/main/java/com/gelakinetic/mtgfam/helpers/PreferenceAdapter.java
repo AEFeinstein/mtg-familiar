@@ -25,7 +25,6 @@ public class PreferenceAdapter {
 	private final Context context;
 	private final SharedPreferences prefs;
 	private final Editor edit;
-	private int theme;
 
 	/**
 	 * Constructor
@@ -38,17 +37,17 @@ public class PreferenceAdapter {
 		this.edit = this.prefs.edit();
 	}
 
-    public void registerOnSharedPreferenceChangeListener(
-            SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        this.prefs.registerOnSharedPreferenceChangeListener(listener);
-    }
+	public void registerOnSharedPreferenceChangeListener(
+			SharedPreferences.OnSharedPreferenceChangeListener listener) {
+		this.prefs.registerOnSharedPreferenceChangeListener(listener);
+	}
 
-    public void unregisterOnSharedPreferenceChangeListener(
-            SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        this.prefs.unregisterOnSharedPreferenceChangeListener(listener);
-    }
+	public void unregisterOnSharedPreferenceChangeListener(
+			SharedPreferences.OnSharedPreferenceChangeListener listener) {
+		this.prefs.unregisterOnSharedPreferenceChangeListener(listener);
+	}
 
-    /* Last version */
+	/* Last version */
 	public synchronized int getLastVersion() {
 		return this.prefs.getInt(context.getString(R.string.key_lastVersion), 0);
 	}
@@ -406,17 +405,18 @@ public class PreferenceAdapter {
 				Arrays.asList(context.getResources().getStringArray(R.array.default_widget_buttons_array_entries))));
 	}
 
-    public void setWidgetButtons(Set<String> widgetButtons) {
-        this.edit.putStringSet(context.getString(R.string.key_widgetButtons), widgetButtons);
-        this.edit.commit();
-    }
-
-	public int getTheme() {
-		return this.prefs.getInt(context.getString(R.string.key_theme), R.style.Theme_light);
+	public void setWidgetButtons(Set<String> widgetButtons) {
+		this.edit.putStringSet(context.getString(R.string.key_widgetButtons), widgetButtons);
+		this.edit.commit();
 	}
 
-	public void setTheme(int theme) {
-		this.edit.putInt(context.getString(R.string.key_theme), theme);
+	public String getTheme() {
+		return this.prefs.getString(context.getString(R.string.key_theme),
+				context.getResources().getString(R.string.pref_theme_light));
+	}
+
+	public void setTheme(String theme) {
+		this.edit.putString(context.getString(R.string.key_theme), theme);
 		this.edit.commit();
 	}
 }

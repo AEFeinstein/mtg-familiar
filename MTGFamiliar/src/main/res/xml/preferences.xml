@@ -62,6 +62,19 @@
         </PreferenceCategory>
 
         <PreferenceCategory
+            android:title="@string/pref_cat_theme">
+
+            <ListPreference
+                android:dialogTitle="@string/pref_theme_title"
+                android:key="@string/key_theme"
+                android:summary="@string/pref_theme_summary"
+                android:title="@string/pref_theme_title"
+                android:entries="@array/pref_themes"
+                android:entryValues="@array/pref_themes"
+                android:defaultValue="@string/pref_theme_light"/>
+        </PreferenceCategory>
+
+        <PreferenceCategory
             android:title="@string/pref_cat_tts">
 
             <Preference

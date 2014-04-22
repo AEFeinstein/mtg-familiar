@@ -433,6 +433,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_cat_widget">Widget</string>
     <string name="pref_widget_mode_title">Widget Buttons</string>
     <string name="pref_widget_mode_summary">The buttons to display in the widget</string>
+    <string name="pref_theme_dark">Dark</string>
+    <string name="pref_theme_light">Light</string>
 
     <!-- Judge's Corner -->
     <string name="judges_corner_MTR">MTR</string>
@@ -442,5 +444,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="judges_corner_error">An error occurred.</string>
     <string name="deck_counter_reset">Reset</string>
     <string name="deck_counter_undo">Undo</string>
+    <string name="pref_cat_theme">Theme</string>
+    <string name="pref_theme_title">Theme</string>
+    <string name="pref_theme_summary">Set a light or dark theme</string>
 
 </resources>
