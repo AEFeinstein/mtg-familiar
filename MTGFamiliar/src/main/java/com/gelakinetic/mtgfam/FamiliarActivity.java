@@ -133,6 +133,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 	/* UI elements */
 	private IndeterminateRefreshLayout mRefreshLayout;
+	private int mThemeId;
 
 	/* Used to pass results between fragments */
 	private Bundle mFragResults;
@@ -255,8 +256,14 @@ public class FamiliarActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 		mPreferenceAdapter = new PreferenceAdapter(this);
+
+		if (savedInstanceState != null) {
+			mThemeId = mPreferenceAdapter.getTheme();
+			this.setTheme(mThemeId);
+		}
+
+		setContentView(R.layout.activity_main);
 
 		DatabaseManager.initializeInstance(new DatabaseHelper(getApplicationContext()));
 
@@ -305,7 +312,7 @@ public class FamiliarActivity extends FragmentActivity {
 					case R.string.main_extras:
 					case R.string.main_pages: {
 						/* It's a header */
-						return; /* don't close the drawer or change a selection */
+						break; /* don't close the drawer or change a selection */
 					}
 					case R.string.main_mana_pool:
 					case R.string.main_dice:
@@ -321,10 +328,20 @@ public class FamiliarActivity extends FragmentActivity {
 						break;
 					}
 					case R.string.main_settings_title: {
-						FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-						ft.addToBackStack(null);
-						ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
-						ft.commit();
+						if (mThemeId == R.style.Theme_dark) {
+							mThemeId = R.style.Theme_light;
+						} else {
+							mThemeId = R.style.Theme_dark;
+						}
+						mDrawerLayout.closeDrawer(mDrawerList);
+						mPreferenceAdapter.setTheme(mThemeId);
+						FamiliarActivity.this.recreate();
+
+
+//						FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//						ft.addToBackStack(null);
+//						ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
+//						ft.commit();
 						break;
 					}
 					case R.string.main_force_update_title: {

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:background="?android:attr/activatedBackgroundIndicator"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <LinearLayout
         android:orientation="horizontal"
@@ -20,8 +21,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:duplicateParentState="true"
-            android:src="@drawable/ic_drawer_settings"
-            />
+            android:src="@drawable/ic_drawer_settings"/>
 
         <TextView
             android:text="@string/main_settings_title"
@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:layout_marginLeft="12dp"
-            android:textColor="@drawable/drawer_text"
+            android:textColor="?attr/selector_drawer_text"
             style="@style/text.medium"
             android:duplicateParentState="true"/>
     </LinearLayout>
@@ -40,5 +40,5 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/drawer_divider_item"/>
+        android:background="?attr/color_drawer_divider_item"/>
 </LinearLayout>

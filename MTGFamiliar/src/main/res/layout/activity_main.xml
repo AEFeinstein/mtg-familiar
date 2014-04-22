@@ -5,27 +5,15 @@
     android:layout_height="match_parent">
     <!-- The main content view -->
 
-
-    <RelativeLayout
+    <com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/loading_bar_container"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:orientation="vertical"/>
-
-        <com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </RelativeLayout>
+        android:layout_height="match_parent"/>
 
     <!-- The navigation drawer -->
     <ListView
         android:id="@+id/left_drawer"
-        android:background="@color/drawer_background"
+        android:background="?attr/color_drawer_background"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:layout_width="240dp"

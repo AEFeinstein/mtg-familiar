@@ -25,6 +25,7 @@ public class PreferenceAdapter {
 	private final Context context;
 	private final SharedPreferences prefs;
 	private final Editor edit;
+	private int theme;
 
 	/**
 	 * Constructor
@@ -409,4 +410,13 @@ public class PreferenceAdapter {
         this.edit.putStringSet(context.getString(R.string.key_widgetButtons), widgetButtons);
         this.edit.commit();
     }
+
+	public int getTheme() {
+		return this.prefs.getInt(context.getString(R.string.key_theme), R.style.Theme_light);
+	}
+
+	public void setTheme(int theme) {
+		this.edit.putInt(context.getString(R.string.key_theme), theme);
+		this.edit.commit();
+	}
 }

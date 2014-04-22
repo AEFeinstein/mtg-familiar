@@ -107,8 +107,7 @@ public abstract class FamiliarFragment extends Fragment {
 		}
 		try {
 			getFamiliarActivity().mSpiceManager.cancelAllRequests();
-		}
-		catch (RejectedExecutionException e) {
+		} catch (RejectedExecutionException e) {
 			/* eat it */
 		}
 	}
@@ -207,7 +206,11 @@ public abstract class FamiliarFragment extends Fragment {
 	 * This removes any currently open dialog
 	 */
 	void removeDialog(FragmentManager fm) {
-		getFamiliarActivity().removeDialogFragment(fm);
+		try {
+			getFamiliarActivity().removeDialogFragment(fm);
+		} catch (NullPointerException e) {
+			/* no dialog to close */
+		}
 	}
 
 	/**
@@ -262,7 +265,7 @@ public abstract class FamiliarFragment extends Fragment {
 	}
 
 	public FamiliarActivity getFamiliarActivity() {
-		if(getActivity() instanceof FamiliarActivity) {
+		if (getActivity() instanceof FamiliarActivity) {
 			return (FamiliarActivity) getActivity();
 		}
 		return null;

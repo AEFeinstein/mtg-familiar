@@ -27,11 +27,19 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="mythic">#FFA500</color>
     <color name="timeshifted">#90699E</color>
 
-    <color name="drawer_background">#EEEEEE</color>
-    <color name="drawer_text_unselected">#58585B</color>
-    <color name="drawer_text_selected">#FFFFFF</color>
-    <color name="drawer_divider_header">#BEBEBE</color>
     <color name="drawer_divider_item">#D7D7D7</color>
+
+    <color name="drawer_background_light">#EEEEEE</color>
+    <color name="drawer_text_unselected_light">#58585B</color>
+    <color name="drawer_text_selected_light">#FFFFFF</color>
+    <color name="drawer_divider_header_light">#BEBEBE</color>
+    <color name="drawer_divider_item_light">#D7D7D7</color>
+
+    <color name="drawer_background_dark">#505050</color>
+    <color name="drawer_text_unselected_dark">#00FF00</color>
+    <color name="drawer_text_selected_dark">#FF00FF</color>
+    <color name="drawer_divider_header_dark">#0000FF</color>
+    <color name="drawer_divider_item_dark">#FFFFFF</color>
 
     <color name="transparent">#00000000</color>
 
