@@ -70,7 +70,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/drawer_divider_item" />
+                android:background="?attr/color_drawer_divider_item" />
 
             <TextView
                 android:id="@+id/priceTextLeft"
@@ -84,14 +84,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/drawer_divider_item" />
+                android:background="?attr/color_drawer_divider_item" />
 
             <ListView
                 android:id="@+id/tradeListLeft"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="clip_horizontal"
-                android:divider="@color/drawer_divider_item"
+                android:divider="?attr/color_drawer_divider_item"
                 android:dividerHeight="1dp"
                 tools:listitem="@layout/trader_row" />
         </LinearLayout>
@@ -102,7 +102,7 @@
             android:layout_height="fill_parent"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:background="@color/drawer_divider_item" />
+            android:background="?attr/color_drawer_divider_item" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -121,7 +121,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/drawer_divider_item" />
+                android:background="?attr/color_drawer_divider_item" />
 
             <TextView
                 android:id="@+id/priceTextRight"
@@ -135,14 +135,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/drawer_divider_item" />
+                android:background="?attr/color_drawer_divider_item" />
 
             <ListView
                 android:id="@+id/tradeListRight"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="clip_horizontal"
-                android:divider="@color/drawer_divider_item"
+                android:divider="?attr/color_drawer_divider_item"
                 android:dividerHeight="1dp"
                 tools:listitem="@layout/trader_row" />
         </LinearLayout>

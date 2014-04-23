@@ -21,7 +21,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 	
 	<item
         android:id="@+id/rules_menu_exit"
-        android:icon="@drawable/ic_action_cancel"
+        android:icon="?attr/ic_action_cancel"
         android:showAsAction="always"
         android:title="@string/rules_exit"/>
 

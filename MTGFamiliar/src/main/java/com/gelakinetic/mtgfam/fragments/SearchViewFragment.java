@@ -676,20 +676,20 @@ public class SearchViewFragment extends FamiliarFragment {
 			return;
 		}
 
-		mSetButton.setTextColor(getResources().getColor(R.color.black));
+		mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
 		for (boolean aSetChecked : mSetChecked) {
 			if (aSetChecked) {
-				mSetButton.setTextColor(getResources().getColor(R.color.holo_blue_dark));
+				mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_blue)));
 			}
 		}
-		mFormatButton.setTextColor(getResources().getColor(R.color.black));
+		mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
 		if (mSelectedFormat != -1) {
-			mFormatButton.setTextColor(getResources().getColor(R.color.holo_blue_dark));
+			mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_blue)));
 		}
-		mRarityButton.setTextColor(getResources().getColor(R.color.black));
+		mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
 		for (boolean aRarityChecked : mRarityChecked) {
 			if (aRarityChecked) {
-				mRarityButton.setTextColor(getResources().getColor(R.color.holo_blue_dark));
+				mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_blue)));
 			}
 		}
 	}

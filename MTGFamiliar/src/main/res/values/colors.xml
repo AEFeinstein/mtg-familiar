@@ -19,33 +19,48 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
-    <color name="black">#ff000000</color>
+    <!--Rarity Colors-->
+    <color name="common_dark">#FFFFFF</color>
+    <color name="uncommon_dark">#C0C0C0</color>
+    <color name="rare_dark">#FDD017</color>
+    <color name="mythic_dark">#FFA500</color>
+    <color name="timeshifted_dark">#90699E</color>
 
-    <color name="common">#ff000000</color>
-    <color name="rare">#FDD017</color>
-    <color name="uncommon">#ff909090</color>
-    <color name="mythic">#FFA500</color>
-    <color name="timeshifted">#90699E</color>
+    <color name="common_light">#ff000000</color>
+    <color name="uncommon_light">#ff909090</color>
+    <color name="rare_light">#FDD017</color>
+    <color name="mythic_light">#FFA500</color>
+    <color name="timeshifted_light">#90699E</color>
 
-    <color name="drawer_divider_item">#D7D7D7</color>
-
+    <!--Drawer Colors -->
     <color name="drawer_background_light">#EEEEEE</color>
-    <color name="drawer_text_unselected_light">#58585B</color>
+    <color name="drawer_text_unselected_light">#DF333333</color>
     <color name="drawer_text_selected_light">#FFFFFF</color>
     <color name="drawer_divider_header_light">#BEBEBE</color>
-    <color name="drawer_divider_item_light">#D7D7D7</color>
+    <color name="drawer_divider_item_light">#1A000000</color>
 
-    <color name="drawer_background_dark">#505050</color>
-    <color name="drawer_text_unselected_dark">#00FF00</color>
-    <color name="drawer_text_selected_dark">#FF00FF</color>
-    <color name="drawer_divider_header_dark">#0000FF</color>
-    <color name="drawer_divider_item_dark">#FFFFFF</color>
+    <color name="drawer_background_dark">#303030</color>
+    <color name="drawer_text_unselected_dark">#CCFFFFFF</color>
+    <color name="drawer_text_selected_dark">#000000</color>
+    <color name="drawer_divider_header_dark">#414141</color>
+    <color name="drawer_divider_item_dark">#26FFFFFF</color>
+
+    <!--General Colors-->
+    <!-- A light Holo shade of blue -->
+    <color name="holo_blue_light">#ff33b5e5</color>
+    <!-- A light Holo shade of green -->
+    <color name="holo_green_light">#ff99cc00</color>
+    <!-- A light Holo shade of red -->
+    <color name="holo_red_light">#ffff4444</color>
+    <!-- A dark Holo shade of blue -->
+    <color name="holo_blue_dark">#ff0099cc</color>
+    <!-- A dark Holo shade of green -->
+    <color name="holo_green_dark">#ff669900</color>
+    <!-- A dark Holo shade of red -->
+    <color name="holo_red_dark">#ffcc0000</color>
 
     <color name="transparent">#00000000</color>
-
-    <color name="holo_blue_light">#ff33b5e5</color>
-    <color name="holo_blue_dark">#ff0099cc</color>
-    <color name="holo_green_dark">#ff669900</color>
-    <color name="holo_red_dark">#ffcc0000</color>
+    <color name="text_color_light">#000000</color>
+    <color name="text_color_dark">#FFFFFF</color>
 
 </resources>

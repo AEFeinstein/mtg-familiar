@@ -92,8 +92,7 @@
                     android:layout_marginRight="3dip"
                     android:layout_marginTop="-3sp"
                     android:gravity="right"
-                    android:text="MOR"
-                    android:textColor="@color/mythic"/>
+                    android:text="MOR"/>
 
                 <LinearLayout
                     android:id="@+id/linearLayout4"
@@ -189,7 +188,7 @@
         android:id="@+id/transform_button_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/holo_blue_light"
+        android:background="?attr/holo_blue"
         />
 
     <Button

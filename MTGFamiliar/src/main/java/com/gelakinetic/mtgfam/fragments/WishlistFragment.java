@@ -658,30 +658,31 @@ public class WishlistFragment extends FamiliarFragment {
 				switch (isi.mRarity) {
 					case 'c':
 					case 'C':
-						color = R.color.common;
+						color = R.attr.color_common;
 						break;
 					case 'u':
 					case 'U':
-						color = R.color.uncommon;
+						color = R.attr.color_uncommon;
 						break;
 					case 'r':
 					case 'R':
-						color = R.color.rare;
+						color = R.attr.color_rare;
 						break;
 					case 'm':
 					case 'M':
-						color = R.color.mythic;
+						color = R.attr.color_mythic;
 						break;
 					case 't':
 					case 'T':
-						color = R.color.timeshifted;
+						color = R.attr.color_timeshifted;
 						break;
 					default:
-						color = R.color.black;
+						color = R.attr.color_text;
 						break;
 				}
 				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(isi.mSet);
-				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(getResources().getColor(color));
+				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(getResources()
+						.getColor(getResourceIdFromAttr(color)));
 
 				/* Show or hide the foil indicator */
 				if (isi.mIsFoil) {
@@ -697,11 +698,12 @@ public class WishlistFragment extends FamiliarFragment {
 					if (isi.mIsFoil) {
 						if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
 							priceText.setText(String.format("%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
-							priceText.setTextColor(getResources().getColor(R.color.black));
+							priceText.setTextColor(getResources().getColor(
+									getResourceIdFromAttr(R.attr.color_text)));
 						}
 						else {
 							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
-							priceText.setTextColor(getResources().getColor(R.color.holo_red_dark));
+							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
 						}
 					}
 					else {
@@ -731,11 +733,13 @@ public class WishlistFragment extends FamiliarFragment {
 									}
 									break;
 							}
-							priceText.setTextColor(getResources().getColor(R.color.black));
+							priceText.setTextColor(getResources().getColor(
+									getResourceIdFromAttr(R.attr.color_text)
+							));
 						}
 						if (!priceFound) {
 							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
-							priceText.setTextColor(getResources().getColor(R.color.holo_red_dark));
+							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
 						}
 					}
 				}

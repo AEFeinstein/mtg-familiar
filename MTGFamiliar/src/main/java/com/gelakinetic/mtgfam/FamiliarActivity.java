@@ -134,7 +134,6 @@ public class FamiliarActivity extends FragmentActivity {
 
 	/* UI elements */
 	private IndeterminateRefreshLayout mRefreshLayout;
-	private int mThemeId;
 
 	/* Used to pass results between fragments */
 	private Bundle mFragResults;
@@ -142,24 +141,24 @@ public class FamiliarActivity extends FragmentActivity {
 	/* What the drawer menu will be */
 	private final DrawerEntry[] mPageEntries = {
 			new DrawerEntry(R.string.main_pages, 0, true),
-			new DrawerEntry(R.string.main_card_search, R.drawable.ic_drawer_search, false),
-			new DrawerEntry(R.string.main_life_counter, R.drawable.ic_drawer_life, false),
-			new DrawerEntry(R.string.main_mana_pool, R.drawable.ic_drawer_mana, false),
-			new DrawerEntry(R.string.main_dice, R.drawable.ic_drawer_dice, false),
-			new DrawerEntry(R.string.main_trade, R.drawable.ic_drawer_trade, false),
-			new DrawerEntry(R.string.main_wishlist, R.drawable.ic_drawer_wishlist, false),
-			new DrawerEntry(R.string.main_timer, R.drawable.ic_drawer_timer, false),
-			new DrawerEntry(R.string.main_rules, R.drawable.ic_drawer_rules, false),
-			new DrawerEntry(R.string.main_judges_corner, R.drawable.ic_drawer_judge, false),
-			new DrawerEntry(R.string.main_mojhosto, R.drawable.ic_drawer_mojhosto, false),
+			new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false),
+			new DrawerEntry(R.string.main_life_counter, R.attr.ic_drawer_life, false),
+			new DrawerEntry(R.string.main_mana_pool, R.attr.ic_drawer_mana, false),
+			new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false),
+			new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false),
+			new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false),
+			new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false),
+			new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
+			new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
+			new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
 			new DrawerEntry(R.string.main_extras, 0, true),
-			new DrawerEntry(R.string.main_settings_title, R.drawable.ic_drawer_settings, false),
-			new DrawerEntry(R.string.main_force_update_title, R.drawable.ic_drawer_download, false),
-			new DrawerEntry(R.string.main_donate_title, R.drawable.ic_drawer_good, false),
-			new DrawerEntry(R.string.main_about, R.drawable.ic_drawer_about, false),
-			new DrawerEntry(R.string.main_whats_new_title, R.drawable.ic_drawer_help, false),
-			new DrawerEntry(R.string.main_export_data_title, R.drawable.ic_action_save, false),
-			new DrawerEntry(R.string.main_import_data_title, R.drawable.ic_action_collection, false)
+			new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
+			new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
+			new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
+			new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
+			new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
+			new DrawerEntry(R.string.main_export_data_title, R.attr.ic_action_save, false),
+			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_action_collection, false)
 	};
 
 	/* Timer setup */
@@ -202,6 +201,7 @@ public class FamiliarActivity extends FragmentActivity {
 				sendBroadcast(intent);
 			}
 			else if (s.equals(getString(R.string.key_theme))) {
+				invalidateOptionsMenu(); /* to redraw the magnifying glass */
 				FamiliarActivity.this.recreate();
 			}
 		}
@@ -263,20 +263,14 @@ public class FamiliarActivity extends FragmentActivity {
 		mPreferenceAdapter = new PreferenceAdapter(this);
 
 		/* Figure out what theme the app is currently in, and change it if necessary */
-		assert getTheme() != null;
-		TypedArray ta = getTheme().obtainStyledAttributes(new int[]{R.attr.color_drawer_background});
-		assert ta != null;
-		int resourceId = ta.getResourceId(0, 0);
-		ta.recycle();
+		int resourceId = getResourceIdFromAttr(R.attr.color_drawer_background);
 		String themeString = "";
 		int otherTheme = 0;
 		if (resourceId == R.color.drawer_background_dark) {
-			mThemeId = R.style.Theme_dark;
 			otherTheme = R.style.Theme_light;
 			themeString = getString(R.string.pref_theme_dark);
 		}
 		else if (resourceId == R.color.drawer_background_light) {
-			mThemeId = R.style.Theme_light;
 			otherTheme = R.style.Theme_dark;
 			themeString = getString(R.string.pref_theme_light);
 		}
@@ -284,7 +278,6 @@ public class FamiliarActivity extends FragmentActivity {
 		/* Switch the theme if the preference does not match the current theme */
 		if (!themeString.equals(mPreferenceAdapter.getTheme())) {
 			this.setTheme(otherTheme);
-			mThemeId = otherTheme;
 		}
 
 		setContentView(R.layout.activity_main);
@@ -292,6 +285,11 @@ public class FamiliarActivity extends FragmentActivity {
 		DatabaseManager.initializeInstance(new DatabaseHelper(getApplicationContext()));
 
 		mRefreshLayout = ((IndeterminateRefreshLayout) findViewById(R.id.fragment_container));
+		mRefreshLayout.setColors(
+				getResources().getColor(getResourceIdFromAttr(R.attr.color_common)),
+				getResources().getColor(getResourceIdFromAttr(R.attr.color_uncommon)),
+				getResources().getColor(getResourceIdFromAttr(R.attr.color_rare)),
+				getResources().getColor(getResourceIdFromAttr(R.attr.color_mythic)));
 
 		/* Set up a listener to update the home screen widget whenever the user changes the preference */
 		mPreferenceAdapter.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
@@ -871,7 +869,7 @@ public class FamiliarActivity extends FragmentActivity {
 				assert convertView != null;
 				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
 				((ImageView) convertView.findViewById(R.id.drawer_entry_icon))
-						.setImageResource(values[position].mIconResource);
+						.setImageResource(getResourceIdFromAttr(values[position].mIconResource));
 			}
 
 			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
@@ -1291,5 +1289,20 @@ public class FamiliarActivity extends FragmentActivity {
 	 */
 	public void clearLoading() {
 		mRefreshLayout.setRefreshing(false);
+	}
+
+	/**
+	 * This helper function translates an attribute into a resource ID
+	 *
+	 * @param attr The attribute ID
+	 * @return the resource ID
+	 */
+	public int getResourceIdFromAttr(int attr) {
+		assert getTheme() != null;
+		TypedArray ta = getTheme().obtainStyledAttributes(new int[]{attr});
+		assert ta != null;
+		int resId = ta.getResourceId(0, 0);
+		ta.recycle();
+		return resId;
 	}
 }

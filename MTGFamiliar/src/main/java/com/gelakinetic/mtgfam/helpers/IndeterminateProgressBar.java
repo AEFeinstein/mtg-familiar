@@ -36,10 +36,10 @@ import android.view.animation.Interpolator;
 public final class IndeterminateProgressBar {
 
 	// Default progress animation colors are grays.
-	private final static int COLOR1 = 0xB3000000;
-	private final static int COLOR2 = 0x80000000;
-	private final static int COLOR3 = 0x4d000000;
-	private final static int COLOR4 = 0x1a000000;
+	private final static int COLOR1 = 0xFFFF0000;
+	private final static int COLOR2 = 0xFF00FF00;
+	private final static int COLOR3 = 0xFF0000FF;
+	private final static int COLOR4 = 0xFF808080;
 
 	// The duration of the animation cycle.
 	private static final int ANIMATION_DURATION_MS = 2000;

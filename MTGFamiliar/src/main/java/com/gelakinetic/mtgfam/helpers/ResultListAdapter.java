@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.text.Html.ImageGetter;
 import android.view.LayoutInflater;
@@ -43,9 +44,10 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 
 	private final String[] mFrom;
 	private final int[] mTo;
-	private final Resources mResources;
 	private final ImageGetter mImgGetter;
 	private final AlphabetIndexer mAlphaIndexer;
+	private final Resources.Theme mTheme;
+	private final Resources mResources;
 
 	/**
 	 * Standard Constructor.
@@ -63,7 +65,8 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 		this.mFrom = from;
 		this.mTo = to;
 		this.mResources = context.getResources();
-		this.mImgGetter = ImageGetterHelper.GlyphGetter(this.mResources);
+		this.mTheme = context.getTheme();
+		this.mImgGetter = ImageGetterHelper.GlyphGetter(mResources);
 		this.mAlphaIndexer = new AlphabetIndexer(cursor, cursor.getColumnIndex(CardDbAdapter.KEY_NAME),
 				"ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 	}
@@ -132,19 +135,19 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 				char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
 				switch (rarity) {
 					case 'C':
-						textField.setTextColor(mResources.getColor(R.color.common));
+						textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_common)));
 						break;
 					case 'U':
-						textField.setTextColor(mResources.getColor(R.color.uncommon));
+						textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
 						break;
 					case 'R':
-						textField.setTextColor(mResources.getColor(R.color.rare));
+						textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_rare)));
 						break;
 					case 'M':
-						textField.setTextColor(mResources.getColor(R.color.mythic));
+						textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_mythic)));
 						break;
 					case 'T':
-						textField.setTextColor(mResources.getColor(R.color.timeshifted));
+						textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
 						break;
 				}
 			}
@@ -286,5 +289,19 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 	 */
 	public Object[] getSections() {
 		return mAlphaIndexer.getSections(); /* use the indexer */
+	}
+
+	/**
+	 * This helper function translates an attribute into a resource ID
+	 *
+	 * @param attr The attribute ID
+	 * @return the resource ID
+	 */
+	public int getResourceIdFromAttr(int attr) {
+		TypedArray ta = mTheme.obtainStyledAttributes(new int[]{attr});
+		assert ta != null;
+		int resId = ta.getResourceId(0, 0);
+		ta.recycle();
+		return resId;
 	}
 }

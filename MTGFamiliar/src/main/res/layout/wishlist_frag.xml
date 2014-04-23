@@ -55,7 +55,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/holo_blue_light"/>
+        android:background="?attr/holo_blue"/>
 
     <Button
         android:id="@+id/add_card"
@@ -68,7 +68,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/holo_blue_light"/>
+        android:background="?attr/holo_blue"/>
 
     <TextView
         android:id="@+id/priceText"
@@ -82,7 +82,7 @@
         android:id="@+id/divider_total_price"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/drawer_divider_item"/>
+        android:background="?attr/color_drawer_divider_item"/>
 
     <ListView
         android:id="@+id/wishlist"

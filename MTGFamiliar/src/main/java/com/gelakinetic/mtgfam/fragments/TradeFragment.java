@@ -859,8 +859,9 @@ public class TradeFragment extends FamiliarFragment {
 
 			/* Set the color whether all values are loaded, and write the text */
 			int color = hasBadValues ?
-					this.getActivity().getResources().getColor(R.color.holo_red_dark) :
-					this.getActivity().getResources().getColor(R.color.black);
+					this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
+					this.getActivity().getResources().getColor(
+							getResourceIdFromAttr(R.attr.color_text));
 			mTotalPriceLeft.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
 			mTotalPriceLeft.setTextColor(color);
 		}
@@ -879,8 +880,10 @@ public class TradeFragment extends FamiliarFragment {
 
 			/* Set the color whether all values are loaded, and write the text */
 			int color = hasBadValues ?
-					this.getActivity().getResources().getColor(R.color.holo_red_dark) :
-					this.getActivity().getResources().getColor(R.color.black);
+					this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
+					this.getActivity().getResources().getColor(
+							getResourceIdFromAttr(R.attr.color_text)
+					);
 			mTotalPriceRight.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
 			mTotalPriceRight.setTextColor(color);
 		}
@@ -1081,14 +1084,16 @@ public class TradeFragment extends FamiliarFragment {
 				priceField.setText(data.hasPrice() ? data.getPriceString() : data.message);
 				if (data.hasPrice()) {
 					if (data.customPrice) {
-						priceField.setTextColor(getActivity().getResources().getColor(R.color.holo_green_dark));
+						priceField.setTextColor(getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_green)));
 					}
 					else {
-						priceField.setTextColor(getActivity().getResources().getColor(R.color.black));
+						priceField.setTextColor(getActivity().getResources().getColor(
+								getResourceIdFromAttr(R.attr.color_text)
+						));
 					}
 				}
 				else {
-					priceField.setTextColor(getActivity().getResources().getColor(R.color.holo_red_dark));
+					priceField.setTextColor(getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
 				}
 			}
 			return convertView;

@@ -5,29 +5,29 @@
         android:id="@+id/save_gathering"
         android:showAsAction="ifRoom"
         android:title="@string/gathering_save"
-        android:icon="@drawable/ic_action_save"/>
+        android:icon="?attr/ic_action_save"/>
 
     <item
         android:id="@+id/load_gathering"
-        android:icon="@drawable/ic_action_collection"
+        android:icon="?attr/ic_action_collection"
         android:showAsAction="ifRoom"
         android:title="@string/gathering_load"/>
 
     <item
         android:id="@+id/delete_gathering"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_discard"
+        android:icon="?attr/ic_action_discard"
         android:title="@string/gathering_delete"/>
 
     <item
         android:id="@+id/add_player"
-        android:icon="@drawable/ic_action_add"
+        android:icon="?attr/ic_action_add"
         android:showAsAction="ifRoom"
         android:title="@string/gathering_add_player"/>
 
     <item
         android:id="@+id/remove_player"
-        android:icon="@drawable/ic_action_remove"
+        android:icon="?attr/ic_action_remove"
         android:showAsAction="ifRoom"
         android:title="@string/gathering_remove_player"/>
 

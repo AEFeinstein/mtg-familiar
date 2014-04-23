@@ -8,7 +8,7 @@
     <LinearLayout
         style="@style/forty_eight"
         android:layout_width="match_parent"
-        android:background="@drawable/light_grey_border"
+        android:background="?attr/grey_border"
         android:orientation="horizontal">
 
         <TextView
@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="1dp"
             android:layout_marginTop="1dp"
-            android:background="@color/drawer_divider_item" />
+            android:background="?attr/color_drawer_divider_item" />
 
         <TextView
             android:id="@+id/absolute"

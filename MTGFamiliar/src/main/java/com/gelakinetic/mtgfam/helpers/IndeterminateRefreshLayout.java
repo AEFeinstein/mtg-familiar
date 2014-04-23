@@ -17,7 +17,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -77,18 +76,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 		assert typedArray != null;
 		setEnabled(typedArray.getBoolean(0, true));
 		typedArray.recycle();
-
-		/*
-		 * Set the four colors used in the progress animation. The first color will
-		 * also be the color of the bar that grows in response to a user swipe
-		 * gesture.
-		 */
-		final Resources res = getResources();
-		mProgressBar.setColorScheme(
-				res.getColor(com.gelakinetic.mtgfam.R.color.common),
-				res.getColor(com.gelakinetic.mtgfam.R.color.uncommon),
-				res.getColor(com.gelakinetic.mtgfam.R.color.rare),
-				res.getColor(com.gelakinetic.mtgfam.R.color.mythic));
 	}
 
 	/**
@@ -161,5 +148,19 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 			assert child != null;
 			child.measure(width, height);
 		}
+	}
+
+	/**
+	 * Set the four colors used in the progress animation. The first color will
+	 * also be the color of the bar that grows in response to a user swipe
+	 * gesture.
+	 *
+	 * @param i A color
+	 * @param i1 A color
+	 * @param i2 A color
+	 * @param i3 A color
+	 */
+	public void setColors(int i, int i1, int i2, int i3) {
+		mProgressBar.setColorScheme(i, i1, i2, i3);
 	}
 }

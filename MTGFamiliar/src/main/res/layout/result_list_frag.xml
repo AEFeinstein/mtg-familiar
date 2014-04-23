@@ -13,7 +13,7 @@
         android:layout_height="fill_parent"
         android:fastScrollEnabled="true"
         tools:listitem="@layout/result_list_card_row"
-        android:divider="@color/drawer_divider_item"
+        android:divider="?attr/color_drawer_divider_item"
         android:dividerHeight="1dp" />
 
 </LinearLayout>

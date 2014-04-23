@@ -31,7 +31,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:orientation="vertical">
 
         <HorizontalScrollView
-            android:id="@+id/playerScrollView"
+            android:id="@+id/playerScrollView_horz"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -59,7 +59,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/divider"
         android:layout_width="1dip"
         android:layout_height="fill_parent"
-        android:background="@color/holo_blue_light"/>
+        android:background="?attr/holo_blue"/>
 
     <!-- Command bar: reset, poison, etc. -->
 

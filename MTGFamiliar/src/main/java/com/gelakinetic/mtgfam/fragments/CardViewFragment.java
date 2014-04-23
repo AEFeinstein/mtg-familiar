@@ -290,23 +290,23 @@ public class CardViewFragment extends FamiliarFragment {
 		switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
 			case 'C':
 			case 'c':
-				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(R.color.common));
+				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_common)));
 				break;
 			case 'U':
 			case 'u':
-				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(R.color.uncommon));
+				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
 				break;
 			case 'R':
 			case 'r':
-				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(R.color.rare));
+				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_rare)));
 				break;
 			case 'M':
 			case 'm':
-				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(R.color.mythic));
+				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_mythic)));
 				break;
 			case 'T':
 			case 't':
-				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(R.color.timeshifted));
+				mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
 				break;
 		}
 

@@ -21,17 +21,17 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
     <item
         android:id="@+id/wishlist_menu_clear"
-        android:icon="@drawable/ic_action_cancel"
+        android:icon="?attr/ic_action_cancel"
         android:showAsAction="always"
         android:title="@string/wishlist_clear_fields"/>
     <item
         android:id="@+id/wishlist_menu_settings"
-        android:icon="@drawable/ic_action_import_export"
+        android:icon="?attr/ic_action_import_export"
         android:showAsAction="ifRoom"
         android:title="@string/wishlist_set_pricing" />
     <item
         android:id="@+id/wishlist_menu_share"
-        android:icon="@drawable/ic_action_share"
+        android:icon="?attr/ic_action_share"
         android:showAsAction="ifRoom"
         android:title="@string/wishlist_share" />
 

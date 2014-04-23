@@ -73,8 +73,7 @@ public abstract class FamiliarFragment extends Fragment {
 		super.onResume();
 		if ((getActivity()) != null) {
 			getFamiliarActivity().getFragmentResults();
-			getFamiliarActivity()
-					.mDrawerLayout.closeDrawer(getFamiliarActivity().mDrawerList);
+			getFamiliarActivity().mDrawerLayout.closeDrawer(getFamiliarActivity().mDrawerList);
 		}
 	}
 
@@ -124,10 +123,11 @@ public abstract class FamiliarFragment extends Fragment {
 		super.onCreateOptionsMenu(menu, inflater);
 		menu.clear();
 
+		int resourceId = getResourceIdFromAttr(R.attr.ic_action_search);
 		if (getActivity() != null) {
 			if (canInterceptSearchKey()) {
 				menu.add(R.string.search_search)
-						.setIcon(R.drawable.ic_action_search)
+						.setIcon(resourceId)
 						.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 							@Override
 							public boolean onMenuItemClick(MenuItem item) {
@@ -148,7 +148,7 @@ public abstract class FamiliarFragment extends Fragment {
 					Field searchField = SearchView.class.getDeclaredField("mSearchButton");
 					searchField.setAccessible(true);
 					ImageView searchBtn = (ImageView) searchField.get(sv);
-					searchBtn.setImageResource(R.drawable.ic_action_search);
+					searchBtn.setImageResource(resourceId);
 				} catch (NoSuchFieldException e) {
 					/* eat it */
 				} catch (IllegalAccessException e) {
@@ -156,7 +156,7 @@ public abstract class FamiliarFragment extends Fragment {
 				}
 
 				menu.add(R.string.name_search_hint)
-						.setIcon(R.drawable.ic_action_search)
+						.setIcon(resourceId)
 						.setActionView(sv)
 						.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 			}
@@ -264,6 +264,11 @@ public abstract class FamiliarFragment extends Fragment {
 
 	}
 
+	/**
+	 * Convenience method for getting the FamiliarActivity parent for this fragment
+	 *
+	 * @return The FamiliarActivity
+	 */
 	public FamiliarActivity getFamiliarActivity() {
 		if (getActivity() instanceof FamiliarActivity) {
 			return (FamiliarActivity) getActivity();
@@ -271,4 +276,13 @@ public abstract class FamiliarFragment extends Fragment {
 		return null;
 	}
 
+	/**
+	 * Convenience method for getting a resource ID given an attr
+	 *
+	 * @param attr The attr to get an ID for
+	 * @return The resource ID
+	 */
+	public int getResourceIdFromAttr(int attr) {
+		return ((FamiliarActivity) getActivity()).getResourceIdFromAttr(attr);
+	}
 }

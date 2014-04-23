@@ -154,7 +154,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		mCommanderPlayerView = (LinearLayout) myFragmentView.findViewById(R.id.commander_player);
 
-		mScrollView = myFragmentView.findViewById(R.id.playerScrollView);
+		if(null != myFragmentView.findViewById(R.id.playerScrollView_horz)) {
+			mScrollView = myFragmentView.findViewById(R.id.playerScrollView_horz);
+		}
+		else {
+			mScrollView = myFragmentView.findViewById(R.id.playerScrollView_vert);
+		}
 		ViewTreeObserver viewTreeObserver = mScrollView.getViewTreeObserver();
 		assert viewTreeObserver != null;
 		viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
