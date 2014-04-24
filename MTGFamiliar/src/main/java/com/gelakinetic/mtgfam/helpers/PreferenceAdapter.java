@@ -172,8 +172,8 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_ttsShowDialog), true);
 	}
 
-	public synchronized void setTtsShowDialog(@SuppressWarnings("SameParameterValue") boolean ttsShowDialog) {
-		this.edit.putBoolean(context.getString(R.string.key_ttsShowDialog), ttsShowDialog);
+	public synchronized void setTtsShowDialog() {
+		this.edit.putBoolean(context.getString(R.string.key_ttsShowDialog), false);
 		this.edit.commit();
 	}
 
@@ -272,8 +272,8 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_mojhostoFirstTime), true);
 	}
 
-	public synchronized void setMojhostoFirstTime(@SuppressWarnings("SameParameterValue") boolean mojhostoFirstTime) {
-		this.edit.putBoolean(context.getString(R.string.key_mojhostoFirstTime), mojhostoFirstTime);
+	public synchronized void setMojhostoFirstTime() {
+		this.edit.putBoolean(context.getString(R.string.key_mojhostoFirstTime), false);
 		this.edit.commit();
 	}
 
@@ -395,8 +395,8 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_bounceDrawer), true);
 	}
 
-	public synchronized void setBounceDrawer(@SuppressWarnings("SameParameterValue") boolean value) {
-		this.edit.putBoolean(context.getString(R.string.key_bounceDrawer), value);
+	public synchronized void setBounceDrawer() {
+		this.edit.putBoolean(context.getString(R.string.key_bounceDrawer), false);
 		this.edit.commit();
 	}
 
@@ -415,8 +415,4 @@ public class PreferenceAdapter {
 				context.getResources().getString(R.string.pref_theme_light));
 	}
 
-	public void setTheme(String theme) {
-		this.edit.putString(context.getString(R.string.key_theme), theme);
-		this.edit.commit();
-	}
 }

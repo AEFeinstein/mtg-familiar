@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!-- General-purpose strings -->
     <string name="default_price">$0.00</string>
 
     <!-- Placeholder text -->
-    <string name="ph_type">Type</string>
-    <string name="ph_cost">Cost</string>
-    <string name="ph_ability">Ability</string>
-    <string name="ph_power">P</string>
-    <string name="ph_toughness">T</string>
 
     <!-- Life counter activity -->
     <string name="life_counter_twenty">20</string>
@@ -25,7 +20,6 @@
 
     <!-- Card trading activity -->
     <string name="trader_default_number_of">1x</string>
-    <string name="trader_edit_dialog_x">x</string>
 
     <!-- Default language -->
     <string name="main_card_language">en</string>

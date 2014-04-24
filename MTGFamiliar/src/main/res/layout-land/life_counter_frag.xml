@@ -23,30 +23,21 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
               android:layout_height="fill_parent"
               android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/info_layout"
+    <HorizontalScrollView
+        android:id="@+id/playerScrollView_horz"
         android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-        <HorizontalScrollView
-            android:id="@+id/playerScrollView_horz"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+        <GridLayout
+            android:id="@+id/playerList"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <GridLayout
-                android:id="@+id/playerList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+        </GridLayout>
 
-            </GridLayout>
-
-        </HorizontalScrollView>
-
-    </LinearLayout>
+    </HorizontalScrollView>
 
     <LinearLayout
         android:id="@+id/commander_player"

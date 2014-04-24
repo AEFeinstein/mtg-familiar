@@ -103,15 +103,15 @@ class PreferenceManagerCompat {
 	 *
 	 * @param manager  The PreferenceManager to reflect
 	 * @param activity The context of the resource.
-	 * @param resId    The resource ID of the XML to inflate.
 	 * @param screen   Optional existing hierarchy to merge the new hierarchies into.
 	 * @return The root hierarchy (if one was not provided, the new hierarchy's root).
 	 */
-	static PreferenceScreen inflateFromResource(PreferenceManager manager, Activity activity, int resId, PreferenceScreen screen) {
+	static PreferenceScreen inflateFromResource(PreferenceManager manager, Activity activity, PreferenceScreen screen) {
 		try {
-			Method m = PreferenceManager.class.getDeclaredMethod("inflateFromResource", Context.class, int.class, PreferenceScreen.class);
+			Method m = PreferenceManager.class.getDeclaredMethod("inflateFromResource", Context.class, int.class,
+					PreferenceScreen.class);
 			m.setAccessible(true);
-			return (PreferenceScreen) m.invoke(manager, activity, resId, screen);
+			return (PreferenceScreen) m.invoke(manager, activity, com.gelakinetic.mtgfam.R.xml.preferences, screen);
 		} catch (Exception e) {
 			Log.w(TAG, "Couldn't call PreferenceManager.inflateFromResource by reflection", e);
 		}

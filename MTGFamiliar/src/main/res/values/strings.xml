@@ -18,14 +18,12 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_yes">Yes</string>
-    <string name="dialog_no">No</string>
     <string name="dialog_done">Done</string>
     <string name="dialog_both">Both</string>
     <string name="dialog_life">Life</string>
     <string name="dialog_thanks">Thanks!</string>
     <string name="dialog_thanks_anyway">Thanks Anyway!</string>
     <string name="dialog_enjoy">Enjoy!</string>
-    <string name="dialog_save">Save</string>
     <string name="update_notification">Checking for database updates</string>
     <string name="update_updating_set">Adding %s</string>
     <string name="update_updating_rules">Updating comprehensive rules</string>
@@ -33,8 +31,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="update_added_rules">new comprehensive rules</string>
     <string name="update_added_mtr">new Magic Tournament Rules</string>
     <string name="update_added_ipg">new Infraction Procedure Guide</string>
-    <string name="update_parse_cards">Parsing %s</string>
-    <string name="update_parse_rules">Parsing comprehensive rules</string>
     <string name="error">Error</string>
     <string name="error_database">A database error occurred. If it persists, try clearing the app data from the Android settings menu.</string>
     <string name="error_no_email_client">It does not appear that you have an active email client installed. Please configure an email application.</string>
@@ -222,8 +218,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="life_counter_default_name">Player</string>
     <string name="life_counter_spoken_life" formatted="false">%s has %d life. </string>
     <string name="life_counter_spoken_poison" formatted="false">%s has %d poison counters. </string>
-    <string name="life_counter_spoken_life_single" formatted="false">%s has %d life. </string>
-    <string name="life_counter_spoken_poison_single" formatted="false">%s has %d poison counter. </string>
+    <string name="life_counter_spoken_life_singular" formatted="false">%s has %d life. </string>
+    <string name="life_counter_spoken_poison_singular" formatted="false">%s has %d poison counter. </string>
     <string name="life_counter_over_9000">over 9000</string>
     <string name="life_counter_no_gatherings_exist">No Gatherings exist.</string>
     <string name="life_counter_edh_dialog_title">Damage from %s\'s Commander</string>
@@ -245,14 +241,12 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="gathering_toast_no_name">Please include a name for the Gathering.</string>
     <string name="gathering_empty_field">Fields cannot be empty. Please check all fields.</string>
     <string name="gathering_display_mode_title">Display mode:</string>
-    <string name="gathering_toast_no_players">No players to remove</string>
 
     <!-- Dice activity -->
     <string name="dice_heads">heads</string>
     <string name="dice_tails">tails</string>
 
     <!-- Mana pool activity -->
-    <string name="mana_pool_clear_all">Clear All</string>
     <string name="mana_pool_error_toast">Mana pool failed to load!</string>
 
     <!-- Card trading activity -->
@@ -262,7 +256,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="trader_delete">Delete Trade</string>
     <string name="trader_clear_fields">Clear Fields</string>
     <string name="trader_set_pricing">Set Pricing Option</string>
-    <string name="trader_toast_select_card">Please enter a card first.</string>
     <string name="trader_edit_dialog_change_set">Change Set</string>
     <string name="trader_edit_dialog_remove">Remove</string>
     <string name="trader_edit_dialog_reset_price">Reset Price</string>
@@ -275,7 +268,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="trader_toast_no_trades">You have no saved trades.</string>
     <string name="trader_toast_save_error">The trade could not be saved; please try again.</string>
     <string name="trader_toast_invalid_chars">Trade names may not contain the path separator character (\'/\').</string>
-    <string name="trader_no_price">N/A</string>
     <string name="trader_Low">Low</string>
     <string name="trader_Average">Average</string>
     <string name="trader_High">High</string>
@@ -286,12 +278,9 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="wishlist_add_card">Add</string>
     <string name="wishlist_clear_fields">Clear Fields</string>
     <string name="wishlist_set_pricing">Set Pricing Option</string>
-    <string name="wishlist_toast_select_card">Please enter a card first.</string>
     <string name="wishlist_share">Share Wishlist</string>
-    <string name="wishlist_share_include_set">Include Set Names?</string>
     <string name="wishlist_empty_dialog_title">Empty Wishlist</string>
     <string name="wishlist_empty_dialog_text">Are you sure you want to empty your wishlist?</string>
-    <string name="wishlist_edit_dialog_title_foil">Foil</string>
     <string name="wishlist_edit_dialog_title_end">in the Wishlist</string>
     <string name="wishlist_loading">Loading</string>
     <string name="wishlist_share_title">MTG Familiar Wishlist</string>
@@ -325,7 +314,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="rules_glossary">Glossary</string>
     <string name="rules_no_results_toast">No results found.</string>
     <string name="rules_short_key_toast">Your search term must be at least 3 characters long.</string>
-    <string name="rules_search_title">Keyword Search</string>
     <string name="rules_search_all">Search all rules</string>
     <string name="rules_search_cat">Search within %s</string>
     <string name="rules_this_cat">this category:</string>
@@ -370,12 +358,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_cat_card_view">Card View</string>
     <string name="pref_show_art_title">Always Show Art</string>
     <string name="pref_show_art_summary">When viewing a card, load official card image instead of rules text</string>
-    <string name="pref_scroll_title">Scroll Results</string>
-    <string name="pref_scroll_summary">Show buttons to scroll between search results</string>
     <string name="pref_card_language_title">Card image language</string>
     <string name="pref_card_language_summary">Choose the language used to retrieve the card image</string>
-    <string name="pref_cat_dice">Dice</string>
-    <string name="pref_d2_as_coin_title">Treat D2 As Coin</string>
     <string name="pref_cat_life_counter">Life Counter</string>
     <string name="pref_wake_lock_title">Wake Lock</string>
     <string name="pref_wake_lock_summary">Force the life counter screen to never go to sleep</string>
@@ -447,5 +431,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_cat_theme">Theme</string>
     <string name="pref_theme_title">Theme</string>
     <string name="pref_theme_summary">Set a light or dark theme</string>
+    <string name="mana_pool_clear_all">Clear All</string>
 
 </resources>

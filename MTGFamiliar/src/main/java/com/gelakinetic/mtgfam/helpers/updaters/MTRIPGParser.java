@@ -82,7 +82,7 @@ class MTRIPGParser {
 			/* eat it */
 		}
 
-		/* Then update via the interntet */
+		/* Then update via the internet */
 		try {
 			URL url;
 			switch (mode) {

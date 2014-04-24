@@ -339,6 +339,6 @@ public class ManaPoolFragment extends FamiliarFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.mana_pool_menu, menu);
+		inflater.inflate(R.menu.manapool_menu, menu);
 	}
 }

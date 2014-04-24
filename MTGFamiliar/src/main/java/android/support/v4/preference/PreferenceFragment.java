@@ -195,13 +195,12 @@ public abstract class PreferenceFragment extends Fragment implements
 	 * Inflates the given XML resource and adds the preference hierarchy to the current
 	 * preference hierarchy.
 	 *
-	 * @param preferencesResId The XML resource ID to inflate.
 	 */
-	public void addPreferencesFromResource(int preferencesResId) {
+	protected void addPreferencesFromResource() {
 		requirePreferenceManager();
 
 		setPreferenceScreen(PreferenceManagerCompat.inflateFromResource(mPreferenceManager, getActivity(),
-				preferencesResId, getPreferenceScreen()));
+				getPreferenceScreen()));
 	}
 
 	/**

@@ -27,13 +27,6 @@ import android.widget.TabHost;
 
 import com.gelakinetic.mtgfam.R;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
 /**
@@ -175,8 +168,9 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
 		/**
 		 * Constructor
-		 *  @param fragment    The fragment this TabManager will manage tabs for
-		 * @param tabHost     A TabHost which exists in the fragment's view
+		 *
+		 * @param fragment The fragment this TabManager will manage tabs for
+		 * @param tabHost  A TabHost which exists in the fragment's view
 		 */
 		public TabManager(FamiliarFragment fragment, TabHost tabHost) {
 			mFragment = fragment;

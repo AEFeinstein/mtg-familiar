@@ -1096,7 +1096,7 @@ public class FamiliarActivity extends FragmentActivity {
 									@Override
 									public void run() {
 										mDrawerLayout.closeDrawer(mDrawerList);
-										mPreferenceAdapter.setBounceDrawer(false);
+										mPreferenceAdapter.setBounceDrawer();
 									}
 								}, 2000);
 							}
@@ -1201,7 +1201,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 		if (requestCode == TTS_DATA_CHECK_CODE) {
 			/* So we don't display this dialog again and bother the user */
-			mPreferenceAdapter.setTtsShowDialog(false);
+			mPreferenceAdapter.setTtsShowDialog();
 			if (resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
 				/* missing data, install it */
 				showDialogFragment(TTS_DIALOG);

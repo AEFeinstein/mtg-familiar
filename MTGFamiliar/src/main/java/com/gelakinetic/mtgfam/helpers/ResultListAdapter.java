@@ -297,7 +297,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 	 * @param attr The attribute ID
 	 * @return the resource ID
 	 */
-	public int getResourceIdFromAttr(int attr) {
+	int getResourceIdFromAttr(int attr) {
 		TypedArray ta = mTheme.obtainStyledAttributes(new int[]{attr});
 		assert ta != null;
 		int resId = ta.getResourceId(0, 0);

@@ -146,7 +146,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 		super.onResume();
 		if (getFamiliarActivity().mPreferenceAdapter.getMojhostoFirstTime()) {
 			showDialog(RULES_DIALOG);
-			getFamiliarActivity().mPreferenceAdapter.setMojhostoFirstTime(false);
+			getFamiliarActivity().mPreferenceAdapter.setMojhostoFirstTime();
 		}
 	}
 

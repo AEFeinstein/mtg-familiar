@@ -955,7 +955,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 						}
 						else {
 							if(p.mLife == 1) {
-								mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life_single),
+								mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life_singular),
 										p.mName, p.mLife));
 							}
 							else {
@@ -966,7 +966,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 						break;
 					case STAT_POISON:
 						if(p.mPoison == 1) {
-							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison_single),
+							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison_singular),
 									p.mName, p.mPoison));
 						}
 						else {

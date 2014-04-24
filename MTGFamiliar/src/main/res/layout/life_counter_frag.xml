@@ -23,13 +23,6 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
               android:layout_height="fill_parent"
               android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/info_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
         <ScrollView
             android:id="@+id/playerScrollView_vert"
             android:layout_width="fill_parent"
@@ -39,13 +32,11 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             <GridLayout
                 android:id="@+id/playerList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:columnCount="2"
                 android:orientation="horizontal">
             </GridLayout>
         </ScrollView>
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/commander_player"
@@ -54,6 +45,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:orientation="vertical"/>
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?attr/holo_blue"
