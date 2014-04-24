@@ -27,13 +27,13 @@ import android.widget.Toast;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -248,11 +248,9 @@ public class TradeFragment extends FamiliarFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(this.isVisible()) {
-			mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
-			/* Try to load the autosave trade, the function will handle FileNotFoundException */
-			LoadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
-		}
+		mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
+		/* Try to load the autosave trade, the function will handle FileNotFoundException */
+		LoadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
 	}
 
 	/**

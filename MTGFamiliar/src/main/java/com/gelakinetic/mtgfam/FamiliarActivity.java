@@ -202,7 +202,9 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 			else if (s.equals(getString(R.string.key_theme))) {
 				invalidateOptionsMenu(); /* to redraw the magnifying glass */
-				FamiliarActivity.this.recreate();
+				Intent i = new Intent(FamiliarActivity.this, FamiliarActivity.class);
+				startActivity(i);
+				FamiliarActivity.this.finish();
 			}
 		}
 	};
