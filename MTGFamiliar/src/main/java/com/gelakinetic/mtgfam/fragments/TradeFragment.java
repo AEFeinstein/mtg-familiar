@@ -89,6 +89,7 @@ public class TradeFragment extends FamiliarFragment {
 	private SafeAutoCompleteTextView mNameEditText;
 	private EditText mNumberEditText;
 	private CheckBox mCheckboxFoil;
+	private int mPriceFetchRequests = 0;
 
 	/* Settings */
 	private int mPriceSetting;
@@ -964,6 +965,8 @@ public class TradeFragment extends FamiliarFragment {
 		else {
 			/* priceInfo is null, perform a query */
 			PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1);
+			mPriceFetchRequests++;
+			getFamiliarActivity().setLoading();
 			getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode,
 					DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
 						/**
@@ -976,6 +979,10 @@ public class TradeFragment extends FamiliarFragment {
 							data.message = spiceException.getLocalizedMessage();
 							data.priceInfo = null;
 							adapter.notifyDataSetChanged();
+							mPriceFetchRequests--;
+							if (mPriceFetchRequests == 0) {
+								getFamiliarActivity().clearLoading();
+							}
 						}
 
 						/**
@@ -1026,6 +1033,10 @@ public class TradeFragment extends FamiliarFragment {
 							/* Notify the adapter and update total prices */
 							UpdateTotalPrices(BOTH);
 							adapter.notifyDataSetChanged();
+							mPriceFetchRequests--;
+							if (mPriceFetchRequests == 0) {
+								getFamiliarActivity().clearLoading();
+							}
 						}
 					}
 			);

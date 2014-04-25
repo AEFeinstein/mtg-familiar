@@ -193,10 +193,10 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="life_counter_Normal">Normal</string>
     <string name="life_counter_commander_cast">Coût du Commander</string>
     <string name="life_counter_default_name">Joueur</string>
-    <string name="life_counter_spoken_life" formatted="false">%s a %d points de vie.</string>
-    <string name="life_counter_spoken_poison" formatted="false">%s a %d marqueurs poison.</string>
-    <string name="life_counter_spoken_life_singular" formatted="false">%s a %d point de vie.</string>
-    <string name="life_counter_spoken_poison_singular" formatted="false">%s a %d marqueur poison.</string>
+    <string name="life_counter_spoken_life" >%1$s a %2$d points de vie.</string>
+    <string name="life_counter_spoken_poison" >%1$s a %2$d marqueurs poison.</string>
+    <string name="life_counter_spoken_life_singular" >%1$s a %2$d point de vie.</string>
+    <string name="life_counter_spoken_poison_singular" >%1$s a %2$d marqueur poison.</string>
     <string name="life_counter_over_9000">plus de 9000</string>
     <string name="life_counter_no_gatherings_exist">Aucun type de match n\'existe.</string>
     <string name="life_counter_edh_dialog_title">Dégâts du Commander de %s</string>

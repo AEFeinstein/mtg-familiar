@@ -216,13 +216,13 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="life_counter_Normal">Normal</string>
     <string name="life_counter_commander_cast">Commander Casting</string>
     <string name="life_counter_default_name">Player</string>
-    <string name="life_counter_spoken_life" formatted="false">%s has %d life. </string>
-    <string name="life_counter_spoken_poison" formatted="false">%s has %d poison counters. </string>
-    <string name="life_counter_spoken_life_singular" formatted="false">%s has %d life. </string>
-    <string name="life_counter_spoken_poison_singular" formatted="false">%s has %d poison counter. </string>
+    <string name="life_counter_spoken_life">%1$s has %2$d life. </string>
+    <string name="life_counter_spoken_poison">%1$s has %2$d poison counters. </string>
+    <string name="life_counter_spoken_life_singular">%1$s has %2$d life. </string>
+    <string name="life_counter_spoken_poison_singular">%1$s has %2$d poison counter. </string>
     <string name="life_counter_over_9000">over 9000</string>
     <string name="life_counter_no_gatherings_exist">No Gatherings exist.</string>
-    <string name="life_counter_edh_dialog_title">Damage from %s\'s Commander</string>
+    <string name="life_counter_edh_dialog_title">Damage from %1$s\'s Commander</string>
     <string name="life_counter_edit_life_dialog_title">Enter Life</string>
     <string name="life_counter_edit_poison_dialog_title">Enter Poison</string>
 
@@ -248,6 +248,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Mana pool activity -->
     <string name="mana_pool_error_toast">Mana pool failed to load!</string>
+    <string name="mana_pool_clear_all">Clear All</string>
 
     <!-- Card trading activity -->
     <string name="trader_add_card">Add Card</string>
@@ -419,6 +420,9 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_widget_mode_summary">The buttons to display in the widget</string>
     <string name="pref_theme_dark">Dark</string>
     <string name="pref_theme_light">Light</string>
+    <string name="pref_cat_theme">Look &amp; Feel</string>
+    <string name="pref_theme_title">Theme</string>
+    <string name="pref_theme_summary">Set a light or dark theme</string>
 
     <!-- Judge's Corner -->
     <string name="judges_corner_MTR">MTR</string>
@@ -428,9 +432,5 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="judges_corner_error">An error occurred.</string>
     <string name="deck_counter_reset">Reset</string>
     <string name="deck_counter_undo">Undo</string>
-    <string name="pref_cat_theme">Theme</string>
-    <string name="pref_theme_title">Theme</string>
-    <string name="pref_theme_summary">Set a light or dark theme</string>
-    <string name="mana_pool_clear_all">Clear All</string>
 
 </resources>

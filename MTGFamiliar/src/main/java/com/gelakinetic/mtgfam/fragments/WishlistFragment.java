@@ -28,9 +28,6 @@ import android.widget.Toast;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
@@ -39,6 +36,9 @@ import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.IndividualSetInfo;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -71,6 +71,7 @@ public class WishlistFragment extends FamiliarFragment {
 	private EditText mNumberField;
 	private TextView mTotalPriceField;
 	private CheckBox mFoilCheckBox;
+	private int mPriceFetchRequests = 0;
 
 	/* The wishlist and adapter */
 	private ArrayList<CompressedWishlistInfo> mCompressedWishlist;
@@ -763,8 +764,9 @@ public class WishlistFragment extends FamiliarFragment {
 	 * @param mCardNumber The collector's number
 	 */
 	void loadPrice(final String mCardName, final String mSetCode, String mCardNumber) {
-		PriceFetchRequest priceRequest;
-		priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, -1);
+		PriceFetchRequest priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, -1);
+		mPriceFetchRequests++;
+		getFamiliarActivity().setLoading();
 		getFamiliarActivity().mSpiceManager.execute(priceRequest, mCardName + "-" +
 				mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
 
@@ -791,6 +793,10 @@ public class WishlistFragment extends FamiliarFragment {
 							}
 						}
 					}
+				}
+				mPriceFetchRequests--;
+				if (mPriceFetchRequests == 0) {
+					getFamiliarActivity().clearLoading();
 				}
 				mWishlistAdapter.notifyDataSetChanged();
 			}
@@ -822,6 +828,10 @@ public class WishlistFragment extends FamiliarFragment {
 						}
 					}
 					sumTotalPrice();
+				}
+				mPriceFetchRequests--;
+				if (mPriceFetchRequests == 0) {
+					getFamiliarActivity().clearLoading();
 				}
 				mWishlistAdapter.notifyDataSetChanged();
 			}

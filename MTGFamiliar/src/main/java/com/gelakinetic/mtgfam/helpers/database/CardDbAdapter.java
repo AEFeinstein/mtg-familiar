@@ -182,6 +182,11 @@ public class CardDbAdapter {
 	public static final int FUSE = 2;
 	public static final int SPLIT = 3;
 
+	/**
+	 *
+	 * @param sqLiteDatabase
+	 * @throws FamiliarDbException
+	 */
 	public static void dropCreateDB(SQLiteDatabase sqLiteDatabase) throws FamiliarDbException {
 		try {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_CARDS);
@@ -204,6 +209,12 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param c
+	 * @param mDb
+	 * @return
+	 */
 	public static long createCard(MtgCard c, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 
@@ -226,6 +237,12 @@ public class CardDbAdapter {
 		return mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
 	}
 
+	/**
+	 *
+	 * @param set
+	 * @param mDb
+	 * @return
+	 */
 	public static long createSet(MtgSet set, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 
@@ -237,6 +254,13 @@ public class CardDbAdapter {
 		return mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param code
+	 * @param mDb
+	 * @return
+	 */
 	public static boolean addTcgName(String name, String code, SQLiteDatabase mDb) {
 		ContentValues args = new ContentValues();
 
@@ -245,6 +269,12 @@ public class CardDbAdapter {
 		return mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null) > 0;
 	}
 
+	/**
+	 *
+	 * @param sqLiteDatabase
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor fetchAllSets(SQLiteDatabase sqLiteDatabase) throws FamiliarDbException {
 
 		Cursor c;
@@ -262,6 +292,13 @@ public class CardDbAdapter {
 		return c;
 	}
 
+	/**
+	 *
+	 * @param code
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static boolean doesSetExist(String code, SQLiteDatabase mDb) throws FamiliarDbException {
 
 		String statement = "(" + KEY_CODE + " LIKE '%" + code + "%')";
@@ -281,6 +318,13 @@ public class CardDbAdapter {
 		return count > 0;
 	}
 
+	/**
+	 *
+	 * @param code
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static String getCodeMtgi(String code, SQLiteDatabase mDb) throws FamiliarDbException {
 		Cursor c;
 		try {
@@ -298,6 +342,13 @@ public class CardDbAdapter {
 		return returnVal;
 	}
 
+	/**
+	 *
+	 * @param id
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor fetchCard(long id, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 
@@ -322,6 +373,14 @@ public class CardDbAdapter {
 
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param fields
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor fetchCardByName(String name, String[] fields, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		// replace lowercase ae with Ae
@@ -359,6 +418,12 @@ public class CardDbAdapter {
 		return mCursor;
 	}
 
+	/**
+	 *
+	 * @param mCompressedWishlist
+	 * @param mDb
+	 * @throws FamiliarDbException
+	 */
 	public static void fillExtraWishlistData(ArrayList<CompressedWishlistInfo> mCompressedWishlist,
 											 SQLiteDatabase mDb) throws FamiliarDbException {
 		String sql = "SELECT ";
@@ -447,6 +512,15 @@ public class CardDbAdapter {
 		cursor.close();
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param setCode
+	 * @param fields
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor fetchCardByNameAndSet(String name, String setCode, String[] fields, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		// replace lowercase ae with Ae
@@ -488,6 +562,13 @@ public class CardDbAdapter {
 		return mCursor;
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static long fetchIdByName(String name, SQLiteDatabase mDb) throws FamiliarDbException {
 		// replace lowercase ae with Ae
 		name = name.replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0]);
@@ -515,6 +596,34 @@ public class CardDbAdapter {
 		return -1;
 	}
 
+	/**
+	 *
+	 * @param cardname
+	 * @param cardtext
+	 * @param cardtype
+	 * @param color
+	 * @param colorlogic
+	 * @param sets
+	 * @param pow_choice
+	 * @param pow_logic
+	 * @param tou_choice
+	 * @param tou_logic
+	 * @param cmc
+	 * @param cmcLogic
+	 * @param format
+	 * @param rarity
+	 * @param flavor
+	 * @param artist
+	 * @param type_logic
+	 * @param text_logic
+	 * @param set_logic
+	 * @param backface
+	 * @param returnTypes
+	 * @param consolidate
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor Search(String cardname, String cardtext, String cardtype,
 								String color, int colorlogic, String sets, float pow_choice,
 								String pow_logic, float tou_choice, String tou_logic, int cmc,
@@ -1004,6 +1113,14 @@ public class CardDbAdapter {
 		return mCursor;
 	}
 
+	/**
+	 *
+	 * @param set
+	 * @param number
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static int getTransform(String set, String number, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		Cursor mCursor;
@@ -1024,6 +1141,14 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param set
+	 * @param number
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static String getTransformName(String set, String number, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		Cursor mCursor;
@@ -1046,6 +1171,11 @@ public class CardDbAdapter {
 		return name;
 	}
 
+	/**
+	 *
+	 * @param mDb
+	 * @throws FamiliarDbException
+	 */
 	public static void createLegalTables(SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			mDb.execSQL(DATABASE_CREATE_FORMATS);
@@ -1056,6 +1186,11 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param mDb
+	 * @throws FamiliarDbException
+	 */
 	public static void dropLegalTables(SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_FORMATS);
@@ -1066,12 +1201,25 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param mDb
+	 * @return
+	 */
 	public static long createFormat(String name, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_NAME, name);
 		return mDb.insert(DATABASE_TABLE_FORMATS, null, initialValues);
 	}
 
+	/**
+	 *
+	 * @param set
+	 * @param format
+	 * @param mDb
+	 * @return
+	 */
 	public static long addLegalSet(String set, String format, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_SET, set);
@@ -1079,6 +1227,14 @@ public class CardDbAdapter {
 		return mDb.insert(DATABASE_TABLE_LEGAL_SETS, null, initialValues);
 	}
 
+	/**
+	 *
+	 * @param card
+	 * @param format
+	 * @param status
+	 * @param mDb
+	 * @return
+	 */
 	public static long addLegalCard(String card, String format, int status, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_NAME, card);
@@ -1087,6 +1243,12 @@ public class CardDbAdapter {
 		return mDb.insert(DATABASE_TABLE_BANNED_CARDS, null, initialValues);
 	}
 
+	/**
+	 *
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor fetchAllFormats(SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			return mDb.query(DATABASE_TABLE_FORMATS, new String[]{KEY_ID,
@@ -1098,6 +1260,14 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param mCardName
+	 * @param format
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static int checkLegality(String mCardName, String format, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		mCardName = mCardName.replace("'", "''").replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0]);
@@ -1141,6 +1311,13 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param setCode
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static String getTcgName(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			String sql = "SELECT " + KEY_NAME_TCGPLAYER + " FROM " + DATABASE_TABLE_SETS + " WHERE " + KEY_CODE + " = '" + setCode.replace("'", "''") + "';";
@@ -1155,6 +1332,13 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param setName
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	private static boolean isModernLegalSet(String setName, SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			String sql = "SELECT " + KEY_SET + " FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_SET + " = '" + setName.replace("'", "''") + "';";
@@ -1168,6 +1352,14 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param category
+	 * @param subcategory
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor getRules(int category, int subcategory, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		try {
@@ -1201,6 +1393,15 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param keyword
+	 * @param category
+	 * @param subcategory
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor getRulesByKeyword(String keyword, int category,
 										   int subcategory, SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
@@ -1247,6 +1448,15 @@ public class CardDbAdapter {
 		return null;
 	}
 
+	/**
+	 *
+	 * @param category
+	 * @param subcategory
+	 * @param entry
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static int getRulePosition(int category, int subcategory, String entry, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		try {
@@ -1273,6 +1483,14 @@ public class CardDbAdapter {
 		return 0;
 	}
 
+	/**
+	 *
+	 * @param category
+	 * @param subcategory
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static String getCategoryName(int category, int subcategory, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		try {
@@ -1296,6 +1514,12 @@ public class CardDbAdapter {
 		return "";
 	}
 
+	/**
+	 *
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static Cursor getGlossaryTerms(SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			String sql = "SELECT * FROM " + DATABASE_TABLE_GLOSSARY;
@@ -1307,6 +1531,11 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param mDb
+	 * @throws FamiliarDbException
+	 */
 	public static void dropRulesTables(SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_RULES);
@@ -1316,6 +1545,11 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param mDb
+	 * @throws FamiliarDbException
+	 */
 	public static void createRulesTables(SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			mDb.execSQL(DATABASE_CREATE_RULES);
@@ -1325,6 +1559,16 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param category
+	 * @param subcategory
+	 * @param entry
+	 * @param text
+	 * @param position
+	 * @param mDb
+	 * @throws FamiliarDbException
+	 */
 	public static void insertRule(int category, int subcategory, String entry,
 								  String text, int position, SQLiteDatabase mDb) throws FamiliarDbException {
 		if (entry == null) {
@@ -1353,6 +1597,13 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param term
+	 * @param definition
+	 * @param mDb
+	 * @throws FamiliarDbException
+	 */
 	public static void insertGlossaryTerm(String term, String definition, SQLiteDatabase mDb) throws FamiliarDbException {
 		term = "'" + term.replace("'", "''") + "'";
 		definition = "'" + definition.replace("'", "''") + "'";
@@ -1372,6 +1623,7 @@ public class CardDbAdapter {
 	 * column names, but must include all columns, even if the value is the key.
 	 * This allows the ContentProvider to request columns w/o the need to know
 	 * real column names and create the alias itself.
+	 * @return
 	 */
 	private static HashMap<String, String> buildColumnMap() {
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -1385,12 +1637,12 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 * Performs a database query.
 	 *
 	 * @param selection     The selection clause
 	 * @param selectionArgs Selection arguments for "?" components in the selection
 	 * @param columns       The columns to return
-	 * @return A Cursor over all rows matching the query
+	 * @param mDb
+	 * @return  A Cursor over all rows matching the query
 	 * @throws FamiliarDbException
 	 */
 	private static Cursor query(String selection, String[] selectionArgs,
@@ -1428,6 +1680,7 @@ public class CardDbAdapter {
 	 *
 	 * @param rowId   id of word to retrieve
 	 * @param columns The columns to include, if null then all are included
+	 * @param mDb
 	 * @return Cursor positioned to matching word, or null if not found.
 	 * @throws FamiliarDbException
 	 */
@@ -1448,6 +1701,7 @@ public class CardDbAdapter {
 	 * Returns a Cursor over all words that match the given query
 	 *
 	 * @param query The string to search for
+	 * @param mDb
 	 * @return Cursor over all words that match, or null if none found.
 	 * @throws FamiliarDbException
 	 */
@@ -1476,6 +1730,11 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param ctx
+	 * @return
+	 */
 	public static boolean isDbOutOfDate(Context ctx) {
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
@@ -1484,6 +1743,10 @@ public class CardDbAdapter {
 		return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
 	}
 
+	/**
+	 *
+	 * @param ctx
+	 */
 	public static void copyDB(Context ctx) {
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
@@ -1529,6 +1792,13 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static int getSplitMultiverseID(String name, SQLiteDatabase mDb) throws FamiliarDbException {
 		Cursor mCursor;
 		String statement = "SELECT " + KEY_MULTIVERSEID + " from "
@@ -1556,6 +1826,13 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param multiverseId
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static String getSplitName(int multiverseId, SQLiteDatabase mDb) throws FamiliarDbException {
 		Cursor mCursor;
 		String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER + " from "
@@ -1586,6 +1863,11 @@ public class CardDbAdapter {
 		}
 	}
 
+	/**
+	 *
+	 * @param s
+	 * @return
+	 */
 	public static String removeAccentMarks(String s) {
 		return s.replace(Character.toChars(0xC0)[0] + "", "A")
 				.replace(Character.toChars(0xC1)[0] + "", "A")
@@ -1648,6 +1930,12 @@ public class CardDbAdapter {
 				.replace(Character.toChars(0xFF)[0] + "", "y");
 	}
 
+	/**
+	 *
+	 * @param number
+	 * @param setCode
+	 * @return
+	 */
 	public static int isMultiCard(String number, String setCode) {
 		if (number.contains("a") || number.contains("b")) {
 			if (setCode.compareTo("ISD") == 0 || setCode.compareTo("DKA") == 0) {
@@ -1663,6 +1951,13 @@ public class CardDbAdapter {
 		return NOPE;
 	}
 
+	/**
+	 *
+	 * @param setCode
+	 * @param mDb
+	 * @return
+	 * @throws FamiliarDbException
+	 */
 	public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
 		String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
 		ArrayList<String> nonModernLegalSets = new ArrayList<String>(Arrays.asList(extraSets));
