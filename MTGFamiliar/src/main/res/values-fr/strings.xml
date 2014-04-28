@@ -40,28 +40,28 @@
     <string name="main_donate_title">Faire un don</string>
     <string name="main_donate_dialog_title">Don aux créateurs</string>
 <string name="main_donate_text">        Pour une appli M:TG premium comme celle-ci, combien paieriez-vous ? 1 000 €? 10 000 €?&lt;br&gt;&lt;br&gt;
-        Bon, si vous lisez ceci, vous savez déjà qu\'on la distribue gratuitement!&lt;br&gt;&lt;br&gt;
-        Coder est un travail difficile, et nous développeurs appréciont les euros bonus ici ou là.&lt;br&gt;&lt;br&gt;
-        Nous avons une passion du draft à alimenter, ok?&lt;br&gt;&lt;br&gt;
-        Vous pouvez cliquer sur le bouton ci-dessous pour faire un don via PayPal. 1€ c\'est cool, 5€ ça l\'est encore plus. A vous de choisir.&lt;br&gt;&lt;br&gt;
-        Alors, à quel point vous sentez-vous généreux aujourd\'hui?</string>
+Bon, si vous lisez ceci, vous savez déjà qu\'on la distribue gratuitement!&lt;br&gt;&lt;br&gt;
+Coder est un travail difficile, et nous développeurs appréciont les euros bonus ici ou là.&lt;br&gt;&lt;br&gt;
+Nous avons une passion du draft à alimenter, ok?&lt;br&gt;&lt;br&gt;
+Vous pouvez cliquer sur le bouton ci-dessous pour faire un don via PayPal. 1€ c\'est cool, 5€ ça l\'est encore plus. A vous de choisir.&lt;br&gt;&lt;br&gt;
+Alors, à quel point vous sentez-vous généreux aujourd\'hui?</string>
     <string name="main_whats_new_title">Nouveautés</string>
     <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
 <string name="main_whats_new_text">
-        - Nous sommes sur GitHub! Cliquez sur l\'Octocat pour parcourir le code et aider au projet.&lt;br&gt;&lt;br&gt;
-        - Nouveau look épuré, moderne et images HD.&lt;br&gt;&lt;br&gt;
-        - Faites défiler les cartes à droite et à gauche après une recherche pour naviguer en avant et en arrière.&lt;br&gt;&lt;br&gt;
-        - Nouvelles mises en page paysage pour les modes du Compteur de vie, du MoJhoSto.&lt;br&gt;&lt;br&gt;
-        - Tout nouveau widget de l\'écran d\'accueil configurable.&lt;br&gt;&lt;br&gt;
-        - Traduction en espagnol, meilleure gestion des traductions&lt;br&gt;&lt;br&gt;
-        - De nombreuses corrections de bugs&lt;br&gt;&lt;br&gt;
-        - Plus de commentaires dans le code.&lt;br&gt;&lt;br&gt;
-        - Fonctionnalité de recherche par image supprimée (Google ayant arrêté le support de son outil de reconnaissance d\'images)
+- Nous sommes sur GitHub! Cliquez sur l\'Octocat pour parcourir le code et aider au projet.&lt;br&gt;&lt;br&gt;
+- Nouveau thème clair ou foncé épuré, moderne et images HD.&lt;br&gt;&lt;br&gt;
+- Faites défiler les cartes à droite et à gauche après une recherche pour naviguer en avant et en arrière.&lt;br&gt;&lt;br&gt;
+- Nouvelles mises en page paysage pour les modes du Compteur de vie, du MoJhoSto.&lt;br&gt;&lt;br&gt;
+- Tout nouveau widget de l\'écran d\'accueil configurable.&lt;br&gt;&lt;br&gt;
+- Traduction en espagnol, meilleure gestion des traductions&lt;br&gt;&lt;br&gt;
+- De nombreuses corrections de bugs&lt;br&gt;&lt;br&gt;
+- Plus de commentaires dans le code.&lt;br&gt;&lt;br&gt;
+- Fonctionnalité de recherche par image supprimée (Google ayant arrêté le support de son outil de reconnaissance d\'images)
 
 </string>
     <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
 <string name="main_tts_warning_text">Cette appli permet la synthèse vocale parmi ses fonctionnalités, mais il semble que vous ne l\'ayiez pas installée. 
-        Si vous voulez l\'installer, utiliser le lien \"Installer Text-to-Speech\" dans le menu des paramètres.</string>
+Si vous voulez l\'installer, utiliser le lien \"Installer Text-to-Speech\" dans le menu des paramètres.</string>
     <string name="main_export_data_title">Export vers SD</string>
     <string name="main_export_success">Export réalisé avec succès vers </string>
     <string name="main_export_fail">Echec de l\'export des données vers carte SD</string>
@@ -193,10 +193,10 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="life_counter_Normal">Normal</string>
     <string name="life_counter_commander_cast">Coût du Commander</string>
     <string name="life_counter_default_name">Joueur</string>
-    <string name="life_counter_spoken_life" >%1$s a %2$d points de vie.</string>
-    <string name="life_counter_spoken_poison" >%1$s a %2$d marqueurs poison.</string>
-    <string name="life_counter_spoken_life_singular" >%1$s a %2$d point de vie.</string>
-    <string name="life_counter_spoken_poison_singular" >%1$s a %2$d marqueur poison.</string>
+    <string name="life_counter_spoken_life">%1$s a %2$d points de vie.</string>
+    <string name="life_counter_spoken_poison">%1$s a %2$d marqueurs poison.</string>
+    <string name="life_counter_spoken_life_singular">%1$s a %2$d point de vie.</string>
+    <string name="life_counter_spoken_poison_singular">%1$s a %2$d marqueur poison.</string>
     <string name="life_counter_over_9000">plus de 9000</string>
     <string name="life_counter_no_gatherings_exist">Aucun type de match n\'existe.</string>
     <string name="life_counter_edh_dialog_title">Dégâts du Commander de %s</string>
@@ -219,6 +219,7 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="dice_heads">face</string>
     <string name="dice_tails">pile</string>
     <string name="mana_pool_error_toast">Echec du chargement de la Réserve de Mana!</string>
+    <string name="mana_pool_clear_all">Tout effacer</string>
     <string name="trader_add_card">Ajouter Carte</string>
     <string name="trader_save">Sauver Echange</string>
     <string name="trader_load">Charger Echange</string>
@@ -282,16 +283,16 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="rules_this_cat">cette catégorie:</string>
     <string name="mojhosto_rules_title">Règles MoJhoSto Basic</string>
 <string name="mojhosto_rules_text">    MoJhoSto est un format avec Fun card de Magic Online.&lt;br&gt;&lt;br&gt;
-    Pour jouer, chaque joueur doit avoir un deck constitué de 60 terrains basiques uniquement.&lt;br&gt;&lt;br&gt;
-    Chaque joueur commence la partie avec trois Fun cards: Momir Vig, Jhoira, et Stonehewer Giant.&lt;br&gt;&lt;br&gt;
-    Ces Fun cards modifient la taille initiale et max de la main à 9 et les points de vie de départ à 19 pour chaque joueur.&lt;br&gt;&lt;br&gt;
-    Toute capacité indiquée sur une Fun card est jouée exactement comme celles d\'une carte Magic en jeu.&lt;br&gt;&lt;br&gt;
-    Cependant, ces capacités n\'ont pas de couleur et les dégâts qu\'elles causent ne sont pas celles d\'un permanent de couleur ou d\'une source de couleur.&lt;br&gt;&lt;br&gt;
-    Une Fun card n\'est pas une carte Magic, elle ne peut donc pas être affectée par des sorts ou capacités.&lt;br&gt;&lt;br&gt;
-    Vous pouvez cliquer sur chaque carte pour voir la Fun card complète.&lt;br&gt;&lt;br&gt;
-    Vous pouvez consulter les règles à tout moment depuis le menu.&lt;br&gt;&lt;br&gt;
-    Papier et crayon peuvent être utiles pour suivre le jeu. Malheureusement, MTG Familiar ne peut pas reproduire les cartes réelles.&lt;br&gt;&lt;br&gt;
-    Bonne chance, et bon jeu!</string>
+Pour jouer, chaque joueur doit avoir un deck constitué de 60 terrains basiques uniquement.&lt;br&gt;&lt;br&gt;
+Chaque joueur commence la partie avec trois Fun cards: Momir Vig, Jhoira, et Stonehewer Giant.&lt;br&gt;&lt;br&gt;
+Ces Fun cards modifient la taille initiale et max de la main à 9 et les points de vie de départ à 19 pour chaque joueur.&lt;br&gt;&lt;br&gt;
+Toute capacité indiquée sur une Fun card est jouée exactement comme celles d\'une carte Magic en jeu.&lt;br&gt;&lt;br&gt;
+Cependant, ces capacités n\'ont pas de couleur et les dégâts qu\'elles causent ne sont pas celles d\'un permanent de couleur ou d\'une source de couleur.&lt;br&gt;&lt;br&gt;
+Une Fun card n\'est pas une carte Magic, elle ne peut donc pas être affectée par des sorts ou capacités.&lt;br&gt;&lt;br&gt;
+Vous pouvez cliquer sur chaque carte pour voir la Fun card complète.&lt;br&gt;&lt;br&gt;
+Vous pouvez consulter les règles à tout moment depuis le menu.&lt;br&gt;&lt;br&gt;
+Papier et crayon peuvent être utiles pour suivre le jeu. Malheureusement, MTG Familiar ne peut pas reproduire les cartes réelles.&lt;br&gt;&lt;br&gt;
+Bonne chance, et bon jeu!</string>
     <string name="mojhosto_momir_label">CMC =</string>
     <string name="mojhosto_random_creature">Créature aléatoire</string>
     <string name="mojhosto_stonehewer_label">CMC ≤</string>
@@ -374,6 +375,11 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="pref_cat_widget">Widget</string>
     <string name="pref_widget_mode_title">Boutons du widget</string>
     <string name="pref_widget_mode_summary">Les boutons à afficher dans le widget</string>
+    <string name="pref_theme_dark">Foncé</string>
+    <string name="pref_theme_light">Clair</string>
+    <string name="pref_cat_theme">Apparence</string>
+    <string name="pref_theme_title">Thème</string>
+    <string name="pref_theme_summary">Définir un thème clair ou foncé</string>
     <string name="judges_corner_MTR">MTR</string>
     <string name="judges_corner_IPG">IPG</string>
     <string name="judges_corner_jump_to_top">Retour en haut</string>
@@ -381,5 +387,4 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
     <string name="judges_corner_error">Une erreur est survenue.</string>
     <string name="deck_counter_reset">Rétablir</string>
     <string name="deck_counter_undo">Annuler</string>
-    <string name="mana_pool_clear_all">Tout effacer</string>
 </resources>

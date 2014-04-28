@@ -42,18 +42,18 @@
     <string name="main_donate_text">¿Cuánto pagarías por una excelente aplicación de Magic como esta? ¿1000€? ¿10000€?&lt;br&gt;&lt;br&gt; Bueno, si estás leyendo esto, entonces ya sabes que la estamos dando totalmente gratis.&lt;br&gt;&lt;br&gt; Escribir código es un duro trabajo y nosotros, los desarrolladores, apreciamos cualquier euro que recibamos.&lt;br&gt;&lt;br&gt; Tenemos una adicción a los drafts que mantener, ¿vale?&lt;br&gt;&lt;br&gt; Puedes pulsar el botón de abajo y donar a través de Paypal. 1€ está bien, 5€ están mejor. Ya me entiendes.&lt;br&gt;&lt;br&gt;  Así que, ¿cómo vas hoy de generosidad?</string>
     <string name="main_whats_new_title">Novedades</string>
     <string name="main_whats_new_in_title">Novedades de la versión</string>
-<string name="main_whats_new_text"><![CDATA[- ¡Estamos en GitHub! Pulsa en el Octocat para explorar el código y ayudar al proyecto.<br><br>
-- Nueva apariencia, más limpia y moderna, e imágenes en alta definición.<br><br>
-- Desliza las cartas hacia la izquierza o la derecha tras buscarlas para ir hacia delante o hacia atrás.<br><br>
-- Nueva disposición en horizontal para todos los modos de contador de vidas, MoJhoSto…<br><br>
-- Nuevo y flamante widget configurable en la pantalla de inicio.<br><br>
-- Traducción al español y mejora en las demás traducciones.<br><br>
-- Muchas correcciones de errores.<br><br>
-- Comentarios en el código.<br><br>
-- Eliminada la búsqueda por imagen (Google eliminó el servicio)]]></string>
+<string name="main_whats_new_text">- ¡Estamos en GitHub! Pulsa en el Octocat para explorar el código y ayudar al proyecto.&lt;br&gt;&lt;br&gt;
+- Nueva apariencia, más limpia y moderna, temas oscuros e imágenes en alta definición.&lt;br&gt;&lt;br&gt;
+- Desliza las cartas hacia la izquierza o la derecha tras buscarlas para ir hacia delante o hacia atrás.&lt;br&gt;&lt;br&gt;
+- Nueva disposición en horizontal para todos los modos de contador de vidas, MoJhoSto…&lt;br&gt;&lt;br&gt;
+- Nuevo y flamante widget configurable en la pantalla de inicio.&lt;br&gt;&lt;br&gt;
+- Traducción al español y mejora en las demás traducciones.&lt;br&gt;&lt;br&gt;
+- Muchas correcciones de errores.&lt;br&gt;&lt;br&gt;
+- Comentarios en el código.&lt;br&gt;&lt;br&gt;
+- Eliminada la búsqueda por imagen (Google eliminó el servicio)</string>
     <string name="main_tts_warning_title">Síntesis de voz (Text-to-Speech)</string>
 <string name="main_tts_warning_text">Esta aplicación tiene la capacidad de usar síntesis de voz (Text-to-Speech) para algunas de sus funciones, pero parece que no la tienes instalada. 
-        Si quieres instalarla, usa el enlace \"Instalar Text-to-Speech\" en el menú de ajustes.</string>
+Si quieres instalarla, usa el enlace \"Instalar Text-to-Speech\" en el menú de ajustes.</string>
     <string name="main_export_data_title">Exportar datos a la SD</string>
     <string name="main_export_success">Datos exportados correctamente a</string>
     <string name="main_export_fail">La exportación de datos a la tarjeta SD ha fallado</string>
@@ -184,10 +184,10 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
     <string name="life_counter_Normal">Normal</string>
     <string name="life_counter_commander_cast">Coste de Commander</string>
     <string name="life_counter_default_name">Jugador</string>
-    <string name="life_counter_spoken_life" >%1$s tiene %2$d vidas.</string>
-    <string name="life_counter_spoken_poison" >%1$s tiene %2$d contadores de veneno.</string>
-    <string name="life_counter_spoken_life_singular" >%1$s tiene %2$d vida.</string>
-    <string name="life_counter_spoken_poison_singular" >%1$s tiene %2$d contador de veneno.</string>
+    <string name="life_counter_spoken_life">%1$s tiene %2$d vidas.</string>
+    <string name="life_counter_spoken_poison">%1$s tiene %2$d contadores de veneno.</string>
+    <string name="life_counter_spoken_life_singular">%1$s tiene %2$d vida.</string>
+    <string name="life_counter_spoken_poison_singular">%1$s tiene %2$d contador de veneno.</string>
     <string name="life_counter_over_9000">más de 9000</string>
     <string name="life_counter_no_gatherings_exist">No existen tipos de partida.</string>
     <string name="life_counter_edh_dialog_title">Daño del Commander de %s</string>
@@ -210,6 +210,7 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
     <string name="dice_heads">cara</string>
     <string name="dice_tails">cruz</string>
     <string name="mana_pool_error_toast">¡La reserva de maná falló al cargar!</string>
+    <string name="mana_pool_clear_all">Borrar todo</string>
     <string name="trader_add_card">Añadir carta</string>
     <string name="trader_save">Guardar intercambio</string>
     <string name="trader_load">Cargar intercambio</string>
@@ -258,7 +259,7 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
     <string name="timer_50_minutes">50 minutos</string>
     <string name="timer_55_minutes">55 minutos</string>
     <string name="timer_1_hour">1 hora</string>
-    <string name="timer_notification_ongoing">La ronda terminará a esta hora: %1$tl:%1$tM %1$Tp</string>
+    <string name="timer_notification_ongoing">La ronda terminará a esta hora: %1$tl:%1$tM %1$Tp.</string>
     <string name="timer_five_minutes_left">La ronda terminará en cinco minutos</string>
     <string name="timer_ten_minutes_left">La ronda terminará en diez minutos</string>
     <string name="timer_fifteen_minutes_left">La ronda terminará en quince minutos</string>
@@ -273,17 +274,17 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
     <string name="rules_this_cat">esta categoría:</string>
     <string name="mojhosto_rules_title">Reglas de MoJhoSto Basic</string>
 <string name="mojhosto_rules_text">
-    MoJhoSto es un formato casual de Vanguard de Magic Online.&lt;br&gt;&lt;br&gt;
-    Para jugar, cada jugador debe tener un mazo que solo tenga 60 tierras básicas.&lt;br&gt;&lt;br&gt;
-    Cada jugador empieza la partida con tres Vanguards: Momir Vig, Jhoira y Stonehewer Giant.&lt;br&gt;&lt;br&gt;
-    Estos Vanguards ajustan las cartas de la mano inicial y el tamaño máximo de tu mano a (9) y la vida inicial a (19).&lt;br&gt;&lt;br&gt;
-    Cualquier habilidad de una carta de Vanguard es jugada exactamente igual que la de una carta de Magic.&lt;br&gt;&lt;br&gt;
-    Sin embargo, estas habilidades no tienen color, y el daño de ellas no es daño de ningún permanente de ningún tipo ni de ninguna fuente de ningún color.&lt;br&gt;&lt;br&gt;
-    Una carta de Vanguard no es una carta de Magic, por lo que no se ve afectada por hechizos ni habilidades.&lt;br&gt;&lt;br&gt;
-    Puedes pulsar cada imagen para ver la carta de Vanguard completa.&lt;br&gt;&lt;br&gt;
-    Puedes leer las reglas en cualquier momento en el menú.&lt;br&gt;&lt;br&gt;
-    Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgracia, MTG Familiar no puede hacer aparecer cartas reales.&lt;br&gt;&lt;br&gt;
-    ¡Buena suerte, y pásalo bien!</string>
+MoJhoSto es un formato casual de Vanguard de Magic Online.&lt;br&gt;&lt;br&gt;
+Para jugar, cada jugador debe tener un mazo que solo tenga 60 tierras básicas.&lt;br&gt;&lt;br&gt;
+Cada jugador empieza la partida con tres Vanguards: Momir Vig, Jhoira y Stonehewer Giant.&lt;br&gt;&lt;br&gt;
+Estos Vanguards ajustan las cartas de la mano inicial y el tamaño máximo de tu mano a (9) y la vida inicial a (19).&lt;br&gt;&lt;br&gt;
+Cualquier habilidad de una carta de Vanguard es jugada exactamente igual que la de una carta de Magic.&lt;br&gt;&lt;br&gt;
+Sin embargo, estas habilidades no tienen color, y el daño de ellas no es daño de ningún permanente de ningún tipo ni de ninguna fuente de ningún color.&lt;br&gt;&lt;br&gt;
+Una carta de Vanguard no es una carta de Magic, por lo que no se ve afectada por hechizos ni habilidades.&lt;br&gt;&lt;br&gt;
+Puedes pulsar cada imagen para ver la carta de Vanguard completa.&lt;br&gt;&lt;br&gt;
+Puedes leer las reglas en cualquier momento en el menú.&lt;br&gt;&lt;br&gt;
+Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgracia, MTG Familiar no puede hacer aparecer cartas reales.&lt;br&gt;&lt;br&gt;
+¡Buena suerte, y pásalo bien!</string>
     <string name="mojhosto_momir_label">CMC =</string>
     <string name="mojhosto_random_creature">Criatura aleatoria</string>
     <string name="mojhosto_stonehewer_label">CMC ≤</string>
@@ -366,6 +367,11 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
     <string name="pref_cat_widget">Widget</string>
     <string name="pref_widget_mode_title">Botones del widget</string>
     <string name="pref_widget_mode_summary">Botones que aparecen en el widget</string>
+    <string name="pref_theme_dark">Oscuro</string>
+    <string name="pref_theme_light">Claro</string>
+    <string name="pref_cat_theme">Apariencia</string>
+    <string name="pref_theme_title">Tema</string>
+    <string name="pref_theme_summary">Elige un tema claro u oscuro</string>
     <string name="judges_corner_MTR">MTR</string>
     <string name="judges_corner_IPG">IPG</string>
     <string name="judges_corner_jump_to_top">Ir arriba</string>
@@ -373,5 +379,4 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
     <string name="judges_corner_error">Ha habido un error.</string>
     <string name="deck_counter_reset">Reiniciar</string>
     <string name="deck_counter_undo">Deshacer</string>
-    <string name="mana_pool_clear_all">Borrar todo</string>
 </resources>

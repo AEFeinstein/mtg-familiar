@@ -50,7 +50,7 @@ Więc, na jak dużą hojność stać cię dzisiaj?</string>
     <string name="main_whats_new_title">Nowości</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
 <string name="main_whats_new_text">- Jesteśmy na GitHub! Kliknij na maskotkę Octocata aby móc analizować kod i wspomóc projekt. &lt;br&gt;&lt;br&gt;
-- Nowoczesny, odświeżony wygląd i obrazki w HD.&lt;br&gt;&lt;br&gt;
+- Nowoczesny, odświeżony wygląd z jasnym i ciemnym motywem i obrazki w HD.&lt;br&gt;&lt;br&gt;
 - Po wyszukiwaniu, przewijaj karty w lewo i w prawo aby przejść wstecz lub dalej&lt;br&gt;&lt;br&gt;
 - Nowo zaprojektowane układy graficzne dla wszystkich trybów wyświetlania oraz MoJhoSto&lt;br&gt;&lt;br&gt;
 - Zupełnie nowy widget dla ekranu głównego z możliwością konfiguracji&lt;br&gt;&lt;br&gt;
@@ -191,10 +191,10 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="life_counter_Normal">Zwykły</string>
     <string name="life_counter_commander_cast">Wywołania Commandera</string>
     <string name="life_counter_default_name">Gracz</string>
-    <string name="life_counter_spoken_life" >%1$s ma %2$d życia.</string>
-    <string name="life_counter_spoken_poison" >%1$s ma %2$d znaczników trucizny.</string>
-    <string name="life_counter_spoken_life_singular" >%1$s ma %2$d życia. </string>
-    <string name="life_counter_spoken_poison_singular" >%1$s ma %2$d znacznik trucizny.</string>
+    <string name="life_counter_spoken_life">%1$s ma %2$d życia.</string>
+    <string name="life_counter_spoken_poison">%1$s ma %2$d znaczników trucizny.</string>
+    <string name="life_counter_spoken_life_singular">%1$s ma %2$d życia. </string>
+    <string name="life_counter_spoken_poison_singular">%1$s ma %2$d znacznik trucizny.</string>
     <string name="life_counter_over_9000">ponad 9000</string>
     <string name="life_counter_no_gatherings_exist">Takie pojedynki nie istnieją.</string>
     <string name="life_counter_edh_dialog_title">Obrażenia od %s Commandera</string>
@@ -217,6 +217,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="dice_heads">Orzeł</string>
     <string name="dice_tails">Reszka</string>
     <string name="mana_pool_error_toast">Nie udało się wczytać licznika many!</string>
+    <string name="mana_pool_clear_all">Wyczyść wszystko</string>
     <string name="trader_add_card">Dodaj kartę</string>
     <string name="trader_save">Zapisz Wymianę</string>
     <string name="trader_load">Wczytaj Wymianę</string>
@@ -379,6 +380,11 @@ Powodzenia i miłej zabawy!</string>
     <string name="pref_cat_widget">Widget</string>
     <string name="pref_widget_mode_title">Przyciski Widgetu</string>
     <string name="pref_widget_mode_summary">Przyciski do wyświetlania w Widgecie</string>
+    <string name="pref_theme_dark">Ciemny</string>
+    <string name="pref_theme_light">Jasny</string>
+    <string name="pref_cat_theme">Wygląd</string>
+    <string name="pref_theme_title">Motyw</string>
+    <string name="pref_theme_summary">Ustaw jasny lub ciemny motyw</string>
     <string name="judges_corner_MTR">MTR</string>
     <string name="judges_corner_IPG">IPG</string>
     <string name="judges_corner_jump_to_top">Skocz do góry</string>
@@ -386,5 +392,4 @@ Powodzenia i miłej zabawy!</string>
     <string name="judges_corner_error">Wystąpił błąd.</string>
     <string name="deck_counter_reset">Wyczyść</string>
     <string name="deck_counter_undo">Cofnij</string>
-    <string name="mana_pool_clear_all">Wyczyść wszystko</string>
 </resources>

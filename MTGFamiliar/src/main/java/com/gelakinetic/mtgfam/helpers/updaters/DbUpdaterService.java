@@ -28,10 +28,10 @@ import android.support.v4.app.NotificationCompat;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -104,126 +104,134 @@ public class DbUpdaterService extends IntentService {
 	 */
 	@Override
 	public void onHandleIntent(Intent intent) {
-		PreferenceAdapter mPrefAdapter = new PreferenceAdapter(this);
-
-		ProgressReporter reporter = new ProgressReporter();
-		ArrayList<String> updatedStuff = new ArrayList<String>();
-		CardAndSetParser parser = new CardAndSetParser();
-		boolean commitDates = true;
-		boolean newRulesParsed = false;
-
 		try {
-			/* Get database access, which auto-opens it, close it, and open a transactional write */
-			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
+			PreferenceAdapter mPrefAdapter = new PreferenceAdapter(this);
 
-			showStatusNotification();
+			ProgressReporter reporter = new ProgressReporter();
+			ArrayList<String> updatedStuff = new ArrayList<String>();
+			CardAndSetParser parser = new CardAndSetParser();
+			boolean commitDates = true;
+			boolean newRulesParsed = false;
 
-			if (RE_PARSE_DATABASE) {
-				/* Blow up the database and download and build it all over again */
-				CardDbAdapter.dropCreateDB(database);
-				parser.readLegalityJsonStream(database, mPrefAdapter);
-				GZIPInputStream upToGIS = new GZIPInputStream(
-						new URL("https://sites.google.com/site/mtgfamiliar/patches/UpToRTR.json.gzip").openStream());
-				switchToUpdating(String.format(getString(R.string.update_updating_set), "EVERYTHING!!"));
-				parser.readCardJsonStream(upToGIS, reporter, database);
-				parser.readTCGNameJsonStream(mPrefAdapter, database);
-			}
-			else {
-				/* Look for updates with the banned / restricted lists and formats */
-				parser.readLegalityJsonStream(database, mPrefAdapter);
-				/* Look for new cards */
-				ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
-				if (patchInfo != null) {
-					/* Look through the list of available patches, and if it doesn't exist in the database, add it. */
-					for (String[] set : patchInfo) {
-						if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) {
-							try {
-								/* Change the notification to the specific set */
-								switchToUpdating(String.format(getString(R.string.update_updating_set),
-										set[CardAndSetParser.SET_NAME]));
-								GZIPInputStream gis = new GZIPInputStream(
-										new URL(set[CardAndSetParser.SET_URL]).openStream());
-								parser.readCardJsonStream(gis, reporter, database);
-								updatedStuff.add(set[CardAndSetParser.SET_NAME]);
-							} catch (MalformedURLException e) {
-								/* Eat it */
-							} catch (IOException e) {
-								/* Eat it */
-							}
-							/* Change the notification to generic "checking for updates" */
-							switchToChecking();
-						}
-					}
+			try {
+				/* Get database access, which auto-opens it, close it, and open a transactional write */
+				SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
 
-					/* Look for new TCGPlayer.com versions of set names */
+				showStatusNotification();
+
+				if (RE_PARSE_DATABASE) {
+					/* Blow up the database and download and build it all over again */
+					CardDbAdapter.dropCreateDB(database);
+					parser.readLegalityJsonStream(database, mPrefAdapter);
+					GZIPInputStream upToGIS = new GZIPInputStream(
+							new URL("https://sites.google.com/site/mtgfamiliar/patches/UpToRTR.json.gzip").openStream());
+					switchToUpdating(String.format(getString(R.string.update_updating_set), "EVERYTHING!!"));
+					parser.readCardJsonStream(upToGIS, reporter, database);
 					parser.readTCGNameJsonStream(mPrefAdapter, database);
 				}
-			}
+				else {
+					/* Look for updates with the banned / restricted lists and formats */
+					parser.readLegalityJsonStream(database, mPrefAdapter);
+					/* Look for new cards */
+					ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
+					if (patchInfo != null) {
+						/* Look through the list of available patches, and if it doesn't exist in the database, add it. */
+						for (String[] set : patchInfo) {
+							if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) {
+								try {
+									/* Change the notification to the specific set */
+									switchToUpdating(String.format(getString(R.string.update_updating_set),
+											set[CardAndSetParser.SET_NAME]));
+									GZIPInputStream gis = new GZIPInputStream(
+											new URL(set[CardAndSetParser.SET_URL]).openStream());
+									parser.readCardJsonStream(gis, reporter, database);
+									updatedStuff.add(set[CardAndSetParser.SET_NAME]);
+								} catch (MalformedURLException e) {
+									/* Eat it */
+								} catch (IOException e) {
+									/* Eat it */
+								}
+								/* Change the notification to generic "checking for updates" */
+								switchToChecking();
+							}
+						}
 
-			/* Parse the rules
-			 * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
-			 * built. This is a safe assumption to make, since any market release will have the latest database baked
-			 * in.
-			 */
-
-			long lastRulesUpdate;
-			if (RE_PARSE_DATABASE) {
-				lastRulesUpdate = 0; /* Long, long time ago */
-			}
-			else {
-				lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
-			}
-
-			RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
-			if (rp.needsToUpdate()) {
-				if (rp.parseRules()) {
-					switchToUpdating(getString(R.string.update_updating_rules));
-					int code = rp.loadRulesAndGlossary(database);
-
-					/* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
-					 * should let them know and try again next update.
-					 */
-					if (code == RulesParser.SUCCESS) {
-						newRulesParsed = true;
-						updatedStuff.add(getString(R.string.update_added_rules));
+						/* Look for new TCGPlayer.com versions of set names */
+						parser.readTCGNameJsonStream(mPrefAdapter, database);
 					}
+				}
 
-					switchToChecking();
+				/* Parse the rules
+				 * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
+				 * built. This is a safe assumption to make, since any market release will have the latest database baked
+				 * in.
+				 */
+
+				long lastRulesUpdate;
+				if (RE_PARSE_DATABASE) {
+					lastRulesUpdate = 0; /* Long, long time ago */
+				}
+				else {
+					lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
+				}
+
+				RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
+				if (rp.needsToUpdate()) {
+					if (rp.parseRules()) {
+						switchToUpdating(getString(R.string.update_updating_rules));
+						int code = rp.loadRulesAndGlossary(database);
+
+						/* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
+						 * should let them know and try again next update.
+						 */
+						if (code == RulesParser.SUCCESS) {
+							newRulesParsed = true;
+							updatedStuff.add(getString(R.string.update_added_rules));
+						}
+
+						switchToChecking();
+					}
+				}
+
+				DatabaseManager.getInstance().closeDatabase();
+
+				cancelStatusNotification();
+			} catch (MalformedURLException e1) {
+				commitDates = false; /* don't commit the dates */
+			} catch (IOException e) {
+				commitDates = false;
+			} catch (FamiliarDbException e) {
+				commitDates = false;
+			}
+
+			/* Parse the MTR and IPG */
+			MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);
+			if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR)) {
+				updatedStuff.add(getString(R.string.update_added_mtr));
+			}
+
+			if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG)) {
+				updatedStuff.add(getString(R.string.update_added_ipg));
+			}
+
+			/* If everything went well so far, commit the date and show the update complete notification */
+			if (commitDates) {
+				showUpdatedNotification(updatedStuff);
+
+				parser.commitDates(mPrefAdapter);
+
+				long curTime = new Date().getTime();
+				mPrefAdapter.setLastLegalityUpdate((int) (curTime / 1000));
+				if (newRulesParsed) {
+					mPrefAdapter.setLastRulesUpdate(curTime);
 				}
 			}
-
-			DatabaseManager.getInstance().closeDatabase();
-
-			cancelStatusNotification();
-		} catch (MalformedURLException e1) {
-			commitDates = false; /* don't commit the dates */
-		} catch (IOException e) {
-			commitDates = false;
-		} catch (FamiliarDbException e) {
-			commitDates = false;
-		}
-
-		/* Parse the MTR and IPG */
-		MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);
-		if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR)) {
-			updatedStuff.add(getString(R.string.update_added_mtr));
-		}
-
-		if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG)) {
-			updatedStuff.add(getString(R.string.update_added_ipg));
-		}
-
-		/* If everything went well so far, commit the date and show the update complete notification */
-		if (commitDates) {
-			showUpdatedNotification(updatedStuff);
-
-			parser.commitDates(mPrefAdapter);
-
-			long curTime = new Date().getTime();
-			mPrefAdapter.setLastLegalityUpdate((int) (curTime / 1000));
-			if (newRulesParsed) {
-				mPrefAdapter.setLastRulesUpdate(curTime);
+			else {
+				cancelStatusNotification();
 			}
+		} catch (Exception e) {
+			/* Generally pokemon handling is bad, but I don't want to leave a notification */
+			cancelStatusNotification();
 		}
 	}
 
