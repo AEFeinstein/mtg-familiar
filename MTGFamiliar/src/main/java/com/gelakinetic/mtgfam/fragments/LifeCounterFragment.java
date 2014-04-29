@@ -154,7 +154,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		mCommanderPlayerView = (LinearLayout) myFragmentView.findViewById(R.id.commander_player);
 
-		if(null != myFragmentView.findViewById(R.id.playerScrollView_horz)) {
+		if (null != myFragmentView.findViewById(R.id.playerScrollView_horz)) {
 			mScrollView = myFragmentView.findViewById(R.id.playerScrollView_horz);
 		}
 		else {
@@ -470,7 +470,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 												changeDisplayMode();
 												dialog.dismiss();
 											}
-										})
+										}
+								)
 								.setNeutralButton(getString(R.string.dialog_life),
 										new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog, int id) {
@@ -481,13 +482,15 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 												mGridLayout.invalidate();
 												dialog.dismiss();
 											}
-										})
+										}
+								)
 								.setNegativeButton(getString(R.string.dialog_cancel),
 										new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog, int id) {
 												dialog.dismiss();
 											}
-										});
+										}
+								);
 
 						return builder.create();
 					}
@@ -507,7 +510,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 											changeDisplayMode();
 										}
 									}
-								});
+								}
+						);
 
 						return builder.create();
 					}
@@ -702,7 +706,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 					mCommanderPlayerView.addView(player.mView);
 					player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
 							getActivity().getResources().getConfiguration().orientation
-									== Configuration.ORIENTATION_PORTRAIT);
+									== Configuration.ORIENTATION_PORTRAIT
+					);
 				}
 			});
 		}
@@ -928,8 +933,17 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	@Override
 	public void onInit(int status) {
 		if (status == TextToSpeech.SUCCESS) {
-			mTtsInit = true;
-			getActivity().invalidateOptionsMenu();
+			int result = mTts.setLanguage(getResources().getConfiguration().locale);
+			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+				mTtsInit = true;
+				getActivity().invalidateOptionsMenu();
+			}
+			else {
+				getFamiliarActivity().showTtsDialog();
+			}
+		}
+		else if (status == TextToSpeech.ERROR) {
+			getFamiliarActivity().showTtsDialog();
 		}
 	}
 
@@ -954,7 +968,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 							mVocalizations.add(parts[1]);
 						}
 						else {
-							if(p.mLife == 1) {
+							if (p.mLife == 1) {
 								mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life_singular),
 										p.mName, p.mLife));
 							}
@@ -965,7 +979,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 						}
 						break;
 					case STAT_POISON:
-						if(p.mPoison == 1) {
+						if (p.mPoison == 1) {
 							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison_singular),
 									p.mName, p.mPoison));
 						}
@@ -1019,14 +1033,19 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 					HashMap<String, String> ttsParams = new HashMap<String, String>();
 					ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
 					ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
-					mTts.speak(getString(R.string.life_counter_over_9000), TextToSpeech.QUEUE_FLUSH, ttsParams);
+					if (mTts.speak(getString(R.string.life_counter_over_9000), TextToSpeech.QUEUE_FLUSH, ttsParams) == TextToSpeech.ERROR) {
+						getFamiliarActivity().showTtsDialog();
+					}
 				}
 			}
 			else {
 				HashMap<String, String> ttsParams = new HashMap<String, String>();
 				ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
 				ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
-				mTts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, ttsParams);
+
+				if (mTts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, ttsParams) == TextToSpeech.ERROR) {
+					getFamiliarActivity().showTtsDialog();
+				}
 			}
 		}
 		else {

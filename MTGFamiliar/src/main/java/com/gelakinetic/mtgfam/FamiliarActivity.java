@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -110,10 +111,9 @@ public class FamiliarActivity extends FragmentActivity {
 
 	/* Constants used for displaying dialogs */
 	private static final int ABOUT_DIALOG = 100;
-	public static final int CHANGE_LOG_DIALOG = 101;
+	private static final int CHANGE_LOG_DIALOG = 101;
 	private static final int DONATE_DIALOG = 102;
 	private static final int TTS_DIALOG = 103;
-	public int dialogShowing = 0;
 
 	/* Constants used for saving state */
 	private static final String CURRENT_FRAG = "CURRENT_FRAG";
@@ -306,14 +306,6 @@ public class FamiliarActivity extends FragmentActivity {
 			RoundTimerFragment.setOrCancelAlarms(this, mRoundEndTime, true);
 		}
 		mUpdatingRoundTimer = false;
-
-		/* Check for TTS support, the result will be caught in onActivityResult()
-		 * Launching this intent will cause the activity lifecycle to call onPause() and onResume() twice  */
-		if (mPreferenceAdapter.getTtsShowDialog()) {
-			Intent checkIntent = new Intent();
-			checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-			startActivityForResult(checkIntent, TTS_DATA_CHECK_CODE);
-		}
 
 		/* Get the drawer layout and list */
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -797,6 +789,16 @@ public class FamiliarActivity extends FragmentActivity {
 	}
 
 	/**
+	 * If TTS couldn't init, show this dialog. It will only display once as to not annoy people
+	 */
+	public void showTtsDialog() {
+		if(mPreferenceAdapter.getTtsShowDialog()) {
+			showDialogFragment(FamiliarActivity.TTS_DIALOG);
+			mPreferenceAdapter.setTtsShowDialog();
+		}
+	}
+
+	/**
 	 * This nested class encapsulates the necessary information for an entry in the drawer menu
 	 */
 	public class DrawerEntry {
@@ -902,7 +904,6 @@ public class FamiliarActivity extends FragmentActivity {
 				ft.commit();
 			}
 		}
-		dialogShowing = 0;
 	}
 
 	/**
@@ -916,7 +917,6 @@ public class FamiliarActivity extends FragmentActivity {
 
 		removeDialogFragment(getSupportFragmentManager());
 
-		dialogShowing = id;
 		/* Create and show the dialog. */
 		FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
@@ -1055,9 +1055,17 @@ public class FamiliarActivity extends FragmentActivity {
 								.setPositiveButton(R.string.main_install_tts, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
-										Intent installIntent = new Intent();
-										installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-										startActivity(installIntent);
+										/* TTS couldn't init, try installing TTS data */
+										try {
+											Intent installIntent = new Intent();
+											installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+											startActivity(installIntent);
+										} catch (ActivityNotFoundException e) {
+											/* TTS not even installed */
+											Intent intent = new Intent(Intent.ACTION_VIEW);
+											intent.setData(Uri.parse("market://details?id=com.google.android.tts"));
+											startActivity(intent);
+										}
 										dialogInterface.dismiss();
 									}
 								})
@@ -1196,15 +1204,6 @@ public class FamiliarActivity extends FragmentActivity {
 				if (uri != null) {
 					mPreferenceAdapter.setTimerSound(uri.toString());
 				}
-			}
-		}
-
-		if (requestCode == TTS_DATA_CHECK_CODE) {
-			/* So we don't display this dialog again and bother the user */
-			mPreferenceAdapter.setTtsShowDialog();
-			if (resultCode != TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-				/* missing data, install it */
-				showDialogFragment(TTS_DIALOG);
 			}
 		}
 	}

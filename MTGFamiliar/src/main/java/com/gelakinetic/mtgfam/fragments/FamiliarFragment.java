@@ -101,9 +101,7 @@ public abstract class FamiliarFragment extends Fragment {
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (getFamiliarActivity().dialogShowing != FamiliarActivity.CHANGE_LOG_DIALOG) {
-			removeDialog(getFragmentManager());
-		}
+		removeDialog(getFragmentManager());
 		try {
 			getFamiliarActivity().mSpiceManager.cancelAllRequests();
 		} catch (RejectedExecutionException e) {

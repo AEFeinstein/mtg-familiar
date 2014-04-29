@@ -20,7 +20,6 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.RoundTimerFragment;
 
 import java.util.HashMap;
-import java.util.Locale;
 
 /**
  * This class receives PendingIntents from the AlarmManager and acts upon them. If the device supports TTS, a service
@@ -169,7 +168,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
 		public void onInit(int status) {
 			if (status == TextToSpeech.SUCCESS) {
 				/* Try to say what needs to be said */
-				int result = mTts.setLanguage(Locale.US);
+				int result = mTts.setLanguage(getResources().getConfiguration().locale);
 				if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
 					/* Fall back to ringtone */
 					Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
@@ -221,6 +220,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
 
 		/**
 		 * Necessary to implement AudioManager.OnAudioFocusChangeListener, but it's never called.
+		 *
 		 * @param focusChange The new focus
 		 */
 		@Override
