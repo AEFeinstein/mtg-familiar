@@ -52,18 +52,104 @@ public class RoundTimerFragment extends FamiliarFragment {
 	public static final int TIMER_10_MIN_WARNING = 3;
 	public static final int TIMER_15_MIN_WARNING = 4;
 	public static final int TIMER_EASTER_EGG = 5;
-
-	private static final int DIALOG_SET_WARNINGS = 1;
-
-	private static final int RINGTONE_REQUEST_CODE = 17;
-
 	public static final int TIMER_NOTIFICATION_ID = 53;
-
+	private static final int DIALOG_SET_WARNINGS = 1;
+	private static final int RINGTONE_REQUEST_CODE = 17;
 	/* Variables */
 	private Button mTimerButton;
 	private TimePicker mTimePicker;
 	private int mPickerHours = -1;
 	private int mPickerMinutes = -1;
+
+	/**
+	 * This static method is used to either set or cancel PendingIntents with the AlarmManager. It is static so that
+	 * the FamiliarActivity can restart alarms without instantiating a fragment.
+	 *
+	 * @param context The application context to build the PendingIntents with
+	 * @param endTime The time the round should end
+	 * @param set     Whether to set the alarms after setting them
+	 */
+	public static void setOrCancelAlarms(Context context, long endTime, boolean set) {
+		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+		PendingIntent AlarmPendingIntent = PendingIntent.getBroadcast(context, TIMER_RING_ALARM, new Intent(context,
+						RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_RING_ALARM),
+				PendingIntent.FLAG_UPDATE_CURRENT
+		);
+		PendingIntent fiveMinPI = PendingIntent.getBroadcast(context, TIMER_5_MIN_WARNING, new Intent(context,
+						RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_5_MIN_WARNING),
+				PendingIntent.FLAG_UPDATE_CURRENT
+		);
+		PendingIntent tenMinPI = PendingIntent.getBroadcast(context, TIMER_10_MIN_WARNING, new Intent(context,
+						RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_10_MIN_WARNING),
+				PendingIntent.FLAG_UPDATE_CURRENT
+		);
+		PendingIntent fifteenMinPI = PendingIntent.getBroadcast(context, TIMER_15_MIN_WARNING, new Intent(context,
+						RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_15_MIN_WARNING),
+				PendingIntent.FLAG_UPDATE_CURRENT
+		);
+		PendingIntent easterEggPI = PendingIntent.getBroadcast(context, TIMER_EASTER_EGG, new Intent(context,
+						RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_EASTER_EGG),
+				PendingIntent.FLAG_UPDATE_CURRENT
+		);
+
+		/* Cancel any pending alarms */
+		am.cancel(AlarmPendingIntent);
+		am.cancel(fiveMinPI);
+		am.cancel(tenMinPI);
+		am.cancel(fifteenMinPI);
+		am.cancel(easterEggPI);
+
+		if (set) {
+			/* Set all applicable alarms */
+			am.set(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
+
+			if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
+				am.set(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
+			}
+			if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
+				am.set(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
+			}
+			if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
+				am.set(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
+			}
+			if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
+				am.set(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
+			}
+		}
+	}
+
+	/**
+	 * Create and show a notification in the status bar. It will say when the round ends. This method is static so that
+	 * FamiliarActivity can call it without instantiating a fragment
+	 *
+	 * @param context The application context to build the notification with
+	 * @param endTime The time the round will end, relative to System.currentTimeInMillis()
+	 */
+	public static void showTimerRunningNotification(Context context, long endTime) {
+		/* Format the String */
+		Calendar then = Calendar.getInstance();
+		then.add(Calendar.MILLISECOND, (int) (endTime - System.currentTimeMillis()));
+		String messageText = String.format(context.getString(R.string.timer_notification_ongoing), then);
+
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+		Notification notification = builder
+				.setSmallIcon(R.drawable.notification_icon)
+				.setWhen(System.currentTimeMillis())
+				.setContentTitle(context.getString(R.string.main_timer))
+				.setContentText(messageText)
+				.setContentIntent(PendingIntent.getActivity(context, 7, new Intent(context,
+						FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER), 0))
+				.setOngoing(true)
+				.build();
+
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		/* Clear any existing notifications just in case there's still one there */
+		notificationManager.cancel(TIMER_NOTIFICATION_ID);
+		/* Then show the new one */
+		notificationManager.notify(TIMER_NOTIFICATION_ID, notification);
+	}
 
 	/**
 	 * Inflate the View and pull out UI elements. Attach an action to the button to either start or stop the timer,
@@ -103,8 +189,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 					NotificationManager notificationManager = (NotificationManager) getActivity()
 							.getSystemService(Context.NOTIFICATION_SERVICE);
 					notificationManager.cancel(TIMER_NOTIFICATION_ID);
-				}
-				else {
+				} else {
 					/* This forces the inner value to update, in case the user typed it in manually */
 					mTimePicker.clearFocus();
 
@@ -230,9 +315,8 @@ public class RoundTimerFragment extends FamiliarFragment {
 
 	/**
 	 * Remove any showing dialogs, and show the requested one
-	 *
 	 */
-	void showDialog() {
+	void showDialog() throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -291,90 +375,5 @@ public class RoundTimerFragment extends FamiliarFragment {
 			}
 		};
 		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
-	}
-
-	/**
-	 * This static method is used to either set or cancel PendingIntents with the AlarmManager. It is static so that
-	 * the FamiliarActivity can restart alarms without instantiating a fragment.
-	 *
-	 * @param context The application context to build the PendingIntents with
-	 * @param endTime The time the round should end
-	 * @param set     Whether to set the alarms after setting them
-	 */
-	public static void setOrCancelAlarms(Context context, long endTime, boolean set) {
-		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-		PendingIntent AlarmPendingIntent = PendingIntent.getBroadcast(context, TIMER_RING_ALARM, new Intent(context,
-				RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_RING_ALARM),
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		PendingIntent fiveMinPI = PendingIntent.getBroadcast(context, TIMER_5_MIN_WARNING, new Intent(context,
-				RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_5_MIN_WARNING),
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		PendingIntent tenMinPI = PendingIntent.getBroadcast(context, TIMER_10_MIN_WARNING, new Intent(context,
-				RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_10_MIN_WARNING),
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		PendingIntent fifteenMinPI = PendingIntent.getBroadcast(context, TIMER_15_MIN_WARNING, new Intent(context,
-				RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_15_MIN_WARNING),
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		PendingIntent easterEggPI = PendingIntent.getBroadcast(context, TIMER_EASTER_EGG, new Intent(context,
-				RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_EASTER_EGG),
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
-		/* Cancel any pending alarms */
-		am.cancel(AlarmPendingIntent);
-		am.cancel(fiveMinPI);
-		am.cancel(tenMinPI);
-		am.cancel(fifteenMinPI);
-		am.cancel(easterEggPI);
-
-		if (set) {
-			/* Set all applicable alarms */
-			am.set(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
-
-			if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
-				am.set(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
-			}
-			if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
-				am.set(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
-			}
-			if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
-				am.set(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
-			}
-			if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
-				am.set(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
-			}
-		}
-	}
-
-	/**
-	 * Create and show a notification in the status bar. It will say when the round ends. This method is static so that
-	 * FamiliarActivity can call it without instantiating a fragment
-	 *
-	 * @param context The application context to build the notification with
-	 * @param endTime The time the round will end, relative to System.currentTimeInMillis()
-	 */
-	public static void showTimerRunningNotification(Context context, long endTime) {
-		/* Format the String */
-		Calendar then = Calendar.getInstance();
-		then.add(Calendar.MILLISECOND, (int) (endTime - System.currentTimeMillis()));
-		String messageText = String.format(context.getString(R.string.timer_notification_ongoing), then);
-
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-		Notification notification = builder
-				.setSmallIcon(R.drawable.notification_icon)
-				.setWhen(System.currentTimeMillis())
-				.setContentTitle(context.getString(R.string.main_timer))
-				.setContentText(messageText)
-				.setContentIntent(PendingIntent.getActivity(context, 7, new Intent(context,
-						FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER), 0))
-				.setOngoing(true)
-				.build();
-
-		NotificationManager notificationManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		/* Clear any existing notifications just in case there's still one there */
-		notificationManager.cancel(TIMER_NOTIFICATION_ID);
-		/* Then show the new one */
-		notificationManager.notify(TIMER_NOTIFICATION_ID, notification);
 	}
 }

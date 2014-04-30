@@ -110,12 +110,12 @@ public class GatheringsFragment extends FamiliarFragment {
 	/**
 	 * Create the view and grab the LinearLayout and Spinner. Information will be populated later
 	 *
-	 * @param inflater		   The LayoutInflater object that can be used to inflate any views in the fragment,
-	 * @param container		  If non-null, this is the parent view that the fragment's UI should be attached to. The
-	 *						   fragment should not add the view itself, but this can be used to generate the
-	 *						   LayoutParams of the view.
+	 * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+	 * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
+	 *                           fragment should not add the view itself, but this can be used to generate the
+	 *                           LayoutParams of the view.
 	 * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
-	 *						   here.
+	 *                           here.
 	 * @return The inflated view
 	 */
 	@Override
@@ -168,7 +168,7 @@ public class GatheringsFragment extends FamiliarFragment {
 	 *
 	 * @param id the ID of the dialog to show
 	 */
-	void showDialog(final int id) {
+	void showDialog(final int id) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -421,7 +421,7 @@ public class GatheringsFragment extends FamiliarFragment {
 	/**
 	 * Inflate the menu, gathering_menu
 	 *
-	 * @param menu	 The options menu in which you place your items.
+	 * @param menu     The options menu in which you place your items.
 	 * @param inflater The inflater to use to inflate the menu
 	 */
 	@Override

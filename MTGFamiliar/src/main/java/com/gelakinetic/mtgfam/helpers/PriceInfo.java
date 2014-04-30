@@ -13,11 +13,13 @@ public class PriceInfo {
 
 	}
 
-	public PriceInfo(byte [] bytes) {
+	public PriceInfo(byte[] bytes) {
 		this.fromBytes(bytes);
 	}
+
 	/**
 	 * Pack all the fields into a byte buffer and return it.
+	 *
 	 * @return The byte representation of a PriceInfo
 	 */
 	public byte[] toBytes() {
@@ -49,7 +51,7 @@ public class PriceInfo {
 		mHigh = buf2.getDouble();
 		mFoilAverage = buf2.getDouble();
 
-		byte stringBuf[] = new byte[bytes.length - 8*4];
+		byte stringBuf[] = new byte[bytes.length - 8 * 4];
 		buf2.get(stringBuf);
 		mUrl = new String(stringBuf);
 	}

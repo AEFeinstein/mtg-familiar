@@ -32,6 +32,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
  * Encapsulate all information about a magic card
  */
 public class MtgCard {
+	private static final String DELIMITER = "%";
 	public String name;
 	public String set;
 	public String type;
@@ -47,7 +48,6 @@ public class MtgCard {
 	public String number;
 	public String color;
 	public int multiverseId;
-
 	/* Wish and trade list fields */
 	public String tcgName;
 	public String setCode;
@@ -57,8 +57,6 @@ public class MtgCard {
 	public boolean customPrice = false; /* default is false as all cards should first grab internet prices. */
 	public boolean foil = false;
 	public int mSide;
-
-	private static final String DELIMITER = "%";
 	public PriceInfo priceInfo;
 
 	/**
@@ -141,8 +139,7 @@ public class MtgCard {
 		card.customPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
 		if (parts.length > 5) {
 			card.price = Integer.parseInt(parts[5]);
-		}
-		else {
+		} else {
 			card.price = 0;
 		}
 		card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
@@ -176,8 +173,7 @@ public class MtgCard {
 	public boolean equals(Object o) {
 		if (o instanceof MtgCard) {
 			return this.name.equals(((MtgCard) o).name);
-		}
-		else if (o instanceof CompressedWishlistInfo) {
+		} else if (o instanceof CompressedWishlistInfo) {
 			return this.name.equals(((CompressedWishlistInfo) o).mCard.name);
 		}
 		return false;

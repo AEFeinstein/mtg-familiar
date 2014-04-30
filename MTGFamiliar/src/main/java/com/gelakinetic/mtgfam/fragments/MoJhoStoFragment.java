@@ -22,10 +22,10 @@ import android.widget.Spinner;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 
 import java.util.Random;
 
@@ -185,7 +185,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 	 *
 	 * @param id the ID of the dialog to show
 	 */
-	void showDialog(final int id) {
+	void showDialog(final int id) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -261,8 +261,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 						if ((imageHeight / (float) imageWidth) > (windowHeight / (float) windowWidth)) {
 							/* Limiting factor is height */
 							scaleFactor = (windowHeight - border) / (float) imageHeight;
-						}
-						else {
+						} else {
 							/* Limiting factor is width */
 							scaleFactor = (windowWidth - border) / (float) imageWidth;
 						}
@@ -302,7 +301,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 					CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, cmc, logic, null, null, null,
 					null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
 
-			if(permanents.getCount() == 0) {
+			if (permanents.getCount() == 0) {
 				return;
 			}
 			int pos = mRandom.nextInt(permanents.getCount());

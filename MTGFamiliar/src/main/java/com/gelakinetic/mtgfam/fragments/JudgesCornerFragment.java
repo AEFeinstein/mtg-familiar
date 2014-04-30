@@ -33,18 +33,16 @@ import java.util.HashMap;
  * This fragment houses tabs which house other fragments. These sub-fragments are a collection of utilities for Judges
  */
 public class JudgesCornerFragment extends FamiliarFragment {
-	/* UI elements */
-	private TabHost mTabHost;
-
-	/* Constants to keep track of tabs */
-	private static final String TAG_MTR = "MTR";
-	private static final String TAG_IPG = "IPG";
-	private static final String TAG_COUNTER = "COUNTER";
-
 	/* Key and constants for displaying the MTR and IPG */
 	public static final String HTML_DOC = "html";
 	public static final String MTR_LOCAL_FILE = "MTR.html";
 	public static final String IPG_LOCAL_FILE = "IPG.html";
+	/* Constants to keep track of tabs */
+	private static final String TAG_MTR = "MTR";
+	private static final String TAG_IPG = "IPG";
+	private static final String TAG_COUNTER = "COUNTER";
+	/* UI elements */
+	private TabHost mTabHost;
 
 	/**
 	 * Set up the tab UI and the tabs
@@ -114,59 +112,6 @@ public class JudgesCornerFragment extends FamiliarFragment {
 		TabInfo mLastTab;
 
 		/**
-		 * This inner class encapsulates all the necessary information for a tab
-		 */
-		static final class TabInfo {
-			private final String tag;
-			private final Class<?> mClass;
-			private final Bundle args;
-			private Fragment fragment;
-
-			/**
-			 * Constructor
-			 *
-			 * @param _tag   A string tag for this tab
-			 * @param _class The class this tab will host
-			 * @param _args  Any arguments to pass to this tab's class
-			 */
-			TabInfo(String _tag, Class<?> _class, Bundle _args) {
-				tag = _tag;
-				mClass = _class;
-				args = _args;
-			}
-		}
-
-		/**
-		 * This inner class creates views for tabs
-		 */
-		static class DummyTabFactory implements TabHost.TabContentFactory {
-			private final Context mContext;
-
-			/**
-			 * Constructor
-			 *
-			 * @param context a Context to create views with
-			 */
-			public DummyTabFactory(Context context) {
-				mContext = context;
-			}
-
-			/**
-			 * Create a view for a tab
-			 *
-			 * @param tag The string tag to keep track of this tab
-			 * @return The view to be displayed by this tab
-			 */
-			@Override
-			public View createTabContent(String tag) {
-				View v = new View(mContext);
-				v.setMinimumWidth(0);
-				v.setMinimumHeight(0);
-				return v;
-			}
-		}
-
-		/**
 		 * Constructor
 		 *
 		 * @param fragment The fragment this TabManager will manage tabs for
@@ -226,8 +171,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 						newTab.fragment = Fragment.instantiate(mFragment.getActivity(),
 								newTab.mClass.getName(), newTab.args);
 						ft.add(mContainerId, newTab.fragment, newTab.tag);
-					}
-					else {
+					} else {
 						ft.attach(newTab.fragment);
 					}
 				}
@@ -235,6 +179,59 @@ public class JudgesCornerFragment extends FamiliarFragment {
 				mLastTab = newTab;
 				ft.commit();
 				mFragment.getChildFragmentManager().executePendingTransactions();
+			}
+		}
+
+		/**
+		 * This inner class encapsulates all the necessary information for a tab
+		 */
+		static final class TabInfo {
+			private final String tag;
+			private final Class<?> mClass;
+			private final Bundle args;
+			private Fragment fragment;
+
+			/**
+			 * Constructor
+			 *
+			 * @param _tag   A string tag for this tab
+			 * @param _class The class this tab will host
+			 * @param _args  Any arguments to pass to this tab's class
+			 */
+			TabInfo(String _tag, Class<?> _class, Bundle _args) {
+				tag = _tag;
+				mClass = _class;
+				args = _args;
+			}
+		}
+
+		/**
+		 * This inner class creates views for tabs
+		 */
+		static class DummyTabFactory implements TabHost.TabContentFactory {
+			private final Context mContext;
+
+			/**
+			 * Constructor
+			 *
+			 * @param context a Context to create views with
+			 */
+			public DummyTabFactory(Context context) {
+				mContext = context;
+			}
+
+			/**
+			 * Create a view for a tab
+			 *
+			 * @param tag The string tag to keep track of this tab
+			 * @return The view to be displayed by this tab
+			 */
+			@Override
+			public View createTabContent(String tag) {
+				View v = new View(mContext);
+				v.setMinimumWidth(0);
+				v.setMinimumHeight(0);
+				return v;
 			}
 		}
 	}

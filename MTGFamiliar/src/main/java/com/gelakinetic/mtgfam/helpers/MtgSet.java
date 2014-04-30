@@ -23,18 +23,18 @@ package com.gelakinetic.mtgfam.helpers;
  * Encapsulate all information about a set of cards (block)
  */
 public class MtgSet {
-    public String code;
-    public String codeMagicCards;
-    public String name;
-    public long date;
+	public String code;
+	public String codeMagicCards;
+	public String name;
+	public long date;
 
 	/**
 	 * Default constructor, doesn't leave null fields
 	 */
-    public MtgSet() {
-        code = "";
-        codeMagicCards = "";
-        name = "";
-        date = 0;
-    }
+	public MtgSet() {
+		code = "";
+		codeMagicCards = "";
+		name = "";
+		date = 0;
+	}
 }

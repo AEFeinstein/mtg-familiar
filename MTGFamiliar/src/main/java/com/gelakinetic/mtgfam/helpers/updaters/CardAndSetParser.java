@@ -21,11 +21,11 @@ package com.gelakinetic.mtgfam.helpers.updaters;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
@@ -57,14 +57,6 @@ class CardAndSetParser {
 	private String mCurrentTCGNamePatchDate = null;
 	private String mCurrentPatchDate = null;
 	private String mCurrentRulesDate = null;
-
-	/**
-	 * This interface is implemented by ProgressReporter in DbUpdaterService. It's used to report progress to the
-	 * notification
-	 */
-	public interface CardProgressReporter {
-		void reportJsonCardProgress(int progress);
-	}
 
 	/**
 	 * If a set has a patch, and doesn't exist in the database, this is called to parse an InputStream of JSON and add
@@ -133,8 +125,7 @@ class CardAndSetParser {
 							}
 							setsAdded.add(set);
 							reader.endObject();
-						}
-						else if (jt.equals(JsonToken.BEGIN_ARRAY)) {
+						} else if (jt.equals(JsonToken.BEGIN_ARRAY)) {
 							reader.beginArray();
 							while (reader.hasNext()) {
 								set = new MtgSet();
@@ -179,117 +170,87 @@ class CardAndSetParser {
 								s2 = reader.nextName();
 								if (s2.equalsIgnoreCase("a")) { /* name */
 									c.name = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("b")) { /* set */
+								} else if (s2.equalsIgnoreCase("b")) { /* set */
 									c.set = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("c")) { /* type */
+								} else if (s2.equalsIgnoreCase("c")) { /* type */
 									c.type = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("d")) { /* rarity */
+								} else if (s2.equalsIgnoreCase("d")) { /* rarity */
 									c.rarity = reader.nextString().charAt(0);
-								}
-								else if (s2.equalsIgnoreCase("e")) { /* manaCost */
+								} else if (s2.equalsIgnoreCase("e")) { /* manaCost */
 									c.manaCost = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("f")) { /* converted_manaCost */
+								} else if (s2.equalsIgnoreCase("f")) { /* converted_manaCost */
 									try {
 										c.cmc = reader.nextInt();
 									} catch (NumberFormatException e) {
 										reader.skipValue();
 									}
-								}
-								else if (s2.equalsIgnoreCase("g")) { /* power */
+								} else if (s2.equalsIgnoreCase("g")) { /* power */
 									pouTouStr = reader.nextString();
 									try {
 										c.power = Integer.parseInt(pouTouStr);
 									} catch (NumberFormatException e) {
 										if (pouTouStr.equals("*")) {
 											c.power = CardDbAdapter.STAR;
-										}
-										else if (pouTouStr.equals("1+*")) {
+										} else if (pouTouStr.equals("1+*")) {
 											c.power = CardDbAdapter.ONE_PLUS_STAR;
-										}
-										else if (pouTouStr.equals("2+*")) {
+										} else if (pouTouStr.equals("2+*")) {
 											c.power = CardDbAdapter.TWO_PLUS_STAR;
-										}
-										else if (pouTouStr.equals("7-*")) {
+										} else if (pouTouStr.equals("7-*")) {
 											c.power = CardDbAdapter.SEVEN_MINUS_STAR;
-										}
-										else if (pouTouStr.equals("*{^2}")) {
+										} else if (pouTouStr.equals("*{^2}")) {
 											c.power = CardDbAdapter.STAR_SQUARED;
-										}
-										else if (pouTouStr.equals("{1/2}")) {
+										} else if (pouTouStr.equals("{1/2}")) {
 											c.power = 0.5f;
-										}
-										else if (pouTouStr.equals("1{1/2}")) {
+										} else if (pouTouStr.equals("1{1/2}")) {
 											c.power = 1.5f;
-										}
-										else if (pouTouStr.equals("2{1/2}")) {
+										} else if (pouTouStr.equals("2{1/2}")) {
 											c.power = 2.5f;
-										}
-										else if (pouTouStr.equals("3{1/2}")) {
+										} else if (pouTouStr.equals("3{1/2}")) {
 											c.power = 3.5f;
 										}
 									}
-								}
-								else if (s2.equalsIgnoreCase("h")) { /* toughness */
+								} else if (s2.equalsIgnoreCase("h")) { /* toughness */
 									pouTouStr = reader.nextString();
 									try {
 										c.toughness = Integer.parseInt(pouTouStr);
 									} catch (NumberFormatException e) {
 										if (pouTouStr.equals("*")) {
 											c.toughness = CardDbAdapter.STAR;
-										}
-										else if (pouTouStr.equals("1+*")) {
+										} else if (pouTouStr.equals("1+*")) {
 											c.toughness = CardDbAdapter.ONE_PLUS_STAR;
-										}
-										else if (pouTouStr.equals("2+*")) {
+										} else if (pouTouStr.equals("2+*")) {
 											c.toughness = CardDbAdapter.TWO_PLUS_STAR;
-										}
-										else if (pouTouStr.equals("7-*")) {
+										} else if (pouTouStr.equals("7-*")) {
 											c.toughness = CardDbAdapter.SEVEN_MINUS_STAR;
-										}
-										else if (pouTouStr.equals("*{^2}")) {
+										} else if (pouTouStr.equals("*{^2}")) {
 											c.toughness = CardDbAdapter.STAR_SQUARED;
-										}
-										else if (pouTouStr.equals("{1/2}")) {
+										} else if (pouTouStr.equals("{1/2}")) {
 											c.toughness = 0.5f;
-										}
-										else if (pouTouStr.equals("1{1/2}")) {
+										} else if (pouTouStr.equals("1{1/2}")) {
 											c.toughness = 1.5f;
-										}
-										else if (pouTouStr.equals("2{1/2}")) {
+										} else if (pouTouStr.equals("2{1/2}")) {
 											c.toughness = 2.5f;
-										}
-										else if (pouTouStr.equals("3{1/2}")) {
+										} else if (pouTouStr.equals("3{1/2}")) {
 											c.toughness = 3.5f;
 										}
 									}
-								}
-								else if (s2.equalsIgnoreCase("i")) { /* loyalty */
+								} else if (s2.equalsIgnoreCase("i")) { /* loyalty */
 									try {
 										c.loyalty = reader.nextInt();
 									} catch (NumberFormatException e) {
 										reader.skipValue();
 									}
-								}
-								else if (s2.equalsIgnoreCase("j")) { /* ability */
+								} else if (s2.equalsIgnoreCase("j")) { /* ability */
 									c.ability = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("k")) { /* flavor */
+								} else if (s2.equalsIgnoreCase("k")) { /* flavor */
 									c.flavor = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("l")) { /* artist */
+								} else if (s2.equalsIgnoreCase("l")) { /* artist */
 									c.artist = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("m")) { /* number */
+								} else if (s2.equalsIgnoreCase("m")) { /* number */
 									c.number = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("n")) { /* color */
+								} else if (s2.equalsIgnoreCase("n")) { /* color */
 									c.color = reader.nextString();
-								}
-								else if (s2.equalsIgnoreCase("x")) { /* multiverse id */
+								} else if (s2.equalsIgnoreCase("x")) { /* multiverse id */
 									try {
 										c.multiverseId = reader.nextInt();
 									} catch (NumberFormatException e) {
@@ -354,8 +315,7 @@ class CardAndSetParser {
 					reader.close();
 					return null;
 				}
-			}
-			else if (label.equals("Patches")) {
+			} else if (label.equals("Patches")) {
 				reader.beginArray();
 				while (reader.hasNext()) {
 					reader.beginObject();
@@ -364,11 +324,9 @@ class CardAndSetParser {
 						label2 = reader.nextName();
 						if (label2.equals("Name")) {
 							setData[SET_NAME] = reader.nextString();
-						}
-						else if (label2.equals("URL")) {
+						} else if (label2.equals("URL")) {
 							setData[SET_URL] = reader.nextString();
-						}
-						else if (label2.equals("Code")) {
+						} else if (label2.equals("Code")) {
 							setData[SET_CODE] = reader.nextString();
 						}
 					}
@@ -390,7 +348,7 @@ class CardAndSetParser {
 	 *
 	 * @param database    Database access
 	 * @param prefAdapter The preference adapter is used to get the last update time
-	 * @throws IOException                                        Thrown if something goes wrong with the InputStream
+	 * @throws IOException                                                 Thrown if something goes wrong with the InputStream
 	 * @throws com.gelakinetic.mtgfam.helpers.database.FamiliarDbException Thrown if something goes wrong with database writing
 	 */
 	public void readLegalityJsonStream(SQLiteDatabase database, PreferenceAdapter prefAdapter)
@@ -426,8 +384,7 @@ class CardAndSetParser {
 
 				CardDbAdapter.dropLegalTables(database);
 				CardDbAdapter.createLegalTables(database);
-			}
-			else if (jsonTopLevelName.equalsIgnoreCase("Formats")) {
+			} else if (jsonTopLevelName.equalsIgnoreCase("Formats")) {
 
 				reader.beginObject();
 				while (reader.hasNext()) {
@@ -446,16 +403,14 @@ class CardAndSetParser {
 								CardDbAdapter.addLegalSet(legalSet, formatName, database);
 							}
 							reader.endArray();
-						}
-						else if (jsonArrayName.equalsIgnoreCase("Banlist")) {
+						} else if (jsonArrayName.equalsIgnoreCase("Banlist")) {
 							reader.beginArray();
 							while (reader.hasNext()) {
 								bannedCard = reader.nextString();
 								CardDbAdapter.addLegalCard(bannedCard, formatName, CardDbAdapter.BANNED, database);
 							}
 							reader.endArray();
-						}
-						else if (jsonArrayName.equalsIgnoreCase("Restrictedlist")) {
+						} else if (jsonArrayName.equalsIgnoreCase("Restrictedlist")) {
 							reader.beginArray();
 							while (reader.hasNext()) {
 								restrictedCard = reader.nextString();
@@ -503,8 +458,7 @@ class CardAndSetParser {
 					reader.close();
 					return;
 				}
-			}
-			else if (label.equals("Sets")) {
+			} else if (label.equals("Sets")) {
 				reader.beginArray();
 				while (reader.hasNext()) {
 					reader.beginObject();
@@ -512,8 +466,7 @@ class CardAndSetParser {
 						label2 = reader.nextName();
 						if (label2.equals("Code")) {
 							code = reader.nextString();
-						}
-						else if (label2.equals("TCGName")) {
+						} else if (label2.equals("TCGName")) {
 							name = reader.nextString();
 						}
 					}
@@ -540,5 +493,13 @@ class CardAndSetParser {
 		mCurrentTCGNamePatchDate = null;
 		mCurrentPatchDate = null;
 		mCurrentRulesDate = null;
+	}
+
+	/**
+	 * This interface is implemented by ProgressReporter in DbUpdaterService. It's used to report progress to the
+	 * notification
+	 */
+	public interface CardProgressReporter {
+		void reportJsonCardProgress(int progress);
 	}
 }

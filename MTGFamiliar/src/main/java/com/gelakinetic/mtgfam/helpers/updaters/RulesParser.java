@@ -17,14 +17,10 @@ import java.util.Date;
 
 class RulesParser {
 
-	/* Instance variables */
-	private final Date mLastUpdated;
-	private InputStream mInputStream;
-	private BufferedReader mBufferedReader;
-	private final RulesProgressReporter mProgressReporter;
-	private final ArrayList<RuleItem> mRules;
-	private final ArrayList<GlossaryItem> mGlossary;
-
+	/**
+	 * Returned from fetchAndLoad() if everything works correctly.
+	 */
+	public static final int SUCCESS = 0;
 	/* URL and delimiting tokens */
 	private static final String SOURCE = "https://sites.google.com/site/mtgfamiliar/rules/MagicCompRules.txt";
 	@SuppressWarnings("SpellCheckingInspection")
@@ -33,30 +29,22 @@ class RulesParser {
 	private static final String GLOSSARY_TOKEN = "GLOSSARY_VERYLONGSTRINGOFLETTERSUNLIKELYTOBEFOUNDINTHEACTUALRULES";
 	@SuppressWarnings("SpellCheckingInspection")
 	private static final String EOF_TOKEN = "EOF_VERYLONGSTRINGOFLETTERSUNLIKELYTOBEFOUNDINTHEACTUALRULES";
-
-	/**
-	 * Returned from fetchAndLoad() if everything works correctly.
-	 */
-	public static final int SUCCESS = 0;
-
 	/**
 	 * Returned from fetchAndLoad() if some of the rules/terms failed, but some succeeded.
 	 */
 	private static final int ERRORS = 1;
-
 	/**
 	 * Returned from fetchAndLoad() if a catastrophic failure occurs.
 	 */
 	private static final int FAILURE = 2;
+	/* Instance variables */
+	private final Date mLastUpdated;
+	private final RulesProgressReporter mProgressReporter;
+	private final ArrayList<RuleItem> mRules;
+	private final ArrayList<GlossaryItem> mGlossary;
+	private InputStream mInputStream;
+	private BufferedReader mBufferedReader;
 
-
-	/**
-	 * This interface is implemented by ProgressReporter in DbUpdaterService. It's used to report progress to the
-	 * notification
-	 */
-	public interface RulesProgressReporter {
-		void reportRulesProgress(int progress);
-	}
 
 	/**
 	 * Default Constructor
@@ -97,8 +85,7 @@ class RulesParser {
 
 			if (c.getTime().after(this.mLastUpdated)) {
 				return true;
-			}
-			else {
+			} else {
 				closeReader();
 				return false;
 			}
@@ -148,8 +135,7 @@ class RulesParser {
 						this.mRules.add(currentRule);
 						currentRule = null;
 					}
-				}
-				else {
+				} else {
 					if (Character.isDigit(line.charAt(0))) {
 						/* If the line starts with a number, it's the start of a rule */
 						int category, subcategory;
@@ -162,16 +148,14 @@ class RulesParser {
 						if (rawCategory >= 100) {
 							category = rawCategory / 100;
 							subcategory = rawCategory % 100;
-						}
-						else {
+						} else {
 							category = rawCategory;
 							subcategory = -1;
 						}
 
 						if (subTokens.length > 1) {
 							entry = subTokens[1];
-						}
-						else {
+						} else {
 							entry = null;
 						}
 
@@ -180,14 +164,12 @@ class RulesParser {
 
 						if (entry == null) {
 							position = -1;
-						}
-						else {
+						} else {
 							position++;
 						}
 
 						currentRule = new RuleItem(category, subcategory, entry, text, position);
-					}
-					else {
+					} else {
 						if (currentRule != null) {
 							currentRule.addExample(line.replace("{PW}", "{PWK}").replace("{P/W}", "{PW}")
 									.replace("{W/P}", "{WP}"));
@@ -209,12 +191,10 @@ class RulesParser {
 						mGlossary.add(currentTerm);
 						currentTerm = null;
 					}
-				}
-				else {
+				} else {
 					if (currentTerm == null) {
 						currentTerm = new GlossaryItem(line);
-					}
-					else {
+					} else {
 						currentTerm.addDefinitionLine(line.replace("{PW}", "{PWK}").replace("{P/W}", "{PW}")
 								.replace("{W/P}", "{WP}"));
 					}
@@ -295,14 +275,22 @@ class RulesParser {
 	}
 
 	/**
+	 * This interface is implemented by ProgressReporter in DbUpdaterService. It's used to report progress to the
+	 * notification
+	 */
+	public interface RulesProgressReporter {
+		void reportRulesProgress(int progress);
+	}
+
+	/**
 	 * Nested class which encapsulates all necessary information about a rule
 	 */
 	private class RuleItem {
 		public final int category;
 		public final int subcategory;
 		public final String entry;
-		public String text;
 		public final int position;
+		public String text;
 
 		/**
 		 * Constructor which populates the rule

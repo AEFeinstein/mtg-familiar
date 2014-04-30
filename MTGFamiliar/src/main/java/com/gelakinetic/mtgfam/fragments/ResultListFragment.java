@@ -32,21 +32,19 @@ import java.util.Random;
  */
 public class ResultListFragment extends FamiliarFragment {
 
-	/* Saved instance state bundle keys */
-	private static final String CURSOR_POSITION_OFFSET = "cur_pos";
-	private static final String CURSOR_POSITION = "pos_off";
-
-	/* The cursor with the data and the list view to display it */
-	private Cursor mCursor;
-	private ListView mListView;
-	/* Static integers preserve list position during the fragment's lifecycle */
-	private static int mCursorPosition;
-	private static int mCursorPositionOffset;
-
 	/* Constants for bundled arguments */
 	public static final String CARD_ID_0 = "id0";
 	public static final String CARD_ID_1 = "id1";
 	public static final String CARD_ID_2 = "id2";
+	/* Saved instance state bundle keys */
+	private static final String CURSOR_POSITION_OFFSET = "cur_pos";
+	private static final String CURSOR_POSITION = "pos_off";
+	/* Static integers preserve list position during the fragment's lifecycle */
+	private static int mCursorPosition;
+	private static int mCursorPositionOffset;
+	/* The cursor with the data and the list view to display it */
+	private Cursor mCursor;
+	private ListView mListView;
 
 	/**
 	 * When the fragment is created, open the database and search for whatever.
@@ -88,8 +86,7 @@ public class ResultListFragment extends FamiliarFragment {
 				cs[1] = CardDbAdapter.fetchCard(id1, database);
 				cs[2] = CardDbAdapter.fetchCard(id2, database);
 				mCursor = new MergeCursor(cs);
-			}
-			else {
+			} else {
 				SearchCriteria criteria = (SearchCriteria) args.getSerializable(SearchViewFragment.CRITERIA);
 				assert criteria != null; /* Because Android Studio */
 				boolean consolidate = (criteria.setLogic == CardDbAdapter.MOST_RECENT_PRINTING ||
@@ -108,17 +105,14 @@ public class ResultListFragment extends FamiliarFragment {
 					).show();
 					if (!getActivity().isTaskRoot()) {
 						getActivity().finish();
-					}
-					else {
+					} else {
 						getFragmentManager().popBackStack();
 					}
-				}
-				else if (mCursor.getCount() == 1) {
+				} else if (mCursor.getCount() == 1) {
 					mCursor.moveToFirst();
 					id = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));
 					startCardViewFrag(id);
-				}
-				else {
+				} else {
 					if (savedInstanceState == null) {
 						Toast.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
 								mCursor.getCount()), Toast.LENGTH_LONG).show();
@@ -242,8 +236,7 @@ public class ResultListFragment extends FamiliarFragment {
 				/* Jump back past the result list (it wasn't displayed because this card is a singleton) */
 				if (!getActivity().isTaskRoot()) {
 					getActivity().finish();
-				}
-				else {
+				} else {
 					getFragmentManager().popBackStack();
 				}
 			}

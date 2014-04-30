@@ -22,17 +22,14 @@ import java.util.Calendar;
  */
 class MTRIPGParser {
 
+	public static final int MODE_IPG = 0;
+	public static final int MODE_MTR = 1;
 	private static final String MTR_SOURCE =
 			"https://sites.google.com/site/mtgfamiliar/rules/MagicTournamentRules-light.html";
 	private static final String IPG_SOURCE =
 			"https://sites.google.com/site/mtgfamiliar/rules/InfractionProcedureGuide-light.html";
-
 	private static final String MTR_LOCAL_FILE = "MTR.html";
 	private static final String IPG_LOCAL_FILE = "IPG.html";
-
-	public static final int MODE_IPG = 0;
-	public static final int MODE_MTR = 1;
-
 	private final Context mContext;
 	private final PreferenceAdapter mPrefAdapter;
 

@@ -49,12 +49,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class IndeterminateRefreshLayout extends ViewGroup {
 	private static final float PROGRESS_BAR_HEIGHT = 4;
-
+	private static final int[] LAYOUT_ATTRS = new int[]{android.R.attr.enabled};
+	public boolean mRefreshing = false;
 	private IndeterminateProgressBar mProgressBar; //the thing that shows progress is going
 	private View mTarget; //the content that gets pulled down
-	public boolean mRefreshing = false;
 	private int mProgressBarHeight;
-	private static final int[] LAYOUT_ATTRS = new int[]{android.R.attr.enabled};
 
 	/**
 	 * Constructor that is called when inflating IndeterminateRefreshLayout from XML.
@@ -90,8 +89,7 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 			mRefreshing = refreshing;
 			if (mRefreshing) {
 				mProgressBar.start();
-			}
-			else {
+			} else {
 				mProgressBar.stop();
 			}
 		}
@@ -155,7 +153,7 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 	 * also be the color of the bar that grows in response to a user swipe
 	 * gesture.
 	 *
-	 * @param i A color
+	 * @param i  A color
 	 * @param i1 A color
 	 * @param i2 A color
 	 * @param i3 A color

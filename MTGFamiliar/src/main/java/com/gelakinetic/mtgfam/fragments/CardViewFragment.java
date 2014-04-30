@@ -92,6 +92,8 @@ import java.util.Locale;
  */
 public class CardViewFragment extends FamiliarFragment {
 
+	/* Bundle constant */
+	public static final String CARD_ID = "card_id";
 	/* Dialogs */
 	private static final int GET_PRICE = 1;
 	private static final int GET_IMAGE = 2;
@@ -99,17 +101,12 @@ public class CardViewFragment extends FamiliarFragment {
 	private static final int CARD_RULINGS = 4;
 	private static final int WISH_LIST_COUNTS = 6;
 	private static final int GET_LEGALITY = 7;
-
 	/* Where the card image is loaded to */
 	private static final int MAIN_PAGE = 1;
 	private static final int DIALOG = 2;
-
-	/* Bundle constant */
-	public static final String CARD_ID = "card_id";
-
+	private int loadTo = DIALOG; /* where to load the image */
 	/* Used to store the String when copying to clipboard */
 	private String mCopyString;
-
 	/* UI elements, to be filled in */
 	private TextView mNameTextView;
 	private TextView mCostTextView;
@@ -123,11 +120,9 @@ public class CardViewFragment extends FamiliarFragment {
 	private View mTransformButtonDivider;
 	private ImageView mCardImageView;
 	private FrameLayout mFrameLayout;
-
 	/* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
 	private AsyncTask<Void, Void, Void> mAsyncTask;
 	private BitmapDrawable mCardBitmap;
-	private int loadTo = DIALOG; /* where to load the image */
 	private String[] mLegalities;
 	private String[] mFormats;
 	private ArrayList<Ruling> mRulingsArrayList;
@@ -164,9 +159,6 @@ public class CardViewFragment extends FamiliarFragment {
 		 * If this wasn't launched by a ResultListFragment, it'll get eaten */
 		Bundle args = new Bundle();
 		mActivity.setFragmentResult(args);
-		if (mAsyncTask != null) {
-			mAsyncTask.cancel(true);
-		}
 	}
 
 	/**
@@ -176,6 +168,9 @@ public class CardViewFragment extends FamiliarFragment {
 	public void onPause() {
 		super.onPause();
 		mActivity.clearLoading();
+		if (mAsyncTask != null) {
+			mAsyncTask.cancel(true);
+		}
 	}
 
 	/**
@@ -225,8 +220,7 @@ public class CardViewFragment extends FamiliarFragment {
 
 		if (mActivity.mPreferenceAdapter.getPicFirst()) {
 			loadTo = MAIN_PAGE;
-		}
-		else {
+		} else {
 			loadTo = DIALOG;
 		}
 
@@ -257,7 +251,7 @@ public class CardViewFragment extends FamiliarFragment {
 		long cardID = extras.getLong(CARD_ID);
 
 		try {
-			/* from onCreateView */
+            /* from onCreateView */
 			setInfoFromID(cardID);
 		} catch (FamiliarDbException e) {
 			handleFamiliarDbException(true);
@@ -332,8 +326,7 @@ public class CardViewFragment extends FamiliarFragment {
 		float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
 		if (loyalty != CardDbAdapter.NO_ONE_CARES) {
 			mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
-		}
-		else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
+		} else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
 			String powTouStr = "";
 
@@ -350,8 +343,7 @@ public class CardViewFragment extends FamiliarFragment {
 			else {
 				if (p == (int) p) {
 					powTouStr += (int) p;
-				}
-				else {
+				} else {
 					powTouStr += p;
 				}
 			}
@@ -371,15 +363,13 @@ public class CardViewFragment extends FamiliarFragment {
 			else {
 				if (t == (int) t) {
 					powTouStr += (int) t;
-				}
-				else {
+				} else {
 					powTouStr += t;
 				}
 			}
 
 			mPowTouTextView.setText(powTouStr);
-		}
-		else {
+		} else {
 			mPowTouTextView.setText("");
 		}
 
@@ -414,8 +404,7 @@ public class CardViewFragment extends FamiliarFragment {
 		if (isMultiCard) {
 			if (mCardNumber.contains("a")) {
 				mTransformCardNumber = mCardNumber.replace("a", "b");
-			}
-			else if (mCardNumber.contains("b")) {
+			} else if (mCardNumber.contains("b")) {
 				mTransformCardNumber = mCardNumber.replace("b", "a");
 			}
 			mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
@@ -447,10 +436,12 @@ public class CardViewFragment extends FamiliarFragment {
 			mFrameLayout.setVisibility(View.GONE);
 
 			mActivity.setLoading();
+			if (mAsyncTask != null) {
+				mAsyncTask.cancel(true);
+			}
 			mAsyncTask = new FetchPictureTask();
 			mAsyncTask.execute((Void[]) null);
-		}
-		else {
+		} else {
 			mCardImageView.setVisibility(View.GONE);
 			mNameTextView.setVisibility(View.VISIBLE);
 			mCostTextView.setVisibility(View.VISIBLE);
@@ -468,7 +459,7 @@ public class CardViewFragment extends FamiliarFragment {
 		cCardById.close();
 
 		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
-		   one set */
+           one set */
 		Cursor cCardByName = CardDbAdapter.fetchCardByName(mCardName,
 				new String[]{
 						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
@@ -484,7 +475,7 @@ public class CardViewFragment extends FamiliarFragment {
 			cCardByName.moveToNext();
 		}
 		cCardByName.close();
-		/* If it exists in only one set, remove the button from the menu */
+        /* If it exists in only one set, remove the button from the menu */
 		if (mSets.size() == 1) {
 			mActivity.invalidateOptionsMenu();
 		}
@@ -492,386 +483,11 @@ public class CardViewFragment extends FamiliarFragment {
 	}
 
 	/**
-	 * This private class handles asking the database about the legality of a card, and will eventually show the
-	 * information in a Dialog
-	 */
-	private class FetchLegalityTask extends AsyncTask<Void, Void, Void> {
-
-		/**
-		 * Queries the data in the database to see what sets this card is legal in
-		 *
-		 * @param params unused
-		 * @return unused
-		 */
-		@Override
-		protected Void doInBackground(Void... params) {
-
-			try {
-				SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
-				Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
-				mFormats = new String[cFormats.getCount()];
-				mLegalities = new String[cFormats.getCount()];
-
-				cFormats.moveToFirst();
-				for (int i = 0; i < cFormats.getCount(); i++) {
-					mFormats[i] = cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
-					switch (CardDbAdapter.checkLegality(mCardName, mFormats[i], database)) {
-						case CardDbAdapter.LEGAL:
-							mLegalities[i] = getString(R.string.card_view_legal);
-							break;
-						case CardDbAdapter.RESTRICTED:
-							mLegalities[i] = getString(R.string.card_view_restricted);
-							break;
-						case CardDbAdapter.BANNED:
-							mLegalities[i] = getString(R.string.card_view_banned);
-							break;
-						default:
-							mLegalities[i] = getString(R.string.error);
-							break;
-					}
-					cFormats.moveToNext();
-				}
-				cFormats.close();
-				DatabaseManager.getInstance().closeDatabase();
-			} catch (FamiliarDbException e) {
-				CardViewFragment.this.handleFamiliarDbException(false);
-				mLegalities = null;
-			}
-
-			return null;
-		}
-
-		/**
-		 * After the query, remove the progress dialog and show the legalities
-		 *
-		 * @param result unused
-		 */
-		@Override
-		protected void onPostExecute(Void result) {
-			showDialog(GET_LEGALITY);
-			mActivity.clearLoading();
-		}
-	}
-
-	/**
-	 * This private class retrieves a picture of the card from the internet
-	 */
-	private class FetchPictureTask extends AsyncTask<Void, Void, Void> {
-
-		private String error;
-
-		/**
-		 * First check www.MagicCards.info for the card image in the user's preferred language
-		 * If that fails, check www.MagicCards.info for the card image in English
-		 * If that fails, check www.gatherer.wizards.com for the card image
-		 * If that fails, give up
-		 * There is non-standard URL building for planes and schemes
-		 * It also re-sizes the image
-		 *
-		 * @param params unused
-		 * @return unused
-		 */
-		@SuppressWarnings("SpellCheckingInspection")
-		@Override
-		protected Void doInBackground(Void... params) {
-			error = null;
-			String cardLanguage =
-					mActivity.mPreferenceAdapter.getCardLanguage();
-			if (cardLanguage == null) {
-				cardLanguage = "en";
-			}
-
-			boolean bRetry = true;
-			boolean triedEn = false;
-
-			while (bRetry) {
-
-				bRetry = false;
-
-				try {
-
-					if (cardLanguage.equalsIgnoreCase("en")) {
-						triedEn = true;
-					}
-					String picURL;
-					if (mSetCode.equals("PP2")) {
-						picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					}
-					else if (mSetCode.equals("PCP")) {
-						if (mCardName.equalsIgnoreCase("tazeem")) {
-							mCardName = "tazeem-release-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else if (mCardName.equalsIgnoreCase("celestine reef")) {
-							mCardName = "celestine-reef-pre-release-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else if (mCardName.equalsIgnoreCase("horizon boughs")) {
-							mCardName = "horizon-boughs-gateway-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else {
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					}
-					else if (mSetCode.equals("ARS")) {
-						picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					}
-					else {
-						picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
-								mCardNumber + ".jpg";
-					}
-					picURL = picURL.toLowerCase(Locale.ENGLISH);
-
-					URL u = new URL(picURL);
-					try {
-						mCardBitmap = new BitmapDrawable(mActivity.getResources(),u.openStream());
-					} catch (FileNotFoundException e) {
-						if (!triedEn) {
-							/* Let the catch block take care of it */
-							throw new FileNotFoundException();
-						}
-						else {
-							/* Ok, it doesn't exist on MagicCards.info in English. Fall back to Gatherer */
-							URL u2 = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
-									+ mMultiverseId + "&type=card");
-							mCardBitmap = new BitmapDrawable(mActivity.getResources(),u2.openStream());
-						}
-					}
-
-					/* Resize the image */
-					int height = 0, width = 0;
-					float scale;
-					/* 16dp */
-					int border = (int) TypedValue.applyDimension(
-							TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-					if (loadTo == MAIN_PAGE) {
-						Rect rectangle = new Rect();
-						Window window = mActivity.getWindow();
-						window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-
-						assert mActivity.getActionBar() != null; /* Because Android Studio */
-						height = ((rectangle.bottom - rectangle.top) -mActivity.getActionBar().getHeight()) - border;
-						width = (rectangle.right - rectangle.left) - border;
-					}
-					else if (loadTo == DIALOG) {
-						Display display = ((WindowManager) mActivity
-								.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-						Point p = new Point();
-						display.getSize(p);
-						height = p.y - border;
-						width = p.x - border;
-					}
-
-					float screenAspectRatio = (float) height / (float) (width);
-					float cardAspectRatio = (float) mCardBitmap.getIntrinsicHeight() /
-							(float) mCardBitmap.getIntrinsicWidth();
-
-					if (screenAspectRatio > cardAspectRatio) {
-						scale = (width) / (float) mCardBitmap.getIntrinsicWidth();
-					}
-					else {
-						scale = (height) / (float) mCardBitmap.getIntrinsicHeight();
-					}
-
-					int newWidth = Math.round(mCardBitmap.getIntrinsicWidth() * scale);
-					int newHeight = Math.round(mCardBitmap.getIntrinsicHeight() * scale);
-
-					Bitmap d = mCardBitmap.getBitmap();
-					Bitmap bitmapOrig = Bitmap.createScaledBitmap(d, newWidth, newHeight, true);
-					mCardBitmap = new BitmapDrawable(mActivity.getResources(), bitmapOrig);
-				} catch (FileNotFoundException e) {
-					/* internet works, image not found */
-					if (cardLanguage.equalsIgnoreCase("en")) {
-						error = getString(R.string.card_view_image_not_found);
-					}
-					else {
-						/* If image doesn't exist in the preferred language, let's retry with "en" */
-						cardLanguage = "en";
-						bRetry = true;
-					}
-				} catch (ConnectException e) {
-					/* no internet */
-					error = "ConnectException";
-				} catch (UnknownHostException e) {
-					/* no internet */
-					error = "UnknownHostException";
-				} catch (MalformedURLException e) {
-					error = "MalformedURLException";
-				} catch (IOException e) {
-					error = "IOException";
-				} catch (NullPointerException e) {
-					error = "NullPointerException";
-				}
-			}
-			return null;
-		}
-
-		/**
-		 * When the task has finished, if there was no error, remove the progress dialog and show the image
-		 * If the image was supposed to load to the main screen, and it failed to load, fall back to text view
-		 *
-		 * @param result unused
-		 */
-		@Override
-		protected void onPostExecute(Void result) {
-			if (error == null) {
-				if (loadTo == DIALOG) {
-					showDialog(GET_IMAGE);
-				}
-				else if (loadTo == MAIN_PAGE) {
-					removeDialog(getFragmentManager());
-					mCardImageView.setImageDrawable(mCardBitmap);
-					/* remove the image load button if it is the main page */
-					mActivity.invalidateOptionsMenu();
-				}
-			}
-			else {
-				removeDialog(getFragmentManager());
-				if (loadTo == MAIN_PAGE) {
-					mCardImageView.setVisibility(View.GONE);
-					mNameTextView.setVisibility(View.VISIBLE);
-					mCostTextView.setVisibility(View.VISIBLE);
-					mTypeTextView.setVisibility(View.VISIBLE);
-					mSetTextView.setVisibility(View.VISIBLE);
-					mAbilityTextView.setVisibility(View.VISIBLE);
-					mPowTouTextView.setVisibility(View.VISIBLE);
-					mFlavorTextView.setVisibility(View.VISIBLE);
-					mArtistTextView.setVisibility(View.VISIBLE);
-					mFrameLayout.setVisibility(View.VISIBLE);
-				}
-				Toast.makeText(mActivity, error, Toast.LENGTH_LONG).show();
-			}
-			mActivity.clearLoading();
-		}
-
-		/**
-		 * If the task is canceled, fall back to text view
-		 */
-		@Override
-		protected void onCancelled() {
-			if (loadTo == MAIN_PAGE) {
-				mCardImageView.setVisibility(View.GONE);
-				mNameTextView.setVisibility(View.VISIBLE);
-				mCostTextView.setVisibility(View.VISIBLE);
-				mTypeTextView.setVisibility(View.VISIBLE);
-				mSetTextView.setVisibility(View.VISIBLE);
-				mAbilityTextView.setVisibility(View.VISIBLE);
-				mPowTouTextView.setVisibility(View.VISIBLE);
-				mFlavorTextView.setVisibility(View.VISIBLE);
-				mArtistTextView.setVisibility(View.VISIBLE);
-				mFrameLayout.setVisibility(View.VISIBLE);
-			}
-		}
-	}
-
-	/**
-	 * This private class fetches rulings about this card from gatherer.wizards.com
-	 */
-	private class FetchRulingsTask extends AsyncTask<Void, Void, Void> {
-
-		String mErrorMessage = null;
-
-		/**
-		 * This function downloads the source of the gatherer page, scans it for rulings, and stores them for display
-		 *
-		 * @param params unused
-		 * @return unused
-		 */
-		@Override
-		@SuppressWarnings("SpellCheckingInspection")
-		protected Void doInBackground(Void... params) {
-
-			URL url;
-			InputStream is = null;
-			BufferedReader br;
-			String line;
-
-			mRulingsArrayList = new ArrayList<Ruling>();
-
-			try {
-				url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mMultiverseId);
-				is = url.openStream(); /* throws an IOException */
-				br = new BufferedReader(new InputStreamReader(new BufferedInputStream(is)));
-
-				String date = null, ruling;
-				while ((line = br.readLine()) != null) {
-					if (line.contains("rulingDate") && line.contains("<td")) {
-						date = (line.replace("<autocard>", "").replace("</autocard>", ""))
-								.split(">")[1].split("<")[0];
-					}
-					if (line.contains("rulingText") && line.contains("<td")) {
-						ruling = (line.replace("<autocard>", "").replace("</autocard>", ""))
-								.split(">")[1].split("<")[0];
-						Ruling r = new Ruling(date, ruling);
-						mRulingsArrayList.add(r);
-					}
-				}
-			} catch (MalformedURLException mue) {
-				mErrorMessage = mue.getLocalizedMessage();
-			} catch (IOException ioe) {
-				mErrorMessage = ioe.getLocalizedMessage();
-			} finally {
-				try {
-					if (is != null) {
-						is.close();
-					}
-				} catch (IOException ioe) {
-					mErrorMessage = ioe.getLocalizedMessage();
-				}
-			}
-
-			return null;
-		}
-
-		/**
-		 * Hide the progress dialog and show the rulings, if there are no errors
-		 *
-		 * @param result unused
-		 */
-		@Override
-		protected void onPostExecute(Void result) {
-
-			if (mErrorMessage == null) {
-				showDialog(CARD_RULINGS);
-			}
-			else {
-				removeDialog(getFragmentManager());
-				Toast.makeText(mActivity, mErrorMessage, Toast.LENGTH_SHORT).show();
-			}
-			mActivity.clearLoading();
-		}
-	}
-
-	/**
-	 * This inner class encapsulates a ruling and the date it was made
-	 */
-	private static class Ruling {
-		public final String date;
-		public final String ruling;
-
-		public Ruling(String d, String r) {
-			date = d;
-			ruling = r;
-		}
-
-		public String toString() {
-			return date + ": " + ruling;
-		}
-	}
-
-	/**
 	 * Remove any showing dialogs, and show the requested one
 	 *
 	 * @param id the ID of the dialog to show
 	 */
-	void showDialog(final int id) {
+	void showDialog(final int id) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -930,7 +546,7 @@ public class CardViewFragment extends FamiliarFragment {
 							fillMaps.add(map);
 						}
 
-						SimpleAdapter adapter = new SimpleAdapter(mActivity, fillMaps,R.layout.card_view_legal_row,
+						SimpleAdapter adapter = new SimpleAdapter(mActivity, fillMaps, R.layout.card_view_legal_row,
 								from, to);
 						ListView lv = new ListView(mActivity);
 						lv.setAdapter(adapter);
@@ -961,8 +577,7 @@ public class CardViewFragment extends FamiliarFragment {
 
 						if (mPriceInfo.mFoilAverage != 0) {
 							f.setText(String.format("$%1$,.2f", mPriceInfo.mFoilAverage));
-						}
-						else {
+						} else {
 							f.setVisibility(View.GONE);
 							v.findViewById(R.id.foil_label).setVisibility(View.GONE);
 						}
@@ -1007,8 +622,7 @@ public class CardViewFragment extends FamiliarFragment {
 						String message = "";
 						if (mRulingsArrayList.size() == 0) {
 							message = getString(R.string.card_view_no_rulings);
-						}
-						else {
+						} else {
 							for (Ruling r : mRulingsArrayList) {
 								message += (r.toString() + "<br><br>");
 							}
@@ -1129,6 +743,9 @@ public class CardViewFragment extends FamiliarFragment {
 		switch (item.getItemId()) {
 			case R.id.image: {
 				mActivity.setLoading();
+				if (mAsyncTask != null) {
+					mAsyncTask.cancel(true);
+				}
 				mAsyncTask = new FetchPictureTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
@@ -1146,7 +763,7 @@ public class CardViewFragment extends FamiliarFragment {
 								mActivity.clearLoading();
 
 								CardViewFragment.this.removeDialog(getFragmentManager());
-								Toast.makeText(mActivity, spiceException.getMessage(),Toast.LENGTH_SHORT).show();
+								Toast.makeText(mActivity, spiceException.getMessage(), Toast.LENGTH_SHORT).show();
 							}
 
 							@Override
@@ -1156,8 +773,7 @@ public class CardViewFragment extends FamiliarFragment {
 								if (result != null) {
 									mPriceInfo = result;
 									showDialog(GET_PRICE);
-								}
-								else {
+								} else {
 									Toast.makeText(mActivity, R.string.card_view_price_not_found,
 											Toast.LENGTH_SHORT).show();
 								}
@@ -1173,12 +789,18 @@ public class CardViewFragment extends FamiliarFragment {
 			}
 			case R.id.legality: {
 				mActivity.setLoading();
+				if (mAsyncTask != null) {
+					mAsyncTask.cancel(true);
+				}
 				mAsyncTask = new FetchLegalityTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
 			}
 			case R.id.cardrulings: {
 				mActivity.setLoading();
+				if (mAsyncTask != null) {
+					mAsyncTask.cancel(true);
+				}
 				mAsyncTask = new FetchRulingsTask();
 				mAsyncTask.execute((Void[]) null);
 				return true;
@@ -1215,6 +837,380 @@ public class CardViewFragment extends FamiliarFragment {
 			mi = menu.findItem(R.id.changeset);
 			assert mi != null; /* Because Android Studio */
 			menu.removeItem(mi.getItemId());
+		}
+	}
+
+	/**
+	 * This inner class encapsulates a ruling and the date it was made
+	 */
+	private static class Ruling {
+		public final String date;
+		public final String ruling;
+
+		public Ruling(String d, String r) {
+			date = d;
+			ruling = r;
+		}
+
+		public String toString() {
+			return date + ": " + ruling;
+		}
+	}
+
+	/**
+	 * This private class handles asking the database about the legality of a card, and will eventually show the
+	 * information in a Dialog
+	 */
+	private class FetchLegalityTask extends AsyncTask<Void, Void, Void> {
+
+		/**
+		 * Queries the data in the database to see what sets this card is legal in
+		 *
+		 * @param params unused
+		 * @return unused
+		 */
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			try {
+				SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+				Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
+				mFormats = new String[cFormats.getCount()];
+				mLegalities = new String[cFormats.getCount()];
+
+				cFormats.moveToFirst();
+				for (int i = 0; i < cFormats.getCount(); i++) {
+					mFormats[i] = cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+					switch (CardDbAdapter.checkLegality(mCardName, mFormats[i], database)) {
+						case CardDbAdapter.LEGAL:
+							mLegalities[i] = getString(R.string.card_view_legal);
+							break;
+						case CardDbAdapter.RESTRICTED:
+							mLegalities[i] = getString(R.string.card_view_restricted);
+							break;
+						case CardDbAdapter.BANNED:
+							mLegalities[i] = getString(R.string.card_view_banned);
+							break;
+						default:
+							mLegalities[i] = getString(R.string.error);
+							break;
+					}
+					cFormats.moveToNext();
+				}
+				cFormats.close();
+				DatabaseManager.getInstance().closeDatabase();
+			} catch (FamiliarDbException e) {
+				CardViewFragment.this.handleFamiliarDbException(false);
+				mLegalities = null;
+			}
+
+			return null;
+		}
+
+		/**
+		 * After the query, remove the progress dialog and show the legalities
+		 *
+		 * @param result unused
+		 */
+		@Override
+		protected void onPostExecute(Void result) {
+			try {
+				showDialog(GET_LEGALITY);
+			} catch (IllegalStateException e) {
+                /* eat it */
+			}
+			mActivity.clearLoading();
+		}
+	}
+
+	/**
+	 * This private class retrieves a picture of the card from the internet
+	 */
+	private class FetchPictureTask extends AsyncTask<Void, Void, Void> {
+
+		private String error;
+
+		/**
+		 * First check www.MagicCards.info for the card image in the user's preferred language
+		 * If that fails, check www.MagicCards.info for the card image in English
+		 * If that fails, check www.gatherer.wizards.com for the card image
+		 * If that fails, give up
+		 * There is non-standard URL building for planes and schemes
+		 * It also re-sizes the image
+		 *
+		 * @param params unused
+		 * @return unused
+		 */
+		@SuppressWarnings("SpellCheckingInspection")
+		@Override
+		protected Void doInBackground(Void... params) {
+			error = null;
+			String cardLanguage =
+					mActivity.mPreferenceAdapter.getCardLanguage();
+			if (cardLanguage == null) {
+				cardLanguage = "en";
+			}
+
+			boolean bRetry = true;
+			boolean triedEn = false;
+
+			while (bRetry) {
+
+				bRetry = false;
+
+				try {
+
+					if (cardLanguage.equalsIgnoreCase("en")) {
+						triedEn = true;
+					}
+					String picURL;
+					if (mSetCode.equals("PP2")) {
+						picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
+						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+					} else if (mSetCode.equals("PCP")) {
+						if (mCardName.equalsIgnoreCase("tazeem")) {
+							mCardName = "tazeem-release-promo";
+							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+						} else if (mCardName.equalsIgnoreCase("celestine reef")) {
+							mCardName = "celestine-reef-pre-release-promo";
+							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+						} else if (mCardName.equalsIgnoreCase("horizon boughs")) {
+							mCardName = "horizon-boughs-gateway-promo";
+							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+						} else {
+							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+						}
+						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+					} else if (mSetCode.equals("ARS")) {
+						picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
+						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+					} else {
+						picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
+								mCardNumber + ".jpg";
+					}
+					picURL = picURL.toLowerCase(Locale.ENGLISH);
+
+					URL u = new URL(picURL);
+					try {
+						mCardBitmap = new BitmapDrawable(mActivity.getResources(), u.openStream());
+					} catch (FileNotFoundException e) {
+						if (!triedEn) {
+							/* Let the catch block take care of it */
+							throw new FileNotFoundException();
+						} else {
+							/* Ok, it doesn't exist on MagicCards.info in English. Fall back to Gatherer */
+							URL u2 = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
+									+ mMultiverseId + "&type=card");
+							mCardBitmap = new BitmapDrawable(mActivity.getResources(), u2.openStream());
+						}
+					}
+
+					/* Resize the image */
+					int height = 0, width = 0;
+					float scale;
+					/* 16dp */
+					int border = (int) TypedValue.applyDimension(
+							TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+					if (loadTo == MAIN_PAGE) {
+						Rect rectangle = new Rect();
+						Window window = mActivity.getWindow();
+						window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+
+						assert mActivity.getActionBar() != null; /* Because Android Studio */
+						height = ((rectangle.bottom - rectangle.top) - mActivity.getActionBar().getHeight()) - border;
+						width = (rectangle.right - rectangle.left) - border;
+					} else if (loadTo == DIALOG) {
+						Display display = ((WindowManager) mActivity
+								.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+						Point p = new Point();
+						display.getSize(p);
+						height = p.y - border;
+						width = p.x - border;
+					}
+
+					float screenAspectRatio = (float) height / (float) (width);
+					float cardAspectRatio = (float) mCardBitmap.getIntrinsicHeight() /
+							(float) mCardBitmap.getIntrinsicWidth();
+
+					if (screenAspectRatio > cardAspectRatio) {
+						scale = (width) / (float) mCardBitmap.getIntrinsicWidth();
+					} else {
+						scale = (height) / (float) mCardBitmap.getIntrinsicHeight();
+					}
+
+					int newWidth = Math.round(mCardBitmap.getIntrinsicWidth() * scale);
+					int newHeight = Math.round(mCardBitmap.getIntrinsicHeight() * scale);
+
+					Bitmap d = mCardBitmap.getBitmap();
+					Bitmap bitmapOrig = Bitmap.createScaledBitmap(d, newWidth, newHeight, true);
+					mCardBitmap = new BitmapDrawable(mActivity.getResources(), bitmapOrig);
+				} catch (FileNotFoundException e) {
+					/* internet works, image not found */
+					if (cardLanguage.equalsIgnoreCase("en")) {
+						error = getString(R.string.card_view_image_not_found);
+					} else {
+						/* If image doesn't exist in the preferred language, let's retry with "en" */
+						cardLanguage = "en";
+						bRetry = true;
+					}
+				} catch (ConnectException e) {
+					/* no internet */
+					error = "ConnectException";
+				} catch (UnknownHostException e) {
+					/* no internet */
+					error = "UnknownHostException";
+				} catch (MalformedURLException e) {
+					error = "MalformedURLException";
+				} catch (IOException e) {
+					error = "IOException";
+				} catch (NullPointerException e) {
+					error = "NullPointerException";
+				}
+			}
+			return null;
+		}
+
+		/**
+		 * When the task has finished, if there was no error, remove the progress dialog and show the image
+		 * If the image was supposed to load to the main screen, and it failed to load, fall back to text view
+		 *
+		 * @param result unused
+		 */
+		@Override
+		protected void onPostExecute(Void result) {
+			if (error == null) {
+				if (loadTo == DIALOG) {
+					try {
+						showDialog(GET_IMAGE);
+					} catch (IllegalStateException e) {
+                        /* eat it */
+					}
+				} else if (loadTo == MAIN_PAGE) {
+					removeDialog(getFragmentManager());
+					mCardImageView.setImageDrawable(mCardBitmap);
+					/* remove the image load button if it is the main page */
+					mActivity.invalidateOptionsMenu();
+				}
+			} else {
+				removeDialog(getFragmentManager());
+				if (loadTo == MAIN_PAGE) {
+					mCardImageView.setVisibility(View.GONE);
+					mNameTextView.setVisibility(View.VISIBLE);
+					mCostTextView.setVisibility(View.VISIBLE);
+					mTypeTextView.setVisibility(View.VISIBLE);
+					mSetTextView.setVisibility(View.VISIBLE);
+					mAbilityTextView.setVisibility(View.VISIBLE);
+					mPowTouTextView.setVisibility(View.VISIBLE);
+					mFlavorTextView.setVisibility(View.VISIBLE);
+					mArtistTextView.setVisibility(View.VISIBLE);
+					mFrameLayout.setVisibility(View.VISIBLE);
+				}
+				Toast.makeText(mActivity, error, Toast.LENGTH_LONG).show();
+			}
+			mActivity.clearLoading();
+		}
+
+		/**
+		 * If the task is canceled, fall back to text view
+		 */
+		@Override
+		protected void onCancelled() {
+			if (loadTo == MAIN_PAGE) {
+				mCardImageView.setVisibility(View.GONE);
+				mNameTextView.setVisibility(View.VISIBLE);
+				mCostTextView.setVisibility(View.VISIBLE);
+				mTypeTextView.setVisibility(View.VISIBLE);
+				mSetTextView.setVisibility(View.VISIBLE);
+				mAbilityTextView.setVisibility(View.VISIBLE);
+				mPowTouTextView.setVisibility(View.VISIBLE);
+				mFlavorTextView.setVisibility(View.VISIBLE);
+				mArtistTextView.setVisibility(View.VISIBLE);
+				mFrameLayout.setVisibility(View.VISIBLE);
+			}
+		}
+	}
+
+	/**
+	 * This private class fetches rulings about this card from gatherer.wizards.com
+	 */
+	private class FetchRulingsTask extends AsyncTask<Void, Void, Void> {
+
+		String mErrorMessage = null;
+
+		/**
+		 * This function downloads the source of the gatherer page, scans it for rulings, and stores them for display
+		 *
+		 * @param params unused
+		 * @return unused
+		 */
+		@Override
+		@SuppressWarnings("SpellCheckingInspection")
+		protected Void doInBackground(Void... params) {
+
+			URL url;
+			InputStream is = null;
+			BufferedReader br;
+			String line;
+
+			mRulingsArrayList = new ArrayList<Ruling>();
+
+			try {
+				url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mMultiverseId);
+				is = url.openStream(); /* throws an IOException */
+				br = new BufferedReader(new InputStreamReader(new BufferedInputStream(is)));
+
+				String date = null, ruling;
+				while ((line = br.readLine()) != null) {
+					if (line.contains("rulingDate") && line.contains("<td")) {
+						date = (line.replace("<autocard>", "").replace("</autocard>", ""))
+								.split(">")[1].split("<")[0];
+					}
+					if (line.contains("rulingText") && line.contains("<td")) {
+						ruling = (line.replace("<autocard>", "").replace("</autocard>", ""))
+								.split(">")[1].split("<")[0];
+						Ruling r = new Ruling(date, ruling);
+						mRulingsArrayList.add(r);
+					}
+				}
+			} catch (MalformedURLException mue) {
+				mErrorMessage = mue.getLocalizedMessage();
+			} catch (IOException ioe) {
+				mErrorMessage = ioe.getLocalizedMessage();
+			} finally {
+				try {
+					if (is != null) {
+						is.close();
+					}
+				} catch (IOException ioe) {
+					mErrorMessage = ioe.getLocalizedMessage();
+				}
+			}
+
+			return null;
+		}
+
+		/**
+		 * Hide the progress dialog and show the rulings, if there are no errors
+		 *
+		 * @param result unused
+		 */
+		@Override
+		protected void onPostExecute(Void result) {
+
+			if (mErrorMessage == null) {
+				try {
+					showDialog(CARD_RULINGS);
+				} catch (IllegalStateException e) {
+                    /* eat it */
+				}
+			} else {
+				removeDialog(getFragmentManager());
+				Toast.makeText(mActivity, mErrorMessage, Toast.LENGTH_SHORT).show();
+			}
+			mActivity.clearLoading();
 		}
 	}
 }

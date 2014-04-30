@@ -133,8 +133,7 @@ public abstract class FamiliarFragment extends Fragment {
 								return true;
 							}
 						}).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-			}
-			else {
+			} else {
 
 				SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 				SearchView sv = new SearchView(getActivity());
@@ -234,8 +233,7 @@ public abstract class FamiliarFragment extends Fragment {
 				 * Otherwise pop the offending fragment */
 				if (fm.getFragments().size() == 1) {
 					getActivity().finish();
-				}
-				else {
+				} else {
 					fm.popBackStack();
 				}
 			}

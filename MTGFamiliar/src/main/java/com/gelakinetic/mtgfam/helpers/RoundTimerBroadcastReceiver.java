@@ -174,8 +174,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
 					Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
 					Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
 					r.play();
-				}
-				else {
+				} else {
 					/* Request audio focus for playback on the alarm stream */
 					int res = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_ALARM,
 							AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
@@ -187,16 +186,14 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
 						ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_ALARM));
 						mTts.speak(mTextToSpeak, TextToSpeech.QUEUE_FLUSH, ttsParams);
 						return; /* if we don't return, the service will stop before speaking */
-					}
-					else {
+					} else {
 						/* Fall back to ringtone */
 						Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
 						Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
 						r.play();
 					}
 				}
-			}
-			else {
+			} else {
 				/* Fall back to ringtone */
 				Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
 				Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);

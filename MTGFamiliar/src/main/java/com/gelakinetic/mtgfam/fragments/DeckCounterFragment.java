@@ -65,8 +65,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
 		if (savedInstanceState != null) {
 			mDeckCount = savedInstanceState.getInt(DECK_COUNT_KEY);
 			mDeckCountSequence = StringToArray(savedInstanceState.getString(SEQUENCE_KEY));
-		}
-		else {
+		} else {
 			mDeckCount = 0;
 			mDeckCountSequence = new ArrayList<Integer>();
 		}
@@ -193,8 +192,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
 			case COUNT_FLAG_UNDO:
 				if (mDeckCountSequence.size() > 0) {
 					mDeckCount -= mDeckCountSequence.remove(mDeckCountSequence.size() - 1);
-				}
-				else {
+				} else {
 					updateUi = false;
 				}
 				break;
@@ -202,8 +200,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
 				if (mDeckCountSequence.size() > 0) {
 					mDeckCount = 0;
 					mDeckCountSequence.clear();
-				}
-				else {
+				} else {
 					updateUi = false;
 				}
 				break;

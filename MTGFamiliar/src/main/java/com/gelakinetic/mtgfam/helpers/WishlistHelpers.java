@@ -169,8 +169,7 @@ public class WishlistHelpers {
 					}
 				}
 			});
-		}
-		else {
+		} else {
 			customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
 			customView.findViewById(R.id.divider).setVisibility(View.GONE);
 		}
@@ -232,8 +231,7 @@ public class WishlistHelpers {
 				if (card.name.equals(mCardName) && card.setCode.equals(setCode)) {
 					if (card.foil && wishlistRowFoil != null) {
 						((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText(card.numberOf + "");
-					}
-					else {
+					} else {
 						((EditText) wishlistRow.findViewById(R.id.numberInput)).setText(card.numberOf + "");
 					}
 				}
@@ -287,8 +285,7 @@ public class WishlistHelpers {
 									if (card.numberOf == 0) {
 										wishlist.remove(j);
 										j--;
-									}
-									else {
+									} else {
 										wishlist.get(j).numberOf = card.numberOf;
 									}
 									added = true;
@@ -314,6 +311,36 @@ public class WishlistHelpers {
 					}
 				})
 				.create();
+	}
+
+	/**
+	 * Take a wishlist and turn it into plaintext so that it can be shared via email or whatever
+	 *
+	 * @param mCompressedWishlist The wishlist to share
+	 * @param ctx                 The context to get localized strings with
+	 * @return A string containing all the wishlist data
+	 */
+	public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, Context ctx) {
+		StringBuilder readableWishlist = new StringBuilder();
+
+		for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+			for (IndividualSetInfo isi : cwi.mInfo) {
+				readableWishlist
+						.append(isi.mNumberOf)
+						.append("x ")
+						.append(cwi.mCard.name)
+						.append(", ")
+						.append(isi.mSet);
+				if (isi.mIsFoil) {
+					readableWishlist
+							.append(" (")
+							.append(ctx.getString(R.string.wishlist_foil))
+							.append(")");
+				}
+				readableWishlist.append("\r\n");
+			}
+		}
+		return readableWishlist.toString();
 	}
 
 	/**
@@ -381,8 +408,7 @@ public class WishlistHelpers {
 		public boolean equals(Object o) {
 			if (o instanceof CompressedWishlistInfo) {
 				return mCard.name.equals(((CompressedWishlistInfo) o).mCard.name);
-			}
-			else if (o instanceof MtgCard) {
+			} else if (o instanceof MtgCard) {
 				return mCard.name.equals(((MtgCard) o).name);
 			}
 			return false;
@@ -394,35 +420,5 @@ public class WishlistHelpers {
 		public void clearCompressedInfo() {
 			mInfo.clear();
 		}
-	}
-
-	/**
-	 * Take a wishlist and turn it into plaintext so that it can be shared via email or whatever
-	 *
-	 * @param mCompressedWishlist The wishlist to share
-	 * @param ctx                 The context to get localized strings with
-	 * @return A string containing all the wishlist data
-	 */
-	public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, Context ctx) {
-		StringBuilder readableWishlist = new StringBuilder();
-
-		for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-			for (IndividualSetInfo isi : cwi.mInfo) {
-				readableWishlist
-						.append(isi.mNumberOf)
-						.append("x ")
-						.append(cwi.mCard.name)
-						.append(", ")
-						.append(isi.mSet);
-				if (isi.mIsFoil) {
-					readableWishlist
-							.append(" (")
-							.append(ctx.getString(R.string.wishlist_foil))
-							.append(")");
-				}
-				readableWishlist.append("\r\n");
-			}
-		}
-		return readableWishlist.toString();
 	}
 }

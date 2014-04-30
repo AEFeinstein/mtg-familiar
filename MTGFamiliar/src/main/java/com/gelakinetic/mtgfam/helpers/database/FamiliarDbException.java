@@ -5,8 +5,8 @@ package com.gelakinetic.mtgfam.helpers.database;
  */
 public class FamiliarDbException extends Exception {
 
-	private final Exception mInnerException;
 	private static final long serialVersionUID = 5953780555438726164L;
+	private final Exception mInnerException;
 
 	/**
 	 * Encapsulate another exception in the FamiliarDbException

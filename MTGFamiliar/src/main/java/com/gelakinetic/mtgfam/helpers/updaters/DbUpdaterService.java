@@ -128,8 +128,7 @@ public class DbUpdaterService extends IntentService {
 					switchToUpdating(String.format(getString(R.string.update_updating_set), "EVERYTHING!!"));
 					parser.readCardJsonStream(upToGIS, reporter, database);
 					parser.readTCGNameJsonStream(mPrefAdapter, database);
-				}
-				else {
+				} else {
 					/* Look for updates with the banned / restricted lists and formats */
 					parser.readLegalityJsonStream(database, mPrefAdapter);
 					/* Look for new cards */
@@ -170,8 +169,7 @@ public class DbUpdaterService extends IntentService {
 				long lastRulesUpdate;
 				if (RE_PARSE_DATABASE) {
 					lastRulesUpdate = 0; /* Long, long time ago */
-				}
-				else {
+				} else {
 					lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
 				}
 
@@ -225,8 +223,7 @@ public class DbUpdaterService extends IntentService {
 				if (newRulesParsed) {
 					mPrefAdapter.setLastRulesUpdate(curTime);
 				}
-			}
-			else {
+			} else {
 				cancelStatusNotification();
 			}
 		} catch (Exception e) {

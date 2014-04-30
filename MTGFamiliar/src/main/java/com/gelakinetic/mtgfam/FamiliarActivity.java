@@ -96,7 +96,6 @@ public class FamiliarActivity extends FragmentActivity {
 
 	/* Constants used for launching activities, receiving results */
 	public static final String ACTION_ROUND_TIMER = "android.intent.action.ROUND_TIMER";
-	private static final int TTS_DATA_CHECK_CODE = 42;
 
 	/* Constants used for launching fragments */
 	public static final String ACTION_CARD_SEARCH = "android.intent.action.CARD_SEARCH";
@@ -125,19 +124,10 @@ public class FamiliarActivity extends FragmentActivity {
 			"&business=SZK4TAH2XBZNC&lc=US&item_name=MTG%20Familiar&currency_code=USD" +
 			"&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
 	private static final String GITHUB_URL = "https://github.com/AEFeinstein/mtg-familiar";
-
-	/* Drawer elements */
-	public DrawerLayout mDrawerLayout;
-	public ListView mDrawerList;
-	private ActionBarDrawerToggle mDrawerToggle;
-	public boolean mIsMenuVisible;
-
-	/* UI elements */
-	private IndeterminateRefreshLayout mRefreshLayout;
-
-	/* Used to pass results between fragments */
-	private Bundle mFragResults;
-
+	/* Timer to determine user inactivity for screen dimming in the life counter */
+	private static final long INACTIVITY_MS = 30000;
+	/* Spice setup */
+	public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
 	/* What the drawer menu will be */
 	private final DrawerEntry[] mPageEntries = {
 			new DrawerEntry(R.string.main_pages, 0, true),
@@ -160,32 +150,7 @@ public class FamiliarActivity extends FragmentActivity {
 			new DrawerEntry(R.string.main_export_data_title, R.attr.ic_action_save, false),
 			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_action_collection, false)
 	};
-
-	/* Timer setup */
-	private boolean mUpdatingRoundTimer;
-	private long mRoundEndTime;
-	private Handler mRoundTimerUpdateHandler;
-
-	/* Spice setup */
-	public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
-	public PreferenceAdapter mPreferenceAdapter;
-	private int mCurrentFrag;
-
-	/* Timer to determine user inactivity for screen dimming in the life counter */
-	private static final long INACTIVITY_MS = 30000;
 	private final Handler mInactivityHandler = new Handler();
-	private boolean mUserInactive = false;
-	private final Runnable userInactive = new Runnable() {
-		@Override
-		public void run() {
-			mUserInactive = true;
-			Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-			if (fragment instanceof FamiliarFragment) {
-				((FamiliarFragment) fragment).onUserInactive();
-			}
-		}
-	};
-
 	/* Listen for changes to preferences */
 	private final SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 		@Override
@@ -200,12 +165,37 @@ public class FamiliarActivity extends FragmentActivity {
 						new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
 				intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 				sendBroadcast(intent);
-			}
-			else if (s.equals(getString(R.string.key_theme))) {
+			} else if (s.equals(getString(R.string.key_theme))) {
 				invalidateOptionsMenu(); /* to redraw the magnifying glass */
 				Intent i = new Intent(FamiliarActivity.this, FamiliarActivity.class);
 				startActivity(i);
 				FamiliarActivity.this.finish();
+			}
+		}
+	};
+	/* Drawer elements */
+	public DrawerLayout mDrawerLayout;
+	public ListView mDrawerList;
+	public boolean mIsMenuVisible;
+	public PreferenceAdapter mPreferenceAdapter;
+	private ActionBarDrawerToggle mDrawerToggle;
+	/* UI elements */
+	private IndeterminateRefreshLayout mRefreshLayout;
+	/* Used to pass results between fragments */
+	private Bundle mFragResults;
+	/* Timer setup */
+	private boolean mUpdatingRoundTimer;
+	private long mRoundEndTime;
+	private Handler mRoundTimerUpdateHandler;
+	private int mCurrentFrag;
+	private boolean mUserInactive = false;
+	private final Runnable userInactive = new Runnable() {
+		@Override
+		public void run() {
+			mUserInactive = true;
+			Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+			if (fragment instanceof FamiliarFragment) {
+				((FamiliarFragment) fragment).onUserInactive();
 			}
 		}
 	};
@@ -272,8 +262,7 @@ public class FamiliarActivity extends FragmentActivity {
 		if (resourceId == R.color.drawer_background_dark) {
 			otherTheme = R.style.Theme_light;
 			themeString = getString(R.string.pref_theme_dark);
-		}
-		else if (resourceId == R.color.drawer_background_light) {
+		} else if (resourceId == R.color.drawer_background_light) {
 			otherTheme = R.style.Theme_dark;
 			themeString = getString(R.string.pref_theme_light);
 		}
@@ -488,81 +477,59 @@ public class FamiliarActivity extends FragmentActivity {
 				sc.name = query;
 				args.putSerializable(SearchViewFragment.CRITERIA, sc);
 				selectItem(R.string.main_card_search, args);
-			}
-			else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+			} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 				/* User clicked a card in the quick search autocomplete, jump right to it */
 				Uri data = intent.getData();
 				Bundle args = new Bundle();
 				assert data != null;
 				args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
 				selectItem(R.string.main_card_search, args);
-			}
-			else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
+			} else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
 				selectItem(R.string.main_timer, null);
-			}
-			else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
+			} else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
 				selectItem(R.string.main_card_search, null);
-			}
-			else if (ACTION_LIFE.equals(intent.getAction())) {
+			} else if (ACTION_LIFE.equals(intent.getAction())) {
 				selectItem(R.string.main_life_counter, null);
-			}
-			else if (ACTION_DICE.equals(intent.getAction())) {
+			} else if (ACTION_DICE.equals(intent.getAction())) {
 				selectItem(R.string.main_dice, null);
-			}
-			else if (ACTION_TRADE.equals(intent.getAction())) {
+			} else if (ACTION_TRADE.equals(intent.getAction())) {
 				selectItem(R.string.main_trade, null);
-			}
-			else if (ACTION_MANA.equals(intent.getAction())) {
+			} else if (ACTION_MANA.equals(intent.getAction())) {
 				selectItem(R.string.main_mana_pool, null);
-			}
-			else if (ACTION_WISH.equals(intent.getAction())) {
+			} else if (ACTION_WISH.equals(intent.getAction())) {
 				selectItem(R.string.main_wishlist, null);
-			}
-			else if (ACTION_RULES.equals(intent.getAction())) {
+			} else if (ACTION_RULES.equals(intent.getAction())) {
 				selectItem(R.string.main_rules, null);
-			}
-			else if (ACTION_JUDGE.equals(intent.getAction())) {
+			} else if (ACTION_JUDGE.equals(intent.getAction())) {
 				selectItem(R.string.main_judges_corner, null);
-			}
-			else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
+			} else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
 				selectItem(R.string.main_mojhosto, null);
-			}
-			else {
+			} else {
 			/* App launched as regular, show the default fragment */
 
 				String defaultFragment = mPreferenceAdapter.getDefaultFragment();
 
 				if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
 					selectItem(R.string.main_card_search, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
 					selectItem(R.string.main_life_counter, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
 					selectItem(R.string.main_mana_pool, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
 					selectItem(R.string.main_dice, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
 					selectItem(R.string.main_trade, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
 					selectItem(R.string.main_wishlist, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
 					selectItem(R.string.main_timer, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
 					selectItem(R.string.main_rules, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
 					selectItem(R.string.main_judges_corner, null);
-				}
-				else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
+				} else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
 					selectItem(R.string.main_mojhosto, null);
-				}
-				else {
+				} else {
 					selectItem(R.string.main_card_search, null);
 				}
 			}
@@ -624,11 +591,9 @@ public class FamiliarActivity extends FragmentActivity {
 				/* If this is a quick search intent, launch either the card view or result list directly */
 				if (args != null && args.containsKey(CardViewFragment.CARD_ID)) {
 					newFrag = new CardViewFragment();
-				}
-				else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
+				} else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
 					newFrag = new ResultListFragment();
-				}
-				else {
+				} else {
 					newFrag = new SearchViewFragment();
 				}
 				break;
@@ -793,97 +758,9 @@ public class FamiliarActivity extends FragmentActivity {
 	 * If TTS couldn't init, show this dialog. It will only display once as to not annoy people
 	 */
 	public void showTtsDialog() {
-		if(mPreferenceAdapter.getTtsShowDialog()) {
+		if (mPreferenceAdapter.getTtsShowDialog()) {
 			showDialogFragment(FamiliarActivity.DIALOG_TTS);
 			mPreferenceAdapter.setTtsShowDialog();
-		}
-	}
-
-	/**
-	 * This nested class encapsulates the necessary information for an entry in the drawer menu
-	 */
-	public class DrawerEntry {
-		final int mNameResource;
-		final int mIconResource;
-		final boolean mIsHeader;
-
-		public DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
-			mNameResource = nameResource;
-			mIconResource = iconResource;
-			mIsHeader = isHeader;
-		}
-	}
-
-	/**
-	 * This nested class is the adapter which populates the listView in the drawer menu. It handles both entries and
-	 * headers
-	 */
-	public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
-		private final DrawerEntry[] values;
-
-		/**
-		 * Constructor. The context will be used to inflate views later. The array of values will be used to populate
-		 * the views
-		 *
-		 * @param context The application's context, used to inflate views later.
-		 * @param values  An array of DrawerEntries which will populate the list
-		 */
-		public DrawerEntryArrayAdapter(Context context, DrawerEntry[] values) {
-			super(context, R.layout.drawer_list_item, values);
-			this.values = values;
-		}
-
-		/**
-		 * Called to get a view for an entry in the listView
-		 *
-		 * @param position    The position of the listView to populate
-		 * @param convertView The old view to reuse, if possible. Since the layouts for entries and headers are
-		 *                    different, this will be ignored
-		 * @param parent      The parent this view will eventually be attached to
-		 * @return The view for the data at this position
-		 */
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			int layout;
-			if (values[position].mIsHeader) {
-				layout = R.layout.drawer_list_header;
-			}
-			else {
-				layout = R.layout.drawer_list_item;
-			}
-			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(layout, parent, false);
-			}
-
-			assert convertView != null;
-			if (values[position].mIsHeader) {
-				/* Make sure the recycled view is the right type, inflate a new one if necessary */
-				if (convertView.findViewById(R.id.drawer_header_name) == null) {
-					convertView = getLayoutInflater().inflate(layout, parent, false);
-				}
-				assert convertView != null;
-				((TextView) convertView.findViewById(R.id.drawer_header_name)).setText(values[position].mNameResource);
-				convertView.setFocusable(false);
-				convertView.setFocusableInTouchMode(false);
-			}
-			else {
-				/* Make sure the recycled view is the right type, inflate a new one if necessary */
-				if (convertView.findViewById(R.id.drawer_entry_name) == null) {
-					convertView = getLayoutInflater().inflate(layout, parent, false);
-				}
-				assert convertView != null;
-				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
-				((ImageView) convertView.findViewById(R.id.drawer_entry_icon))
-						.setImageResource(getResourceIdFromAttr(values[position].mIconResource));
-			}
-
-			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
-				convertView.findViewById(R.id.divider).setVisibility(View.GONE);
-			}
-			else {
-				convertView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
-			}
-			return convertView;
 		}
 	}
 
@@ -912,7 +789,7 @@ public class FamiliarActivity extends FragmentActivity {
 	 *
 	 * @param id the ID of the dialog to show
 	 */
-	void showDialogFragment(final int id) {
+	void showDialogFragment(final int id) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -1118,47 +995,6 @@ public class FamiliarActivity extends FragmentActivity {
 	}
 
 	/**
-	 * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
-	 * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment
-	 */
-	private final Runnable timerUpdate = new Runnable() {
-
-		@Override
-		public void run() {
-			if (mRoundEndTime > System.currentTimeMillis()) {
-				long timeLeftSeconds = (mRoundEndTime - System.currentTimeMillis()) / 1000;
-				String timeLeftStr;
-
-				if (timeLeftSeconds <= 0) {
-					timeLeftStr = "00:00:00";
-				}
-				else {
-					/* This is a slight hack to handle the fact that it always rounds down. It will start the timer at
-					   50:00 instead of 49:59, or whatever */
-					timeLeftSeconds++;
-					timeLeftStr = String.format("%02d:%02d:%02d",
-							timeLeftSeconds / 3600,
-							(timeLeftSeconds % 3600) / 60,
-							timeLeftSeconds % 60);
-				}
-
-				if (mUpdatingRoundTimer) {
-					assert getActionBar() != null;
-					getActionBar().setTitle(timeLeftStr);
-				}
-				mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1000);
-			}
-			else {
-				stopUpdatingDisplay();
-				Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-				if (fragment instanceof RoundTimerFragment) {
-					((RoundTimerFragment) fragment).timerEnded();
-				}
-			}
-		}
-	};
-
-	/**
 	 * Show the timer in the action bar, set up the handler to update the displayed time every second.
 	 */
 	public void startUpdatingDisplay() {
@@ -1221,15 +1057,51 @@ public class FamiliarActivity extends FragmentActivity {
 			case android.R.id.home:
 				if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
 					mDrawerLayout.closeDrawer(mDrawerList);
-				}
-				else {
+				} else {
 					mDrawerLayout.openDrawer(mDrawerList);
 				}
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}
+	}	/**
+	 * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
+	 * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment
+	 */
+	private final Runnable timerUpdate = new Runnable() {
+
+		@Override
+		public void run() {
+			if (mRoundEndTime > System.currentTimeMillis()) {
+				long timeLeftSeconds = (mRoundEndTime - System.currentTimeMillis()) / 1000;
+				String timeLeftStr;
+
+				if (timeLeftSeconds <= 0) {
+					timeLeftStr = "00:00:00";
+				} else {
+					/* This is a slight hack to handle the fact that it always rounds down. It will start the timer at
+					   50:00 instead of 49:59, or whatever */
+					timeLeftSeconds++;
+					timeLeftStr = String.format("%02d:%02d:%02d",
+							timeLeftSeconds / 3600,
+							(timeLeftSeconds % 3600) / 60,
+							timeLeftSeconds % 60);
+				}
+
+				if (mUpdatingRoundTimer) {
+					assert getActionBar() != null;
+					getActionBar().setTitle(timeLeftStr);
+				}
+				mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1000);
+			} else {
+				stopUpdatingDisplay();
+				Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+				if (fragment instanceof RoundTimerFragment) {
+					((RoundTimerFragment) fragment).timerEnded();
+				}
+			}
+		}
+	};
 
 	/**
 	 * Called whenever the user does anything. On an interaction, reset the inactivity timer and notifies the
@@ -1307,4 +1179,93 @@ public class FamiliarActivity extends FragmentActivity {
 		ta.recycle();
 		return resId;
 	}
+
+	/**
+	 * This nested class encapsulates the necessary information for an entry in the drawer menu
+	 */
+	public class DrawerEntry {
+		final int mNameResource;
+		final int mIconResource;
+		final boolean mIsHeader;
+
+		public DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
+			mNameResource = nameResource;
+			mIconResource = iconResource;
+			mIsHeader = isHeader;
+		}
+	}
+
+	/**
+	 * This nested class is the adapter which populates the listView in the drawer menu. It handles both entries and
+	 * headers
+	 */
+	public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
+		private final DrawerEntry[] values;
+
+		/**
+		 * Constructor. The context will be used to inflate views later. The array of values will be used to populate
+		 * the views
+		 *
+		 * @param context The application's context, used to inflate views later.
+		 * @param values  An array of DrawerEntries which will populate the list
+		 */
+		public DrawerEntryArrayAdapter(Context context, DrawerEntry[] values) {
+			super(context, R.layout.drawer_list_item, values);
+			this.values = values;
+		}
+
+		/**
+		 * Called to get a view for an entry in the listView
+		 *
+		 * @param position    The position of the listView to populate
+		 * @param convertView The old view to reuse, if possible. Since the layouts for entries and headers are
+		 *                    different, this will be ignored
+		 * @param parent      The parent this view will eventually be attached to
+		 * @return The view for the data at this position
+		 */
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			int layout;
+			if (values[position].mIsHeader) {
+				layout = R.layout.drawer_list_header;
+			} else {
+				layout = R.layout.drawer_list_item;
+			}
+			if (convertView == null) {
+				convertView = getLayoutInflater().inflate(layout, parent, false);
+			}
+
+			assert convertView != null;
+			if (values[position].mIsHeader) {
+				/* Make sure the recycled view is the right type, inflate a new one if necessary */
+				if (convertView.findViewById(R.id.drawer_header_name) == null) {
+					convertView = getLayoutInflater().inflate(layout, parent, false);
+				}
+				assert convertView != null;
+				((TextView) convertView.findViewById(R.id.drawer_header_name)).setText(values[position].mNameResource);
+				convertView.setFocusable(false);
+				convertView.setFocusableInTouchMode(false);
+			} else {
+				/* Make sure the recycled view is the right type, inflate a new one if necessary */
+				if (convertView.findViewById(R.id.drawer_entry_name) == null) {
+					convertView = getLayoutInflater().inflate(layout, parent, false);
+				}
+				assert convertView != null;
+				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
+				((ImageView) convertView.findViewById(R.id.drawer_entry_icon))
+						.setImageResource(getResourceIdFromAttr(values[position].mIconResource));
+			}
+
+			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
+				convertView.findViewById(R.id.divider).setVisibility(View.GONE);
+			} else {
+				convertView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+			}
+			return convertView;
+		}
+	}
+
+
+
+
 }

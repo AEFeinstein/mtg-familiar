@@ -121,14 +121,12 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 			if (CardDbAdapter.KEY_NAME.equals(mFrom[i])) {
 				String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
 				textField.setText(name);
-			}
-			else if (CardDbAdapter.KEY_MANACOST.equals(mFrom[i])) {
+			} else if (CardDbAdapter.KEY_MANACOST.equals(mFrom[i])) {
 				String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
 				hideCost = false;
 				CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
 				textField.setText(csq);
-			}
-			else if (CardDbAdapter.KEY_SET.equals(mFrom[i])) {
+			} else if (CardDbAdapter.KEY_SET.equals(mFrom[i])) {
 				String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
 				hideSet = false;
 				textField.setText(name);
@@ -150,19 +148,16 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 						textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
 						break;
 				}
-			}
-			else if (CardDbAdapter.KEY_TYPE.equals(mFrom[i])) {
+			} else if (CardDbAdapter.KEY_TYPE.equals(mFrom[i])) {
 				String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
 				hideType = false;
 				textField.setText(name);
-			}
-			else if (CardDbAdapter.KEY_ABILITY.equals(mFrom[i])) {
+			} else if (CardDbAdapter.KEY_ABILITY.equals(mFrom[i])) {
 				String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
 				hideAbility = false;
 				CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
 				textField.setText(csq);
-			}
-			else if (CardDbAdapter.KEY_POWER.equals(mFrom[i])) {
+			} else if (CardDbAdapter.KEY_POWER.equals(mFrom[i])) {
 				float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
 				if (p != CardDbAdapter.NO_ONE_CARES) {
 					String pow;
@@ -180,15 +175,13 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 					else {
 						if (p == (int) p) {
 							pow = Integer.valueOf((int) p).toString();
-						}
-						else {
+						} else {
 							pow = Float.valueOf(p).toString();
 						}
 					}
 					textField.setText(pow);
 				}
-			}
-			else if (CardDbAdapter.KEY_TOUGHNESS.equals(mFrom[i])) {
+			} else if (CardDbAdapter.KEY_TOUGHNESS.equals(mFrom[i])) {
 				float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
 				if (t != CardDbAdapter.NO_ONE_CARES) {
 					hidePT = false;
@@ -206,22 +199,19 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 					else {
 						if (t == (int) t) {
 							tou = Integer.valueOf((int) t).toString();
-						}
-						else {
+						} else {
 							tou = Float.valueOf(t).toString();
 						}
 					}
 					textField.setText(tou);
 				}
-			}
-			else if (CardDbAdapter.KEY_LOYALTY.equals(mFrom[i])) {
+			} else if (CardDbAdapter.KEY_LOYALTY.equals(mFrom[i])) {
 				float l = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
 				if (l != CardDbAdapter.NO_ONE_CARES) {
 					hideLoyalty = false;
 					if (l == (int) l) {
 						textField.setText(Integer.toString((int) l));
-					}
-					else {
+					} else {
 						textField.setText(Float.toString(l));
 					}
 				}
@@ -244,8 +234,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 		if (!hideLoyalty) {
 			view.findViewById(R.id.cardp).setVisibility(View.GONE);
 			view.findViewById(R.id.cardslash).setVisibility(View.GONE);
-		}
-		else if (hidePT) {
+		} else if (hidePT) {
 			view.findViewById(R.id.cardp).setVisibility(View.GONE);
 			view.findViewById(R.id.cardslash).setVisibility(View.GONE);
 			view.findViewById(R.id.cardt).setVisibility(View.GONE);

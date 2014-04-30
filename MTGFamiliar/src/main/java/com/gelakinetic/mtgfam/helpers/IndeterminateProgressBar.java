@@ -52,18 +52,16 @@ public final class IndeterminateProgressBar {
 
 	private final Paint mPaint = new Paint();
 	private final RectF mClipRect = new RectF();
+	private final View mParent;
+	private final Rect mBounds = new Rect();
 	private long mStartTime;
 	private long mFinishTime;
 	private boolean mRunning;
-
 	// Colors used when rendering the animation,
 	private int mColor1;
 	private int mColor2;
 	private int mColor3;
 	private int mColor4;
-	private final View mParent;
-
-	private final Rect mBounds = new Rect();
 
 	public IndeterminateProgressBar(View parent) {
 		mParent = parent;
@@ -147,14 +145,11 @@ public final class IndeterminateProgressBar {
 
 			if (rawProgress >= 0 && rawProgress < 25) {
 				canvas.drawColor(mColor4);
-			}
-			else if (rawProgress >= 25 && rawProgress < 50) {
+			} else if (rawProgress >= 25 && rawProgress < 50) {
 				canvas.drawColor(mColor1);
-			}
-			else if (rawProgress >= 50 && rawProgress < 75) {
+			} else if (rawProgress >= 50 && rawProgress < 75) {
 				canvas.drawColor(mColor2);
-			}
-			else {
+			} else {
 				canvas.drawColor(mColor3);
 			}
 
@@ -221,18 +216,6 @@ public final class IndeterminateProgressBar {
 
 	final static class BakedBezierInterpolator implements Interpolator {
 		private static final BakedBezierInterpolator INSTANCE = new BakedBezierInterpolator();
-
-		public static BakedBezierInterpolator getInstance() {
-			return INSTANCE;
-		}
-
-		/**
-		 * Use getInstance instead of instantiating.
-		 */
-		private BakedBezierInterpolator() {
-			super();
-		}
-
 		/**
 		 * Lookup table values.
 		 * Generated using a Bezier curve from (0,0) to (1,1) with control points:
@@ -255,8 +238,18 @@ public final class IndeterminateProgressBar {
 				0.9753f, 0.9777f, 0.9805f, 0.9826f, 0.9847f, 0.9866f, 0.9884f, 0.9901f, 0.9917f, 0.9931f,
 				0.9944f, 0.9955f, 0.9964f, 0.9973f, 0.9981f, 0.9986f, 0.9992f, 0.9995f, 0.9998f, 1.0f, 1.0f
 		};
-
 		private static final float STEP_SIZE = 1.0f / (VALUES.length - 1);
+
+		/**
+		 * Use getInstance instead of instantiating.
+		 */
+		private BakedBezierInterpolator() {
+			super();
+		}
+
+		public static BakedBezierInterpolator getInstance() {
+			return INSTANCE;
+		}
 
 		@Override
 		public float getInterpolation(float input) {

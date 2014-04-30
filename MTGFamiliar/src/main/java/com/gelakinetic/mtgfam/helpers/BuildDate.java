@@ -18,15 +18,15 @@
  */
 package com.gelakinetic.mtgfam.helpers;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 
 /**
  * A class to extract the date the APK was built
@@ -46,8 +46,7 @@ class BuildDate {
 			ZipEntry ze = zf.getEntry("classes.dex");
 			long time = ze.getTime();
 			return new Date(time);
-		}
-		catch(PackageManager.NameNotFoundException e) {
+		} catch (PackageManager.NameNotFoundException e) {
 			return new GregorianCalendar(1990, 2, 13).getTime();
 		} catch (IOException e) {
 			return new GregorianCalendar(1990, 2, 13).getTime();

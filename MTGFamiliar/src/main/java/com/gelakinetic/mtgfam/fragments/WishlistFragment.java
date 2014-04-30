@@ -205,8 +205,7 @@ public class WishlistFragment extends FamiliarFragment {
 				if (!added) {
 					cwi.add(card);
 				}
-			}
-			else {
+			} else {
 				mCompressedWishlist.add(new CompressedWishlistInfo(card));
 			}
 
@@ -253,8 +252,7 @@ public class WishlistFragment extends FamiliarFragment {
 		if (mShowTotalWishlistPrice) {
 			mTotalPriceField.setVisibility(View.VISIBLE);
 			mTotalPriceDivider.setVisibility(View.VISIBLE);
-		}
-		else {
+		} else {
 			mTotalPriceField.setVisibility(View.GONE);
 			mTotalPriceDivider.setVisibility(View.GONE);
 		}
@@ -284,8 +282,7 @@ public class WishlistFragment extends FamiliarFragment {
 			/* Clear the wishlist, or just the card that changed */
 			if (changedCardName == null) {
 				mCompressedWishlist.clear();
-			}
-			else {
+			} else {
 				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
 					if (cwi.mCard.name.equals(changedCardName)) {
 						cwi.clearCompressedInfo();
@@ -300,8 +297,7 @@ public class WishlistFragment extends FamiliarFragment {
 					 * other */
 					if (!mCompressedWishlist.contains(card)) {
 						mCompressedWishlist.add(new CompressedWishlistInfo(card));
-					}
-					else {
+					} else {
 						mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
 					}
 					/* Look up the new price */
@@ -403,7 +399,7 @@ public class WishlistFragment extends FamiliarFragment {
 	 * @param id       the ID of the dialog to show
 	 * @param cardName The name of the card to use if this is a dialog to change wishlist counts
 	 */
-	void showDialog(final int id, final String cardName) {
+	void showDialog(final int id, final String cardName) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -486,274 +482,6 @@ public class WishlistFragment extends FamiliarFragment {
 			}
 		};
 		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
-	}
-
-	/**
-	 * This nested class is the adapter which populates the listView in the drawer menu. It handles both entries and
-	 * headers
-	 */
-	public class WishlistArrayAdapter extends ArrayAdapter<CompressedWishlistInfo> {
-		private final ArrayList<CompressedWishlistInfo> values;
-
-		/**
-		 * Constructor. The context will be used to inflate views later. The array of values will be used to populate
-		 * the views
-		 *
-		 * @param values An array of DrawerEntries which will populate the list
-		 */
-		public WishlistArrayAdapter(ArrayList<CompressedWishlistInfo> values) {
-			super(getActivity(), R.layout.drawer_list_item, values);
-			this.values = values;
-		}
-
-		/**
-		 * Called to get a view for an entry in the listView
-		 *
-		 * @param position    The position of the listView to populate
-		 * @param convertView The old view to reuse, if possible. Since the layouts for entries and headers are
-		 *                    different, this will be ignored
-		 * @param parent      The parent this view will eventually be attached to
-		 * @return The view for the data at this position
-		 */
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			/* Recycle the view if it isn't null, otherwise inflate it */
-			LinearLayout wishlistSets;
-			if (convertView == null) {
-				convertView = getActivity().getLayoutInflater().inflate(R.layout.result_list_card_row, parent, false);
-				assert convertView != null;
-				wishlistSets = ((LinearLayout) convertView.findViewById(R.id.wishlist_sets));
-			}
-			else {
-				wishlistSets = ((LinearLayout) convertView.findViewById(R.id.wishlist_sets));
-				/* clear any prior sets */
-				wishlistSets.removeAllViews();
-			}
-
-			/* Get all the wishlist info for this entry */
-			CompressedWishlistInfo info = values.get(position);
-
-			/* Set the card name, always */
-			((TextView) convertView.findViewById(R.id.cardname)).setText(info.mCard.name);
-
-			/* Show or hide full card information */
-			convertView.findViewById(R.id.cardset).setVisibility(View.GONE);
-			if (mShowCardInfo) {
-				Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
-
-				/* make sure everything is showing */
-				convertView.findViewById(R.id.cardcost).setVisibility(View.VISIBLE);
-				convertView.findViewById(R.id.cardtype).setVisibility(View.VISIBLE);
-				convertView.findViewById(R.id.cardability).setVisibility(View.VISIBLE);
-				convertView.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
-				convertView.findViewById(R.id.cardslash).setVisibility(View.VISIBLE);
-				convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
-
-				/* Set the type, cost, and ability */
-				((TextView) convertView.findViewById(R.id.cardtype)).setText(info.mCard.type);
-				((TextView) convertView.findViewById(R.id.cardcost))
-						.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imgGetter));
-				((TextView) convertView.findViewById(R.id.cardability))
-						.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.ability, imgGetter));
-
-				/* Show the power, toughness, or loyalty if the card has it */
-				convertView.findViewById(R.id.cardt).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
-				try {
-					/* Figure out what power the card has, including special ones */
-					float p = info.mCard.power;
-					if (p != CardDbAdapter.NO_ONE_CARES) {
-						String pow;
-						if (p == CardDbAdapter.STAR)
-							pow = "*";
-						else if (p == CardDbAdapter.ONE_PLUS_STAR)
-							pow = "1+*";
-						else if (p == CardDbAdapter.TWO_PLUS_STAR)
-							pow = "2+*";
-						else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-							pow = "7-*";
-						else if (p == CardDbAdapter.STAR_SQUARED)
-							pow = "*^2";
-						else {
-							if (p == (int) p) {
-								pow = Integer.valueOf((int) p).toString();
-							}
-							else {
-								pow = Float.valueOf(p).toString();
-							}
-						}
-						((TextView) convertView.findViewById(R.id.cardp)).setText(pow);
-
-						convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
-						convertView.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
-						convertView.findViewById(R.id.cardslash).setVisibility(View.VISIBLE);
-					}
-				} catch (NumberFormatException e) {
-					/* eat it */
-				}
-				try {
-					/* figure out what toughness the card has, including special ones */
-					float t = info.mCard.toughness;
-					if (t != CardDbAdapter.NO_ONE_CARES) {
-						String tou;
-						if (t == CardDbAdapter.STAR)
-							tou = "*";
-						else if (t == CardDbAdapter.ONE_PLUS_STAR)
-							tou = "1+*";
-						else if (t == CardDbAdapter.TWO_PLUS_STAR)
-							tou = "2+*";
-						else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-							tou = "7-*";
-						else if (t == CardDbAdapter.STAR_SQUARED)
-							tou = "*^2";
-						else {
-							if (t == (int) t) {
-								tou = Integer.valueOf((int) t).toString();
-							}
-							else {
-								tou = Float.valueOf(t).toString();
-							}
-						}
-						((TextView) convertView.findViewById(R.id.cardt)).setText(tou);
-					}
-				} catch (NumberFormatException e) {
-					/* eat it */
-				}
-
-				/* Show the loyalty, if the card has any (traitor...) */
-				float loyalty = info.mCard.loyalty;
-				if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
-					if (loyalty == (int) loyalty) {
-						((TextView) convertView.findViewById(R.id.cardt)).setText(Integer.toString((int) loyalty));
-					}
-					else {
-						((TextView) convertView.findViewById(R.id.cardt)).setText(Float.toString(loyalty));
-					}
-					convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
-					convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
-					convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
-				}
-			}
-			else {
-				/* hide all the extra fields */
-				convertView.findViewById(R.id.cardcost).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardtype).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardability).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
-				convertView.findViewById(R.id.cardt).setVisibility(View.GONE);
-			}
-
-			/* List all the sets and wishlist values for this card */
-			for (IndividualSetInfo isi : info.mInfo) {
-				/* inflate a row */
-				View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, parent, false);
-				assert setRow != null;
-
-				/* Write the set name, color it with the rarity */
-				int color;
-				switch (isi.mRarity) {
-					case 'c':
-					case 'C':
-						color = R.attr.color_common;
-						break;
-					case 'u':
-					case 'U':
-						color = R.attr.color_uncommon;
-						break;
-					case 'r':
-					case 'R':
-						color = R.attr.color_rare;
-						break;
-					case 'm':
-					case 'M':
-						color = R.attr.color_mythic;
-						break;
-					case 't':
-					case 'T':
-						color = R.attr.color_timeshifted;
-						break;
-					default:
-						color = R.attr.color_text;
-						break;
-				}
-				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(isi.mSet);
-				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(getResources()
-						.getColor(getResourceIdFromAttr(color)));
-
-				/* Show or hide the foil indicator */
-				if (isi.mIsFoil) {
-					setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.VISIBLE);
-				}
-				else {
-					setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.GONE);
-				}
-
-				/* Show individual prices and number of each card, or message if price does not exist, if desired */
-				TextView priceText = ((TextView) setRow.findViewById(R.id.wishlistRowPrice));
-				if (mShowIndividualPrices) {
-					if (isi.mIsFoil) {
-						if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
-							priceText.setText(String.format("%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
-							priceText.setTextColor(getResources().getColor(
-									getResourceIdFromAttr(R.attr.color_text)));
-						}
-						else {
-							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
-							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
-						}
-					}
-					else {
-						boolean priceFound = false;
-						if (isi.mPrice != null) {
-							switch (mPriceSetting) {
-								case LOW_PRICE:
-									if (isi.mPrice.mLow != 0) {
-										priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
-												isi.mPrice.mLow));
-										priceFound = true;
-									}
-									break;
-								default:
-								case AVG_PRICE:
-									if (isi.mPrice.mAverage != 0) {
-										priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
-												isi.mPrice.mAverage));
-										priceFound = true;
-									}
-									break;
-								case HIGH_PRICE:
-									if (isi.mPrice.mHigh != 0) {
-										priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
-												isi.mPrice.mHigh));
-										priceFound = true;
-									}
-									break;
-							}
-							priceText.setTextColor(getResources().getColor(
-									getResourceIdFromAttr(R.attr.color_text)
-							));
-						}
-						if (!priceFound) {
-							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
-							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
-						}
-					}
-				}
-				else {
-					/* Just show the number of */
-					priceText.setText("x" + isi.mNumberOf);
-				}
-
-				/* Add the view to the linear layout */
-				wishlistSets.addView(setRow);
-			}
-			return convertView;
-		}
 	}
 
 	/**
@@ -850,8 +578,7 @@ public class WishlistFragment extends FamiliarFragment {
 					if (isi.mPrice != null) {
 						if (isi.mIsFoil) {
 							totalPrice += (isi.mPrice.mFoilAverage * isi.mNumberOf);
-						}
-						else {
+						} else {
 							switch (mPriceSetting) {
 								case LOW_PRICE:
 									totalPrice += (isi.mPrice.mLow * isi.mNumberOf);
@@ -868,6 +595,265 @@ public class WishlistFragment extends FamiliarFragment {
 				}
 			}
 			mTotalPriceField.setText(String.format("$%.02f", totalPrice));
+		}
+	}
+
+	/**
+	 * This nested class is the adapter which populates the listView in the drawer menu. It handles both entries and
+	 * headers
+	 */
+	public class WishlistArrayAdapter extends ArrayAdapter<CompressedWishlistInfo> {
+		private final ArrayList<CompressedWishlistInfo> values;
+
+		/**
+		 * Constructor. The context will be used to inflate views later. The array of values will be used to populate
+		 * the views
+		 *
+		 * @param values An array of DrawerEntries which will populate the list
+		 */
+		public WishlistArrayAdapter(ArrayList<CompressedWishlistInfo> values) {
+			super(getActivity(), R.layout.drawer_list_item, values);
+			this.values = values;
+		}
+
+		/**
+		 * Called to get a view for an entry in the listView
+		 *
+		 * @param position    The position of the listView to populate
+		 * @param convertView The old view to reuse, if possible. Since the layouts for entries and headers are
+		 *                    different, this will be ignored
+		 * @param parent      The parent this view will eventually be attached to
+		 * @return The view for the data at this position
+		 */
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+
+			/* Recycle the view if it isn't null, otherwise inflate it */
+			LinearLayout wishlistSets;
+			if (convertView == null) {
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.result_list_card_row, parent, false);
+				assert convertView != null;
+				wishlistSets = ((LinearLayout) convertView.findViewById(R.id.wishlist_sets));
+			} else {
+				wishlistSets = ((LinearLayout) convertView.findViewById(R.id.wishlist_sets));
+				/* clear any prior sets */
+				wishlistSets.removeAllViews();
+			}
+
+			/* Get all the wishlist info for this entry */
+			CompressedWishlistInfo info = values.get(position);
+
+			/* Set the card name, always */
+			((TextView) convertView.findViewById(R.id.cardname)).setText(info.mCard.name);
+
+			/* Show or hide full card information */
+			convertView.findViewById(R.id.cardset).setVisibility(View.GONE);
+			if (mShowCardInfo) {
+				Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
+
+				/* make sure everything is showing */
+				convertView.findViewById(R.id.cardcost).setVisibility(View.VISIBLE);
+				convertView.findViewById(R.id.cardtype).setVisibility(View.VISIBLE);
+				convertView.findViewById(R.id.cardability).setVisibility(View.VISIBLE);
+				convertView.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
+				convertView.findViewById(R.id.cardslash).setVisibility(View.VISIBLE);
+				convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
+
+				/* Set the type, cost, and ability */
+				((TextView) convertView.findViewById(R.id.cardtype)).setText(info.mCard.type);
+				((TextView) convertView.findViewById(R.id.cardcost))
+						.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imgGetter));
+				((TextView) convertView.findViewById(R.id.cardability))
+						.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.ability, imgGetter));
+
+				/* Show the power, toughness, or loyalty if the card has it */
+				convertView.findViewById(R.id.cardt).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
+				try {
+					/* Figure out what power the card has, including special ones */
+					float p = info.mCard.power;
+					if (p != CardDbAdapter.NO_ONE_CARES) {
+						String pow;
+						if (p == CardDbAdapter.STAR)
+							pow = "*";
+						else if (p == CardDbAdapter.ONE_PLUS_STAR)
+							pow = "1+*";
+						else if (p == CardDbAdapter.TWO_PLUS_STAR)
+							pow = "2+*";
+						else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
+							pow = "7-*";
+						else if (p == CardDbAdapter.STAR_SQUARED)
+							pow = "*^2";
+						else {
+							if (p == (int) p) {
+								pow = Integer.valueOf((int) p).toString();
+							} else {
+								pow = Float.valueOf(p).toString();
+							}
+						}
+						((TextView) convertView.findViewById(R.id.cardp)).setText(pow);
+
+						convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
+						convertView.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
+						convertView.findViewById(R.id.cardslash).setVisibility(View.VISIBLE);
+					}
+				} catch (NumberFormatException e) {
+					/* eat it */
+				}
+				try {
+					/* figure out what toughness the card has, including special ones */
+					float t = info.mCard.toughness;
+					if (t != CardDbAdapter.NO_ONE_CARES) {
+						String tou;
+						if (t == CardDbAdapter.STAR)
+							tou = "*";
+						else if (t == CardDbAdapter.ONE_PLUS_STAR)
+							tou = "1+*";
+						else if (t == CardDbAdapter.TWO_PLUS_STAR)
+							tou = "2+*";
+						else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
+							tou = "7-*";
+						else if (t == CardDbAdapter.STAR_SQUARED)
+							tou = "*^2";
+						else {
+							if (t == (int) t) {
+								tou = Integer.valueOf((int) t).toString();
+							} else {
+								tou = Float.valueOf(t).toString();
+							}
+						}
+						((TextView) convertView.findViewById(R.id.cardt)).setText(tou);
+					}
+				} catch (NumberFormatException e) {
+					/* eat it */
+				}
+
+				/* Show the loyalty, if the card has any (traitor...) */
+				float loyalty = info.mCard.loyalty;
+				if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
+					if (loyalty == (int) loyalty) {
+						((TextView) convertView.findViewById(R.id.cardt)).setText(Integer.toString((int) loyalty));
+					} else {
+						((TextView) convertView.findViewById(R.id.cardt)).setText(Float.toString(loyalty));
+					}
+					convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
+					convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
+					convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
+				}
+			} else {
+				/* hide all the extra fields */
+				convertView.findViewById(R.id.cardcost).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardtype).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardability).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
+				convertView.findViewById(R.id.cardt).setVisibility(View.GONE);
+			}
+
+			/* List all the sets and wishlist values for this card */
+			for (IndividualSetInfo isi : info.mInfo) {
+				/* inflate a row */
+				View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, parent, false);
+				assert setRow != null;
+
+				/* Write the set name, color it with the rarity */
+				int color;
+				switch (isi.mRarity) {
+					case 'c':
+					case 'C':
+						color = R.attr.color_common;
+						break;
+					case 'u':
+					case 'U':
+						color = R.attr.color_uncommon;
+						break;
+					case 'r':
+					case 'R':
+						color = R.attr.color_rare;
+						break;
+					case 'm':
+					case 'M':
+						color = R.attr.color_mythic;
+						break;
+					case 't':
+					case 'T':
+						color = R.attr.color_timeshifted;
+						break;
+					default:
+						color = R.attr.color_text;
+						break;
+				}
+				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(isi.mSet);
+				((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(getResources()
+						.getColor(getResourceIdFromAttr(color)));
+
+				/* Show or hide the foil indicator */
+				if (isi.mIsFoil) {
+					setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.VISIBLE);
+				} else {
+					setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.GONE);
+				}
+
+				/* Show individual prices and number of each card, or message if price does not exist, if desired */
+				TextView priceText = ((TextView) setRow.findViewById(R.id.wishlistRowPrice));
+				if (mShowIndividualPrices) {
+					if (isi.mIsFoil) {
+						if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
+							priceText.setText(String.format("%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
+							priceText.setTextColor(getResources().getColor(
+									getResourceIdFromAttr(R.attr.color_text)));
+						} else {
+							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
+							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
+						}
+					} else {
+						boolean priceFound = false;
+						if (isi.mPrice != null) {
+							switch (mPriceSetting) {
+								case LOW_PRICE:
+									if (isi.mPrice.mLow != 0) {
+										priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
+												isi.mPrice.mLow));
+										priceFound = true;
+									}
+									break;
+								default:
+								case AVG_PRICE:
+									if (isi.mPrice.mAverage != 0) {
+										priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
+												isi.mPrice.mAverage));
+										priceFound = true;
+									}
+									break;
+								case HIGH_PRICE:
+									if (isi.mPrice.mHigh != 0) {
+										priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
+												isi.mPrice.mHigh));
+										priceFound = true;
+									}
+									break;
+							}
+							priceText.setTextColor(getResources().getColor(
+									getResourceIdFromAttr(R.attr.color_text)
+							));
+						}
+						if (!priceFound) {
+							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
+							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
+						}
+					}
+				} else {
+					/* Just show the number of */
+					priceText.setText("x" + isi.mNumberOf);
+				}
+
+				/* Add the view to the linear layout */
+				wishlistSets.addView(setRow);
+			}
+			return convertView;
 		}
 	}
 }

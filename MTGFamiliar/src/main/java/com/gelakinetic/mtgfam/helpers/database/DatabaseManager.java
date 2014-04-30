@@ -9,10 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DatabaseManager {
 
-	private final AtomicInteger mOpenCounter = new AtomicInteger();
-
 	private static DatabaseManager mDatabaseManager;
 	private static DatabaseHelper mDatabaseHelper;
+	private final AtomicInteger mOpenCounter = new AtomicInteger();
 	private SQLiteDatabase mDatabase;
 	private boolean mTransactional;
 

@@ -49,9 +49,9 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			FamiliarActivity.ACTION_MOJHOSTO,
 			FamiliarActivity.ACTION_JUDGE};
 
-    private int mMaxNumButtons = 100;
+	private int mMaxNumButtons = 100;
 
-    /**
+	/**
 	 * Called in response to the ACTION_APPWIDGET_UPDATE broadcast when this AppWidget provider is being asked to
 	 * provide RemoteViews for a set of AppWidgets. Override this method to implement your own AppWidget functionality.
 	 *
