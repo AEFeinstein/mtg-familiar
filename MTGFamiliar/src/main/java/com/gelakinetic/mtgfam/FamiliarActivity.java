@@ -110,10 +110,10 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
 
 	/* Constants used for displaying dialogs */
-	private static final int ABOUT_DIALOG = 100;
-	private static final int CHANGE_LOG_DIALOG = 101;
-	private static final int DONATE_DIALOG = 102;
-	private static final int TTS_DIALOG = 103;
+	private static final int DIALOG_ABOUT = 100;
+	private static final int DIALOG_CHANGE_LOG = 101;
+	private static final int DIALOG_DONATE = 102;
+	private static final int DIALOG_TTS = 103;
 
 	/* Constants used for saving state */
 	private static final String CURRENT_FRAG = "CURRENT_FRAG";
@@ -172,6 +172,7 @@ public class FamiliarActivity extends FragmentActivity {
 	private int mCurrentFrag;
 
 	/* Timer to determine user inactivity for screen dimming in the life counter */
+	private static final long INACTIVITY_MS = 30000;
 	private final Handler mInactivityHandler = new Handler();
 	private boolean mUserInactive = false;
 	private final Runnable userInactive = new Runnable() {
@@ -357,17 +358,17 @@ public class FamiliarActivity extends FragmentActivity {
 						break;
 					}
 					case R.string.main_donate_title: {
-						showDialogFragment(DONATE_DIALOG);
+						showDialogFragment(DIALOG_DONATE);
 						shouldCloseDrawer = true;
 						break;
 					}
 					case R.string.main_about: {
-						showDialogFragment(ABOUT_DIALOG);
+						showDialogFragment(DIALOG_ABOUT);
 						shouldCloseDrawer = true;
 						break;
 					}
 					case R.string.main_whats_new_title: {
-						showDialogFragment(CHANGE_LOG_DIALOG);
+						showDialogFragment(DIALOG_CHANGE_LOG);
 						shouldCloseDrawer = true;
 						break;
 					}
@@ -451,7 +452,7 @@ public class FamiliarActivity extends FragmentActivity {
 				} catch (NullPointerException e) {
 					/* eat it. tasty */
 				}
-				showDialogFragment(CHANGE_LOG_DIALOG);
+				showDialogFragment(DIALOG_CHANGE_LOG);
 				mPreferenceAdapter.setLastVersion(pInfo.versionCode);
 
 				/* Clear the mtr and ipg on update, to replace them with the newly colored versions, but only if we're
@@ -591,7 +592,7 @@ public class FamiliarActivity extends FragmentActivity {
 		if (mRoundEndTime != -1) {
 			startUpdatingDisplay();
 		}
-		mInactivityHandler.postDelayed(userInactive, 15000);
+		mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
 	}
 
 	/**
@@ -793,7 +794,7 @@ public class FamiliarActivity extends FragmentActivity {
 	 */
 	public void showTtsDialog() {
 		if(mPreferenceAdapter.getTtsShowDialog()) {
-			showDialogFragment(FamiliarActivity.TTS_DIALOG);
+			showDialogFragment(FamiliarActivity.DIALOG_TTS);
 			mPreferenceAdapter.setTtsShowDialog();
 		}
 	}
@@ -939,7 +940,7 @@ public class FamiliarActivity extends FragmentActivity {
 				assert getPackageManager() != null;
 
 				switch (id) {
-					case ABOUT_DIALOG: {
+					case DIALOG_ABOUT: {
 
 						/* Set the title with the package version if possible */
 						try {
@@ -968,7 +969,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						return builder.create();
 					}
-					case CHANGE_LOG_DIALOG: {
+					case DIALOG_CHANGE_LOG: {
 						try {
 							builder.setTitle(getString(R.string.main_whats_new_in_title) + " " +
 									getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
@@ -1003,7 +1004,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						return builder.create();
 					}
-					case DONATE_DIALOG: {
+					case DIALOG_DONATE: {
 						/* Set the title */
 						builder.setTitle(R.string.main_donate_dialog_title);
 						/* Set the buttons button */
@@ -1047,7 +1048,7 @@ public class FamiliarActivity extends FragmentActivity {
 						builder.setView(dialogLayout);
 						return builder.create();
 					}
-					case TTS_DIALOG: {
+					case DIALOG_TTS: {
 						/* Then display a dialog informing them of TTS */
 
 						builder.setTitle(R.string.main_tts_warning_title)
@@ -1094,7 +1095,7 @@ public class FamiliarActivity extends FragmentActivity {
 			@Override
 			public void onDismiss(DialogInterface dialog) {
 				super.onDismiss(dialog);
-				if (id == CHANGE_LOG_DIALOG) {
+				if (id == DIALOG_CHANGE_LOG) {
 					if (mPreferenceAdapter.getBounceDrawer()) {
 						new Handler().postDelayed(new Runnable() {
 							@Override
@@ -1245,7 +1246,7 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		}
 		mInactivityHandler.removeCallbacks(userInactive);
-		mInactivityHandler.postDelayed(userInactive, 30000);
+		mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
 		mUserInactive = false;
 	}
 

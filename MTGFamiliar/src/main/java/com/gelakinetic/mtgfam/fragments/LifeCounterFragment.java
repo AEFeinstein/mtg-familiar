@@ -41,10 +41,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		AudioManager.OnAudioFocusChangeListener, TextToSpeech.OnUtteranceCompletedListener {
 
 	/* Dialog Constants */
-	private static final int REMOVE_PLAYER_DIALOG = 0;
-	private static final int RESET_CONFIRM_DIALOG = 1;
+	private static final int DIALOG_REMOVE_PLAYER = 0;
+	private static final int DIALOG_RESET_CONFIRM = 1;
 	private static final int DIALOG_CHANGE_DISPLAY = 2;
-	private static final int SET_GATHERING_DIALOG = 3;
+	private static final int DIALOG_SET_GATHERING = 3;
 
 	/* Constant for persisting data */
 	private static final String DISPLAY_MODE = "display_mode";
@@ -86,9 +86,6 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	private AudioManager mAudioManager;
 	private MediaPlayer m9000Player;
 	private final LinkedList<String> mVocalizations = new LinkedList<String>();
-
-	/* For proper dimming during wake lock */
-	private float mDefaultBrightness;
 
 	/**
 	 * When the fragment is created, set up the TTS engine, AudioManager, and MediaPlayer for life total vocalization
@@ -185,7 +182,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 						for (LcPlayer player : mPlayers) {
 							player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
 									getActivity().getResources().getConfiguration().orientation
-											== Configuration.ORIENTATION_PORTRAIT);
+											== Configuration.ORIENTATION_PORTRAIT
+							);
 						}
 					}
 				}
@@ -215,16 +213,13 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		myFragmentView.findViewById(R.id.reset_button).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				showDialog(RESET_CONFIRM_DIALOG);
+				showDialog(DIALOG_RESET_CONFIRM);
 			}
 		});
 
 		if (savedInstanceState != null) {
 			mStatDisplaying = savedInstanceState.getInt(DISPLAY_MODE, STAT_LIFE);
 		}
-
-		WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
-		mDefaultBrightness = layoutParams.screenBrightness;
 
 		return myFragmentView;
 	}
@@ -257,7 +252,9 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		mGridLayout.removeAllViews();
 		mPlayers.clear();
 
+		/* Remove the screen on lock, restore the brightness */
 		getActivity().getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		onUserActive();
 	}
 
 	/**
@@ -313,7 +310,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	public void onUserActive() {
 		if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
 			WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
-			layoutParams.screenBrightness = mDefaultBrightness;
+			layoutParams.screenBrightness = -1;
 			getActivity().getWindow().setAttributes(layoutParams);
 		}
 	}
@@ -366,7 +363,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				return true;
 			case R.id.remove_player:
 				/* Show a dialog of players to remove */
-				showDialog(REMOVE_PLAYER_DIALOG);
+				showDialog(DIALOG_REMOVE_PLAYER);
 				return true;
 			case R.id.announce_life:
 				/* Vocalize the current life totals */
@@ -379,7 +376,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				return true;
 			case R.id.set_gathering:
 				/* Show a dialog of gatherings a user can set */
-				showDialog(SET_GATHERING_DIALOG);
+				showDialog(DIALOG_SET_GATHERING);
 				return true;
 			case R.id.display_mode:
 				/* Show a dialog to change the display mode (normal, compact, commander) */
@@ -416,7 +413,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				switch (id) {
-					case REMOVE_PLAYER_DIALOG: {
+					case DIALOG_REMOVE_PLAYER: {
 						/* Get all the player names */
 						String[] names = new String[mPlayers.size()];
 						for (int i = 0; i < mPlayers.size(); i++) {
@@ -452,7 +449,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 						return builder.create();
 					}
-					case RESET_CONFIRM_DIALOG: {
+					case DIALOG_RESET_CONFIRM: {
 						builder.setMessage(getString(R.string.life_counter_clear_dialog_text))
 								.setCancelable(true)
 								.setPositiveButton(getString(R.string.dialog_both),
@@ -515,7 +512,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 						return builder.create();
 					}
-					case SET_GATHERING_DIALOG: {
+					case DIALOG_SET_GATHERING: {
 						/* If there aren't any dialogs, don't show the dialog. Pop a toast instead */
 						if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
 							Toast.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist,

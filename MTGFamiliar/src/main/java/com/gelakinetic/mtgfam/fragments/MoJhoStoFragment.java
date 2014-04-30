@@ -36,10 +36,10 @@ import java.util.Random;
 public class MoJhoStoFragment extends FamiliarFragment {
 
 	/* Dialog Constants */
-	private static final int RULES_DIALOG = 1;
-	private static final int MOMIR_IMAGE = 2;
-	private static final int STONEHEWER_IMAGE = 3;
-	private static final int JHOIRA_IMAGE = 4;
+	private static final int DIALOG_RULES = 1;
+	private static final int DIALOG_MOMIR = 2;
+	private static final int DIALOG_STONEHEWER = 3;
+	private static final int DIALOG_JHOIRA = 4;
 
 	/* Type constants */
 	private static final String EQUIPMENT = "equipment";
@@ -78,19 +78,19 @@ public class MoJhoStoFragment extends FamiliarFragment {
 		/* Add listeners to the portraits to show the full Vanguards */
 		myFragmentView.findViewById(R.id.imageViewMo).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(MOMIR_IMAGE);
+				showDialog(DIALOG_MOMIR);
 			}
 		});
 
 		myFragmentView.findViewById(R.id.imageViewSto).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(STONEHEWER_IMAGE);
+				showDialog(DIALOG_STONEHEWER);
 			}
 		});
 
 		myFragmentView.findViewById(R.id.imageViewJho).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showDialog(JHOIRA_IMAGE);
+				showDialog(DIALOG_JHOIRA);
 			}
 		});
 
@@ -145,7 +145,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 	public void onResume() {
 		super.onResume();
 		if (getFamiliarActivity().mPreferenceAdapter.getMojhostoFirstTime()) {
-			showDialog(RULES_DIALOG);
+			showDialog(DIALOG_RULES);
 			getFamiliarActivity().mPreferenceAdapter.setMojhostoFirstTime();
 		}
 	}
@@ -173,7 +173,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 		/* Handle item selection */
 		switch (item.getItemId()) {
 			case R.id.random_rules:
-				showDialog(RULES_DIALOG);
+				showDialog(DIALOG_RULES);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -205,7 +205,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 				setShowsDialog(true);
 
 				switch (id) {
-					case RULES_DIALOG: {
+					case DIALOG_RULES: {
 						/* Use a generic AlertDialog to display the rules text */
 						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 						builder.setNeutralButton(R.string.mojhosto_dialog_play, new DialogInterface.OnClickListener() {
@@ -217,9 +217,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
 						builder.setTitle(R.string.mojhosto_rules_title);
 						return builder.create();
 					}
-					case MOMIR_IMAGE:
-					case STONEHEWER_IMAGE:
-					case JHOIRA_IMAGE: {
+					case DIALOG_MOMIR:
+					case DIALOG_STONEHEWER:
+					case DIALOG_JHOIRA: {
 						/* Use a raw dialog with a custom view (ImageView inside LinearLayout) to display the Vanguard*/
 						Dialog dialog = new Dialog(this.getActivity());
 						dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -229,13 +229,13 @@ public class MoJhoStoFragment extends FamiliarFragment {
 						/* These drawables are re-sized on-the-fly, so only a single hi-res version exists in a resource
 						   folder without density */
 						switch (id) {
-							case MOMIR_IMAGE:
+							case DIALOG_MOMIR:
 								image.setImageResource(R.drawable.mjs_momir);
 								break;
-							case STONEHEWER_IMAGE:
+							case DIALOG_STONEHEWER:
 								image.setImageResource(R.drawable.mjs_stonehewer);
 								break;
-							case JHOIRA_IMAGE:
+							case DIALOG_JHOIRA:
 								image.setImageResource(R.drawable.mjs_jhoira);
 								break;
 						}
