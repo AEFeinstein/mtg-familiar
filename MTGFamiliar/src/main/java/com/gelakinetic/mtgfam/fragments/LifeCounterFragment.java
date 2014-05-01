@@ -923,10 +923,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		if (status == TextToSpeech.SUCCESS) {
 			int result = mTts.setLanguage(getResources().getConfiguration().locale);
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+				getFamiliarActivity().showTtsDialog();
+			} else {
 				mTtsInit = true;
 				getActivity().invalidateOptionsMenu();
-			} else {
-				getFamiliarActivity().showTtsDialog();
 			}
 		} else if (status == TextToSpeech.ERROR) {
 			getFamiliarActivity().showTtsDialog();

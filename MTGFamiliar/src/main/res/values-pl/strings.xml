@@ -347,9 +347,6 @@ Powodzenia i miłej zabawy!</string>
     <string name="pref_show_type_title">Pokaż typ/podtyp</string>
     <string name="pref_show_ability_title">Pokaż zasady</string>
     <string name="pref_show_pt_title">Pokaż siłę/wytrzymałość</string>
-    <string name="pref_cat_tts">Syntezator mowy</string>
-    <string name="pref_install_tts_title">Zainstaluj Syntezator mowy</string>
-    <string name="pref_install_tts_summary">Kliknięcie tu spowoduje przejście do strony instalacyjnej syntezatora mowy w Google Play</string>
     <string name="pref_cat_wishlist">Lista Życzeń</string>
     <string name="pref_wishlist_details_title">Pokaż szczegóły</string>
     <string name="pref_wishlist_details_summary">Pokazuj wszystkie detale karty na Liście Życzeń</string>

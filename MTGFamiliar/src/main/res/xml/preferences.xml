@@ -74,19 +74,6 @@
                 android:defaultValue="@string/pref_theme_light"/>
         </PreferenceCategory>
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_tts">
-
-            <Preference
-                android:title="@string/pref_install_tts_title"
-                android:summary="@string/pref_install_tts_summary">
-
-                <intent android:action="android.speech.tts.engine.INSTALL_TTS_DATA"/>
-
-            </Preference>
-
-        </PreferenceCategory>
-
     </PreferenceScreen>
 
     <!-- Search and results preferences -->

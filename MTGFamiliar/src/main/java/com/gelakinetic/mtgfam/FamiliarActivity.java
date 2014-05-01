@@ -445,8 +445,8 @@ public class FamiliarActivity extends FragmentActivity {
 				mPreferenceAdapter.setLastVersion(pInfo.versionCode);
 
 				/* Clear the mtr and ipg on update, to replace them with the newly colored versions, but only if we're
-				 * updating to 3.0 (v23) */
-				if (pInfo.versionCode == 23) {
+				 * updating to 3.0.1 (v24) */
+				if (pInfo.versionCode <= 24) {
 					File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
 					File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
 					if (mtr.exists()) {

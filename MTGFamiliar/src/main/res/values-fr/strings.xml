@@ -342,9 +342,6 @@ Bonne chance, et bon jeu!</string>
     <string name="pref_show_type_title">Afficher Type/Sous-type</string>
     <string name="pref_show_ability_title">Afficher Texte Règles</string>
     <string name="pref_show_pt_title">Afficher Force/Endurance</string>
-    <string name="pref_cat_tts">Synthèse vocale</string>
-    <string name="pref_install_tts_title">Installer Text-to-Speech</string>
-    <string name="pref_install_tts_summary">Cliquer ici vous enverra vers la page d\'installation de la synthèse vocale (text-to-speech) dans le Google Play Store</string>
     <string name="pref_cat_wishlist">Liste de voeux</string>
     <string name="pref_wishlist_details_title">Afficher Détails</string>
     <string name="pref_wishlist_details_summary">Afficher les détails complets des cartes de la liste de voeux</string>

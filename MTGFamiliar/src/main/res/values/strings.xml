@@ -385,9 +385,6 @@ Good luck, and have fun!
     <string name="pref_show_type_title">Show Type/Subtype</string>
     <string name="pref_show_ability_title">Show Rules Text</string>
     <string name="pref_show_pt_title">Show Power/Toughness</string>
-    <string name="pref_cat_tts">Text-to-Speech</string>
-    <string name="pref_install_tts_title">Install Text-to-Speech</string>
-    <string name="pref_install_tts_summary">Clicking here will take you to the text-to-speech install page in the Google Play Store</string>
     <string name="pref_cat_wishlist">Wishlist</string>
     <string name="pref_wishlist_details_title">Show Details</string>
     <string name="pref_wishlist_details_summary">Display full card details in the wishlist</string>

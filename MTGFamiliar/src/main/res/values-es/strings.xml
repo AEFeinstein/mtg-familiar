@@ -334,9 +334,6 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
     <string name="pref_show_type_title">Mostrar tipo/subtipo</string>
     <string name="pref_show_ability_title">Mostrar texto de reglas</string>
     <string name="pref_show_pt_title">Mostrar fuerza/resistencia</string>
-    <string name="pref_cat_tts">Texto a voz</string>
-    <string name="pref_install_tts_title">Instalar Text-to-Speech</string>
-    <string name="pref_install_tts_summary">Pulsa aquí para ir a la página de instalación del sintetizador de voz en Google Play Store</string>
     <string name="pref_cat_wishlist">Lista de deseos</string>
     <string name="pref_wishlist_details_title">Mostrar detalles</string>
     <string name="pref_wishlist_details_summary">Mostrar los detales completos de las cartas de la lista de deseos</string>
