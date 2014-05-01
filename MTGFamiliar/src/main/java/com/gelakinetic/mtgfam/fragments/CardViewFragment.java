@@ -220,7 +220,8 @@ public class CardViewFragment extends FamiliarFragment {
 
 		if (mActivity.mPreferenceAdapter.getPicFirst()) {
 			loadTo = MAIN_PAGE;
-		} else {
+		}
+		else {
 			loadTo = DIALOG;
 		}
 
@@ -251,7 +252,7 @@ public class CardViewFragment extends FamiliarFragment {
 		long cardID = extras.getLong(CARD_ID);
 
 		try {
-            /* from onCreateView */
+			/* from onCreateView */
 			setInfoFromID(cardID);
 		} catch (FamiliarDbException e) {
 			handleFamiliarDbException(true);
@@ -326,7 +327,8 @@ public class CardViewFragment extends FamiliarFragment {
 		float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
 		if (loyalty != CardDbAdapter.NO_ONE_CARES) {
 			mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
-		} else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
+		}
+		else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
 			String powTouStr = "";
 
@@ -343,7 +345,8 @@ public class CardViewFragment extends FamiliarFragment {
 			else {
 				if (p == (int) p) {
 					powTouStr += (int) p;
-				} else {
+				}
+				else {
 					powTouStr += p;
 				}
 			}
@@ -363,13 +366,15 @@ public class CardViewFragment extends FamiliarFragment {
 			else {
 				if (t == (int) t) {
 					powTouStr += (int) t;
-				} else {
+				}
+				else {
 					powTouStr += t;
 				}
 			}
 
 			mPowTouTextView.setText(powTouStr);
-		} else {
+		}
+		else {
 			mPowTouTextView.setText("");
 		}
 
@@ -404,7 +409,8 @@ public class CardViewFragment extends FamiliarFragment {
 		if (isMultiCard) {
 			if (mCardNumber.contains("a")) {
 				mTransformCardNumber = mCardNumber.replace("a", "b");
-			} else if (mCardNumber.contains("b")) {
+			}
+			else if (mCardNumber.contains("b")) {
 				mTransformCardNumber = mCardNumber.replace("b", "a");
 			}
 			mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
@@ -441,7 +447,8 @@ public class CardViewFragment extends FamiliarFragment {
 			}
 			mAsyncTask = new FetchPictureTask();
 			mAsyncTask.execute((Void[]) null);
-		} else {
+		}
+		else {
 			mCardImageView.setVisibility(View.GONE);
 			mNameTextView.setVisibility(View.VISIBLE);
 			mCostTextView.setVisibility(View.VISIBLE);
@@ -577,7 +584,8 @@ public class CardViewFragment extends FamiliarFragment {
 
 						if (mPriceInfo.mFoilAverage != 0) {
 							f.setText(String.format("$%1$,.2f", mPriceInfo.mFoilAverage));
-						} else {
+						}
+						else {
 							f.setVisibility(View.GONE);
 							v.findViewById(R.id.foil_label).setVisibility(View.GONE);
 						}
@@ -622,7 +630,8 @@ public class CardViewFragment extends FamiliarFragment {
 						String message = "";
 						if (mRulingsArrayList.size() == 0) {
 							message = getString(R.string.card_view_no_rulings);
-						} else {
+						}
+						else {
 							for (Ruling r : mRulingsArrayList) {
 								message += (r.toString() + "<br><br>");
 							}
@@ -773,7 +782,8 @@ public class CardViewFragment extends FamiliarFragment {
 								if (result != null) {
 									mPriceInfo = result;
 									showDialog(GET_PRICE);
-								} else {
+								}
+								else {
 									Toast.makeText(mActivity, R.string.card_view_price_not_found,
 											Toast.LENGTH_SHORT).show();
 								}
@@ -968,26 +978,32 @@ public class CardViewFragment extends FamiliarFragment {
 						picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
 						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
 								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					} else if (mSetCode.equals("PCP")) {
+					}
+					else if (mSetCode.equals("PCP")) {
 						if (mCardName.equalsIgnoreCase("tazeem")) {
 							mCardName = "tazeem-release-promo";
 							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						} else if (mCardName.equalsIgnoreCase("celestine reef")) {
+						}
+						else if (mCardName.equalsIgnoreCase("celestine reef")) {
 							mCardName = "celestine-reef-pre-release-promo";
 							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						} else if (mCardName.equalsIgnoreCase("horizon boughs")) {
+						}
+						else if (mCardName.equalsIgnoreCase("horizon boughs")) {
 							mCardName = "horizon-boughs-gateway-promo";
 							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						} else {
+						}
+						else {
 							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
 						}
 						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
 								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					} else if (mSetCode.equals("ARS")) {
+					}
+					else if (mSetCode.equals("ARS")) {
 						picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
 						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
 								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					} else {
+					}
+					else {
 						picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
 								mCardNumber + ".jpg";
 					}
@@ -1000,7 +1016,8 @@ public class CardViewFragment extends FamiliarFragment {
 						if (!triedEn) {
 							/* Let the catch block take care of it */
 							throw new FileNotFoundException();
-						} else {
+						}
+						else {
 							/* Ok, it doesn't exist on MagicCards.info in English. Fall back to Gatherer */
 							URL u2 = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
 									+ mMultiverseId + "&type=card");
@@ -1022,7 +1039,8 @@ public class CardViewFragment extends FamiliarFragment {
 						assert mActivity.getActionBar() != null; /* Because Android Studio */
 						height = ((rectangle.bottom - rectangle.top) - mActivity.getActionBar().getHeight()) - border;
 						width = (rectangle.right - rectangle.left) - border;
-					} else if (loadTo == DIALOG) {
+					}
+					else if (loadTo == DIALOG) {
 						Display display = ((WindowManager) mActivity
 								.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 						Point p = new Point();
@@ -1037,7 +1055,8 @@ public class CardViewFragment extends FamiliarFragment {
 
 					if (screenAspectRatio > cardAspectRatio) {
 						scale = (width) / (float) mCardBitmap.getIntrinsicWidth();
-					} else {
+					}
+					else {
 						scale = (height) / (float) mCardBitmap.getIntrinsicHeight();
 					}
 
@@ -1051,7 +1070,8 @@ public class CardViewFragment extends FamiliarFragment {
 					/* internet works, image not found */
 					if (cardLanguage.equalsIgnoreCase("en")) {
 						error = getString(R.string.card_view_image_not_found);
-					} else {
+					}
+					else {
 						/* If image doesn't exist in the preferred language, let's retry with "en" */
 						cardLanguage = "en";
 						bRetry = true;
@@ -1088,13 +1108,15 @@ public class CardViewFragment extends FamiliarFragment {
 					} catch (IllegalStateException e) {
                         /* eat it */
 					}
-				} else if (loadTo == MAIN_PAGE) {
+				}
+				else if (loadTo == MAIN_PAGE) {
 					removeDialog(getFragmentManager());
 					mCardImageView.setImageDrawable(mCardBitmap);
 					/* remove the image load button if it is the main page */
 					mActivity.invalidateOptionsMenu();
 				}
-			} else {
+			}
+			else {
 				removeDialog(getFragmentManager());
 				if (loadTo == MAIN_PAGE) {
 					mCardImageView.setVisibility(View.GONE);
@@ -1206,7 +1228,8 @@ public class CardViewFragment extends FamiliarFragment {
 				} catch (IllegalStateException e) {
                     /* eat it */
 				}
-			} else {
+			}
+			else {
 				removeDialog(getFragmentManager());
 				Toast.makeText(mActivity, mErrorMessage, Toast.LENGTH_SHORT).show();
 			}

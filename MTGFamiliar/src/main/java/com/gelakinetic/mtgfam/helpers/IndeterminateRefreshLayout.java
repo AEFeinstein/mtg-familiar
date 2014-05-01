@@ -89,7 +89,8 @@ public class IndeterminateRefreshLayout extends ViewGroup {
 			mRefreshing = refreshing;
 			if (mRefreshing) {
 				mProgressBar.start();
-			} else {
+			}
+			else {
 				mProgressBar.stop();
 			}
 		}

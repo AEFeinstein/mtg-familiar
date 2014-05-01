@@ -194,7 +194,6 @@ public abstract class PreferenceFragment extends Fragment implements
 	/**
 	 * Inflates the given XML resource and adds the preference hierarchy to the current
 	 * preference hierarchy.
-	 *
 	 */
 	protected void addPreferencesFromResource() {
 		requirePreferenceManager();
@@ -247,7 +246,8 @@ public abstract class PreferenceFragment extends Fragment implements
 		if (!(rawListView instanceof ListView)) {
 			throw new RuntimeException(
 					"Content has view with id attribute 'android.R.id.list' "
-							+ "that is not a ListView class");
+							+ "that is not a ListView class"
+			);
 		}
 		mList = (ListView) rawListView;
 		mList.setOnKeyListener(mListOnKeyListener);
@@ -275,9 +275,9 @@ public abstract class PreferenceFragment extends Fragment implements
 	public void onResume() {
 		super.onResume();
 		if ((getActivity()) != null) {
-			((FamiliarActivity)getActivity()).getFragmentResults();
-			((FamiliarActivity)getActivity())
-					.mDrawerLayout.closeDrawer(((FamiliarActivity)getActivity()).mDrawerList);
+			((FamiliarActivity) getActivity()).getFragmentResults();
+			((FamiliarActivity) getActivity())
+					.mDrawerLayout.closeDrawer(((FamiliarActivity) getActivity()).mDrawerList);
 		}
 	}
 }

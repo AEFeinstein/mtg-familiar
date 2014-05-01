@@ -139,7 +139,8 @@ public class MtgCard {
 		card.customPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
 		if (parts.length > 5) {
 			card.price = Integer.parseInt(parts[5]);
-		} else {
+		}
+		else {
 			card.price = 0;
 		}
 		card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
@@ -173,7 +174,8 @@ public class MtgCard {
 	public boolean equals(Object o) {
 		if (o instanceof MtgCard) {
 			return this.name.equals(((MtgCard) o).name);
-		} else if (o instanceof CompressedWishlistInfo) {
+		}
+		else if (o instanceof CompressedWishlistInfo) {
 			return this.name.equals(((CompressedWishlistInfo) o).mCard.name);
 		}
 		return false;

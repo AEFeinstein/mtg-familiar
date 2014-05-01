@@ -90,7 +90,8 @@ public class PriceFetchService extends SpiceService {
 								}
 							}
 						}.start();
-					} else {
+					}
+					else {
 						BufferedOutputStream bos = new BufferedOutputStream(
 								new FileOutputStream(getCacheFile(cacheKey)));
 						bos.write(data.toBytes());

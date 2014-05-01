@@ -318,7 +318,8 @@ public class TradeFragment extends FamiliarFragment {
 							SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 							if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).setCode, database)) {
 								view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
-							} else {
+							}
+							else {
 								view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
 							}
 							DatabaseManager.getInstance().closeDatabase();
@@ -417,7 +418,8 @@ public class TradeFragment extends FamiliarFragment {
 										/* validate number of cards text */
 										if (numberOf.length() == 0) {
 											data.numberOf = 1;
-										} else {
+										}
+										else {
 											/* Set the numberOf */
 											assert numberOf.getEditableText() != null;
 											try {
@@ -436,7 +438,8 @@ public class TradeFragment extends FamiliarFragment {
 										if (userInputPrice.length() == 0) {
 											data.customPrice = true;
 											data.price = 0;
-										} else {
+										}
+										else {
 											/* Attempt to parse the price */
 											try {
 												data.price = (int) (Double.parseDouble(userInputPrice) * 100);
@@ -452,7 +455,8 @@ public class TradeFragment extends FamiliarFragment {
 										if (data.priceInfo != null) {
 											if (data.foil) {
 												oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
-											} else {
+											}
+											else {
 												switch (mPriceSetting) {
 													case LOW_PRICE: {
 														oldPrice = (int) (data.priceInfo.mLow * 100);
@@ -476,7 +480,8 @@ public class TradeFragment extends FamiliarFragment {
 											if (oldPrice != data.price) {
 												data.customPrice = true;
 											}
-										} else {
+										}
+										else {
 											data.customPrice = true;
 										}
 
@@ -533,7 +538,8 @@ public class TradeFragment extends FamiliarFragment {
 											if (sideForDialog == LEFT) {
 												data = mLeftList.get(positionForDialog);
 												adapter = mLeftAdapter;
-											} else {
+											}
+											else {
 												data = mRightList.get(positionForDialog);
 												adapter = mRightAdapter;
 											}
@@ -823,7 +829,8 @@ public class TradeFragment extends FamiliarFragment {
 						mLeftList.add(card);
 						if (!card.customPrice)
 							loadPrice(card, mLeftAdapter);
-					} else if (card.mSide == RIGHT) {
+					}
+					else if (card.mSide == RIGHT) {
 						mRightList.add(card);
 						if (!card.customPrice)
 							loadPrice(card, mRightAdapter);
@@ -852,7 +859,8 @@ public class TradeFragment extends FamiliarFragment {
 			for (MtgCard data : mLeftList) {
 				if (data.hasPrice()) {
 					totalPrice += data.numberOf * data.price;
-				} else {
+				}
+				else {
 					hasBadValues = true;
 				}
 			}
@@ -872,7 +880,8 @@ public class TradeFragment extends FamiliarFragment {
 			for (MtgCard data : mRightList) {
 				if (data.hasPrice()) {
 					totalPrice += data.numberOf * data.price;
-				} else {
+				}
+				else {
 					hasBadValues = true;
 				}
 			}
@@ -939,7 +948,8 @@ public class TradeFragment extends FamiliarFragment {
 		if (data.priceInfo != null) {
 			if (data.foil) {
 				data.price = (int) (data.priceInfo.mFoilAverage * 100);
-			} else {
+			}
+			else {
 				switch (mPriceSetting) {
 					case LOW_PRICE: {
 						data.price = (int) (data.priceInfo.mLow * 100);
@@ -960,7 +970,8 @@ public class TradeFragment extends FamiliarFragment {
 					}
 				}
 			}
-		} else {
+		}
+		else {
 			/* priceInfo is null, perform a query */
 			PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1);
 			mPriceFetchRequests++;
@@ -993,7 +1004,8 @@ public class TradeFragment extends FamiliarFragment {
 							/* Sanity check */
 							if (result == null) {
 								data.priceInfo = null;
-							} else {
+							}
+							else {
 								/* Set the PriceInfo object */
 								data.priceInfo = result;
 
@@ -1001,7 +1013,8 @@ public class TradeFragment extends FamiliarFragment {
 								if (!data.customPrice) {
 									if (data.foil) {
 										data.price = (int) (result.mFoilAverage * 100);
-									} else {
+									}
+									else {
 										switch (mPriceSetting) {
 											case LOW_PRICE: {
 												data.price = (int) (result.mLow * 100);
@@ -1090,12 +1103,14 @@ public class TradeFragment extends FamiliarFragment {
 				if (data.hasPrice()) {
 					if (data.customPrice) {
 						priceField.setTextColor(getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_green)));
-					} else {
+					}
+					else {
 						priceField.setTextColor(getActivity().getResources().getColor(
 								getResourceIdFromAttr(R.attr.color_text)
 						));
 					}
-				} else {
+				}
+				else {
 					priceField.setTextColor(getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
 				}
 			}

@@ -146,7 +146,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		if (null != myFragmentView.findViewById(R.id.playerScrollView_horz)) {
 			mScrollView = myFragmentView.findViewById(R.id.playerScrollView_horz);
-		} else {
+		}
+		else {
 			mScrollView = myFragmentView.findViewById(R.id.playerScrollView_vert);
 		}
 		ViewTreeObserver viewTreeObserver = mScrollView.getViewTreeObserver();
@@ -264,7 +265,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		if (playerData == null || playerData.length() == 0) {
 			addPlayer();
 			addPlayer();
-		} else {
+		}
+		else {
 			String[] playerLines = playerData.split("\n");
 			for (String line : playerLines) {
 				addPlayer(line);
@@ -330,7 +332,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		assert menuItem != null;
 		if (!mTtsInit || !getFamiliarActivity().mIsMenuVisible) {
 			menuItem.setVisible(false);
-		} else {
+		}
+		else {
 			menuItem.setVisible(true);
 		}
 	}
@@ -421,7 +424,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 								   removed */
 								if (mDisplayMode == DISPLAY_COMMANDER) {
 									mGridLayout.removeView(mPlayers.get(item).mCommanderRowView);
-								} else {
+								}
+								else {
 									mGridLayout.removeView(mPlayers.get(item).mView);
 								}
 								mPlayers.remove(item);
@@ -565,7 +569,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		for (LcPlayer player1 : mPlayers) {
 			if (toBeRemoved != -1) {
 				player1.mCommanderDamage.remove(toBeRemoved);
-			} else {
+			}
+			else {
 				for (int i = 0; i < mPlayers.size(); i++) {
 					/* An entry for this player exists, just set the name */
 					if (player1.mCommanderDamage.size() > i) {
@@ -616,7 +621,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 					mGridLayout.setRowCount(GridLayout.UNDEFINED);
 					break;
 			}
-		} else {
+		}
+		else {
 			switch (mDisplayMode) {
 				case DISPLAY_NORMAL:
 					mGridLayout.setOrientation(GridLayout.HORIZONTAL);
@@ -635,7 +641,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 						float height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
 								getActivity().getResources().getDisplayMetrics());
 						mGridLayout.setRowCount((int) (mListSizeHeight / height));
-					} else {
+					}
+					else {
 						mGridLayout.setRowCount(GridLayout.UNDEFINED);
 					}
 					break;
@@ -665,7 +672,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources()
 						.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
 			}
-		} else {
+		}
+		else {
 			mCommanderPlayerView.setVisibility(View.GONE);
 			mCommanderButton.setVisibility(View.GONE);
 			if (mStatDisplaying == STAT_COMMANDER) {
@@ -836,7 +844,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 					entry.mAbsolute = Integer.parseInt(lifeHistory[i]);
 					if (i != lifeHistory.length - 1) {
 						entry.mDelta = entry.mAbsolute - player.mLifeHistory.get(0).mAbsolute;
-					} else {
+					}
+					else {
 						entry.mDelta = entry.mAbsolute - player.mDefaultLifeTotal;
 					}
 					player.mLifeHistory.add(0, entry);
@@ -862,7 +871,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 					entry.mAbsolute = Integer.parseInt(poisonHistory[i]);
 					if (i != poisonHistory.length - 1) {
 						entry.mDelta = entry.mAbsolute - player.mPoisonHistory.get(0).mAbsolute;
-					} else {
+					}
+					else {
 						entry.mDelta = entry.mAbsolute;
 					}
 					player.mPoisonHistory.add(0, entry);
@@ -924,11 +934,13 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			int result = mTts.setLanguage(getResources().getConfiguration().locale);
 			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
 				getFamiliarActivity().showTtsDialog();
-			} else {
+			}
+			else {
 				mTtsInit = true;
 				getActivity().invalidateOptionsMenu();
 			}
-		} else if (status == TextToSpeech.ERROR) {
+		}
+		else if (status == TextToSpeech.ERROR) {
 			getFamiliarActivity().showTtsDialog();
 		}
 	}
@@ -952,11 +964,13 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 							mVocalizations.add(parts[0]);
 							mVocalizations.add(OVER_9000_KEY);
 							mVocalizations.add(parts[1]);
-						} else {
+						}
+						else {
 							if (p.mLife == 1) {
 								mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life_singular),
 										p.mName, p.mLife));
-							} else {
+							}
+							else {
 								mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life),
 										p.mName, p.mLife));
 							}
@@ -966,7 +980,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 						if (p.mPoison == 1) {
 							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison_singular),
 									p.mName, p.mPoison));
-						} else {
+						}
+						else {
 							mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison),
 									p.mName, p.mPoison));
 						}
@@ -1020,7 +1035,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 						getFamiliarActivity().showTtsDialog();
 					}
 				}
-			} else {
+			}
+			else {
 				HashMap<String, String> ttsParams = new HashMap<String, String>();
 				ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
 				ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
@@ -1029,7 +1045,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 					getFamiliarActivity().showTtsDialog();
 				}
 			}
-		} else {
+		}
+		else {
 			mAudioManager.abandonAudioFocus(this);
 		}
 	}

@@ -85,7 +85,8 @@ class RulesParser {
 
 			if (c.getTime().after(this.mLastUpdated)) {
 				return true;
-			} else {
+			}
+			else {
 				closeReader();
 				return false;
 			}
@@ -135,7 +136,8 @@ class RulesParser {
 						this.mRules.add(currentRule);
 						currentRule = null;
 					}
-				} else {
+				}
+				else {
 					if (Character.isDigit(line.charAt(0))) {
 						/* If the line starts with a number, it's the start of a rule */
 						int category, subcategory;
@@ -148,14 +150,16 @@ class RulesParser {
 						if (rawCategory >= 100) {
 							category = rawCategory / 100;
 							subcategory = rawCategory % 100;
-						} else {
+						}
+						else {
 							category = rawCategory;
 							subcategory = -1;
 						}
 
 						if (subTokens.length > 1) {
 							entry = subTokens[1];
-						} else {
+						}
+						else {
 							entry = null;
 						}
 
@@ -164,12 +168,14 @@ class RulesParser {
 
 						if (entry == null) {
 							position = -1;
-						} else {
+						}
+						else {
 							position++;
 						}
 
 						currentRule = new RuleItem(category, subcategory, entry, text, position);
-					} else {
+					}
+					else {
 						if (currentRule != null) {
 							currentRule.addExample(line.replace("{PW}", "{PWK}").replace("{P/W}", "{PW}")
 									.replace("{W/P}", "{WP}"));
@@ -191,10 +197,12 @@ class RulesParser {
 						mGlossary.add(currentTerm);
 						currentTerm = null;
 					}
-				} else {
+				}
+				else {
 					if (currentTerm == null) {
 						currentTerm = new GlossaryItem(line);
-					} else {
+					}
+					else {
 						currentTerm.addDefinitionLine(line.replace("{PW}", "{PWK}").replace("{P/W}", "{PW}")
 								.replace("{W/P}", "{WP}"));
 					}

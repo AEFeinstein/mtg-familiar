@@ -50,7 +50,8 @@ public class ZipUtils {
 		} catch (ZipException e) {
 			if (e.getMessage().equals("No entries")) {
 				Toast.makeText(context, context.getString(R.string.main_export_no_data), Toast.LENGTH_SHORT).show();
-			} else {
+			}
+			else {
 				Toast.makeText(context, context.getString(R.string.main_export_fail), Toast.LENGTH_SHORT).show();
 			}
 		} catch (IOException e) {
@@ -90,7 +91,8 @@ public class ZipUtils {
 			for (File file : listFiles) {
 				if (file.isDirectory()) {
 					files.addAll(findAllFiles(file));
-				} else {
+				}
+				else {
 					files.add(file);
 				}
 			}
@@ -141,7 +143,8 @@ public class ZipUtils {
 				Log.e("pth", SHARED_PREF_DIR + " : " + entry.getName());
 				out = new BufferedOutputStream(new FileOutputStream(
 						new File(SHARED_PREF_DIR, entry.getName())));
-			} else {
+			}
+			else {
 				Log.e("pth", context.getFilesDir() + " : " + entry.getName());
 				out = new BufferedOutputStream(new FileOutputStream(
 						new File(context.getFilesDir(), entry.getName())));

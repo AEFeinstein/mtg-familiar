@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/master_layout"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="4dp"
-    android:orientation="vertical">
+              android:id="@+id/master_layout"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
+              android:layout_marginTop="4dp"
+              android:orientation="vertical">
 
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/mjs_momir_portrait" />
+            android:src="@drawable/mjs_momir_portrait"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -39,14 +39,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:gravity="center"
-                    android:text="@string/mojhosto_momir_label" />
+                    android:text="@string/mojhosto_momir_label"/>
 
                 <Spinner
                     android:id="@+id/momir_spinner"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:entries="@array/momir_spinner"
-                    android:gravity="center" />
+                    android:gravity="center"/>
             </LinearLayout>
 
             <Button
@@ -57,7 +57,7 @@
                 android:layout_margin="4dp"
                 android:background="@drawable/btn_default_custom"
                 android:text="@string/mojhosto_random_creature"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/mjs_stonehewer_portrait" />
+            android:src="@drawable/mjs_stonehewer_portrait"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -92,14 +92,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:gravity="center"
-                    android:text="@string/mojhosto_stonehewer_label" />
+                    android:text="@string/mojhosto_stonehewer_label"/>
 
                 <Spinner
                     android:id="@+id/stonehewer_spinner"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:entries="@array/momir_spinner"
-                    android:gravity="center" />
+                    android:gravity="center"/>
             </LinearLayout>
 
             <Button
@@ -110,7 +110,7 @@
                 android:layout_margin="4dp"
                 android:background="@drawable/btn_default_custom"
                 android:text="@string/mojhosto_random_equipment"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -125,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/mjs_jhoira_portrait" />
+            android:src="@drawable/mjs_jhoira_portrait"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -142,7 +142,7 @@
                 android:layout_margin="4dp"
                 android:background="@drawable/btn_default_custom"
                 android:text="@string/mojhosto_random_instants"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/jhorira_sorcery_button"
@@ -152,7 +152,7 @@
                 android:layout_margin="4dp"
                 android:background="@drawable/btn_default_custom"
                 android:text="@string/mojhosto_random_sorceries"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

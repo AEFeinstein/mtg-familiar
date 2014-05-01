@@ -62,7 +62,8 @@ public class LcPlayer {
 			/* If there are no entries, assume life is mDefaultLifeTotal */
 			if (mLifeHistory.size() == 0) {
 				entry.mDelta = mLife - mDefaultLifeTotal;
-			} else {
+			}
+			else {
 				entry.mDelta = mLife - mLifeHistory.get(0).mAbsolute;
 			}
 			entry.mAbsolute = mLife;
@@ -76,7 +77,8 @@ public class LcPlayer {
 			entry = new HistoryEntry();
 			if (mPoisonHistory.size() == 0) {
 				entry.mDelta = mPoison;
-			} else {
+			}
+			else {
 				entry.mDelta = mPoison - mPoisonHistory.get(0).mAbsolute;
 			}
 			entry.mAbsolute = mPoison;
@@ -187,7 +189,8 @@ public class LcPlayer {
 		mHandler.removeCallbacks(mLifePoisonCommitter);
 		if (immediate) {
 			mHandler.post(mLifePoisonCommitter);
-		} else {
+		}
+		else {
 			mHandler.postDelayed(mLifePoisonCommitter,
 					Integer.parseInt(mFragment.getFamiliarActivity().mPreferenceAdapter.getLifeTimer()));
 		}
@@ -323,7 +326,8 @@ public class LcPlayer {
 
 		if (displayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
 			return mCommanderRowView;
-		} else {
+		}
+		else {
 			return mView;
 		}
 	}
@@ -344,7 +348,8 @@ public class LcPlayer {
 			if (first) {
 				first = false;
 				data += entry.mAbsolute;
-			} else {
+			}
+			else {
 				data += "," + entry.mAbsolute;
 			}
 		}
@@ -357,7 +362,8 @@ public class LcPlayer {
 			if (first) {
 				first = false;
 				data += entry.mAbsolute;
-			} else {
+			}
+			else {
 				data += "," + entry.mAbsolute;
 			}
 		}
@@ -369,7 +375,8 @@ public class LcPlayer {
 			if (first) {
 				first = false;
 				data += ";" + entry.mLife;
-			} else {
+			}
+			else {
 				data += "," + entry.mLife;
 			}
 		}
@@ -426,7 +433,8 @@ public class LcPlayer {
 				if (isPortrait) {
 					params.width = mGridLayoutWidth;
 					params.height = mGridLayoutHeight / 2;
-				} else {
+				}
+				else {
 					params.width = mGridLayoutWidth / 2;
 					params.height = mGridLayoutHeight;
 				}
@@ -439,7 +447,8 @@ public class LcPlayer {
 				if (isPortrait) {
 					params.width = mGridLayoutWidth / 2;
 					params.height = mGridLayoutHeight / 2;
-				} else {
+				}
+				else {
 					params.width = mGridLayoutWidth / 4;
 					params.height = mGridLayoutHeight;
 				}
@@ -454,7 +463,8 @@ public class LcPlayer {
 						mFragment.getActivity().getResources().getDisplayMetrics());
 				if (isPortrait) {
 					rowParams.width = mGridLayoutWidth / 2;
-				} else {
+				}
+				else {
 					rowParams.width = mGridLayoutWidth / 4;
 				}
 				mCommanderRowView.setLayoutParams(rowParams);
@@ -620,7 +630,8 @@ public class LcPlayer {
 						String title;
 						if (mMode == LifeCounterFragment.STAT_POISON) {
 							title = getResources().getString(R.string.life_counter_edit_poison_dialog_title);
-						} else {
+						}
+						else {
 							title = getResources().getString(R.string.life_counter_edit_life_dialog_title);
 						}
 
@@ -635,7 +646,8 @@ public class LcPlayer {
 											int newLife = Integer.parseInt(lifeInput.getText().toString());
 											if (mMode == LifeCounterFragment.STAT_POISON) {
 												changeValue(newLife - mPoison, true);
-											} else {
+											}
+											else {
 												changeValue(newLife - mLife, true);
 											}
 										} catch (NumberFormatException e) {
@@ -710,7 +722,8 @@ public class LcPlayer {
 			View view;
 			if (convertView != null) {
 				view = convertView;
-			} else {
+			}
+			else {
 				view = LayoutInflater.from(mFragment.getActivity())
 						.inflate(R.layout.life_counter_history_adapter_row, null, false);
 			}
@@ -724,7 +737,8 @@ public class LcPlayer {
 								mFragment.getActivity().getResources().getColor(
 										mFragment.getResourceIdFromAttr(R.attr.holo_green))
 						);
-					} else {
+					}
+					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mLifeHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
@@ -741,7 +755,8 @@ public class LcPlayer {
 								mFragment.getActivity().getResources().getColor(
 										mFragment.getResourceIdFromAttr(R.attr.holo_green))
 						);
-					} else {
+					}
+					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mPoisonHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
@@ -782,7 +797,8 @@ public class LcPlayer {
 			View view;
 			if (convertView != null) {
 				view = convertView;
-			} else {
+			}
+			else {
 				view = LayoutInflater.from(mFragment.getActivity())
 						.inflate(R.layout.life_counter_player_commander, null, false);
 			}

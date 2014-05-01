@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/search_set"
         style="@style/text.small"/>
+
     <ImageView
         android:id="@+id/wishlistSetRowFoil"
         android:layout_width="wrap_content"

@@ -169,7 +169,8 @@ public class WishlistHelpers {
 					}
 				}
 			});
-		} else {
+		}
+		else {
 			customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
 			customView.findViewById(R.id.divider).setVisibility(View.GONE);
 		}
@@ -231,7 +232,8 @@ public class WishlistHelpers {
 				if (card.name.equals(mCardName) && card.setCode.equals(setCode)) {
 					if (card.foil && wishlistRowFoil != null) {
 						((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText(card.numberOf + "");
-					} else {
+					}
+					else {
 						((EditText) wishlistRow.findViewById(R.id.numberInput)).setText(card.numberOf + "");
 					}
 				}
@@ -285,7 +287,8 @@ public class WishlistHelpers {
 									if (card.numberOf == 0) {
 										wishlist.remove(j);
 										j--;
-									} else {
+									}
+									else {
 										wishlist.get(j).numberOf = card.numberOf;
 									}
 									added = true;
@@ -408,7 +411,8 @@ public class WishlistHelpers {
 		public boolean equals(Object o) {
 			if (o instanceof CompressedWishlistInfo) {
 				return mCard.name.equals(((CompressedWishlistInfo) o).mCard.name);
-			} else if (o instanceof MtgCard) {
+			}
+			else if (o instanceof MtgCard) {
 				return mCard.name.equals(((MtgCard) o).name);
 			}
 			return false;

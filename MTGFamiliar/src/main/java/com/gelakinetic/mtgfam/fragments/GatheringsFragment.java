@@ -146,7 +146,8 @@ public class GatheringsFragment extends FamiliarFragment {
 		if (savedInstanceState == null) {
 			AddPlayerRow(new GatheringsPlayerData(null, 20));
 			AddPlayerRow(new GatheringsPlayerData(null, 20));
-		} else {
+		}
+		else {
 			mLinearLayout.removeAllViews();
 			mLargestPlayerNumber = 0;
 			Gathering gathering = (Gathering) savedInstanceState.getSerializable(SAVED_GATHERING_KEY);
@@ -504,7 +505,8 @@ public class GatheringsFragment extends FamiliarFragment {
 		if (_player.mName == null) {
 			mLargestPlayerNumber++;
 			_player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
-		} else {
+		}
+		else {
 			try {
 				String nameParts[] = _player.mName.split(" ");
 				int number = Integer.parseInt(nameParts[nameParts.length - 1]);
@@ -543,7 +545,8 @@ public class GatheringsFragment extends FamiliarFragment {
 
 		if (mLinearLayout.getChildCount() == 0 || !getFamiliarActivity().mIsMenuVisible) {
 			removePlayer.setVisible(false);
-		} else {
+		}
+		else {
 			removePlayer.setVisible(true);
 		}
 
@@ -551,7 +554,8 @@ public class GatheringsFragment extends FamiliarFragment {
 				!getFamiliarActivity().mIsMenuVisible) {
 			deleteGathering.setVisible(false);
 			loadGathering.setVisible(false);
-		} else {
+		}
+		else {
 			deleteGathering.setVisible(true);
 			loadGathering.setVisible(true);
 		}

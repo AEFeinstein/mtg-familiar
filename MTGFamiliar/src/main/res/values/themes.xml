@@ -15,7 +15,7 @@
         <item name="com.gelakinetic.mtgfam:color_rare">@color/rare_light</item>
         <item name="com.gelakinetic.mtgfam:color_mythic">@color/mythic_light</item>
         <item name="com.gelakinetic.mtgfam:color_timeshifted">@color/timeshifted_light</item>
-        
+
         <item name="com.gelakinetic.mtgfam:color_drawer_background">@color/drawer_background_light</item>
         <item name="com.gelakinetic.mtgfam:color_drawer_text_unselected">@color/drawer_text_unselected_light</item>
         <item name="com.gelakinetic.mtgfam:color_drawer_text_selected">@color/drawer_text_selected_light</item>
@@ -81,7 +81,7 @@
         <item name="com.gelakinetic.mtgfam:color_rare">@color/rare_dark</item>
         <item name="com.gelakinetic.mtgfam:color_mythic">@color/mythic_dark</item>
         <item name="com.gelakinetic.mtgfam:color_timeshifted">@color/timeshifted_dark</item>
-        
+
         <item name="com.gelakinetic.mtgfam:color_drawer_background">@color/drawer_background_dark</item>
         <item name="com.gelakinetic.mtgfam:color_drawer_text_unselected">@color/drawer_text_unselected_dark</item>
         <item name="com.gelakinetic.mtgfam:color_drawer_text_selected">@color/drawer_text_selected_dark</item>

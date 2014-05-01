@@ -14,6 +14,6 @@
         android:fastScrollEnabled="true"
         tools:listitem="@layout/result_list_card_row"
         android:divider="?attr/color_drawer_divider_item"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"/>
 
 </LinearLayout>

@@ -183,7 +183,6 @@ public class CardDbAdapter {
 	public static final int SPLIT = 3;
 
 	/**
-	 *
 	 * @param sqLiteDatabase
 	 * @throws FamiliarDbException
 	 */
@@ -210,7 +209,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param c
 	 * @param mDb
 	 * @return
@@ -238,7 +236,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param set
 	 * @param mDb
 	 * @return
@@ -255,7 +252,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param name
 	 * @param code
 	 * @param mDb
@@ -270,7 +266,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param sqLiteDatabase
 	 * @return
 	 * @throws FamiliarDbException
@@ -293,7 +288,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param code
 	 * @param mDb
 	 * @return
@@ -319,7 +313,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param code
 	 * @param mDb
 	 * @return
@@ -343,7 +336,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param id
 	 * @param mDb
 	 * @return
@@ -374,7 +366,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param name
 	 * @param fields
 	 * @param mDb
@@ -419,7 +410,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param mCompressedWishlist
 	 * @param mDb
 	 * @throws FamiliarDbException
@@ -513,7 +503,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param name
 	 * @param setCode
 	 * @param fields
@@ -563,7 +552,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param name
 	 * @param mDb
 	 * @return
@@ -597,7 +585,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param cardname
 	 * @param cardtext
 	 * @param cardtype
@@ -1114,7 +1101,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param set
 	 * @param number
 	 * @param mDb
@@ -1142,7 +1128,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param set
 	 * @param number
 	 * @param mDb
@@ -1172,7 +1157,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param mDb
 	 * @throws FamiliarDbException
 	 */
@@ -1187,7 +1171,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param mDb
 	 * @throws FamiliarDbException
 	 */
@@ -1202,7 +1185,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param name
 	 * @param mDb
 	 * @return
@@ -1214,7 +1196,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param set
 	 * @param format
 	 * @param mDb
@@ -1228,7 +1209,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param card
 	 * @param format
 	 * @param status
@@ -1244,7 +1224,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param mDb
 	 * @return
 	 * @throws FamiliarDbException
@@ -1261,7 +1240,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param mCardName
 	 * @param format
 	 * @param mDb
@@ -1312,7 +1290,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param setCode
 	 * @param mDb
 	 * @return
@@ -1333,7 +1310,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param setName
 	 * @param mDb
 	 * @return
@@ -1353,7 +1329,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param category
 	 * @param subcategory
 	 * @param mDb
@@ -1394,7 +1369,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param keyword
 	 * @param category
 	 * @param subcategory
@@ -1449,7 +1423,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param category
 	 * @param subcategory
 	 * @param entry
@@ -1484,7 +1457,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param category
 	 * @param subcategory
 	 * @param mDb
@@ -1515,7 +1487,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param mDb
 	 * @return
 	 * @throws FamiliarDbException
@@ -1532,7 +1503,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param mDb
 	 * @throws FamiliarDbException
 	 */
@@ -1546,7 +1516,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param mDb
 	 * @throws FamiliarDbException
 	 */
@@ -1560,7 +1529,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param category
 	 * @param subcategory
 	 * @param entry
@@ -1598,7 +1566,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param term
 	 * @param definition
 	 * @param mDb
@@ -1623,6 +1590,7 @@ public class CardDbAdapter {
 	 * column names, but must include all columns, even if the value is the key.
 	 * This allows the ContentProvider to request columns w/o the need to know
 	 * real column names and create the alias itself.
+	 *
 	 * @return
 	 */
 	private static HashMap<String, String> buildColumnMap() {
@@ -1637,12 +1605,11 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param selection     The selection clause
 	 * @param selectionArgs Selection arguments for "?" components in the selection
 	 * @param columns       The columns to return
 	 * @param mDb
-	 * @return  A Cursor over all rows matching the query
+	 * @return A Cursor over all rows matching the query
 	 * @throws FamiliarDbException
 	 */
 	private static Cursor query(String selection, String[] selectionArgs,
@@ -1731,7 +1698,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param ctx
 	 * @return
 	 */
@@ -1744,7 +1710,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param ctx
 	 */
 	public static void copyDB(Context ctx) {
@@ -1793,7 +1758,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param name
 	 * @param mDb
 	 * @return
@@ -1827,7 +1791,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param multiverseId
 	 * @param mDb
 	 * @return
@@ -1864,7 +1827,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param s
 	 * @return
 	 */
@@ -1931,7 +1893,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param number
 	 * @param setCode
 	 * @return
@@ -1952,7 +1913,6 @@ public class CardDbAdapter {
 	}
 
 	/**
-	 *
 	 * @param setCode
 	 * @param mDb
 	 * @return

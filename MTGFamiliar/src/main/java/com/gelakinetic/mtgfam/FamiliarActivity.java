@@ -165,7 +165,8 @@ public class FamiliarActivity extends FragmentActivity {
 						new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
 				intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
 				sendBroadcast(intent);
-			} else if (s.equals(getString(R.string.key_theme))) {
+			}
+			else if (s.equals(getString(R.string.key_theme))) {
 				invalidateOptionsMenu(); /* to redraw the magnifying glass */
 				Intent i = new Intent(FamiliarActivity.this, FamiliarActivity.class);
 				startActivity(i);
@@ -262,7 +263,8 @@ public class FamiliarActivity extends FragmentActivity {
 		if (resourceId == R.color.drawer_background_dark) {
 			otherTheme = R.style.Theme_light;
 			themeString = getString(R.string.pref_theme_dark);
-		} else if (resourceId == R.color.drawer_background_light) {
+		}
+		else if (resourceId == R.color.drawer_background_light) {
 			otherTheme = R.style.Theme_dark;
 			themeString = getString(R.string.pref_theme_light);
 		}
@@ -477,59 +479,81 @@ public class FamiliarActivity extends FragmentActivity {
 				sc.name = query;
 				args.putSerializable(SearchViewFragment.CRITERIA, sc);
 				selectItem(R.string.main_card_search, args);
-			} else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+			}
+			else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 				/* User clicked a card in the quick search autocomplete, jump right to it */
 				Uri data = intent.getData();
 				Bundle args = new Bundle();
 				assert data != null;
 				args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
 				selectItem(R.string.main_card_search, args);
-			} else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
+			}
+			else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
 				selectItem(R.string.main_timer, null);
-			} else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
+			}
+			else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
 				selectItem(R.string.main_card_search, null);
-			} else if (ACTION_LIFE.equals(intent.getAction())) {
+			}
+			else if (ACTION_LIFE.equals(intent.getAction())) {
 				selectItem(R.string.main_life_counter, null);
-			} else if (ACTION_DICE.equals(intent.getAction())) {
+			}
+			else if (ACTION_DICE.equals(intent.getAction())) {
 				selectItem(R.string.main_dice, null);
-			} else if (ACTION_TRADE.equals(intent.getAction())) {
+			}
+			else if (ACTION_TRADE.equals(intent.getAction())) {
 				selectItem(R.string.main_trade, null);
-			} else if (ACTION_MANA.equals(intent.getAction())) {
+			}
+			else if (ACTION_MANA.equals(intent.getAction())) {
 				selectItem(R.string.main_mana_pool, null);
-			} else if (ACTION_WISH.equals(intent.getAction())) {
+			}
+			else if (ACTION_WISH.equals(intent.getAction())) {
 				selectItem(R.string.main_wishlist, null);
-			} else if (ACTION_RULES.equals(intent.getAction())) {
+			}
+			else if (ACTION_RULES.equals(intent.getAction())) {
 				selectItem(R.string.main_rules, null);
-			} else if (ACTION_JUDGE.equals(intent.getAction())) {
+			}
+			else if (ACTION_JUDGE.equals(intent.getAction())) {
 				selectItem(R.string.main_judges_corner, null);
-			} else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
+			}
+			else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
 				selectItem(R.string.main_mojhosto, null);
-			} else {
+			}
+			else {
 			/* App launched as regular, show the default fragment */
 
 				String defaultFragment = mPreferenceAdapter.getDefaultFragment();
 
 				if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
 					selectItem(R.string.main_card_search, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
 					selectItem(R.string.main_life_counter, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
 					selectItem(R.string.main_mana_pool, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
 					selectItem(R.string.main_dice, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
 					selectItem(R.string.main_trade, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
 					selectItem(R.string.main_wishlist, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
 					selectItem(R.string.main_timer, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
 					selectItem(R.string.main_rules, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
 					selectItem(R.string.main_judges_corner, null);
-				} else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
+				}
+				else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
 					selectItem(R.string.main_mojhosto, null);
-				} else {
+				}
+				else {
 					selectItem(R.string.main_card_search, null);
 				}
 			}
@@ -591,9 +615,11 @@ public class FamiliarActivity extends FragmentActivity {
 				/* If this is a quick search intent, launch either the card view or result list directly */
 				if (args != null && args.containsKey(CardViewFragment.CARD_ID)) {
 					newFrag = new CardViewFragment();
-				} else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
+				}
+				else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
 					newFrag = new ResultListFragment();
-				} else {
+				}
+				else {
 					newFrag = new SearchViewFragment();
 				}
 				break;
@@ -1057,14 +1083,17 @@ public class FamiliarActivity extends FragmentActivity {
 			case android.R.id.home:
 				if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
 					mDrawerLayout.closeDrawer(mDrawerList);
-				} else {
+				}
+				else {
 					mDrawerLayout.openDrawer(mDrawerList);
 				}
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
-	}	/**
+	}
+
+	/**
 	 * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
 	 * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment
 	 */
@@ -1078,7 +1107,8 @@ public class FamiliarActivity extends FragmentActivity {
 
 				if (timeLeftSeconds <= 0) {
 					timeLeftStr = "00:00:00";
-				} else {
+				}
+				else {
 					/* This is a slight hack to handle the fact that it always rounds down. It will start the timer at
 					   50:00 instead of 49:59, or whatever */
 					timeLeftSeconds++;
@@ -1093,7 +1123,8 @@ public class FamiliarActivity extends FragmentActivity {
 					getActionBar().setTitle(timeLeftStr);
 				}
 				mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1000);
-			} else {
+			}
+			else {
 				stopUpdatingDisplay();
 				Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
 				if (fragment instanceof RoundTimerFragment) {
@@ -1228,7 +1259,8 @@ public class FamiliarActivity extends FragmentActivity {
 			int layout;
 			if (values[position].mIsHeader) {
 				layout = R.layout.drawer_list_header;
-			} else {
+			}
+			else {
 				layout = R.layout.drawer_list_item;
 			}
 			if (convertView == null) {
@@ -1245,7 +1277,8 @@ public class FamiliarActivity extends FragmentActivity {
 				((TextView) convertView.findViewById(R.id.drawer_header_name)).setText(values[position].mNameResource);
 				convertView.setFocusable(false);
 				convertView.setFocusableInTouchMode(false);
-			} else {
+			}
+			else {
 				/* Make sure the recycled view is the right type, inflate a new one if necessary */
 				if (convertView.findViewById(R.id.drawer_entry_name) == null) {
 					convertView = getLayoutInflater().inflate(layout, parent, false);
@@ -1258,14 +1291,13 @@ public class FamiliarActivity extends FragmentActivity {
 
 			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
 				convertView.findViewById(R.id.divider).setVisibility(View.GONE);
-			} else {
+			}
+			else {
 				convertView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
 			}
 			return convertView;
 		}
 	}
-
-
 
 
 }

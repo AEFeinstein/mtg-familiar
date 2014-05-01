@@ -164,7 +164,7 @@
                 android:entryValues="@array/life_timer_array_values"
                 android:key="@string/key_lifeTimer"
                 android:summary="@string/pref_life_timer_summary"
-                android:title="@string/pref_life_timer_title" />
+                android:title="@string/pref_life_timer_title"/>
         </PreferenceCategory>
 
     </PreferenceScreen>

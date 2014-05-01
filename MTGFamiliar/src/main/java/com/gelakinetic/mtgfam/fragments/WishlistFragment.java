@@ -205,7 +205,8 @@ public class WishlistFragment extends FamiliarFragment {
 				if (!added) {
 					cwi.add(card);
 				}
-			} else {
+			}
+			else {
 				mCompressedWishlist.add(new CompressedWishlistInfo(card));
 			}
 
@@ -252,7 +253,8 @@ public class WishlistFragment extends FamiliarFragment {
 		if (mShowTotalWishlistPrice) {
 			mTotalPriceField.setVisibility(View.VISIBLE);
 			mTotalPriceDivider.setVisibility(View.VISIBLE);
-		} else {
+		}
+		else {
 			mTotalPriceField.setVisibility(View.GONE);
 			mTotalPriceDivider.setVisibility(View.GONE);
 		}
@@ -282,7 +284,8 @@ public class WishlistFragment extends FamiliarFragment {
 			/* Clear the wishlist, or just the card that changed */
 			if (changedCardName == null) {
 				mCompressedWishlist.clear();
-			} else {
+			}
+			else {
 				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
 					if (cwi.mCard.name.equals(changedCardName)) {
 						cwi.clearCompressedInfo();
@@ -297,7 +300,8 @@ public class WishlistFragment extends FamiliarFragment {
 					 * other */
 					if (!mCompressedWishlist.contains(card)) {
 						mCompressedWishlist.add(new CompressedWishlistInfo(card));
-					} else {
+					}
+					else {
 						mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
 					}
 					/* Look up the new price */
@@ -578,7 +582,8 @@ public class WishlistFragment extends FamiliarFragment {
 					if (isi.mPrice != null) {
 						if (isi.mIsFoil) {
 							totalPrice += (isi.mPrice.mFoilAverage * isi.mNumberOf);
-						} else {
+						}
+						else {
 							switch (mPriceSetting) {
 								case LOW_PRICE:
 									totalPrice += (isi.mPrice.mLow * isi.mNumberOf);
@@ -634,7 +639,8 @@ public class WishlistFragment extends FamiliarFragment {
 				convertView = getActivity().getLayoutInflater().inflate(R.layout.result_list_card_row, parent, false);
 				assert convertView != null;
 				wishlistSets = ((LinearLayout) convertView.findViewById(R.id.wishlist_sets));
-			} else {
+			}
+			else {
 				wishlistSets = ((LinearLayout) convertView.findViewById(R.id.wishlist_sets));
 				/* clear any prior sets */
 				wishlistSets.removeAllViews();
@@ -688,7 +694,8 @@ public class WishlistFragment extends FamiliarFragment {
 						else {
 							if (p == (int) p) {
 								pow = Integer.valueOf((int) p).toString();
-							} else {
+							}
+							else {
 								pow = Float.valueOf(p).toString();
 							}
 						}
@@ -719,7 +726,8 @@ public class WishlistFragment extends FamiliarFragment {
 						else {
 							if (t == (int) t) {
 								tou = Integer.valueOf((int) t).toString();
-							} else {
+							}
+							else {
 								tou = Float.valueOf(t).toString();
 							}
 						}
@@ -734,14 +742,16 @@ public class WishlistFragment extends FamiliarFragment {
 				if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
 					if (loyalty == (int) loyalty) {
 						((TextView) convertView.findViewById(R.id.cardt)).setText(Integer.toString((int) loyalty));
-					} else {
+					}
+					else {
 						((TextView) convertView.findViewById(R.id.cardt)).setText(Float.toString(loyalty));
 					}
 					convertView.findViewById(R.id.cardt).setVisibility(View.VISIBLE);
 					convertView.findViewById(R.id.cardp).setVisibility(View.GONE);
 					convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
 				}
-			} else {
+			}
+			else {
 				/* hide all the extra fields */
 				convertView.findViewById(R.id.cardcost).setVisibility(View.GONE);
 				convertView.findViewById(R.id.cardtype).setVisibility(View.GONE);
@@ -793,7 +803,8 @@ public class WishlistFragment extends FamiliarFragment {
 				/* Show or hide the foil indicator */
 				if (isi.mIsFoil) {
 					setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.VISIBLE);
-				} else {
+				}
+				else {
 					setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.GONE);
 				}
 
@@ -805,11 +816,13 @@ public class WishlistFragment extends FamiliarFragment {
 							priceText.setText(String.format("%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
 							priceText.setTextColor(getResources().getColor(
 									getResourceIdFromAttr(R.attr.color_text)));
-						} else {
+						}
+						else {
 							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
 							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
 						}
-					} else {
+					}
+					else {
 						boolean priceFound = false;
 						if (isi.mPrice != null) {
 							switch (mPriceSetting) {
@@ -845,7 +858,8 @@ public class WishlistFragment extends FamiliarFragment {
 							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
 						}
 					}
-				} else {
+				}
+				else {
 					/* Just show the number of */
 					priceText.setText("x" + isi.mNumberOf);
 				}

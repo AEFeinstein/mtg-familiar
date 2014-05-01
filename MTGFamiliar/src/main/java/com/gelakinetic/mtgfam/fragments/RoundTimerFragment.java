@@ -189,7 +189,8 @@ public class RoundTimerFragment extends FamiliarFragment {
 					NotificationManager notificationManager = (NotificationManager) getActivity()
 							.getSystemService(Context.NOTIFICATION_SERVICE);
 					notificationManager.cancel(TIMER_NOTIFICATION_ID);
-				} else {
+				}
+				else {
 					/* This forces the inner value to update, in case the user typed it in manually */
 					mTimePicker.clearFocus();
 

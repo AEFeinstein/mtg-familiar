@@ -172,7 +172,7 @@ public class GatheringsIO {
 		} catch (FileNotFoundException e) {
 			/* eat it */
 		} catch (IOException e) {
-            /* eat it */
+			/* eat it */
 		}
 	}
 
@@ -246,7 +246,8 @@ public class GatheringsIO {
 		if (mode != null) {
 			String sMode = mode.getChildNodes().item(0).getNodeValue();
 			displayMode = Integer.parseInt(sMode);
-		} else {
+		}
+		else {
 			displayMode = 0;
 		}
 

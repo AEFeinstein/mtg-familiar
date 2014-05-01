@@ -318,33 +318,39 @@ public class SearchViewFragment extends FamiliarFragment {
 
 		if (mCheckboxW.isChecked()) {
 			searchCriteria.color = "W";
-		} else {
+		}
+		else {
 			searchCriteria.color = "w";
 		}
 
 		if (mCheckboxU.isChecked()) {
 			searchCriteria.color += "U";
-		} else {
+		}
+		else {
 			searchCriteria.color += "u";
 		}
 		if (mCheckboxB.isChecked()) {
 			searchCriteria.color += "B";
-		} else {
+		}
+		else {
 			searchCriteria.color += "b";
 		}
 		if (mCheckboxR.isChecked()) {
 			searchCriteria.color += "R";
-		} else {
+		}
+		else {
 			searchCriteria.color += "r";
 		}
 		if (mCheckboxG.isChecked()) {
 			searchCriteria.color += "G";
-		} else {
+		}
+		else {
 			searchCriteria.color += "g";
 		}
 		if (mCheckboxL.isChecked()) {
 			searchCriteria.color += "L";
-		} else {
+		}
+		else {
 			searchCriteria.color += "l";
 		}
 		searchCriteria.colorLogic = mColorSpinner.getSelectedItemPosition();
@@ -355,7 +361,8 @@ public class SearchViewFragment extends FamiliarFragment {
 			if (mSetChecked[i]) {
 				if (searchCriteria.set == null) {
 					searchCriteria.set = mSetSymbols[i];
-				} else {
+				}
+				else {
 					searchCriteria.set += "-" + mSetSymbols[i];
 				}
 			}
@@ -371,7 +378,8 @@ public class SearchViewFragment extends FamiliarFragment {
 			if (mRarityChecked[i]) {
 				if (searchCriteria.rarity == null) {
 					searchCriteria.rarity = mRarityNames[i].charAt(0) + "";
-				} else {
+				}
+				else {
 					searchCriteria.rarity += mRarityNames[i].charAt(0);
 				}
 			}
@@ -387,13 +395,17 @@ public class SearchViewFragment extends FamiliarFragment {
 		} catch (NumberFormatException e) {
 			if (power.equals("*")) {
 				pow = CardDbAdapter.STAR;
-			} else if (power.equals("1+*")) {
+			}
+			else if (power.equals("1+*")) {
 				pow = CardDbAdapter.ONE_PLUS_STAR;
-			} else if (power.equals("2+*")) {
+			}
+			else if (power.equals("2+*")) {
 				pow = CardDbAdapter.TWO_PLUS_STAR;
-			} else if (power.equals("7-*")) {
+			}
+			else if (power.equals("7-*")) {
 				pow = CardDbAdapter.SEVEN_MINUS_STAR;
-			} else if (power.equals("*^2")) {
+			}
+			else if (power.equals("*^2")) {
 				pow = CardDbAdapter.STAR_SQUARED;
 			}
 		}
@@ -406,13 +418,17 @@ public class SearchViewFragment extends FamiliarFragment {
 		} catch (NumberFormatException e) {
 			if (toughness.equals("*")) {
 				tou = CardDbAdapter.STAR;
-			} else if (toughness.equals("1+*")) {
+			}
+			else if (toughness.equals("1+*")) {
 				tou = CardDbAdapter.ONE_PLUS_STAR;
-			} else if (toughness.equals("2+*")) {
+			}
+			else if (toughness.equals("2+*")) {
 				tou = CardDbAdapter.TWO_PLUS_STAR;
-			} else if (toughness.equals("7-*")) {
+			}
+			else if (toughness.equals("7-*")) {
 				tou = CardDbAdapter.SEVEN_MINUS_STAR;
-			} else if (toughness.equals("*^2")) {
+			}
+			else if (toughness.equals("*^2")) {
 				tou = CardDbAdapter.STAR_SQUARED;
 			}
 		}
@@ -547,7 +563,8 @@ public class SearchViewFragment extends FamiliarFragment {
 				else {
 					if (p == (int) p) {
 						mPowChoice.setSelection(ptList.indexOf(((int) p) + ""));
-					} else {
+					}
+					else {
 						mPowChoice.setSelection(ptList.indexOf(p + ""));
 					}
 				}
@@ -568,7 +585,8 @@ public class SearchViewFragment extends FamiliarFragment {
 				else {
 					if (t == (int) t) {
 						mTouChoice.setSelection(ptList.indexOf(((int) t) + ""));
-					} else {
+					}
+					else {
 						mTouChoice.setSelection(ptList.indexOf(t + ""));
 					}
 				}
@@ -581,7 +599,8 @@ public class SearchViewFragment extends FamiliarFragment {
 				List<String> sets = Arrays.asList(criteria.set.split("-"));
 				for (int i = 0; i < mSetChecked.length; i++)
 					mSetChecked[i] = sets.contains(mSetSymbols[i]);
-			} else
+			}
+			else
 				for (int i = 0; i < mSetChecked.length; i++)
 					mSetChecked[i] = false;
 

@@ -17,7 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/wishlist_menu_clear"
@@ -28,11 +28,11 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/wishlist_menu_settings"
         android:icon="?attr/ic_action_import_export"
         android:showAsAction="ifRoom"
-        android:title="@string/wishlist_set_pricing" />
+        android:title="@string/wishlist_set_pricing"/>
     <item
         android:id="@+id/wishlist_menu_share"
         android:icon="?attr/ic_action_share"
         android:showAsAction="ifRoom"
-        android:title="@string/wishlist_share" />
+        android:title="@string/wishlist_share"/>
 
 </menu>

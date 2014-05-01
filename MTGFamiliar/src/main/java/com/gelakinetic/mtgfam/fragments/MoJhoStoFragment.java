@@ -261,7 +261,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
 						if ((imageHeight / (float) imageWidth) > (windowHeight / (float) windowWidth)) {
 							/* Limiting factor is height */
 							scaleFactor = (windowHeight - border) / (float) imageHeight;
-						} else {
+						}
+						else {
 							/* Limiting factor is width */
 							scaleFactor = (windowWidth - border) / (float) imageWidth;
 						}

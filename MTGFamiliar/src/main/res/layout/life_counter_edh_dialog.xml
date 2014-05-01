@@ -17,14 +17,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"/>
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="1dp"
             android:layout_marginTop="1dp"
-            android:background="?attr/color_drawer_divider_item" />
+            android:background="?attr/color_drawer_divider_item"/>
 
         <TextView
             android:id="@+id/absolute"
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"/>
 
     </LinearLayout>
 
@@ -53,7 +53,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/life_counter_minus_one"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/commander_plus1"
@@ -62,7 +62,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/life_counter_plus_one"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </LinearLayout>

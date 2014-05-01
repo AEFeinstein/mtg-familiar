@@ -145,11 +145,14 @@ public final class IndeterminateProgressBar {
 
 			if (rawProgress >= 0 && rawProgress < 25) {
 				canvas.drawColor(mColor4);
-			} else if (rawProgress >= 25 && rawProgress < 50) {
+			}
+			else if (rawProgress >= 25 && rawProgress < 50) {
 				canvas.drawColor(mColor1);
-			} else if (rawProgress >= 50 && rawProgress < 75) {
+			}
+			else if (rawProgress >= 50 && rawProgress < 75) {
 				canvas.drawColor(mColor2);
-			} else {
+			}
+			else {
 				canvas.drawColor(mColor3);
 			}
 

@@ -99,17 +99,20 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 				int multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
 				if ((multiCardType == CardDbAdapter.TRANSFORM) && mCardNumber.contains("b")) {
 					tcgCardName = CardDbAdapter.getTransformName(mSetCode, mCardNumber.replace("b", "a"), database);
-				} else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
+				}
+				else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
 						multiCardType == CardDbAdapter.FUSE)) {
 					int multiID = CardDbAdapter.getSplitMultiverseID(mCardName, database);
 					if (multiID == -1) {
 						throw new FamiliarDbException(null);
 					}
 					tcgCardName = CardDbAdapter.getSplitName(multiID, database);
-				} else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
+				}
+				else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
 						multiCardType == CardDbAdapter.FUSE)) {
 					tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, database);
-				} else {
+				}
+				else {
 					tcgCardName = mCardName;
 				}
 
@@ -160,7 +163,8 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 		DatabaseManager.getInstance().closeDatabase();
 		if (exception != null) {
 			throw exception;
-		} else {
+		}
+		else {
 			throw new SpiceException("CardNotFound");
 		}
 	}

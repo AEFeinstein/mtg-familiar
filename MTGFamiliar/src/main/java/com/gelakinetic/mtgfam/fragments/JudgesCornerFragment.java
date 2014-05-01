@@ -171,7 +171,8 @@ public class JudgesCornerFragment extends FamiliarFragment {
 						newTab.fragment = Fragment.instantiate(mFragment.getActivity(),
 								newTab.mClass.getName(), newTab.args);
 						ft.add(mContainerId, newTab.fragment, newTab.tag);
-					} else {
+					}
+					else {
 						ft.attach(newTab.fragment);
 					}
 				}
