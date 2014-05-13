@@ -509,28 +509,30 @@ public class WishlistFragment extends FamiliarFragment {
 			 */
 			@Override
 			public void onRequestFailure(SpiceException spiceException) {
-				/* because this can return when the fragment is in the background */
-				if (!WishlistFragment.this.isAdded()) {
-					return;
-				}
-				/* Find the compressed wishlist info for this card */
-				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-					if (cwi.mCard.name.equals(mCardName)) {
-						/* Find all foil and non foil compressed items with the same set code */
-						for (IndividualSetInfo isi : cwi.mInfo) {
-							if (isi.mSetCode.equals(mSetCode)) {
-								/* Set the price as null and the message as the exception */
-								isi.mMessage = spiceException.getLocalizedMessage();
-								isi.mPrice = null;
+				if (WishlistFragment.this.isAdded()) {
+					/* because this can return when the fragment is in the background */
+					if (!WishlistFragment.this.isAdded()) {
+						return;
+					}
+					/* Find the compressed wishlist info for this card */
+					for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+						if (cwi.mCard.name.equals(mCardName)) {
+							/* Find all foil and non foil compressed items with the same set code */
+							for (IndividualSetInfo isi : cwi.mInfo) {
+								if (isi.mSetCode.equals(mSetCode)) {
+									/* Set the price as null and the message as the exception */
+									isi.mMessage = spiceException.getLocalizedMessage();
+									isi.mPrice = null;
+								}
 							}
 						}
 					}
+					mPriceFetchRequests--;
+					if (mPriceFetchRequests == 0) {
+						getFamiliarActivity().clearLoading();
+					}
+					mWishlistAdapter.notifyDataSetChanged();
 				}
-				mPriceFetchRequests--;
-				if (mPriceFetchRequests == 0) {
-					getFamiliarActivity().clearLoading();
-				}
-				mWishlistAdapter.notifyDataSetChanged();
 			}
 
 			/**
@@ -540,32 +542,34 @@ public class WishlistFragment extends FamiliarFragment {
 			 */
 			@Override
 			public void onRequestSuccess(final PriceInfo result) {
-				/* because this can return when the fragment is in the background */
-				if (!WishlistFragment.this.isAdded()) {
-					return;
-				}
-				/* Find the compressed wishlist info for this card */
-				for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-					if (cwi.mCard.name.equals(mCardName)) {
-						/* Find all foil and non foil compressed items with the same set code */
-						for (IndividualSetInfo isi : cwi.mInfo) {
-							if (isi.mSetCode.equals(mSetCode)) {
-								/* Set the whole price info object */
-								if (result != null) {
-									isi.mPrice = result;
+				if (WishlistFragment.this.isAdded()) {
+					/* because this can return when the fragment is in the background */
+					if (!WishlistFragment.this.isAdded()) {
+						return;
+					}
+					/* Find the compressed wishlist info for this card */
+					for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+						if (cwi.mCard.name.equals(mCardName)) {
+							/* Find all foil and non foil compressed items with the same set code */
+							for (IndividualSetInfo isi : cwi.mInfo) {
+								if (isi.mSetCode.equals(mSetCode)) {
+									/* Set the whole price info object */
+									if (result != null) {
+										isi.mPrice = result;
+									}
+									/* The message will never be shown with a valid price, so set it as DNE */
+									isi.mMessage = getString(R.string.card_view_price_not_found);
 								}
-								/* The message will never be shown with a valid price, so set it as DNE */
-								isi.mMessage = getString(R.string.card_view_price_not_found);
 							}
 						}
+						sumTotalPrice();
 					}
-					sumTotalPrice();
+					mPriceFetchRequests--;
+					if (mPriceFetchRequests == 0) {
+						getFamiliarActivity().clearLoading();
+					}
+					mWishlistAdapter.notifyDataSetChanged();
 				}
-				mPriceFetchRequests--;
-				if (mPriceFetchRequests == 0) {
-					getFamiliarActivity().clearLoading();
-				}
-				mWishlistAdapter.notifyDataSetChanged();
 			}
 		});
 	}

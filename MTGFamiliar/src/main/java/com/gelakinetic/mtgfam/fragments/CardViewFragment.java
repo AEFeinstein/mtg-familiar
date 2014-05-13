@@ -466,7 +466,7 @@ public class CardViewFragment extends FamiliarFragment {
 		cCardById.close();
 
 		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
-           one set */
+		   one set */
 		Cursor cCardByName = CardDbAdapter.fetchCardByName(mCardName,
 				new String[]{
 						CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
@@ -484,7 +484,7 @@ public class CardViewFragment extends FamiliarFragment {
 		cCardByName.close();
         /* If it exists in only one set, remove the button from the menu */
 		if (mSets.size() == 1) {
-			mActivity.invalidateOptionsMenu();
+			mActivity.supportInvalidateOptionsMenu();
 		}
 		DatabaseManager.getInstance().closeDatabase();
 	}
@@ -769,23 +769,27 @@ public class CardViewFragment extends FamiliarFragment {
 
 							@Override
 							public void onRequestFailure(SpiceException spiceException) {
-								mActivity.clearLoading();
+								if (CardViewFragment.this.isAdded()) {
+									mActivity.clearLoading();
 
-								CardViewFragment.this.removeDialog(getFragmentManager());
-								Toast.makeText(mActivity, spiceException.getMessage(), Toast.LENGTH_SHORT).show();
+									CardViewFragment.this.removeDialog(getFragmentManager());
+									Toast.makeText(mActivity, spiceException.getMessage(), Toast.LENGTH_SHORT).show();
+								}
 							}
 
 							@Override
 							public void onRequestSuccess(final PriceInfo result) {
-								mActivity.clearLoading();
+								if (CardViewFragment.this.isAdded()) {
+									mActivity.clearLoading();
 
-								if (result != null) {
-									mPriceInfo = result;
-									showDialog(GET_PRICE);
-								}
-								else {
-									Toast.makeText(mActivity, R.string.card_view_price_not_found,
-											Toast.LENGTH_SHORT).show();
+									if (result != null) {
+										mPriceInfo = result;
+										showDialog(GET_PRICE);
+									}
+									else {
+										Toast.makeText(mActivity, R.string.card_view_price_not_found,
+												Toast.LENGTH_SHORT).show();
+									}
 								}
 							}
 						}
@@ -1113,7 +1117,7 @@ public class CardViewFragment extends FamiliarFragment {
 					removeDialog(getFragmentManager());
 					mCardImageView.setImageDrawable(mCardBitmap);
 					/* remove the image load button if it is the main page */
-					mActivity.invalidateOptionsMenu();
+					mActivity.supportInvalidateOptionsMenu();
 				}
 			}
 			else {

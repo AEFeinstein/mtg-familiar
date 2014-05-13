@@ -1,7 +1,9 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.database.StaleDataException;
 import android.util.AttributeSet;
+import android.view.InflateException;
 import android.widget.AutoCompleteTextView;
 
 /**
@@ -50,6 +52,10 @@ public class SafeAutoCompleteTextView extends AutoCompleteTextView {
 			super.onFilterComplete(count);
 		} catch (IllegalStateException e) {
 			/* Ignore */
+		} catch (StaleDataException e) {
+			/* Ignore */
+		} catch (InflateException e) {
+			/* Ignore */
 		}
 	}
 
@@ -61,6 +67,10 @@ public class SafeAutoCompleteTextView extends AutoCompleteTextView {
 		try {
 			super.showDropDown();
 		} catch (IllegalStateException e) {
+			/* Ignore */
+		} catch (StaleDataException e) {
+			/* Ignore */
+		} catch (InflateException e) {
 			/* Ignore */
 		}
 	}

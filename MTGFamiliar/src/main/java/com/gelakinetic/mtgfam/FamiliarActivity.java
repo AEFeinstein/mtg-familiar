@@ -167,7 +167,7 @@ public class FamiliarActivity extends FragmentActivity {
 				sendBroadcast(intent);
 			}
 			else if (s.equals(getString(R.string.key_theme))) {
-				invalidateOptionsMenu(); /* to redraw the magnifying glass */
+				supportInvalidateOptionsMenu(); /* to redraw the magnifying glass */
 				Intent i = new Intent(FamiliarActivity.this, FamiliarActivity.class);
 				startActivity(i);
 				FamiliarActivity.this.finish();
@@ -226,7 +226,7 @@ public class FamiliarActivity extends FragmentActivity {
 	}
 
 	/**
-	 * Called whenever we call invalidateOptionsMenu(). This hides action bar items when the drawer is open
+	 * Called whenever we call supportInvalidateOptionsMenu(). This hides action bar items when the drawer is open
 	 *
 	 * @param menu The menu to hide or show items in
 	 * @return True if the menu is to be displayed, false otherwise
@@ -423,7 +423,7 @@ public class FamiliarActivity extends FragmentActivity {
 			public void onDrawerSlide(View drawerView, float slideOffset) {
 				super.onDrawerSlide(drawerView, slideOffset);
 				if ((mIsMenuVisible && slideOffset > 0) || (slideOffset == 0 && !mIsMenuVisible)) {
-					invalidateOptionsMenu();
+					supportInvalidateOptionsMenu();
 				}
 			}
 		};

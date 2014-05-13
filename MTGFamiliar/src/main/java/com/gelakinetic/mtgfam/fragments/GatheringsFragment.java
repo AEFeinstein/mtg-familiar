@@ -158,7 +158,7 @@ public class GatheringsFragment extends FamiliarFragment {
 			for (GatheringsPlayerData player : players) {
 				AddPlayerRow(player);
 			}
-			getActivity().invalidateOptionsMenu();
+			getActivity().supportInvalidateOptionsMenu();
 			mCurrentGatheringName = savedInstanceState.getString(SAVED_NAME_KEY);
 		}
 	}
@@ -301,7 +301,7 @@ public class GatheringsFragment extends FamiliarFragment {
 									public void onClick(DialogInterface dialogInterface, int item) {
 										GatheringsIO.DeleteGathering(dfGatherings[item], getActivity().getFilesDir(),
 												getActivity());
-										getActivity().invalidateOptionsMenu();
+										getActivity().supportInvalidateOptionsMenu();
 									}
 								}).create();
 					}
@@ -327,7 +327,7 @@ public class GatheringsFragment extends FamiliarFragment {
 								.setItems(aNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {
 										mLinearLayout.removeViewAt(item);
-										getActivity().invalidateOptionsMenu();
+										getActivity().supportInvalidateOptionsMenu();
 									}
 								})
 								.create();
@@ -365,7 +365,7 @@ public class GatheringsFragment extends FamiliarFragment {
 										for (GatheringsPlayerData player : players) {
 											AddPlayerRow(player);
 										}
-										getActivity().invalidateOptionsMenu();
+										getActivity().supportInvalidateOptionsMenu();
 									}
 								}).create();
 					}
@@ -463,7 +463,7 @@ public class GatheringsFragment extends FamiliarFragment {
 
 		GatheringsIO.writeGatheringXML(players, _gatheringName, mDisplayModeSpinner.getSelectedItemPosition(),
 				getActivity().getFilesDir());
-		getActivity().invalidateOptionsMenu();
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class GatheringsFragment extends FamiliarFragment {
 		((TextView) newView.findViewById(R.id.starting_life)).setText(String.valueOf(_player.mStartingLife));
 
 		mLinearLayout.addView(newView);
-		getActivity().invalidateOptionsMenu();
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	/**
@@ -543,10 +543,16 @@ public class GatheringsFragment extends FamiliarFragment {
 		assert deleteGathering != null;
 		assert loadGathering != null;
 
-		if (mLinearLayout.getChildCount() == 0 || !getFamiliarActivity().mIsMenuVisible) {
-			removePlayer.setVisible(false);
-		}
-		else {
+		try {
+			if (mLinearLayout.getChildCount() == 0 || !getFamiliarActivity().mIsMenuVisible) {
+				removePlayer.setVisible(false);
+			}
+			else {
+				removePlayer.setVisible(true);
+			}
+		} catch (NullPointerException e) {
+			/* the if () statement throwing a NullPointerException for some users. I don't know which part was null,
+			or why, but this catches it well enough */
 			removePlayer.setVisible(true);
 		}
 

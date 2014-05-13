@@ -1,7 +1,9 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,6 +50,16 @@ public abstract class FamiliarFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setHasOptionsMenu(true);
+	}
+
+	/**
+	 * Called when the fragment is no longer attached to its activity.  This
+	 * is called after {@link #onDestroy()}.
+	 */
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		getFamiliarActivity().clearLoading();
 	}
 
 	/**
@@ -138,26 +150,32 @@ public abstract class FamiliarFragment extends Fragment {
 
 				SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 				SearchView sv = new SearchView(getActivity());
-				sv.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-
-				/* Fix for https://code.google.com/p/android/issues/detail?id=54745
-				 * found here http://stackoverflow.com/questions/9771603/customizing-android-widget-searchView */
 				try {
-					Field searchField = SearchView.class.getDeclaredField("mSearchButton");
-					searchField.setAccessible(true);
-					ImageView searchBtn = (ImageView) searchField.get(sv);
-					searchBtn.setImageResource(resourceId);
-				} catch (NoSuchFieldException e) {
-					/* eat it */
-				} catch (IllegalAccessException e) {
-					/* eat it */
-				}
+					sv.setSearchableInfo(searchManager.getSearchableInfo(
+							new ComponentName("com.gelakinetic.mtgfam", "com.gelakinetic.mtgfam.FamiliarActivity")));
 
-				menu.add(R.string.name_search_hint)
-						.setIcon(resourceId)
-						.setActionView(sv)
-						.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+					/* Fix for https://code.google.com/p/android/issues/detail?id=54745
+					 * found here http://stackoverflow.com/questions/9771603/customizing-android-widget-searchView */
+					try {
+						Field searchField = SearchView.class.getDeclaredField("mSearchButton");
+						searchField.setAccessible(true);
+						ImageView searchBtn = (ImageView) searchField.get(sv);
+						searchBtn.setImageResource(resourceId);
+					} catch (NoSuchFieldException e) {
+						/* eat it */
+					} catch (IllegalAccessException e) {
+						/* eat it */
+					}
+
+					menu.add(R.string.name_search_hint)
+							.setIcon(resourceId)
+							.setActionView(sv)
+							.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+				} catch (Resources.NotFoundException e) {
+					/* One user threw this once. I think the typed ComponentName fixes it, but just in case */
+				}
 			}
+
 		}
 	}
 

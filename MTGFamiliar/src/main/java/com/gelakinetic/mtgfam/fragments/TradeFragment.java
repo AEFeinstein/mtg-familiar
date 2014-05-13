@@ -852,48 +852,50 @@ public class TradeFragment extends FamiliarFragment {
 	 * @param side RIGHT, LEFT, or BOTH, depending on the side to update
 	 */
 	private void UpdateTotalPrices(int side) {
-		if (side == LEFT || side == BOTH) {
-			int totalPrice = 0;
-			boolean hasBadValues = false;
+		if (this.isAdded()) {
+			if (side == LEFT || side == BOTH) {
+				int totalPrice = 0;
+				boolean hasBadValues = false;
 			/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
-			for (MtgCard data : mLeftList) {
-				if (data.hasPrice()) {
-					totalPrice += data.numberOf * data.price;
+				for (MtgCard data : mLeftList) {
+					if (data.hasPrice()) {
+						totalPrice += data.numberOf * data.price;
+					}
+					else {
+						hasBadValues = true;
+					}
 				}
-				else {
-					hasBadValues = true;
-				}
-			}
 
 			/* Set the color whether all values are loaded, and write the text */
-			int color = hasBadValues ?
-					this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
-					this.getActivity().getResources().getColor(
-							getResourceIdFromAttr(R.attr.color_text));
-			mTotalPriceLeft.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
-			mTotalPriceLeft.setTextColor(color);
-		}
-		if (side == RIGHT || side == BOTH) {
-			int totalPrice = 0;
-			boolean hasBadValues = false;
-			/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
-			for (MtgCard data : mRightList) {
-				if (data.hasPrice()) {
-					totalPrice += data.numberOf * data.price;
-				}
-				else {
-					hasBadValues = true;
-				}
+				int color = hasBadValues ?
+						this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
+						this.getActivity().getResources().getColor(
+								getResourceIdFromAttr(R.attr.color_text));
+				mTotalPriceLeft.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
+				mTotalPriceLeft.setTextColor(color);
 			}
+			if (side == RIGHT || side == BOTH) {
+				int totalPrice = 0;
+				boolean hasBadValues = false;
+			/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
+				for (MtgCard data : mRightList) {
+					if (data.hasPrice()) {
+						totalPrice += data.numberOf * data.price;
+					}
+					else {
+						hasBadValues = true;
+					}
+				}
 
 			/* Set the color whether all values are loaded, and write the text */
-			int color = hasBadValues ?
-					this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
-					this.getActivity().getResources().getColor(
-							getResourceIdFromAttr(R.attr.color_text)
-					);
-			mTotalPriceRight.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
-			mTotalPriceRight.setTextColor(color);
+				int color = hasBadValues ?
+						this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
+						this.getActivity().getResources().getColor(
+								getResourceIdFromAttr(R.attr.color_text)
+						);
+				mTotalPriceRight.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
+				mTotalPriceRight.setTextColor(color);
+			}
 		}
 	}
 
@@ -985,12 +987,14 @@ public class TradeFragment extends FamiliarFragment {
 						 */
 						@Override
 						public void onRequestFailure(SpiceException spiceException) {
-							data.message = spiceException.getLocalizedMessage();
-							data.priceInfo = null;
-							adapter.notifyDataSetChanged();
-							mPriceFetchRequests--;
-							if (mPriceFetchRequests == 0) {
-								getFamiliarActivity().clearLoading();
+							if(TradeFragment.this.isAdded()) {
+								data.message = spiceException.getLocalizedMessage();
+								data.priceInfo = null;
+								adapter.notifyDataSetChanged();
+								mPriceFetchRequests--;
+								if (mPriceFetchRequests == 0) {
+									getFamiliarActivity().clearLoading();
+								}
 							}
 						}
 
@@ -1043,7 +1047,7 @@ public class TradeFragment extends FamiliarFragment {
 							UpdateTotalPrices(BOTH);
 							adapter.notifyDataSetChanged();
 							mPriceFetchRequests--;
-							if (mPriceFetchRequests == 0) {
+							if (mPriceFetchRequests == 0 && TradeFragment.this.isAdded()) {
 								getFamiliarActivity().clearLoading();
 							}
 						}
@@ -1082,8 +1086,7 @@ public class TradeFragment extends FamiliarFragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			/* if the supplied view is null, inflate a new one */
 			if (convertView == null) {
-				convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row,
-						null, false);
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row, null, false);
 			}
 			/* Get the data from the ArrayList */
 			MtgCard data = items.get(position);

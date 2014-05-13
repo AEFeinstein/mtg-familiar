@@ -929,19 +929,21 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 * @param status SUCCESS or ERROR.
 	 */
 	@Override
-	public void onInit(int status) {
-		if (status == TextToSpeech.SUCCESS) {
-			int result = mTts.setLanguage(getResources().getConfiguration().locale);
-			if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+	public void onInit(final int status) {
+		if (isAdded()) {
+			if (status == TextToSpeech.SUCCESS) {
+				int result = mTts.setLanguage(getResources().getConfiguration().locale);
+				if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+					getFamiliarActivity().showTtsDialog();
+				}
+				else {
+					mTtsInit = true;
+					getActivity().supportInvalidateOptionsMenu();
+				}
+			}
+			else if (status == TextToSpeech.ERROR) {
 				getFamiliarActivity().showTtsDialog();
 			}
-			else {
-				mTtsInit = true;
-				getActivity().invalidateOptionsMenu();
-			}
-		}
-		else if (status == TextToSpeech.ERROR) {
-			getFamiliarActivity().showTtsDialog();
 		}
 	}
 
