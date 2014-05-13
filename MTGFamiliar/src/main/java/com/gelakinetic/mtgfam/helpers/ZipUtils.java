@@ -2,7 +2,6 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
@@ -140,12 +139,10 @@ public class ZipUtils {
 			InputStream in = zipFile.getInputStream(entry);
 			OutputStream out;
 			if (entry.getName().contains("_preferences.xml")) {
-				Log.e("pth", SHARED_PREF_DIR + " : " + entry.getName());
 				out = new BufferedOutputStream(new FileOutputStream(
 						new File(SHARED_PREF_DIR, entry.getName())));
 			}
 			else {
-				Log.e("pth", context.getFilesDir() + " : " + entry.getName());
 				out = new BufferedOutputStream(new FileOutputStream(
 						new File(context.getFilesDir(), entry.getName())));
 			}
