@@ -601,12 +601,6 @@ public class FamiliarActivity extends FragmentActivity {
 			position++;
 		}
 
-		if (mCurrentFrag == position) {
-			/* This is the same fragment, just close the menu */
-			mDrawerLayout.closeDrawer(mDrawerList);
-			return;
-		}
-
 		mCurrentFrag = position;
 		Fragment newFrag;
 		/* Pick the new fragment */
@@ -662,6 +656,16 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 			default:
 				return;
+		}
+
+		try {
+			if (newFrag.getClass().equals(getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass())) {
+			/* This is the same fragment, just close the menu */
+				mDrawerLayout.closeDrawer(mDrawerList);
+				return;
+			}
+		} catch (NullPointerException e) {
+			/* no fragment to compare to */
 		}
 
 		if (args != null) {

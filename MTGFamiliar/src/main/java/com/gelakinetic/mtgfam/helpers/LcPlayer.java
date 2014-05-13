@@ -53,41 +53,23 @@ public class LcPlayer {
 	public View mCommanderRowView;
 	private HistoryArrayAdapter mHistoryLifeAdapter;
 	private HistoryArrayAdapter mHistoryPoisonAdapter;
+	private boolean mCommitting = false;
 	/* This runnable will commit any life / poison changes to history, and notify the adapter to display the changes
 	   in the ListView */
 	private final Runnable mLifePoisonCommitter = new Runnable() {
 		@Override
 		public void run() {
-			HistoryEntry entry = new HistoryEntry();
-			/* If there are no entries, assume life is mDefaultLifeTotal */
-			if (mLifeHistory.size() == 0) {
-				entry.mDelta = mLife - mDefaultLifeTotal;
+			mCommitting = false;
+
+			if(mLifeHistory.size() > 0 && mLifeHistory.get(0).mDelta == 0) {
+				mLifeHistory.remove(0);
 			}
-			else {
-				entry.mDelta = mLife - mLifeHistory.get(0).mAbsolute;
-			}
-			entry.mAbsolute = mLife;
-			if (entry.mDelta != 0) {
-				mLifeHistory.add(0, entry);
-				if (mHistoryLifeAdapter != null) {
-					mHistoryLifeAdapter.notifyDataSetChanged();
-				}
+			if(mPoisonHistory.size() > 0 && mPoisonHistory.get(0).mDelta == 0) {
+				mPoisonHistory.remove(0);
 			}
 
-			entry = new HistoryEntry();
-			if (mPoisonHistory.size() == 0) {
-				entry.mDelta = mPoison;
-			}
-			else {
-				entry.mDelta = mPoison - mPoisonHistory.get(0).mAbsolute;
-			}
-			entry.mAbsolute = mPoison;
-			if (entry.mDelta != 0) {
-				mPoisonHistory.add(0, entry);
-				if (mHistoryPoisonAdapter != null) {
-					mHistoryPoisonAdapter.notifyDataSetChanged();
-				}
-			}
+			mHistoryLifeAdapter.notifyDataSetChanged();
+			mHistoryPoisonAdapter.notifyDataSetChanged();
 		}
 	};
 	private int mMode = LifeCounterFragment.STAT_LIFE;
@@ -169,6 +151,9 @@ public class LcPlayer {
 	 * @param delta How much the current value should be changed
 	 */
 	private void changeValue(int delta, boolean immediate) {
+		if(delta == 0) {
+			return;
+		}
 		switch (mMode) {
 			case LifeCounterFragment.STAT_POISON:
 				mPoison += delta;
@@ -186,13 +171,67 @@ public class LcPlayer {
 				}
 				break;
 		}
-		mHandler.removeCallbacks(mLifePoisonCommitter);
-		if (immediate) {
-			mHandler.post(mLifePoisonCommitter);
+
+		/* If we're not committing yet, make a new history entry */
+		if(!mCommitting) {
+			/* Create a new historyEntry */
+			HistoryEntry entry = new HistoryEntry();
+			/* If there are no entries, assume life is mDefaultLifeTotal */
+			if (mLifeHistory.size() == 0) {
+				entry.mDelta = mLife - mDefaultLifeTotal;
+			}
+			else {
+				entry.mDelta = mLife - mLifeHistory.get(0).mAbsolute;
+			}
+			entry.mAbsolute = mLife;
+			if (entry.mDelta != 0) {
+				mLifeHistory.add(0, entry);
+				if (mHistoryLifeAdapter != null) {
+					mHistoryLifeAdapter.notifyDataSetChanged();
+				}
+			}
+
+			entry = new HistoryEntry();
+			if (mPoisonHistory.size() == 0) {
+				entry.mDelta = mPoison;
+			}
+			else {
+				entry.mDelta = mPoison - mPoisonHistory.get(0).mAbsolute;
+			}
+			entry.mAbsolute = mPoison;
+			if (entry.mDelta != 0) {
+				mPoisonHistory.add(0, entry);
+				if (mHistoryPoisonAdapter != null) {
+					mHistoryPoisonAdapter.notifyDataSetChanged();
+				}
+			}
 		}
-		else {
+
+		else if(!immediate) {
+			/* Modify current historyEntry */
+			switch (mMode) {
+				case LifeCounterFragment.STAT_POISON: {
+					mPoisonHistory.get(0).mDelta += delta;
+					mPoisonHistory.get(0).mAbsolute += delta;
+					mHistoryPoisonAdapter.notifyDataSetChanged();
+					break;
+				}
+				case LifeCounterFragment.STAT_COMMANDER:
+				case LifeCounterFragment.STAT_LIFE: {
+					mLifeHistory.get(0).mDelta += delta;
+					mLifeHistory.get(0).mAbsolute += delta;
+					mHistoryLifeAdapter.notifyDataSetChanged();
+					break;
+				}
+			}
+		}
+
+		if(!immediate) {
+			mCommitting = true;
+			mHandler.removeCallbacks(mLifePoisonCommitter);
 			mHandler.postDelayed(mLifePoisonCommitter,
 					Integer.parseInt(mFragment.getFamiliarActivity().mPreferenceAdapter.getLifeTimer()));
+
 		}
 	}
 
@@ -515,8 +554,7 @@ public class LcPlayer {
 					case DIALOG_SET_NAME: {
 						/* Inflate a view to type in the player's name, and show it in an AlertDialog */
 						View textEntryView = mFragment.getActivity().getLayoutInflater().inflate(
-								R.layout.alert_dialog_text_entry,
-								null, false);
+								R.layout.alert_dialog_text_entry, null, false);
 						assert textEntryView != null;
 						final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
 						nameInput.append(LcPlayer.this.mName);
@@ -728,6 +766,16 @@ public class LcPlayer {
 						.inflate(R.layout.life_counter_history_adapter_row, null, false);
 			}
 			assert view != null;
+
+			if(mCommitting && position == 0) {
+				((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
+						mFragment.getResourceIdFromAttr(R.attr.holo_blue)));
+			}
+			else {
+				((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
+						mFragment.getResourceIdFromAttr(R.attr.color_text)));
+			}
+
 			switch (mType) {
 				case LifeCounterFragment.STAT_LIFE:
 					((TextView) view.findViewById(R.id.absolute)).setText(mLifeHistory.get(position).mAbsolute + "");
