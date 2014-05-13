@@ -4,7 +4,7 @@
                     android:minResizeWidth="56dp"
                     android:minResizeHeight="56dp"
                     android:updatePeriodMillis="86400000"
-                    android:initialLayout="@layout/mtgfamiliar_appwidget"
+                    android:initialLayout="@layout/mtgfamiliar_appwidget_light"
                     android:resizeMode="horizontal"
                     android:configure="com.gelakinetic.mtgfam.MtgAppWidgetConfigure"
                     android:previewImage="@drawable/widget_preview"

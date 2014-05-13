@@ -65,14 +65,23 @@
             android:exported="true"/>
 
         <!-- For the homescreen widget -->
-        <receiver android:name="com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider">
+        <receiver android:name="com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProviderDark">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/mtgfamiliar_appwidget_info"/>
+                android:resource="@xml/mtgfamiliar_appwidget_info_dark"/>
+        </receiver>
+        <receiver android:name="com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProviderLight">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mtgfamiliar_appwidget_info_light"/>
         </receiver>
 
     </application>

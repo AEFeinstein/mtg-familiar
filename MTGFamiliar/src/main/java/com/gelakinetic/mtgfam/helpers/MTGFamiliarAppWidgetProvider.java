@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * This class sets up the buttons for the home screen widget
  */
-public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
+public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
 	/* An array of resource IDs for the buttons in the widget. Must stay in order with intents[] below, and
 	   R.array.default_fragment_array_entries in arrays.xml */
@@ -49,7 +49,7 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			FamiliarActivity.ACTION_MOJHOSTO,
 			FamiliarActivity.ACTION_JUDGE};
 
-	private int mMaxNumButtons = 100;
+	protected int mMaxNumButtons = 100;
 
 	/**
 	 * Called in response to the ACTION_APPWIDGET_UPDATE broadcast when this AppWidget provider is being asked to
@@ -60,22 +60,7 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 	 * @param appWidgetIds     The appWidgetIds for which an update is needed. Note that this may be all of the
 	 *                         AppWidget instances for this provider, or just a subset of them.
 	 */
-	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		/* Perform this loop procedure for each App Widget that belongs to this provider */
-		for (int appWidgetId : appWidgetIds) {
-
-			/* Get the layout for the App Widget and attach an on-click listener to the buttons */
-			RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.mtgfamiliar_appwidget);
-
-			bindButtons(context, views);
-
-			/* 100 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
-			showButtonsFromPreferences(context, views, mMaxNumButtons);
-
-			/* Tell the AppWidgetManager to perform an update on the current app widget */
-			appWidgetManager.updateAppWidget(appWidgetId, views);
-		}
-	}
+	public abstract void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds);
 
 	/**
 	 * Bind the buttons in the widget to their proper intents
@@ -83,7 +68,7 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 	 * @param context The Context used to create the intents
 	 * @param views   The RemoteViews which holds the widget
 	 */
-	private void bindButtons(Context context, RemoteViews views) {
+    void bindButtons(Context context, RemoteViews views) {
 		/* Attach all the intents to all the buttons */
 		for (int i = 0; i < buttonResources.length; i++) {
 			Intent intentQuick = new Intent(context, FamiliarActivity.class);
@@ -100,7 +85,7 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 	 * @param views         The RemoteViews which holds the widget
 	 * @param maxNumButtons The maximum number of buttons to display, so things don't get too crammed
 	 */
-	private void showButtonsFromPreferences(Context context, RemoteViews views, int maxNumButtons) {
+    void showButtonsFromPreferences(Context context, RemoteViews views, int maxNumButtons) {
 		String[] entries = context.getResources().getStringArray(R.array.default_fragment_array_entries);
 		Set<String> buttons = (new PreferenceAdapter(context)).getWidgetButtons();
 
@@ -141,7 +126,7 @@ public class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 										  Bundle newOptions) {
 		super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
 
-		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.mtgfamiliar_appwidget);
+		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.mtgfamiliar_appwidget_light);
 
 		float densityDpi = context.getResources().getDisplayMetrics().densityDpi;
 		float dp = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) / (densityDpi / 160f);

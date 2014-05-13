@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:background="@drawable/widget_bg_light"
+              android:dividerPadding="4dp"
+              android:gravity="center"
+              android:orientation="horizontal"
+              android:showDividers="middle">
+
+    <ImageButton
+        android:id="@+id/widget_search"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_search_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_life"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_life_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_mana"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_mana_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_dice"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_dice_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_trade"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_trade_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_wish"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_wishlist_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_timer"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_timer_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_rules"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_rules_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_judge"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_judge_light"/>
+
+    <ImageButton
+        android:id="@+id/widget_mojhosto"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_mojhosto_light"/>
+
+</LinearLayout>
