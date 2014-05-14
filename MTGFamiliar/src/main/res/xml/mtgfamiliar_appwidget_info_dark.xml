@@ -7,7 +7,7 @@
                     android:initialLayout="@layout/mtgfamiliar_appwidget_dark"
                     android:resizeMode="horizontal"
                     android:configure="com.gelakinetic.mtgfam.MtgAppWidgetConfigure"
-                    android:previewImage="@drawable/widget_preview"
+                    android:previewImage="@drawable/widget_preview_dark"
                     android:widgetCategory="keyguard|home_screen">
 
 </appwidget-provider>
