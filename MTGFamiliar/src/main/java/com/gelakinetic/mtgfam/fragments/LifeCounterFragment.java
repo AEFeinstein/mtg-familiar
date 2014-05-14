@@ -938,7 +938,19 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				}
 				else {
 					mTtsInit = true;
-					getActivity().supportInvalidateOptionsMenu();
+					if (mIsSearchViewOpen) {
+						/* Search view is open, pend menu refresh */
+						mAfterSearchClosedRunnable = new Runnable() {
+							@Override
+							public void run() {
+								getActivity().supportInvalidateOptionsMenu();
+							}
+						};
+					}
+					else {
+						/* Redraw menu */
+						getActivity().supportInvalidateOptionsMenu();
+					}
 				}
 			}
 			else if (status == TextToSpeech.ERROR) {

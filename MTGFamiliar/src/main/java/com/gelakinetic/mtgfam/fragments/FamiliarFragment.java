@@ -29,6 +29,9 @@ import java.util.concurrent.RejectedExecutionException;
  */
 public abstract class FamiliarFragment extends Fragment {
 
+	public boolean mIsSearchViewOpen = false;
+	public Runnable mAfterSearchClosedRunnable = null;
+
 	/**
 	 * http://developer.android.com/reference/android/app/Fragment.html
 	 * All subclasses of Fragment must include a public empty constructor. The framework will often re-instantiate a
@@ -170,7 +173,26 @@ public abstract class FamiliarFragment extends Fragment {
 					menu.add(R.string.name_search_hint)
 							.setIcon(resourceId)
 							.setActionView(sv)
-							.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+							.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+								@Override
+								public boolean onMenuItemActionExpand(MenuItem item) {
+									mIsSearchViewOpen = true;
+									return true;
+								}
+
+								@Override
+								public boolean onMenuItemActionCollapse(MenuItem item) {
+									mIsSearchViewOpen = false;
+									if (null != mAfterSearchClosedRunnable) {
+										mAfterSearchClosedRunnable.run();
+										mAfterSearchClosedRunnable = null;
+									}
+									return true;
+								}
+							})
+							.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM |
+									MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+
 				} catch (Resources.NotFoundException e) {
 					/* One user threw this once. I think the typed ComponentName fixes it, but just in case */
 				}
