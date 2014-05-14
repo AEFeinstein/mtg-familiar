@@ -51,6 +51,10 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
 	protected int mMaxNumButtons = 100;
 
+	protected int mLayout;
+
+	public abstract void setLayout();
+
 	/**
 	 * Called in response to the ACTION_APPWIDGET_UPDATE broadcast when this AppWidget provider is being asked to
 	 * provide RemoteViews for a set of AppWidgets. Override this method to implement your own AppWidget functionality.
@@ -60,7 +64,23 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 	 * @param appWidgetIds     The appWidgetIds for which an update is needed. Note that this may be all of the
 	 *                         AppWidget instances for this provider, or just a subset of them.
 	 */
-	public abstract void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds);
+	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+		setLayout();
+		/* Perform this loop procedure for each App Widget that belongs to this provider */
+		for (int appWidgetId : appWidgetIds) {
+
+			/* Get the layout for the App Widget and attach an on-click listener to the buttons */
+			RemoteViews views = new RemoteViews(context.getPackageName(), mLayout);
+
+			bindButtons(context, views);
+
+			/* 100 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
+			showButtonsFromPreferences(context, views, mMaxNumButtons);
+
+			/* Tell the AppWidgetManager to perform an update on the current app widget */
+			appWidgetManager.updateAppWidget(appWidgetId, views);
+		}
+	}
 
 	/**
 	 * Bind the buttons in the widget to their proper intents
@@ -124,9 +144,10 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId,
 										  Bundle newOptions) {
+		setLayout();
 		super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
 
-		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.mtgfamiliar_appwidget_light);
+		RemoteViews views = new RemoteViews(context.getPackageName(), mLayout);
 
 		float densityDpi = context.getResources().getDisplayMetrics().densityDpi;
 		float dp = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH) / (densityDpi / 160f);
