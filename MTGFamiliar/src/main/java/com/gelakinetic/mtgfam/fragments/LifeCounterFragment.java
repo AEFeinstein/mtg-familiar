@@ -61,6 +61,9 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	private static final String LIFE_ANNOUNCE = "life_announce";
 	private static final int IMPROBABLE_NUMBER = 531865548;
 	private static final String OVER_9000_KEY = "@over_9000";
+	/* Life total constants */
+	public static final int DEFAULT_LIFE_COMMANDER = 40;
+	public static final int DEFAULT_LIFE = 20;
 	/* Keeping track of players, display state */
 	private final ArrayList<LcPlayer> mPlayers = new ArrayList<LcPlayer>();
 	private final LinkedList<String> mVocalizations = new LinkedList<String>();
@@ -655,7 +658,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			if (player.mLifeHistory.size() == 0
 					&& player.mPoisonHistory.size() == 0
 					&& player.mLife == player.mDefaultLifeTotal
-					&& (player.mDefaultLifeTotal == 20 || player.mDefaultLifeTotal == 40)) {
+					&& (player.mDefaultLifeTotal == DEFAULT_LIFE || player.mDefaultLifeTotal == DEFAULT_LIFE_COMMANDER)) {
 				player.mDefaultLifeTotal = getDefaultLife();
 				player.mLife = player.mDefaultLifeTotal;
 			}
@@ -918,9 +921,9 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 */
 	private int getDefaultLife() {
 		if (mDisplayMode == DISPLAY_COMMANDER) {
-			return 40;
+			return DEFAULT_LIFE_COMMANDER;
 		}
-		return 20;
+		return DEFAULT_LIFE;
 	}
 
 	/**

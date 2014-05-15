@@ -399,11 +399,11 @@ public class GatheringsFragment extends FamiliarFragment {
 				switch (mDisplayModeSpinner.getSelectedItemPosition()) {
 					case 1:
 					case 0: {
-						AddPlayerRow(new GatheringsPlayerData(null, 20));
+						AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE));
 						break;
 					}
 					case 2: {
-						AddPlayerRow(new GatheringsPlayerData(null, 40));
+						AddPlayerRow(new GatheringsPlayerData(null, LifeCounterFragment.DEFAULT_LIFE_COMMANDER));
 						break;
 					}
 				}

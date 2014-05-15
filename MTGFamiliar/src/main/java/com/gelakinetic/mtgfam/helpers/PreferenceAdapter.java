@@ -410,9 +410,20 @@ public class PreferenceAdapter {
 		this.edit.commit();
 	}
 
+	/* This is slightly different because we want to make sure to commit a theme if one doesn't
+	 * exist, not just return the default. asd is a nice tag, no?
+	 */
 	public String getTheme() {
-		return this.prefs.getString(context.getString(R.string.key_theme),
-				context.getResources().getString(R.string.pref_theme_light));
+		String theme = this.prefs.getString(context.getString(R.string.key_theme), "asd");
+		if(theme.equals("asd")) {
+			theme = context.getResources().getString(R.string.pref_theme_light);
+			setTheme(theme);
+		}
+		return theme;
 	}
 
+	public void setTheme(String theme) {
+		this.edit.putString(context.getString(R.string.key_theme), theme);
+		this.edit.commit();
+	}
 }

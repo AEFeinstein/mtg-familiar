@@ -43,11 +43,11 @@ public class LcPlayer {
 	public CommanderDamageAdapter mCommanderDamageAdapter;
 
 	/* Stats */
-	public int mLife = 20;
+	public int mLife = LifeCounterFragment.DEFAULT_LIFE;
 	public int mPoison = 0;
 	public String mName;
 	public int mCommanderCasting = 0;
-	public int mDefaultLifeTotal = 20;
+	public int mDefaultLifeTotal = LifeCounterFragment.DEFAULT_LIFE;
 	/* The player's View to be drawn in the LifeCounterFragment */
 	public View mView;
 	public View mCommanderRowView;
@@ -68,8 +68,12 @@ public class LcPlayer {
 				mPoisonHistory.remove(0);
 			}
 
-			mHistoryLifeAdapter.notifyDataSetChanged();
-			mHistoryPoisonAdapter.notifyDataSetChanged();
+			if(mHistoryLifeAdapter != null) {
+				mHistoryLifeAdapter.notifyDataSetChanged();
+			}
+			if(mHistoryPoisonAdapter != null) {
+				mHistoryPoisonAdapter.notifyDataSetChanged();
+			}
 		}
 	};
 	private int mMode = LifeCounterFragment.STAT_LIFE;
@@ -151,9 +155,6 @@ public class LcPlayer {
 	 * @param delta How much the current value should be changed
 	 */
 	private void changeValue(int delta, boolean immediate) {
-		if(delta == 0) {
-			return;
-		}
 		switch (mMode) {
 			case LifeCounterFragment.STAT_POISON:
 				mPoison += delta;
@@ -170,6 +171,10 @@ public class LcPlayer {
 					mCommanderReadoutTextView.setText(mLife + "");
 				}
 				break;
+		}
+
+		if(delta == 0) {
+			return;
 		}
 
 		/* If we're not committing yet, make a new history entry */
@@ -213,14 +218,18 @@ public class LcPlayer {
 				case LifeCounterFragment.STAT_POISON: {
 					mPoisonHistory.get(0).mDelta += delta;
 					mPoisonHistory.get(0).mAbsolute += delta;
-					mHistoryPoisonAdapter.notifyDataSetChanged();
+					if(null != mHistoryPoisonAdapter) {
+						mHistoryPoisonAdapter.notifyDataSetChanged();
+					}
 					break;
 				}
 				case LifeCounterFragment.STAT_COMMANDER:
 				case LifeCounterFragment.STAT_LIFE: {
 					mLifeHistory.get(0).mDelta += delta;
 					mLifeHistory.get(0).mAbsolute += delta;
-					mHistoryLifeAdapter.notifyDataSetChanged();
+					if(null != mHistoryLifeAdapter) {
+						mHistoryLifeAdapter.notifyDataSetChanged();
+					}
 					break;
 				}
 			}
@@ -447,6 +456,11 @@ public class LcPlayer {
 		}
 		if (mCommanderDamageAdapter != null) {
 			mCommanderDamageAdapter.notifyDataSetChanged();
+		}
+
+		/* Check for -1 life? */
+		if(mLife == -1) {
+			mLife = LifeCounterFragment.DEFAULT_LIFE;
 		}
 
 		/* Redraw life totals */
