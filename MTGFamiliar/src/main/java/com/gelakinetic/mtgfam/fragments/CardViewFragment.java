@@ -414,18 +414,24 @@ public class CardViewFragment extends FamiliarFragment {
 				mTransformCardNumber = mCardNumber.replace("b", "a");
 			}
 			mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
-			mTransformButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					mCardBitmap = null;
-					mCardNumber = mTransformCardNumber;
-					try {
-						setInfoFromID(mTransformId);
-					} catch (FamiliarDbException e) {
-						handleFamiliarDbException(true);
-					}
+			if(mTransformId == -1) {
+				mTransformButton.setVisibility(View.GONE);
+				mTransformButtonDivider.setVisibility(View.GONE);
+			}
+			else {
+				mTransformButton.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						mCardBitmap = null;
+						mCardNumber = mTransformCardNumber;
+						try {
+							setInfoFromID(mTransformId);
+						} catch (FamiliarDbException e) {
+							handleFamiliarDbException(true);
+						}
 
-				}
-			});
+					}
+				});
+			}
 		}
 
 		/* Do we load the image immediately to the main page, or do it in a dialog later? */

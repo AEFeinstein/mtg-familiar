@@ -348,9 +348,9 @@ public class CardDbAdapter {
 				KEY_RARITY, KEY_MANACOST, KEY_CMC, KEY_POWER,
 				KEY_TOUGHNESS, KEY_LOYALTY, KEY_ABILITY, KEY_FLAVOR,
 				KEY_ARTIST, KEY_NUMBER, KEY_COLOR, KEY_MULTIVERSEID};
-		Cursor mCursor;
+		Cursor c;
 		try {
-			mCursor = mDb.query(true, DATABASE_TABLE_CARDS, columns, KEY_ID
+			c = mDb.query(true, DATABASE_TABLE_CARDS, columns, KEY_ID
 					+ "=" + id, null, null, null, KEY_NAME, null);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
@@ -358,10 +358,10 @@ public class CardDbAdapter {
 			throw new FamiliarDbException(e);
 		}
 
-		if (mCursor != null) {
-			mCursor.moveToFirst();
+		if (c != null) {
+			c.moveToFirst();
 		}
-		return mCursor;
+		return c;
 
 	}
 
@@ -393,20 +393,20 @@ public class CardDbAdapter {
 				+ DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(name)
 				+ " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
 				+ " DESC";
-		Cursor mCursor;
+		Cursor c;
 
 		try {
-			mCursor = mDb.rawQuery(sql, null);
+			c = mDb.rawQuery(sql, null);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {
 			throw new FamiliarDbException(e);
 		}
 
-		if (mCursor != null) {
-			mCursor.moveToFirst();
+		if (c != null) {
+			c.moveToFirst();
 		}
-		return mCursor;
+		return c;
 	}
 
 	/**
@@ -535,20 +535,20 @@ public class CardDbAdapter {
 				+ " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '"
 				+ setCode + "' ORDER BY " + DATABASE_TABLE_SETS + "."
 				+ KEY_DATE + " DESC";
-		Cursor mCursor;
+		Cursor c;
 
 		try {
-			mCursor = mDb.rawQuery(sql, null);
+			c = mDb.rawQuery(sql, null);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {
 			throw new FamiliarDbException(e);
 		}
 
-		if (mCursor != null) {
-			mCursor.moveToFirst();
+		if (c != null) {
+			c.moveToFirst();
 		}
-		return mCursor;
+		return c;
 	}
 
 	/**
@@ -565,20 +565,20 @@ public class CardDbAdapter {
 				" FROM (" + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_CARDS + "." + KEY_SET + "=" + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
 				" WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(name) + " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
 
-		Cursor mCursor;
+		Cursor c;
 		try {
-			mCursor = mDb.rawQuery(sql, null);
+			c = mDb.rawQuery(sql, null);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {
 			throw new FamiliarDbException(e);
 		}
 
-		if (mCursor != null) {
-			mCursor.moveToFirst();
-			long id = mCursor.getLong(mCursor
+		if (c != null) {
+			c.moveToFirst();
+			long id = c.getLong(c
 					.getColumnIndex(CardDbAdapter.KEY_ID));
-			mCursor.close();
+			c.close();
 			return id;
 		}
 		return -1;
@@ -618,7 +618,7 @@ public class CardDbAdapter {
 								String artist, int type_logic, int text_logic, int set_logic,
 								boolean backface, String[] returnTypes, boolean consolidate, SQLiteDatabase mDb)
 			throws FamiliarDbException {
-		Cursor mCursor;
+		Cursor c;
 
 		if (cardname != null)
 			cardname = cardname.replace("'", "''").replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0]).trim();
@@ -874,20 +874,20 @@ public class CardDbAdapter {
 			{
 				statement += " AND ((";
 				for (byte b : color.getBytes()) {
-					char c = (char) b;
+					char ch = (char) b;
 
-					if (c > 'a') {
+					if (ch > 'a') {
 						if (firstPrint)
 							firstPrint = false;
 						else
 							statement += " AND ";
 
-						if (c == 'l' || c == 'L')
+						if (ch == 'l' || ch == 'L')
 							statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
 									+ " NOT GLOB '[CLA]'";
 						else
 							statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-									+ " NOT LIKE '%" + Character.toUpperCase(c)
+									+ " NOT LIKE '%" + Character.toUpperCase(ch)
 									+ "%'";
 					}
 				}
@@ -901,8 +901,8 @@ public class CardDbAdapter {
 				statement += " AND (";
 
 			for (byte b : color.getBytes()) {
-				char c = (char) b;
-				if (c < 'a') {
+				char ch = (char) b;
+				if (ch < 'a') {
 					if (firstPrint)
 						firstPrint = false;
 					else {
@@ -912,12 +912,12 @@ public class CardDbAdapter {
 							statement += " OR ";
 					}
 
-					if (c == 'l' || c == 'L')
+					if (ch == 'l' || ch == 'L')
 						statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
 								+ " GLOB '[CLA]'";
 					else
 						statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-								+ " LIKE '%" + c + "%'";
+								+ " LIKE '%" + ch + "%'";
 				}
 			}
 			if (colorlogic > 1)
@@ -1088,16 +1088,16 @@ public class CardDbAdapter {
 						+ ", " + DATABASE_TABLE_SETS + "." + KEY_DATE
 						+ " DESC)";
 			}
-			mCursor = mDb.rawQuery(sql, null);
+			c = mDb.rawQuery(sql, null);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {
 			throw new FamiliarDbException(e);
 		}
-		if (mCursor != null) {
-			mCursor.moveToFirst();
+		if (c != null) {
+			c.moveToFirst();
 		}
-		return mCursor;
+		return c;
 	}
 
 	/**
@@ -1109,16 +1109,20 @@ public class CardDbAdapter {
 	 */
 	public static int getTransform(String set, String number, SQLiteDatabase mDb)
 			throws FamiliarDbException {
-		Cursor mCursor;
+		Cursor c;
 		String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
 				+ KEY_SET + " = '" + set + "')";
 		try {
-			mCursor = mDb.query(true, DATABASE_TABLE_CARDS,
+			c = mDb.query(true, DATABASE_TABLE_CARDS,
 					new String[]{KEY_ID}, statement, null, null, null,
 					KEY_ID, null);
-			mCursor.moveToFirst();
-			int ID = mCursor.getInt(mCursor.getColumnIndex(KEY_ID));
-			mCursor.close();
+			if(c.getColumnCount() == 1) {
+				/* This card isn't actually a transform... */
+				return -1;
+			}
+			c.moveToFirst();
+			int ID = c.getInt(c.getColumnIndex(KEY_ID));
+			c.close();
 			return ID;
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
@@ -1136,17 +1140,17 @@ public class CardDbAdapter {
 	 */
 	public static String getTransformName(String set, String number, SQLiteDatabase mDb)
 			throws FamiliarDbException {
-		Cursor mCursor;
+		Cursor c;
 		String name;
 		String statement = "(" + KEY_NUMBER + " = '" + number + "') AND ("
 				+ KEY_SET + " = '" + set + "')";
 		try {
-			mCursor = mDb.query(true, DATABASE_TABLE_CARDS,
+			c = mDb.query(true, DATABASE_TABLE_CARDS,
 					new String[]{KEY_NAME}, statement, null, null, null,
 					KEY_NAME, null);
-			mCursor.moveToFirst();
-			name = mCursor.getString(mCursor.getColumnIndex(KEY_NAME));
-			mCursor.close();
+			c.moveToFirst();
+			name = c.getString(c.getColumnIndex(KEY_NAME));
+			c.close();
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {
@@ -1300,7 +1304,10 @@ public class CardDbAdapter {
 			String sql = "SELECT " + KEY_NAME_TCGPLAYER + " FROM " + DATABASE_TABLE_SETS + " WHERE " + KEY_CODE + " = '" + setCode.replace("'", "''") + "';";
 			Cursor c = mDb.rawQuery(sql, null);
 			c.moveToFirst();
-			return c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
+
+			String tcgName = c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
+			c.close();
+			return tcgName;
 
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
@@ -1319,8 +1326,9 @@ public class CardDbAdapter {
 		try {
 			String sql = "SELECT " + KEY_SET + " FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_SET + " = '" + setName.replace("'", "''") + "';";
 			Cursor c = mDb.rawQuery(sql, null);
-			return c.getCount() >= 1;
-
+			boolean isModernLegal = (c.getCount() >= 1);
+			c.close();
+			return isModernLegal;
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {
@@ -1764,23 +1772,23 @@ public class CardDbAdapter {
 	 * @throws FamiliarDbException
 	 */
 	public static int getSplitMultiverseID(String name, SQLiteDatabase mDb) throws FamiliarDbException {
-		Cursor mCursor;
+		Cursor c;
 		String statement = "SELECT " + KEY_MULTIVERSEID + " from "
 				+ DATABASE_TABLE_CARDS + " WHERE " + KEY_NAME + " = '"
 				+ name + "'";
 
 		try {
-			mCursor = mDb.rawQuery(statement, null);
+			c = mDb.rawQuery(statement, null);
 
-			if (mCursor.getCount() == 1) {
-				mCursor.moveToFirst();
-				int retVal = mCursor.getInt(mCursor
+			if (c.getCount() == 1) {
+				c.moveToFirst();
+				int retVal = c.getInt(c
 						.getColumnIndex(KEY_MULTIVERSEID));
-				mCursor.close();
+				c.close();
 				return retVal;
 			}
 			else {
-				mCursor.close();
+				c.close();
 				return -1;
 			}
 		} catch (SQLiteException e) {
@@ -1797,26 +1805,26 @@ public class CardDbAdapter {
 	 * @throws FamiliarDbException
 	 */
 	public static String getSplitName(int multiverseId, SQLiteDatabase mDb) throws FamiliarDbException {
-		Cursor mCursor;
+		Cursor c;
 		String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER + " from "
 				+ DATABASE_TABLE_CARDS + " WHERE " + KEY_MULTIVERSEID + " = "
 				+ multiverseId + " ORDER BY " + KEY_NUMBER + " ASC";
 
 		try {
-			mCursor = mDb.rawQuery(statement, null);
+			c = mDb.rawQuery(statement, null);
 
-			if (mCursor.getCount() == 2) {
-				mCursor.moveToFirst();
-				String retVal = mCursor.getString(mCursor
+			if (c.getCount() == 2) {
+				c.moveToFirst();
+				String retVal = c.getString(c
 						.getColumnIndex(KEY_NAME));
 				retVal += " // ";
-				mCursor.moveToNext();
-				retVal += mCursor.getString(mCursor.getColumnIndex(KEY_NAME));
-				mCursor.close();
+				c.moveToNext();
+				retVal += c.getString(c.getColumnIndex(KEY_NAME));
+				c.close();
 				return retVal;
 			}
 			else {
-				mCursor.close();
+				c.close();
 				return null;
 			}
 		} catch (SQLiteException e) {
