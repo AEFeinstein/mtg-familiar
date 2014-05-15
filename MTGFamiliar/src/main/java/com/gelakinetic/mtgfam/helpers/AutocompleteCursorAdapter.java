@@ -134,7 +134,8 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
 	public CharSequence convertToString(@NotNull Cursor cursor) {
 		try {
 			return cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-		} catch (CursorIndexOutOfBoundsException e) {
+		} catch (Exception e) {
+			/* If there is any problem, return the empty string */
 			return "";
 		}
 	}
