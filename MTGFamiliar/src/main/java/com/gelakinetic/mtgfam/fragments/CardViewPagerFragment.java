@@ -19,6 +19,20 @@ public class CardViewPagerFragment extends FamiliarFragment {
 	/* Bundle keys */
 	public static final String CARD_ID_ARRAY = "card_id_array";
 	public static final String STARTING_CARD_POSITION = "starting_card_id";
+	private ViewPager mViewPager;
+
+	/**
+	 * Assume that every fragment has a menu
+	 * Assume that every fragment wants to retain it's instance state (onCreate/onDestroy called
+	 * once, onCreateView called on rotations etc)
+	 *
+	 * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.setHasOptionsMenu(false);
+	}
 
 	/**
 	 * Grab the array of card IDs and the current position, then create the view amd attach the pager adapter
@@ -34,24 +48,43 @@ public class CardViewPagerFragment extends FamiliarFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		Bundle args = getArguments();
-		long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
-		int currentPosition = args.getInt(STARTING_CARD_POSITION);
-
 		/* Instantiate a ViewPager and a PagerAdapter. */
 		View v = inflater.inflate(R.layout.card_view_pager, container, false);
 		assert v != null; /* Because Android Studio */
-		ViewPager pager = (ViewPager) v.findViewById(R.id.pager);
-		CardViewPagerAdapter pagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
-		pager.setAdapter(pagerAdapter);
-		pager.setCurrentItem(currentPosition);
-		pager.setPageTransformer(true, new DepthPageTransformer());
+		mViewPager = (ViewPager) v.findViewById(R.id.pager);
 
 		/* Retain the instance */
 		if (getParentFragment() == null) {
 			this.setRetainInstance(true);
 		}
 		return v;
+	}
+
+	/**
+	 * Called when the fragment's activity has been created and this
+	 * fragment's view hierarchy instantiated.  It can be used to do final
+	 * initialization once these pieces are in place, such as retrieving
+	 * views or restoring state.  It is also useful for fragments that use
+	 * {@link #setRetainInstance(boolean)} to retain their instance,
+	 * as this callback tells the fragment when it is fully associated with
+	 * the new activity instance.  This is called after {@link #onCreateView}
+	 * and before {@link #onViewStateRestored(android.os.Bundle)}.
+	 *
+	 * @param savedInstanceState If the fragment is being re-created from
+	 *                           a previous saved state, this is the state.
+	 */
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+
+		Bundle args = getArguments();
+		long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
+		int currentPosition = args.getInt(STARTING_CARD_POSITION);
+
+		super.onActivityCreated(savedInstanceState);
+		CardViewPagerAdapter pagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
+		mViewPager.setAdapter(pagerAdapter);
+		mViewPager.setCurrentItem(currentPosition);
+		mViewPager.setPageTransformer(true, new DepthPageTransformer());
 	}
 
 	/**

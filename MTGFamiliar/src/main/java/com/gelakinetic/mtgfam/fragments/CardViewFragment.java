@@ -845,18 +845,36 @@ public class CardViewFragment extends FamiliarFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.card_menu, menu);
+	}
+
+	/**
+	 * Prepare the Screen's standard options menu to be displayed.  This is
+	 * called right before the menu is shown, every time it is shown.  You can
+	 * use this method to efficiently enable/disable items or otherwise
+	 * dynamically modify the contents.
+	 *
+	 * @param menu The options menu as last shown or first initialized by
+	 *             onCreateOptionsMenu().
+	 * @see #setHasOptionsMenu
+	 * @see #onCreateOptionsMenu
+	 */
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
 
 		MenuItem mi;
 		/* If the image has been loaded to the main page, remove the menu option for image */
 		if (loadTo == MAIN_PAGE && mCardBitmap != null) {
 			mi = menu.findItem(R.id.image);
-			assert mi != null; /* Because Android Studio */
-			menu.removeItem(mi.getItemId());
+			if(mi != null) {
+				menu.removeItem(mi.getItemId());
+			}
 		}
 		if (mSets != null && mSets.size() == 1) {
 			mi = menu.findItem(R.id.changeset);
-			assert mi != null; /* Because Android Studio */
-			menu.removeItem(mi.getItemId());
+			if(mi != null) {
+				menu.removeItem(mi.getItemId());
+			}
 		}
 	}
 

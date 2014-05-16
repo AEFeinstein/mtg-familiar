@@ -294,7 +294,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	public void onUserInactive() {
 		if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
 			WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
-			layoutParams.screenBrightness = 0.0f;
+			layoutParams.screenBrightness = 0.01f;
 			getActivity().getWindow().setAttributes(layoutParams);
 		}
 	}
