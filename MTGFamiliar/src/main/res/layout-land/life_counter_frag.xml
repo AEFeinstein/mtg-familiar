@@ -62,6 +62,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:orientation="vertical">
 
         <ImageView
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/life_button"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -71,6 +72,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:src="@drawable/lc_life_enabled"/>
 
         <ImageView
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/poison_button"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -80,6 +82,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:src="@drawable/lc_poison_enabled"/>
 
         <ImageView
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/commander_button"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -89,6 +92,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:src="@drawable/lc_commander_enabled"/>
 
         <ImageView
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/reset_button"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
