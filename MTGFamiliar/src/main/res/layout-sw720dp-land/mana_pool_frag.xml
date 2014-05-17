@@ -15,8 +15,8 @@
               android:layout_gravity="center"
               android:baselineAligned="false"
               android:gravity="center"
-              android:layout_marginRight="16dp"
-              android:layout_marginLeft="16dp"
+              android:layout_marginRight="350dp"
+              android:layout_marginLeft="350dp"
               android:orientation="vertical">
     <!-- white -->
     <!-- blue -->
