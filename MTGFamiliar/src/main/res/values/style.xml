@@ -50,5 +50,4 @@
     <style name="text.xxxlarge" parent="android:TextAppearance.Holo">
         <item name="android:textSize">60sp</item>
     </style>
-
 </resources>

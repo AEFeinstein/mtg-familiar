@@ -245,6 +245,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <!-- Dice activity -->
     <string name="dice_heads">heads</string>
     <string name="dice_tails">tails</string>
+    <string name="num_default_sides">50</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_error_toast">Mana pool failed to load!</string>
