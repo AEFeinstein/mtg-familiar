@@ -1,17 +1,28 @@
 package com.gelakinetic.mtgfam.fragments;
 
+import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
 import java.util.Random;
@@ -23,6 +34,9 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 
 	private Random mRandom;
 	private TextSwitcher mDieOutput;
+
+    private FamiliarActivity mActivity;
+    private int mLastNumber = -1;
 
 	/**
 	 * Set up the TextSwitcher animations, button handlers
@@ -37,6 +51,12 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        try {
+            mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
+        } catch (NullPointerException e) {
+            mActivity = getFamiliarActivity();
+        }
 
 		View myFragmentView = inflater.inflate(R.layout.dice_frag, container, false);
 
@@ -56,6 +76,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 		ImageView d12 = (ImageView) myFragmentView.findViewById(R.id.d12);
 		ImageView d20 = (ImageView) myFragmentView.findViewById(R.id.d20);
 		ImageView d100 = (ImageView) myFragmentView.findViewById(R.id.d100);
+        ImageView dN = (ImageView) myFragmentView.findViewById(R.id.dN);
 
 		if (d2 != null) {
 			d2.setOnClickListener(new View.OnClickListener() {
@@ -113,8 +134,82 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 				}
 			});
 		}
+        if (dN != null) {
+            dN.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chooseDie();
+                }
+            });
+        }
 		return myFragmentView;
 	}
+
+    void chooseDie() {
+        if (!this.isVisible()) {
+            return;
+        }
+
+        removeDialog(getFragmentManager());
+
+        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
+            @Override
+            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                super.onCreateDialog(savedInstanceState);
+
+                setShowsDialog(true);
+
+                View v = mActivity.getLayoutInflater().inflate(R.layout.number_picker_frag, null, false);
+
+                assert v != null;
+
+                final EditText txtNumber = (EditText) v.findViewById(R.id.numberInput);
+
+                if (mLastNumber > 0) {
+                    txtNumber.setText(String.valueOf(mLastNumber));
+                }
+
+                AlertDialog.Builder adb = new AlertDialog.Builder(mActivity);
+                adb.setView(v);
+                adb.setTitle("Choose the number of sides");
+                adb.setPositiveButton(mActivity.getResources().getString(R.string.dialog_ok),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (txtNumber.getText() == null ||
+                                    txtNumber.getText().toString().isEmpty()) {
+                                return;
+                            }
+
+                            int num;
+                            
+                            try {
+                                num = Integer.parseInt(txtNumber.getText().toString());
+                            } catch (NumberFormatException e) {
+                                Toast.makeText(mActivity, "The number you entered is too large",
+                                        Toast.LENGTH_SHORT).show();
+
+                                return;
+                            }
+
+                            if (num < 1) {
+                                Toast.makeText(mActivity, "You must enter a positive number",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                mLastNumber = num;
+
+                                rollDie(num);
+                            }
+
+                            dismiss();
+                        }
+                    });
+                return adb.create();
+            }
+        };
+
+        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+    }
 
 	/**
 	 * Get a random number between [0, d) and display it as [1,d]
