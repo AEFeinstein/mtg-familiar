@@ -176,11 +176,21 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            if (txtNumber.getText() == null) {
+                            if (txtNumber.getText() == null ||
+                                    txtNumber.getText().toString().isEmpty()) {
                                 return;
                             }
 
-                            int num = Integer.parseInt(txtNumber.getText().toString());
+                            int num;
+                            
+                            try {
+                                num = Integer.parseInt(txtNumber.getText().toString());
+                            } catch (NumberFormatException e) {
+                                Toast.makeText(mActivity, "The number you entered is too large",
+                                        Toast.LENGTH_SHORT).show();
+
+                                return;
+                            }
 
                             if (num < 1) {
                                 Toast.makeText(mActivity, "You must enter a positive number",
