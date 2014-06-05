@@ -245,6 +245,10 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <!-- Dice activity -->
     <string name="dice_heads">heads</string>
     <string name="dice_tails">tails</string>
+    <string name="dice_num_default_sides">50</string>
+    <string name="dice_choose_sides">Choose the number of sides</string>
+    <string name="dice_num_too_large">The number you entered is too large</string>
+    <string name="dice_postive">You must enter a positive number</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_error_toast">Mana pool failed to load!</string>
