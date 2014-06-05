@@ -188,6 +188,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="card_view_legal">Legal</string>
     <string name="card_view_restricted">Restricted</string>
     <string name="card_view_banned">Banned</string>
+    <string name="card_view_no_commander">Cannot be commander</string>
     <string name="card_view_price_dialog_title">TCGPlayer.com Prices</string>
     <string name="card_view_price_dialog_low">Low:</string>
     <string name="card_view_price_dialog_medium">Average:</string>

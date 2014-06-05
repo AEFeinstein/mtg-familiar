@@ -915,6 +915,9 @@ public class CardViewFragment extends FamiliarFragment {
 						case CardDbAdapter.BANNED:
 							mLegalities[i] = getString(R.string.card_view_banned);
 							break;
+                        case CardDbAdapter.NO_COMMANDER:
+                            mLegalities[i] = getString(R.string.card_view_no_commander);
+                            break;
 						default:
 							mLegalities[i] = getString(R.string.error);
 							break;

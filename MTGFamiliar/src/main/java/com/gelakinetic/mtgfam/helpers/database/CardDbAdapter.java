@@ -171,6 +171,7 @@ public class CardDbAdapter {
 	public static final int LEGAL = 0;
 	public static final int BANNED = 1;
 	public static final int RESTRICTED = 2;
+    public static final int NO_COMMANDER = 3;
 
 	// use a hash map for performance
 	private static final HashMap<String, String> mColumnMap = buildColumnMap();
@@ -1273,7 +1274,8 @@ public class CardDbAdapter {
 					+ " = '" + mCardName
 					+ "') WHEN 1 THEN NULL ELSE CASE WHEN '" + format
 					+ "' = 'Legacy' " + "THEN NULL WHEN '" + format
-					+ "' = 'Vintage' THEN NULL ELSE 1 END END, (SELECT "
+					+ "' = 'Vintage' THEN NULL WHEN '" + format
+                    + "' = 'Commander' THEN NULL ELSE 1 END END, (SELECT "
 					+ KEY_LEGALITY + " from " + DATABASE_TABLE_BANNED_CARDS
 					+ " WHERE " + KEY_NAME + " = '" + mCardName + "' AND "
 					+ KEY_FORMAT + " = '" + format + "'), 0) AS "

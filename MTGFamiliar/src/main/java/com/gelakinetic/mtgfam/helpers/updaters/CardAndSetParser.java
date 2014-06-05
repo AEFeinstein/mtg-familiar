@@ -391,11 +391,12 @@ class CardAndSetParser {
 		String legalSet;
 		String bannedCard;
 		String restrictedCard;
+        String noCommanderCard;
 		String formatName;
 		String jsonArrayName;
 		String jsonTopLevelName;
 
-		URL legal = new URL(LEGALITY_URL);
+        URL legal = new URL(LEGALITY_URL);
 		InputStream in = new BufferedInputStream(legal.openStream());
 
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "ISO-8859-1"));
@@ -432,18 +433,18 @@ class CardAndSetParser {
 						jsonArrayName = reader.nextName();
 
 						if (jsonArrayName.equalsIgnoreCase("Sets")) {
-							reader.beginArray();
+                            reader.beginArray();
 							while (reader.hasNext()) {
 								legalSet = reader.nextString();
-								CardDbAdapter.addLegalSet(legalSet, formatName, database);
+                                CardDbAdapter.addLegalSet(legalSet, formatName, database);
 							}
 							reader.endArray();
 						}
 						else if (jsonArrayName.equalsIgnoreCase("Banlist")) {
-							reader.beginArray();
+                            reader.beginArray();
 							while (reader.hasNext()) {
 								bannedCard = reader.nextString();
-								CardDbAdapter.addLegalCard(bannedCard, formatName, CardDbAdapter.BANNED, database);
+                                CardDbAdapter.addLegalCard(bannedCard, formatName, CardDbAdapter.BANNED, database);
 							}
 							reader.endArray();
 						}
@@ -455,6 +456,13 @@ class CardAndSetParser {
 							}
 							reader.endArray();
 						}
+                        else if (jsonArrayName.equalsIgnoreCase("NoCommanderList")) {
+                            reader.beginArray();
+                            while (reader.hasNext()) {
+                                noCommanderCard = reader.nextString();
+                                CardDbAdapter.addLegalCard(noCommanderCard, formatName, CardDbAdapter.NO_COMMANDER, database);
+                            }
+                        }
 					}
 					reader.endObject();
 				}
