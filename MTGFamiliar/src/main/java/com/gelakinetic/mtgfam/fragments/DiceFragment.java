@@ -30,8 +30,8 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 	private Random mRandom;
 	private TextSwitcher mDieOutput;
 
-    private FamiliarActivity mActivity;
-    private int mLastNumber = -1;
+	private FamiliarActivity mActivity;
+	private int mLastNumber = -1;
 
 	/**
 	 * Set up the TextSwitcher animations, button handlers
@@ -47,11 +47,11 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        try {
-            mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
-        } catch (NullPointerException e) {
-            mActivity = getFamiliarActivity();
-        }
+		try {
+			mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
+		} catch (NullPointerException e) {
+			mActivity = getFamiliarActivity();
+		}
 
 		View myFragmentView = inflater.inflate(R.layout.dice_frag, container, false);
 
@@ -71,7 +71,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 		ImageView d12 = (ImageView) myFragmentView.findViewById(R.id.d12);
 		ImageView d20 = (ImageView) myFragmentView.findViewById(R.id.d20);
 		ImageView d100 = (ImageView) myFragmentView.findViewById(R.id.d100);
-        ImageView dN = (ImageView) myFragmentView.findViewById(R.id.dN);
+		ImageView dN = (ImageView) myFragmentView.findViewById(R.id.dN);
 
 		if (d2 != null) {
 			d2.setOnClickListener(new View.OnClickListener() {
@@ -129,85 +129,84 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 				}
 			});
 		}
-        if (dN != null) {
-            dN.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    chooseDie();
-                }
-            });
-        }
+		if (dN != null) {
+			dN.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					chooseDie();
+				}
+			});
+		}
 		return myFragmentView;
 	}
 
-    /**
-     * Present a fragment that lets the user choose the number of sides on the die
-     */
-    void chooseDie() {
-        if (!this.isVisible()) {
-            return;
-        }
+	/**
+	 * Present a fragment that lets the user choose the number of sides on the die
+	 */
+	void chooseDie() {
+		if (!this.isVisible()) {
+			return;
+		}
 
-        removeDialog(getFragmentManager());
+		removeDialog(getFragmentManager());
 
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                super.onCreateDialog(savedInstanceState);
+		final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
+			@Override
+			public Dialog onCreateDialog(Bundle savedInstanceState) {
+				super.onCreateDialog(savedInstanceState);
 
-                setShowsDialog(true);
+				setShowsDialog(true);
 
-                View v = mActivity.getLayoutInflater().inflate(R.layout.number_picker_frag, null, false);
+				View v = mActivity.getLayoutInflater().inflate(R.layout.number_picker_frag, null, false);
 
-                assert v != null;
+				assert v != null;
 
-                final EditText txtNumber = (EditText) v.findViewById(R.id.numberInput);
+				final EditText txtNumber = (EditText) v.findViewById(R.id.numberInput);
 
-                if (mLastNumber > 0) {
-                    txtNumber.setText(String.valueOf(mLastNumber));
-                }
+				if (mLastNumber > 0) {
+					txtNumber.setText(String.valueOf(mLastNumber));
+				}
 
-                AlertDialog.Builder adb = new AlertDialog.Builder(mActivity);
-                adb.setView(v);
-                adb.setTitle(getResources().getString(R.string.dice_choose_sides));
-                adb.setPositiveButton(mActivity.getResources().getString(R.string.dialog_ok),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if (txtNumber.getText() == null ||
-                                    txtNumber.getText().toString().isEmpty()) {
-                                return;
-                            }
+				AlertDialog.Builder adb = new AlertDialog.Builder(mActivity);
+				adb.setView(v);
+				adb.setTitle(getResources().getString(R.string.dice_choose_sides));
+				adb.setPositiveButton(mActivity.getResources().getString(R.string.dialog_ok),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								if (txtNumber.getText() == null || txtNumber.getText().toString().isEmpty()) {
+									return;
+								}
 
-                            int num;
+								int num;
 
-                            try {
-                                num = Integer.parseInt(txtNumber.getText().toString());
-                            } catch (NumberFormatException e) {
-                                Toast.makeText(mActivity, getResources().getString(R.string.dice_num_too_large),
-                                        Toast.LENGTH_SHORT).show();
+								try {
+									num = Integer.parseInt(txtNumber.getText().toString());
+								} catch (NumberFormatException e) {
+									Toast.makeText(mActivity, getResources().getString(R.string.dice_num_too_large),
+											Toast.LENGTH_SHORT).show();
+									return;
+								}
 
-                                return;
-                            }
+								if (num < 1) {
+									Toast.makeText(mActivity, getResources().getString(R.string.dice_postive),
+											Toast.LENGTH_SHORT).show();
+								}
+								else {
+									mLastNumber = num;
+									rollDie(num);
+								}
 
-                            if (num < 1) {
-                                Toast.makeText(mActivity, getResources().getString(R.string.dice_postive),
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
-                                mLastNumber = num;
+								dismiss();
+							}
+						}
+				);
+				return adb.create();
+			}
+		};
 
-                                rollDie(num);
-                            }
-
-                            dismiss();
-                        }
-                    });
-                return adb.create();
-            }
-        };
-
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
-    }
+		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+	}
 
 	/**
 	 * Get a random number between [0, d) and display it as [1,d]
