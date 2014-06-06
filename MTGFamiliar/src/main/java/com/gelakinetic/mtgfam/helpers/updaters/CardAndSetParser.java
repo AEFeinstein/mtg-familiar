@@ -391,7 +391,6 @@ class CardAndSetParser {
 		String legalSet;
 		String bannedCard;
 		String restrictedCard;
-        String noCommanderCard;
 		String formatName;
 		String jsonArrayName;
 		String jsonTopLevelName;
