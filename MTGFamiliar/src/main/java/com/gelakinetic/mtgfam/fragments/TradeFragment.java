@@ -1039,10 +1039,6 @@ public class TradeFragment extends FamiliarFragment {
 											}
 										}
 									}
-									/* If there is no regular price AND the foil price exists, use the foil price. */
-									if (data.price == 0 && result.mFoilAverage != 0) {
-										data.price = (int) (result.mFoilAverage * 100);
-									}
 								}
 								/* Clear the message */
 								data.message = null;
