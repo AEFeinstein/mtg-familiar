@@ -171,7 +171,6 @@ public class CardDbAdapter {
 	public static final int LEGAL = 0;
 	public static final int BANNED = 1;
 	public static final int RESTRICTED = 2;
-    public static final int NO_COMMANDER = 3;
 
 	// use a hash map for performance
 	private static final HashMap<String, String> mColumnMap = buildColumnMap();

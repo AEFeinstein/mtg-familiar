@@ -456,13 +456,6 @@ class CardAndSetParser {
 							}
 							reader.endArray();
 						}
-                        else if (jsonArrayName.equalsIgnoreCase("NoCommanderList")) {
-                            reader.beginArray();
-                            while (reader.hasNext()) {
-                                noCommanderCard = reader.nextString();
-                                CardDbAdapter.addLegalCard(noCommanderCard, formatName, CardDbAdapter.NO_COMMANDER, database);
-                            }
-                        }
 					}
 					reader.endObject();
 				}
