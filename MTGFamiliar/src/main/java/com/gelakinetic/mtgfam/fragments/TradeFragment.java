@@ -1039,16 +1039,9 @@ public class TradeFragment extends FamiliarFragment {
 											}
 										}
 									}
-									/* If there is no regular price AND the foil price exists, use the foil price. (for FTV sets) */
-									try {
-										SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
-										String setFrom = CardDbAdapter.getTcgName(data.setCode, database);
-										if (data.price == 0 && result.mFoilAverage != 0 && setFrom.contains("From the Vault")) {
-											data.price = (int) (result.mFoilAverage * 100);
-										}
-									}
-									catch (FamiliarDbException e) {
-
+									/* If there is no regular price AND the foil price exists, use the foil price. */
+									if (data.price == 0 && result.mFoilAverage != 0) {
+										data.price = (int) (result.mFoilAverage * 100);
 									}
 								}
 								/* Clear the message */
