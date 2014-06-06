@@ -136,6 +136,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/die_100"/>
+
+            <ImageView
+                android:id="@+id/dN"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/die_n"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
