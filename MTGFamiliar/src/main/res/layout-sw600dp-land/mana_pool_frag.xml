@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+     Copyright 2011 Michael Shick This file is part of MTG Familiar. MTG 
+	Familiar is free software: you can redistribute it and/or modify it under 
+	the terms of the GNU General Public License as published by the Free Software 
+	Foundation, either version 3 of the License, or (at your option) any later 
+	version. MTG Familiar is distributed in the hope that it will be useful, 
+	but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for 
+	more details. You should have received a copy of the GNU General Public License 
+	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:paddingLeft="200dp"
+              android:paddingRight="200dp">
+
+    <!-- white -->
+    <!-- blue -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/white_minus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_minus"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dip"
+                android:src="@drawable/glyph_w"/>
+
+            <TextView
+                android:id="@+id/white_readout"
+                style="@style/text.xxlarge"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/mana_pool_zero"/>
+
+            <Button
+                android:id="@+id/white_plus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5sp"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_plus"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/blue_minus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5sp"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_minus"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dip"
+                android:src="@drawable/glyph_u"/>
+
+            <TextView
+                android:id="@+id/blue_readout"
+                style="@style/text.xxlarge"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/mana_pool_zero"/>
+
+            <Button
+                android:id="@+id/blue_plus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_plus"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- black -->
+    <!-- red -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/black_minus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_minus"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dip"
+                android:src="@drawable/glyph_b"/>
+
+            <TextView
+                android:id="@+id/black_readout"
+                style="@style/text.xxlarge"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/mana_pool_zero"/>
+
+            <Button
+                android:id="@+id/black_plus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5sp"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_plus"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/red_minus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5sp"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_minus"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dip"
+                android:src="@drawable/glyph_r"/>
+
+            <TextView
+                android:id="@+id/red_readout"
+                style="@style/text.xxlarge"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/mana_pool_zero"/>
+
+            <Button
+                android:id="@+id/red_plus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_plus"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- green -->
+    <!-- colorless -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/green_minus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_minus"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dip"
+                android:src="@drawable/glyph_g"/>
+
+            <TextView
+                android:id="@+id/green_readout"
+                style="@style/text.xxlarge"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/mana_pool_zero"/>
+
+            <Button
+                android:id="@+id/green_plus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5sp"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_plus"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/colorless_minus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5sp"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_minus"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dip"
+                android:src="@drawable/glyph_x"/>
+
+            <TextView
+                android:id="@+id/colorless_readout"
+                style="@style/text.xxlarge"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/mana_pool_zero"/>
+
+            <Button
+                android:id="@+id/colorless_plus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_plus"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+    <!-- spell -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/spell_minus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_minus"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dip"
+                android:src="@drawable/glyph_spell"/>
+
+            <TextView
+                android:id="@+id/spell_readout"
+                style="@style/text.xxlarge"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/mana_pool_zero"/>
+
+            <Button
+                android:id="@+id/spell_plus"
+                style="@style/text.xlarge"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_default_custom"
+                android:text="@string/mana_pool_plus"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+</LinearLayout>

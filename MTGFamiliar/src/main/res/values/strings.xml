@@ -55,9 +55,9 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="main_donate_title">Donate</string>
     <string name="main_donate_dialog_title">Donate to the Developers</string>
 <string name="main_donate_text">
-For a premium M:TG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;&lt;br&gt;
+For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;&lt;br&gt;
 Well, if you\'re reading this, you already know we\'re giving it away for free!&lt;br&gt;&lt;br&gt;
-Coding is hard work though, and us developers appreciate the extra dollar here or there.&lt;br&gt;&lt;br&gt;
+Coding is hard work though, and we developers appreciate the extra dollar here or there.&lt;br&gt;&lt;br&gt;
 We\'ve got a drafting habit to fuel, OK?&lt;br&gt;&lt;br&gt;
 You can click the button below to donate via PayPal. $1 is cool. $5 is cooler. You get the drift.&lt;br&gt;&lt;br&gt;
 So, how generous are you feeling today?</string>
@@ -245,6 +245,10 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <!-- Dice activity -->
     <string name="dice_heads">heads</string>
     <string name="dice_tails">tails</string>
+    <string name="dice_num_default_sides">50</string>
+    <string name="dice_choose_sides">Choose the number of sides</string>
+    <string name="dice_num_too_large">The number you entered is too large</string>
+    <string name="dice_postive">You must enter a positive number</string>
 
     <!-- Mana pool activity -->
     <string name="mana_pool_error_toast">Mana pool failed to load!</string>

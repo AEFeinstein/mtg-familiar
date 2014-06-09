@@ -39,7 +39,7 @@
     <string name="main_settings_title">Ustawienia</string>
     <string name="main_donate_title">Wspomóż nas</string>
     <string name="main_donate_dialog_title">Wspomóż Programistów</string>
-<string name="main_donate_text">Ile jesteś gotów zapłacić za wersję premium aplikacji M:TG takiej jak ta? $1,000? $10,000?&lt;br&gt;&lt;br&gt;
+<string name="main_donate_text">Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;&lt;br&gt;
 Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;&lt;br&gt;
 Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br&gt;&lt;br&gt;
 Mamy programistyczny nawyk do pracy, ok?&lt;br&gt;&lt;br&gt;
@@ -67,7 +67,7 @@ Więc, na jak dużą hojność stać cię dzisiaj?</string>
     <string name="main_import_success">Import zakończony powodzeniem</string>
     <string name="main_import_fail">Nie udało się zaimportować danych. Proszę wstawić MTGFamiliarBackup.zip w root\'a swojej karty SD</string>
     <string name="main_about">O aplikacji</string>
-<string name="main_about_text">Ta aplikacja jest moim darem dla społeczności M:TG&lt;br&gt;&lt;br&gt;
+<string name="main_about_text">Ta aplikacja jest moim darem dla społeczności MTG&lt;br&gt;&lt;br&gt;
 Jeśli masz jakieś pytania, komentarze lub prośby to wyślij je na:&lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
 Dołącz do &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;projektu open source&lt;/a&gt; na GitHub.&lt;br&gt;&lt;br&gt;
 Podziękowania dla zagaberoo za piękne grafiki i jeszcze piękniejszy kod.&lt;br&gt;&lt;br&gt;
@@ -287,11 +287,11 @@ Każdy gracz zaczyna grę z trzema Vanguard\'ami: Momir Vig, Jhoira i Stonehewer
 
 Powyższe Vanguardy ustanawiają początkową i maksymalną rękę gracza
 (9) oraz całkowite życie początkowe (19).&lt;br&gt;&lt;br&gt;
-Wszystkie zdolności umieszczone na kartach Vanguard są zagrywane tak samo jak zdolności z innych kart M:TG obecnych w grze.&lt;br&gt;&lt;br&gt;
+Wszystkie zdolności umieszczone na kartach Vanguard są zagrywane tak samo jak zdolności z innych kart MTG obecnych w grze.&lt;br&gt;&lt;br&gt;
 
 Jednakże zdolności te nie posiadają koloru, a obrażenia przez nie zadane nie są traktowane jako obrażenia zadawane przez permanenty dowolnego rodzaju lub źródła dowolnego koloru.&lt;br 
 /&gt;&lt;br&gt;
-Karty Vanguard\'ów nie są kartami M:TG, więc nie mogą być celem zaklęć lub zdolności.&lt;br&gt;&lt;br&gt;
+Karty Vanguard\'ów nie są kartami MTG, więc nie mogą być celem zaklęć lub zdolności.&lt;br&gt;&lt;br&gt;
 Możesz zatapować każdy obrazek aby zobaczyć pełną kartę Vanguard\'a.&lt;br&gt;&lt;br&gt;
 W każdej chwili możesz zajrzeć do menu aby przeczytać zasady.&lt;br&gt;&lt;br&gt;
 

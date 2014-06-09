@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -1116,10 +1117,6 @@ public class CardDbAdapter {
 			c = mDb.query(true, DATABASE_TABLE_CARDS,
 					new String[]{KEY_ID}, statement, null, null, null,
 					KEY_ID, null);
-			if(c.getColumnCount() == 1) {
-				/* This card isn't actually a transform... */
-				return -1;
-			}
 			c.moveToFirst();
 			int ID = c.getInt(c.getColumnIndex(KEY_ID));
 			c.close();
@@ -1128,6 +1125,8 @@ public class CardDbAdapter {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {
 			throw new FamiliarDbException(e);
+		} catch (CursorIndexOutOfBoundsException e) {
+			return -1; /* The other half doesn't exist... */
 		}
 	}
 

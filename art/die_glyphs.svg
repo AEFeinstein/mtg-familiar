@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1317.9957"
-   height="124.70747"
+   width="736.78009"
+   height="269.32709"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
@@ -162,9 +162,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.0728411"
-     inkscape:cx="658.99786"
-     inkscape:cy="62.353737"
+     inkscape:zoom="0.75861322"
+     inkscape:cx="777.52726"
+     inkscape:cy="-65.28176"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -193,7 +193,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(80.6875,-56.10503)">
+     transform="translate(81.37398,88.69997)">
     <g
        id="g4227"
        transform="translate(-3.810023,0)">
@@ -253,10 +253,9 @@
            y="155.86713">4</tspan></text>
     </g>
     <g
-       id="g4120"
-       transform="translate(7.9624172,6.4601814e-6)">
+       id="g3133">
       <path
-         transform="matrix(1.1398811,0,0,1.1398811,-75.148494,-11.8121)"
+         transform="matrix(1.1398811,0,0,1.1398811,-67.186077,-11.812094)"
          inkscape:export-ydpi="115.77889"
          inkscape:export-xdpi="115.77889"
          inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d6.png"
@@ -277,13 +276,13 @@
       <text
          xml:space="preserve"
          style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
-         x="398.94382"
+         x="406.90622"
          y="141.86713"
          id="text3058"
          sodipodi:linespacing="125%"><tspan
            sodipodi:role="line"
            id="tspan3060"
-           x="398.94382"
+           x="406.90622"
            y="141.86713">6</tspan></text>
     </g>
     <g
@@ -323,7 +322,7 @@
     </g>
     <g
        id="g4258"
-       transform="translate(69.29899,0)">
+       transform="translate(-675.70101,-144.805)">
       <path
          inkscape:export-ydpi="92.07373"
          inkscape:export-xdpi="92.07373"
@@ -357,18 +356,18 @@
            y="167.21124">20</tspan></text>
     </g>
     <g
-       id="g4263"
-       transform="translate(57.0582,0)">
+       id="g3125"
+       transform="translate(-745,-144.805)">
       <path
          inkscape:connector-curvature="0"
          inkscape:export-ydpi="99.310349"
          inkscape:export-xdpi="99.310349"
          inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d2.png"
          id="path2985-9"
-         d="m 1173.7543,119.11715 c 0,30.37565 -24.6243,54.99999 -55,54.99999 -30.3756,0 -55,-24.62434 -55,-54.99999 0,-30.375677 24.6244,-55.000017 55,-55.000017 30.3757,0 55,24.62434 55,55.000017 z"
+         d="m 1230.8125,119.11715 c 0,30.37565 -24.6243,54.99999 -55,54.99999 -30.3756,0 -55,-24.62434 -55,-54.99999 0,-30.375677 24.6244,-55.000017 55,-55.000017 30.3757,0 55,24.62434 55,55.000017 z"
          style="fill:#33b5e5;fill-opacity:1;stroke:#000000;stroke-width:2.99999976;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0" />
       <g
-         transform="translate(0.63448799,8.1526279e-6)"
+         transform="translate(57.692688,8.1526279e-6)"
          id="g3942">
         <text
            xml:space="preserve"
@@ -422,7 +421,7 @@
     </g>
     <g
        id="g4250"
-       transform="translate(49.661142,0)">
+       transform="translate(-695.33886,-144.805)">
       <path
          inkscape:transform-center-y="-5.8065015"
          transform="matrix(0.97213658,0,0,0.97210302,-113.77528,258.30832)"
@@ -469,7 +468,7 @@
     </g>
     <g
        id="g4242"
-       transform="translate(30.75102,0)">
+       transform="translate(-714.24898,-144.805)">
       <path
          inkscape:export-ydpi="110.96032"
          inkscape:export-xdpi="110.96032"
@@ -505,6 +504,29 @@
              x="639.21851"
              y="73.046875">0</tspan></text>
       </g>
+    </g>
+    <g
+       id="g3120"
+       transform="translate(-745,-144.805)">
+      <path
+         inkscape:connector-curvature="0"
+         inkscape:export-ydpi="99.310349"
+         inkscape:export-xdpi="99.310349"
+         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d2.png"
+         id="path2985-9-7"
+         d="m 1380.8125,119.11751 c 0,30.37565 -24.6243,54.99999 -55,54.99999 -30.3756,0 -55,-24.62434 -55,-54.99999 0,-30.375673 24.6244,-55.000013 55,-55.000013 30.3757,0 55,24.62434 55,55.000013 z"
+         style="fill:#33b5e5;fill-opacity:1;stroke:#000000;stroke-width:2.99999976;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3107"
+         y="141.86749"
+         x="1305.4219"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         xml:space="preserve"><tspan
+           y="141.86749"
+           x="1305.4219"
+           id="tspan3109"
+           sodipodi:role="line">X</tspan></text>
     </g>
   </g>
 </svg>

@@ -50,9 +50,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -119,7 +119,8 @@ public class CardViewFragment extends FamiliarFragment {
 	private Button mTransformButton;
 	private View mTransformButtonDivider;
 	private ImageView mCardImageView;
-	private FrameLayout mFrameLayout;
+	private ScrollView mTextScrollView;
+	private ScrollView mImageScrollView;
 	/* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
 	private AsyncTask<Void, Void, Void> mAsyncTask;
 	private BitmapDrawable mCardBitmap;
@@ -206,7 +207,8 @@ public class CardViewFragment extends FamiliarFragment {
 		mPowTouTextView = (TextView) myFragmentView.findViewById(R.id.pt);
 		mTransformButtonDivider = myFragmentView.findViewById(R.id.transform_button_divider);
 		mTransformButton = (Button) myFragmentView.findViewById(R.id.transformbutton);
-		mFrameLayout = (FrameLayout) myFragmentView.findViewById(R.id.frameLayout1);
+		mTextScrollView = (ScrollView) myFragmentView.findViewById(R.id.cardTextScrollView);
+		mImageScrollView = (ScrollView) myFragmentView.findViewById(R.id.cardImageScrollView);
 		mCardImageView = (ImageView) myFragmentView.findViewById(R.id.cardpic);
 
 		registerForContextMenu(mNameTextView);
@@ -436,16 +438,8 @@ public class CardViewFragment extends FamiliarFragment {
 
 		/* Do we load the image immediately to the main page, or do it in a dialog later? */
 		if (loadTo == MAIN_PAGE) {
-			mCardImageView.setVisibility(View.VISIBLE);
-			mNameTextView.setVisibility(View.GONE);
-			mCostTextView.setVisibility(View.GONE);
-			mTypeTextView.setVisibility(View.GONE);
-			mSetTextView.setVisibility(View.GONE);
-			mAbilityTextView.setVisibility(View.GONE);
-			mPowTouTextView.setVisibility(View.GONE);
-			mFlavorTextView.setVisibility(View.GONE);
-			mArtistTextView.setVisibility(View.GONE);
-			mFrameLayout.setVisibility(View.GONE);
+			mImageScrollView.setVisibility(View.VISIBLE);
+			mTextScrollView.setVisibility(View.GONE);
 
 			mActivity.setLoading();
 			if (mAsyncTask != null) {
@@ -455,16 +449,8 @@ public class CardViewFragment extends FamiliarFragment {
 			mAsyncTask.execute((Void[]) null);
 		}
 		else {
-			mCardImageView.setVisibility(View.GONE);
-			mNameTextView.setVisibility(View.VISIBLE);
-			mCostTextView.setVisibility(View.VISIBLE);
-			mTypeTextView.setVisibility(View.VISIBLE);
-			mSetTextView.setVisibility(View.VISIBLE);
-			mAbilityTextView.setVisibility(View.VISIBLE);
-			mPowTouTextView.setVisibility(View.VISIBLE);
-			mFlavorTextView.setVisibility(View.VISIBLE);
-			mArtistTextView.setVisibility(View.VISIBLE);
-			mFrameLayout.setVisibility(View.VISIBLE);
+			mImageScrollView.setVisibility(View.GONE);
+			mTextScrollView.setVisibility(View.VISIBLE);
 		}
 
 		mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
@@ -845,18 +831,36 @@ public class CardViewFragment extends FamiliarFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.card_menu, menu);
+	}
+
+	/**
+	 * Prepare the Screen's standard options menu to be displayed.  This is
+	 * called right before the menu is shown, every time it is shown.  You can
+	 * use this method to efficiently enable/disable items or otherwise
+	 * dynamically modify the contents.
+	 *
+	 * @param menu The options menu as last shown or first initialized by
+	 *             onCreateOptionsMenu().
+	 * @see #setHasOptionsMenu
+	 * @see #onCreateOptionsMenu
+	 */
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
 
 		MenuItem mi;
 		/* If the image has been loaded to the main page, remove the menu option for image */
 		if (loadTo == MAIN_PAGE && mCardBitmap != null) {
 			mi = menu.findItem(R.id.image);
-			assert mi != null; /* Because Android Studio */
-			menu.removeItem(mi.getItemId());
+			if(mi != null) {
+				menu.removeItem(mi.getItemId());
+			}
 		}
 		if (mSets != null && mSets.size() == 1) {
 			mi = menu.findItem(R.id.changeset);
-			assert mi != null; /* Because Android Studio */
-			menu.removeItem(mi.getItemId());
+			if(mi != null) {
+				menu.removeItem(mi.getItemId());
+			}
 		}
 	}
 
@@ -1043,8 +1047,7 @@ public class CardViewFragment extends FamiliarFragment {
 							TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
 					if (loadTo == MAIN_PAGE) {
 						Rect rectangle = new Rect();
-						Window window = mActivity.getWindow();
-						window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+						mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
 
 						assert mActivity.getActionBar() != null; /* Because Android Studio */
 						height = ((rectangle.bottom - rectangle.top) - mActivity.getActionBar().getHeight()) - border;
@@ -1129,16 +1132,8 @@ public class CardViewFragment extends FamiliarFragment {
 			else {
 				removeDialog(getFragmentManager());
 				if (loadTo == MAIN_PAGE) {
-					mCardImageView.setVisibility(View.GONE);
-					mNameTextView.setVisibility(View.VISIBLE);
-					mCostTextView.setVisibility(View.VISIBLE);
-					mTypeTextView.setVisibility(View.VISIBLE);
-					mSetTextView.setVisibility(View.VISIBLE);
-					mAbilityTextView.setVisibility(View.VISIBLE);
-					mPowTouTextView.setVisibility(View.VISIBLE);
-					mFlavorTextView.setVisibility(View.VISIBLE);
-					mArtistTextView.setVisibility(View.VISIBLE);
-					mFrameLayout.setVisibility(View.VISIBLE);
+					mImageScrollView.setVisibility(View.GONE);
+					mTextScrollView.setVisibility(View.VISIBLE);
 				}
 				Toast.makeText(mActivity, error, Toast.LENGTH_LONG).show();
 			}
@@ -1151,16 +1146,8 @@ public class CardViewFragment extends FamiliarFragment {
 		@Override
 		protected void onCancelled() {
 			if (loadTo == MAIN_PAGE) {
-				mCardImageView.setVisibility(View.GONE);
-				mNameTextView.setVisibility(View.VISIBLE);
-				mCostTextView.setVisibility(View.VISIBLE);
-				mTypeTextView.setVisibility(View.VISIBLE);
-				mSetTextView.setVisibility(View.VISIBLE);
-				mAbilityTextView.setVisibility(View.VISIBLE);
-				mPowTouTextView.setVisibility(View.VISIBLE);
-				mFlavorTextView.setVisibility(View.VISIBLE);
-				mArtistTextView.setVisibility(View.VISIBLE);
-				mFrameLayout.setVisibility(View.VISIBLE);
+				mImageScrollView.setVisibility(View.GONE);
+				mTextScrollView.setVisibility(View.VISIBLE);
 			}
 		}
 	}

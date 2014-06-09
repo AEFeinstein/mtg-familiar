@@ -11,297 +11,309 @@
 	more details. You should have received a copy of the GNU General Public License
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="center_vertical"
-              android:gravity="center"
-              android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
 
-    <!-- white -->
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
 
-        <Button
-            android:id="@+id/white_minus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_minus"
-            android:textStyle="bold"/>
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/glyph_w"/>
+            <!-- white -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/white_readout"
-            style="@style/text.xxlarge"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/mana_pool_zero"/>
+                <Button
+                    android:id="@+id/white_minus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_minus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/white_plus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_plus"
-            android:textStyle="bold"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/glyph_w"/>
 
-    </LinearLayout>
-    <!-- blue -->
+                <TextView
+                    android:id="@+id/white_readout"
+                    style="@style/text.xxlarge"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/mana_pool_zero"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/white_plus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_plus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/blue_minus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_minus"
-            android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- blue -->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            android:src="@drawable/glyph_u"/>
+                <Button
+                    android:id="@+id/blue_minus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_minus"
+                    android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/blue_readout"
-            style="@style/text.xxlarge"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/mana_pool_zero"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
 
-        <Button
-            android:id="@+id/blue_plus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_plus"
-            android:textStyle="bold"/>
+                    android:src="@drawable/glyph_u"/>
 
-    </LinearLayout>
-    <!-- black -->
+                <TextView
+                    android:id="@+id/blue_readout"
+                    style="@style/text.xxlarge"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/mana_pool_zero"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/blue_plus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_plus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/black_minus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_minus"
-            android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- black -->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/glyph_b"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/black_readout"
-            style="@style/text.xxlarge"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/mana_pool_zero"/>
+                <Button
+                    android:id="@+id/black_minus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_minus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/black_plus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_plus"
-            android:textStyle="bold"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/glyph_b"/>
 
-    </LinearLayout>
-    <!-- red -->
+                <TextView
+                    android:id="@+id/black_readout"
+                    style="@style/text.xxlarge"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/mana_pool_zero"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/black_plus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_plus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/red_minus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_minus"
-            android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- red -->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/glyph_r"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/red_readout"
-            style="@style/text.xxlarge"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/mana_pool_zero"/>
+                <Button
+                    android:id="@+id/red_minus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_minus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/red_plus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_plus"
-            android:textStyle="bold"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/glyph_r"/>
 
-    </LinearLayout>
-    <!-- green -->
+                <TextView
+                    android:id="@+id/red_readout"
+                    style="@style/text.xxlarge"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/mana_pool_zero"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/red_plus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_plus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/green_minus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_minus"
-            android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- green -->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/glyph_g"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/green_readout"
-            style="@style/text.xxlarge"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/mana_pool_zero"/>
+                <Button
+                    android:id="@+id/green_minus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_minus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/green_plus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_plus"
-            android:textStyle="bold"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/glyph_g"/>
 
-    </LinearLayout>
-    <!-- colorless -->
+                <TextView
+                    android:id="@+id/green_readout"
+                    style="@style/text.xxlarge"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/mana_pool_zero"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+                <Button
+                    android:id="@+id/green_plus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_plus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/colorless_minus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_minus"
-            android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- colorless -->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/glyph_x"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/colorless_readout"
-            style="@style/text.xxlarge"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/mana_pool_zero"/>
+                <Button
+                    android:id="@+id/colorless_minus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_minus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/colorless_plus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_plus"
-            android:textStyle="bold"/>
-    </LinearLayout>
-    <!-- spell -->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/glyph_x"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/colorless_readout"
+                    style="@style/text.xxlarge"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/mana_pool_zero"/>
 
-        <Button
-            android:id="@+id/spell_minus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_minus"
-            android:textStyle="bold"/>
+                <Button
+                    android:id="@+id/colorless_plus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_plus"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <!-- spell -->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/glyph_spell"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/spell_readout"
-            style="@style/text.xxlarge"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/mana_pool_zero"/>
+                <Button
+                    android:id="@+id/spell_minus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_minus"
+                    android:textStyle="bold"/>
 
-        <Button
-            android:id="@+id/spell_plus"
-            style="@style/text.xlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_default_custom"
-            android:text="@string/mana_pool_plus"
-            android:textStyle="bold"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/glyph_spell"/>
 
-    </LinearLayout>
-</LinearLayout>
+                <TextView
+                    android:id="@+id/spell_readout"
+                    style="@style/text.xxlarge"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/mana_pool_zero"/>
+
+                <Button
+                    android:id="@+id/spell_plus"
+                    style="@style/text.xlarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/btn_default_custom"
+                    android:text="@string/mana_pool_plus"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
