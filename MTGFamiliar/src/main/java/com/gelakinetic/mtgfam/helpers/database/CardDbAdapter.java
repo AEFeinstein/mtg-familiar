@@ -1926,7 +1926,7 @@ public class CardDbAdapter {
 	 * @throws FamiliarDbException
 	 */
 	public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-		String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
+		String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC", "CNS", "CNSC"};
 		ArrayList<String> nonModernLegalSets = new ArrayList<String>(Arrays.asList(extraSets));
 		for (String value : nonModernLegalSets) {
 			if (value.equals(setCode)) {
