@@ -36,6 +36,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="error_no_email_client">It does not appear that you have an active email client installed. Please configure an email application.</string>
     <string name="toast_no_card">No card found with that name.</string>
     <string name="not_deleted">not deleted</string>
+    <string name="no_network">Network is not available</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">PAGES</string>
