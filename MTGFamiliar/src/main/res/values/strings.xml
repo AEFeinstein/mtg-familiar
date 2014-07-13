@@ -291,6 +291,14 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="wishlist_share_title">MTG Familiar Wishlist</string>
     <string name="wishlist_view_card">View Card</string>
     <string name="wishlist_foil">foil</string>
+    <string name="wishlist_sort">Sort Wishlist</string>
+    <string name="wishlist_type_none">None</string>
+    <string name="wishlist_type_cmc">Converted Mana Cost</string>
+    <string name="wishlist_type_color">Color</string>
+    <string name="wishlist_type_name">Name</string>
+    <string name="wishlist_type_price">Price</string>
+    <string name="wishlist_ascending">Ascending</string>
+    <string name="wishlist_descending">Descending</string>
 
     <!-- Round timer activity -->
     <string name="timer_how_long">How long is the round?</string>
