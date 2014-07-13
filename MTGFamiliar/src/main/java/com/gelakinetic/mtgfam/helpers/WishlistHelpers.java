@@ -442,14 +442,14 @@ public class WishlistHelpers {
         private static final String colors = "WUBRG";
         private static final String nonColors = "LAC";
 
-        /* Gets the number of colors within a color string (e.g. "BR" will return 2). */
+        /* Filters a color string to only include chars representing colors (e.g. "LG" (Dryad Arbor) will return "G"). */
         public String getColors(String c) {
             String validColors = "";
             //1. Catch null/empty string
             if (c == null || c.isEmpty()) {
                 return "";
             }
-            //2. For each char, increment count if char exists in colors
+            //2. For each char, if a valid color, add to return String
             for (int i=0; i<c.length(); i++) {
                 if (colors.indexOf(c.charAt(i)) > -1) {
                     validColors += c.charAt(i);
@@ -483,7 +483,7 @@ public class WishlistHelpers {
                 }
                 return 0;
             }
-            //2. Compare based on number of colors
+            //2. Else compare based on number of colors
             if (colors1.length() < colors2.length())
             {
                 return -1;
@@ -492,7 +492,7 @@ public class WishlistHelpers {
             {
                 return 1;
             }
-            //3. If same number of colors exist, compare based on WUBRG-ness
+            //3. Else if same number of colors exist, compare based on WUBRG-ness
             else
             {
                 for (int i=0; i<Math.min(colors1.length(),colors2.length()); i++) {
