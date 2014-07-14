@@ -36,6 +36,10 @@ import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.IndividualSetInfo;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorCmc;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorName;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorPrice;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorColor;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -44,6 +48,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * This class displays a wishlist of cards, details about the cards, their prices, and the sum of their prices
@@ -54,17 +59,30 @@ public class WishlistFragment extends FamiliarFragment {
 	private static final int DIALOG_UPDATE_CARD = 1;
 	private static final int DIALOG_PRICE_SETTING = 2;
 	private static final int DIALOG_CONFIRMATION = 3;
+    private static final int DIALOG_SORT = 4;
 
 	/* Price setting constants */
 	private static final int LOW_PRICE = 0;
 	private static final int AVG_PRICE = 1;
 	private static final int HIGH_PRICE = 2;
 
+    /* Sort type constants */
+    private static final int SORT_TYPE_NONE = 0;
+    private static final int SORT_TYPE_CMC = 1;
+    private static final int SORT_TYPE_COLOR = 2;
+    private static final int SORT_TYPE_NAME = 3;
+    private static final int SORT_TYPE_PRICE = 4;
+
+    private static final int ASCENDING = 0;
+    private static final int DESCENDING = 1;
+
 	/* Preferences */
 	private int mPriceSetting;
 	private boolean mShowCardInfo;
 	private boolean mShowIndividualPrices;
 	private boolean mShowTotalWishlistPrice;
+    private int wishlistSortType = SORT_TYPE_NONE;  //Type to sort list by (e.g. Name)
+    private int wishlistSortOrder;  //ASCENDING v DESCENDING
 
 	/* UI Elements */
 	private SafeAutoCompleteTextView mNameField;
@@ -164,6 +182,8 @@ public class WishlistFragment extends FamiliarFragment {
 			card.numberOf = Integer.parseInt(numberOf);
 			card.message = getString(R.string.wishlist_loading);
 
+
+
 			/* Get some extra information from the database */
 			SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 			Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, CardDbAdapter.allData, database);
@@ -183,7 +203,8 @@ public class WishlistFragment extends FamiliarFragment {
 			card.number = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 			card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
 			card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
-
+            card.cmc = cardCursor.getInt((cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
+            card.color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
 			/* Override choice if the card can't be foil */
 			if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
 				card.foil = false;
@@ -212,6 +233,9 @@ public class WishlistFragment extends FamiliarFragment {
 
 			/* load the price */
 			loadPrice(card.name, card.setCode, card.number);
+
+            /* Sort the wishlist */
+            sortWishlist();
 
 			/* Save the wishlist */
 			WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
@@ -388,6 +412,10 @@ public class WishlistFragment extends FamiliarFragment {
 				/* Show a dialog to change which price (low/avg/high) is used */
 				showDialog(DIALOG_PRICE_SETTING, null);
 				return true;
+            case R.id.wishlist_menu_sort:
+                /* Show a dialog to change the sort criteria the list uses */
+                showDialog(DIALOG_SORT, null);
+                return true;
 			case R.id.wishlist_menu_share:
 				/* Launch an intent to share the plaintext wishlist */
 				shareWishlist();
@@ -478,6 +506,33 @@ public class WishlistFragment extends FamiliarFragment {
 								.setCancelable(true).create();
 
 					}
+                    case DIALOG_SORT: {
+                        return new AlertDialog.Builder(this.getActivity())
+                                .setTitle("Sort By")
+                                .setSingleChoiceItems(R.array.wishlist_sort_type, wishlistSortType, null)
+                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        wishlistSortOrder = ASCENDING;
+                                        ListView lw = ((AlertDialog) dialog).getListView();
+                                        wishlistSortType = lw.getCheckedItemPosition();
+                                        sortWishlist();
+                                    }
+                                })
+                                .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        wishlistSortOrder = DESCENDING;
+                                        ListView lw = ((AlertDialog) dialog).getListView();
+                                        wishlistSortType = lw.getCheckedItemPosition();
+                                        sortWishlist();
+                                    }
+                                })
+                                .setCancelable(true).create();
+                    }
 					default: {
 						savedInstanceState.putInt("id", id);
 						return super.onCreateDialog(savedInstanceState);
@@ -606,6 +661,56 @@ public class WishlistFragment extends FamiliarFragment {
 			mTotalPriceField.setText(String.format("$%.02f", totalPrice));
 		}
 	}
+
+    /**
+     * Sorts the wishlist based on wishlistSortType and wishlistSortOrder
+     */
+    void sortWishlist()
+    {
+        /* If no sort type specified, return */
+        if (wishlistSortType == SORT_TYPE_NONE)
+        {
+            return;
+        }
+        /* Else sort by selected sort type */
+        else
+        {
+            if (wishlistSortOrder == ASCENDING) {
+                switch (wishlistSortType) {
+                    case SORT_TYPE_CMC:
+                        Collections.sort(mCompressedWishlist, new WishlistComparatorCmc());
+                        break;
+                    case SORT_TYPE_COLOR:
+                        Collections.sort(mCompressedWishlist, new WishlistComparatorColor());
+                        break;
+                    case SORT_TYPE_NAME:
+                        Collections.sort(mCompressedWishlist, new WishlistComparatorName());
+                        break;
+                    case SORT_TYPE_PRICE:
+                        Collections.sort(mCompressedWishlist, new WishlistComparatorPrice(mPriceSetting));
+                        break;
+                }
+            }
+            else
+            {
+                switch (wishlistSortType) {
+                    case SORT_TYPE_CMC:
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new WishlistComparatorCmc()));
+                        break;
+                    case SORT_TYPE_COLOR:
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new WishlistComparatorColor()));
+                        break;
+                    case SORT_TYPE_NAME:
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new WishlistComparatorName()));
+                        break;
+                    case SORT_TYPE_PRICE:
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new WishlistComparatorPrice(mPriceSetting)));
+                        break;
+                }
+            }
+            mWishlistAdapter.notifyDataSetChanged();
+        }
+    }
 
 	/**
 	 * This nested class is the adapter which populates the listView in the drawer menu. It handles both entries and

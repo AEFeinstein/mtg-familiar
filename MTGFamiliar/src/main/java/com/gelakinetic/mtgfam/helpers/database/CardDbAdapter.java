@@ -80,9 +80,9 @@ public class CardDbAdapter {
 	public static final String KEY_SET = "expansion";
 	public static final String KEY_TYPE = "type";
 	public static final String KEY_ABILITY = "cardtext";
-	private static final String KEY_COLOR = "color";
+	public static final String KEY_COLOR = "color";
 	public static final String KEY_MANACOST = "manacost";
-	private static final String KEY_CMC = "cmc";
+	public static final String KEY_CMC = "cmc";
 	public static final String KEY_POWER = "power";
 	public static final String KEY_TOUGHNESS = "toughness";
 	public static final String KEY_RARITY = "rarity";
@@ -116,7 +116,9 @@ public class CardDbAdapter {
 			DATABASE_TABLE_CARDS + "." + KEY_MANACOST, DATABASE_TABLE_CARDS + "." + KEY_ABILITY,
 			DATABASE_TABLE_CARDS + "." + KEY_POWER, DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS,
 			DATABASE_TABLE_CARDS + "." + KEY_LOYALTY, DATABASE_TABLE_CARDS + "." + KEY_RARITY,
-			DATABASE_TABLE_CARDS + "." + KEY_FLAVOR};
+			DATABASE_TABLE_CARDS + "." + KEY_FLAVOR, DATABASE_TABLE_CARDS + "." + KEY_CMC,
+            DATABASE_TABLE_CARDS + "." + KEY_COLOR
+    };
 
 	public static final String DATABASE_CREATE_CARDS = "create table "
 			+ DATABASE_TABLE_CARDS + "(" + KEY_ID
@@ -366,6 +368,21 @@ public class CardDbAdapter {
 
 	}
 
+
+    public static Cursor fetchDistinctColors(SQLiteDatabase mDb)
+    {
+        String sql = "SELECT DISTINCT " + KEY_COLOR + " FROM " + DATABASE_TABLE_CARDS;
+        Cursor c = mDb.rawQuery(sql, null);
+        c.moveToFirst();
+        ArrayList<String> colors = new ArrayList<String>();
+        colors.add(c.getString(0));
+        while (c.moveToNext())
+        {
+            colors.add(c.getString(0));
+        }
+        return c;
+    }
+
 	/**
 	 * @param name
 	 * @param fields
@@ -493,6 +510,8 @@ public class CardDbAdapter {
 					cwi.mCard.ability = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
 					cwi.mCard.flavor = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
 					cwi.mCard.number = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                    cwi.mCard.cmc = cursor.getInt((cursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
+                    cwi.mCard.color = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
 				}
 			}
 			/* NEXT! */
