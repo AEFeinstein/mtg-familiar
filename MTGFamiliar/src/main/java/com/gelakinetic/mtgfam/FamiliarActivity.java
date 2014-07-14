@@ -345,11 +345,11 @@ public class FamiliarActivity extends FragmentActivity {
 						break;
 					}
 					case R.string.main_force_update_title: {
-                        if(getNetworkState(true) != -1) {
-                            mPreferenceAdapter.setLastLegalityUpdate(0);
-                            startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                        }
-                        shouldCloseDrawer = true;
+						if (getNetworkState(true) != -1) {
+							mPreferenceAdapter.setLastLegalityUpdate(0);
+							startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+						}
+						shouldCloseDrawer = true;
 						break;
 					}
 					case R.string.main_donate_title: {
@@ -1307,31 +1307,30 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 	}
 
-    /**
-     * Checks the networks state
-     *
-     * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
-     * @return -1 if there is no network connection, or the type of network, like ConnectivityManager.TYPE_WIFI
-     */
-    public int getNetworkState(boolean shouldShowToast) {
-        try {
-            ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            for (NetworkInfo ni : conMan.getAllNetworkInfo()) {
-                if (ni.isConnected()) {
-                    return ni.getType();
-                }
-            }
-            if(shouldShowToast) {
-                Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
-            }
-            return -1;
-        }
-        catch (NullPointerException e) {
-            if(shouldShowToast) {
-                Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
-            }
-            return -1;
-        }
-    }
+	/**
+	 * Checks the networks state
+	 *
+	 * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
+	 * @return -1 if there is no network connection, or the type of network, like ConnectivityManager.TYPE_WIFI
+	 */
+	public int getNetworkState(boolean shouldShowToast) {
+		try {
+			ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			for (NetworkInfo ni : conMan.getAllNetworkInfo()) {
+				if (ni.isConnected()) {
+					return ni.getType();
+				}
+			}
+			if (shouldShowToast) {
+				Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
+			}
+			return -1;
+		} catch (NullPointerException e) {
+			if (shouldShowToast) {
+				Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
+			}
+			return -1;
+		}
+	}
 
 }

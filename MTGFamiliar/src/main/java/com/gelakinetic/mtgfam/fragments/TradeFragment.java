@@ -987,7 +987,7 @@ public class TradeFragment extends FamiliarFragment {
 						 */
 						@Override
 						public void onRequestFailure(SpiceException spiceException) {
-							if(TradeFragment.this.isAdded()) {
+							if (TradeFragment.this.isAdded()) {
 								data.message = spiceException.getLocalizedMessage();
 								data.priceInfo = null;
 								adapter.notifyDataSetChanged();
