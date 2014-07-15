@@ -48,6 +48,7 @@
         <attr name="ic_action_volume_on" format="reference"/>
         <attr name="ic_action_warning" format="reference"/>
         <attr name="ic_action_wishlist" format="reference"/>
+        <attr name="ic_action_sort_by_size" format="reference"/>
         <attr name="ic_drawer" format="reference"/>
         <attr name="ic_drawer_about" format="reference"/>
         <attr name="ic_drawer_dice" format="reference"/>

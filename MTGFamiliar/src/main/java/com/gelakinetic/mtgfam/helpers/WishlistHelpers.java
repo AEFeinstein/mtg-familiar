@@ -431,7 +431,13 @@ public class WishlistHelpers {
 	public static class WishlistComparatorCmc implements Comparator<CompressedWishlistInfo> {
 		@Override
 		public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-			return wish1.mCard.cmc == wish2.mCard.cmc ? 0 : wish1.mCard.cmc < wish2.mCard.cmc ? -1 : 1;
+            if( wish1.mCard.cmc == wish2.mCard.cmc) {
+                return wish1.mCard.name.compareTo(wish2.mCard.name);
+            }
+            else if(wish1.mCard.cmc > wish2.mCard.cmc) {
+                return 1;
+            }
+            return -1;
 		}
 	}
 
@@ -476,7 +482,7 @@ public class WishlistHelpers {
 						return priority1 < priority2 ? -1 : 1;
 					}
 				}
-				return 0;
+				return wish1.mCard.name.compareTo(wish2.mCard.name);
 			}
 			//2. Else compare based on number of colors
 			if (colors1.length() < colors2.length()) {
@@ -497,7 +503,7 @@ public class WishlistHelpers {
 						return priority1 < priority2 ? -1 : 1;
 					}
 				}
-				return 0;
+				return wish1.mCard.name.compareTo(wish2.mCard.name);
 			}
 		}
 	}
@@ -556,7 +562,13 @@ public class WishlistHelpers {
 				}
 			}
 
-			return sumWish1 == sumWish2 ? 0 : sumWish1 < sumWish2 ? -1 : 0;
+            if(sumWish1 == sumWish2) {
+                return wish1.mCard.name.compareTo(wish2.mCard.name);
+            }
+            else if(sumWish1 > sumWish2) {
+                return 1;
+            }
+            return -1;
 		}
 	}
 }
