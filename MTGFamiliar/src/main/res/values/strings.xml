@@ -205,11 +205,11 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <!-- Life counter activity -->
     <string name="life_counter_announce_life">Announce Life Totals</string>
     <string name="life_counter_change_default_gathering">Edit Gatherings</string>
-    <string name="life_counter_set_gathering">Set Current Gathering</string>
+    <string name="life_counter_set_gathering">Load a Gathering</string>
     <string name="life_counter_change_display">Change Display Mode</string>
     <string name="life_counter_remove_player">Remove a Player</string>
     <string name="life_counter_add_player">Add a Player</string>
-    <string name="life_counter_gathering_dialog_title">Load a Gathering</string>
+    <string name="life_counter_gathering_dialog_title">Select a Gathering</string>
     <string name="life_counter_clear_dialog_text">Clear life totals or players?\nMana pool will also be cleared.</string>
     <string name="life_counter_edit_name_dialog_title">Enter Name</string>
     <string name="life_counter_Commander">Commander</string>

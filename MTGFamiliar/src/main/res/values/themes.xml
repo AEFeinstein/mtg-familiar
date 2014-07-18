@@ -45,6 +45,8 @@
         <item name="com.gelakinetic.mtgfam:ic_action_warning">@drawable/ic_action_warning_light</item>
         <item name="com.gelakinetic.mtgfam:ic_action_wishlist">@drawable/ic_action_wishlist_light</item>
         <item name="com.gelakinetic.mtgfam:ic_action_sort_by_size">@drawable/ic_action_sort_by_size_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_action_add_person">@drawable/ic_action_add_person_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_action_remove_person">@drawable/ic_action_remove_person_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_about">@drawable/ic_drawer_about_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_download">@drawable/ic_drawer_download_light</item>
@@ -112,6 +114,8 @@
         <item name="com.gelakinetic.mtgfam:ic_action_warning">@drawable/ic_action_warning_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_action_wishlist">@drawable/ic_action_wishlist_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_action_sort_by_size">@drawable/ic_action_sort_by_size_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_action_add_person">@drawable/ic_action_add_person_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_action_remove_person">@drawable/ic_action_remove_person_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_about">@drawable/ic_drawer_about_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_download">@drawable/ic_drawer_download_dark</item>
