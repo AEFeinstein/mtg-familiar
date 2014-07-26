@@ -177,7 +177,6 @@ public class CardDbAdapter {
 	// use a hash map for performance
 	private static final HashMap<String, String> mColumnMap = buildColumnMap();
 
-	private static final String DB_PATH = "/data/data/com.gelakinetic.mtgfam/databases/";
 	private static final String DB_NAME = "data";
 
 	public static final int NOPE = 0;
@@ -407,6 +406,7 @@ public class CardDbAdapter {
 				+ " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
 				+ DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
 				+ DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(name)
+                + " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
 				+ " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
 				+ " DESC";
 		Cursor c;
@@ -1728,7 +1728,9 @@ public class CardDbAdapter {
 	public static boolean isDbOutOfDate(Context ctx) {
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
-		File f = new File(DB_PATH, DB_NAME);
+        String dbPath = ctx.getFilesDir().getPath();
+        dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+		File f = new File(dbPath, DB_NAME);
 		int dbVersion = preferences.getInt("databaseVersion", -1);
 		return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
 	}
@@ -1742,7 +1744,11 @@ public class CardDbAdapter {
 		SharedPreferences.Editor editor = preferences.edit();
 
 		try {
-			File folder = new File(DB_PATH);
+
+            String dbPath = ctx.getFilesDir().getPath();
+            dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+
+			File folder = new File(dbPath);
 			if (!folder.exists()) {
 				folder.mkdir();
 			}
