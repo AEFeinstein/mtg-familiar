@@ -333,7 +333,7 @@ public class RulesFragment extends FamiliarFragment {
 											dialog.dismiss();
 											return;
 										}
-										String keyword = nameInput.getText().toString().trim();
+										String keyword = nameInput.getText().toString();
 										if (keyword.length() < 3) {
 											Toast.makeText(getActivity(),
 													R.string.rules_short_key_toast, Toast.LENGTH_LONG).show();
