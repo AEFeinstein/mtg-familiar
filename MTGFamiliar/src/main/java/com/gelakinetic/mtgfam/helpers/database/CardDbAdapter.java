@@ -297,7 +297,7 @@ public class CardDbAdapter {
 	 */
 	public static boolean doesSetExist(String code, SQLiteDatabase mDb) throws FamiliarDbException {
 
-		String statement = "(" + KEY_CODE + " LIKE '%" + code + "%')";
+		String statement = "(" + KEY_CODE + " = '" + code + "')";
 
 		Cursor c;
 		int count;
