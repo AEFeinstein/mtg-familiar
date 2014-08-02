@@ -415,7 +415,7 @@ public class PreferenceAdapter {
 	 */
 	public String getTheme() {
 		String theme = this.prefs.getString(context.getString(R.string.key_theme), "asd");
-		if(theme.equals("asd")) {
+		if (theme.equals("asd")) {
 			theme = context.getResources().getString(R.string.pref_theme_light);
 			setTheme(theme);
 		}

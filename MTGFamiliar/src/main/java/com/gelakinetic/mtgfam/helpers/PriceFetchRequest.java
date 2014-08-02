@@ -141,6 +141,13 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 					pi.mHigh = Double.parseDouble(getString("hiprice", element));
 					pi.mFoilAverage = Double.parseDouble(getString("foilavgprice", element));
 					pi.mUrl = getString("link", element);
+
+					/* Some cards, like FTV, only have a foil price. This fixed problems down the road */
+					if (pi.mLow == 0 && pi.mAverage == 0 && pi.mHigh == 0 && pi.mFoilAverage != 0) {
+						pi.mLow = pi.mFoilAverage;
+						pi.mAverage = pi.mFoilAverage;
+						pi.mHigh = pi.mFoilAverage;
+					}
 					return pi;
 				} catch (NumberFormatException error) {
 					exception = new SpiceException(error.getLocalizedMessage());

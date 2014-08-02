@@ -31,6 +31,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -343,8 +345,10 @@ public class FamiliarActivity extends FragmentActivity {
 						break;
 					}
 					case R.string.main_force_update_title: {
-						mPreferenceAdapter.setLastLegalityUpdate(0);
-						startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+						if (getNetworkState(true) != -1) {
+							mPreferenceAdapter.setLastLegalityUpdate(0);
+							startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+						}
 						shouldCloseDrawer = true;
 						break;
 					}
@@ -561,8 +565,8 @@ public class FamiliarActivity extends FragmentActivity {
 			mDrawerList.setItemChecked(mCurrentFrag, true);
 		}
 
-		/* Run the updater service */
-		if (mPreferenceAdapter.getAutoUpdate()) {
+		/* Run the updater service if there is a network connection */
+		if (getNetworkState(false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
 			/* Only update the banning list if it hasn't been updated recently */
 			long curTime = System.currentTimeMillis();
 			int updateFrequency = Integer.valueOf(mPreferenceAdapter.getUpdateFrequency());
@@ -1303,5 +1307,30 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 	}
 
+	/**
+	 * Checks the networks state
+	 *
+	 * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
+	 * @return -1 if there is no network connection, or the type of network, like ConnectivityManager.TYPE_WIFI
+	 */
+	public int getNetworkState(boolean shouldShowToast) {
+		try {
+			ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			for (NetworkInfo ni : conMan.getAllNetworkInfo()) {
+				if (ni.isConnected()) {
+					return ni.getType();
+				}
+			}
+			if (shouldShowToast) {
+				Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
+			}
+			return -1;
+		} catch (NullPointerException e) {
+			if (shouldShowToast) {
+				Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
+			}
+			return -1;
+		}
+	}
 
 }

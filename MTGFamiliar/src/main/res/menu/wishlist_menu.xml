@@ -30,6 +30,11 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:showAsAction="ifRoom"
         android:title="@string/wishlist_set_pricing"/>
     <item
+        android:id="@+id/wishlist_menu_sort"
+        android:icon="?attr/ic_action_sort_by_size"
+        android:showAsAction="ifRoom"
+        android:title="@string/wishlist_sort"/>
+    <item
         android:id="@+id/wishlist_menu_share"
         android:icon="?attr/ic_action_share"
         android:showAsAction="ifRoom"

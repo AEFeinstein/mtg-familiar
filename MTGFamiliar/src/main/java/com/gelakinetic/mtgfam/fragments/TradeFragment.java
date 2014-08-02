@@ -987,7 +987,7 @@ public class TradeFragment extends FamiliarFragment {
 						 */
 						@Override
 						public void onRequestFailure(SpiceException spiceException) {
-							if(TradeFragment.this.isAdded()) {
+							if (TradeFragment.this.isAdded()) {
 								data.message = spiceException.getLocalizedMessage();
 								data.priceInfo = null;
 								adapter.notifyDataSetChanged();
@@ -1038,10 +1038,6 @@ public class TradeFragment extends FamiliarFragment {
 												break;
 											}
 										}
-									}
-									/* If there is no regular price AND the foil price exists, use the foil price. */
-									if (data.price == 0 && result.mFoilAverage != 0) {
-										data.price = (int) (result.mFoilAverage * 100);
 									}
 								}
 								/* Clear the message */

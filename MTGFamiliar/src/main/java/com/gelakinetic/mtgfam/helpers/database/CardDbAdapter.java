@@ -80,9 +80,9 @@ public class CardDbAdapter {
 	public static final String KEY_SET = "expansion";
 	public static final String KEY_TYPE = "type";
 	public static final String KEY_ABILITY = "cardtext";
-	private static final String KEY_COLOR = "color";
+	public static final String KEY_COLOR = "color";
 	public static final String KEY_MANACOST = "manacost";
-	private static final String KEY_CMC = "cmc";
+	public static final String KEY_CMC = "cmc";
 	public static final String KEY_POWER = "power";
 	public static final String KEY_TOUGHNESS = "toughness";
 	public static final String KEY_RARITY = "rarity";
@@ -116,7 +116,9 @@ public class CardDbAdapter {
 			DATABASE_TABLE_CARDS + "." + KEY_MANACOST, DATABASE_TABLE_CARDS + "." + KEY_ABILITY,
 			DATABASE_TABLE_CARDS + "." + KEY_POWER, DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS,
 			DATABASE_TABLE_CARDS + "." + KEY_LOYALTY, DATABASE_TABLE_CARDS + "." + KEY_RARITY,
-			DATABASE_TABLE_CARDS + "." + KEY_FLAVOR};
+			DATABASE_TABLE_CARDS + "." + KEY_FLAVOR, DATABASE_TABLE_CARDS + "." + KEY_CMC,
+			DATABASE_TABLE_CARDS + "." + KEY_COLOR
+	};
 
 	public static final String DATABASE_CREATE_CARDS = "create table "
 			+ DATABASE_TABLE_CARDS + "(" + KEY_ID
@@ -175,7 +177,6 @@ public class CardDbAdapter {
 	// use a hash map for performance
 	private static final HashMap<String, String> mColumnMap = buildColumnMap();
 
-	private static final String DB_PATH = "/data/data/com.gelakinetic.mtgfam/databases/";
 	private static final String DB_NAME = "data";
 
 	public static final int NOPE = 0;
@@ -296,7 +297,7 @@ public class CardDbAdapter {
 	 */
 	public static boolean doesSetExist(String code, SQLiteDatabase mDb) throws FamiliarDbException {
 
-		String statement = "(" + KEY_CODE + " LIKE '%" + code + "%')";
+		String statement = "(" + KEY_CODE + " = '" + code + "')";
 
 		Cursor c;
 		int count;
@@ -366,6 +367,19 @@ public class CardDbAdapter {
 
 	}
 
+
+	public static Cursor fetchDistinctColors(SQLiteDatabase mDb) {
+		String sql = "SELECT DISTINCT " + KEY_COLOR + " FROM " + DATABASE_TABLE_CARDS;
+		Cursor c = mDb.rawQuery(sql, null);
+		c.moveToFirst();
+		ArrayList<String> colors = new ArrayList<String>();
+		colors.add(c.getString(0));
+		while (c.moveToNext()) {
+			colors.add(c.getString(0));
+		}
+		return c;
+	}
+
 	/**
 	 * @param name
 	 * @param fields
@@ -392,6 +406,7 @@ public class CardDbAdapter {
 				+ " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
 				+ DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
 				+ DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(name)
+                + " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
 				+ " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
 				+ " DESC";
 		Cursor c;
@@ -493,6 +508,8 @@ public class CardDbAdapter {
 					cwi.mCard.ability = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
 					cwi.mCard.flavor = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
 					cwi.mCard.number = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+					cwi.mCard.cmc = cursor.getInt((cursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
+					cwi.mCard.color = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
 				}
 			}
 			/* NEXT! */
@@ -1712,7 +1729,9 @@ public class CardDbAdapter {
 	public static boolean isDbOutOfDate(Context ctx) {
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
-		File f = new File(DB_PATH, DB_NAME);
+        String dbPath = ctx.getFilesDir().getPath();
+        dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+		File f = new File(dbPath, DB_NAME);
 		int dbVersion = preferences.getInt("databaseVersion", -1);
 		return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
 	}
@@ -1726,7 +1745,11 @@ public class CardDbAdapter {
 		SharedPreferences.Editor editor = preferences.edit();
 
 		try {
-			File folder = new File(DB_PATH);
+
+            String dbPath = ctx.getFilesDir().getPath();
+            dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+
+			File folder = new File(dbPath);
 			if (!folder.exists()) {
 				folder.mkdir();
 			}
@@ -1927,7 +1950,7 @@ public class CardDbAdapter {
 	 * @throws FamiliarDbException
 	 */
 	public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-		String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
+		String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC", "CNS", "CNSC"};
 		ArrayList<String> nonModernLegalSets = new ArrayList<String>(Arrays.asList(extraSets));
 		for (String value : nonModernLegalSets) {
 			if (value.equals(setCode)) {

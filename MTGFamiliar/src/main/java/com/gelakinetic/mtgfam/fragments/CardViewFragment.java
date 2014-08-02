@@ -416,7 +416,7 @@ public class CardViewFragment extends FamiliarFragment {
 				mTransformCardNumber = mCardNumber.replace("b", "a");
 			}
 			mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
-			if(mTransformId == -1) {
+			if (mTransformId == -1) {
 				mTransformButton.setVisibility(View.GONE);
 				mTransformButtonDivider.setVisibility(View.GONE);
 			}
@@ -474,7 +474,7 @@ public class CardViewFragment extends FamiliarFragment {
 			cCardByName.moveToNext();
 		}
 		cCardByName.close();
-        /* If it exists in only one set, remove the button from the menu */
+		/* If it exists in only one set, remove the button from the menu */
 		if (mSets.size() == 1) {
 			mActivity.supportInvalidateOptionsMenu();
 		}
@@ -743,6 +743,10 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Handle item selection */
 		switch (item.getItemId()) {
 			case R.id.image: {
+				if (getFamiliarActivity().getNetworkState(true) == -1) {
+					return true;
+				}
+
 				mActivity.setLoading();
 				if (mAsyncTask != null) {
 					mAsyncTask.cancel(true);
@@ -803,6 +807,10 @@ public class CardViewFragment extends FamiliarFragment {
 				return true;
 			}
 			case R.id.cardrulings: {
+				if (getFamiliarActivity().getNetworkState(true) == -1) {
+					return true;
+				}
+
 				mActivity.setLoading();
 				if (mAsyncTask != null) {
 					mAsyncTask.cancel(true);
@@ -852,13 +860,13 @@ public class CardViewFragment extends FamiliarFragment {
 		/* If the image has been loaded to the main page, remove the menu option for image */
 		if (loadTo == MAIN_PAGE && mCardBitmap != null) {
 			mi = menu.findItem(R.id.image);
-			if(mi != null) {
+			if (mi != null) {
 				menu.removeItem(mi.getItemId());
 			}
 		}
 		if (mSets != null && mSets.size() == 1) {
 			mi = menu.findItem(R.id.changeset);
-			if(mi != null) {
+			if (mi != null) {
 				menu.removeItem(mi.getItemId());
 			}
 		}
@@ -950,7 +958,7 @@ public class CardViewFragment extends FamiliarFragment {
 			try {
 				showDialog(GET_LEGALITY);
 			} catch (IllegalStateException e) {
-                /* eat it */
+				/* eat it */
 			}
 			mActivity.clearLoading();
 		}
@@ -978,14 +986,16 @@ public class CardViewFragment extends FamiliarFragment {
 		@Override
 		protected Void doInBackground(Void... params) {
 			error = null;
-			String cardLanguage =
-					mActivity.mPreferenceAdapter.getCardLanguage();
+			String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
 			if (cardLanguage == null) {
 				cardLanguage = "en";
 			}
 
 			boolean bRetry = true;
-			boolean triedEn = false;
+
+			boolean triedMtgImage = false;
+			boolean triedMtgi = false;
+			boolean triedGatherer = false;
 
 			while (bRetry) {
 
@@ -993,60 +1003,28 @@ public class CardViewFragment extends FamiliarFragment {
 
 				try {
 
-					if (cardLanguage.equalsIgnoreCase("en")) {
-						triedEn = true;
-					}
-					String picURL;
-					if (mSetCode.equals("PP2")) {
-						picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					}
-					else if (mSetCode.equals("PCP")) {
-						if (mCardName.equalsIgnoreCase("tazeem")) {
-							mCardName = "tazeem-release-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else if (mCardName.equalsIgnoreCase("celestine reef")) {
-							mCardName = "celestine-reef-pre-release-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else if (mCardName.equalsIgnoreCase("horizon boughs")) {
-							mCardName = "horizon-boughs-gateway-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else {
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					}
-					else if (mSetCode.equals("ARS")) {
-						picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+					URL u;
+					if (!cardLanguage.equalsIgnoreCase("en")) {
+						u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
+						cardLanguage = "en";
 					}
 					else {
-						picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
-								mCardNumber + ".jpg";
-					}
-					picURL = picURL.toLowerCase(Locale.ENGLISH);
-
-					URL u = new URL(picURL);
-					try {
-						mCardBitmap = new BitmapDrawable(mActivity.getResources(), u.openStream());
-					} catch (FileNotFoundException e) {
-						if (!triedEn) {
-							/* Let the catch block take care of it */
-							throw new FileNotFoundException();
+						if (!triedMtgImage) {
+							u = new URL("http://mtgimage.com/multiverseid/" + mMultiverseId + ".jpg");
+							triedMtgImage = true;
+						}
+						else if (!triedMtgi) {
+							u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
+							triedMtgi = true;
 						}
 						else {
-							/* Ok, it doesn't exist on MagicCards.info in English. Fall back to Gatherer */
-							URL u2 = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
+							u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
 									+ mMultiverseId + "&type=card");
-							mCardBitmap = new BitmapDrawable(mActivity.getResources(), u2.openStream());
+							triedGatherer = true;
 						}
 					}
+
+					mCardBitmap = new BitmapDrawable(mActivity.getResources(), u.openStream());
 
 					/* Resize the image */
 					int height = 0, width = 0;
@@ -1088,31 +1066,64 @@ public class CardViewFragment extends FamiliarFragment {
 					Bitmap d = mCardBitmap.getBitmap();
 					Bitmap bitmapOrig = Bitmap.createScaledBitmap(d, newWidth, newHeight, true);
 					mCardBitmap = new BitmapDrawable(mActivity.getResources(), bitmapOrig);
-				} catch (FileNotFoundException e) {
-					/* internet works, image not found */
-					if (cardLanguage.equalsIgnoreCase("en")) {
-						error = getString(R.string.card_view_image_not_found);
-					}
-					else {
-						/* If image doesn't exist in the preferred language, let's retry with "en" */
-						cardLanguage = "en";
+				} catch (Exception e) {
+					/* Something went wrong */
+					error = getString(R.string.card_view_image_not_found);
+
+					if (!triedGatherer) {
 						bRetry = true;
 					}
-				} catch (ConnectException e) {
-					/* no internet */
-					error = "ConnectException";
-				} catch (UnknownHostException e) {
-					/* no internet */
-					error = "UnknownHostException";
-				} catch (MalformedURLException e) {
-					error = "MalformedURLException";
-				} catch (IOException e) {
-					error = "IOException";
-				} catch (NullPointerException e) {
-					error = "NullPointerException";
 				}
 			}
 			return null;
+		}
+
+		/**
+		 * Jumps through hoops and returns a correctly formatted URL for magiccards.info's image
+		 *
+		 * @param mCardName              The name of the card
+		 * @param mMagicCardsInfoSetCode The set of the card
+		 * @param mCardNumber            The number of the card
+		 * @param cardLanguage           The language of the card
+		 * @return a URL to the card's image
+		 */
+		private String getMtgiPicUrl(String mCardName, String mMagicCardsInfoSetCode, String mCardNumber,
+									 String cardLanguage) {
+			String picURL;
+			if (mSetCode.equals("PP2")) {
+				picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
+				picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+						.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+			}
+			else if (mSetCode.equals("PCP")) {
+				if (mCardName.equalsIgnoreCase("tazeem")) {
+					mCardName = "tazeem-release-promo";
+					picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+				}
+				else if (mCardName.equalsIgnoreCase("celestine reef")) {
+					mCardName = "celestine-reef-pre-release-promo";
+					picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+				}
+				else if (mCardName.equalsIgnoreCase("horizon boughs")) {
+					mCardName = "horizon-boughs-gateway-promo";
+					picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+				}
+				else {
+					picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+				}
+				picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+						.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+			}
+			else if (mSetCode.equals("ARS")) {
+				picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
+				picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+						.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+			}
+			else {
+				picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
+						mCardNumber + ".jpg";
+			}
+			return picURL.toLowerCase(Locale.ENGLISH);
 		}
 
 		/**
