@@ -944,7 +944,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     private void saveCardImage() {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(mActivity, "Unable to access external storage, please check your SD card.",
+            Toast.makeText(mActivity, getString(R.string.card_view_no_external_storage),
                     Toast.LENGTH_LONG).show();
 
             return;
@@ -956,7 +956,7 @@ public class CardViewFragment extends FamiliarFragment {
             strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                     .getCanonicalPath() + "/MTGFamiliar";
         } catch (IOException ex) {
-            Toast.makeText(mActivity, "Unable to find pictures folder, please try again.",
+            Toast.makeText(mActivity, getString(R.string.card_view_no_pictures_folder),
                     Toast.LENGTH_LONG).show();
 
             return;
@@ -969,7 +969,7 @@ public class CardViewFragment extends FamiliarFragment {
             fPath.mkdir();
 
             if (!fPath.isDirectory()) {
-                Toast.makeText(mActivity, "Unable to create directory to hold images, please try again",
+                Toast.makeText(mActivity, getString(R.string.card_view_unable_to_create_dir),
                         Toast.LENGTH_LONG).show();
 
                 return;
@@ -982,7 +982,7 @@ public class CardViewFragment extends FamiliarFragment {
         fPath = new File(strPath, mCardName + "_" + ts + ".jpg");
 
         if (fPath.exists()) {
-            Toast.makeText(mActivity, "Image already exists, please try saving again.",
+            Toast.makeText(mActivity, getString(R.string.card_view_image_exists),
                     Toast.LENGTH_LONG).show();
 
             return;
@@ -990,7 +990,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         try {
             if (!fPath.createNewFile()) {
-                Toast.makeText(mActivity, "Unable to create image file, please try again.",
+                Toast.makeText(mActivity, getString(R.string.card_view_unable_to_create_file),
                         Toast.LENGTH_LONG).show();
 
                 return;
@@ -1003,14 +1003,14 @@ public class CardViewFragment extends FamiliarFragment {
             Bitmap bmpImage = mCopyImageView.getDrawingCache();
 
             if (bmpImage == null) {
-                Toast.makeText(mActivity, "Unable to find image to save, please try again.",
+                Toast.makeText(mActivity, getString(R.string.card_view_no_image),
                         Toast.LENGTH_LONG).show();
 
                 return;
             }
 
             if (!bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream)) {
-                Toast.makeText(mActivity, "Image file could not be saved, please try again.",
+                Toast.makeText(mActivity, getString(R.string.card_view_unable_to_save_image),
                         Toast.LENGTH_LONG).show();
 
                 return;
@@ -1018,13 +1018,13 @@ public class CardViewFragment extends FamiliarFragment {
 
             strPath = fPath.getCanonicalPath();
         } catch (IOException ex) {
-            Toast.makeText(mActivity, "Unable to create image file, please try again.",
+            Toast.makeText(mActivity, getString(R.string.card_view_save_failure),
                     Toast.LENGTH_LONG).show();
 
             return;
         }
 
-        Toast.makeText(mActivity, "Image saved to " + strPath, Toast.LENGTH_LONG).show();
+        Toast.makeText(mActivity, getString(R.string.card_view_image_saved) + strPath, Toast.LENGTH_LONG).show();
     }
 
 	/**
