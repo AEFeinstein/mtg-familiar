@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Copyright 2011 Adam Feinstein
+Copyright 2014 Devin Collins
 
 This file is part of MTG Familiar.
 
@@ -20,11 +20,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/copy"
-        android:title="@string/card_view_copy"/>
-
-    <item
-        android:id="@+id/copyall"
-        android:title="@string/card_view_copy_all"/>
+        android:id="@+id/save"
+        android:title="@string/card_view_save"/>
 
 </menu>

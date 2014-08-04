@@ -201,6 +201,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="card_view_set_dialog_title">Pick a Set</string>
     <string name="card_view_price_not_found">Price not found</string>
     <string name="card_view_image_not_found">Image Not Found</string>
+    <string name="card_view_save">Save card image</string>
 
     <!-- Life counter activity -->
     <string name="life_counter_announce_life">Announce Life Totals</string>

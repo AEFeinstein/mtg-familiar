@@ -34,6 +34,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.method.LinkMovementMethod;
@@ -72,7 +73,9 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -219,6 +222,7 @@ public class CardViewFragment extends FamiliarFragment {
 		registerForContextMenu(mPowTouTextView);
 		registerForContextMenu(mFlavorTextView);
 		registerForContextMenu(mArtistTextView);
+        registerForContextMenu(mCardImageView);
 
 		if (mActivity.mPreferenceAdapter.getPicFirst()) {
 			loadTo = MAIN_PAGE;
@@ -676,13 +680,22 @@ public class CardViewFragment extends FamiliarFragment {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 
 		super.onCreateContextMenu(menu, v, menuInfo);
-		TextView tv = (TextView) v;
 
-		assert tv.getText() != null;
-		mCopyString = tv.getText().toString();
+        int iMenu = 0;
+
+        if (v.getClass() == TextView.class) {
+            TextView tv = (TextView) v;
+
+            assert tv.getText() != null;
+            mCopyString = tv.getText().toString();
+            iMenu = R.menu.copy_menu;
+        } else if (v.getClass() == ImageView.class) {
+            iMenu = R.menu.save_image_menu;
+        }
 
 		android.view.MenuInflater inflater = this.mActivity.getMenuInflater();
-		inflater.inflate(R.menu.copy_menu, menu);
+		inflater.inflate(iMenu, menu);
+
 	}
 
 	/**
@@ -715,6 +728,9 @@ public class CardViewFragment extends FamiliarFragment {
 						mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString();
 				break;
 			}
+            case R.id.save: {
+                saveCardImage();
+            }
 			default: {
 				return super.onContextItemSelected(item);
 			}
@@ -871,6 +887,75 @@ public class CardViewFragment extends FamiliarFragment {
 			}
 		}
 	}
+
+    private void saveCardImage() {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Toast.makeText(mActivity, "Unable to access external storage, please check your SD card.",
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        String strPath;
+
+        try {
+            strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    .getCanonicalPath() + "/MTGFamiliar";
+        } catch (IOException ex) {
+            Toast.makeText(mActivity, "Unable to find pictures folder, please try again.",
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        File fPath = new File(strPath);
+
+        if (!fPath.exists()) {
+            fPath.mkdir();
+
+            if (!fPath.isDirectory()) {
+                Toast.makeText(mActivity, "Unable to create directory to hold images, please try again",
+                        Toast.LENGTH_LONG).show();
+
+                return;
+            }
+        }
+
+        Long tsLong = System.currentTimeMillis() / 1000;
+        String ts = tsLong.toString();
+
+        fPath = new File(strPath, mCardName + "_" + ts + ".jpg");
+
+        if (fPath.exists()) {
+            Toast.makeText(mActivity, "Image already exists, please try saving again.",
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        try {
+            if (!fPath.createNewFile()) {
+                Toast.makeText(mActivity, "Unable to create image file, please try again.",
+                        Toast.LENGTH_LONG).show();
+
+                return;
+            }
+
+            FileOutputStream fStream = new FileOutputStream(fPath);
+
+            if (!mCardBitmap.getBitmap().compress(Bitmap.CompressFormat.JPEG, 80, fStream)) {
+                Toast.makeText(mActivity, "Image file could not be saved, please try again.",
+                        Toast.LENGTH_LONG).show();
+            }
+        } catch (IOException ex) {
+            Toast.makeText(mActivity, "Unable to create image file, please try again.",
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        Toast.makeText(mActivity, "Card image saved!", Toast.LENGTH_LONG).show();
+    }
 
 	/**
 	 * This inner class encapsulates a ruling and the date it was made
