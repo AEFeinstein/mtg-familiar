@@ -994,7 +994,7 @@ public class CardViewFragment extends FamiliarFragment {
 
 			FileOutputStream fStream = new FileOutputStream(fPath);
 
-			mCopyImageView.setDrawingCacheEnabled(true);
+			mCopyImageView.buildDrawingCache();
 
 			Bitmap bmpImage = mCopyImageView.getDrawingCache();
 
@@ -1005,7 +1005,11 @@ public class CardViewFragment extends FamiliarFragment {
 				return;
 			}
 
-			if (!bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream)) {
+            boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream);
+
+            mCopyImageView.destroyDrawingCache();
+
+			if (!bCompressed) {
 				Toast.makeText(mActivity, getString(R.string.card_view_unable_to_save_image),
 						Toast.LENGTH_LONG).show();
 
