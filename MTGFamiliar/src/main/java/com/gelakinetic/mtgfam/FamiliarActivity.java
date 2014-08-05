@@ -70,6 +70,7 @@ import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.fragments.ManaPoolFragment;
 import com.gelakinetic.mtgfam.fragments.MoJhoStoFragment;
 import com.gelakinetic.mtgfam.fragments.PrefsFragment;
+import com.gelakinetic.mtgfam.fragments.ProfileFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.RoundTimerFragment;
 import com.gelakinetic.mtgfam.fragments.RulesFragment;
@@ -112,6 +113,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_RULES = "android.intent.action.RULES";
 	public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
 	public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
+    public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
 
 	/* Constants used for displaying dialogs */
 	private static final int DIALOG_ABOUT = 100;
@@ -146,6 +148,7 @@ public class FamiliarActivity extends FragmentActivity {
 			new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
 			new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
 			new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
+            new DrawerEntry(R.string.main_profile, R.attr.ic_action_person, false),
 			new DrawerEntry(R.string.main_extras, 0, true),
 			new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
 			new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
@@ -153,7 +156,7 @@ public class FamiliarActivity extends FragmentActivity {
 			new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
 			new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
 			new DrawerEntry(R.string.main_export_data_title, R.attr.ic_action_save, false),
-			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_action_collection, false)
+			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_action_collection, false),
 	};
 	private final Handler mInactivityHandler = new Handler();
 	/* Listen for changes to preferences */
@@ -369,7 +372,8 @@ public class FamiliarActivity extends FragmentActivity {
 					case R.string.main_judges_corner:
 					case R.string.main_mojhosto:
 					case R.string.main_card_search:
-					case R.string.main_life_counter: {
+                    case R.string.main_life_counter:
+                    case R.string.main_profile: {
 						selectItem(mPageEntries[i].mNameResource, null);
 						break;
 					}
@@ -510,54 +514,45 @@ public class FamiliarActivity extends FragmentActivity {
 		/* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
 		/* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
 		if (savedInstanceState == null) {
-			Intent intent = getIntent();
-			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Intent intent = getIntent();
+            if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 				/* Do a search by name, launched from the quick search */
-				String query = intent.getStringExtra(SearchManager.QUERY);
-				Bundle args = new Bundle();
-				SearchCriteria sc = new SearchCriteria();
-				sc.name = query;
-				args.putSerializable(SearchViewFragment.CRITERIA, sc);
-				selectItem(R.string.main_card_search, args);
-			}
-			else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+                String query = intent.getStringExtra(SearchManager.QUERY);
+                Bundle args = new Bundle();
+                SearchCriteria sc = new SearchCriteria();
+                sc.name = query;
+                args.putSerializable(SearchViewFragment.CRITERIA, sc);
+                selectItem(R.string.main_card_search, args);
+            } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 				/* User clicked a card in the quick search autocomplete, jump right to it */
-				Uri data = intent.getData();
-				Bundle args = new Bundle();
-				assert data != null;
-				args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
-				selectItem(R.string.main_card_search, args);
-			}
-			else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
-				selectItem(R.string.main_timer, null);
-			}
-			else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
-				selectItem(R.string.main_card_search, null);
-			}
-			else if (ACTION_LIFE.equals(intent.getAction())) {
-				selectItem(R.string.main_life_counter, null);
-			}
-			else if (ACTION_DICE.equals(intent.getAction())) {
-				selectItem(R.string.main_dice, null);
-			}
-			else if (ACTION_TRADE.equals(intent.getAction())) {
-				selectItem(R.string.main_trade, null);
-			}
-			else if (ACTION_MANA.equals(intent.getAction())) {
-				selectItem(R.string.main_mana_pool, null);
-			}
-			else if (ACTION_WISH.equals(intent.getAction())) {
-				selectItem(R.string.main_wishlist, null);
-			}
-			else if (ACTION_RULES.equals(intent.getAction())) {
-				selectItem(R.string.main_rules, null);
-			}
-			else if (ACTION_JUDGE.equals(intent.getAction())) {
-				selectItem(R.string.main_judges_corner, null);
-			}
-			else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
-				selectItem(R.string.main_mojhosto, null);
-			}
+                Uri data = intent.getData();
+                Bundle args = new Bundle();
+                assert data != null;
+                args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
+                selectItem(R.string.main_card_search, args);
+            } else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
+                selectItem(R.string.main_timer, null);
+            } else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
+                selectItem(R.string.main_card_search, null);
+            } else if (ACTION_LIFE.equals(intent.getAction())) {
+                selectItem(R.string.main_life_counter, null);
+            } else if (ACTION_DICE.equals(intent.getAction())) {
+                selectItem(R.string.main_dice, null);
+            } else if (ACTION_TRADE.equals(intent.getAction())) {
+                selectItem(R.string.main_trade, null);
+            } else if (ACTION_MANA.equals(intent.getAction())) {
+                selectItem(R.string.main_mana_pool, null);
+            } else if (ACTION_WISH.equals(intent.getAction())) {
+                selectItem(R.string.main_wishlist, null);
+            } else if (ACTION_RULES.equals(intent.getAction())) {
+                selectItem(R.string.main_rules, null);
+            } else if (ACTION_JUDGE.equals(intent.getAction())) {
+                selectItem(R.string.main_judges_corner, null);
+            } else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
+                selectItem(R.string.main_mojhosto, null);
+            } else if (ACTION_PROFILE.equals(intent.getAction())) {
+                selectItem(R.string.main_profile, null);
+            }
 			else {
 			/* App launched as regular, show the default fragment */
 
@@ -593,6 +588,9 @@ public class FamiliarActivity extends FragmentActivity {
 				else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
 					selectItem(R.string.main_mojhosto, null);
 				}
+                else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
+                    selectItem(R.string.main_profile, null);
+                }
 				else {
 					selectItem(R.string.main_card_search, null);
 				}
@@ -694,6 +692,10 @@ public class FamiliarActivity extends FragmentActivity {
 				newFrag = new MoJhoStoFragment();
 				break;
 			}
+            case R.string.main_profile: {
+                newFrag = new ProfileFragment();
+                break;
+            }
 			default:
 				return;
 		}

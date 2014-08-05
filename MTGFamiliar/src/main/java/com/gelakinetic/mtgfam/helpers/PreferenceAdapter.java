@@ -365,7 +365,7 @@ public class PreferenceAdapter {
 	}
 
 	public synchronized void setLastTCGNameUpdate(String lastTCGNameUpdate) {
-		this.edit.putString(context.getString(R.string.key_lastTCGNameUpdate), lastTCGNameUpdate);
+        this.edit.putString(context.getString(R.string.key_lastTCGNameUpdate), lastTCGNameUpdate);
 		this.edit.commit();
 	}
 
@@ -410,7 +410,7 @@ public class PreferenceAdapter {
 		this.edit.commit();
 	}
 
-	/* This is slightly different because we want to make sure to commit a theme if one doesn't
+    /* This is slightly different because we want to make sure to commit a theme if one doesn't
 	 * exist, not just return the default. asd is a nice tag, no?
 	 */
 	public String getTheme() {
@@ -426,4 +426,13 @@ public class PreferenceAdapter {
 		this.edit.putString(context.getString(R.string.key_theme), theme);
 		this.edit.commit();
 	}
+
+    public synchronized String getDCINumber() {
+        return this.prefs.getString(context.getString(R.string.key_dci_number), "");
+    }
+
+    public void setDCINumber(String dciNumber) {
+        this.edit.putString(context.getString(R.string.key_dci_number), dciNumber);
+        this.edit.commit();
+    }
 }

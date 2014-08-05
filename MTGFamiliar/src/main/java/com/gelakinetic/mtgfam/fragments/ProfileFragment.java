@@ -1,0 +1,224 @@
+/**
+ Copyright 2014 Devin Collins
+
+ This file is part of MTG Familiar.
+
+ MTG Familiar is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ MTG Familiar is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.gelakinetic.mtgfam.fragments;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.gelakinetic.mtgfam.FamiliarActivity;
+import com.gelakinetic.mtgfam.R;
+
+/**
+ * This fragment contains a players profile information such as their DCI number and anything else
+ * we can think of to go here
+ */
+public class ProfileFragment extends FamiliarFragment {
+
+    /* Dialog constants */
+    private static final int DIALOG_DCI_NUMBER = 1;
+
+    /* UI Elements */
+    private TextView mBarcodeTextView;
+    private TextView mDCINumberTextView;
+    private TextView mNoDCINumberTextView;
+
+    /* String variables */
+    private String mDCINumber;
+
+    /* Global activity variable to reduce getActivity() calls */
+    private FamiliarActivity mActivity;
+
+    /**
+     * Initialize the view and set up the button actions
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
+     *                           fragment should not add the view itself, but this can be used to generate the
+     *                           LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
+     *                           here.
+     * @return The inflated view
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        try {
+            mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
+        } catch (NullPointerException ex) {
+            mActivity = getFamiliarActivity();
+        }
+
+        View myFragmentView = inflater.inflate(R.layout.profile_frag, container, false);
+
+        assert myFragmentView != null;
+        mBarcodeTextView = (TextView) myFragmentView.findViewById(R.id.barcode);
+        mDCINumberTextView = (TextView) myFragmentView.findViewById(R.id.dci_number);
+        mNoDCINumberTextView = (TextView) myFragmentView.findViewById(R.id.no_dci_number);
+
+        Typeface tf = Typeface.createFromAsset(mActivity.getAssets(), "free3of9.ttf");
+        mBarcodeTextView.setTypeface(tf);
+
+        mDCINumber = mActivity.mPreferenceAdapter.getDCINumber();
+
+        checkDCINumber();
+
+        return myFragmentView;
+    }
+
+    /**
+     * @param menu     The options menu in which you place your items.
+     * @param inflater The inflater to use to inflate the menu
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.profile_menu, menu);
+    }
+
+    /**
+     * Handle an ActionBar item click
+     *
+     * @param item the item clicked
+     * @return true if the click was acted on
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.profile_menu_update_dci:
+                showDialog(DIALOG_DCI_NUMBER);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    void showDialog(final int id) throws IllegalStateException {
+		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
+		currently showing dialog, so make our own transaction and take care of that here. */
+
+		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        if (!this.isVisible()) {
+            return;
+        }
+
+        removeDialog(getFragmentManager());
+
+		/* Create and show the dialog. */
+        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
+
+            @Override
+            public Dialog onCreateDialog(Bundle savedInstanceState) {
+				/* We're setting this to false if we return null, so we should reset it every time to be safe */
+                setShowsDialog(true);
+                switch (id) {
+                    case DIALOG_DCI_NUMBER: {
+                        View view = ((LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                                .inflate(R.layout.profile_update_dci_dialog, null, false);
+
+                        final EditText dciEditText = (EditText) view.findViewById(R.id.dci_number);
+
+                        final String strDCI = mActivity.mPreferenceAdapter.getDCINumber();
+
+                        dciEditText.setText(strDCI);
+
+                        return new AlertDialog.Builder(mActivity)
+                                .setTitle(R.string.profile_update_dci_dialog_title)
+                                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        String strNumber = dciEditText.getText().toString();
+
+                                        if (strNumber.isEmpty()) {
+                                            Toast.makeText(mActivity,
+                                                    getString(R.string.profile_invalid_dci),
+                                                    Toast.LENGTH_SHORT).show();
+
+                                            return;
+                                        }
+
+                                        mActivity.mPreferenceAdapter.setDCINumber(strNumber);
+                                        mDCINumber = strNumber;
+                                        checkDCINumber();
+                                        dismiss();
+                                    }
+                                })
+                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        checkDCINumber();
+                                        dismiss();
+                                    }
+                                })
+                                .setNeutralButton(R.string.dialog_clear, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mActivity.mPreferenceAdapter.setDCINumber("");
+                                        mDCINumber = "";
+                                        checkDCINumber();
+                                        dismiss();
+                                    }
+                                })
+                                .setView(view)
+                                .create();
+                    }
+                    default: {
+                        setShowsDialog(false);
+                        return null;
+                    }
+                }
+            }
+        };
+        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+    }
+
+    private void checkDCINumber() {
+        if (mDCINumber.isEmpty()) {
+            hideDCINumber();
+        } else {
+            showDCINumber();
+        }
+    }
+
+    private void hideDCINumber() {
+        mDCINumberTextView.setVisibility(View.GONE);
+        mBarcodeTextView.setVisibility(View.GONE);
+        mNoDCINumberTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void showDCINumber() {
+        mDCINumberTextView.setText(mDCINumber);
+        mBarcodeTextView.setText(mDCINumber);
+        mDCINumberTextView.setVisibility(View.VISIBLE);
+        mBarcodeTextView.setVisibility(View.VISIBLE);
+        mNoDCINumberTextView.setVisibility(View.GONE);
+    }
+}
