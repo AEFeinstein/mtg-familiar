@@ -30,6 +30,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -82,8 +83,10 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseHelper;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 import com.octo.android.robospice.SpiceManager;
 
@@ -312,6 +315,39 @@ public class FamiliarActivity extends FragmentActivity {
 		DrawerEntryArrayAdapter pagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
 
 		mDrawerList.setAdapter(pagesAdapter);
+        mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                boolean shouldCloseDrawer = false;
+                switch (mPageEntries[i].mNameResource) {
+                    case R.string.main_force_update_title: {
+                        if (getNetworkState(true) != -1) {
+                            try {
+                                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
+                                CardDbAdapter.dropCreateDB(database);
+                                mPreferenceAdapter.setLastLegalityUpdate(0);
+                                startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+                            } catch (FamiliarDbException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        shouldCloseDrawer = true;
+                        break;
+                    }
+                }
+
+                mDrawerList.setItemChecked(mCurrentFrag, true);
+                if (shouldCloseDrawer) {
+                    (new Handler()).postDelayed(new Runnable() {
+                        public void run() {
+                            mDrawerLayout.closeDrawer(mDrawerList);
+                        }
+                    }, 50);
+                    return true;
+                }
+                return false;
+            }
+        });
 		mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
