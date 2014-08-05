@@ -201,6 +201,16 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="card_view_set_dialog_title">Pick a Set</string>
     <string name="card_view_price_not_found">Price not found</string>
     <string name="card_view_image_not_found">Image Not Found</string>
+    <string name="card_view_save">Save card image</string>
+    <string name="card_view_no_external_storage">Unable to access external storage, please check your SD card.</string>
+    <string name="card_view_no_pictures_folder">Unable to find pictures folder, please try again.</string>
+    <string name="card_view_unable_to_create_dir">Unable to create directory to hold images, please try again</string>
+    <string name="card_view_image_exists">Image already exists, please try saving again.</string>
+    <string name="card_view_unable_to_create_file">Unable to create image file, please try again.</string>
+    <string name="card_view_no_image">Could not find the image to save, please try again.</string>
+    <string name="card_view_unable_to_save_image">Unable to save image, please try again.</string>
+    <string name="card_view_save_failure">Failed to save image, please try again</string>
+    <string name="card_view_image_saved">Image saved to </string>
 
     <!-- Life counter activity -->
     <string name="life_counter_announce_life">Announce Life Totals</string>

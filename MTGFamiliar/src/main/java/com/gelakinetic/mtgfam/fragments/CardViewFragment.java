@@ -34,6 +34,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.method.LinkMovementMethod;
@@ -72,14 +73,13 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -127,6 +127,7 @@ public class CardViewFragment extends FamiliarFragment {
 	private String[] mLegalities;
 	private String[] mFormats;
 	private ArrayList<Ruling> mRulingsArrayList;
+    private ImageView mCopyImageView;
 
 	/* Loaded in a Spice Service */
 	private PriceInfo mPriceInfo;
@@ -219,6 +220,7 @@ public class CardViewFragment extends FamiliarFragment {
 		registerForContextMenu(mPowTouTextView);
 		registerForContextMenu(mFlavorTextView);
 		registerForContextMenu(mArtistTextView);
+        registerForContextMenu(mCardImageView);
 
 		if (mActivity.mPreferenceAdapter.getPicFirst()) {
 			loadTo = MAIN_PAGE;
@@ -523,6 +525,9 @@ public class CardViewFragment extends FamiliarFragment {
 						ImageView dialogImageView = (ImageView) dialog.findViewById(R.id.cardimage);
 						dialogImageView.setImageDrawable(mCardBitmap);
 
+                        registerForContextMenu(dialogImageView);
+                        dialogImageView.setOnCreateContextMenuListener(this);
+
 						return dialog;
 					}
 					case GET_LEGALITY: {
@@ -660,12 +665,61 @@ public class CardViewFragment extends FamiliarFragment {
 					}
 				}
 			}
-		};
+
+            /**
+             * Called when a registered view is long-pressed. The menu inflated will give different options based on the view class
+             *
+             * @param menu     The context menu that is being built
+             * @param v        The view for which the context menu is being built
+             * @param menuInfo Extra information about the item for which the context menu should be shown. This information
+             *                 will vary depending on the class of v.
+             */
+            @Override
+            public void onCreateContextMenu(final ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+                super.onCreateContextMenu(menu, v, menuInfo);
+
+                if (v.getClass() == ImageView.class) {
+                    android.view.MenuInflater inflater = mActivity.getMenuInflater();
+                    inflater.inflate(R.menu.save_image_menu, menu);
+
+                    mCopyImageView = (ImageView) v;
+
+                    /* We have to do some trickery to get the context menu listener to work inside of
+                       a dialogfragment. So we create a new listener for menu items and override the
+                       listener for all items in the menu */
+                    MenuItem.OnMenuItemClickListener listener = new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            onContextItemSelected(menuItem);
+                            return true;
+                        }
+                    };
+
+                    for (int i = 0; i < menu.size(); i++) {
+                        menu.getItem(i).setOnMenuItemClickListener(listener);
+                    }
+                }
+            }
+
+            @Override
+            public boolean onContextItemSelected(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.save:
+                        saveCardImage();
+
+                        return true;
+                    default:
+                        return super.onContextItemSelected(item);
+                }
+            }
+
+
+        };
 		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
 	}
 
 	/**
-	 * Called when a registered TextView is long-pressed. The menu inflated will give options to copy text
+     * Called when a registered view is long-pressed. The menu inflated will give different options based on the view class
 	 *
 	 * @param menu     The context menu that is being built
 	 * @param v        The view for which the context menu is being built
@@ -676,13 +730,23 @@ public class CardViewFragment extends FamiliarFragment {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 
 		super.onCreateContextMenu(menu, v, menuInfo);
-		TextView tv = (TextView) v;
 
-		assert tv.getText() != null;
-		mCopyString = tv.getText().toString();
+        int iMenu = 0;
+
+        if (v.getClass() == TextView.class) {
+            TextView tv = (TextView) v;
+
+            assert tv.getText() != null;
+            mCopyString = tv.getText().toString();
+            iMenu = R.menu.copy_menu;
+        } else if (v.getClass() == ImageView.class) {
+            mCopyImageView = (ImageView) v;
+
+            iMenu = R.menu.save_image_menu;
+        }
 
 		android.view.MenuInflater inflater = this.mActivity.getMenuInflater();
-		inflater.inflate(R.menu.copy_menu, menu);
+		inflater.inflate(iMenu, menu);
 	}
 
 	/**
@@ -715,17 +779,23 @@ public class CardViewFragment extends FamiliarFragment {
 						mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString();
 				break;
 			}
+            case R.id.save: {
+                saveCardImage();
+
+                return true;
+            }
 			default: {
 				return super.onContextItemSelected(item);
 			}
 		}
-		ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
-				getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-		String label = getResources().getString(R.string.app_name);
-		String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-		ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
-		clipboard.setPrimaryClip(cd);
-		return true;
+
+        ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
+                getSystemService(android.content.Context.CLIPBOARD_SERVICE));
+        String label = getResources().getString(R.string.app_name);
+        String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+        ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
+        clipboard.setPrimaryClip(cd);
+        return true;
 	}
 
 	/**
@@ -871,6 +941,91 @@ public class CardViewFragment extends FamiliarFragment {
 			}
 		}
 	}
+
+    private void saveCardImage() {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Toast.makeText(mActivity, getString(R.string.card_view_no_external_storage),
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        String strPath;
+
+        try {
+            strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    .getCanonicalPath() + "/MTGFamiliar";
+        } catch (IOException ex) {
+            Toast.makeText(mActivity, getString(R.string.card_view_no_pictures_folder),
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        File fPath = new File(strPath);
+
+        if (!fPath.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            fPath.mkdir();
+
+            if (!fPath.isDirectory()) {
+                Toast.makeText(mActivity, getString(R.string.card_view_unable_to_create_dir),
+                        Toast.LENGTH_LONG).show();
+
+                return;
+            }
+        }
+
+        Long tsLong = System.currentTimeMillis() / 1000;
+        String ts = tsLong.toString();
+
+        fPath = new File(strPath, mCardName + "_" + ts + ".jpg");
+
+        if (fPath.exists()) {
+            Toast.makeText(mActivity, getString(R.string.card_view_image_exists),
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        try {
+            if (!fPath.createNewFile()) {
+                Toast.makeText(mActivity, getString(R.string.card_view_unable_to_create_file),
+                        Toast.LENGTH_LONG).show();
+
+                return;
+            }
+
+            FileOutputStream fStream = new FileOutputStream(fPath);
+
+            mCopyImageView.setDrawingCacheEnabled(true);
+
+            Bitmap bmpImage = mCopyImageView.getDrawingCache();
+
+            if (bmpImage == null) {
+                Toast.makeText(mActivity, getString(R.string.card_view_no_image),
+                        Toast.LENGTH_LONG).show();
+
+                return;
+            }
+
+            if (!bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream)) {
+                Toast.makeText(mActivity, getString(R.string.card_view_unable_to_save_image),
+                        Toast.LENGTH_LONG).show();
+
+                return;
+            }
+
+            strPath = fPath.getCanonicalPath();
+        } catch (IOException ex) {
+            Toast.makeText(mActivity, getString(R.string.card_view_save_failure),
+                    Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        Toast.makeText(mActivity, getString(R.string.card_view_image_saved) + strPath, Toast.LENGTH_LONG).show();
+    }
 
 	/**
 	 * This inner class encapsulates a ruling and the date it was made
