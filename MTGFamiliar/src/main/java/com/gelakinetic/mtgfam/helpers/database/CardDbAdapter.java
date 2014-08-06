@@ -1290,7 +1290,8 @@ public class CardDbAdapter {
 					+ " = '" + mCardName
 					+ "') WHEN 1 THEN NULL ELSE CASE WHEN '" + format
 					+ "' = 'Legacy' " + "THEN NULL WHEN '" + format
-					+ "' = 'Vintage' THEN NULL ELSE 1 END END, (SELECT "
+					+ "' = 'Vintage' THEN NULL WHEN '" + format
+                    + "' = 'Commander' THEN NULL ELSE 1 END END, (SELECT "
 					+ KEY_LEGALITY + " from " + DATABASE_TABLE_BANNED_CARDS
 					+ " WHERE " + KEY_NAME + " = '" + mCardName + "' AND "
 					+ KEY_FORMAT + " = '" + format + "'), 0) AS "

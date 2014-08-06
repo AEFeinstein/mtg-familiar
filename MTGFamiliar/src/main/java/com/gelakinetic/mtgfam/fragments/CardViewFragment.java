@@ -1073,7 +1073,16 @@ public class CardViewFragment extends FamiliarFragment {
 							mLegalities[i] = getString(R.string.card_view_legal);
 							break;
 						case CardDbAdapter.RESTRICTED:
-							mLegalities[i] = getString(R.string.card_view_restricted);
+                            /* For backwards compatibility, we list cards that are legal
+                             * in commander, but can't be the commander as Restricted in
+                             * the legality file.  This prevents older version of the app
+                             * from throwing an IllegalStateException if we try including
+                             * a new legality. */
+                            if (mFormats[i].equalsIgnoreCase("Commander")) {
+                                mLegalities[i] = getString(R.string.card_view_no_commander);
+                            } else {
+                                mLegalities[i] = getString(R.string.card_view_restricted);
+                            }
 							break;
 						case CardDbAdapter.BANNED:
 							mLegalities[i] = getString(R.string.card_view_banned);
