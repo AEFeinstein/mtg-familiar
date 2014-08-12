@@ -45,4 +45,5 @@
     <string name="key_bounceDrawer">bounceDrawer</string>
     <string name="key_widgetButtons">widgetButtons</string>
     <string name="key_theme">theme</string>
+    <string name="key_ramCache">ramCache</string>
 </resources>

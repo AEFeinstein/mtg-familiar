@@ -76,6 +76,7 @@ import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.helpers.ImageCacheHelper;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
@@ -206,6 +207,9 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 	};
 
+	/* Public image helper to manage cache */
+	public ImageCacheHelper mCacheHelper;
+
 	/**
 	 * Start the Spice Manager when the activity starts
 	 */
@@ -260,6 +264,7 @@ public class FamiliarActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPreferenceAdapter = new PreferenceAdapter(this);
+		mCacheHelper = new ImageCacheHelper(this);
 
 		/* Figure out what theme the app is currently in, and change it if necessary */
 		int resourceId = getResourceIdFromAttr(R.attr.color_drawer_background);
