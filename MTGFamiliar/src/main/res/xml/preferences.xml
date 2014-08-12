@@ -135,6 +135,22 @@
 
         </PreferenceCategory>
 
+        <PreferenceCategory
+            android:title="@string/pref_cat_card_cache"
+            xmlns:robobunny="http://robobunny.com">
+
+            <com.robobunny.preferences.SeekBarPreference
+                android:key="@string/key_ramCache"
+                android:title="@string/pref_card_ram_size_title"
+                android:summary="@string/pref_card_ram_size_summary"
+                android:defaultValue="12"
+                android:max="100"
+                robobunny:min="1"
+                robobunny:unitsLeft=""
+                robobunny:unitsRight="%" />
+
+        </PreferenceCategory>
+
     </PreferenceScreen>
 
     <!-- Life counter preferences -->

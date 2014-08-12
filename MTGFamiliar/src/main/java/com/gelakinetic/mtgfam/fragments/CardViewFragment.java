@@ -35,9 +35,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -1157,6 +1159,14 @@ public class CardViewFragment extends FamiliarFragment {
 				bRetry = false;
 
 				try {
+					Bitmap cacheBmp = mActivity.mCacheHelper.getBitmapFromCache(
+							String.valueOf(mMultiverseId) + cardLanguage);
+
+					if (cacheBmp != null) {
+						mCardBitmap = new BitmapDrawable(mActivity.getResources(), cacheBmp);
+
+						return null;
+					}
 
 					URL u;
 					if (!cardLanguage.equalsIgnoreCase("en")) {
@@ -1221,6 +1231,8 @@ public class CardViewFragment extends FamiliarFragment {
 					Bitmap d = mCardBitmap.getBitmap();
 					Bitmap bitmapOrig = Bitmap.createScaledBitmap(d, newWidth, newHeight, true);
 					mCardBitmap = new BitmapDrawable(mActivity.getResources(), bitmapOrig);
+					mActivity.mCacheHelper.addBitmapToCache(
+							String.valueOf(mMultiverseId) + cardLanguage, bitmapOrig);
 				} catch (Exception e) {
 					/* Something went wrong */
 					error = getString(R.string.card_view_image_not_found);

@@ -426,4 +426,13 @@ public class PreferenceAdapter {
 		this.edit.putString(context.getString(R.string.key_theme), theme);
 		this.edit.commit();
 	}
+
+	public void setRAMCache(int ramCache) {
+		this.edit.putInt(context.getString(R.string.key_ramCache), ramCache);
+		this.edit.commit();
+	}
+
+	public int getRAMCache() {
+		return this.prefs.getInt(context.getString(R.string.key_ramCache), 12);
+	}
 }

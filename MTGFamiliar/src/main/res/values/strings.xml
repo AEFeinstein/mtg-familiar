@@ -443,6 +443,9 @@ Good luck, and have fun!
     <string name="pref_cat_theme">Look &amp; Feel</string>
     <string name="pref_theme_title">Theme</string>
     <string name="pref_theme_summary">Set a light or dark theme</string>
+    <string name="pref_cat_card_cache">Image caching</string>
+    <string name="pref_card_ram_size_title">Percentage of RAM</string>
+    <string name="pref_card_ram_size_summary">Maximum amount of RAM to utilize for caching card images</string>
 
     <!-- Judge's Corner -->
     <string name="judges_corner_MTR">MTR</string>
