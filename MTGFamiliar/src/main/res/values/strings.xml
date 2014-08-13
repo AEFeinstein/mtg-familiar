@@ -24,6 +24,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="dialog_thanks">Thanks!</string>
     <string name="dialog_thanks_anyway">Thanks Anyway!</string>
     <string name="dialog_enjoy">Enjoy!</string>
+    <string name="dialog_clear">Clear</string>
     <string name="update_notification">Checking for database updates</string>
     <string name="update_updating_set">Adding %s</string>
     <string name="update_updating_rules">Updating comprehensive rules</string>
@@ -55,6 +56,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="main_settings_title">Settings</string>
     <string name="main_donate_title">Donate</string>
     <string name="main_donate_dialog_title">Donate to the Developers</string>
+    <string name="main_profile">Profile</string>
 <string name="main_donate_text">
 For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;&lt;br&gt;
 Well, if you\'re reading this, you already know we\'re giving it away for free!&lt;br&gt;&lt;br&gt;
@@ -341,6 +343,13 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="rules_search_all">Search all rules</string>
     <string name="rules_search_cat">Search within %s</string>
     <string name="rules_this_cat">this category:</string>
+
+    <!-- Profile activity -->
+    <string name="profile_dci_number">DCI Number</string>
+    <string name="profile_update_dci">Update DCI Number</string>
+    <string name="profile_update_dci_dialog_title">Enter your DCI number</string>
+    <string name="profile_invalid_dci">Invalid DCI number entered</string>
+    <string name="profile_no_dci">You have not entered your DCI number</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">MoJhoSto Basic Rules</string>
