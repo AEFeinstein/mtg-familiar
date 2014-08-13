@@ -1005,9 +1005,9 @@ public class CardViewFragment extends FamiliarFragment {
 				return;
 			}
 
-            boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream);
+			boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream);
 
-            mCopyImageView.destroyDrawingCache();
+			mCopyImageView.destroyDrawingCache();
 
 			if (!bCompressed) {
 				Toast.makeText(mActivity, getString(R.string.card_view_unable_to_save_image),
@@ -1073,16 +1073,17 @@ public class CardViewFragment extends FamiliarFragment {
 							mLegalities[i] = getString(R.string.card_view_legal);
 							break;
 						case CardDbAdapter.RESTRICTED:
-                            /* For backwards compatibility, we list cards that are legal
+							/* For backwards compatibility, we list cards that are legal
                              * in commander, but can't be the commander as Restricted in
                              * the legality file.  This prevents older version of the app
                              * from throwing an IllegalStateException if we try including
                              * a new legality. */
-                            if (mFormats[i].equalsIgnoreCase("Commander")) {
-                                mLegalities[i] = getString(R.string.card_view_no_commander);
-                            } else {
-                                mLegalities[i] = getString(R.string.card_view_restricted);
-                            }
+							if (mFormats[i].equalsIgnoreCase("Commander")) {
+								mLegalities[i] = getString(R.string.card_view_no_commander);
+							}
+							else {
+								mLegalities[i] = getString(R.string.card_view_restricted);
+							}
 							break;
 						case CardDbAdapter.BANNED:
 							mLegalities[i] = getString(R.string.card_view_banned);

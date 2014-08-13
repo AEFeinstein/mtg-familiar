@@ -375,9 +375,9 @@ public class RulesFragment extends FamiliarFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.rules_menu_exit:
-                for(int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
-                    getFragmentManager().popBackStack();
-                }
+				for (int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
+					getFragmentManager().popBackStack();
+				}
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

@@ -33,8 +33,8 @@ public class ZipUtils {
 	public static void exportData(Context context) {
 		assert context.getFilesDir() != null;
 
-        String sharedPrefsDir = context.getFilesDir().getPath();
-        sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
+		String sharedPrefsDir = context.getFilesDir().getPath();
+		sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
 
 		ArrayList<File> files = findAllFiles(context.getFilesDir(),
 				new File(sharedPrefsDir));
@@ -143,8 +143,8 @@ public class ZipUtils {
 			InputStream in = zipFile.getInputStream(entry);
 			OutputStream out;
 			if (entry.getName().contains("_preferences.xml")) {
-                String sharedPrefsDir = context.getFilesDir().getPath();
-                sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
+				String sharedPrefsDir = context.getFilesDir().getPath();
+				sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
 
 				out = new BufferedOutputStream(new FileOutputStream(
 						new File(sharedPrefsDir, entry.getName())));

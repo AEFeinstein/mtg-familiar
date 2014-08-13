@@ -406,7 +406,7 @@ public class CardDbAdapter {
 				+ " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
 				+ DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
 				+ DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(name)
-                + " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
+				+ " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
 				+ " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
 				+ " DESC";
 		Cursor c;
@@ -1291,7 +1291,7 @@ public class CardDbAdapter {
 					+ "') WHEN 1 THEN NULL ELSE CASE WHEN '" + format
 					+ "' = 'Legacy' " + "THEN NULL WHEN '" + format
 					+ "' = 'Vintage' THEN NULL WHEN '" + format
-                    + "' = 'Commander' THEN NULL ELSE 1 END END, (SELECT "
+					+ "' = 'Commander' THEN NULL ELSE 1 END END, (SELECT "
 					+ KEY_LEGALITY + " from " + DATABASE_TABLE_BANNED_CARDS
 					+ " WHERE " + KEY_NAME + " = '" + mCardName + "' AND "
 					+ KEY_FORMAT + " = '" + format + "'), 0) AS "
@@ -1729,8 +1729,8 @@ public class CardDbAdapter {
 	public static boolean isDbOutOfDate(Context ctx) {
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
-        String dbPath = ctx.getFilesDir().getPath();
-        dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+		String dbPath = ctx.getFilesDir().getPath();
+		dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
 		File f = new File(dbPath, DB_NAME);
 		int dbVersion = preferences.getInt("databaseVersion", -1);
 		return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
@@ -1746,8 +1746,8 @@ public class CardDbAdapter {
 
 		try {
 
-            String dbPath = ctx.getFilesDir().getPath();
-            dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+			String dbPath = ctx.getFilesDir().getPath();
+			dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
 
 			File folder = new File(dbPath);
 			if (!folder.exists()) {

@@ -431,13 +431,13 @@ public class WishlistHelpers {
 	public static class WishlistComparatorCmc implements Comparator<CompressedWishlistInfo> {
 		@Override
 		public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            if( wish1.mCard.cmc == wish2.mCard.cmc) {
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
-            }
-            else if(wish1.mCard.cmc > wish2.mCard.cmc) {
-                return 1;
-            }
-            return -1;
+			if (wish1.mCard.cmc == wish2.mCard.cmc) {
+				return wish1.mCard.name.compareTo(wish2.mCard.name);
+			}
+			else if (wish1.mCard.cmc > wish2.mCard.cmc) {
+				return 1;
+			}
+			return -1;
 		}
 	}
 
@@ -562,13 +562,13 @@ public class WishlistHelpers {
 				}
 			}
 
-            if(sumWish1 == sumWish2) {
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
-            }
-            else if(sumWish1 > sumWish2) {
-                return 1;
-            }
-            return -1;
+			if (sumWish1 == sumWish2) {
+				return wish1.mCard.name.compareTo(wish2.mCard.name);
+			}
+			else if (sumWish1 > sumWish2) {
+				return 1;
+			}
+			return -1;
 		}
 	}
 }

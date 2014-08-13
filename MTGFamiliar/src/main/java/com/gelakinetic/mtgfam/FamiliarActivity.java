@@ -113,7 +113,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_RULES = "android.intent.action.RULES";
 	public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
 	public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
-    public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
+	public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
 
 	/* Constants used for displaying dialogs */
 	private static final int DIALOG_ABOUT = 100;
@@ -148,7 +148,7 @@ public class FamiliarActivity extends FragmentActivity {
 			new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
 			new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
 			new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
-            new DrawerEntry(R.string.main_profile, R.attr.ic_action_person, false),
+			new DrawerEntry(R.string.main_profile, R.attr.ic_action_person, false),
 			new DrawerEntry(R.string.main_extras, 0, true),
 			new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
 			new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
@@ -318,39 +318,39 @@ public class FamiliarActivity extends FragmentActivity {
 		DrawerEntryArrayAdapter pagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
 
 		mDrawerList.setAdapter(pagesAdapter);
-        mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                boolean shouldCloseDrawer = false;
-                switch (mPageEntries[i].mNameResource) {
-                    case R.string.main_force_update_title: {
-                        if (getNetworkState(true) != -1) {
-                            try {
-                                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
-                                CardDbAdapter.dropCreateDB(database);
-                                mPreferenceAdapter.setLastLegalityUpdate(0);
-                                startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                            } catch (FamiliarDbException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        shouldCloseDrawer = true;
-                        break;
-                    }
-                }
+		mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+				boolean shouldCloseDrawer = false;
+				switch (mPageEntries[i].mNameResource) {
+					case R.string.main_force_update_title: {
+						if (getNetworkState(true) != -1) {
+							try {
+								SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
+								CardDbAdapter.dropCreateDB(database);
+								mPreferenceAdapter.setLastLegalityUpdate(0);
+								startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+							} catch (FamiliarDbException e) {
+								e.printStackTrace();
+							}
+						}
+						shouldCloseDrawer = true;
+						break;
+					}
+				}
 
-                mDrawerList.setItemChecked(mCurrentFrag, true);
-                if (shouldCloseDrawer) {
-                    (new Handler()).postDelayed(new Runnable() {
-                        public void run() {
-                            mDrawerLayout.closeDrawer(mDrawerList);
-                        }
-                    }, 50);
-                    return true;
-                }
-                return false;
-            }
-        });
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+				if (shouldCloseDrawer) {
+					(new Handler()).postDelayed(new Runnable() {
+						public void run() {
+							mDrawerLayout.closeDrawer(mDrawerList);
+						}
+					}, 50);
+					return true;
+				}
+				return false;
+			}
+		});
 		mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -372,8 +372,8 @@ public class FamiliarActivity extends FragmentActivity {
 					case R.string.main_judges_corner:
 					case R.string.main_mojhosto:
 					case R.string.main_card_search:
-                    case R.string.main_life_counter:
-                    case R.string.main_profile: {
+					case R.string.main_life_counter:
+					case R.string.main_profile: {
 						selectItem(mPageEntries[i].mNameResource, null);
 						break;
 					}
@@ -514,45 +514,57 @@ public class FamiliarActivity extends FragmentActivity {
 		/* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
 		/* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
 		if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			Intent intent = getIntent();
+			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 				/* Do a search by name, launched from the quick search */
-                String query = intent.getStringExtra(SearchManager.QUERY);
-                Bundle args = new Bundle();
-                SearchCriteria sc = new SearchCriteria();
-                sc.name = query;
-                args.putSerializable(SearchViewFragment.CRITERIA, sc);
-                selectItem(R.string.main_card_search, args);
-            } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+				String query = intent.getStringExtra(SearchManager.QUERY);
+				Bundle args = new Bundle();
+				SearchCriteria sc = new SearchCriteria();
+				sc.name = query;
+				args.putSerializable(SearchViewFragment.CRITERIA, sc);
+				selectItem(R.string.main_card_search, args);
+			}
+			else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 				/* User clicked a card in the quick search autocomplete, jump right to it */
-                Uri data = intent.getData();
-                Bundle args = new Bundle();
-                assert data != null;
-                args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
-                selectItem(R.string.main_card_search, args);
-            } else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
-                selectItem(R.string.main_timer, null);
-            } else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
-                selectItem(R.string.main_card_search, null);
-            } else if (ACTION_LIFE.equals(intent.getAction())) {
-                selectItem(R.string.main_life_counter, null);
-            } else if (ACTION_DICE.equals(intent.getAction())) {
-                selectItem(R.string.main_dice, null);
-            } else if (ACTION_TRADE.equals(intent.getAction())) {
-                selectItem(R.string.main_trade, null);
-            } else if (ACTION_MANA.equals(intent.getAction())) {
-                selectItem(R.string.main_mana_pool, null);
-            } else if (ACTION_WISH.equals(intent.getAction())) {
-                selectItem(R.string.main_wishlist, null);
-            } else if (ACTION_RULES.equals(intent.getAction())) {
-                selectItem(R.string.main_rules, null);
-            } else if (ACTION_JUDGE.equals(intent.getAction())) {
-                selectItem(R.string.main_judges_corner, null);
-            } else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
-                selectItem(R.string.main_mojhosto, null);
-            } else if (ACTION_PROFILE.equals(intent.getAction())) {
-                selectItem(R.string.main_profile, null);
-            }
+				Uri data = intent.getData();
+				Bundle args = new Bundle();
+				assert data != null;
+				args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
+				selectItem(R.string.main_card_search, args);
+			}
+			else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
+				selectItem(R.string.main_timer, null);
+			}
+			else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
+				selectItem(R.string.main_card_search, null);
+			}
+			else if (ACTION_LIFE.equals(intent.getAction())) {
+				selectItem(R.string.main_life_counter, null);
+			}
+			else if (ACTION_DICE.equals(intent.getAction())) {
+				selectItem(R.string.main_dice, null);
+			}
+			else if (ACTION_TRADE.equals(intent.getAction())) {
+				selectItem(R.string.main_trade, null);
+			}
+			else if (ACTION_MANA.equals(intent.getAction())) {
+				selectItem(R.string.main_mana_pool, null);
+			}
+			else if (ACTION_WISH.equals(intent.getAction())) {
+				selectItem(R.string.main_wishlist, null);
+			}
+			else if (ACTION_RULES.equals(intent.getAction())) {
+				selectItem(R.string.main_rules, null);
+			}
+			else if (ACTION_JUDGE.equals(intent.getAction())) {
+				selectItem(R.string.main_judges_corner, null);
+			}
+			else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
+				selectItem(R.string.main_mojhosto, null);
+			}
+			else if (ACTION_PROFILE.equals(intent.getAction())) {
+				selectItem(R.string.main_profile, null);
+			}
 			else {
 			/* App launched as regular, show the default fragment */
 
@@ -588,9 +600,9 @@ public class FamiliarActivity extends FragmentActivity {
 				else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
 					selectItem(R.string.main_mojhosto, null);
 				}
-                else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
-                    selectItem(R.string.main_profile, null);
-                }
+				else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
+					selectItem(R.string.main_profile, null);
+				}
 				else {
 					selectItem(R.string.main_card_search, null);
 				}
@@ -692,10 +704,10 @@ public class FamiliarActivity extends FragmentActivity {
 				newFrag = new MoJhoStoFragment();
 				break;
 			}
-            case R.string.main_profile: {
-                newFrag = new ProfileFragment();
-                break;
-            }
+			case R.string.main_profile: {
+				newFrag = new ProfileFragment();
+				break;
+			}
 			default:
 				return;
 		}
