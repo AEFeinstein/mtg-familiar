@@ -329,6 +329,11 @@ public class FamiliarActivity extends FragmentActivity {
 								SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
 								CardDbAdapter.dropCreateDB(database);
 								mPreferenceAdapter.setLastLegalityUpdate(0);
+								mPreferenceAdapter.setLastIPGUpdate(0);
+								mPreferenceAdapter.setLastMTRUpdate(0);
+								mPreferenceAdapter.setLastRulesUpdate(0);
+								mPreferenceAdapter.setLastTCGNameUpdate("");
+								mPreferenceAdapter.setLastUpdate("");
 								startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
 							} catch (FamiliarDbException e) {
 								e.printStackTrace();
@@ -713,7 +718,7 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 
 		try {
-			if (newFrag.getClass().equals(getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass())) {
+			if (((Object)newFrag).getClass().equals(((Object)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
 			/* This is the same fragment, just close the menu */
 				mDrawerLayout.closeDrawer(mDrawerList);
 				return;
