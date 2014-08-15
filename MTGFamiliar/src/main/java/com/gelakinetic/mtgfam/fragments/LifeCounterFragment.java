@@ -172,7 +172,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 								== Configuration.ORIENTATION_LANDSCAPE) {
 							if (mDisplayMode == DISPLAY_COMMANDER) {
 								/* Conveniently takes care of re-adding the sized views in the right number of rows */
-								changeDisplayMode();
+								changeDisplayMode(false);
 							}
 						}
 						for (LcPlayer player : mPlayers) {
@@ -278,7 +278,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 		setCommanderInfo(-1);
 
-		changeDisplayMode();
+		changeDisplayMode(false);
 
 		setStatDisplaying(mStatDisplaying);
 
@@ -462,7 +462,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 												setCommanderInfo(-1);
 
 												/* Clear and then add the views */
-												changeDisplayMode();
+												changeDisplayMode(false);
 												dialog.dismiss();
 											}
 										}
@@ -502,7 +502,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
 										if (mDisplayMode != selection) {
 											mDisplayMode = selection;
-											changeDisplayMode();
+											changeDisplayMode(true);
 										}
 									}
 								}
@@ -546,7 +546,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 								}
 
 								setCommanderInfo(-1);
-								changeDisplayMode();
+								changeDisplayMode(false);
 							}
 						});
 						return builder.create();
@@ -600,7 +600,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 	 * and draws the player's views in the fragment. It also shows and hides buttons and views relating to
 	 * commander mode.
 	 */
-	private void changeDisplayMode() {
+	private void changeDisplayMode(boolean shouldDefaultLives) {
 		/* update the preference */
 		getFamiliarActivity().mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
 
@@ -652,16 +652,26 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			}
 		}
 
+		boolean areLivesDefault = true;
 		for (LcPlayer player : mPlayers) {
 			/* Only reset a player's default life / life if that player is unaltered and doesn't have a noticeably
 			 * custom default life */
-			if (player.mLifeHistory.size() == 0
+			if (!(player.mLifeHistory.size() == 0
 					&& player.mPoisonHistory.size() == 0
 					&& player.mLife == player.mDefaultLifeTotal
-					&& (player.mDefaultLifeTotal == DEFAULT_LIFE || player.mDefaultLifeTotal == DEFAULT_LIFE_COMMANDER)) {
+					&& (player.mDefaultLifeTotal == DEFAULT_LIFE || player.mDefaultLifeTotal == DEFAULT_LIFE_COMMANDER))) {
+				areLivesDefault = false;
+			}
+		}
+
+		if(areLivesDefault && shouldDefaultLives) {
+			for (LcPlayer player : mPlayers) {
 				player.mDefaultLifeTotal = getDefaultLife();
 				player.mLife = player.mDefaultLifeTotal;
 			}
+		}
+
+		for(LcPlayer player : mPlayers) {
 			/* Draw the player's view */
 			addPlayerView(player);
 		}
