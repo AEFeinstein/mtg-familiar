@@ -25,6 +25,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.InputType;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,9 +58,6 @@ public class ProfileFragment extends FamiliarFragment {
 	/* String variables */
 	private String mDCINumber;
 
-	/* Global activity variable to reduce getActivity() calls */
-	private FamiliarActivity mActivity;
-
 	/**
 	 * Initialize the view and set up the button actions
 	 *
@@ -71,11 +71,6 @@ public class ProfileFragment extends FamiliarFragment {
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		try {
-			mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
-		} catch (NullPointerException ex) {
-			mActivity = getFamiliarActivity();
-		}
 
 		View myFragmentView = inflater.inflate(R.layout.profile_frag, container, false);
 
@@ -84,10 +79,10 @@ public class ProfileFragment extends FamiliarFragment {
 		mDCINumberTextView = (TextView) myFragmentView.findViewById(R.id.dci_number);
 		mNoDCINumberTextView = (TextView) myFragmentView.findViewById(R.id.no_dci_number);
 
-		Typeface tf = Typeface.createFromAsset(mActivity.getAssets(), "free3of9.ttf");
+		Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "free3of9.ttf");
 		mBarcodeTextView.setTypeface(tf);
 
-		mDCINumber = mActivity.mPreferenceAdapter.getDCINumber();
+		mDCINumber = getFamiliarActivity().mPreferenceAdapter.getDCINumber();
 
 		checkDCINumber();
 
@@ -141,16 +136,27 @@ public class ProfileFragment extends FamiliarFragment {
 				setShowsDialog(true);
 				switch (id) {
 					case DIALOG_DCI_NUMBER: {
-						View view = ((LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-								.inflate(R.layout.profile_update_dci_dialog, null, false);
+						View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+								.inflate(R.layout.alert_dialog_text_entry, null, false);
 
-						final EditText dciEditText = (EditText) view.findViewById(R.id.dci_number);
+						final EditText dciEditText = (EditText) view.findViewById(R.id.text_entry);
+						dciEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-						final String strDCI = mActivity.mPreferenceAdapter.getDCINumber();
+						view.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								getFamiliarActivity().mPreferenceAdapter.setDCINumber("");
+								mDCINumber = "";
+								checkDCINumber();
+								dciEditText.setText("");
+							}
+						});
+
+						final String strDCI = getFamiliarActivity().mPreferenceAdapter.getDCINumber();
 
 						dciEditText.setText(strDCI);
 
-						return new AlertDialog.Builder(mActivity)
+						return new AlertDialog.Builder(getActivity())
 								.setTitle(R.string.profile_update_dci_dialog_title)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 									@Override
@@ -158,14 +164,14 @@ public class ProfileFragment extends FamiliarFragment {
 										String strNumber = dciEditText.getText().toString();
 
 										if (strNumber.isEmpty()) {
-											Toast.makeText(mActivity,
+											Toast.makeText(getActivity(),
 													getString(R.string.profile_invalid_dci),
 													Toast.LENGTH_SHORT).show();
 
 											return;
 										}
 
-										mActivity.mPreferenceAdapter.setDCINumber(strNumber);
+										getFamiliarActivity().mPreferenceAdapter.setDCINumber(strNumber);
 										mDCINumber = strNumber;
 										checkDCINumber();
 										dismiss();
@@ -174,15 +180,6 @@ public class ProfileFragment extends FamiliarFragment {
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
-										checkDCINumber();
-										dismiss();
-									}
-								})
-								.setNeutralButton(R.string.dialog_clear, new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialogInterface, int i) {
-										mActivity.mPreferenceAdapter.setDCINumber("");
-										mDCINumber = "";
 										checkDCINumber();
 										dismiss();
 									}
@@ -212,7 +209,8 @@ public class ProfileFragment extends FamiliarFragment {
 	private void hideDCINumber() {
 		mDCINumberTextView.setVisibility(View.GONE);
 		mBarcodeTextView.setVisibility(View.GONE);
-		mNoDCINumberTextView.setVisibility(View.VISIBLE);
+		mNoDCINumberTextView.setText(R.string.profile_no_dci);
+		mNoDCINumberTextView.setClickable(false);
 	}
 
 	private void showDCINumber() {
@@ -220,6 +218,9 @@ public class ProfileFragment extends FamiliarFragment {
 		mBarcodeTextView.setText(mDCINumber);
 		mDCINumberTextView.setVisibility(View.VISIBLE);
 		mBarcodeTextView.setVisibility(View.VISIBLE);
-		mNoDCINumberTextView.setVisibility(View.GONE);
+
+		mNoDCINumberTextView.setText(Html.fromHtml("<a href=\"http://www.wizards.com/Magic/PlaneswalkerPoints/" + mDCINumber + "\">" + getString(R.string.profile_planeswalker_points) + "</a>"));
+		mNoDCINumberTextView.setClickable(true);
+		mNoDCINumberTextView.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 }
