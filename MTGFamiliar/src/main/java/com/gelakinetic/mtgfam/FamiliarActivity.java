@@ -718,7 +718,7 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 
 		try {
-			if (((Object)newFrag).getClass().equals(((Object)getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
+			if (((Object) newFrag).getClass().equals(((Object) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
 			/* This is the same fragment, just close the menu */
 				mDrawerLayout.closeDrawer(mDrawerList);
 				return;

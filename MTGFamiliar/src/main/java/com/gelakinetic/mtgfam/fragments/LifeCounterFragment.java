@@ -664,14 +664,14 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 			}
 		}
 
-		if(areLivesDefault && shouldDefaultLives) {
+		if (areLivesDefault && shouldDefaultLives) {
 			for (LcPlayer player : mPlayers) {
 				player.mDefaultLifeTotal = getDefaultLife();
 				player.mLife = player.mDefaultLifeTotal;
 			}
 		}
 
-		for(LcPlayer player : mPlayers) {
+		for (LcPlayer player : mPlayers) {
 			/* Draw the player's view */
 			addPlayerView(player);
 		}

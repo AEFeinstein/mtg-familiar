@@ -1074,7 +1074,7 @@ public class CardViewFragment extends FamiliarFragment {
 							break;
 						case CardDbAdapter.RESTRICTED:
 							/* For backwards compatibility, we list cards that are legal
-                             * in commander, but can't be the commander as Restricted in
+							 * in commander, but can't be the commander as Restricted in
                              * the legality file.  This prevents older version of the app
                              * from throwing an IllegalStateException if we try including
                              * a new legality. */
