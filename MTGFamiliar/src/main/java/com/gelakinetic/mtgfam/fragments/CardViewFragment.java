@@ -35,6 +35,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.method.LinkMovementMethod;
@@ -67,6 +68,7 @@ import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -150,6 +152,16 @@ public class CardViewFragment extends FamiliarFragment {
 	/* Easier than calling getActivity() all the time, and handles being nested */
 	private FamiliarActivity mActivity;
 
+	private ImageCache mImageCache;
+	private ImageCache.ImageCacheParams mImageCacheParams;
+
+	private static final int MESSAGE_CLEAR = 0;
+	private static final int MESSAGE_INIT_DISK_CACHE = 1;
+	private static final int MESSAGE_FLUSH = 2;
+	private static final int MESSAGE_CLOSE = 3;
+
+	private static final String IMAGE_CACHE_DIR = "images";
+
 	/**
 	 * Kill any AsyncTask if it is still running
 	 */
@@ -194,6 +206,13 @@ public class CardViewFragment extends FamiliarFragment {
 		} catch (NullPointerException e) {
 			mActivity = getFamiliarActivity();
 		}
+
+		ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(this.getActivity(), IMAGE_CACHE_DIR);
+		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+		cacheParams.diskCacheSize = 1024 * 1024 * 10; // TODO pull slider size from preferences
+
+		// The ImageFetcher takes care of loading images into our ImageView children asynchronously
+		addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
 
 		View myFragmentView = inflater.inflate(R.layout.card_view_frag, container, false);
 
@@ -1120,6 +1139,60 @@ public class CardViewFragment extends FamiliarFragment {
 		}
 	}
 
+	public void addImageCache(FragmentManager fragmentManager,
+							  ImageCache.ImageCacheParams cacheParams) {
+		mImageCacheParams = cacheParams;
+		mImageCache = ImageCache.getInstance(fragmentManager, mImageCacheParams);
+		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
+	}
+
+	protected class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Object... params) {
+			switch ((Integer)params[0]) {
+				case MESSAGE_CLEAR:
+					clearCacheInternal();
+					break;
+				case MESSAGE_INIT_DISK_CACHE:
+					initDiskCacheInternal();
+					break;
+				case MESSAGE_FLUSH:
+					flushCacheInternal();
+					break;
+				case MESSAGE_CLOSE:
+					closeCacheInternal();
+					break;
+			}
+			return null;
+		}
+	}
+
+	protected void initDiskCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.initDiskCache();
+		}
+	}
+
+	protected void clearCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.clearCache();
+		}
+	}
+
+	protected void flushCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.flush();
+		}
+	}
+
+	protected void closeCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.close();
+			mImageCache = null;
+		}
+	}
+
 	/**
 	 * This private class retrieves a picture of the card from the internet
 	 */
@@ -1141,95 +1214,110 @@ public class CardViewFragment extends FamiliarFragment {
 		@SuppressWarnings("SpellCheckingInspection")
 		@Override
 		protected Void doInBackground(Void... params) {
-			error = null;
+
 			String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
 			if (cardLanguage == null) {
 				cardLanguage = "en";
 			}
 
-			boolean bRetry = true;
+			final String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
 
-			boolean triedMtgImage = false;
-			boolean triedMtgi = false;
-			boolean triedGatherer = false;
+			// Check disk cache in background thread
+			Bitmap bitmap = mImageCache.getBitmapFromDiskCache(imageKey);
 
-			while (bRetry) {
+			if (bitmap == null) { // Not found in disk cache
 
-				bRetry = false;
+				error = null;
 
-				try {
+				boolean bRetry = true;
 
-					URL u;
-					if (!cardLanguage.equalsIgnoreCase("en")) {
-						u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
-						cardLanguage = "en";
-					}
-					else {
-						if (!triedMtgImage) {
-							u = new URL("http://mtgimage.com/multiverseid/" + mMultiverseId + ".jpg");
-							triedMtgImage = true;
-						}
-						else if (!triedMtgi) {
+				boolean triedMtgImage = false;
+				boolean triedMtgi = false;
+				boolean triedGatherer = false;
+
+				while (bRetry) {
+
+					bRetry = false;
+
+					try {
+
+						URL u;
+						if (!cardLanguage.equalsIgnoreCase("en")) {
 							u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
-							triedMtgi = true;
+							cardLanguage = "en";
 						}
 						else {
-							u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
-									+ mMultiverseId + "&type=card");
-							triedGatherer = true;
+							if (!triedMtgImage) {
+								u = new URL("http://mtgimage.com/multiverseid/" + mMultiverseId + ".jpg");
+								triedMtgImage = true;
+							}
+							else if (!triedMtgi) {
+								u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
+								triedMtgi = true;
+							}
+							else {
+								u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
+										+ mMultiverseId + "&type=card");
+								triedGatherer = true;
+							}
+						}
+
+						mCardBitmap = new BitmapDrawable(mActivity.getResources(), u.openStream());
+						bitmap = mCardBitmap.getBitmap();
+						mImageCache.addBitmapToCache(imageKey, mCardBitmap);
+
+					} catch (Exception e) {
+						/* Something went wrong */
+						error = getString(R.string.card_view_image_not_found);
+
+						if (!triedGatherer) {
+							bRetry = true;
 						}
 					}
-
-					mCardBitmap = new BitmapDrawable(mActivity.getResources(), u.openStream());
-
-					/* Resize the image */
-					int height = 0, width = 0;
-					float scale;
-					/* 16dp */
-					int border = (int) TypedValue.applyDimension(
-							TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-					if (loadTo == MAIN_PAGE) {
-						Rect rectangle = new Rect();
-						mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
-
-						assert mActivity.getActionBar() != null; /* Because Android Studio */
-						height = ((rectangle.bottom - rectangle.top) - mActivity.getActionBar().getHeight()) - border;
-						width = (rectangle.right - rectangle.left) - border;
-					}
-					else if (loadTo == DIALOG) {
-						Display display = ((WindowManager) mActivity
-								.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-						Point p = new Point();
-						display.getSize(p);
-						height = p.y - border;
-						width = p.x - border;
-					}
-
-					float screenAspectRatio = (float) height / (float) (width);
-					float cardAspectRatio = (float) mCardBitmap.getIntrinsicHeight() /
-							(float) mCardBitmap.getIntrinsicWidth();
-
-					if (screenAspectRatio > cardAspectRatio) {
-						scale = (width) / (float) mCardBitmap.getIntrinsicWidth();
-					}
-					else {
-						scale = (height) / (float) mCardBitmap.getIntrinsicHeight();
-					}
-
-					int newWidth = Math.round(mCardBitmap.getIntrinsicWidth() * scale);
-					int newHeight = Math.round(mCardBitmap.getIntrinsicHeight() * scale);
-
-					Bitmap d = mCardBitmap.getBitmap();
-					Bitmap bitmapOrig = Bitmap.createScaledBitmap(d, newWidth, newHeight, true);
-					mCardBitmap = new BitmapDrawable(mActivity.getResources(), bitmapOrig);
-				} catch (Exception e) {
-					/* Something went wrong */
-					error = getString(R.string.card_view_image_not_found);
-
-					if (!triedGatherer) {
-						bRetry = true;
-					}
 				}
+			}
+
+			try {
+				/* Resize the image */
+				int height = 0, width = 0;
+				float scale;
+				/* 16dp */
+				int border = (int) TypedValue.applyDimension(
+						TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+				if (loadTo == MAIN_PAGE) {
+					Rect rectangle = new Rect();
+					mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
+
+					assert mActivity.getActionBar() != null; /* Because Android Studio */
+					height = ((rectangle.bottom - rectangle.top) - mActivity.getActionBar().getHeight()) - border;
+					width = (rectangle.right - rectangle.left) - border;
+				}
+				else if (loadTo == DIALOG) {
+					Display display = ((WindowManager) mActivity
+							.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+					Point p = new Point();
+					display.getSize(p);
+					height = p.y - border;
+					width = p.x - border;
+				}
+
+				float screenAspectRatio = (float) height / (float) (width);
+				float cardAspectRatio = (float) bitmap.getHeight() / (float) bitmap.getWidth();
+
+				if (screenAspectRatio > cardAspectRatio) {
+					scale = (width) / (float) bitmap.getWidth();
+				}
+				else {
+					scale = (height) / (float) bitmap.getHeight();
+				}
+
+				int newWidth = Math.round(bitmap.getWidth() * scale);
+				int newHeight = Math.round(bitmap.getHeight() * scale);
+
+				Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+				mCardBitmap = new BitmapDrawable(mActivity.getResources(), scaledBitmap);
+			} catch (Exception e) {
+				/* Some error resizing. Out of memory? */
 			}
 			return null;
 		}
@@ -1295,7 +1383,7 @@ public class CardViewFragment extends FamiliarFragment {
 					try {
 						showDialog(GET_IMAGE);
 					} catch (IllegalStateException e) {
-                        /* eat it */
+						/* eat it */
 					}
 				}
 				else if (loadTo == MAIN_PAGE) {
@@ -1399,7 +1487,7 @@ public class CardViewFragment extends FamiliarFragment {
 				try {
 					showDialog(CARD_RULINGS);
 				} catch (IllegalStateException e) {
-                    /* eat it */
+					/* eat it */
 				}
 			}
 			else {
