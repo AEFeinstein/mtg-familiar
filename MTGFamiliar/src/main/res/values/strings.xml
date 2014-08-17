@@ -462,5 +462,6 @@ Good luck, and have fun!
     <string name="deck_counter_reset">Reset</string>
     <string name="deck_counter_undo">Undo</string>
     <string name="wishlist_sort_by">Sort By</string>
+    <string name="profile_planeswalker_points">Planeswalker Points</string>
 
 </resources>
