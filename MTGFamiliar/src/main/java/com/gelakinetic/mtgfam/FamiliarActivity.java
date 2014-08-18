@@ -35,6 +35,7 @@ import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -88,6 +89,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseHelper;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 import com.octo.android.robospice.SpiceManager;
 
@@ -180,6 +182,17 @@ public class FamiliarActivity extends FragmentActivity {
 				startActivity(i);
 				FamiliarActivity.this.finish();
 			}
+			else if (s.endsWith(getString(R.string.key_imageCacheSize))) {
+				/* Close the old cache */
+				mImageCache.flush();
+				mImageCache.close();
+
+				/* Set up the image cache */
+				ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
+				cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+				cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
+				addImageCache(getSupportFragmentManager(), cacheParams);
+			}
 		}
 	};
 	/* Drawer elements */
@@ -208,6 +221,16 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		}
 	};
+
+	/* Image caching */
+	public ImageCache mImageCache;
+
+	private static final int MESSAGE_CLEAR = 0;
+	private static final int MESSAGE_INIT_DISK_CACHE = 1;
+	private static final int MESSAGE_FLUSH = 2;
+	private static final int MESSAGE_CLOSE = 3;
+
+	private static final String IMAGE_CACHE_DIR = "images";
 
 	/**
 	 * Start the Spice Manager when the activity starts
@@ -627,6 +650,12 @@ public class FamiliarActivity extends FragmentActivity {
 				startService(new Intent(this, DbUpdaterService.class));
 			}
 		}
+
+		/* Set up the image cache */
+		ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(this, IMAGE_CACHE_DIR);
+		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+		cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
+		addImageCache(getSupportFragmentManager(), cacheParams);
 	}
 
 	/**
@@ -1388,4 +1417,61 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 	}
 
+	/*
+	 * Image Caching
+	 */
+
+	public void addImageCache(FragmentManager fragmentManager,
+							  ImageCache.ImageCacheParams cacheParams) {
+		ImageCache.ImageCacheParams mImageCacheParams = cacheParams;
+		mImageCache = ImageCache.getInstance(fragmentManager, mImageCacheParams);
+		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
+	}
+
+	protected class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Object... params) {
+			switch ((Integer) params[0]) {
+				case MESSAGE_CLEAR:
+					clearCacheInternal();
+					break;
+				case MESSAGE_INIT_DISK_CACHE:
+					initDiskCacheInternal();
+					break;
+				case MESSAGE_FLUSH:
+					flushCacheInternal();
+					break;
+				case MESSAGE_CLOSE:
+					closeCacheInternal();
+					break;
+			}
+			return null;
+		}
+	}
+
+	protected void initDiskCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.initDiskCache();
+		}
+	}
+
+	protected void clearCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.clearCache();
+		}
+	}
+
+	protected void flushCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.flush();
+		}
+	}
+
+	protected void closeCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.close();
+			mImageCache = null;
+		}
+	}
 }

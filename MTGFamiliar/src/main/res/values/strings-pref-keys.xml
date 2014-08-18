@@ -46,4 +46,5 @@
     <string name="key_widgetButtons">widgetButtons</string>
     <string name="key_theme">theme</string>
     <string name="key_dci_number">dciNumber</string>
+    <string name="key_imageCacheSize">imageCacheSize</string>
 </resources>

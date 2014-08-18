@@ -152,16 +152,6 @@ public class CardViewFragment extends FamiliarFragment {
 	/* Easier than calling getActivity() all the time, and handles being nested */
 	private FamiliarActivity mActivity;
 
-	private ImageCache mImageCache;
-	private ImageCache.ImageCacheParams mImageCacheParams;
-
-	private static final int MESSAGE_CLEAR = 0;
-	private static final int MESSAGE_INIT_DISK_CACHE = 1;
-	private static final int MESSAGE_FLUSH = 2;
-	private static final int MESSAGE_CLOSE = 3;
-
-	private static final String IMAGE_CACHE_DIR = "images";
-
 	/**
 	 * Kill any AsyncTask if it is still running
 	 */
@@ -206,13 +196,6 @@ public class CardViewFragment extends FamiliarFragment {
 		} catch (NullPointerException e) {
 			mActivity = getFamiliarActivity();
 		}
-
-		ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(this.getActivity(), IMAGE_CACHE_DIR);
-		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-		cacheParams.diskCacheSize = 1024 * 1024 * 10; // TODO pull slider size from preferences
-
-		// The ImageFetcher takes care of loading images into our ImageView children asynchronously
-		addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
 
 		View myFragmentView = inflater.inflate(R.layout.card_view_frag, container, false);
 
@@ -1139,60 +1122,6 @@ public class CardViewFragment extends FamiliarFragment {
 		}
 	}
 
-	public void addImageCache(FragmentManager fragmentManager,
-							  ImageCache.ImageCacheParams cacheParams) {
-		mImageCacheParams = cacheParams;
-		mImageCache = ImageCache.getInstance(fragmentManager, mImageCacheParams);
-		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
-	}
-
-	protected class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
-
-		@Override
-		protected Void doInBackground(Object... params) {
-			switch ((Integer)params[0]) {
-				case MESSAGE_CLEAR:
-					clearCacheInternal();
-					break;
-				case MESSAGE_INIT_DISK_CACHE:
-					initDiskCacheInternal();
-					break;
-				case MESSAGE_FLUSH:
-					flushCacheInternal();
-					break;
-				case MESSAGE_CLOSE:
-					closeCacheInternal();
-					break;
-			}
-			return null;
-		}
-	}
-
-	protected void initDiskCacheInternal() {
-		if (mImageCache != null) {
-			mImageCache.initDiskCache();
-		}
-	}
-
-	protected void clearCacheInternal() {
-		if (mImageCache != null) {
-			mImageCache.clearCache();
-		}
-	}
-
-	protected void flushCacheInternal() {
-		if (mImageCache != null) {
-			mImageCache.flush();
-		}
-	}
-
-	protected void closeCacheInternal() {
-		if (mImageCache != null) {
-			mImageCache.close();
-			mImageCache = null;
-		}
-	}
-
 	/**
 	 * This private class retrieves a picture of the card from the internet
 	 */
@@ -1223,7 +1152,7 @@ public class CardViewFragment extends FamiliarFragment {
 			final String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
 
 			// Check disk cache in background thread
-			Bitmap bitmap = mImageCache.getBitmapFromDiskCache(imageKey);
+			Bitmap bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
 
 			if (bitmap == null) { // Not found in disk cache
 
@@ -1264,7 +1193,7 @@ public class CardViewFragment extends FamiliarFragment {
 
 						mCardBitmap = new BitmapDrawable(mActivity.getResources(), u.openStream());
 						bitmap = mCardBitmap.getBitmap();
-						mImageCache.addBitmapToCache(imageKey, mCardBitmap);
+						getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, mCardBitmap);
 
 					} catch (Exception e) {
 						/* Something went wrong */

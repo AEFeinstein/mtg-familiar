@@ -435,4 +435,13 @@ public class PreferenceAdapter {
 		this.edit.putString(context.getString(R.string.key_dci_number), dciNumber);
 		this.edit.commit();
 	}
+
+	public void setImageCacheSize(int cacheSizeMB) {
+		this.edit.putInt(context.getString(R.string.key_imageCacheSize), cacheSizeMB);
+		this.edit.commit();
+	}
+
+	public int getImageCacheSize() {
+		return this.prefs.getInt(context.getString(R.string.key_imageCacheSize), 12);
+	}
 }

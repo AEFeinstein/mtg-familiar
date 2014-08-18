@@ -312,6 +312,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="wishlist_type_price">Price</string>
     <string name="wishlist_ascending">Ascending</string>
     <string name="wishlist_descending">Descending</string>
+    <string name="wishlist_sort_by">Sort By</string>
 
     <!-- Round timer activity -->
     <string name="timer_how_long">How long is the round?</string>
@@ -350,6 +351,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="profile_update_dci_dialog_title">Enter your DCI number</string>
     <string name="profile_invalid_dci">Invalid DCI number entered</string>
     <string name="profile_no_dci">You have not entered your DCI number</string>
+    <string name="profile_planeswalker_points">Planeswalker Points</string>
 
     <!-- MoJhoSto activity -->
     <string name="mojhosto_rules_title">MoJhoSto Basic Rules</string>
@@ -452,6 +454,9 @@ Good luck, and have fun!
     <string name="pref_cat_theme">Look &amp; Feel</string>
     <string name="pref_theme_title">Theme</string>
     <string name="pref_theme_summary">Set a light or dark theme</string>
+    <string name="pref_image_cache_size_summary">Maximum amount of disk space to use for caching card images</string>
+    <string name="pref_image_cache_size_title">Image Cache Size</string>
+    <string name="pref_cat_card_cache">Image Caching</string>
 
     <!-- Judge's Corner -->
     <string name="judges_corner_MTR">MTR</string>
@@ -461,7 +466,5 @@ Good luck, and have fun!
     <string name="judges_corner_error">An error occurred.</string>
     <string name="deck_counter_reset">Reset</string>
     <string name="deck_counter_undo">Undo</string>
-    <string name="wishlist_sort_by">Sort By</string>
-    <string name="profile_planeswalker_points">Planeswalker Points</string>
 
 </resources>
