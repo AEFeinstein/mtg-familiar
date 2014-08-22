@@ -344,6 +344,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <!-- Profile activity -->
     <string name="profile_dci_number">DCI Number</string>
     <string name="profile_update_dci">Update DCI Number</string>
+    <string name="profile_remove_dci">Remove DCI Number</string>
     <string name="profile_update_dci_dialog_title">Enter your DCI number</string>
     <string name="profile_invalid_dci">Invalid DCI number entered</string>
     <string name="profile_no_dci">You have not entered your DCI number</string>

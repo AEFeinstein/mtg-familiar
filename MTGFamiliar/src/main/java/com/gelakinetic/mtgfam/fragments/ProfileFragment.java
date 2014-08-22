@@ -111,8 +111,32 @@ public class ProfileFragment extends FamiliarFragment {
 			case R.id.profile_menu_update_dci:
 				showDialog(DIALOG_DCI_NUMBER);
 				return true;
+			case R.id.profile_menu_remove_dci:
+				getFamiliarActivity().mPreferenceAdapter.setDCINumber("");
+				mDCINumber = "";
+				checkDCINumber();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+
+		MenuItem updateDCI = menu.findItem(R.id.profile_menu_update_dci);
+		MenuItem removeDCI = menu.findItem(R.id.profile_menu_remove_dci);
+		assert updateDCI != null;
+		assert removeDCI != null;
+
+		if (mDCINumber != null && !mDCINumber.isEmpty()) {
+			updateDCI.setVisible(false);
+			removeDCI.setVisible(true);
+		}
+		else {
+			updateDCI.setVisible(true);
+			removeDCI.setVisible(false);
 		}
 	}
 
@@ -145,9 +169,6 @@ public class ProfileFragment extends FamiliarFragment {
 						view.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
 							@Override
 							public void onClick(View view) {
-								getFamiliarActivity().mPreferenceAdapter.setDCINumber("");
-								mDCINumber = "";
-								checkDCINumber();
 								dciEditText.setText("");
 							}
 						});
@@ -204,6 +225,7 @@ public class ProfileFragment extends FamiliarFragment {
 		else {
 			showDCINumber();
 		}
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	private void hideDCINumber() {
