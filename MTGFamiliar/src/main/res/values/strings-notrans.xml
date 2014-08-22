@@ -30,4 +30,7 @@
     <string name="deck_counter_3">+3</string>
     <string name="deck_counter_4">+4</string>
 
+    <!-- Dice Fragment -->
+    <string name="dice_num_default_sides">50</string>
+
 </resources>

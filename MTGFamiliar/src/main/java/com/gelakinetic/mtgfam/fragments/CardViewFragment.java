@@ -29,13 +29,12 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.method.LinkMovementMethod;
@@ -68,7 +67,7 @@ import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
+import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -125,7 +124,7 @@ public class CardViewFragment extends FamiliarFragment {
 	private ScrollView mImageScrollView;
 	/* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
 	private AsyncTask<Void, Void, Void> mAsyncTask;
-	private BitmapDrawable mCardBitmap;
+	private RecyclingBitmapDrawable mCardBitmap;
 	private String[] mLegalities;
 	private String[] mFormats;
 	private ArrayList<Ruling> mRulingsArrayList;
@@ -151,6 +150,7 @@ public class CardViewFragment extends FamiliarFragment {
 
 	/* Easier than calling getActivity() all the time, and handles being nested */
 	private FamiliarActivity mActivity;
+	private Bitmap mScaledBitmap;
 
 	/**
 	 * Kill any AsyncTask if it is still running
@@ -172,6 +172,12 @@ public class CardViewFragment extends FamiliarFragment {
 	public void onPause() {
 		super.onPause();
 		mActivity.clearLoading();
+		if (mScaledBitmap != null) {
+			mScaledBitmap.recycle();
+		}
+		if (mCardBitmap != null && mCardBitmap.getBitmap() != null) {
+			mCardBitmap.getBitmap().recycle();
+		}
 		if (mAsyncTask != null) {
 			mAsyncTask.cancel(true);
 		}
@@ -1191,7 +1197,7 @@ public class CardViewFragment extends FamiliarFragment {
 							}
 						}
 
-						mCardBitmap = new BitmapDrawable(mActivity.getResources(), u.openStream());
+						mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), BitmapFactory.decodeStream(u.openStream()));
 						bitmap = mCardBitmap.getBitmap();
 						getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, mCardBitmap);
 
@@ -1204,6 +1210,10 @@ public class CardViewFragment extends FamiliarFragment {
 						}
 					}
 				}
+			}
+
+			if (bitmap == null) {
+				return null;
 			}
 
 			try {
@@ -1243,8 +1253,9 @@ public class CardViewFragment extends FamiliarFragment {
 				int newWidth = Math.round(bitmap.getWidth() * scale);
 				int newHeight = Math.round(bitmap.getHeight() * scale);
 
-				Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-				mCardBitmap = new BitmapDrawable(mActivity.getResources(), scaledBitmap);
+				mScaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); // todo this is leaky?
+				mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), mScaledBitmap);
+				bitmap.recycle();
 			} catch (Exception e) {
 				/* Some error resizing. Out of memory? */
 			}
