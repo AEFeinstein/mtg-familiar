@@ -988,13 +988,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
 						dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-						dialogLayout.findViewById(R.id.image_button).setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-								Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_URL));
-								startActivity(myIntent);
-							}
-						});
+						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 						builder.setView(dialogLayout);
 
 						return builder.create();
