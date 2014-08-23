@@ -197,6 +197,16 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_wakelock), true);
 	}
 
+	/* Dim Screen */
+	public synchronized boolean getDimScreen() {
+		return this.prefs.getBoolean(context.getString(R.string.key_dimlock), true);
+	}
+
+	/* Percentage to dim screen */
+	public synchronized int getDimLevel() {
+		return this.prefs.getInt(context.getString(R.string.key_dimlevel), 10);
+	}
+
 	/* Set pref */
 	public synchronized boolean getSetPref() {
 		return this.prefs.getBoolean(context.getString(R.string.key_setPref), true);

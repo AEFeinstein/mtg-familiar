@@ -17,6 +17,8 @@
     <string name="key_consolidateSearch">consolidateSearch</string>
     <string name="key_picFirst">picFirst</string>
     <string name="key_wakelock">wakelock</string>
+    <string name="key_dimlock">dimlock</string>
+    <string name="key_dimlevel">dimlevel</string>
     <string name="key_setPref">setPref</string>
     <string name="key_manacostPref">manacostPref</string>
     <string name="key_typePref">typePref</string>

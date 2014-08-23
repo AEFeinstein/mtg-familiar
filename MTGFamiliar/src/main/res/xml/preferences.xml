@@ -160,12 +160,6 @@
         <PreferenceCategory
             android:title="@string/pref_cat_life_counter">
 
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="@string/key_wakelock"
-                android:summary="@string/pref_wake_lock_summary"
-                android:title="@string/pref_wake_lock_title"/>
-
             <ListPreference
                 android:defaultValue="0"
                 android:entries="@array/display_array_entries"
@@ -181,6 +175,36 @@
                 android:key="@string/key_lifeTimer"
                 android:summary="@string/pref_life_timer_summary"
                 android:title="@string/pref_life_timer_title"/>
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            xmlns:robobunny="http://robobunny.com"
+            android:title="@string/pref_cat_life_screen">
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/key_wakelock"
+                android:summary="@string/pref_wake_lock_summary"
+                android:title="@string/pref_wake_lock_title"/>
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:dependency="@string/key_wakelock"
+                android:key="@string/key_dimlock"
+                android:summary="@string/pref_dim_lock_summary"
+                android:title="@string/pref_dim_lock_title" />
+
+            <com.robobunny.preferences.SeekBarPreference
+                android:defaultValue="10"
+                android:dependency="@string/key_dimlock"
+                android:key="@string/key_dimlevel"
+                android:max="100"
+                android:summary="@string/pref_dim_lock_level_summary"
+                android:title="@string/pref_dim_lock_level_title"
+                robobunny:min="1"
+                robobunny:interval="1"
+                robobunny:unitsRight="%"/>
+
         </PreferenceCategory>
 
     </PreferenceScreen>
