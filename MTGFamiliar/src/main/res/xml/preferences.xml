@@ -195,7 +195,7 @@
                 android:title="@string/pref_dim_lock_title" />
 
             <com.robobunny.preferences.SeekBarPreference
-                android:defaultValue="10"
+                android:defaultValue="1"
                 android:dependency="@string/key_dimlock"
                 android:key="@string/key_dimlevel"
                 android:max="100"

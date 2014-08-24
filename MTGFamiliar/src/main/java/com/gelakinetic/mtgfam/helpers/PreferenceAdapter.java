@@ -204,7 +204,7 @@ public class PreferenceAdapter {
 
 	/* Percentage to dim screen */
 	public synchronized int getDimLevel() {
-		return this.prefs.getInt(context.getString(R.string.key_dimlevel), 10);
+		return this.prefs.getInt(context.getString(R.string.key_dimlevel), 1);
 	}
 
 	/* Set pref */
