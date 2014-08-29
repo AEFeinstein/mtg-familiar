@@ -150,7 +150,6 @@ public class CardViewFragment extends FamiliarFragment {
 
 	/* Easier than calling getActivity() all the time, and handles being nested */
 	private FamiliarActivity mActivity;
-	private Bitmap mScaledBitmap;
 
 	/**
 	 * Kill any AsyncTask if it is still running
@@ -172,12 +171,6 @@ public class CardViewFragment extends FamiliarFragment {
 	public void onPause() {
 		super.onPause();
 		mActivity.clearLoading();
-		if (mScaledBitmap != null) {
-			mScaledBitmap.recycle();
-		}
-		if (mCardBitmap != null && mCardBitmap.getBitmap() != null) {
-			mCardBitmap.getBitmap().recycle();
-		}
 		if (mAsyncTask != null) {
 			mAsyncTask.cancel(true);
 		}
@@ -1253,8 +1246,8 @@ public class CardViewFragment extends FamiliarFragment {
 				int newWidth = Math.round(bitmap.getWidth() * scale);
 				int newHeight = Math.round(bitmap.getHeight() * scale);
 
-				mScaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); // todo this is leaky?
-				mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), mScaledBitmap);
+				Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); // todo this is leaky?
+				mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
 				bitmap.recycle();
 			} catch (Exception e) {
 				/* Some error resizing. Out of memory? */
