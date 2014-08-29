@@ -475,10 +475,7 @@ public class WishlistHelpers {
 				for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
 					priority1 = nonColors.indexOf(colors1.charAt(i));
 					priority2 = nonColors.indexOf(colors2.charAt(i));
-					if (priority1 == priority2) {
-						continue;
-					}
-					else {
+					if (priority1 != priority2) {
 						return priority1 < priority2 ? -1 : 1;
 					}
 				}
@@ -496,10 +493,7 @@ public class WishlistHelpers {
 				for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
 					priority1 = colors.indexOf(colors1.charAt(i));
 					priority2 = colors.indexOf(colors2.charAt(i));
-					if (priority1 == priority2) {
-						continue;
-					}
-					else {
+					if (priority1 != priority2) {
 						return priority1 < priority2 ? -1 : 1;
 					}
 				}
@@ -523,7 +517,7 @@ public class WishlistHelpers {
 		private static final int AVG_PRICE = 1;
 		private static final int HIGH_PRICE = 2;
 
-		private int mPriceSetting;
+		private final int mPriceSetting;
 
 		public WishlistComparatorPrice(int mPriceSetting) {
 			this.mPriceSetting = mPriceSetting;

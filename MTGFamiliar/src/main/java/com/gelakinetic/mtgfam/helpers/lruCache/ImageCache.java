@@ -78,7 +78,7 @@ public class ImageCache {
     private final Object mDiskCacheLock = new Object();
     private boolean mDiskCacheStarting = true;
 
-    private Set<SoftReference<Bitmap>> mReusableBitmaps;
+    final private Set<SoftReference<Bitmap>> mReusableBitmaps = Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
 
     /**
      * Create a new ImageCache object using the specified parameters. This should not be
@@ -139,10 +139,10 @@ public class ImageCache {
             // require knowledge of the expected size of the bitmaps. From Honeycomb to JellyBean
             // the size would need to be precise, from KitKat onward the size would just need to
             // be the upper bound (due to changes in how inBitmap can re-use bitmaps).
-            if (Utils.hasHoneycomb()) {
-                mReusableBitmaps =
-                        Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
-            }
+//            if (Utils.hasHoneycomb()) {
+//                mReusableBitmaps =
+//                        Collections.synchronizedSet(new HashSet<SoftReference<Bitmap>>());
+//            }
 
             mMemoryCache = new LruCache<String, BitmapDrawable>(mCacheParams.memCacheSize) {
 
@@ -268,7 +268,9 @@ public class ImageCache {
                         if (out != null) {
                             out.close();
                         }
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+						/* Eat it */
+					}
                 }
             }
         }
@@ -308,7 +310,9 @@ public class ImageCache {
             while (mDiskCacheStarting) {
                 try {
                     mDiskCacheLock.wait();
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+					/* Eat it */
+				}
             }
             if (mDiskLruCache != null) {
                 InputStream inputStream = null;
@@ -332,7 +336,9 @@ public class ImageCache {
                         if (inputStream != null) {
                             inputStream.close();
                         }
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+						/* Eat it */
+					}
                 }
             }
             return bitmap;
@@ -344,7 +350,7 @@ public class ImageCache {
      * @param options - BitmapFactory.Options with out* options populated
      * @return Bitmap that case be used for inBitmap
      */
-    protected Bitmap getBitmapFromReusableSet(BitmapFactory.Options options) {
+	Bitmap getBitmapFromReusableSet(BitmapFactory.Options options) {
         //BEGIN_INCLUDE(get_bitmap_from_reusable_set)
         Bitmap bitmap = null;
 
@@ -442,11 +448,11 @@ public class ImageCache {
         public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
         public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
         public File diskCacheDir;
-        public CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
-        public int compressQuality = DEFAULT_COMPRESS_QUALITY;
-        public boolean memoryCacheEnabled = DEFAULT_MEM_CACHE_ENABLED;
-        public boolean diskCacheEnabled = DEFAULT_DISK_CACHE_ENABLED;
-        public boolean initDiskCacheOnCreate = DEFAULT_INIT_DISK_CACHE_ON_CREATE;
+        public final CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
+        public final int compressQuality = DEFAULT_COMPRESS_QUALITY;
+        public final boolean memoryCacheEnabled = DEFAULT_MEM_CACHE_ENABLED;
+        public final boolean diskCacheEnabled = DEFAULT_DISK_CACHE_ENABLED;
+        public final boolean initDiskCacheOnCreate = DEFAULT_INIT_DISK_CACHE_ON_CREATE;
 
         /**
          * Create a set of image cache parameters that can be provided to
@@ -534,7 +540,7 @@ public class ImageCache {
      * @param uniqueName A unique directory name to append to the cache dir
      * @return The cache dir
      */
-    public static File getDiskCacheDir(Context context, String uniqueName) {
+    private static File getDiskCacheDir(Context context, String uniqueName) {
         // Check if media is mounted or storage is built-in, if so, try and use external cache dir
         // otherwise use internal cache dir
         final String cachePath =
@@ -549,7 +555,7 @@ public class ImageCache {
      * A hashing method that changes a string (like a URL) into a hash suitable for using as a
      * disk filename.
      */
-    public static String hashKeyForDisk(String key) {
+    private static String hashKeyForDisk(String key) {
         String cacheKey;
         try {
             final MessageDigest mDigest = MessageDigest.getInstance("MD5");
@@ -564,13 +570,13 @@ public class ImageCache {
     private static String bytesToHexString(byte[] bytes) {
         // http://stackoverflow.com/questions/332079
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
-            if (hex.length() == 1) {
-                sb.append('0');
-            }
-            sb.append(hex);
-        }
+		for (byte aByte : bytes) {
+			String hex = Integer.toHexString(0xFF & aByte);
+			if (hex.length() == 1) {
+				sb.append('0');
+			}
+			sb.append(hex);
+		}
         return sb.toString();
     }
 
@@ -583,7 +589,7 @@ public class ImageCache {
      * @return size in bytes
      */
     @TargetApi(VERSION_CODES.KITKAT)
-    public static int getBitmapSize(BitmapDrawable value) {
+	private static int getBitmapSize(BitmapDrawable value) {
         Bitmap bitmap = value.getBitmap();
 
         // From KitKat onward use getAllocationByteCount() as allocated bytes can potentially be
@@ -607,12 +613,9 @@ public class ImageCache {
      *         otherwise.
      */
     @TargetApi(VERSION_CODES.GINGERBREAD)
-    public static boolean isExternalStorageRemovable() {
-        if (Utils.hasGingerbread()) {
-            return Environment.isExternalStorageRemovable();
-        }
-        return true;
-    }
+	private static boolean isExternalStorageRemovable() {
+		return !Utils.hasGingerbread() || Environment.isExternalStorageRemovable();
+	}
 
     /**
      * Get the external app cache directory.
@@ -621,7 +624,7 @@ public class ImageCache {
      * @return The external cache dir
      */
     @TargetApi(VERSION_CODES.FROYO)
-    public static File getExternalCacheDir(Context context) {
+	private static File getExternalCacheDir(Context context) {
         if (Utils.hasFroyo()) {
             return context.getExternalCacheDir();
         }
@@ -638,7 +641,7 @@ public class ImageCache {
      * @return The space available in bytes
      */
     @TargetApi(VERSION_CODES.GINGERBREAD)
-    public static long getUsableSpace(File path) {
+	private static long getUsableSpace(File path) {
         if (Utils.hasGingerbread()) {
             return path.getUsableSpace();
         }

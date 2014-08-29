@@ -29,8 +29,8 @@ import java.util.concurrent.RejectedExecutionException;
  */
 public abstract class FamiliarFragment extends Fragment {
 
-	public boolean mIsSearchViewOpen = false;
-	public Runnable mAfterSearchClosedRunnable = null;
+	boolean mIsSearchViewOpen = false;
+	Runnable mAfterSearchClosedRunnable = null;
 
 	/**
 	 * http://developer.android.com/reference/android/app/Fragment.html

@@ -215,7 +215,7 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long createCard(MtgCard c, SQLiteDatabase mDb) {
+	public static void createCard(MtgCard c, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 
 		initialValues.put(KEY_NAME, c.name);
@@ -234,7 +234,7 @@ public class CardDbAdapter {
 		initialValues.put(KEY_COLOR, c.color);
 		initialValues.put(KEY_MULTIVERSEID, c.multiverseId);
 
-		return mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
 	}
 
 	/**
@@ -242,7 +242,7 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long createSet(MtgSet set, SQLiteDatabase mDb) {
+	public static void createSet(MtgSet set, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 
 		initialValues.put(KEY_CODE, set.code);
@@ -250,7 +250,7 @@ public class CardDbAdapter {
 		initialValues.put(KEY_CODE_MTGI, set.codeMagicCards);
 		initialValues.put(KEY_DATE, set.date);
 
-		return mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
 	}
 
 	/**
@@ -259,12 +259,12 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static boolean addTcgName(String name, String code, SQLiteDatabase mDb) {
+	public static void addTcgName(String name, String code, SQLiteDatabase mDb) {
 		ContentValues args = new ContentValues();
 
 		args.put(KEY_NAME_TCGPLAYER, name);
 
-		return mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null) > 0;
+		mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
 	}
 
 	/**
@@ -365,19 +365,6 @@ public class CardDbAdapter {
 		}
 		return c;
 
-	}
-
-
-	public static Cursor fetchDistinctColors(SQLiteDatabase mDb) {
-		String sql = "SELECT DISTINCT " + KEY_COLOR + " FROM " + DATABASE_TABLE_CARDS;
-		Cursor c = mDb.rawQuery(sql, null);
-		c.moveToFirst();
-		ArrayList<String> colors = new ArrayList<String>();
-		colors.add(c.getString(0));
-		while (c.moveToNext()) {
-			colors.add(c.getString(0));
-		}
-		return c;
 	}
 
 	/**
@@ -1209,10 +1196,10 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long createFormat(String name, SQLiteDatabase mDb) {
+	public static void createFormat(String name, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_NAME, name);
-		return mDb.insert(DATABASE_TABLE_FORMATS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_FORMATS, null, initialValues);
 	}
 
 	/**
@@ -1221,11 +1208,11 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long addLegalSet(String set, String format, SQLiteDatabase mDb) {
+	public static void addLegalSet(String set, String format, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_SET, set);
 		initialValues.put(KEY_FORMAT, format);
-		return mDb.insert(DATABASE_TABLE_LEGAL_SETS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_LEGAL_SETS, null, initialValues);
 	}
 
 	/**
@@ -1235,12 +1222,12 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long addLegalCard(String card, String format, int status, SQLiteDatabase mDb) {
+	public static void addLegalCard(String card, String format, int status, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_NAME, card);
 		initialValues.put(KEY_LEGALITY, status);
 		initialValues.put(KEY_FORMAT, format);
-		return mDb.insert(DATABASE_TABLE_BANNED_CARDS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_BANNED_CARDS, null, initialValues);
 	}
 
 	/**

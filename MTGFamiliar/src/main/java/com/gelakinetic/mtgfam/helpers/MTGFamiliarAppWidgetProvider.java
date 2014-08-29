@@ -49,11 +49,11 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			FamiliarActivity.ACTION_MOJHOSTO,
 			FamiliarActivity.ACTION_JUDGE};
 
-	protected int mMaxNumButtons = 100;
+	private int mMaxNumButtons = 100;
 
-	protected int mLayout;
+	int mLayout;
 
-	public abstract void setLayout();
+	protected abstract void setLayout();
 
 	/**
 	 * Called in response to the ACTION_APPWIDGET_UPDATE broadcast when this AppWidget provider is being asked to

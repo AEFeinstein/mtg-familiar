@@ -16,6 +16,8 @@
 
 package com.gelakinetic.mtgfam.helpers.lruCache;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.Closeable;
@@ -98,11 +100,11 @@ import java.util.concurrent.TimeUnit;
  * responding appropriately.
  */
 public final class DiskLruCache implements Closeable {
-    static final String JOURNAL_FILE = "journal";
-    static final String JOURNAL_FILE_TMP = "journal.tmp";
-    static final String MAGIC = "libcore.io.DiskLruCache";
-    static final String VERSION_1 = "1";
-    static final long ANY_SEQUENCE_NUMBER = -1;
+    private static final String JOURNAL_FILE = "journal";
+    private static final String JOURNAL_FILE_TMP = "journal.tmp";
+    private static final String MAGIC = "libcore.io.DiskLruCache";
+    private static final String VERSION_1 = "1";
+    private static final long ANY_SEQUENCE_NUMBER = -1;
     private static final String CLEAN = "CLEAN";
     private static final String DIRTY = "DIRTY";
     private static final String REMOVE = "REMOVE";
@@ -191,7 +193,7 @@ public final class DiskLruCache implements Closeable {
     /**
      * Returns the remainder of 'reader' as a string, closing it when done.
      */
-    public static String readFully(Reader reader) throws IOException {
+    private static String readFully(Reader reader) throws IOException {
         try {
             StringWriter writer = new StringWriter();
             char[] buffer = new char[1024];
@@ -212,7 +214,7 @@ public final class DiskLruCache implements Closeable {
      * @throws java.io.EOFException if the stream is exhausted before the next newline
      *     character.
      */
-    public static String readAsciiLine(InputStream in) throws IOException {
+    private static String readAsciiLine(InputStream in) throws IOException {
         // TODO: support UTF-8 here instead
 
         StringBuilder result = new StringBuilder(80);
@@ -236,7 +238,7 @@ public final class DiskLruCache implements Closeable {
     /**
      * Closes 'closeable', ignoring any checked exceptions. Does nothing if 'closeable' is null.
      */
-    public static void closeQuietly(Closeable closeable) {
+    private static void closeQuietly(Closeable closeable) {
         if (closeable != null) {
             try {
                 closeable.close();
@@ -251,7 +253,7 @@ public final class DiskLruCache implements Closeable {
      * Recursively delete everything in {@code dir}.
      */
     // TODO: this should specify paths as Strings rather than as Files
-    public static void deleteContents(File dir) throws IOException {
+    private static void deleteContents(File dir) throws IOException {
         File[] files = dir.listFiles();
         if (files == null) {
             throw new IllegalArgumentException("not a directory: " + dir);
@@ -498,7 +500,7 @@ public final class DiskLruCache implements Closeable {
         }
 
         redundantOpCount++;
-        journalWriter.append(READ + ' ' + key + '\n');
+        journalWriter.append(READ + ' ').append(key).append('\n');
         if (journalRebuildRequired()) {
             executorService.submit(cleanupCallable);
         }
@@ -538,22 +540,7 @@ public final class DiskLruCache implements Closeable {
         return editor;
     }
 
-    /**
-     * Returns the directory where this cache stores its data.
-     */
-    public File getDirectory() {
-        return directory;
-    }
-
-    /**
-     * Returns the maximum number of bytes that this cache should use to store
-     * its data.
-     */
-    public long maxSize() {
-        return maxSize;
-    }
-
-    /**
+	/**
      * Returns the number of bytes currently being used to store the values in
      * this cache. This may be greater than the max size if a background
      * deletion is pending.
@@ -628,12 +615,12 @@ public final class DiskLruCache implements Closeable {
      *
      * @return true if an entry was removed.
      */
-    public synchronized boolean remove(String key) throws IOException {
+    synchronized void remove(String key) throws IOException {
         checkNotClosed();
         validateKey(key);
         Entry entry = lruEntries.get(key);
         if (entry == null || entry.currentEditor != null) {
-            return false;
+			return;
         }
 
         for (int i = 0; i < valueCount; i++) {
@@ -646,15 +633,14 @@ public final class DiskLruCache implements Closeable {
         }
 
         redundantOpCount++;
-        journalWriter.append(REMOVE + ' ' + key + '\n');
+        journalWriter.append(REMOVE + ' ').append(key).append('\n');
         lruEntries.remove(key);
 
         if (journalRebuildRequired()) {
             executorService.submit(cleanupCallable);
         }
 
-        return true;
-    }
+	}
 
     /**
      * Returns true if this cache has been closed.
@@ -867,7 +853,7 @@ public final class DiskLruCache implements Closeable {
                 }
             }
 
-            @Override public void write(byte[] buffer, int offset, int length) {
+            @Override public void write(@NotNull byte[] buffer, int offset, int length) {
                 try {
                     out.write(buffer, offset, length);
                 } catch (IOException e) {
@@ -913,7 +899,7 @@ public final class DiskLruCache implements Closeable {
             this.lengths = new long[valueCount];
         }
 
-        public String getLengths() throws IOException {
+        public String getLengths() {
             StringBuilder result = new StringBuilder();
             for (long size : lengths) {
                 result.append(' ').append(size);

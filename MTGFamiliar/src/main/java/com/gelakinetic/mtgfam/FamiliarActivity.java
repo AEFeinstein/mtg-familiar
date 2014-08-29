@@ -115,7 +115,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_RULES = "android.intent.action.RULES";
 	public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
 	public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
-	public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
+	private static final String ACTION_PROFILE = "android.intent.action.PROFILE";
 
 	/* Constants used for displaying dialogs */
 	private static final int DIALOG_ABOUT = 100;
@@ -1415,14 +1415,13 @@ public class FamiliarActivity extends FragmentActivity {
 	 * Image Caching
 	 */
 
-	public void addImageCache(FragmentManager fragmentManager,
-							  ImageCache.ImageCacheParams cacheParams) {
-		ImageCache.ImageCacheParams mImageCacheParams = cacheParams;
-		mImageCache = ImageCache.getInstance(fragmentManager, mImageCacheParams);
+	void addImageCache(FragmentManager fragmentManager,
+					   ImageCache.ImageCacheParams cacheParams) {
+		mImageCache = ImageCache.getInstance(fragmentManager, cacheParams);
 		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
 	}
 
-	protected class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
+	private class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Object... params) {
@@ -1444,25 +1443,25 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 	}
 
-	protected void initDiskCacheInternal() {
+	void initDiskCacheInternal() {
 		if (mImageCache != null) {
 			mImageCache.initDiskCache();
 		}
 	}
 
-	protected void clearCacheInternal() {
+	void clearCacheInternal() {
 		if (mImageCache != null) {
 			mImageCache.clearCache();
 		}
 	}
 
-	protected void flushCacheInternal() {
+	void flushCacheInternal() {
 		if (mImageCache != null) {
 			mImageCache.flush();
 		}
 	}
 
-	protected void closeCacheInternal() {
+	void closeCacheInternal() {
 		if (mImageCache != null) {
 			mImageCache.close();
 			mImageCache = null;

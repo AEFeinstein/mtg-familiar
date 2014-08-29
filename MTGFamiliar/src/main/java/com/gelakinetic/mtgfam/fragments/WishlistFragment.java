@@ -667,11 +667,7 @@ public class WishlistFragment extends FamiliarFragment {
 	 */
 	void sortWishlist() {
 		/* If no sort type specified, return */
-		if (wishlistSortType == SORT_TYPE_NONE) {
-			return;
-		}
-		/* Else sort by selected sort type */
-		else {
+		if (wishlistSortType != SORT_TYPE_NONE) {
 			if (wishlistSortOrder == ASCENDING) {
 				switch (wishlistSortType) {
 					case SORT_TYPE_CMC:

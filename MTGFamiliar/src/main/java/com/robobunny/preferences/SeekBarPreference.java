@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
 
+import org.jetbrains.annotations.NotNull;
+
 public class SeekBarPreference extends Preference implements OnSeekBarChangeListener {
 
 	private final String TAG = getClass().getName();
@@ -91,7 +93,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	}
 
 	@Override
-	public void onBindView(View view) {
+	public void onBindView(@NotNull View view) {
 		super.onBindView(view);
 
 		try {
@@ -114,7 +116,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 		}
 
 		//if dependency is false from the beginning, disable the seek bar
-		if (view != null && !view.isEnabled()) {
+		if (!view.isEnabled()) {
 			mSeekBar.setEnabled(false);
 		}
 
@@ -126,7 +128,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	 *
 	 * @param view
 	 */
-	protected void updateView(View view) {
+	void updateView(View view) {
 
 		try {
 			mStatusText = (TextView) view.findViewById(R.id.seekBarPrefValue);
@@ -185,8 +187,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 	@Override
 	protected Object onGetDefaultValue(TypedArray ta, int index) {
 
-		int defaultValue = ta.getInt(index, DEFAULT_VALUE);
-		return defaultValue;
+		return ta.getInt(index, DEFAULT_VALUE);
 
 	}
 

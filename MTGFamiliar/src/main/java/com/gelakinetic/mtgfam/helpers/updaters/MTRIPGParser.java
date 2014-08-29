@@ -166,9 +166,7 @@ class MTRIPGParser {
 			}
 		}
 
-		if (is != null) {
-			is.close();
-		}
+		is.close();
 		reader.close();
 
 		return updated;
