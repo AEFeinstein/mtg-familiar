@@ -702,18 +702,14 @@ public class CardViewFragment extends FamiliarFragment {
 
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		int iMenu = 0;
 
-		if (v.getClass() == TextView.class) {
-			TextView tv = (TextView) v;
+		TextView tv = (TextView) v;
 
-			assert tv.getText() != null;
-			mCopyString = tv.getText().toString();
-			iMenu = R.menu.copy_menu;
-		}
+		assert tv.getText() != null;
+		mCopyString = tv.getText().toString();
 
 		android.view.MenuInflater inflater = this.mActivity.getMenuInflater();
-		inflater.inflate(iMenu, menu);
+		inflater.inflate(R.menu.copy_menu, menu);
 	}
 
 	/**
@@ -724,40 +720,43 @@ public class CardViewFragment extends FamiliarFragment {
 	 */
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
-		String copyText;
-		switch (item.getItemId()) {
-			case R.id.copy: {
-				copyText = mCopyString;
-				break;
-			}
-			case R.id.copyall: {
-				assert mNameTextView.getText() != null; /* Because Android Studio */
-				assert mCostTextView.getText() != null;
-				assert mTypeTextView.getText() != null;
-				assert mSetTextView.getText() != null;
-				assert mAbilityTextView.getText() != null;
-				assert mFlavorTextView.getText() != null;
-				assert mPowTouTextView.getText() != null;
-				assert mArtistTextView.getText() != null;
+		if (getUserVisibleHint()) {
+			String copyText;
+			switch (item.getItemId()) {
+				case R.id.copy: {
+					copyText = mCopyString;
+					break;
+				}
+				case R.id.copyall: {
+					assert mNameTextView.getText() != null; /* Because Android Studio */
+					assert mCostTextView.getText() != null;
+					assert mTypeTextView.getText() != null;
+					assert mSetTextView.getText() != null;
+					assert mAbilityTextView.getText() != null;
+					assert mFlavorTextView.getText() != null;
+					assert mPowTouTextView.getText() != null;
+					assert mArtistTextView.getText() != null;
 
-				copyText = mNameTextView.getText().toString() + '\n' + mCostTextView.getText().toString() + '\n' +
-						mTypeTextView.getText().toString() + '\n' + mSetTextView.getText().toString() + '\n' +
-						mAbilityTextView.getText().toString() + '\n' + mFlavorTextView.getText().toString() + '\n' +
-						mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString();
-				break;
+					copyText = mNameTextView.getText().toString() + '\n' + mCostTextView.getText().toString() + '\n' +
+							mTypeTextView.getText().toString() + '\n' + mSetTextView.getText().toString() + '\n' +
+							mAbilityTextView.getText().toString() + '\n' + mFlavorTextView.getText().toString() + '\n' +
+							mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString();
+					break;
+				}
+				default: {
+					return super.onContextItemSelected(item);
+				}
 			}
-			default: {
-				return super.onContextItemSelected(item);
-			}
+
+			ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
+					getSystemService(android.content.Context.CLIPBOARD_SERVICE));
+			String label = getResources().getString(R.string.app_name);
+			String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+			ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
+			clipboard.setPrimaryClip(cd);
+			return true;
 		}
-
-		ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
-				getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-		String label = getResources().getString(R.string.app_name);
-		String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-		ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
-		clipboard.setPrimaryClip(cd);
-		return true;
+		return false;
 	}
 
 	/**
