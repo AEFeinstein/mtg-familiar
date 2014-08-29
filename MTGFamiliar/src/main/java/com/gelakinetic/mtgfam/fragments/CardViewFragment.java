@@ -220,7 +220,18 @@ public class CardViewFragment extends FamiliarFragment {
 		registerForContextMenu(mPowTouTextView);
 		registerForContextMenu(mFlavorTextView);
 		registerForContextMenu(mArtistTextView);
-		registerForContextMenu(mCardImageView);
+
+		mCardImageView.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				if (mAsyncTask != null) {
+					mAsyncTask.cancel(true);
+				}
+				mAsyncTask = new saveCardImageTask();
+				mAsyncTask.execute((Void[]) null);
+				return true;
+			}
+		});
 
 		if (mActivity.mPreferenceAdapter.getPicFirst()) {
 			loadTo = MAIN_PAGE;
@@ -525,8 +536,17 @@ public class CardViewFragment extends FamiliarFragment {
 						ImageView dialogImageView = (ImageView) dialog.findViewById(R.id.cardimage);
 						dialogImageView.setImageDrawable(mCardBitmap);
 
-						registerForContextMenu(dialogImageView);
-						dialogImageView.setOnCreateContextMenuListener(this);
+						dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
+							@Override
+							public boolean onLongClick(View view) {
+								if (mAsyncTask != null) {
+									mAsyncTask.cancel(true);
+								}
+								mAsyncTask = new saveCardImageTask();
+								mAsyncTask.execute((Void[]) null);
+								return true;
+							}
+						});
 
 						return dialog;
 					}
@@ -665,56 +685,6 @@ public class CardViewFragment extends FamiliarFragment {
 					}
 				}
 			}
-
-			/**
-			 * Called when a registered view is long-pressed. The menu inflated will give different options based on the view class
-			 *
-			 * @param menu     The context menu that is being built
-			 * @param v        The view for which the context menu is being built
-			 * @param menuInfo Extra information about the item for which the context menu should be shown. This information
-			 *                 will vary depending on the class of v.
-			 */
-			@Override
-			public void onCreateContextMenu(final ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-				super.onCreateContextMenu(menu, v, menuInfo);
-
-				if (v.getClass() == ImageView.class) {
-					android.view.MenuInflater inflater = mActivity.getMenuInflater();
-					inflater.inflate(R.menu.save_image_menu, menu);
-
-					/* We have to do some trickery to get the context menu listener to work inside of
-					   a dialogfragment. So we create a new listener for menu items and override the
-                       listener for all items in the menu */
-					MenuItem.OnMenuItemClickListener listener = new MenuItem.OnMenuItemClickListener() {
-						@Override
-						public boolean onMenuItemClick(MenuItem menuItem) {
-							onContextItemSelected(menuItem);
-							return true;
-						}
-					};
-
-					for (int i = 0; i < menu.size(); i++) {
-						menu.getItem(i).setOnMenuItemClickListener(listener);
-					}
-				}
-			}
-
-			@Override
-			public boolean onContextItemSelected(MenuItem item) {
-				switch (item.getItemId()) {
-					case R.id.save:
-						if (mAsyncTask != null) {
-							mAsyncTask.cancel(true);
-						}
-						mAsyncTask = new saveCardImageTask();
-						mAsyncTask.execute((Void[]) null);
-						return true;
-					default:
-						return super.onContextItemSelected(item);
-				}
-			}
-
-
 		};
 		newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
 	}
@@ -740,9 +710,6 @@ public class CardViewFragment extends FamiliarFragment {
 			assert tv.getText() != null;
 			mCopyString = tv.getText().toString();
 			iMenu = R.menu.copy_menu;
-		}
-		else if (v.getClass() == ImageView.class) {
-			iMenu = R.menu.save_image_menu;
 		}
 
 		android.view.MenuInflater inflater = this.mActivity.getMenuInflater();
@@ -778,15 +745,6 @@ public class CardViewFragment extends FamiliarFragment {
 						mAbilityTextView.getText().toString() + '\n' + mFlavorTextView.getText().toString() + '\n' +
 						mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString();
 				break;
-			}
-			case R.id.save: {
-				if (mAsyncTask != null) {
-					mAsyncTask.cancel(true);
-				}
-				mAsyncTask = new saveCardImageTask();
-				mAsyncTask.execute((Void[]) null);
-
-				return true;
 			}
 			default: {
 				return super.onContextItemSelected(item);
@@ -1011,7 +969,7 @@ public class CardViewFragment extends FamiliarFragment {
 					return null;
 				}
 
-				boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream);
+				boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 90, fStream);
 
 				if (!bCompressed) {
 					mToastString = getString(R.string.card_view_unable_to_save_image);
