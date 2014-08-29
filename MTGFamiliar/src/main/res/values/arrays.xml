@@ -19,6 +19,7 @@
         <item>@string/search_Tribal</item>
         <item>@string/search_Vanguard</item>
         <item>@string/search_World</item>
+        <item>@string/search_Conspiracy</item>
     </string-array>
     <string-array name="logic_spinner">
         <item>></item>
