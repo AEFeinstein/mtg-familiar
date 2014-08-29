@@ -128,7 +128,6 @@ public class CardViewFragment extends FamiliarFragment {
 	private String[] mLegalities;
 	private String[] mFormats;
 	private ArrayList<Ruling> mRulingsArrayList;
-	private ImageView mCopyImageView;
 
 	/* Loaded in a Spice Service */
 	private PriceInfo mPriceInfo;
@@ -683,9 +682,7 @@ public class CardViewFragment extends FamiliarFragment {
 					android.view.MenuInflater inflater = mActivity.getMenuInflater();
 					inflater.inflate(R.menu.save_image_menu, menu);
 
-					mCopyImageView = (ImageView) v;
-
-                    /* We have to do some trickery to get the context menu listener to work inside of
+					/* We have to do some trickery to get the context menu listener to work inside of
 					   a dialogfragment. So we create a new listener for menu items and override the
                        listener for all items in the menu */
 					MenuItem.OnMenuItemClickListener listener = new MenuItem.OnMenuItemClickListener() {
@@ -706,8 +703,11 @@ public class CardViewFragment extends FamiliarFragment {
 			public boolean onContextItemSelected(MenuItem item) {
 				switch (item.getItemId()) {
 					case R.id.save:
-						saveCardImage();
-
+						if (mAsyncTask != null) {
+							mAsyncTask.cancel(true);
+						}
+						mAsyncTask = new saveCardImageTask();
+						mAsyncTask.execute((Void[]) null);
 						return true;
 					default:
 						return super.onContextItemSelected(item);
@@ -742,8 +742,6 @@ public class CardViewFragment extends FamiliarFragment {
 			iMenu = R.menu.copy_menu;
 		}
 		else if (v.getClass() == ImageView.class) {
-			mCopyImageView = (ImageView) v;
-
 			iMenu = R.menu.save_image_menu;
 		}
 
@@ -782,7 +780,11 @@ public class CardViewFragment extends FamiliarFragment {
 				break;
 			}
 			case R.id.save: {
-				saveCardImage();
+				if (mAsyncTask != null) {
+					mAsyncTask.cancel(true);
+				}
+				mAsyncTask = new saveCardImageTask();
+				mAsyncTask.execute((Void[]) null);
 
 				return true;
 			}
@@ -944,88 +946,95 @@ public class CardViewFragment extends FamiliarFragment {
 		}
 	}
 
-	private void saveCardImage() {
-		if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			Toast.makeText(mActivity, getString(R.string.card_view_no_external_storage),
-					Toast.LENGTH_LONG).show();
+	class saveCardImageTask extends AsyncTask<Void, Void, Void> {
+		String mToastString;
 
-			return;
-		}
-
-		String strPath;
-
-		try {
-			strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-					.getCanonicalPath() + "/MTGFamiliar";
-		} catch (IOException ex) {
-			Toast.makeText(mActivity, getString(R.string.card_view_no_pictures_folder),
-					Toast.LENGTH_LONG).show();
-
-			return;
-		}
-
-		File fPath = new File(strPath);
-
-		if (!fPath.exists()) {
-			//noinspection ResultOfMethodCallIgnored
-			fPath.mkdir();
-
-			if (!fPath.isDirectory()) {
-				Toast.makeText(mActivity, getString(R.string.card_view_unable_to_create_dir),
-						Toast.LENGTH_LONG).show();
-
-				return;
-			}
-		}
-
-		fPath = new File(strPath, mCardName + "_" + mSetCode + ".jpg");
-
-		if (fPath.exists()) {
-			fPath.delete();
-			return;
-		}
-
-		try {
-			if (!fPath.createNewFile()) {
-				Toast.makeText(mActivity, getString(R.string.card_view_unable_to_create_file),
-						Toast.LENGTH_LONG).show();
-
-				return;
+		@Override
+		protected Void doInBackground(Void... voids) {
+			if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				mToastString = getString(R.string.card_view_no_external_storage);
+				return null;
 			}
 
-			FileOutputStream fStream = new FileOutputStream(fPath);
+			String strPath;
 
-			mCopyImageView.buildDrawingCache();
-
-			Bitmap bmpImage = mCopyImageView.getDrawingCache();
-
-			if (bmpImage == null) {
-				Toast.makeText(mActivity, getString(R.string.card_view_no_image),
-						Toast.LENGTH_LONG).show();
-
-				return;
+			try {
+				strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+						.getCanonicalPath() + "/MTGFamiliar";
+			} catch (IOException ex) {
+				mToastString = getString(R.string.card_view_no_pictures_folder);
+				return null;
 			}
 
-			boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream);
+			File fPath = new File(strPath);
 
-			mCopyImageView.destroyDrawingCache();
+			if (!fPath.exists()) {
+				fPath.mkdir();
 
-			if (!bCompressed) {
-				Toast.makeText(mActivity, getString(R.string.card_view_unable_to_save_image),
-						Toast.LENGTH_LONG).show();
-
-				return;
+				if (!fPath.isDirectory()) {
+					mToastString = getString(R.string.card_view_unable_to_create_dir);
+					return null;
+				}
 			}
 
-			strPath = fPath.getCanonicalPath();
-		} catch (IOException ex) {
-			Toast.makeText(mActivity, getString(R.string.card_view_save_failure),
-					Toast.LENGTH_LONG).show();
+			fPath = new File(strPath, mCardName + "_" + mSetCode + ".jpg");
 
-			return;
+			if (fPath.exists()) {
+				fPath.delete();
+			}
+
+			try {
+				if (!fPath.createNewFile()) {
+					mToastString = getString(R.string.card_view_unable_to_create_file);
+					return null;
+				}
+
+				FileOutputStream fStream = new FileOutputStream(fPath);
+
+				/* If the card is displayed, there's a real good chance it's cached */
+				String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
+				if (cardLanguage == null) {
+					cardLanguage = "en";
+				}
+				String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
+				Bitmap bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+
+				/* Check if this is an english only image */
+				if(bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
+					imageKey = Integer.toString(mMultiverseId) + "en";
+					bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+				}
+
+				/* nope, not here */
+				if (bmpImage == null) {
+					mToastString = getString(R.string.card_view_no_image);
+					return null;
+				}
+
+				boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 80, fStream);
+
+				if (!bCompressed) {
+					mToastString = getString(R.string.card_view_unable_to_save_image);
+					return null;
+				}
+
+				strPath = fPath.getCanonicalPath();
+			} catch (IOException ex) {
+				mToastString = getString(R.string.card_view_save_failure);
+				return null;
+			}
+
+			mToastString = getString(R.string.card_view_image_saved) + strPath;
+			return null;
 		}
 
-		Toast.makeText(mActivity, getString(R.string.card_view_image_saved) + strPath, Toast.LENGTH_LONG).show();
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			super.onPostExecute(aVoid);
+			if(mToastString != null) {
+				Toast.makeText(mActivity, mToastString, Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 
 	/**
