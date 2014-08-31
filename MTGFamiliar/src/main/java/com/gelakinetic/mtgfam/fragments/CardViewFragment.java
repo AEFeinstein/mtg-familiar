@@ -1121,8 +1121,6 @@ public class CardViewFragment extends FamiliarFragment {
 
 			if (bitmap == null) { // Not found in disk cache
 
-				error = null;
-
 				boolean bRetry = true;
 
 				boolean triedMtgImage = false;
@@ -1132,6 +1130,7 @@ public class CardViewFragment extends FamiliarFragment {
 				while (bRetry) {
 
 					bRetry = false;
+					error = null;
 
 					try {
 

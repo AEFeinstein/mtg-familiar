@@ -357,6 +357,7 @@ public class FamiliarActivity extends FragmentActivity {
 								mPreferenceAdapter.setLastRulesUpdate(0);
 								mPreferenceAdapter.setLastTCGNameUpdate("");
 								mPreferenceAdapter.setLastUpdate("");
+								mPreferenceAdapter.setLegalityDate("");
 								startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
 							} catch (FamiliarDbException e) {
 								e.printStackTrace();
