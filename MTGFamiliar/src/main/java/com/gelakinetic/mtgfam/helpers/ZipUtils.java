@@ -23,7 +23,7 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 
 	private static final String BACKUP_FILE_NAME = "MTGFamiliarBackup.zip";
-	private static final String SHARED_PREF_DIR = "/data/data/com.gelakinetic.mtgfam/shared_prefs/";
+//	private static final String SHARED_PREF_DIR = "/data/data/com.gelakinetic.mtgfam/shared_prefs/";
 
 	/**
 	 * This method exports any data in this application's getFilesDir() into a zip file on external storage
@@ -32,8 +32,12 @@ public class ZipUtils {
 	 */
 	public static void exportData(Context context) {
 		assert context.getFilesDir() != null;
+
+		String sharedPrefsDir = context.getFilesDir().getPath();
+		sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
+
 		ArrayList<File> files = findAllFiles(context.getFilesDir(),
-				new File(SHARED_PREF_DIR));
+				new File(sharedPrefsDir));
 
 		File sdCard = Environment.getExternalStorageDirectory();
 		File zipOut = new File(sdCard, BACKUP_FILE_NAME);
@@ -139,8 +143,11 @@ public class ZipUtils {
 			InputStream in = zipFile.getInputStream(entry);
 			OutputStream out;
 			if (entry.getName().contains("_preferences.xml")) {
+				String sharedPrefsDir = context.getFilesDir().getPath();
+				sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
+
 				out = new BufferedOutputStream(new FileOutputStream(
-						new File(SHARED_PREF_DIR, entry.getName())));
+						new File(sharedPrefsDir, entry.getName())));
 			}
 			else {
 				out = new BufferedOutputStream(new FileOutputStream(

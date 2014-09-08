@@ -61,17 +61,17 @@ public class LcPlayer {
 		public void run() {
 			mCommitting = false;
 
-			if(mLifeHistory.size() > 0 && mLifeHistory.get(0).mDelta == 0) {
+			if (mLifeHistory.size() > 0 && mLifeHistory.get(0).mDelta == 0) {
 				mLifeHistory.remove(0);
 			}
-			if(mPoisonHistory.size() > 0 && mPoisonHistory.get(0).mDelta == 0) {
+			if (mPoisonHistory.size() > 0 && mPoisonHistory.get(0).mDelta == 0) {
 				mPoisonHistory.remove(0);
 			}
 
-			if(mHistoryLifeAdapter != null) {
+			if (mHistoryLifeAdapter != null) {
 				mHistoryLifeAdapter.notifyDataSetChanged();
 			}
-			if(mHistoryPoisonAdapter != null) {
+			if (mHistoryPoisonAdapter != null) {
 				mHistoryPoisonAdapter.notifyDataSetChanged();
 			}
 		}
@@ -173,12 +173,12 @@ public class LcPlayer {
 				break;
 		}
 
-		if(delta == 0) {
+		if (delta == 0) {
 			return;
 		}
 
 		/* If we're not committing yet, make a new history entry */
-		if(!mCommitting) {
+		if (!mCommitting) {
 			/* Create a new historyEntry */
 			HistoryEntry entry = new HistoryEntry();
 			/* If there are no entries, assume life is mDefaultLifeTotal */
@@ -212,13 +212,13 @@ public class LcPlayer {
 			}
 		}
 
-		else if(!immediate) {
+		else if (!immediate) {
 			/* Modify current historyEntry */
 			switch (mMode) {
 				case LifeCounterFragment.STAT_POISON: {
 					mPoisonHistory.get(0).mDelta += delta;
 					mPoisonHistory.get(0).mAbsolute += delta;
-					if(null != mHistoryPoisonAdapter) {
+					if (null != mHistoryPoisonAdapter) {
 						mHistoryPoisonAdapter.notifyDataSetChanged();
 					}
 					break;
@@ -227,7 +227,7 @@ public class LcPlayer {
 				case LifeCounterFragment.STAT_LIFE: {
 					mLifeHistory.get(0).mDelta += delta;
 					mLifeHistory.get(0).mAbsolute += delta;
-					if(null != mHistoryLifeAdapter) {
+					if (null != mHistoryLifeAdapter) {
 						mHistoryLifeAdapter.notifyDataSetChanged();
 					}
 					break;
@@ -235,7 +235,7 @@ public class LcPlayer {
 			}
 		}
 
-		if(!immediate) {
+		if (!immediate) {
 			mCommitting = true;
 			mHandler.removeCallbacks(mLifePoisonCommitter);
 			mHandler.postDelayed(mLifePoisonCommitter,
@@ -459,7 +459,7 @@ public class LcPlayer {
 		}
 
 		/* Check for -1 life? */
-		if(mLife == -1) {
+		if (mLife == -1) {
 			mLife = LifeCounterFragment.DEFAULT_LIFE;
 		}
 
@@ -781,7 +781,7 @@ public class LcPlayer {
 			}
 			assert view != null;
 
-			if(mCommitting && position == 0) {
+			if (mCommitting && position == 0) {
 				((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
 						mFragment.getResourceIdFromAttr(R.attr.holo_blue)));
 			}

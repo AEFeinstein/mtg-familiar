@@ -73,16 +73,16 @@ public class CardDbAdapter {
 	private static final String DATABASE_TABLE_RULES = "rules";
 	private static final String DATABASE_TABLE_GLOSSARY = "glossary";
 
-	public static final int DATABASE_VERSION = 43;
+	public static final int DATABASE_VERSION = 47;
 
 	public static final String KEY_ID = "_id";
 	public static final String KEY_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1; // "name";
 	public static final String KEY_SET = "expansion";
 	public static final String KEY_TYPE = "type";
 	public static final String KEY_ABILITY = "cardtext";
-	private static final String KEY_COLOR = "color";
+	public static final String KEY_COLOR = "color";
 	public static final String KEY_MANACOST = "manacost";
-	private static final String KEY_CMC = "cmc";
+	public static final String KEY_CMC = "cmc";
 	public static final String KEY_POWER = "power";
 	public static final String KEY_TOUGHNESS = "toughness";
 	public static final String KEY_RARITY = "rarity";
@@ -116,7 +116,9 @@ public class CardDbAdapter {
 			DATABASE_TABLE_CARDS + "." + KEY_MANACOST, DATABASE_TABLE_CARDS + "." + KEY_ABILITY,
 			DATABASE_TABLE_CARDS + "." + KEY_POWER, DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS,
 			DATABASE_TABLE_CARDS + "." + KEY_LOYALTY, DATABASE_TABLE_CARDS + "." + KEY_RARITY,
-			DATABASE_TABLE_CARDS + "." + KEY_FLAVOR};
+			DATABASE_TABLE_CARDS + "." + KEY_FLAVOR, DATABASE_TABLE_CARDS + "." + KEY_CMC,
+			DATABASE_TABLE_CARDS + "." + KEY_COLOR
+	};
 
 	public static final String DATABASE_CREATE_CARDS = "create table "
 			+ DATABASE_TABLE_CARDS + "(" + KEY_ID
@@ -175,7 +177,6 @@ public class CardDbAdapter {
 	// use a hash map for performance
 	private static final HashMap<String, String> mColumnMap = buildColumnMap();
 
-	private static final String DB_PATH = "/data/data/com.gelakinetic.mtgfam/databases/";
 	private static final String DB_NAME = "data";
 
 	public static final int NOPE = 0;
@@ -214,7 +215,7 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long createCard(MtgCard c, SQLiteDatabase mDb) {
+	public static void createCard(MtgCard c, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 
 		initialValues.put(KEY_NAME, c.name);
@@ -233,7 +234,7 @@ public class CardDbAdapter {
 		initialValues.put(KEY_COLOR, c.color);
 		initialValues.put(KEY_MULTIVERSEID, c.multiverseId);
 
-		return mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
 	}
 
 	/**
@@ -241,7 +242,7 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long createSet(MtgSet set, SQLiteDatabase mDb) {
+	public static void createSet(MtgSet set, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 
 		initialValues.put(KEY_CODE, set.code);
@@ -249,7 +250,7 @@ public class CardDbAdapter {
 		initialValues.put(KEY_CODE_MTGI, set.codeMagicCards);
 		initialValues.put(KEY_DATE, set.date);
 
-		return mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
 	}
 
 	/**
@@ -258,12 +259,12 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static boolean addTcgName(String name, String code, SQLiteDatabase mDb) {
+	public static void addTcgName(String name, String code, SQLiteDatabase mDb) {
 		ContentValues args = new ContentValues();
 
 		args.put(KEY_NAME_TCGPLAYER, name);
 
-		return mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null) > 0;
+		mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
 	}
 
 	/**
@@ -296,7 +297,7 @@ public class CardDbAdapter {
 	 */
 	public static boolean doesSetExist(String code, SQLiteDatabase mDb) throws FamiliarDbException {
 
-		String statement = "(" + KEY_CODE + " LIKE '%" + code + "%')";
+		String statement = "(" + KEY_CODE + " = '" + code + "')";
 
 		Cursor c;
 		int count;
@@ -392,6 +393,7 @@ public class CardDbAdapter {
 				+ " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
 				+ DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
 				+ DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(name)
+				+ " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
 				+ " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
 				+ " DESC";
 		Cursor c;
@@ -493,6 +495,8 @@ public class CardDbAdapter {
 					cwi.mCard.ability = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
 					cwi.mCard.flavor = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
 					cwi.mCard.number = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+					cwi.mCard.cmc = cursor.getInt((cursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
+					cwi.mCard.color = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
 				}
 			}
 			/* NEXT! */
@@ -1192,10 +1196,10 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long createFormat(String name, SQLiteDatabase mDb) {
+	public static void createFormat(String name, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_NAME, name);
-		return mDb.insert(DATABASE_TABLE_FORMATS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_FORMATS, null, initialValues);
 	}
 
 	/**
@@ -1204,11 +1208,11 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long addLegalSet(String set, String format, SQLiteDatabase mDb) {
+	public static void addLegalSet(String set, String format, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_SET, set);
 		initialValues.put(KEY_FORMAT, format);
-		return mDb.insert(DATABASE_TABLE_LEGAL_SETS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_LEGAL_SETS, null, initialValues);
 	}
 
 	/**
@@ -1218,12 +1222,12 @@ public class CardDbAdapter {
 	 * @param mDb
 	 * @return
 	 */
-	public static long addLegalCard(String card, String format, int status, SQLiteDatabase mDb) {
+	public static void addLegalCard(String card, String format, int status, SQLiteDatabase mDb) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_NAME, card);
 		initialValues.put(KEY_LEGALITY, status);
 		initialValues.put(KEY_FORMAT, format);
-		return mDb.insert(DATABASE_TABLE_BANNED_CARDS, null, initialValues);
+		mDb.insert(DATABASE_TABLE_BANNED_CARDS, null, initialValues);
 	}
 
 	/**
@@ -1273,7 +1277,8 @@ public class CardDbAdapter {
 					+ " = '" + mCardName
 					+ "') WHEN 1 THEN NULL ELSE CASE WHEN '" + format
 					+ "' = 'Legacy' " + "THEN NULL WHEN '" + format
-					+ "' = 'Vintage' THEN NULL ELSE 1 END END, (SELECT "
+					+ "' = 'Vintage' THEN NULL WHEN '" + format
+					+ "' = 'Commander' THEN NULL ELSE 1 END END, (SELECT "
 					+ KEY_LEGALITY + " from " + DATABASE_TABLE_BANNED_CARDS
 					+ " WHERE " + KEY_NAME + " = '" + mCardName + "' AND "
 					+ KEY_FORMAT + " = '" + format + "'), 0) AS "
@@ -1711,7 +1716,9 @@ public class CardDbAdapter {
 	public static boolean isDbOutOfDate(Context ctx) {
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(ctx);
-		File f = new File(DB_PATH, DB_NAME);
+		String dbPath = ctx.getFilesDir().getPath();
+		dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+		File f = new File(dbPath, DB_NAME);
 		int dbVersion = preferences.getInt("databaseVersion", -1);
 		return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
 	}
@@ -1725,7 +1732,11 @@ public class CardDbAdapter {
 		SharedPreferences.Editor editor = preferences.edit();
 
 		try {
-			File folder = new File(DB_PATH);
+
+			String dbPath = ctx.getFilesDir().getPath();
+			dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+
+			File folder = new File(dbPath);
 			if (!folder.exists()) {
 				folder.mkdir();
 			}
@@ -1734,7 +1745,7 @@ public class CardDbAdapter {
 				dbFile.delete();
 				editor.putString("lastUpdate", "");
 				editor.putInt("databaseVersion", -1);
-				editor.commit();
+				editor.apply();
 			}
 			if (!dbFile.exists()) {
 
@@ -1748,7 +1759,7 @@ public class CardDbAdapter {
 				}
 
 				editor.putInt("databaseVersion", CardDbAdapter.DATABASE_VERSION);
-				editor.commit();
+				editor.apply();
 
 				// Close the streams
 				fos.flush();
@@ -1926,7 +1937,7 @@ public class CardDbAdapter {
 	 * @throws FamiliarDbException
 	 */
 	public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-		String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC"};
+		String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC", "CNS", "CNSC"};
 		ArrayList<String> nonModernLegalSets = new ArrayList<String>(Arrays.asList(extraSets));
 		for (String value : nonModernLegalSets) {
 			if (value.equals(setCode)) {

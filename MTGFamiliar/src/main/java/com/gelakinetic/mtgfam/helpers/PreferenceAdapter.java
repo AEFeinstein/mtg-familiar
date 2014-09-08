@@ -197,6 +197,16 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_wakelock), true);
 	}
 
+	/* Dim Screen */
+	public synchronized boolean getDimScreen() {
+		return this.prefs.getBoolean(context.getString(R.string.key_dimlock), true);
+	}
+
+	/* Percentage to dim screen */
+	public synchronized int getDimLevel() {
+		return this.prefs.getInt(context.getString(R.string.key_dimlevel), 1);
+	}
+
 	/* Set pref */
 	public synchronized boolean getSetPref() {
 		return this.prefs.getBoolean(context.getString(R.string.key_setPref), true);
@@ -415,15 +425,33 @@ public class PreferenceAdapter {
 	 */
 	public String getTheme() {
 		String theme = this.prefs.getString(context.getString(R.string.key_theme), "asd");
-		if(theme.equals("asd")) {
+		if (theme.equals("asd")) {
 			theme = context.getResources().getString(R.string.pref_theme_light);
 			setTheme(theme);
 		}
 		return theme;
 	}
 
-	public void setTheme(String theme) {
+	void setTheme(String theme) {
 		this.edit.putString(context.getString(R.string.key_theme), theme);
 		this.edit.commit();
+	}
+
+	public synchronized String getDCINumber() {
+		return this.prefs.getString(context.getString(R.string.key_dci_number), "");
+	}
+
+	public void setDCINumber(String dciNumber) {
+		this.edit.putString(context.getString(R.string.key_dci_number), dciNumber);
+		this.edit.commit();
+	}
+
+	public void setImageCacheSize(int cacheSizeMB) {
+		this.edit.putInt(context.getString(R.string.key_imageCacheSize), cacheSizeMB);
+		this.edit.commit();
+	}
+
+	public int getImageCacheSize() {
+		return this.prefs.getInt(context.getString(R.string.key_imageCacheSize), 12);
 	}
 }

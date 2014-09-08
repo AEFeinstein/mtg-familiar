@@ -21,30 +21,30 @@
             android:title="@string/pref_cat_default_fragment">
 
             <ListPreference
+                android:defaultValue="@string/main_card_search"
                 android:entries="@array/default_fragment_array_entries"
                 android:entryValues="@array/default_fragment_array_entries"
-                android:title="@string/pref_default_fragment_mode_title"
-                android:summary="@string/pref_default_fragment_mode_summary"
                 android:key="@string/key_defaultFragment"
-                android:defaultValue="@string/main_card_search"/>
+                android:summary="@string/pref_default_fragment_mode_summary"
+                android:title="@string/pref_default_fragment_mode_title"/>
         </PreferenceCategory>
 
         <PreferenceCategory
             android:title="@string/pref_cat_updates">
 
             <CheckBoxPreference
-                android:key="@string/key_autoupdate"
                 android:defaultValue="true"
-                android:title="@string/pref_auto_updates_title"
-                android:summary="@string/pref_auto_updates_summary"/>
+                android:key="@string/key_autoupdate"
+                android:summary="@string/pref_auto_updates_summary"
+                android:title="@string/pref_auto_updates_title"/>
 
             <ListPreference
-                android:key="@string/key_updatefrequency"
+                android:defaultValue="3"
                 android:entries="@array/update_frequency_days"
                 android:entryValues="@array/update_frequency_days_values"
-                android:title="@string/pref_update_frequency_title"
+                android:key="@string/key_updatefrequency"
                 android:summary="@string/pref_update_frequency_summary"
-                android:defaultValue="3"/>
+                android:title="@string/pref_update_frequency_title"/>
 
         </PreferenceCategory>
 
@@ -52,26 +52,26 @@
             android:title="@string/pref_cat_widget">
 
             <MultiSelectListPreference
+                android:defaultValue="@array/default_widget_buttons_array_entries"
                 android:dialogTitle="@string/pref_widget_mode_title"
-                android:key="@string/key_widgetButtons"
-                android:summary="@string/pref_widget_mode_summary"
-                android:title="@string/pref_widget_mode_title"
                 android:entries="@array/default_fragment_array_entries"
                 android:entryValues="@array/default_fragment_array_entries"
-                android:defaultValue="@array/default_widget_buttons_array_entries"/>
+                android:key="@string/key_widgetButtons"
+                android:summary="@string/pref_widget_mode_summary"
+                android:title="@string/pref_widget_mode_title"/>
         </PreferenceCategory>
 
         <PreferenceCategory
             android:title="@string/pref_cat_theme">
 
             <ListPreference
+                android:defaultValue="@string/pref_theme_light"
                 android:dialogTitle="@string/pref_theme_title"
-                android:key="@string/key_theme"
-                android:summary="@string/pref_theme_summary"
-                android:title="@string/pref_theme_title"
                 android:entries="@array/pref_themes"
                 android:entryValues="@array/pref_themes"
-                android:defaultValue="@string/pref_theme_light"/>
+                android:key="@string/key_theme"
+                android:summary="@string/pref_theme_summary"
+                android:title="@string/pref_theme_title"/>
         </PreferenceCategory>
 
     </PreferenceScreen>
@@ -84,34 +84,34 @@
             android:title="@string/pref_cat_result_list">
 
             <CheckBoxPreference
-                android:key="@string/key_consolidateSearch"
                 android:defaultValue="true"
-                android:title="@string/pref_consolidate_title"
-                android:summary="@string/pref_consolidate_summary"/>
+                android:key="@string/key_consolidateSearch"
+                android:summary="@string/pref_consolidate_summary"
+                android:title="@string/pref_consolidate_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_setPref"
                 android:defaultValue="true"
+                android:key="@string/key_setPref"
                 android:title="@string/pref_show_set_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_manacostPref"
                 android:defaultValue="true"
+                android:key="@string/key_manacostPref"
                 android:title="@string/pref_show_mana_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_typePref"
                 android:defaultValue="true"
+                android:key="@string/key_typePref"
                 android:title="@string/pref_show_type_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_abilityPref"
                 android:defaultValue="true"
+                android:key="@string/key_abilityPref"
                 android:title="@string/pref_show_ability_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_ptPref"
                 android:defaultValue="true"
+                android:key="@string/key_ptPref"
                 android:title="@string/pref_show_pt_title"/>
 
         </PreferenceCategory>
@@ -120,18 +120,34 @@
             android:title="@string/pref_cat_card_view">
 
             <CheckBoxPreference
-                android:key="@string/key_picFirst"
                 android:defaultValue="false"
-                android:title="@string/pref_show_art_title"
-                android:summary="@string/pref_show_art_summary"/>
+                android:key="@string/key_picFirst"
+                android:summary="@string/pref_show_art_summary"
+                android:title="@string/pref_show_art_title"/>
 
             <ListPreference
+                android:defaultValue="@string/main_card_language"
                 android:entries="@array/card_language"
                 android:entryValues="@array/card_language_values"
                 android:key="@string/key_cardlanguage"
                 android:summary="@string/pref_card_language_summary"
-                android:title="@string/pref_card_language_title"
-                android:defaultValue="@string/main_card_language"/>
+                android:title="@string/pref_card_language_title"/>
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            xmlns:robobunny="http://robobunny.com"
+            android:title="@string/pref_cat_card_cache">
+
+            <com.robobunny.preferences.SeekBarPreference
+                android:defaultValue="12"
+                android:key="@string/key_imageCacheSize"
+                android:max="100"
+                android:summary="@string/pref_image_cache_size_summary"
+                android:title="@string/pref_image_cache_size_title"
+                robobunny:min="1"
+                robobunny:interval="1"
+                robobunny:unitsRight="MB"/>
 
         </PreferenceCategory>
 
@@ -144,19 +160,13 @@
         <PreferenceCategory
             android:title="@string/pref_cat_life_counter">
 
-            <CheckBoxPreference
-                android:key="@string/key_wakelock"
-                android:defaultValue="true"
-                android:title="@string/pref_wake_lock_title"
-                android:summary="@string/pref_wake_lock_summary"/>
-
             <ListPreference
+                android:defaultValue="0"
                 android:entries="@array/display_array_entries"
                 android:entryValues="@array/display_array_values"
-                android:title="@string/pref_display_mode_title"
-                android:summary="@string/pref_display_mode_summary"
                 android:key="@string/key_displayMode"
-                android:defaultValue="0"/>
+                android:summary="@string/pref_display_mode_summary"
+                android:title="@string/pref_display_mode_title"/>
 
             <ListPreference
                 android:defaultValue="1000"
@@ -165,6 +175,36 @@
                 android:key="@string/key_lifeTimer"
                 android:summary="@string/pref_life_timer_summary"
                 android:title="@string/pref_life_timer_title"/>
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            xmlns:robobunny="http://robobunny.com"
+            android:title="@string/pref_cat_life_screen">
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/key_wakelock"
+                android:summary="@string/pref_wake_lock_summary"
+                android:title="@string/pref_wake_lock_title"/>
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:dependency="@string/key_wakelock"
+                android:key="@string/key_dimlock"
+                android:summary="@string/pref_dim_lock_summary"
+                android:title="@string/pref_dim_lock_title" />
+
+            <com.robobunny.preferences.SeekBarPreference
+                android:defaultValue="1"
+                android:dependency="@string/key_dimlock"
+                android:key="@string/key_dimlevel"
+                android:max="100"
+                android:summary="@string/pref_dim_lock_level_summary"
+                android:title="@string/pref_dim_lock_level_title"
+                robobunny:min="1"
+                robobunny:interval="1"
+                robobunny:unitsRight="%"/>
+
         </PreferenceCategory>
 
     </PreferenceScreen>
@@ -177,33 +217,33 @@
             android:title="@string/pref_cat_timer">
 
             <ListPreference
-                android:key="@string/key_roundLength"
+                android:defaultValue="50"
                 android:entries="@array/rt_defaulttimes"
                 android:entryValues="@array/rt_defaulttimesvalues"
-                android:defaultValue="50"
-                android:title="@string/pref_default_time_title"
-                android:summary="@string/pref_default_time_summary"/>
+                android:key="@string/key_roundLength"
+                android:summary="@string/pref_default_time_summary"
+                android:title="@string/pref_default_time_title"/>
 
             <RingtonePreference
                 android:key="@string/key_timerSound"
                 android:ringtoneType="notification"
                 android:showSilent="false"
-                android:title="@string/pref_ringtone_title"
-                android:summary="@string/pref_ringtone_summary"/>
+                android:summary="@string/pref_ringtone_summary"
+                android:title="@string/pref_ringtone_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_fifteenMinutePref"
                 android:defaultValue="false"
+                android:key="@string/key_fifteenMinutePref"
                 android:title="@string/pref_fifteen_minutes_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_tenMinutePref"
                 android:defaultValue="false"
+                android:key="@string/key_tenMinutePref"
                 android:title="@string/pref_ten_minutes_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_fiveMinutePref"
                 android:defaultValue="false"
+                android:key="@string/key_fiveMinutePref"
                 android:title="@string/pref_five_minutes_title"/>
 
         </PreferenceCategory>
@@ -218,12 +258,12 @@
             android:title="@string/pref_cat_trade_window">
 
             <ListPreference
-                android:key="@string/key_tradePrice"
+                android:defaultValue="1"
                 android:entries="@array/trade_option_entries"
                 android:entryValues="@array/trade_option_values"
-                android:defaultValue="1"
-                android:title="@string/pref_trade_price_title"
-                android:summary="@string/pref_trade_price_summary"/>
+                android:key="@string/key_tradePrice"
+                android:summary="@string/pref_trade_price_summary"
+                android:title="@string/pref_trade_price_title"/>
 
         </PreferenceCategory>
 
@@ -231,22 +271,22 @@
             android:title="@string/pref_cat_wishlist">
 
             <CheckBoxPreference
+                android:defaultValue="false"
                 android:key="@string/key_showTotalPriceWishlistPref"
-                android:defaultValue="false"
-                android:title="@string/pref_wishlist_totals_title"
-                android:summary="@string/pref_wishlist_totals_summary"/>
+                android:summary="@string/pref_wishlist_totals_summary"
+                android:title="@string/pref_wishlist_totals_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_showIndividualPricesWishlistPref"
                 android:defaultValue="true"
-                android:title="@string/pref_wishlist_prices_title"
-                android:summary="@string/pref_wishlist_prices_summary"/>
+                android:key="@string/key_showIndividualPricesWishlistPref"
+                android:summary="@string/pref_wishlist_prices_summary"
+                android:title="@string/pref_wishlist_prices_title"/>
 
             <CheckBoxPreference
-                android:key="@string/key_verboseWishlistPref"
                 android:defaultValue="false"
-                android:title="@string/pref_wishlist_details_title"
-                android:summary="@string/pref_wishlist_details_summary"/>
+                android:key="@string/key_verboseWishlistPref"
+                android:summary="@string/pref_wishlist_details_summary"
+                android:title="@string/pref_wishlist_details_title"/>
 
         </PreferenceCategory>
 

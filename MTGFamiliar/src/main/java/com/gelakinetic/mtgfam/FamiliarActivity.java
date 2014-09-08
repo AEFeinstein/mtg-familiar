@@ -30,8 +30,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -67,6 +71,7 @@ import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.fragments.ManaPoolFragment;
 import com.gelakinetic.mtgfam.fragments.MoJhoStoFragment;
 import com.gelakinetic.mtgfam.fragments.PrefsFragment;
+import com.gelakinetic.mtgfam.fragments.ProfileFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.RoundTimerFragment;
 import com.gelakinetic.mtgfam.fragments.RulesFragment;
@@ -80,8 +85,11 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseHelper;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 import com.octo.android.robospice.SpiceManager;
 
@@ -107,6 +115,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_RULES = "android.intent.action.RULES";
 	public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
 	public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
+	private static final String ACTION_PROFILE = "android.intent.action.PROFILE";
 
 	/* Constants used for displaying dialogs */
 	private static final int DIALOG_ABOUT = 100;
@@ -141,6 +150,7 @@ public class FamiliarActivity extends FragmentActivity {
 			new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
 			new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
 			new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
+			new DrawerEntry(R.string.main_profile, R.attr.ic_action_person, false),
 			new DrawerEntry(R.string.main_extras, 0, true),
 			new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
 			new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
@@ -148,7 +158,7 @@ public class FamiliarActivity extends FragmentActivity {
 			new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
 			new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
 			new DrawerEntry(R.string.main_export_data_title, R.attr.ic_action_save, false),
-			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_action_collection, false)
+			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_action_collection, false),
 	};
 	private final Handler mInactivityHandler = new Handler();
 	/* Listen for changes to preferences */
@@ -171,6 +181,17 @@ public class FamiliarActivity extends FragmentActivity {
 				Intent i = new Intent(FamiliarActivity.this, FamiliarActivity.class);
 				startActivity(i);
 				FamiliarActivity.this.finish();
+			}
+			else if (s.endsWith(getString(R.string.key_imageCacheSize))) {
+				/* Close the old cache */
+				mImageCache.flush();
+				mImageCache.close();
+
+				/* Set up the image cache */
+				ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
+				cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+				cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
+				addImageCache(getSupportFragmentManager(), cacheParams);
 			}
 		}
 	};
@@ -200,6 +221,16 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		}
 	};
+
+	/* Image caching */
+	public ImageCache mImageCache;
+
+	private static final int MESSAGE_CLEAR = 0;
+	private static final int MESSAGE_INIT_DISK_CACHE = 1;
+	private static final int MESSAGE_FLUSH = 2;
+	private static final int MESSAGE_CLOSE = 3;
+
+	private static final String IMAGE_CACHE_DIR = "images";
 
 	/**
 	 * Start the Spice Manager when the activity starts
@@ -310,6 +341,45 @@ public class FamiliarActivity extends FragmentActivity {
 		DrawerEntryArrayAdapter pagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
 
 		mDrawerList.setAdapter(pagesAdapter);
+		mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+				boolean shouldCloseDrawer = false;
+				switch (mPageEntries[i].mNameResource) {
+					case R.string.main_force_update_title: {
+						if (getNetworkState(true) != -1) {
+							try {
+								SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
+								CardDbAdapter.dropCreateDB(database);
+								mPreferenceAdapter.setLastLegalityUpdate(0);
+								mPreferenceAdapter.setLastIPGUpdate(0);
+								mPreferenceAdapter.setLastMTRUpdate(0);
+								mPreferenceAdapter.setLastRulesUpdate(0);
+								mPreferenceAdapter.setLastTCGNameUpdate("");
+								mPreferenceAdapter.setLastUpdate("");
+								mPreferenceAdapter.setLegalityDate("");
+								startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+							} catch (FamiliarDbException e) {
+								e.printStackTrace();
+							}
+						}
+						shouldCloseDrawer = true;
+						break;
+					}
+				}
+
+				mDrawerList.setItemChecked(mCurrentFrag, true);
+				if (shouldCloseDrawer) {
+					(new Handler()).postDelayed(new Runnable() {
+						public void run() {
+							mDrawerLayout.closeDrawer(mDrawerList);
+						}
+					}, 50);
+					return true;
+				}
+				return false;
+			}
+		});
 		mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -331,7 +401,8 @@ public class FamiliarActivity extends FragmentActivity {
 					case R.string.main_judges_corner:
 					case R.string.main_mojhosto:
 					case R.string.main_card_search:
-					case R.string.main_life_counter: {
+					case R.string.main_life_counter:
+					case R.string.main_profile: {
 						selectItem(mPageEntries[i].mNameResource, null);
 						break;
 					}
@@ -343,8 +414,10 @@ public class FamiliarActivity extends FragmentActivity {
 						break;
 					}
 					case R.string.main_force_update_title: {
-						mPreferenceAdapter.setLastLegalityUpdate(0);
-						startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+						if (getNetworkState(true) != -1) {
+							mPreferenceAdapter.setLastLegalityUpdate(0);
+							startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+						}
 						shouldCloseDrawer = true;
 						break;
 					}
@@ -518,6 +591,9 @@ public class FamiliarActivity extends FragmentActivity {
 			else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
 				selectItem(R.string.main_mojhosto, null);
 			}
+			else if (ACTION_PROFILE.equals(intent.getAction())) {
+				selectItem(R.string.main_profile, null);
+			}
 			else {
 			/* App launched as regular, show the default fragment */
 
@@ -553,6 +629,9 @@ public class FamiliarActivity extends FragmentActivity {
 				else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
 					selectItem(R.string.main_mojhosto, null);
 				}
+				else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
+					selectItem(R.string.main_profile, null);
+				}
 				else {
 					selectItem(R.string.main_card_search, null);
 				}
@@ -561,8 +640,8 @@ public class FamiliarActivity extends FragmentActivity {
 			mDrawerList.setItemChecked(mCurrentFrag, true);
 		}
 
-		/* Run the updater service */
-		if (mPreferenceAdapter.getAutoUpdate()) {
+		/* Run the updater service if there is a network connection */
+		if (getNetworkState(false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
 			/* Only update the banning list if it hasn't been updated recently */
 			long curTime = System.currentTimeMillis();
 			int updateFrequency = Integer.valueOf(mPreferenceAdapter.getUpdateFrequency());
@@ -572,6 +651,12 @@ public class FamiliarActivity extends FragmentActivity {
 				startService(new Intent(this, DbUpdaterService.class));
 			}
 		}
+
+		/* Set up the image cache */
+		ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(this, IMAGE_CACHE_DIR);
+		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+		cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
+		addImageCache(getSupportFragmentManager(), cacheParams);
 	}
 
 	/**
@@ -654,12 +739,16 @@ public class FamiliarActivity extends FragmentActivity {
 				newFrag = new MoJhoStoFragment();
 				break;
 			}
+			case R.string.main_profile: {
+				newFrag = new ProfileFragment();
+				break;
+			}
 			default:
 				return;
 		}
 
 		try {
-			if (newFrag.getClass().equals(getSupportFragmentManager().findFragmentById(R.id.fragment_container).getClass())) {
+			if (((Object) newFrag).getClass().equals(((Object) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
 			/* This is the same fragment, just close the menu */
 				mDrawerLayout.closeDrawer(mDrawerList);
 				return;
@@ -900,13 +989,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 						dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
 						dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-						dialogLayout.findViewById(R.id.image_button).setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-								Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_URL));
-								startActivity(myIntent);
-							}
-						});
+						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 						builder.setView(dialogLayout);
 
 						return builder.create();
@@ -1303,5 +1386,86 @@ public class FamiliarActivity extends FragmentActivity {
 		}
 	}
 
+	/**
+	 * Checks the networks state
+	 *
+	 * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
+	 * @return -1 if there is no network connection, or the type of network, like ConnectivityManager.TYPE_WIFI
+	 */
+	public int getNetworkState(boolean shouldShowToast) {
+		try {
+			ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			for (NetworkInfo ni : conMan.getAllNetworkInfo()) {
+				if (ni.isConnected()) {
+					return ni.getType();
+				}
+			}
+			if (shouldShowToast) {
+				Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
+			}
+			return -1;
+		} catch (NullPointerException e) {
+			if (shouldShowToast) {
+				Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
+			}
+			return -1;
+		}
+	}
 
+	/*
+	 * Image Caching
+	 */
+
+	void addImageCache(FragmentManager fragmentManager,
+					   ImageCache.ImageCacheParams cacheParams) {
+		mImageCache = ImageCache.getInstance(fragmentManager, cacheParams);
+		new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
+	}
+
+	private class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Object... params) {
+			switch ((Integer) params[0]) {
+				case MESSAGE_CLEAR:
+					clearCacheInternal();
+					break;
+				case MESSAGE_INIT_DISK_CACHE:
+					initDiskCacheInternal();
+					break;
+				case MESSAGE_FLUSH:
+					flushCacheInternal();
+					break;
+				case MESSAGE_CLOSE:
+					closeCacheInternal();
+					break;
+			}
+			return null;
+		}
+	}
+
+	void initDiskCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.initDiskCache();
+		}
+	}
+
+	void clearCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.clearCache();
+		}
+	}
+
+	void flushCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.flush();
+		}
+	}
+
+	void closeCacheInternal() {
+		if (mImageCache != null) {
+			mImageCache.close();
+			mImageCache = null;
+		}
+	}
 }

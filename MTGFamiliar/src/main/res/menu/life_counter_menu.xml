@@ -22,12 +22,12 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/add_player"
         android:showAsAction="ifRoom"
         android:title="@string/life_counter_add_player"
-        android:icon="?attr/ic_action_add"/>
+        android:icon="?attr/ic_action_add_person"/>
     <item
         android:id="@+id/remove_player"
         android:showAsAction="ifRoom"
         android:title="@string/life_counter_remove_player"
-        android:icon="?attr/ic_action_remove"/>
+        android:icon="?attr/ic_action_remove_person"/>
     <item
         android:id="@+id/display_mode"
         android:title="@string/life_counter_change_display"

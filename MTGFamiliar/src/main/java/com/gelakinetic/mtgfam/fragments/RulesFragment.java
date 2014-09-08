@@ -54,9 +54,6 @@ public class RulesFragment extends FamiliarFragment {
 	/* Dialog constant */
 	private static final int DIALOG_SEARCH = 1;
 
-	/* Result code, to close multiple fragments */
-	private static final int RESULT_QUIT_TO_MAIN = 2;
-
 	/* Current rules information */
 	private ArrayList<DisplayItem> mRules;
 	private int mCategory;
@@ -89,18 +86,6 @@ public class RulesFragment extends FamiliarFragment {
 		/* Inflate the view */
 		View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
 		assert myFragmentView != null;
-
-		/* Check if we are returning to the root */
-		Bundle res = getFamiliarActivity().getFragmentResults();
-		if (res != null) {
-			int resultCode = res.getInt("resultCode");
-			if (resultCode == RESULT_QUIT_TO_MAIN) {
-				Bundle result = new Bundle();
-				result.putInt("resultCode", RESULT_QUIT_TO_MAIN);
-				getFamiliarActivity().setFragmentResult(result);
-				getFragmentManager().popBackStack();
-			}
-		}
 
 		/* Get arguments to display a rules section, or use defaults */
 		Bundle extras = getArguments();
@@ -348,7 +333,7 @@ public class RulesFragment extends FamiliarFragment {
 											dialog.dismiss();
 											return;
 										}
-										String keyword = nameInput.getText().toString().trim();
+										String keyword = nameInput.getText().toString();
 										if (keyword.length() < 3) {
 											Toast.makeText(getActivity(),
 													R.string.rules_short_key_toast, Toast.LENGTH_LONG).show();
@@ -390,10 +375,9 @@ public class RulesFragment extends FamiliarFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.rules_menu_exit:
-				Bundle result = new Bundle();
-				result.putInt("resultCode", RESULT_QUIT_TO_MAIN);
-				getFamiliarActivity().setFragmentResult(result);
-				getFragmentManager().popBackStack();
+				for (int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
+					getFragmentManager().popBackStack();
+				}
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

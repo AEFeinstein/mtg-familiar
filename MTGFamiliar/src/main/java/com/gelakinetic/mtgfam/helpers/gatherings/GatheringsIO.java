@@ -131,7 +131,7 @@ public class GatheringsIO {
 				String name = player.mName;
 
 				String life = String.valueOf(player.mStartingLife);
-				if (life == null || life.equals(""))
+				if (life.equals(""))
 					life = "0";
 
 				serializer.startTag("", "player");

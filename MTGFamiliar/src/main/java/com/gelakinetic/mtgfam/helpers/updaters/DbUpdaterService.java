@@ -46,11 +46,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class DbUpdaterService extends IntentService {
 
-	/* Throw this switch to re-parse the entire database from a custom URL (currently UpToRTR.json.gzip
-	 * THIS SHOULD NEVER EVER EVER BE TRUE IN A PLAY STORE RELEASE
-	 */
-	public static final boolean RE_PARSE_DATABASE = false;
-
 	/* Status Codes */
 	private static final int STATUS_NOTIFICATION = 31;
 	private static final int UPDATED_NOTIFICATION = 32;
@@ -119,46 +114,34 @@ public class DbUpdaterService extends IntentService {
 
 				showStatusNotification();
 
-				if (RE_PARSE_DATABASE) {
-					/* Blow up the database and download and build it all over again */
-					CardDbAdapter.dropCreateDB(database);
-					parser.readLegalityJsonStream(database, mPrefAdapter);
-					GZIPInputStream upToGIS = new GZIPInputStream(
-							new URL("https://sites.google.com/site/mtgfamiliar/patches/UpToRTR.json.gzip").openStream());
-					switchToUpdating(String.format(getString(R.string.update_updating_set), "EVERYTHING!!"));
-					parser.readCardJsonStream(upToGIS, reporter, database);
-					parser.readTCGNameJsonStream(mPrefAdapter, database);
-				}
-				else {
-					/* Look for updates with the banned / restricted lists and formats */
-					parser.readLegalityJsonStream(database, mPrefAdapter);
-					/* Look for new cards */
-					ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
-					if (patchInfo != null) {
-						/* Look through the list of available patches, and if it doesn't exist in the database, add it. */
-						for (String[] set : patchInfo) {
-							if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) {
-								try {
-									/* Change the notification to the specific set */
-									switchToUpdating(String.format(getString(R.string.update_updating_set),
-											set[CardAndSetParser.SET_NAME]));
-									GZIPInputStream gis = new GZIPInputStream(
-											new URL(set[CardAndSetParser.SET_URL]).openStream());
-									parser.readCardJsonStream(gis, reporter, database);
-									updatedStuff.add(set[CardAndSetParser.SET_NAME]);
-								} catch (MalformedURLException e) {
-									/* Eat it */
-								} catch (IOException e) {
-									/* Eat it */
-								}
-								/* Change the notification to generic "checking for updates" */
-								switchToChecking();
+				/* Look for updates with the banned / restricted lists and formats */
+				parser.readLegalityJsonStream(database, mPrefAdapter);
+				/* Look for new cards */
+				ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
+				if (patchInfo != null) {
+					/* Look through the list of available patches, and if it doesn't exist in the database, add it. */
+					for (String[] set : patchInfo) {
+						if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) {
+							try {
+								/* Change the notification to the specific set */
+								switchToUpdating(String.format(getString(R.string.update_updating_set),
+										set[CardAndSetParser.SET_NAME]));
+								GZIPInputStream gis = new GZIPInputStream(
+										new URL(set[CardAndSetParser.SET_URL]).openStream());
+								parser.readCardJsonStream(gis, reporter, database);
+								updatedStuff.add(set[CardAndSetParser.SET_NAME]);
+							} catch (MalformedURLException e) {
+								/* Eat it */
+							} catch (IOException e) {
+								/* Eat it */
 							}
+							/* Change the notification to generic "checking for updates" */
+							switchToChecking();
 						}
-
-						/* Look for new TCGPlayer.com versions of set names */
-						parser.readTCGNameJsonStream(mPrefAdapter, database);
 					}
+
+					/* Look for new TCGPlayer.com versions of set names */
+					parser.readTCGNameJsonStream(mPrefAdapter, database);
 				}
 
 				/* Parse the rules
@@ -167,13 +150,7 @@ public class DbUpdaterService extends IntentService {
 				 * in.
 				 */
 
-				long lastRulesUpdate;
-				if (RE_PARSE_DATABASE) {
-					lastRulesUpdate = 0; /* Long, long time ago */
-				}
-				else {
-					lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
-				}
+				long lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
 
 				RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
 				if (rp.needsToUpdate()) {

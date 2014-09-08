@@ -410,10 +410,8 @@ class CardAndSetParser {
 				/* compare date, maybe return, update shared prefs */
 				String spDate = prefAdapter.getLegalityDate();
 				if (spDate != null && spDate.equals(mCurrentRulesDate)) {
-					if (!DbUpdaterService.RE_PARSE_DATABASE) { /* if we're re-parsing, screw the date */
-						reader.close();
-						return; /* dates match, nothing new here. */
-					}
+					reader.close();
+					return; /* dates match, nothing new here. */
 				}
 
 				CardDbAdapter.dropLegalTables(database);
@@ -491,7 +489,7 @@ class CardAndSetParser {
 			if (label.equals("Date")) {
 				String lastUpdate = prefAdapter.getLastTCGNameUpdate();
 				mCurrentTCGNamePatchDate = reader.nextString();
-				if (lastUpdate.equals(mCurrentTCGNamePatchDate) && !DbUpdaterService.RE_PARSE_DATABASE) {
+				if (lastUpdate.equals(mCurrentTCGNamePatchDate)) {
 					reader.close();
 					return;
 				}

@@ -248,10 +248,6 @@ public class SearchViewFragment extends FamiliarFragment {
 		mSupertypeField.setThreshold(1);
 		mSupertypeField.setAdapter(supertypeAdapter);
 
-		/* Do we want to consolidate different printings of the same card in results, or not? */
-		boolean consolidate = getFamiliarActivity().mPreferenceAdapter.getConsolidateSearch();
-		mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
-
 		/* set the search button! */
 		searchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -259,6 +255,18 @@ public class SearchViewFragment extends FamiliarFragment {
 			}
 		});
 		return myFragmentView;
+	}
+
+	/**
+	 * Generic onResume. Catches when consolidation is changed in preferences
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		/* Do we want to consolidate different printings of the same card in results, or not? */
+		boolean consolidate = getFamiliarActivity().mPreferenceAdapter.getConsolidateSearch();
+		mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
 	}
 
 	/**

@@ -29,11 +29,12 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.method.LinkMovementMethod;
@@ -66,20 +67,20 @@ import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -123,7 +124,7 @@ public class CardViewFragment extends FamiliarFragment {
 	private ScrollView mImageScrollView;
 	/* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
 	private AsyncTask<Void, Void, Void> mAsyncTask;
-	private BitmapDrawable mCardBitmap;
+	private RecyclingBitmapDrawable mCardBitmap;
 	private String[] mLegalities;
 	private String[] mFormats;
 	private ArrayList<Ruling> mRulingsArrayList;
@@ -219,6 +220,18 @@ public class CardViewFragment extends FamiliarFragment {
 		registerForContextMenu(mPowTouTextView);
 		registerForContextMenu(mFlavorTextView);
 		registerForContextMenu(mArtistTextView);
+
+		mCardImageView.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				if (mAsyncTask != null) {
+					mAsyncTask.cancel(true);
+				}
+				mAsyncTask = new saveCardImageTask();
+				mAsyncTask.execute((Void[]) null);
+				return true;
+			}
+		});
 
 		if (mActivity.mPreferenceAdapter.getPicFirst()) {
 			loadTo = MAIN_PAGE;
@@ -416,7 +429,7 @@ public class CardViewFragment extends FamiliarFragment {
 				mTransformCardNumber = mCardNumber.replace("b", "a");
 			}
 			mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
-			if(mTransformId == -1) {
+			if (mTransformId == -1) {
 				mTransformButton.setVisibility(View.GONE);
 				mTransformButtonDivider.setVisibility(View.GONE);
 			}
@@ -436,6 +449,8 @@ public class CardViewFragment extends FamiliarFragment {
 			}
 		}
 
+		mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
+
 		/* Do we load the image immediately to the main page, or do it in a dialog later? */
 		if (loadTo == MAIN_PAGE) {
 			mImageScrollView.setVisibility(View.VISIBLE);
@@ -452,8 +467,6 @@ public class CardViewFragment extends FamiliarFragment {
 			mImageScrollView.setVisibility(View.GONE);
 			mTextScrollView.setVisibility(View.VISIBLE);
 		}
-
-		mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
 
 		cCardById.close();
 
@@ -474,7 +487,7 @@ public class CardViewFragment extends FamiliarFragment {
 			cCardByName.moveToNext();
 		}
 		cCardByName.close();
-        /* If it exists in only one set, remove the button from the menu */
+		/* If it exists in only one set, remove the button from the menu */
 		if (mSets.size() == 1) {
 			mActivity.supportInvalidateOptionsMenu();
 		}
@@ -522,6 +535,18 @@ public class CardViewFragment extends FamiliarFragment {
 
 						ImageView dialogImageView = (ImageView) dialog.findViewById(R.id.cardimage);
 						dialogImageView.setImageDrawable(mCardBitmap);
+
+						dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
+							@Override
+							public boolean onLongClick(View view) {
+								if (mAsyncTask != null) {
+									mAsyncTask.cancel(true);
+								}
+								mAsyncTask = new saveCardImageTask();
+								mAsyncTask.execute((Void[]) null);
+								return true;
+							}
+						});
 
 						return dialog;
 					}
@@ -665,7 +690,7 @@ public class CardViewFragment extends FamiliarFragment {
 	}
 
 	/**
-	 * Called when a registered TextView is long-pressed. The menu inflated will give options to copy text
+	 * Called when a registered view is long-pressed. The menu inflated will give different options based on the view class
 	 *
 	 * @param menu     The context menu that is being built
 	 * @param v        The view for which the context menu is being built
@@ -676,6 +701,8 @@ public class CardViewFragment extends FamiliarFragment {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 
 		super.onCreateContextMenu(menu, v, menuInfo);
+
+
 		TextView tv = (TextView) v;
 
 		assert tv.getText() != null;
@@ -693,39 +720,43 @@ public class CardViewFragment extends FamiliarFragment {
 	 */
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
-		String copyText;
-		switch (item.getItemId()) {
-			case R.id.copy: {
-				copyText = mCopyString;
-				break;
-			}
-			case R.id.copyall: {
-				assert mNameTextView.getText() != null; /* Because Android Studio */
-				assert mCostTextView.getText() != null;
-				assert mTypeTextView.getText() != null;
-				assert mSetTextView.getText() != null;
-				assert mAbilityTextView.getText() != null;
-				assert mFlavorTextView.getText() != null;
-				assert mPowTouTextView.getText() != null;
-				assert mArtistTextView.getText() != null;
+		if (getUserVisibleHint()) {
+			String copyText;
+			switch (item.getItemId()) {
+				case R.id.copy: {
+					copyText = mCopyString;
+					break;
+				}
+				case R.id.copyall: {
+					assert mNameTextView.getText() != null; /* Because Android Studio */
+					assert mCostTextView.getText() != null;
+					assert mTypeTextView.getText() != null;
+					assert mSetTextView.getText() != null;
+					assert mAbilityTextView.getText() != null;
+					assert mFlavorTextView.getText() != null;
+					assert mPowTouTextView.getText() != null;
+					assert mArtistTextView.getText() != null;
 
-				copyText = mNameTextView.getText().toString() + '\n' + mCostTextView.getText().toString() + '\n' +
-						mTypeTextView.getText().toString() + '\n' + mSetTextView.getText().toString() + '\n' +
-						mAbilityTextView.getText().toString() + '\n' + mFlavorTextView.getText().toString() + '\n' +
-						mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString();
-				break;
+					copyText = mNameTextView.getText().toString() + '\n' + mCostTextView.getText().toString() + '\n' +
+							mTypeTextView.getText().toString() + '\n' + mSetTextView.getText().toString() + '\n' +
+							mAbilityTextView.getText().toString() + '\n' + mFlavorTextView.getText().toString() + '\n' +
+							mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString();
+					break;
+				}
+				default: {
+					return super.onContextItemSelected(item);
+				}
 			}
-			default: {
-				return super.onContextItemSelected(item);
-			}
+
+			ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
+					getSystemService(android.content.Context.CLIPBOARD_SERVICE));
+			String label = getResources().getString(R.string.app_name);
+			String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+			ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
+			clipboard.setPrimaryClip(cd);
+			return true;
 		}
-		ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
-				getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-		String label = getResources().getString(R.string.app_name);
-		String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-		ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
-		clipboard.setPrimaryClip(cd);
-		return true;
+		return false;
 	}
 
 	/**
@@ -743,6 +774,10 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Handle item selection */
 		switch (item.getItemId()) {
 			case R.id.image: {
+				if (getFamiliarActivity().getNetworkState(true) == -1) {
+					return true;
+				}
+
 				mActivity.setLoading();
 				if (mAsyncTask != null) {
 					mAsyncTask.cancel(true);
@@ -803,6 +838,10 @@ public class CardViewFragment extends FamiliarFragment {
 				return true;
 			}
 			case R.id.cardrulings: {
+				if (getFamiliarActivity().getNetworkState(true) == -1) {
+					return true;
+				}
+
 				mActivity.setLoading();
 				if (mAsyncTask != null) {
 					mAsyncTask.cancel(true);
@@ -852,14 +891,105 @@ public class CardViewFragment extends FamiliarFragment {
 		/* If the image has been loaded to the main page, remove the menu option for image */
 		if (loadTo == MAIN_PAGE && mCardBitmap != null) {
 			mi = menu.findItem(R.id.image);
-			if(mi != null) {
+			if (mi != null) {
 				menu.removeItem(mi.getItemId());
 			}
 		}
 		if (mSets != null && mSets.size() == 1) {
 			mi = menu.findItem(R.id.changeset);
-			if(mi != null) {
+			if (mi != null) {
 				menu.removeItem(mi.getItemId());
+			}
+		}
+	}
+
+	class saveCardImageTask extends AsyncTask<Void, Void, Void> {
+		String mToastString;
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				mToastString = getString(R.string.card_view_no_external_storage);
+				return null;
+			}
+
+			String strPath;
+
+			try {
+				strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+						.getCanonicalPath() + "/MTGFamiliar";
+			} catch (IOException ex) {
+				mToastString = getString(R.string.card_view_no_pictures_folder);
+				return null;
+			}
+
+			File fPath = new File(strPath);
+
+			if (!fPath.exists()) {
+				fPath.mkdir();
+
+				if (!fPath.isDirectory()) {
+					mToastString = getString(R.string.card_view_unable_to_create_dir);
+					return null;
+				}
+			}
+
+			fPath = new File(strPath, mCardName + "_" + mSetCode + ".jpg");
+
+			if (fPath.exists()) {
+				fPath.delete();
+			}
+
+			try {
+				if (!fPath.createNewFile()) {
+					mToastString = getString(R.string.card_view_unable_to_create_file);
+					return null;
+				}
+
+				FileOutputStream fStream = new FileOutputStream(fPath);
+
+				/* If the card is displayed, there's a real good chance it's cached */
+				String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
+				if (cardLanguage == null) {
+					cardLanguage = "en";
+				}
+				String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
+				Bitmap bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+
+				/* Check if this is an english only image */
+				if(bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
+					imageKey = Integer.toString(mMultiverseId) + "en";
+					bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+				}
+
+				/* nope, not here */
+				if (bmpImage == null) {
+					mToastString = getString(R.string.card_view_no_image);
+					return null;
+				}
+
+				boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 90, fStream);
+
+				if (!bCompressed) {
+					mToastString = getString(R.string.card_view_unable_to_save_image);
+					return null;
+				}
+
+				strPath = fPath.getCanonicalPath();
+			} catch (IOException ex) {
+				mToastString = getString(R.string.card_view_save_failure);
+				return null;
+			}
+
+			mToastString = getString(R.string.card_view_image_saved) + strPath;
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			super.onPostExecute(aVoid);
+			if(mToastString != null) {
+				Toast.makeText(mActivity, mToastString, Toast.LENGTH_LONG).show();
 			}
 		}
 	}
@@ -910,7 +1040,17 @@ public class CardViewFragment extends FamiliarFragment {
 							mLegalities[i] = getString(R.string.card_view_legal);
 							break;
 						case CardDbAdapter.RESTRICTED:
-							mLegalities[i] = getString(R.string.card_view_restricted);
+							/* For backwards compatibility, we list cards that are legal
+							 * in commander, but can't be the commander as Restricted in
+							 * the legality file.  This prevents older version of the app
+							 * from throwing an IllegalStateException if we try including
+							 * a new legality. */
+							if (mFormats[i].equalsIgnoreCase("Commander")) {
+								mLegalities[i] = getString(R.string.card_view_no_commander);
+							}
+							else {
+								mLegalities[i] = getString(R.string.card_view_restricted);
+							}
 							break;
 						case CardDbAdapter.BANNED:
 							mLegalities[i] = getString(R.string.card_view_banned);
@@ -941,7 +1081,7 @@ public class CardViewFragment extends FamiliarFragment {
 			try {
 				showDialog(GET_LEGALITY);
 			} catch (IllegalStateException e) {
-                /* eat it */
+				/* eat it */
 			}
 			mActivity.clearLoading();
 		}
@@ -968,142 +1108,164 @@ public class CardViewFragment extends FamiliarFragment {
 		@SuppressWarnings("SpellCheckingInspection")
 		@Override
 		protected Void doInBackground(Void... params) {
-			error = null;
-			String cardLanguage =
-					mActivity.mPreferenceAdapter.getCardLanguage();
+
+			String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
 			if (cardLanguage == null) {
 				cardLanguage = "en";
 			}
 
-			boolean bRetry = true;
-			boolean triedEn = false;
+			final String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
 
-			while (bRetry) {
+			// Check disk cache in background thread
+			Bitmap bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
 
-				bRetry = false;
+			if (bitmap == null) { // Not found in disk cache
 
-				try {
+				boolean bRetry = true;
 
-					if (cardLanguage.equalsIgnoreCase("en")) {
-						triedEn = true;
-					}
-					String picURL;
-					if (mSetCode.equals("PP2")) {
-						picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					}
-					else if (mSetCode.equals("PCP")) {
-						if (mCardName.equalsIgnoreCase("tazeem")) {
-							mCardName = "tazeem-release-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else if (mCardName.equalsIgnoreCase("celestine reef")) {
-							mCardName = "celestine-reef-pre-release-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else if (mCardName.equalsIgnoreCase("horizon boughs")) {
-							mCardName = "horizon-boughs-gateway-promo";
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						else {
-							picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-						}
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					}
-					else if (mSetCode.equals("ARS")) {
-						picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
-						picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-								.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-					}
-					else {
-						picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
-								mCardNumber + ".jpg";
-					}
-					picURL = picURL.toLowerCase(Locale.ENGLISH);
+				boolean triedMtgImage = false;
+				boolean triedMtgi = false;
+				boolean triedGatherer = false;
 
-					URL u = new URL(picURL);
+				while (bRetry) {
+
+					bRetry = false;
+					error = null;
+
 					try {
-						mCardBitmap = new BitmapDrawable(mActivity.getResources(), u.openStream());
-					} catch (FileNotFoundException e) {
-						if (!triedEn) {
-							/* Let the catch block take care of it */
-							throw new FileNotFoundException();
+
+						URL u;
+						if (!cardLanguage.equalsIgnoreCase("en")) {
+							u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
+							cardLanguage = "en";
 						}
 						else {
-							/* Ok, it doesn't exist on MagicCards.info in English. Fall back to Gatherer */
-							URL u2 = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
-									+ mMultiverseId + "&type=card");
-							mCardBitmap = new BitmapDrawable(mActivity.getResources(), u2.openStream());
+							if (!triedMtgImage) {
+								u = new URL("http://mtgimage.com/multiverseid/" + mMultiverseId + ".jpg");
+								triedMtgImage = true;
+							}
+							else if (!triedMtgi) {
+								u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
+								triedMtgi = true;
+							}
+							else {
+								u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
+										+ mMultiverseId + "&type=card");
+								triedGatherer = true;
+							}
+						}
+
+						mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), BitmapFactory.decodeStream(u.openStream()));
+						bitmap = mCardBitmap.getBitmap();
+						getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, mCardBitmap);
+
+					} catch (Exception e) {
+						/* Something went wrong */
+						error = getString(R.string.card_view_image_not_found);
+
+						if (!triedGatherer) {
+							bRetry = true;
 						}
 					}
-
-					/* Resize the image */
-					int height = 0, width = 0;
-					float scale;
-					/* 16dp */
-					int border = (int) TypedValue.applyDimension(
-							TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-					if (loadTo == MAIN_PAGE) {
-						Rect rectangle = new Rect();
-						mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
-
-						assert mActivity.getActionBar() != null; /* Because Android Studio */
-						height = ((rectangle.bottom - rectangle.top) - mActivity.getActionBar().getHeight()) - border;
-						width = (rectangle.right - rectangle.left) - border;
-					}
-					else if (loadTo == DIALOG) {
-						Display display = ((WindowManager) mActivity
-								.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-						Point p = new Point();
-						display.getSize(p);
-						height = p.y - border;
-						width = p.x - border;
-					}
-
-					float screenAspectRatio = (float) height / (float) (width);
-					float cardAspectRatio = (float) mCardBitmap.getIntrinsicHeight() /
-							(float) mCardBitmap.getIntrinsicWidth();
-
-					if (screenAspectRatio > cardAspectRatio) {
-						scale = (width) / (float) mCardBitmap.getIntrinsicWidth();
-					}
-					else {
-						scale = (height) / (float) mCardBitmap.getIntrinsicHeight();
-					}
-
-					int newWidth = Math.round(mCardBitmap.getIntrinsicWidth() * scale);
-					int newHeight = Math.round(mCardBitmap.getIntrinsicHeight() * scale);
-
-					Bitmap d = mCardBitmap.getBitmap();
-					Bitmap bitmapOrig = Bitmap.createScaledBitmap(d, newWidth, newHeight, true);
-					mCardBitmap = new BitmapDrawable(mActivity.getResources(), bitmapOrig);
-				} catch (FileNotFoundException e) {
-					/* internet works, image not found */
-					if (cardLanguage.equalsIgnoreCase("en")) {
-						error = getString(R.string.card_view_image_not_found);
-					}
-					else {
-						/* If image doesn't exist in the preferred language, let's retry with "en" */
-						cardLanguage = "en";
-						bRetry = true;
-					}
-				} catch (ConnectException e) {
-					/* no internet */
-					error = "ConnectException";
-				} catch (UnknownHostException e) {
-					/* no internet */
-					error = "UnknownHostException";
-				} catch (MalformedURLException e) {
-					error = "MalformedURLException";
-				} catch (IOException e) {
-					error = "IOException";
-				} catch (NullPointerException e) {
-					error = "NullPointerException";
 				}
 			}
+
+			if (bitmap == null) {
+				return null;
+			}
+
+			try {
+				/* Resize the image */
+				int height = 0, width = 0;
+				float scale;
+				/* 16dp */
+				int border = (int) TypedValue.applyDimension(
+						TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+				if (loadTo == MAIN_PAGE) {
+					Rect rectangle = new Rect();
+					mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
+
+					assert mActivity.getActionBar() != null; /* Because Android Studio */
+					height = ((rectangle.bottom - rectangle.top) - mActivity.getActionBar().getHeight()) - border;
+					width = (rectangle.right - rectangle.left) - border;
+				}
+				else if (loadTo == DIALOG) {
+					Display display = ((WindowManager) mActivity
+							.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+					Point p = new Point();
+					display.getSize(p);
+					height = p.y - border;
+					width = p.x - border;
+				}
+
+				float screenAspectRatio = (float) height / (float) (width);
+				float cardAspectRatio = (float) bitmap.getHeight() / (float) bitmap.getWidth();
+
+				if (screenAspectRatio > cardAspectRatio) {
+					scale = (width) / (float) bitmap.getWidth();
+				}
+				else {
+					scale = (height) / (float) bitmap.getHeight();
+				}
+
+				int newWidth = Math.round(bitmap.getWidth() * scale);
+				int newHeight = Math.round(bitmap.getHeight() * scale);
+
+				Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); // todo this is leaky?
+				mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
+				bitmap.recycle();
+			} catch (Exception e) {
+				/* Some error resizing. Out of memory? */
+			}
 			return null;
+		}
+
+		/**
+		 * Jumps through hoops and returns a correctly formatted URL for magiccards.info's image
+		 *
+		 * @param mCardName              The name of the card
+		 * @param mMagicCardsInfoSetCode The set of the card
+		 * @param mCardNumber            The number of the card
+		 * @param cardLanguage           The language of the card
+		 * @return a URL to the card's image
+		 */
+		private String getMtgiPicUrl(String mCardName, String mMagicCardsInfoSetCode, String mCardNumber,
+									 String cardLanguage) {
+			String picURL;
+			if (mSetCode.equals("PP2")) {
+				picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
+				picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+						.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+			}
+			else if (mSetCode.equals("PCP")) {
+				if (mCardName.equalsIgnoreCase("tazeem")) {
+					mCardName = "tazeem-release-promo";
+					picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+				}
+				else if (mCardName.equalsIgnoreCase("celestine reef")) {
+					mCardName = "celestine-reef-pre-release-promo";
+					picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+				}
+				else if (mCardName.equalsIgnoreCase("horizon boughs")) {
+					mCardName = "horizon-boughs-gateway-promo";
+					picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+				}
+				else {
+					picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+				}
+				picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+						.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+			}
+			else if (mSetCode.equals("ARS")) {
+				picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
+				picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+						.replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+			}
+			else {
+				picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
+						mCardNumber + ".jpg";
+			}
+			return picURL.toLowerCase(Locale.ENGLISH);
 		}
 
 		/**
@@ -1119,7 +1281,7 @@ public class CardViewFragment extends FamiliarFragment {
 					try {
 						showDialog(GET_IMAGE);
 					} catch (IllegalStateException e) {
-                        /* eat it */
+						/* eat it */
 					}
 				}
 				else if (loadTo == MAIN_PAGE) {
@@ -1223,7 +1385,7 @@ public class CardViewFragment extends FamiliarFragment {
 				try {
 					showDialog(CARD_RULINGS);
 				} catch (IllegalStateException e) {
-                    /* eat it */
+					/* eat it */
 				}
 			}
 			else {

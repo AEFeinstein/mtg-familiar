@@ -143,7 +143,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 					pi.mUrl = getString("link", element);
 
 					/* Some cards, like FTV, only have a foil price. This fixed problems down the road */
-					if(pi.mLow == 0 && pi.mAverage == 0 && pi.mHigh == 0 && pi.mFoilAverage != 0) {
+					if (pi.mLow == 0 && pi.mAverage == 0 && pi.mHigh == 0 && pi.mFoilAverage != 0) {
 						pi.mLow = pi.mFoilAverage;
 						pi.mAverage = pi.mFoilAverage;
 						pi.mHigh = pi.mFoilAverage;
