@@ -1745,7 +1745,7 @@ public class CardDbAdapter {
 				dbFile.delete();
 				editor.putString("lastUpdate", "");
 				editor.putInt("databaseVersion", -1);
-				editor.commit();
+				editor.apply();
 			}
 			if (!dbFile.exists()) {
 
@@ -1759,7 +1759,7 @@ public class CardDbAdapter {
 				}
 
 				editor.putInt("databaseVersion", CardDbAdapter.DATABASE_VERSION);
-				editor.commit();
+				editor.apply();
 
 				// Close the streams
 				fos.flush();
