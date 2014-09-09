@@ -98,8 +98,8 @@ public class CardDbAdapter {
 	public static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
 	private static final String KEY_DATE = "date";
 
-	private static final String KEY_FORMAT = "format";
-	private static final String KEY_LEGALITY = "legality";
+	public static final String KEY_FORMAT = "format";
+	public static final String KEY_LEGALITY = "legality";
 
 	public static final String KEY_CATEGORY = "category";
 	public static final String KEY_SUBCATEGORY = "subcategory";
@@ -109,6 +109,8 @@ public class CardDbAdapter {
 
 	public static final String KEY_TERM = "term";
 	public static final String KEY_DEFINITION = "definition";
+
+    public static final String KEY_BANNED_LIST = "banned_list";
 
 	public static final String[] allData = {DATABASE_TABLE_CARDS + "." + KEY_ID,
 			DATABASE_TABLE_CARDS + "." + KEY_NAME, DATABASE_TABLE_CARDS + "." + KEY_SET,
@@ -1513,6 +1515,24 @@ public class CardDbAdapter {
 			throw new FamiliarDbException(e);
 		}
 	}
+
+    /**
+     * @param mDb
+     * @return
+     * @throws FamiliarDbException
+     */
+    public static Cursor getBannedCards(SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            String sql = "SELECT " + KEY_FORMAT + ", " + KEY_LEGALITY + ", GROUP_CONCAT(" +
+                    KEY_NAME + ", ', ') AS " + KEY_BANNED_LIST + " FROM " + DATABASE_TABLE_BANNED_CARDS +
+                    " GROUP BY " + KEY_FORMAT + ", " + KEY_LEGALITY;
+            return mDb.rawQuery(sql, null);
+        } catch (SQLiteException e) {
+            throw new FamiliarDbException(e);
+        } catch (IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
 
 	/**
 	 * @param mDb
