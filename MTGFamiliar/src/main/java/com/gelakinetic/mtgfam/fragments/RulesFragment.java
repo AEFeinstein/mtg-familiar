@@ -52,6 +52,10 @@ public class RulesFragment extends FamiliarFragment {
 	private static final String GLOSSARY_KEY = "glossary";
     private static final String BANNED_KEY = "banned";
 
+    /* Keys for banned and restricted table */
+    private static final int BANNED = 1;
+    private static final int RESTRICTED = 2;
+
 	/* Dialog constant */
 	private static final int DIALOG_SEARCH = 1;
 
@@ -193,7 +197,7 @@ public class RulesFragment extends FamiliarFragment {
 					if (!isGlossary && !isBanned && mCategory == -1 && keyword == null) {
 						/* If it's the initial rules page, add a Glossary link to the end*/
 						mRules.add(new GlossaryItem(getString(R.string.rules_glossary), "", true));
-                        mRules.add(new BannedItem("Banned and Restricted", -1, "", true));
+                        mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), -1, "", true));
 					}
 					int listItemResource = R.layout.rules_list_item;
 					/* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
@@ -636,15 +640,16 @@ public class RulesFragment extends FamiliarFragment {
          */
         public BannedItem(String format, int legality, String cards, boolean clickable) {
             this.mFormat = format;
-            if (legality == 1) {
-                mLegality = "Banned";
-            } else if (legality == 2) {
-                mLegality = "Restricted";
+            if (legality == BANNED) {
+                mLegality = getString(R.string.rules_banned);
+            } else if (legality == RESTRICTED) {
+                mLegality = getString(R.string.rules_restricted);
+
             } else {
                 mLegality = "";
             }
             if (cards == null) {
-                this.mCards = "(No Cards)";
+                this.mCards = "(" + getString(R.string.rules_no_cards) + ")";
             } else {
                 this.mCards = cards;
             }
