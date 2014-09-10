@@ -50,11 +50,11 @@ public class RulesFragment extends FamiliarFragment {
 	private static final String POSITION_KEY = "position";
 	private static final String KEYWORD_KEY = "keyword";
 	private static final String GLOSSARY_KEY = "glossary";
-    private static final String BANNED_KEY = "banned";
+	private static final String BANNED_KEY = "banned";
 
-    /* Keys for banned and restricted table */
-    private static final int BANNED = 1;
-    private static final int RESTRICTED = 2;
+	/* Keys for banned and restricted table */
+	private static final int BANNED = 1;
+	private static final int RESTRICTED = 2;
 
 	/* Dialog constant */
 	private static final int DIALOG_SEARCH = 1;
@@ -96,22 +96,21 @@ public class RulesFragment extends FamiliarFragment {
 		Bundle extras = getArguments();
 		int position;
 		boolean isGlossary;
-        boolean isBanned;
+		boolean isBanned;
 		if (extras == null) {
 			mCategory = -1;
 			mSubcategory = -1;
 			position = 0;
 			keyword = null;
 			isGlossary = false;
-            isBanned = false;
-		}
-		else {
+			isBanned = false;
+		} else {
 			mCategory = extras.getInt(CATEGORY_KEY, -1);
 			mSubcategory = extras.getInt(SUBCATEGORY_KEY, -1);
 			position = extras.getInt(POSITION_KEY, 0);
 			keyword = extras.getString(KEYWORD_KEY);
 			isGlossary = extras.getBoolean(GLOSSARY_KEY, false);
-            isBanned = extras.getBoolean(BANNED_KEY, false);
+			isBanned = extras.getBoolean(BANNED_KEY, false);
 		}
 
 		ListView list = (ListView) myFragmentView.findViewById(R.id.result_list);
@@ -149,16 +148,13 @@ public class RulesFragment extends FamiliarFragment {
 			if (isGlossary) {
 				cursor = CardDbAdapter.getGlossaryTerms(database);
 				isClickable = false;
-			}
-            else if (isBanned) {
-                cursor = CardDbAdapter.getBannedCards(database);
-                isClickable = false;
-            }
-			else if (keyword == null) {
+			} else if (isBanned) {
+				cursor = CardDbAdapter.getBannedCards(database);
+				isClickable = false;
+			} else if (keyword == null) {
 				cursor = CardDbAdapter.getRules(mCategory, mSubcategory, database);
 				isClickable = mSubcategory == -1;
-			}
-			else {
+			} else {
 				cursor = CardDbAdapter.getRulesByKeyword(keyword, mCategory, mSubcategory, database);
 				isClickable = false;
 			}
@@ -177,14 +173,12 @@ public class RulesFragment extends FamiliarFragment {
 							mRules.add(new GlossaryItem(
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TERM)),
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_DEFINITION)), false));
-						}
-                        else if (isBanned) {
-                            mRules.add(new BannedItem(
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FORMAT)),
-                                    cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LEGALITY)),
-                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_BANNED_LIST)), false));
-                        }
-						else {
+						} else if (isBanned) {
+							mRules.add(new BannedItem(
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FORMAT)),
+									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LEGALITY)),
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_BANNED_LIST)), false));
+						} else {
 							mRules.add(new RuleItem(
 									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_CATEGORY)),
 									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_SUBCATEGORY)),
@@ -197,7 +191,7 @@ public class RulesFragment extends FamiliarFragment {
 					if (!isGlossary && !isBanned && mCategory == -1 && keyword == null) {
 						/* If it's the initial rules page, add a Glossary link to the end*/
 						mRules.add(new GlossaryItem(getString(R.string.rules_glossary), "", true));
-                        mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), -1, "", true));
+						mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), -1, "", true));
 					}
 					int listItemResource = R.layout.rules_list_item;
 					/* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
@@ -217,20 +211,17 @@ public class RulesFragment extends FamiliarFragment {
 								if (item instanceof RuleItem) {
 									args.putInt(CATEGORY_KEY, ((RuleItem) item).mCategory);
 									args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).mSubcategory);
-								}
-								else if (item instanceof GlossaryItem) {
+								} else if (item instanceof GlossaryItem) {
 									args.putBoolean(GLOSSARY_KEY, true);
+								} else if (item instanceof BannedItem) {
+									args.putBoolean(BANNED_KEY, true);
 								}
-                                else if (item instanceof BannedItem) {
-                                    args.putBoolean(BANNED_KEY, true);
-                                }
 								RulesFragment frag = new RulesFragment();
 								startNewFragment(frag, args);
 							}
 						});
 					}
-				}
-				else {
+				} else {
 					/* Cursor had a size of 0, boring */
 					cursor.close();
 					Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
@@ -240,8 +231,7 @@ public class RulesFragment extends FamiliarFragment {
 				handleFamiliarDbException(true);
 				return null;
 			}
-		}
-		else {
+		} else {
 			/* Cursor is null, weird */
 			Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
 			getFragmentManager().popBackStack();
@@ -255,8 +245,7 @@ public class RulesFragment extends FamiliarFragment {
 		mGlyphPattern = Pattern.compile("\\{([a-zA-Z0-9/]{1,3})\\}");
 		if (keyword != null && !keyword.contains("{") && !keyword.contains("}")) {
 			mKeywordPattern = Pattern.compile("(" + Pattern.quote(keyword) + ")", Pattern.CASE_INSENSITIVE);
-		}
-		else {
+		} else {
 			mKeywordPattern = null;
 		}
 		mHyperlinkPattern = Pattern.compile("<(http://)?(www|gatherer|mtgcommander)(.+?)>");
@@ -333,8 +322,7 @@ public class RulesFragment extends FamiliarFragment {
 						String title;
 						if (mCategory == -1) {
 							title = getString(R.string.rules_search_all);
-						}
-						else {
+						} else {
 							try {
 								SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 								title = String.format(getString(R.string.rules_search_cat),
@@ -359,8 +347,7 @@ public class RulesFragment extends FamiliarFragment {
 										if (keyword.length() < 3) {
 											Toast.makeText(getActivity(),
 													R.string.rules_short_key_toast, Toast.LENGTH_LONG).show();
-										}
-										else {
+										} else {
 											searchArgs = new Bundle();
 											searchArgs.putString(KEYWORD_KEY, keyword);
 											searchArgs.putInt(CATEGORY_KEY, mCategory);
@@ -560,11 +547,9 @@ public class RulesFragment extends FamiliarFragment {
 		public String getHeader() {
 			if (this.mSubcategory == -1) {
 				return String.valueOf(this.mCategory) + ".";
-			}
-			else if (this.mEntry == null) {
+			} else if (this.mEntry == null) {
 				return String.valueOf((this.mCategory * 100) + this.mSubcategory) + ".";
-			}
-			else {
+			} else {
 				return String.valueOf((this.mCategory * 100 + this.mSubcategory)) + "." + this.mEntry;
 			}
 		}
@@ -624,60 +609,64 @@ public class RulesFragment extends FamiliarFragment {
 		}
 	}
 
-    private class BannedItem extends DisplayItem {
-        private final String mFormat;
-        private final String mLegality;
-        private final String mCards;
-        private final boolean mClickable;
+	private class BannedItem extends DisplayItem {
+		private final String mFormat;
+		private final String mLegality;
+		private final String mCards;
+		private final boolean mClickable;
 
-        /**
-         * Constructor
-         *
-         * @param format The format
-         * @param legality The legality of the cards
-         * @param cards Banned and restricted cards in the format
-         * @param clickable Whether clicking on this entry will start a sub-fragment. Main Banned entry point
-         */
-        public BannedItem(String format, int legality, String cards, boolean clickable) {
-            this.mFormat = format;
-            if (legality == BANNED) {
-                mLegality = getString(R.string.rules_banned);
-            } else if (legality == RESTRICTED) {
-                mLegality = getString(R.string.rules_restricted);
+		/**
+		 * Constructor
+		 *
+		 * @param format    The format
+		 * @param legality  The legality of the cards
+		 * @param cards     Banned and restricted cards in the format
+		 * @param clickable Whether clicking on this entry will start a sub-fragment. Main Banned entry point
+		 */
+		public BannedItem(String format, int legality, String cards, boolean clickable) {
+			this.mFormat = format;
+			if (legality == BANNED) {
+				mLegality = getString(R.string.rules_banned);
+			} else if (legality == RESTRICTED) {
+				mLegality = getString(R.string.rules_restricted);
 
-            } else {
-                mLegality = "";
-            }
-            if (cards == null) {
-                this.mCards = "(" + getString(R.string.rules_no_cards) + ")";
-            } else {
-                this.mCards = cards;
-            }
-            this.mClickable = clickable;
-        }
-        /**
-         * @return the list of banned and restricted cards
-         */
-        public String getText() { return this.mCards; }
+			} else {
+				mLegality = "";
+			}
+			if (cards == null) {
+				this.mCards = "(" + getString(R.string.rules_no_cards) + ")";
+			} else {
+				this.mCards = cards;
+			}
+			this.mClickable = clickable;
+		}
 
-        /**
-         * @return the format and legality
-         */
-        public String getHeader() {
-             if (this.mLegality.equals("")) {
-                // it is the initial rules fragment
-                return this.mFormat;
-            }
-            else {
-                return this.mFormat + ": " + this.mLegality;
-            }
-        }
+		/**
+		 * @return the list of banned and restricted cards
+		 */
+		public String getText() {
+			return this.mCards;
+		}
 
-        /**
-         * @return whether clicking this entry launches a sub-fragment
-         */
-        public boolean isClickable() { return this.mClickable; }
-    }
+		/**
+		 * @return the format and legality
+		 */
+		public String getHeader() {
+			if (this.mLegality.equals("")) {
+				// it is the initial rules fragment
+				return this.mFormat;
+			} else {
+				return this.mFormat + ": " + this.mLegality;
+			}
+		}
+
+		/**
+		 * @return whether clicking this entry launches a sub-fragment
+		 */
+		public boolean isClickable() {
+			return this.mClickable;
+		}
+	}
 
 	/**
 	 * This class displays rules items in the list view. It also enables the fast scrolling with the alphabet
@@ -728,8 +717,7 @@ public class RulesFragment extends FamiliarFragment {
 				mAlphabet = alphabetLHS.toArray(mAlphabet);
 				mIndices = new Integer[indicesLHS.size()];
 				mIndices = indicesLHS.toArray(mIndices);
-			}
-			else {
+			} else {
 				this.mIndices = null;
 				this.mAlphabet = null;
 			}
@@ -762,8 +750,7 @@ public class RulesFragment extends FamiliarFragment {
 				rulesHeader.setText(formatText(header, false), BufferType.SPANNABLE);
 				if (text.equals("")) {
 					rulesText.setVisibility(View.GONE);
-				}
-				else {
+				} else {
 					rulesText.setVisibility(View.VISIBLE);
 					rulesText.setText(formatText(text, true), BufferType.SPANNABLE);
 				}
@@ -788,8 +775,7 @@ public class RulesFragment extends FamiliarFragment {
 		public int getPositionForSection(int section) {
 			if (this.mIndices == null) {
 				return 0;
-			}
-			else {
+			} else {
 				return mIndices[section];
 			}
 		}
@@ -808,8 +794,7 @@ public class RulesFragment extends FamiliarFragment {
 		public int getSectionForPosition(int position) {
 			if (this.mIndices == null) {
 				return 0;
-			}
-			else {
+			} else {
 				return 1;
 			}
 		}
@@ -825,8 +810,7 @@ public class RulesFragment extends FamiliarFragment {
 		public Object[] getSections() {
 			if (this.mIndices == null) {
 				return null;
-			}
-			else {
+			} else {
 				return mAlphabet;
 			}
 		}
