@@ -652,7 +652,7 @@ public class RulesFragment extends FamiliarFragment {
 		 * @return the format and legality
 		 */
 		public String getHeader() {
-			if (this.mLegality.equals("")) {
+			if (mClickable) {
 				// it is the initial rules fragment
 				return this.mFormat;
 			} else {
