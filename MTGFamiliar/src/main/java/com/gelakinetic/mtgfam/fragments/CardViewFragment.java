@@ -895,12 +895,17 @@ public class CardViewFragment extends FamiliarFragment {
 				menu.removeItem(mi.getItemId());
 			}
 		}
-		if (mSets != null && mSets.size() == 1) {
+		/* This code removes the "change set" button if there is only one set.
+		 * Turns out some users use it to view the full set name when there is only one set/
+		 * I'm leaving it here, but commented, for posterity */
+		/*
+ 		if (mSets != null && mSets.size() == 1) {
 			mi = menu.findItem(R.id.changeset);
 			if (mi != null) {
 				menu.removeItem(mi.getItemId());
 			}
 		}
+		*/
 	}
 
 	class saveCardImageTask extends AsyncTask<Void, Void, Void> {
