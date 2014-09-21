@@ -80,7 +80,9 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 	@SuppressWarnings("SpellCheckingInspection")
 	@Override
 	public PriceInfo loadDataFromNetwork() throws SpiceException {
-		int retry = 2; /* try the fetch twice, once with accent marks and again without if it fails */
+		boolean isAscending = true;
+		int retry = 4; /* try the fetch four times, once with accent marks and again without if it fails */
+		/* then the same for multicard ordering */
 		SpiceException exception = null; /* Save the exception during while loops */
 		SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 		while (retry > 0) {
@@ -102,23 +104,45 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 				}
 				else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
 						multiCardType == CardDbAdapter.FUSE)) {
-					int multiID = CardDbAdapter.getSplitMultiverseID(mCardName, database);
+					int multiID = CardDbAdapter.getSplitMultiverseID(mCardName, mSetCode, database);
 					if (multiID == -1) {
 						throw new FamiliarDbException(null);
 					}
-					tcgCardName = CardDbAdapter.getSplitName(multiID, database);
+					tcgCardName = CardDbAdapter.getSplitName(multiID, isAscending, database);
 				}
 				else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
 						multiCardType == CardDbAdapter.FUSE)) {
-					tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, database);
+					tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, isAscending, database);
 				}
 				else {
 					tcgCardName = mCardName;
 				}
 
-				if (retry == 1) {
+				/* Retry with accent marks removed */
+				if(retry < 3) {
 					tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
 				}
+
+				/* Set up retries for multicard ordering */
+				if(multiCardType != CardDbAdapter.NOPE) {
+					/* Next time try the other order */
+					switch (retry) {
+						case 4:
+							isAscending = false;
+							break;
+						case 3:
+							isAscending = true;
+							break;
+						case 2:
+							isAscending = false;
+							break;
+					}
+				}
+				/* If it isnt a multicard, don't bother */
+				else if(retry == 4) {
+					retry = 2;
+				}
+
 				/* Build the URL */
 				URL priceUrl = new URL("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=MTGFAMILIA&s=" +
 						URLEncoder.encode(tcgName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") + "&p=" +

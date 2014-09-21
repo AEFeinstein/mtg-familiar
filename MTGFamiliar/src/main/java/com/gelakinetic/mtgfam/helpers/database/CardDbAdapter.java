@@ -73,7 +73,7 @@ public class CardDbAdapter {
 	private static final String DATABASE_TABLE_RULES = "rules";
 	private static final String DATABASE_TABLE_GLOSSARY = "glossary";
 
-	public static final int DATABASE_VERSION = 48;
+	public static final int DATABASE_VERSION = 49;
 
 	public static final String KEY_ID = "_id";
 	public static final String KEY_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1; // "name";
@@ -1781,23 +1781,22 @@ public class CardDbAdapter {
 
 	/**
 	 * @param name
-	 * @param mDb
-	 * @return
+	 * @param mSetCode
+	 *@param mDb  @return
 	 * @throws FamiliarDbException
 	 */
-	public static int getSplitMultiverseID(String name, SQLiteDatabase mDb) throws FamiliarDbException {
+	public static int getSplitMultiverseID(String name, String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
 		Cursor c;
 		String statement = "SELECT " + KEY_MULTIVERSEID + " from "
 				+ DATABASE_TABLE_CARDS + " WHERE " + KEY_NAME + " = '"
-				+ name + "'";
+				+ name + "' AND " + KEY_SET + " = '" + setCode + "'";
 
 		try {
 			c = mDb.rawQuery(statement, null);
 
-			if (c.getCount() == 1) {
+			if (c.getCount() > 0) {
 				c.moveToFirst();
-				int retVal = c.getInt(c
-						.getColumnIndex(KEY_MULTIVERSEID));
+				int retVal = c.getInt(c.getColumnIndex(KEY_MULTIVERSEID));
 				c.close();
 				return retVal;
 			}
@@ -1818,11 +1817,18 @@ public class CardDbAdapter {
 	 * @return
 	 * @throws FamiliarDbException
 	 */
-	public static String getSplitName(int multiverseId, SQLiteDatabase mDb) throws FamiliarDbException {
+	public static String getSplitName(int multiverseId, boolean ascending, SQLiteDatabase mDb) throws FamiliarDbException {
 		Cursor c;
 		String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER + " from "
 				+ DATABASE_TABLE_CARDS + " WHERE " + KEY_MULTIVERSEID + " = "
-				+ multiverseId + " ORDER BY " + KEY_NUMBER + " ASC";
+				+ multiverseId + " ORDER BY " + KEY_NUMBER;
+
+		if(ascending) {
+			statement += " ASC";
+		}
+		else {
+			statement += " DESC";
+		}
 
 		try {
 			c = mDb.rawQuery(statement, null);
