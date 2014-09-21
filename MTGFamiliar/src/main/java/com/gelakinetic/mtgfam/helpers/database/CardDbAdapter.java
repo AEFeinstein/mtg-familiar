@@ -1309,10 +1309,14 @@ public class CardDbAdapter {
 			Cursor c = mDb.rawQuery(sql, null);
 			c.moveToFirst();
 
+			/* Some users had this cursor come up empty. I couldn't replicate. This is safe */
+			if(c.getCount() == 0) {
+				c.close();
+				return "";
+			}
 			String tcgName = c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
 			c.close();
 			return tcgName;
-
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
 		} catch (IllegalStateException e) {
