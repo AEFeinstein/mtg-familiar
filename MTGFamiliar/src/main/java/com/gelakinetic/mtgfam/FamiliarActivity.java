@@ -115,7 +115,7 @@ public class FamiliarActivity extends FragmentActivity {
 	public static final String ACTION_RULES = "android.intent.action.RULES";
 	public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
 	public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
-	private static final String ACTION_PROFILE = "android.intent.action.PROFILE";
+	public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
 
 	/* Constants used for displaying dialogs */
 	private static final int DIALOG_ABOUT = 100;
@@ -150,7 +150,7 @@ public class FamiliarActivity extends FragmentActivity {
 			new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
 			new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
 			new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
-			new DrawerEntry(R.string.main_profile, R.attr.ic_action_person, false),
+			new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false),
 			new DrawerEntry(R.string.main_extras, 0, true),
 			new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
 			new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),

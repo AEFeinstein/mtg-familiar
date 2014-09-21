@@ -62,7 +62,7 @@
         <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_wishlist">@drawable/ic_drawer_wishlist_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_person">@drawable/ic_action_person_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_profile">@drawable/ic_drawer_profile_light</item>
         <item name="com.gelakinetic.mtgfam:lc_commander_disabled">@drawable/lc_commander_disabled_light</item>
         <item name="com.gelakinetic.mtgfam:lc_commander_enabled">@drawable/lc_commander_enabled_light</item>
         <item name="com.gelakinetic.mtgfam:lc_life_disabled">@drawable/lc_life_disabled_light</item>
@@ -132,7 +132,7 @@
         <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_wishlist">@drawable/ic_drawer_wishlist_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_person">@drawable/ic_action_person_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_profile">@drawable/ic_drawer_profile_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_commander_disabled">@drawable/lc_commander_disabled_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_commander_enabled">@drawable/lc_commander_enabled_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_life_disabled">@drawable/lc_life_disabled_dark</item>

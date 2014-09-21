@@ -67,7 +67,7 @@
         <attr name="ic_drawer_timer" format="reference"/>
         <attr name="ic_drawer_trade" format="reference"/>
         <attr name="ic_drawer_wishlist" format="reference"/>
-        <attr name="ic_action_person" format="reference"/>
+        <attr name="ic_drawer_profile" format="reference"/>
         <attr name="lc_commander_disabled" format="reference"/>
         <attr name="lc_commander_enabled" format="reference"/>
         <attr name="lc_life_disabled" format="reference"/>

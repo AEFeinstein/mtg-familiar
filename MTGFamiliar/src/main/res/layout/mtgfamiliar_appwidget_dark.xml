@@ -90,4 +90,12 @@
         android:layout_weight="1"
         android:src="@drawable/ic_drawer_mojhosto_dark"/>
 
+    <ImageButton
+        android:id="@+id/widget_profile"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_drawer_profile_dark"/>
+
 </LinearLayout>

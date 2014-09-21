@@ -33,7 +33,8 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			R.id.widget_timer,
 			R.id.widget_rules,
 			R.id.widget_mojhosto,
-			R.id.widget_judge};
+			R.id.widget_judge,
+			R.id.widget_profile};
 
 	/* An array of String intents for the buttons in the widget. Must stay in order with buttonResources[] above, and
 	   R.array.default_fragment_array_entries in arrays.xml */
@@ -47,7 +48,8 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 			FamiliarActivity.ACTION_ROUND_TIMER,
 			FamiliarActivity.ACTION_RULES,
 			FamiliarActivity.ACTION_MOJHOSTO,
-			FamiliarActivity.ACTION_JUDGE};
+			FamiliarActivity.ACTION_JUDGE,
+			FamiliarActivity.ACTION_PROFILE};
 
 	private int mMaxNumButtons = 100;
 
