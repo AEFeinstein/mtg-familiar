@@ -56,12 +56,13 @@ Więc, na jak dużą hojność stać cię dzisiaj?</string>
 - Możliwość zapisu swojego numeru DCI&lt;br&gt;&lt;br&gt;
 - Możliwość dostosowania poziomu jasności przy wygaszaniu Licznika Życia&lt;br&gt;&lt;br&gt;
 - Możliwość sprawdzenia legalności Commandera</string>
-<string name="main_tts_warning_title">- Obrazki kart są przechowywane offline&lt;br&gt;&lt;br&gt;</string>
-<string name="main_tts_warning_text">- Zapisywanie obrazków kart poprzez naciśnięcie na obrazek &lt;br&gt;&lt;br&gt;</string>
-<string name="main_export_data_title">- Dodana kostka o X oczkach&lt;br&gt;&lt;br&gt;</string>
-<string name="main_export_success">- Możliwość zapisu swojego numeru DCI&lt;br&gt;&lt;br&gt;</string>
-<string name="main_export_fail">- Możliwość dostosowania poziomu jasności przy wygaszaniu Licznika Życia&lt;br&gt;&lt;br&gt;</string>
-<string name="main_import_data_title">- Możliwość sprawdzenia legalności Commandera</string>
+<string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
+<string name="main_tts_warning_text">Ta aplikacja ma możliwość zastosowania syntezatora mowy, ale wydaje się, że nie masz go zainstalowanego. Jeśli chcesz go zainstalować, użyj przycisku \'Zainstaluj TTS (Text-To-Speech)\' z menu Ustawienia.
+</string>
+<string name="main_export_data_title">Zapisz dane na karcie SD</string>
+<string name="main_export_success">Zapisano dane w </string>
+<string name="main_export_fail">Nie udało się zapisać danych na karcie SD</string>
+<string name="main_import_data_title">Wczytaj dane z karty SD</string>
 <string name="main_import_success">Import zakończony powodzeniem</string>
 <string name="main_import_fail">Nie udało się zaimportować danych. Proszę wstawić MTGFamiliarBackup.zip w root\'a swojej karty SD</string>
 <string name="main_about">O aplikacji</string>
@@ -88,7 +89,8 @@ Specjalne podziękowania dla Richarda Garfielda i pozostałych ludzi z &lt;a hre
 Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;&lt;br&gt;
 &lt;a href=\"https://github.com/octo-online/robospice\"&gt;Robospice&lt;/a&gt; został użyty zgodnie z licencją Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
 Program licenced under the &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
-Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.</string>
+Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.
+</string>
 <string name="main_drawer_open">Otwórz menu nawigacji</string>
 <string name="main_drawer_close">Zamknij menu nawigacji</string>
 <string name="main_install_tts">Zainstaluj TTS (Text-To-Speech)</string>
@@ -273,7 +275,8 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="timer_ten_minutes_left">Runda skończy się za dziesięć minut</string>
 <string name="timer_fifteen_minutes_left">Runda skończy się za piętnaście minut</string>
 <string name="timer_ended">Runda została zakończona.</string>
-<string name="timer_easter_egg">Oto noc ostatniego dnia, dwanaście godzin pozostało</string>
+<string name="timer_easter_egg">Oto noc ostatniego dnia, dwanaście godzin pozostało
+</string>
 <string name="rules_exit">Wyjdź z Zasad</string>
 <string name="rules_glossary">Słowniczek</string>
 <string name="rules_no_results_toast">Nic nie znaleziono.</string>
@@ -339,7 +342,7 @@ Powodzenia i miłej zabawy!</string>
 <string name="pref_five_minutes_title">Ostrzeżenie co 5 minut</string>
 <string name="pref_cat_trade_window">Okno Wymiany</string>
 <string name="pref_trade_price_title">Ustawienia cen</string>
-<string name="pref_trade_price_summary">Używaj cen TCGplayera przy wymianie kart</string>
+<string name="pref_trade_price_summary">Wybierz który zakres cen TCGplayera będzie używany przy wymianie kart</string>
 <string name="pref_cat_result_list">Lista wyników</string>
 <string name="pref_consolidate_title">Ujednolicenie rezultatów</string>
 <string name="pref_consolidate_summary">Pokazuj tylko najbardziej aktualne wydanie karty</string>
@@ -377,7 +380,7 @@ Powodzenia i miłej zabawy!</string>
 <string name="pref_5_seconds">5 sekund</string>
 <string name="pref_cat_widget">Widget</string>
 <string name="pref_widget_mode_title">Przyciski Widgetu</string>
-<string name="pref_widget_mode_summary">Przyciski do wyświetlania w Widgecie</string>
+<string name="pref_widget_mode_summary">Przyciski które będą wyświetlane w Widgecie</string>
 <string name="pref_theme_dark">Ciemny</string>
 <string name="pref_theme_light">Jasny</string>
 <string name="pref_cat_theme">Wygląd</string>
@@ -426,6 +429,6 @@ Powodzenia i miłej zabawy!</string>
 <string name="pref_dim_lock_level_summary">Ustaw poziom jasności po przygaszeniu ekranu</string>
 <string name="pref_dim_lock_level_title">Poziom jasności wyświetlacza</string>
 <string name="pref_image_cache_size_summary">Maksymalna ilość przestrzeni dysku używana aby przechowywać obrazki</string>
-<string name="pref_image_cache_size_title">Wielkość obrazka</string>
+<string name="pref_image_cache_size_title">Pamięć podręczna obrazków</string>
 <string name="pref_cat_card_cache">Przechowywanie obrazka</string>
 </resources>
