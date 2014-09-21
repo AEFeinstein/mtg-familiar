@@ -464,7 +464,11 @@ public class ImageCache {
          *                               is sufficient.
          */
         public ImageCacheParams(Context context, String diskCacheDirectoryName) {
-            diskCacheDir = getDiskCacheDir(context, diskCacheDirectoryName);
+            try {
+				diskCacheDir = getDiskCacheDir(context, diskCacheDirectoryName);
+			} catch(NullPointerException e) {
+				diskCacheDir = null;
+			}
         }
 
         /**
@@ -540,7 +544,7 @@ public class ImageCache {
      * @param uniqueName A unique directory name to append to the cache dir
      * @return The cache dir
      */
-    private static File getDiskCacheDir(Context context, String uniqueName) {
+    private static File getDiskCacheDir(Context context, String uniqueName) throws NullPointerException{
         // Check if media is mounted or storage is built-in, if so, try and use external cache dir
         // otherwise use internal cache dir
         final String cachePath =
