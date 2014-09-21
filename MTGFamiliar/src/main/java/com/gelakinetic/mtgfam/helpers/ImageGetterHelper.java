@@ -25,6 +25,7 @@ import android.os.Build;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.Spanned;
+import android.text.SpannedString;
 
 import com.gelakinetic.mtgfam.R;
 
@@ -50,6 +51,10 @@ public class ImageGetterHelper {
 	 * @return the Spanned with shiny new glyphs
 	 */
 	public static Spanned formatStringWithGlyphs(String source, ImageGetter imageGetter) {
+		/* Make sure we're not formatting a null string */
+		if(source == null) {
+			return new SpannedString("");
+		}
 		source = source.replace("{", "<img src=\"").replace("}", "\"/>");
 		if (Build.VERSION.SDK_INT == 16) {
 			source = source.replace("<", " <").replace(">", " >").replace("  ", " ");
@@ -64,6 +69,10 @@ public class ImageGetterHelper {
 	 * @return a formatted Spanned which JellyBean is happy with
 	 */
 	public static Spanned formatHtmlString(String source) {
+		/* Make sure we're not formatting a null string */
+		if(source == null) {
+			return new SpannedString("");
+		}
 		if (Build.VERSION.SDK_INT == 16) {
 			source = source.replace("<", " <").replace(">", " >").replace("  ", " ");
 		}
