@@ -156,6 +156,19 @@ public class WishlistFragment extends FamiliarFragment {
 				showDialog(DIALOG_UPDATE_CARD, mCompressedWishlist.get(position).mCard.name);
 			}
 		});
+		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+				/* Remove the card */
+				mCompressedWishlist.remove(position);
+				/* Save the wishlist */
+				WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+
+				/* Redraw the new wishlist */
+				mWishlistAdapter.notifyDataSetChanged();
+				return true;
+			}
+		});
 		return myFragmentView;
 	}
 
