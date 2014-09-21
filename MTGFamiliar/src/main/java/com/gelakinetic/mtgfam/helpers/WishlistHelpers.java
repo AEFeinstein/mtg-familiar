@@ -529,30 +529,38 @@ public class WishlistHelpers {
 			double sumWish2 = 0;
 
 			for (IndividualSetInfo isi : wish1.mInfo) {
-				switch (mPriceSetting) {
-					case LOW_PRICE:
-						sumWish1 += (isi.mPrice.mLow * isi.mNumberOf);
-						break;
-					case AVG_PRICE:
-						sumWish1 += (isi.mPrice.mAverage * isi.mNumberOf);
-						break;
-					case HIGH_PRICE:
-						sumWish1 += (isi.mPrice.mHigh * isi.mNumberOf);
-						break;
+				try {
+					switch (mPriceSetting) {
+						case LOW_PRICE:
+							sumWish1 += (isi.mPrice.mLow * isi.mNumberOf);
+							break;
+						case AVG_PRICE:
+							sumWish1 += (isi.mPrice.mAverage * isi.mNumberOf);
+							break;
+						case HIGH_PRICE:
+							sumWish1 += (isi.mPrice.mHigh * isi.mNumberOf);
+							break;
+					}
+				} catch (NullPointerException e) {
+					/* eat it, no price is loaded */
 				}
 			}
 
 			for (IndividualSetInfo isi : wish2.mInfo) {
-				switch (mPriceSetting) {
-					case LOW_PRICE:
-						sumWish2 += (isi.mPrice.mLow * isi.mNumberOf);
-						break;
-					case AVG_PRICE:
-						sumWish2 += (isi.mPrice.mAverage * isi.mNumberOf);
-						break;
-					case HIGH_PRICE:
-						sumWish2 += (isi.mPrice.mHigh * isi.mNumberOf);
-						break;
+				try {
+					switch (mPriceSetting) {
+						case LOW_PRICE:
+							sumWish2 += (isi.mPrice.mLow * isi.mNumberOf);
+							break;
+						case AVG_PRICE:
+							sumWish2 += (isi.mPrice.mAverage * isi.mNumberOf);
+							break;
+						case HIGH_PRICE:
+							sumWish2 += (isi.mPrice.mHigh * isi.mNumberOf);
+							break;
+					}
+				} catch (NullPointerException e) {
+					/* eat it, no price is loaded */
 				}
 			}
 
