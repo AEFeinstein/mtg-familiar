@@ -119,12 +119,12 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 				}
 
 				/* Retry with accent marks removed */
-				if(retry < 3) {
+				if (retry < 3) {
 					tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
 				}
 
 				/* Set up retries for multicard ordering */
-				if(multiCardType != CardDbAdapter.NOPE) {
+				if (multiCardType != CardDbAdapter.NOPE) {
 					/* Next time try the other order */
 					switch (retry) {
 						case 4:
@@ -139,7 +139,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 					}
 				}
 				/* If it isnt a multicard, don't bother */
-				else if(retry == 4) {
+				else if (retry == 4) {
 					retry = 2;
 				}
 

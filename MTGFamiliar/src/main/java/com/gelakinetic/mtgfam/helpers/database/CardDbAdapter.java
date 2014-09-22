@@ -1310,7 +1310,7 @@ public class CardDbAdapter {
 			c.moveToFirst();
 
 			/* Some users had this cursor come up empty. I couldn't replicate. This is safe */
-			if(c.getCount() == 0) {
+			if (c.getCount() == 0) {
 				c.close();
 				return "";
 			}
@@ -1782,7 +1782,7 @@ public class CardDbAdapter {
 	/**
 	 * @param name
 	 * @param mSetCode
-	 *@param mDb  @return
+	 * @param mDb      @return
 	 * @throws FamiliarDbException
 	 */
 	public static int getSplitMultiverseID(String name, String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
@@ -1823,7 +1823,7 @@ public class CardDbAdapter {
 				+ DATABASE_TABLE_CARDS + " WHERE " + KEY_MULTIVERSEID + " = "
 				+ multiverseId + " ORDER BY " + KEY_NUMBER;
 
-		if(ascending) {
+		if (ascending) {
 			statement += " ASC";
 		}
 		else {

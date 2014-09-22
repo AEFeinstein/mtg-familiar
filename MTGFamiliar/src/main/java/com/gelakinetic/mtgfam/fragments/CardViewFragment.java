@@ -962,7 +962,7 @@ public class CardViewFragment extends FamiliarFragment {
 				Bitmap bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
 
 				/* Check if this is an english only image */
-				if(bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
+				if (bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
 					imageKey = Integer.toString(mMultiverseId) + "en";
 					bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
 				}
@@ -993,7 +993,7 @@ public class CardViewFragment extends FamiliarFragment {
 		@Override
 		protected void onPostExecute(Void aVoid) {
 			super.onPostExecute(aVoid);
-			if(mToastString != null) {
+			if (mToastString != null) {
 				Toast.makeText(mActivity, mToastString, Toast.LENGTH_LONG).show();
 			}
 		}

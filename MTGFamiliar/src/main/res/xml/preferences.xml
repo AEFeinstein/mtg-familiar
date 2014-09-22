@@ -192,7 +192,7 @@
                 android:dependency="@string/key_wakelock"
                 android:key="@string/key_dimlock"
                 android:summary="@string/pref_dim_lock_summary"
-                android:title="@string/pref_dim_lock_title" />
+                android:title="@string/pref_dim_lock_title"/>
 
             <com.robobunny.preferences.SeekBarPreference
                 android:defaultValue="1"
