@@ -385,7 +385,8 @@ public class CardDbAdapter {
 		for (String field : fields) {
 			if (first) {
 				first = false;
-			} else {
+			}
+			else {
 				sql += ", ";
 			}
 			sql += field;
@@ -426,7 +427,8 @@ public class CardDbAdapter {
 		for (String field : CardDbAdapter.allData) {
 			if (first) {
 				first = false;
-			} else {
+			}
+			else {
 				sql += ", ";
 			}
 			sql += field;
@@ -444,13 +446,15 @@ public class CardDbAdapter {
 				doSql = true;
 				if (first) {
 					first = false;
-				} else {
+				}
+				else {
 					sql += " OR ";
 				}
 				if (cwi.mCard.setCode != null && !cwi.mCard.setCode.equals("")) {
 					sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(cwi.mCard.name) +
 							" AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" + cwi.mCard.setCode + "')";
-				} else {
+				}
+				else {
 					sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + DatabaseUtils.sqlEscapeString(cwi.mCard.name) + ")";
 				}
 			}
@@ -474,7 +478,8 @@ public class CardDbAdapter {
 
 		if (cursor != null) {
 			cursor.moveToFirst();
-		} else {
+		}
+		else {
 			return;
 		}
 
@@ -522,7 +527,8 @@ public class CardDbAdapter {
 		for (String field : fields) {
 			if (first) {
 				first = false;
-			} else {
+			}
+			else {
 				sql += ", ";
 			}
 			sql += field;
@@ -692,7 +698,8 @@ public class CardDbAdapter {
 							else
 								statement += " AND ((" + DATABASE_TABLE_CARDS + "."
 										+ KEY_ABILITY + " LIKE '%" + s + "%')";
-						} else {
+						}
+						else {
 							if (s.contains(EXCLUDE_TOKEN))
 								statement += " AND (" + DATABASE_TABLE_CARDS + "."
 										+ KEY_ABILITY + " NOT LIKE '%"
@@ -732,9 +739,11 @@ public class CardDbAdapter {
 			if (split.length >= 2) {
 				supertypes = split[0].replace(" -", "");
 				subtypes = split[1].replace(" -", "");
-			} else if (containsSupertype) {
+			}
+			else if (containsSupertype) {
 				supertypes = cardtype.replace(" -", "");
-			} else {
+			}
+			else {
 				subtypes = cardtype.replace("- ", "");
 			}
 		}
@@ -768,7 +777,8 @@ public class CardDbAdapter {
 							else
 								statement += " AND ((" + DATABASE_TABLE_CARDS + "."
 										+ KEY_TYPE + " LIKE '%" + s + "%')";
-						} else if (s.contains(EXCLUDE_TOKEN))
+						}
+						else if (s.contains(EXCLUDE_TOKEN))
 							statement += " AND (" + DATABASE_TABLE_CARDS + "."
 									+ KEY_TYPE + " NOT LIKE '%" + s.substring(1)
 									+ "%')";
@@ -817,7 +827,8 @@ public class CardDbAdapter {
 							else
 								statement += " AND ((" + DATABASE_TABLE_CARDS + "."
 										+ KEY_TYPE + " LIKE '%" + s + "%')";
-						} else if (s.contains(EXCLUDE_TOKEN))
+						}
+						else if (s.contains(EXCLUDE_TOKEN))
 							statement += " AND (" + DATABASE_TABLE_CARDS + "."
 									+ KEY_TYPE + " NOT LIKE '%" + s.substring(1)
 									+ "%')";
@@ -932,7 +943,8 @@ public class CardDbAdapter {
 			for (String s : sets.split("-")) {
 				if (first) {
 					first = false;
-				} else {
+				}
+				else {
 					statement += " OR ";
 				}
 				statement += DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" + s
@@ -952,7 +964,8 @@ public class CardDbAdapter {
 					statement += " AND " + DATABASE_TABLE_CARDS + "."
 							+ KEY_POWER + " > " + STAR;
 				}
-			} else if (pow_logic.equals("=")) {
+			}
+			else if (pow_logic.equals("=")) {
 				statement += DATABASE_TABLE_CARDS + "." + KEY_POWER + " "
 						+ pow_logic + " " + pow_choice;
 			}
@@ -969,7 +982,8 @@ public class CardDbAdapter {
 					statement += " AND " + DATABASE_TABLE_CARDS + "."
 							+ KEY_TOUGHNESS + " > " + STAR;
 				}
-			} else if (tou_logic.equals("=")) {
+			}
+			else if (tou_logic.equals("=")) {
 				statement += DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS + " "
 						+ tou_logic + " " + tou_choice;
 			}
@@ -990,7 +1004,8 @@ public class CardDbAdapter {
 			for (int i = 0; i < rarity.length(); i++) {
 				if (firstPrint) {
 					firstPrint = false;
-				} else {
+				}
+				else {
 					statement += " OR ";
 				}
 				statement += DATABASE_TABLE_CARDS + "." + KEY_RARITY + " = "
@@ -1008,7 +1023,8 @@ public class CardDbAdapter {
 						+ DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " AND "
 						+ DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='"
 						+ format + "')";
-			} else {
+			}
+			else {
 				statement += " AND NOT " + KEY_SET + "= 'UNH'" +
 						" AND NOT " + KEY_SET + "= 'UG'" +
 						" AND NOT " + KEY_SET + "= 'ARS'" +
@@ -1058,7 +1074,8 @@ public class CardDbAdapter {
 			for (String s : returnTypes) {
 				if (sel == null) {
 					sel = DATABASE_TABLE_CARDS + "." + s + " AS " + s;
-				} else {
+				}
+				else {
 					sel += ", " + DATABASE_TABLE_CARDS + "." + s + " AS " + s;
 				}
 			}
@@ -1072,7 +1089,8 @@ public class CardDbAdapter {
 			if (consolidate) {
 				sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
 						+ ") GROUP BY " + KEY_NAME + " ORDER BY " + KEY_NAME + " COLLATE UNICODE";
-			} else {
+			}
+			else {
 				sql += " ORDER BY " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " COLLATE UNICODE"
 						+ ", " + DATABASE_TABLE_SETS + "." + KEY_DATE
 						+ " DESC)";
@@ -1343,14 +1361,16 @@ public class CardDbAdapter {
 				String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
 						+ " WHERE " + KEY_SUBCATEGORY + " = -1";
 				return mDb.rawQuery(sql, null);
-			} else if (subcategory == -1) {
+			}
+			else if (subcategory == -1) {
 				// No subcategory specified; return the subcategories under the given category
 				String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
 						+ " WHERE " + KEY_CATEGORY + " = "
 						+ String.valueOf(category) + " AND " + KEY_SUBCATEGORY
 						+ " > -1 AND " + KEY_ENTRY + " IS NULL";
 				return mDb.rawQuery(sql, null);
-			} else {
+			}
+			else {
 				// Both specified; return the rules under the given subcategory
 				String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
 						+ " WHERE " + KEY_CATEGORY + " = "
@@ -1389,7 +1409,8 @@ public class CardDbAdapter {
 							+ " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
 							+ " AND " + KEY_ENTRY + " IS NOT NULL";
 					return mDb.rawQuery(sql, null);
-				} else if (subcategory == -1) {
+				}
+				else if (subcategory == -1) {
 					// No subcategory; we're searching from a category page, so
 					// restrict
 					// within that
@@ -1398,7 +1419,8 @@ public class CardDbAdapter {
 							+ " AND " + KEY_ENTRY + " IS NOT NULL AND "
 							+ KEY_CATEGORY + " = " + String.valueOf(category);
 					return mDb.rawQuery(sql, null);
-				} else {
+				}
+				else {
 					// We're searching within a subcategory, so restrict within
 					// that
 					String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
@@ -1555,14 +1577,16 @@ public class CardDbAdapter {
 								  String text, int position, SQLiteDatabase mDb) throws FamiliarDbException {
 		if (entry == null) {
 			entry = "NULL";
-		} else {
+		}
+		else {
 			entry = "'" + entry.replace("'", "''") + "'";
 		}
 		text = "'" + text.replace("'", "''") + "'";
 		String positionStr;
 		if (position < 0) {
 			positionStr = "NULL";
-		} else {
+		}
+		else {
 			positionStr = String.valueOf(position);
 		}
 		String sql = "INSERT INTO " + DATABASE_TABLE_RULES + " ("
@@ -1795,7 +1819,8 @@ public class CardDbAdapter {
 				int retVal = c.getInt(c.getColumnIndex(KEY_MULTIVERSEID));
 				c.close();
 				return retVal;
-			} else {
+			}
+			else {
 				c.close();
 				return -1;
 			}
@@ -1837,7 +1862,8 @@ public class CardDbAdapter {
 				retVal += c.getString(c.getColumnIndex(KEY_NAME));
 				c.close();
 				return retVal;
-			} else {
+			}
+			else {
 				c.close();
 				return null;
 			}
@@ -1923,9 +1949,11 @@ public class CardDbAdapter {
 		if (number.contains("a") || number.contains("b")) {
 			if (setCode.compareTo("ISD") == 0 || setCode.compareTo("DKA") == 0) {
 				return TRANSFORM;
-			} else if (setCode.compareTo("DGM") == 0) {
+			}
+			else if (setCode.compareTo("DGM") == 0) {
 				return FUSE;
-			} else {
+			}
+			else {
 				return SPLIT;
 			}
 		}
