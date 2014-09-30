@@ -50,6 +50,11 @@ public class RulesFragment extends FamiliarFragment {
 	private static final String POSITION_KEY = "position";
 	private static final String KEYWORD_KEY = "keyword";
 	private static final String GLOSSARY_KEY = "glossary";
+	private static final String BANNED_KEY = "banned";
+
+	/* Keys for banned and restricted table */
+	private static final int BANNED = 1;
+	private static final int RESTRICTED = 2;
 
 	/* Dialog constant */
 	private static final int DIALOG_SEARCH = 1;
@@ -91,12 +96,14 @@ public class RulesFragment extends FamiliarFragment {
 		Bundle extras = getArguments();
 		int position;
 		boolean isGlossary;
+		boolean isBanned;
 		if (extras == null) {
 			mCategory = -1;
 			mSubcategory = -1;
 			position = 0;
 			keyword = null;
 			isGlossary = false;
+			isBanned = false;
 		}
 		else {
 			mCategory = extras.getInt(CATEGORY_KEY, -1);
@@ -104,6 +111,7 @@ public class RulesFragment extends FamiliarFragment {
 			position = extras.getInt(POSITION_KEY, 0);
 			keyword = extras.getString(KEYWORD_KEY);
 			isGlossary = extras.getBoolean(GLOSSARY_KEY, false);
+			isBanned = extras.getBoolean(BANNED_KEY, false);
 		}
 
 		ListView list = (ListView) myFragmentView.findViewById(R.id.result_list);
@@ -142,6 +150,10 @@ public class RulesFragment extends FamiliarFragment {
 				cursor = CardDbAdapter.getGlossaryTerms(database);
 				isClickable = false;
 			}
+			else if (isBanned) {
+				cursor = CardDbAdapter.getBannedCards(database);
+				isClickable = false;
+			}
 			else if (keyword == null) {
 				cursor = CardDbAdapter.getRules(mCategory, mSubcategory, database);
 				isClickable = mSubcategory == -1;
@@ -166,6 +178,12 @@ public class RulesFragment extends FamiliarFragment {
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TERM)),
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_DEFINITION)), false));
 						}
+						else if (isBanned) {
+							mRules.add(new BannedItem(
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FORMAT)),
+									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LEGALITY)),
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_BANNED_LIST)), false));
+						}
 						else {
 							mRules.add(new RuleItem(
 									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_CATEGORY)),
@@ -176,14 +194,15 @@ public class RulesFragment extends FamiliarFragment {
 						cursor.moveToNext();
 					}
 					cursor.close();
-					if (!isGlossary && mCategory == -1 && keyword == null) {
+					if (!isGlossary && !isBanned && mCategory == -1 && keyword == null) {
 						/* If it's the initial rules page, add a Glossary link to the end*/
 						mRules.add(new GlossaryItem(getString(R.string.rules_glossary), "", true));
+						mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), -1, "", true));
 					}
 					int listItemResource = R.layout.rules_list_item;
 					/* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
 					 * the wrong layout*/
-					if (isGlossary || mSubcategory >= 0 || keyword != null) {
+					if (isGlossary || isBanned || mSubcategory >= 0 || keyword != null) {
 						listItemResource = R.layout.rules_list_detail_item;
 					}
 					RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
@@ -201,6 +220,9 @@ public class RulesFragment extends FamiliarFragment {
 								}
 								else if (item instanceof GlossaryItem) {
 									args.putBoolean(GLOSSARY_KEY, true);
+								}
+								else if (item instanceof BannedItem) {
+									args.putBoolean(BANNED_KEY, true);
 								}
 								RulesFragment frag = new RulesFragment();
 								startNewFragment(frag, args);
@@ -596,6 +618,69 @@ public class RulesFragment extends FamiliarFragment {
 
 		/**
 		 * @return whether clicking this entry launches a sub fragment
+		 */
+		public boolean isClickable() {
+			return this.mClickable;
+		}
+	}
+
+	private class BannedItem extends DisplayItem {
+		private final String mFormat;
+		private final String mLegality;
+		private final String mCards;
+		private final boolean mClickable;
+
+		/**
+		 * Constructor
+		 *
+		 * @param format    The format
+		 * @param legality  The legality of the cards
+		 * @param cards     Banned and restricted cards in the format
+		 * @param clickable Whether clicking on this entry will start a sub-fragment. Main Banned entry point
+		 */
+		public BannedItem(String format, int legality, String cards, boolean clickable) {
+			this.mFormat = format;
+			if (legality == BANNED) {
+				mLegality = getString(R.string.rules_banned);
+			}
+			else if (legality == RESTRICTED) {
+				mLegality = getString(R.string.rules_restricted);
+
+			}
+			else {
+				mLegality = "";
+			}
+			if (cards == null) {
+				this.mCards = "(" + getString(R.string.rules_no_cards) + ")";
+			}
+			else {
+				this.mCards = cards;
+			}
+			this.mClickable = clickable;
+		}
+
+		/**
+		 * @return the list of banned and restricted cards
+		 */
+		public String getText() {
+			return this.mCards;
+		}
+
+		/**
+		 * @return the format and legality
+		 */
+		public String getHeader() {
+			if (mClickable) {
+				// it is the initial rules fragment
+				return this.mFormat;
+			}
+			else {
+				return this.mFormat + ": " + this.mLegality;
+			}
+		}
+
+		/**
+		 * @return whether clicking this entry launches a sub-fragment
 		 */
 		public boolean isClickable() {
 			return this.mClickable;
