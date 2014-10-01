@@ -639,16 +639,30 @@ public class RulesFragment extends FamiliarFragment {
 		 * @param clickable Whether clicking on this entry will start a sub-fragment. Main Banned entry point
 		 */
 		public BannedItem(String format, int legality, String cards, boolean clickable) {
-			this.mFormat = format;
-			if (legality == BANNED) {
-				mLegality = getString(R.string.rules_banned);
-			}
-			else if (legality == RESTRICTED) {
-				mLegality = getString(R.string.rules_restricted);
 
+			this.mFormat = format;
+			if(format.equalsIgnoreCase("Commander")) {
+				if (legality == RESTRICTED) {
+					mLegality = getString(R.string.rules_banned_as_commander);
+				}
+				else if (legality == BANNED) {
+					mLegality = getString(R.string.rules_banned);
+				}
+				else {
+					mLegality = "";
+				}
 			}
 			else {
-				mLegality = "";
+				if (legality == BANNED) {
+					mLegality = getString(R.string.rules_banned);
+				}
+				else if (legality == RESTRICTED) {
+					mLegality = getString(R.string.rules_restricted);
+
+				}
+				else {
+					mLegality = "";
+				}
 			}
 			if (cards == null) {
 				this.mCards = "(" + getString(R.string.rules_no_cards) + ")";

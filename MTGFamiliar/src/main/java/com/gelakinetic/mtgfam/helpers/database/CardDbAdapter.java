@@ -1528,7 +1528,7 @@ public class CardDbAdapter {
 	public static Cursor getBannedCards(SQLiteDatabase mDb) throws FamiliarDbException {
 		try {
 			String sql = "SELECT " + KEY_FORMAT + ", " + KEY_LEGALITY + ", GROUP_CONCAT(" +
-					KEY_NAME + ", ', ') AS " + KEY_BANNED_LIST + " FROM " + DATABASE_TABLE_BANNED_CARDS +
+					KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST + " FROM " + DATABASE_TABLE_BANNED_CARDS +
 					" GROUP BY " + KEY_FORMAT + ", " + KEY_LEGALITY;
 			return mDb.rawQuery(sql, null);
 		} catch (SQLiteException e) {
