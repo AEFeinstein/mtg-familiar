@@ -626,6 +626,7 @@ public class CardDbAdapter {
 								boolean backface, String[] returnTypes, boolean consolidate, SQLiteDatabase mDb)
 			throws FamiliarDbException {
 		Cursor c;
+
 		if (cardname != null)
 			cardname = cardname.replace("'", "''").replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0]).trim();
 		if (cardtext != null)
@@ -1024,7 +1025,9 @@ public class CardDbAdapter {
 						+ format + "')";
 			}
 			else {
-				statement += " AND NOT " + KEY_SET + "= 'ARS'" +
+				statement += " AND NOT " + KEY_SET + "= 'UNH'" +
+						" AND NOT " + KEY_SET + "= 'UG'" +
+						" AND NOT " + KEY_SET + "= 'ARS'" +
 						" AND NOT " + KEY_SET + "= 'PCP'" +
 						" AND NOT " + KEY_SET + "= 'PP2'";
 			}
