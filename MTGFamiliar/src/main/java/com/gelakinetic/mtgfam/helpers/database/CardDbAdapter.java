@@ -1016,7 +1016,13 @@ public class CardDbAdapter {
 
 		String tbl = DATABASE_TABLE_CARDS;
 		if (format != null) {
-			if (!(format.equals("Legacy") || format.equals("Vintage"))) {
+
+			/* Check if the format is eternal or not, by the number of legal sets */
+			String numLegalSetsSql = "SELECT * FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = \"" + format + "\"";
+			Cursor numLegalSetCursor = mDb.rawQuery(numLegalSetsSql, null);
+
+			/* If the format is not eternal, filter by set */
+			if (numLegalSetCursor.getCount() > 0) {
 				tbl = "(" + DATABASE_TABLE_CARDS + " JOIN "
 						+ DATABASE_TABLE_LEGAL_SETS + " ON "
 						+ DATABASE_TABLE_CARDS + "." + KEY_SET + "="
@@ -1025,11 +1031,13 @@ public class CardDbAdapter {
 						+ format + "')";
 			}
 			else {
-				statement += " AND NOT " + KEY_SET + "= 'UNH'" +
-						" AND NOT " + KEY_SET + "= 'UG'" +
-						" AND NOT " + KEY_SET + "= 'ARS'" +
-						" AND NOT " + KEY_SET + "= 'PCP'" +
-						" AND NOT " + KEY_SET + "= 'PP2'";
+				/* Otherwise filter silver bordered cards, giant cards */
+				statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UNH'" +
+						" AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UG'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Plane %'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Conspiracy%'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Scheme%'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Vanguard%'";
 			}
 			statement += " AND NOT EXISTS (SELECT * FROM "
 					+ DATABASE_TABLE_BANNED_CARDS + " WHERE "
