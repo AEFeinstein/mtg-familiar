@@ -74,6 +74,7 @@
 
     <style name="Theme.dark" parent="android:Theme.Holo">
 
+        <item name="android:windowBackground">@android:color/black</item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_dark</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_dark</item>
         <item name="com.gelakinetic.mtgfam:holo_red">@color/holo_red_light</item>
