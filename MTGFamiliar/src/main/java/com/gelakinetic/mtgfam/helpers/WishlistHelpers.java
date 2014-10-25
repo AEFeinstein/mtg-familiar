@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.CardViewFragment;
+import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -161,10 +161,11 @@ public class WishlistHelpers {
 						/* Open the database */
 						SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
 						/* Get the card ID, and send it to a new CardViewFragment */
-						args.putLong(CardViewFragment.CARD_ID, CardDbAdapter.fetchIdByName(mCardName, db));
+						args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.fetchIdByName(mCardName, db)});
+						args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
 						DatabaseManager.getInstance().closeDatabase();
-						CardViewFragment cvFrag = new CardViewFragment();
-						fragment.startNewFragment(cvFrag, args);
+						CardViewPagerFragment cvpFrag = new CardViewPagerFragment ();
+						fragment.startNewFragment(cvpFrag, args);
 					} catch (FamiliarDbException e) {
 						fragment.handleFamiliarDbException(false);
 					}

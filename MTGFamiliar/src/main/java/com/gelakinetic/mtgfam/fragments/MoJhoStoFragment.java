@@ -284,7 +284,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 	}
 
 	/**
-	 * Convenience method to fetch a random card of the given supertype and cmc, and start a CardViewFragment to
+	 * Convenience method to fetch a random card of the given supertype and cmc, and start a CardViewPagerFragment to
 	 * display said card
 	 *
 	 * @param type The supertype of the card to randomly fetch
@@ -310,9 +310,10 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
 			/* add a fragment */
 			Bundle args = new Bundle();
-			args.putLong(CardViewFragment.CARD_ID, permanents.getLong(permanents.getColumnIndex(CardDbAdapter.KEY_ID)));
-			CardViewFragment cvFrag = new CardViewFragment();
-			startNewFragment(cvFrag, args);
+			args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{permanents.getLong(permanents.getColumnIndex(CardDbAdapter.KEY_ID))});
+			args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+			CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+			startNewFragment(cvpFrag, args);
 
 			permanents.close();
 			DatabaseManager.getInstance().closeDatabase();

@@ -1,6 +1,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -75,12 +76,12 @@ public class CardViewPagerFragment extends FamiliarFragment {
 	 */
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
 		Bundle args = getArguments();
 		long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
 		int currentPosition = args.getInt(STARTING_CARD_POSITION);
 
-		super.onActivityCreated(savedInstanceState);
 		CardViewPagerAdapter pagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
 		mViewPager.setAdapter(pagerAdapter);
 		mViewPager.setCurrentItem(currentPosition);
@@ -92,6 +93,16 @@ public class CardViewPagerFragment extends FamiliarFragment {
 	 */
 	private class CardViewPagerAdapter extends FragmentStatePagerAdapter {
 		final long[] mCardIds;
+
+		/**
+		 * Override this to do nothing and return nothing in order to fix a bug where orientation
+		 * changes will cause a vague NullPointerException
+		 * @return Nothing, who cares?
+		 */
+		@Override
+		public Parcelable saveState() {
+			return null;
+		}
 
 		/**
 		 * Default Constructor
