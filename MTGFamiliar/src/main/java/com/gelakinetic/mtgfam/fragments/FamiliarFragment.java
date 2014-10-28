@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -170,10 +171,10 @@ public abstract class FamiliarFragment extends Fragment {
 						/* eat it */
 					}
 
-					menu.add(R.string.name_search_hint)
-							.setIcon(resourceId)
-							.setActionView(sv)
-							.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+					MenuItem mi = menu.add(R.string.name_search_hint)
+							.setIcon(resourceId);
+					MenuItemCompat.setActionView(mi, sv);
+					MenuItemCompat.setOnActionExpandListener(mi, new MenuItemCompat.OnActionExpandListener() {
 								@Override
 								public boolean onMenuItemActionExpand(MenuItem item) {
 									mIsSearchViewOpen = true;
@@ -189,9 +190,8 @@ public abstract class FamiliarFragment extends Fragment {
 									}
 									return true;
 								}
-							})
-							.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-									MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+							});
+					MenuItemCompat.setShowAsAction(mi, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
 				} catch (Resources.NotFoundException e) {
 					/* One user threw this once. I think the typed ComponentName fixes it, but just in case */

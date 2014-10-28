@@ -17,31 +17,32 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/trader_menu_clear"
         android:icon="?attr/ic_action_cancel"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/trader_clear_fields"/>
     <item
         android:id="@+id/trader_menu_settings"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:icon="?attr/ic_action_import_export"
         android:title="@string/trader_set_pricing"/>
     <item
         android:id="@+id/trader_menu_save"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:icon="?attr/ic_action_save"
         android:title="@string/trader_save"/>
     <item
         android:id="@+id/trader_menu_load"
         android:icon="?attr/ic_action_collection"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/trader_load"/>
     <item
         android:id="@+id/trader_menu_delete"
         android:icon="?attr/ic_action_discard"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/trader_delete"/>
 
 </menu>

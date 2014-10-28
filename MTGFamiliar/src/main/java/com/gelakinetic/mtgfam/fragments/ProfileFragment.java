@@ -121,10 +121,13 @@ public class ProfileFragment extends FamiliarFragment {
 		}
 	}
 
+	/**
+	 * TODO menu icons not cleared when menu is opened...
+	 * @param menu
+	 */
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-
 		MenuItem updateDCI = menu.findItem(R.id.profile_menu_update_dci);
 		MenuItem removeDCI = menu.findItem(R.id.profile_menu_remove_dci);
 		assert updateDCI != null;

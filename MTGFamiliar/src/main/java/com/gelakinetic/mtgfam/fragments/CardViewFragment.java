@@ -1190,8 +1190,8 @@ public class CardViewFragment extends FamiliarFragment {
 					Rect rectangle = new Rect();
 					mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
 
-					assert mActivity.getActionBar() != null; /* Because Android Studio */
-					height = ((rectangle.bottom - rectangle.top) - mActivity.getActionBar().getHeight()) - border;
+					assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
+					height = ((rectangle.bottom - rectangle.top) - mActivity.getSupportActionBar().getHeight()) - border;
 					width = (rectangle.right - rectangle.left) - border;
 				}
 				else if (loadTo == DIALOG) {

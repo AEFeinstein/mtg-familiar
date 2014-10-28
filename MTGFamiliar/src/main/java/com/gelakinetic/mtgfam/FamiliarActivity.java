@@ -39,14 +39,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -97,7 +98,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class FamiliarActivity extends FragmentActivity {
+public class FamiliarActivity extends ActionBarActivity {
 	/* Tags for fragments */
 	public static final String DIALOG_TAG = "dialog";
 	public static final String FRAGMENT_TAG = "fragment";
@@ -459,18 +460,12 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		});
 
-		/* enable ActionBar app icon to behave as action to toggle nav drawer */
-		assert getActionBar() != null;
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle("");
-
-		/* ActionBarDrawerToggle ties together the the proper interactions between the sliding drawer and the action
-		bar app icon */
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			setSupportActionBar(toolbar);
+		}
 		mDrawerToggle = new ActionBarDrawerToggle(
-				this, /* host Activity */
-				mDrawerLayout, /* DrawerLayout object */
-				R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+				this,  mDrawerLayout, toolbar,
 				R.string.main_drawer_open, /* "open drawer" description for accessibility */
 				R.string.main_drawer_close /* "close drawer" description for accessibility */
 		) {
@@ -501,6 +496,10 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setTitle("");
 
 		/* Check to see if the change log should be shown */
 		PackageInfo pInfo;
@@ -1120,8 +1119,8 @@ public class FamiliarActivity extends FragmentActivity {
 		mRoundTimerUpdateHandler.removeCallbacks(timerUpdate);
 		mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1);
 
-		assert getActionBar() != null;
-		getActionBar().setDisplayShowTitleEnabled(true);
+		assert getSupportActionBar() != null;
+		getSupportActionBar().setDisplayShowTitleEnabled(true);
 	}
 
 	/**
@@ -1132,8 +1131,8 @@ public class FamiliarActivity extends FragmentActivity {
 		mUpdatingRoundTimer = false;
 
 		mRoundTimerUpdateHandler.removeCallbacks(timerUpdate);
-		assert getActionBar() != null;
-		getActionBar().setDisplayShowTitleEnabled(false);
+		assert getSupportActionBar() != null;
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 	}
 
 	/**
@@ -1209,8 +1208,8 @@ public class FamiliarActivity extends FragmentActivity {
 				}
 
 				if (mUpdatingRoundTimer) {
-					assert getActionBar() != null;
-					getActionBar().setTitle(timeLeftStr);
+					assert getSupportActionBar() != null;
+					getSupportActionBar().setTitle(timeLeftStr);
 				}
 				mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1000);
 			}
