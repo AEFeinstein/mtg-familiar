@@ -20,17 +20,17 @@
         revision="21.0.2"
         sha1="7291c9de7f574b15502f73f0ac2ae6d3af36c751"/>
     <item
-        dex="/home/grez/android/mtg-familiar/MTGFamiliar/build/intermediates/pre-dexed/debug/annotations-75683a09348212a3652e2483368ca0cbe4fc9ca1.jar"
-        jar="/home/grez/android/mtg-familiar/MTGFamiliar/libs/annotations.jar"
-        jumboMode="false"
-        revision="21.0.2"
-        sha1="0a1011bc5e97924f4baac9443fb1c02c95049d20"/>
-    <item
         dex="/home/grez/android/mtg-familiar/MTGFamiliar/build/intermediates/pre-dexed/debug/commons-io-1.3.2-1098da705dff93c4bc31025fec694ef6df025e8d.jar"
         jar="/home/grez/android/mtg-familiar/MTGFamiliar/libs/commons-io-1.3.2.jar"
         jumboMode="false"
         revision="21.0.2"
         sha1="b6dde38349ba9bb5e6ea6320531eae969985dae5"/>
+    <item
+        dex="/home/grez/android/mtg-familiar/MTGFamiliar/build/intermediates/pre-dexed/debug/annotations-75683a09348212a3652e2483368ca0cbe4fc9ca1.jar"
+        jar="/home/grez/android/mtg-familiar/MTGFamiliar/libs/annotations.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="0a1011bc5e97924f4baac9443fb1c02c95049d20"/>
     <item
         dex="/home/grez/android/mtg-familiar/MTGFamiliar/build/intermediates/pre-dexed/debug/robospice-1.4.13-c9af47405629292739ac35c5dfca9208c769c49d.jar"
         jar="/home/grez/android/mtg-familiar/MTGFamiliar/libs/robospice-1.4.13.jar"
