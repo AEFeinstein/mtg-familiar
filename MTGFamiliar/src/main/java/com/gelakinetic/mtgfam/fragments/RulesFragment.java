@@ -51,6 +51,7 @@ public class RulesFragment extends FamiliarFragment {
 	private static final String KEYWORD_KEY = "keyword";
 	private static final String GLOSSARY_KEY = "glossary";
 	private static final String BANNED_KEY = "banned";
+	private static final String FORMAT_KEY = "format";
 
 	/* Keys for banned and restricted table */
 	private static final int BANNED = 1;
@@ -84,6 +85,7 @@ public class RulesFragment extends FamiliarFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		String keyword;
+		final String format;
 
 		/* Open a database connection */
 		SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
@@ -96,12 +98,13 @@ public class RulesFragment extends FamiliarFragment {
 		Bundle extras = getArguments();
 		int position;
 		boolean isGlossary;
-		boolean isBanned;
+		final boolean isBanned;
 		if (extras == null) {
 			mCategory = -1;
 			mSubcategory = -1;
 			position = 0;
 			keyword = null;
+			format = null;
 			isGlossary = false;
 			isBanned = false;
 		}
@@ -110,6 +113,7 @@ public class RulesFragment extends FamiliarFragment {
 			mSubcategory = extras.getInt(SUBCATEGORY_KEY, -1);
 			position = extras.getInt(POSITION_KEY, 0);
 			keyword = extras.getString(KEYWORD_KEY);
+			format = extras.getString(FORMAT_KEY);
 			isGlossary = extras.getBoolean(GLOSSARY_KEY, false);
 			isBanned = extras.getBoolean(BANNED_KEY, false);
 		}
@@ -150,9 +154,13 @@ public class RulesFragment extends FamiliarFragment {
 				cursor = CardDbAdapter.getGlossaryTerms(database);
 				isClickable = false;
 			}
-			else if (isBanned) {
-				cursor = CardDbAdapter.getBannedCards(database);
+			else if (isBanned && format != null) {
+				cursor = CardDbAdapter.getBannedCards(database, format);
 				isClickable = false;
+			}
+			else if (isBanned && format == null) {
+				cursor = CardDbAdapter.fetchAllFormats(database);
+				isClickable = true;
 			}
 			else if (keyword == null) {
 				cursor = CardDbAdapter.getRules(mCategory, mSubcategory, database);
@@ -178,11 +186,16 @@ public class RulesFragment extends FamiliarFragment {
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TERM)),
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_DEFINITION)), false));
 						}
-						else if (isBanned) {
+						else if (isBanned && format != null) {
 							mRules.add(new BannedItem(
-									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FORMAT)),
+									"",
 									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LEGALITY)),
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_BANNED_LIST)), false));
+						}
+						else if (isBanned && format == null) {
+							mRules.add(new BannedItem(
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
+									-1, "", true));
 						}
 						else {
 							mRules.add(new RuleItem(
@@ -223,6 +236,9 @@ public class RulesFragment extends FamiliarFragment {
 								}
 								else if (item instanceof BannedItem) {
 									args.putBoolean(BANNED_KEY, true);
+									if (isBanned && format == null) {
+										args.putString(FORMAT_KEY, item.getHeader());
+									}
 								}
 								RulesFragment frag = new RulesFragment();
 								startNewFragment(frag, args);
@@ -689,7 +705,7 @@ public class RulesFragment extends FamiliarFragment {
 				return this.mFormat;
 			}
 			else {
-				return this.mFormat + ": " + this.mLegality;
+				return this.mLegality;
 			}
 		}
 

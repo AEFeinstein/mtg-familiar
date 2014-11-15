@@ -1533,11 +1533,11 @@ public class CardDbAdapter {
 	 * @return
 	 * @throws FamiliarDbException
 	 */
-	public static Cursor getBannedCards(SQLiteDatabase mDb) throws FamiliarDbException {
+	public static Cursor getBannedCards(SQLiteDatabase mDb, String format) throws FamiliarDbException {
 		try {
-			String sql = "SELECT " + KEY_FORMAT + ", " + KEY_LEGALITY + ", GROUP_CONCAT(" +
+			String sql = "SELECT " + KEY_LEGALITY + ", GROUP_CONCAT(" +
 					KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST + " FROM " + DATABASE_TABLE_BANNED_CARDS +
-					" GROUP BY " + KEY_FORMAT + ", " + KEY_LEGALITY;
+					" WHERE " + KEY_FORMAT + " = '" + format + "'" + " GROUP BY " + KEY_LEGALITY;
 			return mDb.rawQuery(sql, null);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
