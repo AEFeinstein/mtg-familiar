@@ -5,10 +5,11 @@
     <style name="Theme.light" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+
+        <item name="com.gelakinetic.mtgfam:color_background">@android:color/white</item>
 
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_light</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_light</item>
@@ -81,12 +82,12 @@
     <style name="Theme.dark" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
-        <item name="android:windowBackground">@android:color/black</item>
+        <item name="com.gelakinetic.mtgfam:color_background">@android:color/black</item>
+
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_dark</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_dark</item>
         <item name="com.gelakinetic.mtgfam:holo_red">@color/holo_red_light</item>

@@ -9,6 +9,7 @@
         <attr name="holo_red" format="reference"/>
         <attr name="holo_green" format="reference"/>
         <attr name="holo_blue" format="reference"/>
+        <attr name="color_background" format="color|reference"/>
 
         <!-- Rarity Colors -->
         <attr name="color_common" format="color|reference"/>
