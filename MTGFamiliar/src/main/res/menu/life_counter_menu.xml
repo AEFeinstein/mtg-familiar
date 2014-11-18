@@ -23,31 +23,31 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/add_player"
         app:showAsAction="ifRoom"
         android:title="@string/life_counter_add_player"
-        android:icon="?attr/ic_action_add_person"/>
+        android:icon="@drawable/ic_menu_person_add"/>
     <item
         android:id="@+id/remove_player"
         app:showAsAction="ifRoom"
         android:title="@string/life_counter_remove_player"
-        android:icon="?attr/ic_action_remove_person"/>
+        android:icon="@drawable/ic_menu_person_remove"/>
     <item
         android:id="@+id/display_mode"
         android:title="@string/life_counter_change_display"
         app:showAsAction="ifRoom"
-        android:icon="?attr/ic_action_view_as_grid"/>
+        android:icon="@drawable/ic_menu_grid"/>
     <item
         android:id="@+id/set_gathering"
         app:showAsAction="ifRoom"
         android:title="@string/life_counter_set_gathering"
-        android:icon="?attr/ic_action_group"/>
+        android:icon="@drawable/ic_menu_group"/>
     <item
         android:id="@+id/edit_gatherings"
         app:showAsAction="ifRoom"
         android:title="@string/life_counter_change_default_gathering"
-        android:icon="?attr/ic_action_add_group"/>
+        android:icon="@drawable/ic_menu_group_add"/>
     <item
         android:id="@+id/announce_life"
         app:showAsAction="ifRoom"
         android:title="@string/life_counter_announce_life"
-        android:icon="?attr/ic_action_volume_on"/>
+        android:icon="@drawable/ic_menu_notifications_on"/>
 
 </menu>

@@ -158,8 +158,8 @@ public class FamiliarActivity extends ActionBarActivity {
 			new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
 			new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
 			new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
-			new DrawerEntry(R.string.main_export_data_title, R.attr.ic_action_save, false),
-			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_action_collection, false),
+			new DrawerEntry(R.string.main_export_data_title, R.drawable.ic_action_save_dark, false),
+			new DrawerEntry(R.string.main_import_data_title, R.drawable.ic_menu_folder_open, false),
 	};
 	private final Handler mInactivityHandler = new Handler();
 	/* Listen for changes to preferences */
@@ -464,6 +464,9 @@ public class FamiliarActivity extends ActionBarActivity {
 		if (toolbar != null) {
 			setSupportActionBar(toolbar);
 		}
+//		toolbar.setCollapsible(true);
+		toolbar.setSubtitleTextColor(getResources().getColor(android.R.color.white));
+		toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 		mDrawerToggle = new ActionBarDrawerToggle(
 				this,  mDrawerLayout, toolbar,
 				R.string.main_drawer_open, /* "open drawer" description for accessibility */

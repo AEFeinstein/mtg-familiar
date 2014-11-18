@@ -137,11 +137,10 @@ public abstract class FamiliarFragment extends Fragment {
 		super.onCreateOptionsMenu(menu, inflater);
 		menu.clear();
 
-		int resourceId = getResourceIdFromAttr(R.attr.ic_action_search);
 		if (getActivity() != null) {
 			if (canInterceptSearchKey()) {
 				menu.add(R.string.search_search)
-						.setIcon(resourceId)
+						.setIcon(R.drawable.ic_menu_search)
 						.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 							@Override
 							public boolean onMenuItemClick(MenuItem item) {
@@ -164,7 +163,7 @@ public abstract class FamiliarFragment extends Fragment {
 						Field searchField = SearchView.class.getDeclaredField("mSearchButton");
 						searchField.setAccessible(true);
 						ImageView searchBtn = (ImageView) searchField.get(sv);
-						searchBtn.setImageResource(resourceId);
+						searchBtn.setImageResource(R.drawable.ic_menu_search);
 					} catch (NoSuchFieldException e) {
 						/* eat it */
 					} catch (IllegalAccessException e) {
@@ -172,7 +171,7 @@ public abstract class FamiliarFragment extends Fragment {
 					}
 
 					MenuItem mi = menu.add(R.string.name_search_hint)
-							.setIcon(resourceId);
+							.setIcon(R.drawable.ic_menu_search);
 					MenuItemCompat.setActionView(mi, sv);
 					MenuItemCompat.setOnActionExpandListener(mi, new MenuItemCompat.OnActionExpandListener() {
 								@Override

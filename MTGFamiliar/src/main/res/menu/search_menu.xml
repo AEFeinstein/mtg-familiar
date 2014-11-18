@@ -21,19 +21,19 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:icon="?attr/ic_action_cancel"
+        android:icon="@drawable/ic_menu_close"
         android:id="@+id/search_menu_clear"
         app:showAsAction="ifRoom"
         android:title="@string/search_clear_fields"/>
 
     <item
-        android:icon="?attr/ic_action_save"
+        android:icon="@drawable/ic_menu_save"
         android:id="@+id/search_menu_save_defaults"
         app:showAsAction="ifRoom"
         android:title="@string/search_save_defaults"/>
 
     <item
-        android:icon="?attr/ic_action_collection"
+        android:icon="@drawable/ic_menu_folder_open"
         android:id="@+id/search_menu_load_defaults"
         app:showAsAction="ifRoom"
         android:title="@string/search_load_defaults"/>

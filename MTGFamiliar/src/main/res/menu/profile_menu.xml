@@ -22,12 +22,12 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
     <item
         android:id="@+id/profile_menu_update_dci"
-        android:icon="?attr/ic_action_add_person"
+        android:icon="@drawable/ic_menu_person_add"
         app:showAsAction="ifRoom"
         android:title="@string/profile_update_dci"/>
     <item
         android:id="@+id/profile_menu_remove_dci"
-        android:icon="?attr/ic_action_remove_person"
+        android:icon="@drawable/ic_menu_person_remove"
         app:showAsAction="ifRoom"
         android:title="@string/profile_remove_dci"/>
 

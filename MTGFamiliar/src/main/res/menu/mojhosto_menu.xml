@@ -21,7 +21,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/random_rules"
-        android:icon="?attr/ic_action_rules"
+        android:icon="@drawable/ic_menu_rules"
         app:showAsAction="ifRoom"
         android:title="@string/mojhosto_rules_title"/>
 

@@ -2,12 +2,14 @@
 <resources
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.light" parent="Theme.AppCompat.Light">
+    <style name="Theme.light" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
 
         <item name="com.gelakinetic.mtgfam:color_background">@android:color/white</item>
 
@@ -30,30 +32,6 @@
         <item name="com.gelakinetic.mtgfam:color_drawer_divider_item">@color/drawer_divider_item_light</item>
         <item name="com.gelakinetic.mtgfam:selector_drawer_text">@drawable/drawer_text_light</item>
 
-        <item name="com.gelakinetic.mtgfam:ic_action_add">@drawable/ic_action_add_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_add_group">@drawable/ic_action_add_group_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_cancel">@drawable/ic_action_cancel_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_card_image">@drawable/ic_action_card_image_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_change_set">@drawable/ic_action_change_set_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_collection">@drawable/ic_action_collection_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_discard">@drawable/ic_action_discard_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_group">@drawable/ic_action_group_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_import_export">@drawable/ic_action_import_export_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_legality">@drawable/ic_action_legality_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_price">@drawable/ic_action_price_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_random">@drawable/ic_action_random_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_remove">@drawable/ic_action_remove_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_rules">@drawable/ic_action_rules_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_save">@drawable/ic_action_save_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_search">@drawable/ic_action_search_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_share">@drawable/ic_action_share_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_view_as_grid">@drawable/ic_action_view_as_grid_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_volume_on">@drawable/ic_action_volume_on_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_warning">@drawable/ic_action_warning_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_wishlist">@drawable/ic_action_wishlist_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_sort_by_size">@drawable/ic_action_sort_by_size_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_add_person">@drawable/ic_action_add_person_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_remove_person">@drawable/ic_action_remove_person_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_about">@drawable/ic_drawer_about_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_download">@drawable/ic_drawer_download_light</item>
@@ -79,9 +57,11 @@
         <item name="com.gelakinetic.mtgfam:lc_reset">@drawable/lc_reset_light</item>
     </style>
 
-    <style name="Theme.dark" parent="Theme.AppCompat">
+    <style name="Theme.dark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -107,30 +87,6 @@
         <item name="com.gelakinetic.mtgfam:color_drawer_divider_item">@color/drawer_divider_item_dark</item>
         <item name="com.gelakinetic.mtgfam:selector_drawer_text">@drawable/drawer_text_dark</item>
 
-        <item name="com.gelakinetic.mtgfam:ic_action_add">@drawable/ic_action_add_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_add_group">@drawable/ic_action_add_group_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_cancel">@drawable/ic_action_cancel_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_card_image">@drawable/ic_action_card_image_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_change_set">@drawable/ic_action_change_set_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_collection">@drawable/ic_action_collection_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_discard">@drawable/ic_action_discard_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_group">@drawable/ic_action_group_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_import_export">@drawable/ic_action_import_export_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_legality">@drawable/ic_action_legality_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_price">@drawable/ic_action_price_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_random">@drawable/ic_action_random_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_remove">@drawable/ic_action_remove_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_rules">@drawable/ic_action_rules_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_save">@drawable/ic_action_save_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_search">@drawable/ic_action_search_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_share">@drawable/ic_action_share_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_view_as_grid">@drawable/ic_action_view_as_grid_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_volume_on">@drawable/ic_action_volume_on_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_warning">@drawable/ic_action_warning_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_wishlist">@drawable/ic_action_wishlist_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_sort_by_size">@drawable/ic_action_sort_by_size_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_add_person">@drawable/ic_action_add_person_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_action_remove_person">@drawable/ic_action_remove_person_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_about">@drawable/ic_drawer_about_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_download">@drawable/ic_drawer_download_dark</item>
@@ -154,5 +110,9 @@
         <item name="com.gelakinetic.mtgfam:lc_poison_disabled">@drawable/lc_poison_disabled_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_poison_enabled">@drawable/lc_poison_enabled_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_reset">@drawable/lc_reset_dark</item>
+    </style>
+
+    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
     </style>
 </resources>

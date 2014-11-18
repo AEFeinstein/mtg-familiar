@@ -6,29 +6,29 @@
         android:id="@+id/save_gathering"
         app:showAsAction="ifRoom"
         android:title="@string/gathering_save"
-        android:icon="?attr/ic_action_save"/>
+        android:icon="@drawable/ic_menu_save"/>
 
     <item
         android:id="@+id/load_gathering"
-        android:icon="?attr/ic_action_collection"
+        android:icon="@drawable/ic_menu_folder_open"
         app:showAsAction="ifRoom"
         android:title="@string/gathering_load"/>
 
     <item
         android:id="@+id/delete_gathering"
         app:showAsAction="ifRoom"
-        android:icon="?attr/ic_action_discard"
+        android:icon="@drawable/ic_menu_delete"
         android:title="@string/gathering_delete"/>
 
     <item
         android:id="@+id/add_player"
-        android:icon="?attr/ic_action_add_person"
+        android:icon="@drawable/ic_menu_person_add"
         app:showAsAction="ifRoom"
         android:title="@string/gathering_add_player"/>
 
     <item
         android:id="@+id/remove_player"
-        android:icon="?attr/ic_action_remove_person"
+        android:icon="@drawable/ic_menu_person_remove"
         app:showAsAction="ifRoom"
         android:title="@string/gathering_remove_player"/>
 

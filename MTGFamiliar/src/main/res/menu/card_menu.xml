@@ -20,32 +20,32 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:icon="?attr/ic_action_card_image"
+        android:icon="@drawable/ic_menu_card_image"
         android:id="@+id/image"
         app:showAsAction="ifRoom"
         android:title="@string/card_view_image"/>
     <item
-        android:icon="?attr/ic_action_price"
+        android:icon="@drawable/ic_menu_price"
         android:id="@+id/price"
         app:showAsAction="ifRoom"
         android:title="@string/card_view_price"/>
     <item
-        android:icon="?attr/ic_action_change_set"
+        android:icon="@drawable/ic_menu_change_set"
         android:id="@+id/changeset"
         app:showAsAction="ifRoom"
         android:title="@string/card_view_change_set"/>
     <item
-        android:icon="?attr/ic_action_rules"
+        android:icon="@drawable/ic_menu_rules"
         android:id="@+id/cardrulings"
         android:title="@string/card_view_rulings"
         app:showAsAction="ifRoom"/>
     <item
-        android:icon="?attr/ic_action_wishlist"
+        android:icon="@drawable/ic_menu_wishlist"
         android:id="@+id/addtowishlist"
         app:showAsAction="ifRoom"
         android:title="@string/card_view_wishlist"/>
     <item
-        android:icon="?attr/ic_action_legality"
+        android:icon="@drawable/ic_menu_legality"
         android:id="@+id/legality"
         app:showAsAction="ifRoom"
         android:title="@string/card_view_legality"/>

@@ -22,7 +22,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <item
         android:id="@+id/search_menu_random_search"
         app:showAsAction="ifRoom"
-        android:icon="?attr/ic_action_random"
+        android:icon="@drawable/ic_menu_random"
         android:title="@string/search_randomize"/>
 
 </menu>

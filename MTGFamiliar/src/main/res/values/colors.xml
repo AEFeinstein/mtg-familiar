@@ -63,8 +63,8 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="text_color_light">#000000</color>
     <color name="text_color_dark">#FFFFFF</color>
 
-    <color name="colorPrimary">#8E24AA</color>
-    <color name="colorPrimaryDark">#6A1B9A</color>
+    <color name="colorPrimary">#9C27B0</color>
+    <color name="colorPrimaryDark">#7B1FA2</color>
 
 
 </resources>
