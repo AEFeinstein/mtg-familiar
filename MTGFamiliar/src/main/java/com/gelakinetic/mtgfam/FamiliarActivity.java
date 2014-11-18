@@ -158,7 +158,7 @@ public class FamiliarActivity extends ActionBarActivity {
 			new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
 			new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
 			new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
-			new DrawerEntry(R.string.main_export_data_title, R.drawable.ic_action_save_dark, false),
+			new DrawerEntry(R.string.main_export_data_title, R.drawable.ic_menu_folder_open, false),
 			new DrawerEntry(R.string.main_import_data_title, R.drawable.ic_menu_folder_open, false),
 	};
 	private final Handler mInactivityHandler = new Handler();
