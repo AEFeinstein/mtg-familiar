@@ -188,7 +188,7 @@ public class RulesFragment extends FamiliarFragment {
 						}
 						else if (isBanned && format != null) {
 							mRules.add(new BannedItem(
-									"",
+									format,
 									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LEGALITY)),
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_BANNED_LIST)), false));
 						}
