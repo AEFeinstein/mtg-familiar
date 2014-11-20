@@ -743,7 +743,7 @@ public class RulesFragment extends FamiliarFragment {
 
 			boolean isGlossary = true;
 			for (DisplayItem item : items) {
-				if (RuleItem.class.isInstance(item)) {
+				if (RuleItem.class.isInstance(item) || BannedItem.class.isInstance(item)) {
 					isGlossary = false;
 					break;
 				}
