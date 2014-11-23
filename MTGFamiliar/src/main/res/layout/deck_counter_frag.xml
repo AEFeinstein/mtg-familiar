@@ -32,7 +32,7 @@
         android:background="?attr/color_drawer_divider_item"/>
 
     <LinearLayout
-        style="@android:style/Holo.Light.ButtonBar"
+        style="@android:style/Holo.ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -63,7 +63,7 @@
         android:background="?attr/color_drawer_divider_item"/>
 
     <LinearLayout
-        style="@android:style/Holo.Light.ButtonBar"
+        style="@android:style/Holo.ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -94,7 +94,7 @@
         android:background="?attr/color_drawer_divider_item"/>
 
     <LinearLayout
-        style="@android:style/Holo.Light.ButtonBar"
+        style="@android:style/Holo.ButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

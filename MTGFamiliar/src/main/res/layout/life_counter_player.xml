@@ -71,7 +71,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:orientation="vertical">
 
                 <LinearLayout
-                    style="?android:attr/buttonBarStyle"
+                    style="@android:style/Holo.ButtonBar"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -105,7 +105,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 <!-- -1/-5 buttons -->
 
                 <LinearLayout
-                    style="?android:attr/buttonBarStyle"
+                    style="@android:style/Holo.ButtonBar"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"

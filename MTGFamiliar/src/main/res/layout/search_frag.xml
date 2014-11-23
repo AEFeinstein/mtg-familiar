@@ -288,7 +288,7 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout11"
-                style="?android:attr/buttonBarStyle"
+                style="@android:style/Holo.ButtonBar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginBottom="4dp"

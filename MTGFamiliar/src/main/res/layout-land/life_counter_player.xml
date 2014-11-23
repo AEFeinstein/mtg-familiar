@@ -92,7 +92,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
         <LinearLayout
             android:id="@+id/buttonLayout"
-            style="?android:attr/buttonBarStyle"
+            style="@android:style/Holo.ButtonBar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
