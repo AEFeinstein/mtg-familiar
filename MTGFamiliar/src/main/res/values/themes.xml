@@ -11,7 +11,7 @@
 
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
 
-        <item name="com.gelakinetic.mtgfam:color_background">@android:color/white</item>
+        <item name="com.gelakinetic.mtgfam:color_background">@color/background_light</item>
 
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_light</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_light</item>
@@ -66,7 +66,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
-        <item name="com.gelakinetic.mtgfam:color_background">@android:color/black</item>
+        <item name="com.gelakinetic.mtgfam:color_background">@color/background_dark</item>
 
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_dark</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_dark</item>
