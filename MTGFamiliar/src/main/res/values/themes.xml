@@ -2,14 +2,13 @@
 <resources
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.light" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <style name="Theme.base.light" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
 
         <item name="com.gelakinetic.mtgfam:color_background">@color/background_light</item>
 
@@ -57,11 +56,10 @@
         <item name="com.gelakinetic.mtgfam:lc_reset">@drawable/lc_reset_light</item>
     </style>
 
-    <style name="Theme.dark" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <style name="Theme.base.dark" parent="Theme.AppCompat.NoActionBar">
 
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -112,7 +110,22 @@
         <item name="com.gelakinetic.mtgfam:lc_reset">@drawable/lc_reset_dark</item>
     </style>
 
+    <style name="Theme.light" parent="Theme.base.light" >
+        <item name="colorPrimary">@color/material_purple_500</item>
+        <item name="colorPrimaryDark">@color/material_purple_700</item>
+        <item name="colorAccent">@color/material_yellow_A200</item>
+    </style>
+    <style name="Theme.dark" parent="Theme.base.dark">
+        <item name="colorPrimary">@color/material_purple_500</item>
+        <item name="colorPrimaryDark">@color/material_purple_700</item>
+        <item name="colorAccent">@color/material_yellow_A200</item>
+    </style>
+
     <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@android:color/white</item>
     </style>
+    <style name="OverflowMenuButton" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_menu_overflow</item>
+    </style>
+
 </resources>
