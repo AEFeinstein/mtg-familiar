@@ -4,13 +4,11 @@
     <style name="Theme.light" parent="Theme.base.light" >
         <item name="android:colorPrimary">@color/material_purple_500</item>
         <item name="android:colorPrimaryDark">@color/material_purple_700</item>
-        <item name="android:colorAccent">@color/material_yellow_A200</item>
     </style>
 
     <style name="Theme.dark" parent="Theme.base.dark">
         <item name="android:colorPrimary">@color/material_purple_500</item>
         <item name="android:colorPrimaryDark">@color/material_purple_700</item>
-        <item name="android:colorAccent">@color/material_yellow_A200</item>
     </style>
 
 </resources>

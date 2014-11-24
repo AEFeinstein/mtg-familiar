@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:background="@color/material_purple_500" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"

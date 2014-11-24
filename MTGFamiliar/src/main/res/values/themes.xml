@@ -113,12 +113,10 @@
     <style name="Theme.light" parent="Theme.base.light" >
         <item name="colorPrimary">@color/material_purple_500</item>
         <item name="colorPrimaryDark">@color/material_purple_700</item>
-        <item name="colorAccent">@color/material_yellow_A200</item>
     </style>
     <style name="Theme.dark" parent="Theme.base.dark">
         <item name="colorPrimary">@color/material_purple_500</item>
         <item name="colorPrimaryDark">@color/material_purple_700</item>
-        <item name="colorAccent">@color/material_yellow_A200</item>
     </style>
 
     <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
