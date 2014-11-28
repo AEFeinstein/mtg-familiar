@@ -4,11 +4,13 @@
     <style name="Theme.light" parent="Theme.base.light" >
         <item name="android:colorPrimary">@color/material_purple_500</item>
         <item name="android:colorPrimaryDark">@color/material_purple_700</item>
+        <item name="com.gelakinetic.mtgfam:btn_ripple">@drawable/btn_ripple_light</item>
     </style>
 
     <style name="Theme.dark" parent="Theme.base.dark">
         <item name="android:colorPrimary">@color/material_purple_500</item>
         <item name="android:colorPrimaryDark">@color/material_purple_700</item>
+        <item name="com.gelakinetic.mtgfam:btn_ripple">@drawable/btn_ripple_dark</item>
     </style>
 
 </resources>

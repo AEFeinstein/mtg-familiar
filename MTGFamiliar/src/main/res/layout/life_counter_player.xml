@@ -149,7 +149,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                     android:id="@+id/commanderCast"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="@drawable/btn_default_custom"
+                    style="@style/button"
                     android:text="@string/mana_pool_zero"
                     android:textStyle="bold"
                     android:visibility="visible"/>

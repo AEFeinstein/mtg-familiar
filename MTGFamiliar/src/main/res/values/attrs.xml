@@ -4,6 +4,7 @@
     <declare-styleable name="custom">
 
         <!-- misc -->
+        <attr name="btn_ripple" format="reference"/>
         <attr name="abc_edit_text_material" format="reference"/>
         <attr name="grey_border" format="reference"/>
         <attr name="color_text" format="reference"/>

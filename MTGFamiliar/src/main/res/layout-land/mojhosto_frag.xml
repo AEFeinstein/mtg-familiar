@@ -46,7 +46,6 @@
 
                     <TextView
                         android:id="@+id/textView1"
-                        style="@style/text.small"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
                         android:gravity="center"
@@ -62,11 +61,11 @@
 
                 <Button
                     android:id="@+id/momir_button"
-                    style="@style/text.small"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/btn_default_custom"
+                    style="@style/button"
+                    android:textSize="14dp"
                     android:text="@string/mojhosto_random_creature"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -100,7 +99,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/text.small"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
                         android:gravity="center"
@@ -116,11 +114,11 @@
 
                 <Button
                     android:id="@+id/stonehewer_button"
-                    style="@style/text.small"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/btn_default_custom"
+                    style="@style/button"
+                    android:textSize="14dp"
                     android:text="@string/mojhosto_random_equipment"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -150,21 +148,21 @@
 
                 <Button
                     android:id="@+id/jhorira_instant_button"
-                    style="@style/text.small"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/btn_default_custom"
+                    style="@style/button"
+                    android:textSize="14dp"
                     android:text="@string/mojhosto_random_instants"
                     android:textStyle="bold"/>
 
                 <Button
                     android:id="@+id/jhorira_sorcery_button"
-                    style="@style/text.small"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/btn_default_custom"
+                    style="@style/button"
+                    android:textSize="14dp"
                     android:text="@string/mojhosto_random_sorceries"
                     android:textStyle="bold"/>
             </LinearLayout>

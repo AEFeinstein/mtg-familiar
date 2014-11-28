@@ -37,12 +37,11 @@
 
                 <Button
                     android:id="@+id/white_minus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_minus"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -60,10 +59,9 @@
 
                 <Button
                     android:id="@+id/white_plus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_plus"
                     android:textStyle="bold"/>
 
@@ -78,10 +76,9 @@
 
                 <Button
                     android:id="@+id/blue_minus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_minus"
                     android:textStyle="bold"/>
 
@@ -102,10 +99,9 @@
 
                 <Button
                     android:id="@+id/blue_plus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_plus"
                     android:textStyle="bold"/>
 
@@ -120,10 +116,9 @@
 
                 <Button
                     android:id="@+id/black_minus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_minus"
                     android:textStyle="bold"/>
 
@@ -143,10 +138,9 @@
 
                 <Button
                     android:id="@+id/black_plus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_plus"
                     android:textStyle="bold"/>
 
@@ -161,10 +155,9 @@
 
                 <Button
                     android:id="@+id/red_minus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_minus"
                     android:textStyle="bold"/>
 
@@ -184,10 +177,9 @@
 
                 <Button
                     android:id="@+id/red_plus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_plus"
                     android:textStyle="bold"/>
 
@@ -202,10 +194,9 @@
 
                 <Button
                     android:id="@+id/green_minus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_minus"
                     android:textStyle="bold"/>
 
@@ -225,10 +216,9 @@
 
                 <Button
                     android:id="@+id/green_plus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_plus"
                     android:textStyle="bold"/>
 
@@ -243,10 +233,9 @@
 
                 <Button
                     android:id="@+id/colorless_minus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_minus"
                     android:textStyle="bold"/>
 
@@ -266,10 +255,9 @@
 
                 <Button
                     android:id="@+id/colorless_plus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_plus"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -283,10 +271,9 @@
 
                 <Button
                     android:id="@+id/spell_minus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_minus"
                     android:textStyle="bold"/>
 
@@ -306,10 +293,9 @@
 
                 <Button
                     android:id="@+id/spell_plus"
-                    style="@style/text.xlarge"
+                    style="@style/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@drawable/btn_default_custom"
                     android:text="@string/mana_pool_plus"
                     android:textStyle="bold"/>
 

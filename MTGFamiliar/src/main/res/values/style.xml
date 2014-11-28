@@ -51,4 +51,8 @@
         <item name="android:textSize">60sp</item>
     </style>
 
+    <style name="button" parent="text.xlarge">
+        <item name="android:background">@drawable/btn_default_custom</item>
+    </style>
+
 </resources>
