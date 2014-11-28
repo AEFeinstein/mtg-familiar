@@ -34,7 +34,8 @@
                 android:hint="@string/search_name"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:singleLine="true">
+                android:singleLine="true"
+                android:background="?attr/abc_edit_text_material">
 
                 <requestFocus/>
             </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
@@ -53,9 +54,11 @@
                     android:hint="@string/search_supertype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:background="?attr/abc_edit_text_material"/>
 
                 <EditText
+                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/subtypesearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -78,6 +81,7 @@
             <!-- EditText below by Adam Feinstein -->
 
             <EditText
+                android:background="?attr/abc_edit_text_material"
                 android:id="@+id/textsearch"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
@@ -339,6 +343,7 @@
                 android:layout_width="match_parent">
 
                 <EditText
+                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/flavorsearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -349,6 +354,7 @@
                     android:maxLines="1"/>
 
                 <EditText
+                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/artistsearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

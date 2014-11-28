@@ -12,6 +12,7 @@
 
         <item name="com.gelakinetic.mtgfam:color_background">@color/background_light</item>
 
+        <item name="com.gelakinetic.mtgfam:abc_edit_text_material">@drawable/abc_edit_text_material_light</item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_light</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_light</item>
         <item name="com.gelakinetic.mtgfam:holo_red">@color/holo_red_dark</item>
@@ -66,6 +67,7 @@
 
         <item name="com.gelakinetic.mtgfam:color_background">@color/background_dark</item>
 
+        <item name="com.gelakinetic.mtgfam:abc_edit_text_material">@drawable/abc_edit_text_material_dark</item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_dark</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_dark</item>
         <item name="com.gelakinetic.mtgfam:holo_red">@color/holo_red_light</item>

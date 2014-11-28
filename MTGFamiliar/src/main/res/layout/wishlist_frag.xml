@@ -12,6 +12,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:background="?attr/abc_edit_text_material"
             android:id="@+id/number_input"
             android:layout_width="48dp"
             android:layout_height="match_parent"
@@ -32,7 +33,8 @@
             android:layout_height="match_parent"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:singleLine="true">
+            android:singleLine="true"
+            android:background="?attr/abc_edit_text_material">
 
             <requestFocus/>
         </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>

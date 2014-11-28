@@ -10,6 +10,7 @@
         android:layout_width="match_parent">
 
         <EditText
+            android:background="?attr/abc_edit_text_material"
             android:id="@+id/traderDialogNumber"
             android:layout_width="48dp"
             android:layout_height="match_parent"
@@ -20,6 +21,7 @@
             android:selectAllOnFocus="true"/>
 
         <EditText
+            android:background="?attr/abc_edit_text_material"
             android:id="@+id/traderDialogPrice"
             android:layout_width="0dp"
             android:layout_height="match_parent"

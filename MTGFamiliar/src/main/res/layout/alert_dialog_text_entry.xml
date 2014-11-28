@@ -23,6 +23,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
               android:id="@id/dialog_layout_root">
 
     <EditText
+        android:background="?attr/abc_edit_text_material"
         android:id="@+id/text_entry"
         android:layout_width="0dp"
         android:layout_height="match_parent"
