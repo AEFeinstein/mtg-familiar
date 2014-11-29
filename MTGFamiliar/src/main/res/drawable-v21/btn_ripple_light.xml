@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-        android:color="#FFB2B2B2">
+        android:color="@color/ripple_material_light">
 
     <item
         android:id="@android:id/mask"
         android:drawable="@android:color/black"/>
 
-    <item android:drawable="@drawable/purple_border"/>
+    <item android:drawable="@drawable/btn_default_normal_custom"/>
 
 </ripple>
