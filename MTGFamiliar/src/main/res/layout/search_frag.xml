@@ -370,7 +370,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/holo_blue"/>
+        android:background="@color/material_purple_500"/>
 
     <Button
         android:id="@+id/searchbutton"

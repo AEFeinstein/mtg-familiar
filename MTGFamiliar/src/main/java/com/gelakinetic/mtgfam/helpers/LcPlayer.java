@@ -110,11 +110,11 @@ public class LcPlayer {
 				}
 				mReadoutTextView.setText(mLife + "");
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(
-						mFragment.getResourceIdFromAttr(R.attr.holo_red)));
+						R.color.material_red_500));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mLife + "");
 					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
-							.getColor(mFragment.getResourceIdFromAttr(R.attr.holo_red)));
+							.getColor(R.color.material_red_500));
 				}
 				break;
 			case LifeCounterFragment.STAT_POISON:
@@ -124,11 +124,11 @@ public class LcPlayer {
 				}
 				mReadoutTextView.setText(mPoison + "");
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(
-						mFragment.getResourceIdFromAttr(R.attr.holo_green)));
+						R.color.material_green_500));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mPoison + "");
 					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
-							.getColor(mFragment.getResourceIdFromAttr(R.attr.holo_green)));
+							.getColor(R.color.material_green_500));
 				}
 				break;
 			case LifeCounterFragment.STAT_COMMANDER:
@@ -138,11 +138,11 @@ public class LcPlayer {
 				}
 				mReadoutTextView.setText(mLife + "");
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(
-						mFragment.getResourceIdFromAttr(R.attr.holo_red)));
+						R.color.material_red_500));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mLife + "");
 					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
-							.getColor(mFragment.getResourceIdFromAttr(R.attr.holo_red)));
+							.getColor(R.color.material_red_500));
 				}
 				break;
 		}
@@ -783,7 +783,7 @@ public class LcPlayer {
 
 			if (mCommitting && position == 0) {
 				((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
-						mFragment.getResourceIdFromAttr(R.attr.holo_blue)));
+						R.color.material_purple_500));
 			}
 			else {
 				((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
@@ -797,14 +797,14 @@ public class LcPlayer {
 						((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
-										mFragment.getResourceIdFromAttr(R.attr.holo_green))
+										R.color.material_green_500)
 						);
 					}
 					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mLifeHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
-										mFragment.getResourceIdFromAttr(R.attr.holo_red))
+										R.color.material_red_500)
 						);
 					}
 					break;
@@ -815,14 +815,14 @@ public class LcPlayer {
 								.setText("+" + mPoisonHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
-										mFragment.getResourceIdFromAttr(R.attr.holo_green))
+										R.color.material_green_500)
 						);
 					}
 					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mPoisonHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
-										mFragment.getResourceIdFromAttr(R.attr.holo_red))
+										R.color.material_red_500)
 						);
 					}
 					break;

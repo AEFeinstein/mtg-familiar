@@ -871,7 +871,7 @@ public class TradeFragment extends FamiliarFragment {
 
 			/* Set the color whether all values are loaded, and write the text */
 				int color = hasBadValues ?
-						this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
+						this.getActivity().getResources().getColor(R.color.material_red_500) :
 						this.getActivity().getResources().getColor(
 								getResourceIdFromAttr(R.attr.color_text));
 				mTotalPriceLeft.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
@@ -892,7 +892,7 @@ public class TradeFragment extends FamiliarFragment {
 
 			/* Set the color whether all values are loaded, and write the text */
 				int color = hasBadValues ?
-						this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
+						this.getActivity().getResources().getColor(R.color.material_red_500) :
 						this.getActivity().getResources().getColor(
 								getResourceIdFromAttr(R.attr.color_text)
 						);
@@ -1108,7 +1108,7 @@ public class TradeFragment extends FamiliarFragment {
 				priceField.setText(data.hasPrice() ? data.getPriceString() : data.message);
 				if (data.hasPrice()) {
 					if (data.customPrice) {
-						priceField.setTextColor(getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_green)));
+						priceField.setTextColor(getActivity().getResources().getColor(R.color.material_green_500));
 					}
 					else {
 						priceField.setTextColor(getActivity().getResources().getColor(
@@ -1117,7 +1117,7 @@ public class TradeFragment extends FamiliarFragment {
 					}
 				}
 				else {
-					priceField.setTextColor(getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
+					priceField.setTextColor(getActivity().getResources().getColor(R.color.material_red_500));
 				}
 			}
 			return convertView;

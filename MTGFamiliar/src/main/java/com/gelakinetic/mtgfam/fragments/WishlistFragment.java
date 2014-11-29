@@ -933,7 +933,7 @@ public class WishlistFragment extends FamiliarFragment {
 						}
 						else {
 							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
-							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
+							priceText.setTextColor(getResources().getColor(R.color.material_red_500));
 						}
 					}
 					else {
@@ -969,7 +969,7 @@ public class WishlistFragment extends FamiliarFragment {
 						}
 						if (!priceFound) {
 							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
-							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
+							priceText.setTextColor(getResources().getColor(R.color.material_red_500));
 						}
 					}
 				}

@@ -18,7 +18,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/holo_blue"/>
+        android:background="@color/material_purple_500"/>
 
     <ScrollView
         android:layout_width="match_parent"

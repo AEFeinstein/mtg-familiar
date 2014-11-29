@@ -15,9 +15,6 @@
         <item name="com.gelakinetic.mtgfam:abc_edit_text_material">@drawable/abc_edit_text_material_light</item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_light</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_light</item>
-        <item name="com.gelakinetic.mtgfam:holo_red">@color/holo_red_dark</item>
-        <item name="com.gelakinetic.mtgfam:holo_green">@color/holo_green_dark</item>
-        <item name="com.gelakinetic.mtgfam:holo_blue">@color/holo_blue_dark</item>
 
         <item name="com.gelakinetic.mtgfam:color_common">@color/common_light</item>
         <item name="com.gelakinetic.mtgfam:color_uncommon">@color/uncommon_light</item>
@@ -70,9 +67,6 @@
         <item name="com.gelakinetic.mtgfam:abc_edit_text_material">@drawable/abc_edit_text_material_dark</item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_dark</item>
         <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_dark</item>
-        <item name="com.gelakinetic.mtgfam:holo_red">@color/holo_red_light</item>
-        <item name="com.gelakinetic.mtgfam:holo_green">@color/holo_green_light</item>
-        <item name="com.gelakinetic.mtgfam:holo_blue">@color/holo_blue_light</item>
 
         <item name="com.gelakinetic.mtgfam:color_common">@color/common_dark</item>
         <item name="com.gelakinetic.mtgfam:color_uncommon">@color/uncommon_dark</item>
