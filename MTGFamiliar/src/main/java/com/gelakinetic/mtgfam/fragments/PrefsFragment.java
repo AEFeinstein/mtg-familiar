@@ -28,12 +28,12 @@ public class PrefsFragment extends PreferenceFragment {
 				.getDefaultSharedPreferences(context);
 
 		// testing
-		Toast.makeText(context, "Language: " + prefs.getString("language", "default"), Toast.LENGTH_LONG);
+		// Toast.makeText(context, "Language: " + prefs.getString("language", "default"), Toast.LENGTH_LONG).show();
 
 		// Check if the system's language setting needs to be overridden
 		String defaultLocale = context.getResources().getConfiguration().locale.getLanguage();
 		boolean overrideSystemLanguage =
-				defaultLocale == prefs.getString("language", defaultLocale);
+				defaultLocale != prefs.getString("language", defaultLocale);
 
 		if (overrideSystemLanguage) {
 			String localeString = prefs.getString("language", "");
