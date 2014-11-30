@@ -53,9 +53,11 @@ public class RulesFragment extends FamiliarFragment {
 	private static final String BANNED_KEY = "banned";
 	private static final String FORMAT_KEY = "format";
 
-	/* Keys for banned and restricted table */
+	/* Keys for BannedItems */
 	private static final int BANNED = 1;
 	private static final int RESTRICTED = 2;
+	private static final int NONE = -1;
+	private static final int SETS = -2;
 
 	/* Dialog constant */
 	private static final int DIALOG_SEARCH = 1;
@@ -123,6 +125,9 @@ public class RulesFragment extends FamiliarFragment {
 		boolean isClickable;
 		Cursor cursor;
 
+		Cursor setsCursor;
+		setsCursor = null;
+
 		/* Sub-optimal, but KitKat is silly */
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			list.setOnScrollListener(new ListView.OnScrollListener() {
@@ -156,6 +161,7 @@ public class RulesFragment extends FamiliarFragment {
 			}
 			else if (isBanned && format != null) {
 				cursor = CardDbAdapter.getBannedCards(database, format);
+				setsCursor = CardDbAdapter.getLegalSets(database, format);
 				isClickable = false;
 			}
 			else if (isBanned && format == null) {
@@ -176,6 +182,26 @@ public class RulesFragment extends FamiliarFragment {
 		}
 
 		/* Add DisplayItems to mRules */
+		if (setsCursor != null) {
+			try {
+				if (setsCursor.getCount() > 0) {
+					setsCursor.moveToFirst();
+					mRules.add(new BannedItem(
+							format,
+							SETS,
+							setsCursor.getString(setsCursor.getColumnIndex(CardDbAdapter.KEY_LEGAL_SETS)), false));
+				}
+				setsCursor.close();
+			} catch (SQLiteDatabaseCorruptException e) {
+				handleFamiliarDbException(true);
+				return null;
+			}
+			if (cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
+				int listItemResource = R.layout.rules_list_detail_item;
+				RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
+				list.setAdapter(adapter);
+			}
+		}
 		if (cursor != null) {
 			try {
 				if (cursor.getCount() > 0) {
@@ -195,7 +221,7 @@ public class RulesFragment extends FamiliarFragment {
 						else if (isBanned && format == null) {
 							mRules.add(new BannedItem(
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
-									-1, "", true));
+									NONE, "", true));
 						}
 						else {
 							mRules.add(new RuleItem(
@@ -210,7 +236,7 @@ public class RulesFragment extends FamiliarFragment {
 					if (!isGlossary && !isBanned && mCategory == -1 && keyword == null) {
 						/* If it's the initial rules page, add a Glossary link to the end*/
 						mRules.add(new GlossaryItem(getString(R.string.rules_glossary), "", true));
-						mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), -1, "", true));
+						mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), NONE, "", true));
 					}
 					int listItemResource = R.layout.rules_list_item;
 					/* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
@@ -249,8 +275,10 @@ public class RulesFragment extends FamiliarFragment {
 				else {
 					/* Cursor had a size of 0, boring */
 					cursor.close();
-					Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
-					getFragmentManager().popBackStack();
+					if (!isBanned) {
+						Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
+						getFragmentManager().popBackStack();
+					}
 				}
 			} catch (SQLiteDatabaseCorruptException e) {
 				handleFamiliarDbException(true);
@@ -258,9 +286,10 @@ public class RulesFragment extends FamiliarFragment {
 			}
 		}
 		else {
-			/* Cursor is null, weird */
-			Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
-			getFragmentManager().popBackStack();
+			if (!isBanned) { /* Cursor is null. weird. */
+				Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
+				getFragmentManager().popBackStack();
+			}
 		}
 
 		list.setSelection(position);
@@ -664,6 +693,12 @@ public class RulesFragment extends FamiliarFragment {
 				else if (legality == BANNED) {
 					mLegality = getString(R.string.rules_banned);
 				}
+				else if (legality == NONE) {
+					mLegality = "";
+				}
+				else if (legality == SETS) {
+					mLegality = "Legal Sets";
+				}
 				else {
 					mLegality = "";
 				}
@@ -675,6 +710,12 @@ public class RulesFragment extends FamiliarFragment {
 				else if (legality == RESTRICTED) {
 					mLegality = getString(R.string.rules_restricted);
 
+				}
+				else if (legality == NONE) {
+					mLegality = "";
+				}
+				else if (legality == SETS) {
+					mLegality = "Legal Sets";
 				}
 				else {
 					mLegality = "";
