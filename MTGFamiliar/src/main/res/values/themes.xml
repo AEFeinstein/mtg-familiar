@@ -2,13 +2,11 @@
 <resources
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.base.light" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.base.light" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-
-        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
-        <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
 
         <item name="com.gelakinetic.mtgfam:color_background">@color/background_light</item>
 
@@ -54,10 +52,8 @@
         <item name="com.gelakinetic.mtgfam:lc_reset">@drawable/lc_reset_light</item>
     </style>
 
-    <style name="Theme.base.dark" parent="Theme.AppCompat.NoActionBar">
-
-        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
-        <item name="actionOverflowButtonStyle">@style/OverflowMenuButton</item>
+    <style name="Theme.base.dark" parent="Theme.AppCompat">
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -110,16 +106,19 @@
         <item name="colorPrimary">@color/material_purple_500</item>
         <item name="colorPrimaryDark">@color/material_purple_700</item>
     </style>
+
     <style name="Theme.dark" parent="Theme.base.dark">
         <item name="colorPrimary">@color/material_purple_500</item>
         <item name="colorPrimaryDark">@color/material_purple_700</item>
     </style>
 
-    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@android:color/white</item>
-    </style>
-    <style name="OverflowMenuButton" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_menu_overflow</item>
+    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Background for the search query section (e.g. EditText) -->
+        <item name="queryBackground">@drawable/abc_edit_text_material_dark</item>
+        <!-- Close button icon -->
+        <item name="closeIcon">@drawable/ic_menu_close</item>
+        <!-- Search button icon -->
+        <item name="searchIcon">@drawable/ic_menu_search</item>
     </style>
 
 </resources>

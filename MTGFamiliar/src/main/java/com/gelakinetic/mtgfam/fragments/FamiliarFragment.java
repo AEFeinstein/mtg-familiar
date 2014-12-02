@@ -17,12 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
@@ -154,6 +157,11 @@ public abstract class FamiliarFragment extends Fragment {
 				SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 				SearchView sv = new SearchView(getActivity());
 				try {
+					for (TextView textView : findChildrenByClass(sv, TextView.class)) {
+						textView.setTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
+						textView.setHintTextColor(getResources().getColor(R.color.hint_foreground_material_dark));
+					}
+
 					sv.setSearchableInfo(searchManager.getSearchableInfo(
 							new ComponentName("com.gelakinetic.mtgfam", "com.gelakinetic.mtgfam.FamiliarActivity")));
 
@@ -321,5 +329,43 @@ public abstract class FamiliarFragment extends Fragment {
 	 */
 	public int getResourceIdFromAttr(int attr) {
 		return ((FamiliarActivity) getActivity()).getResourceIdFromAttr(attr);
+	}
+
+	/**
+	 * Helper function to grab and EditTexts in a SearchView
+	 *
+	 * @param viewGroup A Group to recursively search for UI elements
+	 * @param clazz The class of UI element to search for
+	 * @param <V> The class of UI element to search for
+	 * @return An ArrayList of UI elements of the given class in the viewGroup
+	 */
+	public static <V extends View> Collection<V> findChildrenByClass(ViewGroup viewGroup, Class<V> clazz) {
+
+		return gatherChildrenByClass(viewGroup, clazz, new ArrayList<V>());
+	}
+
+	/**
+	 * Helper function to grab and EditTexts in a SearchView
+	 *
+	 * @param viewGroup A Group to recursively search for UI elements
+	 * @param clazz The class of UI element to search for
+	 * @param <V> The class of UI element to search for
+	 * @param childrenFound A collection of UI elements
+	 * @return An ArrayList of UI elements of the given class in the viewGroup
+	 */
+	private static <V extends View> Collection<V> gatherChildrenByClass(ViewGroup viewGroup, Class<V> clazz, Collection<V> childrenFound) {
+
+		for (int i = 0; i < viewGroup.getChildCount(); i++)
+		{
+			final View child = viewGroup.getChildAt(i);
+			if (clazz.isAssignableFrom(child.getClass())) {
+				childrenFound.add((V)child);
+			}
+			if (child instanceof ViewGroup) {
+				gatherChildrenByClass((ViewGroup) child, clazz, childrenFound);
+			}
+		}
+
+		return childrenFound;
 	}
 }
