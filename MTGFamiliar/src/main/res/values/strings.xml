@@ -466,6 +466,8 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
 	<string name="pref_image_cache_size_summary">Maximum amount of disk space to use for caching card images</string>
 	<string name="pref_image_cache_size_title">Image Cache Size</string>
 	<string name="pref_cat_card_cache">Image Caching</string>
+	<string name="pref_language">Language</string>
+	<string name="pref_set_language">Set a different language</string>
 
 	<!-- Judge's Corner -->
 	<string name="judges_corner_MTR">MTR</string>

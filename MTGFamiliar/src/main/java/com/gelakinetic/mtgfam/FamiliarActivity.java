@@ -193,7 +193,7 @@ public class FamiliarActivity extends FragmentActivity {
 				cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
 				addImageCache(getSupportFragmentManager(), cacheParams);
 			}
-			else if (s.endsWith("language")) {
+			else if (s.endsWith(getString(R.string.key_language))) {
 				FamiliarActivity.this.finish();
 				startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class));
 			}

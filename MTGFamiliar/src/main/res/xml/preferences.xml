@@ -65,12 +65,12 @@
             android:title="@string/pref_cat_theme">
 
             <ListPreference
-                android:dialogTitle="Language"
+                android:dialogTitle="@string/pref_language"
                 android:entries="@array/card_language"
                 android:entryValues="@array/card_language_values"
-                android:key="language"
-                android:summary="Set a different language"
-                android:title="Language"/>
+                android:key="@string/key_language"
+                android:summary="@string/pref_set_language"
+                android:title="@string/pref_language"/>
 
             <ListPreference
                 android:defaultValue="@string/pref_theme_light"
