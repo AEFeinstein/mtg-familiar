@@ -697,7 +697,7 @@ public class RulesFragment extends FamiliarFragment {
 					mLegality = "";
 				}
 				else if (legality == SETS) {
-					mLegality = "Legal Sets";
+					mLegality = getString(R.string.rules_legal_sets);
 				}
 				else {
 					mLegality = "";
@@ -715,14 +715,19 @@ public class RulesFragment extends FamiliarFragment {
 					mLegality = "";
 				}
 				else if (legality == SETS) {
-					mLegality = "Legal Sets";
+					mLegality = getString(R.string.rules_legal_sets);
 				}
 				else {
 					mLegality = "";
 				}
 			}
 			if (cards == null) {
-				this.mCards = "(" + getString(R.string.rules_no_cards) + ")";
+                if(legality == SETS) {
+                    this.mCards = getString(R.string.rules_bb_wb_sets);
+                }
+                else {
+                    this.mCards = getString(R.string.rules_no_cards);
+                }
 			}
 			else {
 				this.mCards = cards;
@@ -843,8 +848,12 @@ public class RulesFragment extends FamiliarFragment {
 					rulesText.setVisibility(View.GONE);
 				}
 				else {
+                    boolean shouldLink = true;
+                    if(data instanceof BannedItem) {
+                        shouldLink = false;
+                    }
 					rulesText.setVisibility(View.VISIBLE);
-					rulesText.setText(formatText(text, true), BufferType.SPANNABLE);
+					rulesText.setText(formatText(text, shouldLink), BufferType.SPANNABLE);
 				}
 				if (!data.isClickable()) {
 					rulesText.setMovementMethod(LinkMovementMethod.getInstance());

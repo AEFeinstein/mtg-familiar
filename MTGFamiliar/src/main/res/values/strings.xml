@@ -342,11 +342,13 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
 	<string name="rules_search_all">Search all rules</string>
 	<string name="rules_search_cat">Search within %s</string>
 	<string name="rules_this_cat">this category:</string>
-	<string name="rules_banned_and_restricted">Banned and Restricted</string>
+	<string name="rules_banned_and_restricted">Formats, Banned, and Restricted</string>
     <string name="rules_banned">Banned</string>
     <string name="rules_banned_as_commander">Banned as Commander</string>
 	<string name="rules_restricted">Restricted</string>
 	<string name="rules_no_cards">No Cards</string>
+    <string name="rules_legal_sets">Legal Sets</string>
+    <string name="rules_bb_wb_sets">All black &amp; white bordered sets</string>
 
 	<!-- Profile activity -->
 	<string name="profile_dci_number">DCI Number</string>

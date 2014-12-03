@@ -1556,9 +1556,9 @@ public class CardDbAdapter {
 	 */
 	public static Cursor getLegalSets(SQLiteDatabase mDb, String format) throws FamiliarDbException {
 		try {
-			String sql = "SELECT GROUP_CONCAT(" + KEY_SET + ", '<br>') AS " + KEY_LEGAL_SETS + " FROM " +
-					DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = '" + format + "'" + " GROUP BY " +
-					KEY_FORMAT;
+			String sql = "SELECT GROUP_CONCAT(" + DATABASE_TABLE_SETS +"."+KEY_NAME + ", '<br>') AS " + KEY_LEGAL_SETS +
+                    " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_LEGAL_SETS +"."+KEY_SET+" = "+DATABASE_TABLE_SETS+"."+KEY_CODE + ")" +
+                    " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
 			return mDb.rawQuery(sql, null);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);
