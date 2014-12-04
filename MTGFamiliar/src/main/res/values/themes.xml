@@ -50,6 +50,7 @@
         <item name="com.gelakinetic.mtgfam:lc_poison_disabled">@drawable/lc_poison_disabled_light</item>
         <item name="com.gelakinetic.mtgfam:lc_poison_enabled">@drawable/lc_poison_enabled_light</item>
         <item name="com.gelakinetic.mtgfam:lc_reset">@drawable/lc_reset_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_close">@drawable/ic_close_light</item>
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat">
@@ -100,6 +101,7 @@
         <item name="com.gelakinetic.mtgfam:lc_poison_disabled">@drawable/lc_poison_disabled_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_poison_enabled">@drawable/lc_poison_enabled_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_reset">@drawable/lc_reset_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_close">@drawable/ic_close_dark</item>
     </style>
 
     <style name="Theme.light" parent="Theme.base.light" >
@@ -116,7 +118,7 @@
         <!-- Background for the search query section (e.g. EditText) -->
         <item name="queryBackground">@drawable/abc_edit_text_material_dark</item>
         <!-- Close button icon -->
-        <item name="closeIcon">@drawable/ic_menu_close</item>
+        <item name="closeIcon">@drawable/ic_close_dark</item>
         <!-- Search button icon -->
         <item name="searchIcon">@drawable/ic_menu_search</item>
     </style>

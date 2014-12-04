@@ -50,6 +50,10 @@
         <attr name="lc_poison_disabled" format="reference"/>
         <attr name="lc_poison_enabled" format="reference"/>
         <attr name="lc_reset" format="reference"/>
+
+        <!-- close button -->
+        <attr name="ic_close" format="reference"/>
+
     </declare-styleable>
 
 </resources>
