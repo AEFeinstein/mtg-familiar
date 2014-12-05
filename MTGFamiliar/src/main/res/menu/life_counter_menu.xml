@@ -48,6 +48,6 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/announce_life"
         app:showAsAction="ifRoom"
         android:title="@string/life_counter_announce_life"
-        android:icon="@drawable/ic_menu_notifications_on"/>
+        android:icon="@drawable/ic_menu_volume_up"/>
 
 </menu>
