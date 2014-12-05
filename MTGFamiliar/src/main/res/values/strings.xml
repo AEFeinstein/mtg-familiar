@@ -349,6 +349,8 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
 	<string name="rules_no_cards">No Cards</string>
     <string name="rules_legal_sets">Legal Sets</string>
     <string name="rules_bb_wb_sets">All black &amp; white bordered sets</string>
+    <string name="rules_coppied">Rule coppied to clipboard</string>
+    <string name="rules_copy_tag">MTG Rule</string>
 
 	<!-- Profile activity -->
 	<string name="profile_dci_number">DCI Number</string>

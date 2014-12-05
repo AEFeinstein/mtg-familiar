@@ -2,6 +2,8 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -271,6 +273,24 @@ public class RulesFragment extends FamiliarFragment {
 							}
 						});
 					}
+					list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+						@Override
+						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+							DisplayItem item = mRules.get(position);
+							if(item instanceof RuleItem) {
+								// Gets a handle to the clipboard service.
+								ClipboardManager clipboard = (ClipboardManager)
+										getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+								// Creates a new text clip to put on the clipboard
+								ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
+								// Set the clipboard's primary clip.
+								clipboard.setPrimaryClip(clip);
+								// Alert the user
+								Toast.makeText(getActivity(), R.string.rules_coppied, Toast.LENGTH_SHORT).show();
+							}
+							return true;
+						}
+					});
 				}
 				else {
 					/* Cursor had a size of 0, boring */
@@ -858,7 +878,6 @@ public class RulesFragment extends FamiliarFragment {
 				if (!data.isClickable()) {
 					rulesText.setMovementMethod(LinkMovementMethod.getInstance());
 					rulesText.setClickable(false);
-					rulesText.setLongClickable(false);
 				}
 			}
 			return v;
