@@ -140,7 +140,6 @@ public class FamiliarActivity extends ActionBarActivity {
 	public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
 	/* What the drawer menu will be */
 	private final DrawerEntry[] mPageEntries = {
-			new DrawerEntry(R.string.main_pages, 0, true),
 			new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false),
 			new DrawerEntry(R.string.main_life_counter, R.attr.ic_drawer_life, false),
 			new DrawerEntry(R.string.main_mana_pool, R.attr.ic_drawer_mana, false),
@@ -158,8 +157,8 @@ public class FamiliarActivity extends ActionBarActivity {
 			new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
 			new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
 			new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
-			new DrawerEntry(R.string.main_export_data_title, R.drawable.ic_menu_folder_open, false),
-			new DrawerEntry(R.string.main_import_data_title, R.drawable.ic_menu_folder_open, false),
+			new DrawerEntry(R.string.main_export_data_title, R.attr.ic_drawer_save, false),
+			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_drawer_load, false),
 	};
 	private final Handler mInactivityHandler = new Handler();
 	/* Listen for changes to preferences */
@@ -1374,6 +1373,8 @@ public class FamiliarActivity extends ActionBarActivity {
 				}
 				assert convertView != null;
 				((TextView) convertView.findViewById(R.id.drawer_header_name)).setText(values[position].mNameResource);
+				convertView.findViewById(R.id.drawer_header_name).setLongClickable(false);
+				convertView.findViewById(R.id.drawer_header_name).setClickable(false);
 				convertView.setFocusable(false);
 				convertView.setFocusableInTouchMode(false);
 			}
@@ -1384,16 +1385,9 @@ public class FamiliarActivity extends ActionBarActivity {
 				}
 				assert convertView != null;
 				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
-				((ImageView) convertView.findViewById(R.id.drawer_entry_icon))
-						.setImageResource(getResourceIdFromAttr(values[position].mIconResource));
+				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconResource), 0, 0, 0);
 			}
 
-			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
-				convertView.findViewById(R.id.divider).setVisibility(View.GONE);
-			}
-			else {
-				convertView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
-			}
 			return convertView;
 		}
 	}
