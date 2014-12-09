@@ -27,24 +27,26 @@
         <item name="com.gelakinetic.mtgfam:color_drawer_divider_item">@color/drawer_divider_item_light</item>
         <item name="com.gelakinetic.mtgfam:selector_drawer_text">@drawable/drawer_text_light</item>
 
+        <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_judge">@drawable/ic_drawer_judge_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_life">@drawable/ic_drawer_life_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_mana">@drawable/ic_drawer_mana_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_mojhosto">@drawable/ic_drawer_mojhosto_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_rules">@drawable/ic_drawer_rules_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_search">@drawable/ic_drawer_search_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_wishlist">@drawable/ic_drawer_wishlist_state_light</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_profile">@drawable/ic_drawer_profile_state_light</item>
+
         <item name="com.gelakinetic.mtgfam:ic_drawer_about">@drawable/ic_drawer_about_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_download">@drawable/ic_drawer_download_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_good">@drawable/ic_drawer_good_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_help">@drawable/ic_drawer_help_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_judge">@drawable/ic_drawer_judge_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_life">@drawable/ic_drawer_life_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_mana">@drawable/ic_drawer_mana_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_mojhosto">@drawable/ic_drawer_mojhosto_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_rules">@drawable/ic_drawer_rules_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_search">@drawable/ic_drawer_search_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_settings">@drawable/ic_drawer_settings_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_wishlist">@drawable/ic_drawer_wishlist_light</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_profile">@drawable/ic_drawer_profile_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_save">@drawable/ic_drawer_save_light</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_load">@drawable/ic_drawer_load_light</item>
+
         <item name="com.gelakinetic.mtgfam:lc_commander_disabled">@drawable/lc_commander_disabled_light</item>
         <item name="com.gelakinetic.mtgfam:lc_commander_enabled">@drawable/lc_commander_enabled_light</item>
         <item name="com.gelakinetic.mtgfam:lc_life_disabled">@drawable/lc_life_disabled_light</item>
@@ -80,24 +82,26 @@
         <item name="com.gelakinetic.mtgfam:color_drawer_divider_item">@color/drawer_divider_item_dark</item>
         <item name="com.gelakinetic.mtgfam:selector_drawer_text">@drawable/drawer_text_dark</item>
 
+        <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_judge">@drawable/ic_drawer_judge_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_life">@drawable/ic_drawer_life_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_mana">@drawable/ic_drawer_mana_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_mojhosto">@drawable/ic_drawer_mojhosto_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_rules">@drawable/ic_drawer_rules_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_search">@drawable/ic_drawer_search_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_wishlist">@drawable/ic_drawer_wishlist_state_dark</item>
+        <item name="com.gelakinetic.mtgfam:ic_drawer_profile">@drawable/ic_drawer_profile_state_dark</item>
+
         <item name="com.gelakinetic.mtgfam:ic_drawer_about">@drawable/ic_drawer_about_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_download">@drawable/ic_drawer_download_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_good">@drawable/ic_drawer_good_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_help">@drawable/ic_drawer_help_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_judge">@drawable/ic_drawer_judge_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_life">@drawable/ic_drawer_life_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_mana">@drawable/ic_drawer_mana_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_mojhosto">@drawable/ic_drawer_mojhosto_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_rules">@drawable/ic_drawer_rules_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_search">@drawable/ic_drawer_search_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_settings">@drawable/ic_drawer_settings_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_wishlist">@drawable/ic_drawer_wishlist_dark</item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_profile">@drawable/ic_drawer_profile_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_save">@drawable/ic_drawer_save_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_load">@drawable/ic_drawer_load_dark</item>
+
         <item name="com.gelakinetic.mtgfam:lc_commander_disabled">@drawable/lc_commander_disabled_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_commander_enabled">@drawable/lc_commander_enabled_dark</item>
         <item name="com.gelakinetic.mtgfam:lc_life_disabled">@drawable/lc_life_disabled_dark</item>

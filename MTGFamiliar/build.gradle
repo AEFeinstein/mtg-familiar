@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0-rc4'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -36,6 +36,6 @@ dependencies {
     compile files('libs/gson-1.7.1.jar')
     compile files('libs/guava-14.0.jar')
     compile 'com.android.support:support-v4:21.0.2'
-    compile 'com.android.support:support-v13:21.0.0'
+    compile 'com.android.support:support-v13:21.0.2'
     compile 'com.android.support:appcompat-v7:21.0.2'
 }
