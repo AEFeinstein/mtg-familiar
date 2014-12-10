@@ -122,7 +122,7 @@ public class ProfileFragment extends FamiliarFragment {
 	}
 
 	/**
-	 * TODO menu icons not cleared when menu is opened...
+	 *
 	 * @param menu
 	 */
 	@Override
@@ -133,7 +133,11 @@ public class ProfileFragment extends FamiliarFragment {
 		assert updateDCI != null;
 		assert removeDCI != null;
 
-		if (mDCINumber != null && !mDCINumber.isEmpty()) {
+		if(!getFamiliarActivity().mIsMenuVisible) {
+			updateDCI.setVisible(false);
+			removeDCI.setVisible(false);
+		}
+		else if (mDCINumber != null && !mDCINumber.isEmpty()) {
 			updateDCI.setVisible(false);
 			removeDCI.setVisible(true);
 		}
