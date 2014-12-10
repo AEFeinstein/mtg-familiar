@@ -53,6 +53,8 @@
         <attr name="lc_poison_enabled" format="reference"/>
         <attr name="lc_reset" format="reference"/>
 
+        <attr name="drawer_background_indicator" format="reference" />
+
         <!-- close button -->
         <attr name="ic_close" format="reference"/>
 

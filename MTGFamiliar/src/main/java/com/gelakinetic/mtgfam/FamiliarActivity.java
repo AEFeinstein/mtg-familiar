@@ -151,7 +151,7 @@ public class FamiliarActivity extends ActionBarActivity {
 			new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
 			new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
 			new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false),
-			new DrawerEntry(R.string.main_extras, 0, true),
+			new DrawerEntry(0, 0, true),
 			new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
 			new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
 			new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
@@ -1372,7 +1372,13 @@ public class FamiliarActivity extends ActionBarActivity {
 					convertView = getLayoutInflater().inflate(layout, parent, false);
 				}
 				assert convertView != null;
-				((TextView) convertView.findViewById(R.id.drawer_header_name)).setText(values[position].mNameResource);
+				TextView title = ((TextView) convertView.findViewById(R.id.drawer_header_name));
+				if(values[position].mNameResource != 0) {
+					title.setText(values[position].mNameResource);
+				}
+				else {
+					title.setVisibility(View.GONE);
+				}
 				convertView.findViewById(R.id.drawer_header_name).setLongClickable(false);
 				convertView.findViewById(R.id.drawer_header_name).setClickable(false);
 				convertView.setFocusable(false);

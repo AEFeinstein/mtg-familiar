@@ -1,16 +1,17 @@
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="44dp"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="false"
+    android:longClickable="false">
+    <!--android:background="?android:attr/activatedBackgroundIndicator"-->
 
     <TextView
         android:text="@string/main_pages"
         android:id="@+id/drawer_header_name"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="31dp"
         android:gravity="bottom"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="56dp"
@@ -22,6 +23,8 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="?attr/color_drawer_divider_header"/>
 </LinearLayout>

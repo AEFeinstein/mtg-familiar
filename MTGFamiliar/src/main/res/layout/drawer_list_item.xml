@@ -2,7 +2,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="?android:attr/activatedBackgroundIndicator"
+    android:background="?attr/drawer_background_indicator"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <TextView
