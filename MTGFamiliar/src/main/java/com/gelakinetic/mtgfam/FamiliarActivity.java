@@ -16,7 +16,6 @@
 
 package com.gelakinetic.mtgfam;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
@@ -63,6 +62,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialogCompat;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
@@ -942,7 +942,7 @@ public class FamiliarActivity extends ActionBarActivity {
 
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
 				setShowsDialog(true);
-				AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+				MaterialDialogCompat.Builder builder = new MaterialDialogCompat.Builder(this.getActivity());
 
 				assert getPackageManager() != null;
 
@@ -971,7 +971,6 @@ public class FamiliarActivity extends ActionBarActivity {
 						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
 						text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
 						text.setMovementMethod(LinkMovementMethod.getInstance());
-						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 						builder.setView(dialogLayout);
 
 						return builder.create();
@@ -1000,7 +999,6 @@ public class FamiliarActivity extends ActionBarActivity {
 
 						dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
 						dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 						builder.setView(dialogLayout);
 
 						return builder.create();
@@ -1044,7 +1042,6 @@ public class FamiliarActivity extends ActionBarActivity {
 							}
 						});
 						dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 
 						builder.setView(dialogLayout);
 						return builder.create();

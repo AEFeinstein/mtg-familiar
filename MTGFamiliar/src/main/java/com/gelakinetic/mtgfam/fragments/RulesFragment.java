@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialogCompat;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
@@ -346,7 +347,7 @@ public class RulesFragment extends FamiliarFragment {
 							}
 						}
 
-						Dialog dialog = new AlertDialog.Builder(getActivity())
+						Dialog dialog = new MaterialDialogCompat.Builder(getActivity())
 								.setTitle(title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {

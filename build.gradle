@@ -1,1 +1,49 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+//// Top-level build file where you can add configuration options common to all sub-projects/modules.
+//
+//buildscript {
+//    repositories {
+//        mavenCentral()
+//    }
+//    dependencies {
+//        classpath 'com.android.tools.build:gradle:1.0.0'
+//    }
+//}
+//
+//android {
+//    compileSdkVersion 21
+//    buildToolsVersion '21.1.1'
+//    defaultConfig {
+//        minSdkVersion 14
+//        targetSdkVersion 21
+//    }
+//    productFlavors {
+//    }
+//}
+//repositories {
+//    mavenCentral()
+//}
+////dependencies {
+////    compile 'com.android.support:appcompat-v7:21.0.2'
+////}

@@ -21,14 +21,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/image_button"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/octocat"
-            style="@style/button"/>
-
         <TextView
             android:id="@+id/aboutfield"
             style="@style/text.medium"

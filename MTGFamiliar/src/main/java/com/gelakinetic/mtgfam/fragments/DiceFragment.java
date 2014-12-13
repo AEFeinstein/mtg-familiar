@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.afollestad.materialdialogs.MaterialDialogCompat;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
@@ -167,7 +168,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 					txtNumber.setText(String.valueOf(mLastNumber));
 				}
 
-				AlertDialog.Builder adb = new AlertDialog.Builder(mActivity);
+				MaterialDialogCompat.Builder adb = new MaterialDialogCompat.Builder(mActivity);
 				adb.setView(v);
 				adb.setTitle(getResources().getString(R.string.dice_choose_sides));
 				adb.setPositiveButton(mActivity.getResources().getString(R.string.dialog_ok),

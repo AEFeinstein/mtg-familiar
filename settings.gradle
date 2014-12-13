@@ -1,1 +1,1 @@
-include ':MTGFamiliar'
+include ':MTGFamiliar', 'MaterialDialog'

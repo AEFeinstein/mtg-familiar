@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TimePicker;
 
+import com.afollestad.materialdialogs.MaterialDialogCompat;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
@@ -353,7 +354,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 						chkTen.setChecked(ten);
 						chkFive.setChecked(five);
 
-						return new AlertDialog.Builder(getActivity())
+						return new MaterialDialogCompat.Builder(getActivity())
 								.setView(v).setTitle(R.string.timer_warning_dialog_title)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 
