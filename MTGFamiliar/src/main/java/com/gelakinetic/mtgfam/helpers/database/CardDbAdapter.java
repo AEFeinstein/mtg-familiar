@@ -1037,7 +1037,7 @@ public class CardDbAdapter {
 						" AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UG'" +
 						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Plane %'" +
 						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Conspiracy%'" +
-						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Scheme%'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE '%Scheme%'" +
 						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Vanguard%'";
 			}
 			statement += " AND NOT EXISTS (SELECT * FROM "
