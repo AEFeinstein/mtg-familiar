@@ -62,7 +62,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialogCompat;
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
@@ -942,7 +942,7 @@ public class FamiliarActivity extends ActionBarActivity {
 
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
 				setShowsDialog(true);
-				MaterialDialogCompat.Builder builder = new MaterialDialogCompat.Builder(this.getActivity());
+				AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
 
 				assert getPackageManager() != null;
 

@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialogCompat;
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
@@ -580,7 +580,7 @@ public class LcPlayer {
 							}
 						});
 
-						Dialog dialog = new MaterialDialogCompat.Builder(getActivity())
+						Dialog dialog = new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.life_counter_edit_name_dialog_title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -642,7 +642,7 @@ public class LcPlayer {
 							}
 						});
 
-						MaterialDialogCompat.Builder builder = new MaterialDialogCompat.Builder(this.getActivity());
+						AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
 						builder.setTitle(String.format(getResources().getString(R.string.life_counter_edh_dialog_title),
 								mCommanderDamage.get(position).mName))
 								.setView(view)
@@ -688,7 +688,7 @@ public class LcPlayer {
 							title = getResources().getString(R.string.life_counter_edit_life_dialog_title);
 						}
 
-						Dialog dialog = new MaterialDialogCompat.Builder(getActivity())
+						Dialog dialog = new AlertDialogPro.Builder(getActivity())
 								.setTitle(title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {

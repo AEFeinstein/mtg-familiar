@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialogCompat;
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
@@ -410,7 +410,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
 				setShowsDialog(true);
 
-				MaterialDialogCompat.Builder builder = new MaterialDialogCompat.Builder(getActivity());
+				AlertDialogPro.Builder builder = new AlertDialogPro.Builder(getActivity());
 				switch (id) {
 					case DIALOG_REMOVE_PLAYER: {
 						/* Get all the player names */

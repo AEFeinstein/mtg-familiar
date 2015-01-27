@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialogCompat;
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
@@ -404,7 +404,7 @@ public class TradeFragment extends FamiliarFragment {
 							}
 						});
 
-						return new MaterialDialogCompat.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(lSide.get(positionForDialog).name)
 								.setView(view)
 								.setPositiveButton(R.string.dialog_done, new DialogInterface.OnClickListener() {
@@ -532,7 +532,7 @@ public class TradeFragment extends FamiliarFragment {
 							final String[] aSetCodes = setCodes.toArray(new String[setCodes.size()]);
 
 							/* Build and return the dialog */
-							return new MaterialDialogCompat.Builder(getActivity())
+							return new AlertDialogPro.Builder(getActivity())
 									.setTitle(R.string.card_view_set_dialog_title)
 									.setItems(aSets, new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialogInterface, int item) {
@@ -580,7 +580,7 @@ public class TradeFragment extends FamiliarFragment {
 					}
 					case DIALOG_PRICE_SETTING: {
 						/* Build the dialog with some choices */
-						return new MaterialDialogCompat.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.trader_pricing_dialog_title)
 								.setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
 												getString(R.string.trader_Average),
@@ -634,7 +634,7 @@ public class TradeFragment extends FamiliarFragment {
 							}
 						});
 
-						Dialog dialog = new MaterialDialogCompat.Builder(getActivity())
+						Dialog dialog = new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.trader_save_dialog_title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -684,7 +684,7 @@ public class TradeFragment extends FamiliarFragment {
 						final String[] tradeNames = new String[validFiles.size()];
 						validFiles.toArray(tradeNames);
 
-						return new MaterialDialogCompat.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.trader_select_dialog_title)
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
@@ -728,7 +728,7 @@ public class TradeFragment extends FamiliarFragment {
 						final String[] tradeNames = new String[validFiles.size()];
 						validFiles.toArray(tradeNames);
 
-						return new MaterialDialogCompat.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.trader_delete_dialog_title)
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
@@ -749,7 +749,7 @@ public class TradeFragment extends FamiliarFragment {
 								.create();
 					}
 					case DIALOG_CONFIRMATION: {
-						return new MaterialDialogCompat.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.trader_clear_dialog_title)
 								.setMessage(R.string.trader_clear_dialog_text)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {

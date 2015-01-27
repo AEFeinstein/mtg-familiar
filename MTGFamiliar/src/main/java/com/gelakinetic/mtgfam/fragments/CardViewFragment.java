@@ -58,7 +58,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialogCompat;
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
@@ -576,7 +576,7 @@ public class CardViewFragment extends FamiliarFragment {
 						ListView lv = new ListView(mActivity);
 						lv.setAdapter(adapter);
 
-						MaterialDialogCompat.Builder builder = new MaterialDialogCompat.Builder(mActivity);
+						AlertDialogPro.Builder builder = new AlertDialogPro.Builder(mActivity);
 						builder.setView(lv);
 						builder.setTitle(R.string.card_view_legality);
 						return builder.create();
@@ -611,7 +611,7 @@ public class CardViewFragment extends FamiliarFragment {
 						priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + mPriceInfo.mUrl + "\">" +
 								getString(R.string.card_view_price_dialog_link) + "</a>"));
 
-						MaterialDialogCompat.Builder adb = new MaterialDialogCompat.Builder(mActivity);
+						AlertDialogPro.Builder adb = new AlertDialogPro.Builder(mActivity);
 						adb.setView(v);
 						adb.setTitle(R.string.card_view_price_dialog_title);
 						return adb.create();
@@ -619,7 +619,7 @@ public class CardViewFragment extends FamiliarFragment {
 					case CHANGE_SET: {
 						final String[] aSets = mSets.toArray(new String[mSets.size()]);
 						final Long[] aIds = mCardIds.toArray(new Long[mCardIds.size()]);
-						MaterialDialogCompat.Builder builder = new MaterialDialogCompat.Builder(mActivity);
+						AlertDialogPro.Builder builder = new AlertDialogPro.Builder(mActivity);
 						builder.setTitle(R.string.card_view_set_dialog_title);
 						builder.setItems(aSets, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialogInterface, int item) {
@@ -666,7 +666,7 @@ public class CardViewFragment extends FamiliarFragment {
 										mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
 						));
 
-						MaterialDialogCompat.Builder builder = new MaterialDialogCompat.Builder(mActivity);
+						AlertDialogPro.Builder builder = new AlertDialogPro.Builder(mActivity);
 						builder.setTitle(R.string.card_view_rulings_dialog_title);
 						builder.setView(v);
 						return builder.create();

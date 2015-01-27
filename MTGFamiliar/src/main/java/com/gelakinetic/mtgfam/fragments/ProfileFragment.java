@@ -38,7 +38,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialogCompat;
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
@@ -185,7 +185,7 @@ public class ProfileFragment extends FamiliarFragment {
 
 						dciEditText.setText(strDCI);
 
-						return new MaterialDialogCompat.Builder(getActivity())
+						return new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.profile_update_dci_dialog_title)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 									@Override

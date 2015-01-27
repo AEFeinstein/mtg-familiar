@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.base.light" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="md_dark_theme">false</item>
+        <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
         <item name="searchViewStyle">@style/MySearchViewStyle</item>
 
         <item name="android:windowNoTitle">true</item>
@@ -61,7 +61,7 @@
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat">
-        <item name="md_dark_theme">true</item>
+        <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material</item>
 
         <item name="searchViewStyle">@style/MySearchViewStyle</item>
 

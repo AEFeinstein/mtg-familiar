@@ -24,7 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialogCompat;
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
@@ -747,13 +747,13 @@ public class SearchViewFragment extends FamiliarFragment {
 					   onCreate() */
 					switch (id) {
 						case SET_LIST: {
-							mSetDialog = new MaterialDialogCompat.Builder(this.getActivity()).setTitle(R.string.search_sets)
+							mSetDialog = new AlertDialogPro.Builder(this.getActivity()).setTitle(R.string.search_sets)
 									.setMultiChoiceItems(mSetNames, mSetChecked, multiChoiceClickListener)
 									.setPositiveButton(R.string.dialog_ok, clickListener).create();
 							return mSetDialog;
 						}
 						case FORMAT_LIST: {
-							mFormatDialog = new MaterialDialogCompat.Builder(this.getActivity()).
+							mFormatDialog = new AlertDialogPro.Builder(this.getActivity()).
 									setTitle(R.string.search_formats).setSingleChoiceItems(mFormatNames,
 									mSelectedFormat, new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {
@@ -764,7 +764,7 @@ public class SearchViewFragment extends FamiliarFragment {
 							return mFormatDialog;
 						}
 						case RARITY_LIST: {
-							mRarityDialog = new MaterialDialogCompat.Builder(this.getActivity())
+							mRarityDialog = new AlertDialogPro.Builder(this.getActivity())
 									.setTitle(R.string.search_rarities).setMultiChoiceItems(mRarityNames,
 											mRarityChecked, multiChoiceClickListener)
 									.setPositiveButton(R.string.dialog_ok, clickListener).create();
