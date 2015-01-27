@@ -117,7 +117,7 @@
                         android:id="@+id/checkBoxW"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_w"/>
+                        android:button="?attr/btn_check_w"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -131,7 +131,7 @@
                         android:id="@+id/checkBoxU"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_u"/>
+                        android:button="?attr/btn_check_u"/>
 
                 </LinearLayout>
 
@@ -146,7 +146,7 @@
                         android:id="@+id/checkBoxB"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_b"/>
+                        android:button="?attr/btn_check_b"/>
 
                 </LinearLayout>
 
@@ -161,7 +161,7 @@
                         android:id="@+id/checkBoxR"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_r"/>
+                        android:button="?attr/btn_check_r"/>
 
                 </LinearLayout>
 
@@ -176,7 +176,7 @@
                         android:id="@+id/checkBoxG"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_g"/>
+                        android:button="?attr/btn_check_g"/>
 
                 </LinearLayout>
 
@@ -191,7 +191,7 @@
                         android:id="@+id/checkBoxL"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_l"/>
+                        android:button="?attr/btn_check_l"/>
                 </LinearLayout>
 
             </LinearLayout>

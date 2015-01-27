@@ -58,6 +58,15 @@
         <item name="com.gelakinetic.mtgfam:ic_close">@drawable/ic_close_light</item>
 
         <item name="com.gelakinetic.mtgfam:drawer_background_indicator">@drawable/drawer_background_indicator_light</item>
+
+        <item name="com.gelakinetic.mtgfam:btn_check_w">@drawable/btn_check_light_w</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_u">@drawable/btn_check_light_u</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_b">@drawable/btn_check_light_b</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_r">@drawable/btn_check_light_r</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_g">@drawable/btn_check_light_g</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_l">@drawable/btn_check_light_l</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_foil">@drawable/btn_check_light_foil</item>
+
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat">
@@ -116,6 +125,15 @@
         <item name="com.gelakinetic.mtgfam:lc_reset">@drawable/lc_reset_dark</item>
         <item name="com.gelakinetic.mtgfam:ic_close">@drawable/ic_close_dark</item>
         <item name="com.gelakinetic.mtgfam:drawer_background_indicator">@drawable/drawer_background_indicator_dark</item>
+
+        <item name="com.gelakinetic.mtgfam:btn_check_w">@drawable/btn_check_dark_w</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_u">@drawable/btn_check_dark_u</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_b">@drawable/btn_check_dark_b</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_r">@drawable/btn_check_dark_r</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_g">@drawable/btn_check_dark_g</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_l">@drawable/btn_check_dark_l</item>
+        <item name="com.gelakinetic.mtgfam:btn_check_foil">@drawable/btn_check_dark_foil</item>
+
     </style>
 
     <style name="Theme.light" parent="Theme.base.light" >

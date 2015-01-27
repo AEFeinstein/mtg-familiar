@@ -58,6 +58,15 @@
         <!-- close button -->
         <attr name="ic_close" format="reference"/>
 
+        <!-- checkboxes -->
+        <attr name="btn_check_w" format="reference"/>
+        <attr name="btn_check_u" format="reference"/>
+        <attr name="btn_check_b" format="reference"/>
+        <attr name="btn_check_r" format="reference"/>
+        <attr name="btn_check_g" format="reference"/>
+        <attr name="btn_check_l" format="reference"/>
+        <attr name="btn_check_foil" format="reference"/>
+
     </declare-styleable>
 
 </resources>
