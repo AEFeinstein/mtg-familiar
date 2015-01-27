@@ -26,6 +26,8 @@
         <item>&lt;</item>
         <item>=</item>
     </string-array>
+    <!-- Keep the character after last underscore in these references the same as the rarity code (C R U M T)
+         See strings.xml and onCreate method in SearchViewFragment -->
     <string-array name="rarities">
         <item>@string/search_Common</item>
         <item>@string/search_Uncommon</item>
