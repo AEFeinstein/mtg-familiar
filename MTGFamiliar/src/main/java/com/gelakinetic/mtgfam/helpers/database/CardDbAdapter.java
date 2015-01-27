@@ -111,6 +111,7 @@ public class CardDbAdapter {
 	public static final String KEY_DEFINITION = "definition";
 
 	public static final String KEY_BANNED_LIST = "banned_list";
+	public static final String KEY_LEGAL_SETS = "legal_sets";
 
 	public static final String[] allData = {DATABASE_TABLE_CARDS + "." + KEY_ID,
 			DATABASE_TABLE_CARDS + "." + KEY_NAME, DATABASE_TABLE_CARDS + "." + KEY_SET,
@@ -1016,7 +1017,13 @@ public class CardDbAdapter {
 
 		String tbl = DATABASE_TABLE_CARDS;
 		if (format != null) {
-			if (!(format.equals("Legacy") || format.equals("Vintage"))) {
+
+			/* Check if the format is eternal or not, by the number of legal sets */
+			String numLegalSetsSql = "SELECT * FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = \"" + format + "\"";
+			Cursor numLegalSetCursor = mDb.rawQuery(numLegalSetsSql, null);
+
+			/* If the format is not eternal, filter by set */
+			if (numLegalSetCursor.getCount() > 0) {
 				tbl = "(" + DATABASE_TABLE_CARDS + " JOIN "
 						+ DATABASE_TABLE_LEGAL_SETS + " ON "
 						+ DATABASE_TABLE_CARDS + "." + KEY_SET + "="
@@ -1025,11 +1032,13 @@ public class CardDbAdapter {
 						+ format + "')";
 			}
 			else {
-				statement += " AND NOT " + KEY_SET + "= 'UNH'" +
-						" AND NOT " + KEY_SET + "= 'UG'" +
-						" AND NOT " + KEY_SET + "= 'ARS'" +
-						" AND NOT " + KEY_SET + "= 'PCP'" +
-						" AND NOT " + KEY_SET + "= 'PP2'";
+				/* Otherwise filter silver bordered cards, giant cards */
+				statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UNH'" +
+						" AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UG'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Plane %'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Conspiracy%'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE '%Scheme%'" +
+						" AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Vanguard%'";
 			}
 			statement += " AND NOT EXISTS (SELECT * FROM "
 					+ DATABASE_TABLE_BANNED_CARDS + " WHERE "
@@ -1522,14 +1531,34 @@ public class CardDbAdapter {
 
 	/**
 	 * @param mDb
+	 * @param format
 	 * @return
 	 * @throws FamiliarDbException
 	 */
-	public static Cursor getBannedCards(SQLiteDatabase mDb) throws FamiliarDbException {
+	public static Cursor getBannedCards(SQLiteDatabase mDb, String format) throws FamiliarDbException {
 		try {
-			String sql = "SELECT " + KEY_FORMAT + ", " + KEY_LEGALITY + ", GROUP_CONCAT(" +
+			String sql = "SELECT " + KEY_LEGALITY + ", GROUP_CONCAT(" +
 					KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST + " FROM " + DATABASE_TABLE_BANNED_CARDS +
-					" GROUP BY " + KEY_FORMAT + ", " + KEY_LEGALITY;
+					" WHERE " + KEY_FORMAT + " = '" + format + "'" + " GROUP BY " + KEY_LEGALITY;
+			return mDb.rawQuery(sql, null);
+		} catch (SQLiteException e) {
+			throw new FamiliarDbException(e);
+		} catch (IllegalStateException e) {
+			throw new FamiliarDbException(e);
+		}
+	}
+
+	/**
+	 * @param mDb
+	 * @param format
+	 * @return
+	 * @throws FamiliarDbException
+	 */
+	public static Cursor getLegalSets(SQLiteDatabase mDb, String format) throws FamiliarDbException {
+		try {
+			String sql = "SELECT GROUP_CONCAT(" + DATABASE_TABLE_SETS +"."+KEY_NAME + ", '<br>') AS " + KEY_LEGAL_SETS +
+                    " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_LEGAL_SETS +"."+KEY_SET+" = "+DATABASE_TABLE_SETS+"."+KEY_CODE + ")" +
+                    " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
 			return mDb.rawQuery(sql, null);
 		} catch (SQLiteException e) {
 			throw new FamiliarDbException(e);

@@ -62,7 +62,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gelakinetic.mtgfam.fragments.CardViewFragment;
+import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
@@ -193,6 +193,10 @@ public class FamiliarActivity extends FragmentActivity {
 				cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
 				addImageCache(getSupportFragmentManager(), cacheParams);
 			}
+			else if (s.endsWith(getString(R.string.key_language))) {
+				FamiliarActivity.this.finish();
+				startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class));
+			}
 		}
 	};
 	/* Drawer elements */
@@ -285,6 +289,7 @@ public class FamiliarActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PrefsFragment.checkOverrideSystemLanguage(this);
 		mPreferenceAdapter = new PreferenceAdapter(this);
 
 		/* Figure out what theme the app is currently in, and change it if necessary */
@@ -558,7 +563,10 @@ public class FamiliarActivity extends FragmentActivity {
 				Uri data = intent.getData();
 				Bundle args = new Bundle();
 				assert data != null;
-				args.putLong(CardViewFragment.CARD_ID, Long.parseLong(data.getLastPathSegment()));
+
+				args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{Long.parseLong(data.getLastPathSegment())});
+				args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+
 				selectItem(R.string.main_card_search, args);
 			}
 			else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
@@ -665,6 +673,7 @@ public class FamiliarActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		PrefsFragment.checkOverrideSystemLanguage(this);
 		if (mRoundEndTime != -1) {
 			startUpdatingDisplay();
 		}
@@ -692,8 +701,8 @@ public class FamiliarActivity extends FragmentActivity {
 		switch (resId) {
 			case R.string.main_card_search: {
 				/* If this is a quick search intent, launch either the card view or result list directly */
-				if (args != null && args.containsKey(CardViewFragment.CARD_ID)) {
-					newFrag = new CardViewFragment();
+				if (args != null && args.containsKey(CardViewPagerFragment.CARD_ID_ARRAY)) {
+					newFrag = new CardViewPagerFragment();
 				}
 				else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
 					newFrag = new ResultListFragment();

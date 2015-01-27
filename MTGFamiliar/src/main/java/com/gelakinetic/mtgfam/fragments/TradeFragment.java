@@ -375,18 +375,21 @@ public class TradeFragment extends FamiliarFragment {
 							public void onClick(View v) {
 								try {
 									SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
-									Bundle args = new Bundle();
-									/* Get the card ID, and send it to a new CardViewFragment */
+									/* Get the card ID, and send it to a new CardViewPagerFragment */
 									Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
 											lSide.get(positionForDialog).setCode, new String[]{
 													CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
 									);
-									args.putLong(CardViewFragment.CARD_ID, cursor.getLong(
-											cursor.getColumnIndex(CardDbAdapter.KEY_ID)));
+
+									Bundle args = new Bundle();
+									args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
+											cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+									args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+
 									cursor.close();
 									DatabaseManager.getInstance().closeDatabase();
-									CardViewFragment cvFrag = new CardViewFragment();
-									TradeFragment.this.startNewFragment(cvFrag, args);
+									CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+									TradeFragment.this.startNewFragment(cvpFrag, args);
 								} catch (FamiliarDbException e) {
 									TradeFragment.this.handleFamiliarDbException(false);
 								}
