@@ -6,6 +6,12 @@
               android:layout_height="match_parent"
               android:id="@+id/dialog_layout_root">
 
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/material_purple_500"/>
+
     <Button
         android:id="@+id/show_card_button"
         android:layout_width="match_parent"
@@ -15,7 +21,7 @@
         android:textStyle="bold"/>
 
     <View
-        android:id="@+id/divider"
+        android:id="@+id/divider2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/material_purple_500"/>
