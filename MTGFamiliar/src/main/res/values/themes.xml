@@ -13,7 +13,7 @@
 
         <item name="com.gelakinetic.mtgfam:abc_edit_text_material">@drawable/abc_edit_text_material_light</item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_light</item>
-        <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_light</item>
+        <item name="com.gelakinetic.mtgfam:color_text">@android:color/primary_text_light</item>
 
         <item name="com.gelakinetic.mtgfam:color_common">@color/common_light</item>
         <item name="com.gelakinetic.mtgfam:color_uncommon">@color/uncommon_light</item>
@@ -23,8 +23,6 @@
 
         <item name="com.gelakinetic.mtgfam:color_drawer_background">@color/drawer_background_light</item>
         <item name="com.gelakinetic.mtgfam:color_drawer_text_unselected">@color/drawer_text_unselected_light</item>
-        <item name="com.gelakinetic.mtgfam:color_drawer_text_selected">@color/drawer_text_selected_light</item>
-        <item name="com.gelakinetic.mtgfam:color_drawer_divider_header">@color/drawer_divider_header_light</item>
         <item name="com.gelakinetic.mtgfam:color_drawer_divider_item">@color/drawer_divider_item_light</item>
         <item name="com.gelakinetic.mtgfam:selector_drawer_text">@drawable/drawer_text_light</item>
 
@@ -81,7 +79,7 @@
 
         <item name="com.gelakinetic.mtgfam:abc_edit_text_material">@drawable/abc_edit_text_material_dark</item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_dark</item>
-        <item name="com.gelakinetic.mtgfam:color_text">@color/text_color_dark</item>
+        <item name="com.gelakinetic.mtgfam:color_text">@android:color/primary_text_dark</item>
 
         <item name="com.gelakinetic.mtgfam:color_common">@color/common_dark</item>
         <item name="com.gelakinetic.mtgfam:color_uncommon">@color/uncommon_dark</item>
@@ -91,8 +89,6 @@
 
         <item name="com.gelakinetic.mtgfam:color_drawer_background">@color/drawer_background_dark</item>
         <item name="com.gelakinetic.mtgfam:color_drawer_text_unselected">@color/drawer_text_unselected_dark</item>
-        <item name="com.gelakinetic.mtgfam:color_drawer_text_selected">@color/drawer_text_selected_dark</item>
-        <item name="com.gelakinetic.mtgfam:color_drawer_divider_header">@color/drawer_divider_header_dark</item>
         <item name="com.gelakinetic.mtgfam:color_drawer_divider_item">@color/drawer_divider_item_dark</item>
         <item name="com.gelakinetic.mtgfam:selector_drawer_text">@drawable/drawer_text_dark</item>
 

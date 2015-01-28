@@ -20,8 +20,6 @@
         <!-- Drawer Colors -->
         <attr name="color_drawer_background" format="color|reference"/>
         <attr name="color_drawer_text_unselected" format="color|reference"/>
-        <attr name="color_drawer_text_selected" format="color|reference"/>
-        <attr name="color_drawer_divider_header" format="color|reference"/>
         <attr name="color_drawer_divider_item" format="color|reference"/>
         <attr name="selector_drawer_text" format="reference"/>
 

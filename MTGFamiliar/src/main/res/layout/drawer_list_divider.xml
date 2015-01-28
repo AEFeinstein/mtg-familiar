@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -7,24 +8,11 @@
     android:longClickable="false">
     <!--android:background="?android:attr/activatedBackgroundIndicator"-->
 
-    <TextView
-        android:text="@string/main_pages"
-        android:id="@+id/drawer_header_name"
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:gravity="bottom"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="56dp"
-        android:layout_marginBottom="1dp"
-        android:textColor="?attr/color_drawer_text_unselected"
-        android:textStyle="bold"
-        style="@style/text.small"/>
-
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="?attr/color_drawer_divider_header"/>
+        android:background="?attr/color_drawer_divider_item"/>
 </LinearLayout>

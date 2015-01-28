@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.helpers;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;

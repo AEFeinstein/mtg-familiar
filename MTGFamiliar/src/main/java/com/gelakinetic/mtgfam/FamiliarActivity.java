@@ -1312,12 +1312,12 @@ public class FamiliarActivity extends ActionBarActivity {
 	public class DrawerEntry {
 		final int mNameResource;
 		final int mIconResource;
-		final boolean mIsHeader;
+		final boolean mIsDivider;
 
 		public DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
 			mNameResource = nameResource;
 			mIconResource = iconResource;
-			mIsHeader = isHeader;
+			mIsDivider = isHeader;
 		}
 	}
 
@@ -1352,8 +1352,8 @@ public class FamiliarActivity extends ActionBarActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			int layout;
-			if (values[position].mIsHeader) {
-				layout = R.layout.drawer_list_header;
+			if (values[position].mIsDivider) {
+				layout = R.layout.drawer_list_divider;
 			}
 			else {
 				layout = R.layout.drawer_list_item;
@@ -1363,21 +1363,12 @@ public class FamiliarActivity extends ActionBarActivity {
 			}
 
 			assert convertView != null;
-			if (values[position].mIsHeader) {
+			if (values[position].mIsDivider) {
 				/* Make sure the recycled view is the right type, inflate a new one if necessary */
-				if (convertView.findViewById(R.id.drawer_header_name) == null) {
+				if (convertView.findViewById(R.id.divider) == null) {
 					convertView = getLayoutInflater().inflate(layout, parent, false);
 				}
 				assert convertView != null;
-				TextView title = ((TextView) convertView.findViewById(R.id.drawer_header_name));
-				if(values[position].mNameResource != 0) {
-					title.setText(values[position].mNameResource);
-				}
-				else {
-					title.setVisibility(View.GONE);
-				}
-				convertView.findViewById(R.id.drawer_header_name).setLongClickable(false);
-				convertView.findViewById(R.id.drawer_header_name).setClickable(false);
 				convertView.setFocusable(false);
 				convertView.setFocusableInTouchMode(false);
 			}
@@ -1388,7 +1379,7 @@ public class FamiliarActivity extends ActionBarActivity {
 				}
 				assert convertView != null;
 				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
-				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconResource), 0, 0, 0);
+                ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconResource), 0, 0, 0);
 			}
 
 			return convertView;

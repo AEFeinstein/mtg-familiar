@@ -35,33 +35,29 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <!--Drawer Colors -->
     <color name="drawer_background_light">#EEEEEE</color>
     <color name="drawer_text_unselected_light">#DF333333</color>
-    <color name="drawer_text_selected_light">#FFFFFF</color>
-    <color name="drawer_divider_header_light">#BEBEBE</color>
     <color name="drawer_divider_item_light">#1A000000</color>
+    <color name="drawer_item_selected_light">#18000000</color>
 
     <color name="drawer_background_dark">#303030</color>
     <color name="drawer_text_unselected_dark">#CCFFFFFF</color>
-    <color name="drawer_text_selected_dark">#000000</color>
-    <color name="drawer_divider_header_dark">#414141</color>
     <color name="drawer_divider_item_dark">#26FFFFFF</color>
+    <color name="drawer_item_selected_dark">#5CFFFFFF</color>
 
-    <color name="transparent">#00000000</color>
-    <color name="text_color_light">#000000</color>
-    <color name="text_color_dark">#FFFFFF</color>
-
-    <color name="material_purple_500">#9C27B0</color>
-    <color name="material_purple_500_transparent">#609C27B0</color>
-    <color name="material_purple_700">#7B1FA2</color>
+    <!-- used for life, poison, here and there -->
     <color name="material_red_500">#F44336</color>
     <color name="material_green_500">#4CAF50</color>
 
+    <!-- background color for the entire app -->
     <color name="background_light">#EEEEEE</color>
     <color name="background_dark">#000000</color>
 
+    <!-- used in btn_default_custom.xml -->
     <color name="light_grey">#D7D7D7</color>
     <color name="dark_grey">#BEBEBE</color>
 
-    <color name="drawer_item_selected_light">#18000000</color>
-    <color name="drawer_item_selected_dark">#64FFFFFF</color>
+    <!-- Theme Colors -->
+    <color name="material_purple_500">#9C27B0</color>
+    <color name="material_purple_500_transparent">#609C27B0</color>
+    <color name="material_purple_700">#7B1FA2</color>
 
 </resources>
