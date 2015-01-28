@@ -403,6 +403,7 @@ Bonne chance, et bon jeu!</string>
 <string name="wishlist_type_color">Couleur</string>
 <string name="wishlist_type_name">Nom</string>
 <string name="wishlist_type_price">Prix</string>
+<string name="wishlist_type_set">Ensemble</string>
 <string name="wishlist_ascending">Ascendant</string>
 <string name="wishlist_descending">Descendant</string>
 <string name="wishlist_sort_by">Trier par </string>

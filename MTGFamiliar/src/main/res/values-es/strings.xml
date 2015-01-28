@@ -398,6 +398,7 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="wishlist_type_color">Color</string>
 <string name="wishlist_type_name">Nombre</string>
 <string name="wishlist_type_price">Precio</string>
+<string name="wishlist_type_set">Conjunto</string>
 <string name="wishlist_ascending">Ascendente</string>
 <string name="wishlist_descending">Descendente</string>
 <string name="wishlist_sort_by">Ordenar por</string>

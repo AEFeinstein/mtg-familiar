@@ -256,5 +256,6 @@
         <item>@string/wishlist_type_color</item>
         <item>@string/wishlist_type_name</item>
         <item>@string/wishlist_type_price</item>
+        <item>@string/wishlist_type_set</item>
     </string-array>
 </resources>

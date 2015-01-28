@@ -310,6 +310,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
 	<string name="wishlist_type_color">Color</string>
 	<string name="wishlist_type_name">Name</string>
 	<string name="wishlist_type_price">Price</string>
+    <string name="wishlist_type_set">Set</string>
 	<string name="wishlist_ascending">Ascending</string>
 	<string name="wishlist_descending">Descending</string>
 	<string name="wishlist_sort_by">Sort By</string>
