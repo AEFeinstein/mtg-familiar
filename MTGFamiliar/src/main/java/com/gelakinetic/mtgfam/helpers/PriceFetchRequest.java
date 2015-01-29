@@ -36,6 +36,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 	private final String mCardName;
 	private final String mSetCode;
 	private final int mMultiverseID;
+    private String mCardType;
 	private String mCardNumber;
 
 	/**
@@ -88,9 +89,17 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 		while (retry > 0) {
 			try {
 				/* If the card number wasn't given, figure it out */
-				if (mCardNumber == null) {
+				if (mCardNumber == null || mCardType == null) {
 					Cursor c = CardDbAdapter.fetchCardByNameAndSet(mCardName, mSetCode, CardDbAdapter.allData, database);
-					mCardNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+
+                    if (mCardNumber == null) {
+                        mCardNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                    }
+
+                    if (mCardType == null) {
+                        mCardType = c.getString(c.getColumnIndex(CardDbAdapter.KEY_TYPE));
+                    }
+
 					c.close();
 				}
 
@@ -146,7 +155,8 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 				/* Build the URL */
 				URL priceUrl = new URL("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=MTGFAMILIA&s=" +
 						URLEncoder.encode(tcgName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") + "&p=" +
-						URLEncoder.encode(tcgCardName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8")
+						URLEncoder.encode(tcgCardName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") +
+                        URLEncoder.encode((mCardType.startsWith("Basic Land") ? " (" + mCardNumber + ")" : ""), "UTF-8")
 				);
 
 				/* Fetch the information from the web */
