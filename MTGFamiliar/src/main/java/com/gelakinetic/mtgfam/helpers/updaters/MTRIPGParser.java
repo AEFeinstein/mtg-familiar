@@ -24,12 +24,16 @@ class MTRIPGParser {
 
 	public static final int MODE_IPG = 0;
 	public static final int MODE_MTR = 1;
+    public static final int MODE_JAR = 2;
 	private static final String MTR_SOURCE =
 			"https://sites.google.com/site/mtgfamiliar/rules/MagicTournamentRules-light.html";
 	private static final String IPG_SOURCE =
 			"https://sites.google.com/site/mtgfamiliar/rules/InfractionProcedureGuide-light.html";
+    private static final String JAR_SOURCE =
+            "https://drive.google.com/file/d/0Bxp8EZC9AHuyVHc4TmVLUkpza0k/view?usp=sharing";
 	private static final String MTR_LOCAL_FILE = "MTR.html";
 	private static final String IPG_LOCAL_FILE = "IPG.html";
+    private static final String JAR_LOCAL_FILE = "JAR.html";
 	private final Context mContext;
 	private final PreferenceAdapter mPrefAdapter;
 
@@ -63,6 +67,8 @@ class MTRIPGParser {
 			case MODE_MTR:
 				output = new File(mContext.getFilesDir(), MTR_LOCAL_FILE);
 				break;
+            case MODE_JAR:
+                output = new File(mContext.getFilesDir(), JAR_LOCAL_FILE);
 		}
 		try {
 			if (output != null && !output.exists()) {
@@ -73,6 +79,9 @@ class MTRIPGParser {
 					case MODE_MTR:
 						parseDocument(mode, mContext.getResources().openRawResource(R.raw.mtr));
 						break;
+                    case MODE_JAR:
+                        parseDocument(mode, mContext.getResources().openRawResource(R.raw.jar));
+                        break;
 				}
 			}
 		} catch (IOException e) {
@@ -89,6 +98,9 @@ class MTRIPGParser {
 				case MODE_MTR:
 					url = new URL(MTR_SOURCE);
 					break;
+                case MODE_JAR:
+                    url = new URL(JAR_SOURCE);
+                    break;
 				default:
 					throw new FileNotFoundException("Invalid switch"); /* handled below */
 			}
@@ -124,6 +136,10 @@ class MTRIPGParser {
 				shouldUpdate = documentDate != mPrefAdapter.getLastMTRUpdate();
 				break;
 			}
+            case MODE_JAR: {
+                shouldUpdate = documentDate != mPrefAdapter.getLastJARUpdate();
+                break;
+            }
 			default: {
 				shouldUpdate = false;
 			}
@@ -145,6 +161,9 @@ class MTRIPGParser {
 				case MODE_MTR:
 					output = new File(mContext.getFilesDir(), MTR_LOCAL_FILE);
 					break;
+                case MODE_JAR:
+                    output = new File(mContext.getFilesDir(), JAR_LOCAL_FILE);
+                    break;
 				default:
 					throw new FileNotFoundException("Invalid switch"); /* handled below */
 			}
@@ -161,6 +180,9 @@ class MTRIPGParser {
 				case MODE_MTR:
 					mPrefAdapter.setLastMTRUpdate(documentDate);
 					break;
+                case MODE_JAR:
+                    mPrefAdapter.setLastJARUpdate(documentDate);
+                    break;
 				default:
 					throw new FileNotFoundException("Invalid switch"); /* handled below */
 			}

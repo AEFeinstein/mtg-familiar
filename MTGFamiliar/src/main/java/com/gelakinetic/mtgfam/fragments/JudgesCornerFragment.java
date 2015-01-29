@@ -37,9 +37,11 @@ public class JudgesCornerFragment extends FamiliarFragment {
 	public static final String HTML_DOC = "html";
 	public static final String MTR_LOCAL_FILE = "MTR.html";
 	public static final String IPG_LOCAL_FILE = "IPG.html";
+    public static final String JAR_LOCAL_FILE = "JAR.html";
 	/* Constants to keep track of tabs */
 	private static final String TAG_MTR = "MTR";
 	private static final String TAG_IPG = "IPG";
+    private static final String TAG_JAR = "JAR";
 	private static final String TAG_COUNTER = "COUNTER";
 	/* UI elements */
 	private TabHost mTabHost;
@@ -71,10 +73,15 @@ public class JudgesCornerFragment extends FamiliarFragment {
 		Bundle IpgBundle = new Bundle();
 		IpgBundle.putString(HTML_DOC, IPG_LOCAL_FILE);
 
+        Bundle JarBundle = new Bundle();
+        JarBundle.putString(HTML_DOC, JAR_LOCAL_FILE);
+
 		mTabManager.addTab(mTabHost.newTabSpec(TAG_MTR)
 				.setIndicator(getString(R.string.judges_corner_MTR)), HtmlDocFragment.class, MtrBundle);
 		mTabManager.addTab(mTabHost.newTabSpec(TAG_IPG)
 				.setIndicator(getString(R.string.judges_corner_IPG)), HtmlDocFragment.class, IpgBundle);
+        mTabManager.addTab(mTabHost.newTabSpec(TAG_JAR)
+                .setIndicator(getString(R.string.judges_corner_JAR)), HtmlDocFragment.class, JarBundle);
 		mTabManager.addTab(mTabHost.newTabSpec(TAG_COUNTER)
 				.setIndicator(getString(R.string.judges_corner_counter)), DeckCounterFragment.class, null);
 
