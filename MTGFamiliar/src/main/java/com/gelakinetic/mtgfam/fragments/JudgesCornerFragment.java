@@ -25,16 +25,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.common.view.SlidingTabLayout;
+import com.astuetz.PagerSlidingTabStrip;
 import com.gelakinetic.mtgfam.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A basic sample which shows how to use {@link com.example.android.common.view.SlidingTabLayout}
- * to display a custom {@link ViewPager} title strip which gives continuous feedback to the user
- * when scrolling.
+ * This fragment nests a few other fragments which are useful for judges
  */
 public class JudgesCornerFragment extends FamiliarFragment {
 
@@ -53,8 +51,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 	private List<PagerItem> mTabs = new ArrayList<PagerItem>();
 
 	/**
-	 * This class represents a tab to be displayed by {@link ViewPager} and it's associated
-	 * {@link SlidingTabLayout}.
+	 * This class represents a tab to be displayed by {@link ViewPager}
 	 */
 	class PagerItem {
 		private final CharSequence mTitle;
@@ -99,13 +96,6 @@ public class JudgesCornerFragment extends FamiliarFragment {
 		CharSequence getTitle() {
 			return mTitle;
 		}
-
-		/**
-		 * @return the color to be used for indicator on the {@link SlidingTabLayout}
-		 */
-		int getIndicatorColor() {
-			return mIndicatorColor;
-		}
 	}
 
 	@Override
@@ -136,7 +126,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 	 * Here we can pick out the {@link View}s we need to configure from the content view.
 	 *
 	 * We set the {@link ViewPager}'s adapter to be an instance of
-	 * {@link SampleFragmentPagerAdapter}. The {@link SlidingTabLayout} is then given the
+	 * {@link SampleFragmentPagerAdapter}. The {@link PagerSlidingTabStrip} is then given the
 	 * {@link ViewPager} so that it can populate itself.
 	 *
 	 * @param view View created in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
@@ -146,25 +136,13 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
 		// Get the ViewPager and set it's PagerAdapter so that it can display items
 		/* A {@link ViewPager} which will be used in conjunction with the {@link SlidingTabLayout} above. */
-		ViewPager mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-		mViewPager.setAdapter(new SampleFragmentPagerAdapter(getChildFragmentManager()));
-		mViewPager.setOffscreenPageLimit(2);
+		ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+		viewPager.setAdapter(new SampleFragmentPagerAdapter(getChildFragmentManager()));
+		viewPager.setOffscreenPageLimit(2);
 
-		// Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
-		// it's PagerAdapter set.
-		/* A custom {@link ViewPager} title strip which looks much like Tabs present in Android v4.0 and
-		 * above, but is designed to give continuous feedback to the user when scrolling. */
-		SlidingTabLayout mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
-		mSlidingTabLayout.setViewPager(mViewPager);
-
-		// Set a TabColorizer to customize the indicator and divider colors. Here we just retrieve
-		// the tab at the position, and return it's set color
-		mSlidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-			@Override
-			public int getIndicatorColor(int position) {
-				return mTabs.get(position).getIndicatorColor();
-			}
-		});
+        // Bind the tabs to the ViewPager
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) view.findViewById(R.id.sliding_tabs);
+        tabs.setViewPager(viewPager);
 	}
 
 	/**
@@ -173,7 +151,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 	 * created by the relevant {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem} for the requested position.
 	 * <p>
 	 * The important section of this class is the {@link #getPageTitle(int)} method which controls
-	 * what is displayed in the {@link SlidingTabLayout}.
+	 * what is displayed in the {@link PagerSlidingTabStrip}.
 	 */
 	class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -198,7 +176,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
 		/**
 		 * Return the title of the item at {@code position}. This is important as what this method
-		 * returns is what is displayed in the {@link SlidingTabLayout}.
+		 * returns is what is displayed in the {@link PagerSlidingTabStrip}.
 		 * <p>
 		 * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#getTitle()}.
 		 */
