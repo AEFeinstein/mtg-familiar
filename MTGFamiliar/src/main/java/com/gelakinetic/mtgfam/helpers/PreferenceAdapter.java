@@ -167,6 +167,16 @@ public class PreferenceAdapter {
 		this.edit.commit();
 	}
 
+    /* Last JAR update */
+    public synchronized long getLastJARUpdate() {
+        return this.prefs.getLong(context.getString(R.string.key_lastJARUpdate), 0);
+    }
+
+    public synchronized void setLastJARUpdate(long lastJARUpdate) {
+        this.edit.putLong(context.getString(R.string.key_lastJARUpdate), lastJARUpdate);
+        this.edit.commit();
+    }
+
 	/* TTS show dialog */
 	public synchronized boolean getTtsShowDialog() {
 		return this.prefs.getBoolean(context.getString(R.string.key_ttsShowDialog), true);
