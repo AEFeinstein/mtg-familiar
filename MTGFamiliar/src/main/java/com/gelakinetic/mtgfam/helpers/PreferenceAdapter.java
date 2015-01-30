@@ -139,7 +139,7 @@ public class PreferenceAdapter {
 
 	/* Last rules update */
 	public synchronized long getLastRulesUpdate() {
-		return this.prefs.getLong(context.getString(R.string.key_lastRulesUpdate), BuildDate.get(this.context).getTime());
+		return this.prefs.getLong(context.getString(R.string.key_lastRulesUpdate), 0);
 	}
 
 	public synchronized void setLastRulesUpdate(long lastRulesUpdate) {
