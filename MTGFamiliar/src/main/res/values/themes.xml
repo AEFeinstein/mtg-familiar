@@ -65,6 +65,7 @@
         <item name="com.gelakinetic.mtgfam:btn_check_l">@drawable/btn_check_light_l</item>
         <item name="com.gelakinetic.mtgfam:btn_check_foil">@drawable/btn_check_light_foil</item>
 
+        <item name="com.gelakinetic.mtgfam:hms_picker_style">@style/MyCustomBetterPickerTheme.Light</item>
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat">
@@ -130,6 +131,7 @@
         <item name="com.gelakinetic.mtgfam:btn_check_l">@drawable/btn_check_dark_l</item>
         <item name="com.gelakinetic.mtgfam:btn_check_foil">@drawable/btn_check_dark_foil</item>
 
+        <item name="com.gelakinetic.mtgfam:hms_picker_style">@style/MyCustomBetterPickerTheme</item>
     </style>
 
     <style name="Theme.light" parent="Theme.base.light" >
@@ -149,6 +151,16 @@
         <item name="closeIcon">@drawable/ic_close_dark</item>
         <!-- Search button icon -->
         <item name="searchIcon">@drawable/ic_menu_search</item>
+    </style>
+
+    <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
+        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless</item>
+        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless</item>
+    </style>
+
+    <style name="MyCustomBetterPickerTheme" parent="@style/BetterPickersDialogFragment">
+        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless</item>
+        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless</item>
     </style>
 
 </resources>

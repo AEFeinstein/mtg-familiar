@@ -175,7 +175,8 @@ public class WishlistHelpers {
 		}
 		else {
 			customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
-			customView.findViewById(R.id.divider).setVisibility(View.GONE);
+            customView.findViewById(R.id.divider1).setVisibility(View.GONE);
+            customView.findViewById(R.id.divider2).setVisibility(View.GONE);
 		}
 
 		/* Read the wishlist */

@@ -65,6 +65,9 @@
         <attr name="btn_check_l" format="reference"/>
         <attr name="btn_check_foil" format="reference"/>
 
+        <!-- to style the hms time picker -->
+        <attr name="hms_picker_style" format="reference"/>
+
     </declare-styleable>
 
 </resources>

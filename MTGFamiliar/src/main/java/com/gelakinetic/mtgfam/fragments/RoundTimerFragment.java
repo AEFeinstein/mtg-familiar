@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -22,9 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.TimePicker;
 
 import com.alertdialogpro.AlertDialogPro;
+import com.doomonafireball.betterpickers.hmspicker.HmsPicker;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
@@ -58,10 +57,8 @@ public class RoundTimerFragment extends FamiliarFragment {
 	private static final int RINGTONE_REQUEST_CODE = 17;
 	/* Variables */
 	private Button mTimerButton;
-	private TimePicker mTimePicker;
-	private int mPickerHours = -1;
-	private int mPickerMinutes = -1;
 
+    private HmsPicker mTimePicker;
 	/**
 	 * This static method is used to either set or cancel PendingIntents with the AlarmManager. It is static so that
 	 * the FamiliarActivity can restart alarms without instantiating a fragment.
@@ -170,8 +167,8 @@ public class RoundTimerFragment extends FamiliarFragment {
 
 		assert v != null;
 
-		mTimePicker = (TimePicker) v.findViewById(R.id.rt_time_picker);
-		mTimePicker.setIs24HourView(true);
+        mTimePicker = (HmsPicker) v.findViewById(R.id.rt_time_picker);
+        mTimePicker.setTheme(getResourceIdFromAttr(R.attr.hms_picker_style));
 
 		mTimerButton = ((Button) v.findViewById(R.id.rt_action_button));
 		mTimerButton.setOnClickListener(new View.OnClickListener() {
@@ -192,14 +189,12 @@ public class RoundTimerFragment extends FamiliarFragment {
 					notificationManager.cancel(TIMER_NOTIFICATION_ID);
 				}
 				else {
-					/* This forces the inner value to update, in case the user typed it in manually */
-					mTimePicker.clearFocus();
-
 					/* Figure out the end time */
-					int hours = mTimePicker.getCurrentHour();
-					int minutes = mTimePicker.getCurrentMinute();
+					int hours = mTimePicker.getHours();
+					int minutes = mTimePicker.getMinutes();
+                    int seconds = mTimePicker.getSeconds();
 
-					long timeInMillis = ((hours * 3600) + (minutes * 60)) * 1000;
+					long timeInMillis = ((hours * 3600) + (minutes * 60) + seconds) * 1000;
 					if (timeInMillis == 0) {
 						return;
 					}
@@ -232,43 +227,6 @@ public class RoundTimerFragment extends FamiliarFragment {
 	 */
 	public void timerEnded() {
 		mTimerButton.setText(R.string.timer_start);
-	}
-
-	/**
-	 * Save the current settings for the time picker to persist through rotations
-	 */
-	@Override
-	public void onPause() {
-		super.onPause();
-		mPickerHours = mTimePicker.getCurrentHour();
-		mPickerMinutes = mTimePicker.getCurrentMinute();
-	}
-
-	/**
-	 * Make sure to set the default round length if the time picker settings haven't persisted
-	 */
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		if (mPickerMinutes == -1 && mPickerHours == -1) {
-			try {
-				int length = Integer.parseInt(
-						getFamiliarActivity().mPreferenceAdapter.getRoundLength());
-				mPickerHours = length / 60;
-				mPickerMinutes = length % 60;
-			} catch (Exception ex) {
-				/* Eat the exception; this should never happen in practice, and if it does we just want to default to 50
-				 * and pretend nothing broke
-				 */
-				mPickerHours = 0;
-				mPickerMinutes = 50;
-			}
-		}
-
-		/* Set the time picker, may be persisted */
-		mTimePicker.setCurrentHour(mPickerHours);
-		mTimePicker.setCurrentMinute(mPickerMinutes);
 	}
 
 	/**

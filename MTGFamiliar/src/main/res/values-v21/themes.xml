@@ -13,4 +13,14 @@
         <item name="com.gelakinetic.mtgfam:btn_ripple">@drawable/btn_ripple_dark</item>
     </style>
 
+    <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
+        <item name="bpKeyBackground">@drawable/btn_ripple_borderless_light</item>
+        <item name="bpButtonBackground">@drawable/btn_ripple_borderless_light</item>
+    </style>
+
+    <style name="MyCustomBetterPickerTheme" parent="@style/BetterPickersDialogFragment">
+        <item name="bpKeyBackground">@drawable/btn_ripple_borderless_dark</item>
+        <item name="bpButtonBackground">@drawable/btn_ripple_borderless_dark</item>
+    </style>
+
 </resources>
