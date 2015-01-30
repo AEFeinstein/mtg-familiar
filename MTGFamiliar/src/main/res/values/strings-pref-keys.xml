@@ -12,6 +12,7 @@
     <string name="key_lastRulesUpdate">lastRulesUpdate</string>
     <string name="key_lastMTRUpdate">lastMTRUpdate</string>
     <string name="key_lastIPGUpdate">lastIPGUpdate</string>
+    <string name="key_lastJARUpdate">lastJARUpdate</string>
     <string name="key_ttsShowDialog">ttsShowDialog</string>
     <string name="key_autoupdate">autoupdate</string>
     <string name="key_consolidateSearch">consolidateSearch</string>

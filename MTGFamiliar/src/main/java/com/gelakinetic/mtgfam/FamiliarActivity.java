@@ -359,6 +359,7 @@ public class FamiliarActivity extends FragmentActivity {
 								mPreferenceAdapter.setLastLegalityUpdate(0);
 								mPreferenceAdapter.setLastIPGUpdate(0);
 								mPreferenceAdapter.setLastMTRUpdate(0);
+                                mPreferenceAdapter.setLastJARUpdate(0);
 								mPreferenceAdapter.setLastRulesUpdate(0);
 								mPreferenceAdapter.setLastTCGNameUpdate("");
 								mPreferenceAdapter.setLastUpdate("");
