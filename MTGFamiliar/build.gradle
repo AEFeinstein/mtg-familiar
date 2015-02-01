@@ -23,7 +23,15 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-    productFlavors {
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    // Temporary
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -36,4 +44,6 @@ dependencies {
     compile files('libs/annotations.jar')
     compile files('libs/gson-1.7.1.jar')
     compile files('libs/guava-14.0.jar')
+    compile 'com.google.code.findbugs:jsr305:3.0.0'
+    compile 'javax.inject:javax.inject:1'
 }
