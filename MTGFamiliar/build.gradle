@@ -29,10 +29,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    // Temporary
-    lintOptions {
-        abortOnError false
-    }
 }
 
 dependencies {
