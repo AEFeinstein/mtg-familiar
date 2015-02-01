@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MTGFamiliar/MTGFamiliar.iml" filepath="$PROJECT_DIR$/MTGFamiliar/MTGFamiliar.iml" />
       <module fileurl="file://$PROJECT_DIR$/mtg-familiar.iml" filepath="$PROJECT_DIR$/mtg-familiar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mtg-familiar.iml" filepath="$PROJECT_DIR$/mtg-familiar.iml" />
     </modules>
   </component>
 </project>
