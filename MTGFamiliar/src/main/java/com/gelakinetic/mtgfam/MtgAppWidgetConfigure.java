@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;

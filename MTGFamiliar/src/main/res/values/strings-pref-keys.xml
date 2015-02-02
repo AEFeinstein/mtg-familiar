@@ -36,7 +36,6 @@
     <string name="key_cardlanguage">cardlanguage</string>
     <string name="key_displayMode">displayMode</string>
     <string name="key_player_data">player_data</string>
-    <string name="key_roundLength">roundLength</string>
     <string name="key_timerSound">timerSound</string>
     <string name="key_tradePrice">tradePrice</string>
     <string name="key_date">date</string>

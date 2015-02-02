@@ -324,11 +324,6 @@ public class PreferenceAdapter {
 		this.edit.commit();
 	}
 
-	/* Round length */
-	public synchronized String getRoundLength() {
-		return this.prefs.getString(context.getString(R.string.key_roundLength), "50");
-	}
-
 	/* Timer sound */
 	public synchronized String getTimerSound() {
 		return this.prefs.getString(context.getString(R.string.key_timerSound), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());

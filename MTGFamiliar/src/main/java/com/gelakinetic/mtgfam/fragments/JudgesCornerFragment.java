@@ -55,12 +55,10 @@ public class JudgesCornerFragment extends FamiliarFragment {
 	 */
 	class PagerItem {
 		private final CharSequence mTitle;
-		private final int mIndicatorColor;
 		private String mFragmentType;
 
 		PagerItem(CharSequence title, String fragmentType) {
 			mTitle = title;
-			mIndicatorColor = JudgesCornerFragment.this.getResources().getColor(android.R.color.white);
 			mFragmentType = fragmentType;
 		}
 
