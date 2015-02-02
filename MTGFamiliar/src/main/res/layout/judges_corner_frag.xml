@@ -19,15 +19,18 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/material_purple_500"/>
+        android:background="@color/material_purple_500"
+        app:pstsIndicatorColor="@android:color/white"
+        android:textColor="@android:color/white"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
