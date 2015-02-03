@@ -304,4 +304,8 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 		ta.recycle();
 		return resId;
 	}
+
+    void sort() {
+
+    }
 }
