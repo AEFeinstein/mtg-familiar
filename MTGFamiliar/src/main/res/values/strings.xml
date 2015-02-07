@@ -92,7 +92,7 @@ Join the &lt;a href="https://plus.google.com/communities/110783165129365768059"&
 Join the &lt;a href="https://github.com/AEFeinstein/mtg-familiar"&gt;open source project&lt;/a&gt; on GitHub.&lt;br&gt;&lt;br&gt;
 Thanks to all the contributors including, but not limited to, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, and bcGiR.&lt;br&gt;&lt;br&gt;
 Thanks to all the translators including, but not limited to, Ghislain, Piotr, Víctor, Emilio, and Alan.&lt;br&gt;&lt;br&gt;
-Thanks to all those who manage data sources including, but not limited to, Ryan Stapleton (&lt;a href="http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html"&gt;Bluewizard.net&lt;/a&gt;), Robert Schultz (&lt;a href="http://www.mtgimage.com"&gt;mtgimage.com&lt;/a&gt;), and Chedy Hampson (&lt;a href="http://tcgplayer.com"&gt;TCGPlayer.com&lt;/a&gt;)&lt;br&gt;&lt;br&gt;
+Thanks to all those who manage data sources including, but not limited to, Ryan Stapleton (&lt;a href="http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html"&gt;Bluewizard.net&lt;/a&gt;), Robert Schultz (&lt;a href="http://www.mtgimage.com"&gt;mtgimage.com&lt;/a&gt;), and Chedy Hampson (&lt;a href="http://tcgplayer.com"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;&lt;br&gt;
 Thanks to reddit\'s &lt;a href="http://www.reddit.com/r/magicTCG/"&gt;/r/magictcg&lt;/a&gt; for testing and feedback.&lt;br&gt;&lt;br&gt;
 Special thanks to Richard Garfield and the rest of the folks at &lt;a href="http://www.wizards.com/magic"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
 -gelakinetic&lt;br&gt;&lt;br&gt;
@@ -340,7 +340,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="rules_no_cards">No Cards</string>
     <string name="rules_legal_sets">Legal Sets</string>
     <string name="rules_bb_wb_sets">All black &amp; white bordered sets</string>
-    <string name="rules_coppied">Rule coppied to clipboard</string>
+    <string name="rules_coppied">Rule copied to clipboard</string>
     <string name="rules_copy_tag">MTG Rule</string>
 
     <!-- Profile activity -->
@@ -436,6 +436,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="pref_Russian">Russian</string>
     <string name="pref_German">German</string>
     <string name="pref_Polish">Polish</string>
+    <string name="pref_Portuguese">Portuguese</string>
     <string name="pref_1_day">1 day</string>
     <string name="pref_2_days">2 days</string>
     <string name="pref_3_days">3 days</string>
