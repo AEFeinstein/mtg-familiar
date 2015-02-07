@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2011 Adam Feinstein
 
 This file is part of MTG Familiar.
@@ -18,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
-            android:label="@string/app_name"
-            android:hint="@string/name_search_hint"
+    android:hint="@string/name_search_hint"
+    android:includeInGlobalSearch="true"
 
-            android:searchSuggestAuthority="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
-            android:searchSuggestIntentAction="android.intent.action.VIEW"
-            android:searchSuggestIntentData="content://com.gelakinetic.mtgfam.helpers.database.CardSearchProvider/cards"
-            android:searchSuggestSelection=" ?"
-            android:searchSuggestThreshold="3"
-            android:includeInGlobalSearch="true">
+    android:label="@string/app_name"
+    android:searchSuggestAuthority="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
+    android:searchSuggestIntentAction="android.intent.action.VIEW"
+    android:searchSuggestIntentData="content://com.gelakinetic.mtgfam.helpers.database.CardSearchProvider/cards"
+    android:searchSuggestSelection=" ?"
+    android:searchSuggestThreshold="3">
 
 </searchable>

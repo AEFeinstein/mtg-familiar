@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2011 Adam Feinstein and April King.
 
 This file is part of MTG Familiar.
@@ -18,36 +17,36 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/add_player"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_person_add"
         android:title="@string/life_counter_add_player"
-        android:icon="@drawable/ic_menu_person_add"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/remove_player"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_person_remove"
         android:title="@string/life_counter_remove_player"
-        android:icon="@drawable/ic_menu_person_remove"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/display_mode"
+        android:icon="@drawable/ic_menu_grid"
         android:title="@string/life_counter_change_display"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_menu_grid"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/set_gathering"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_group"
         android:title="@string/life_counter_set_gathering"
-        android:icon="@drawable/ic_menu_group"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/edit_gatherings"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_group_add"
         android:title="@string/life_counter_change_default_gathering"
-        android:icon="@drawable/ic_menu_group_add"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/announce_life"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_volume_up"
         android:title="@string/life_counter_announce_life"
-        android:icon="@drawable/ic_menu_volume_up"/>
+        app:showAsAction="ifRoom" />
 
 </menu>

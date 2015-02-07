@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2011 Adam Feinstein and April King.
 
 This file is part of MTG Familiar.
@@ -18,24 +17,24 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:icon="@drawable/ic_menu_close"
         android:id="@+id/search_menu_clear"
-        app:showAsAction="ifRoom"
-        android:title="@string/search_clear_fields"/>
+        android:icon="@drawable/ic_menu_close"
+        android:title="@string/search_clear_fields"
+        app:showAsAction="ifRoom" />
 
     <item
-        android:icon="@drawable/ic_menu_save"
         android:id="@+id/search_menu_save_defaults"
-        app:showAsAction="ifRoom"
-        android:title="@string/search_save_defaults"/>
+        android:icon="@drawable/ic_menu_save"
+        android:title="@string/search_save_defaults"
+        app:showAsAction="ifRoom" />
 
     <item
-        android:icon="@drawable/ic_menu_folder_open"
         android:id="@+id/search_menu_load_defaults"
-        app:showAsAction="ifRoom"
-        android:title="@string/search_load_defaults"/>
+        android:icon="@drawable/ic_menu_folder_open"
+        android:title="@string/search_load_defaults"
+        app:showAsAction="ifRoom" />
 
 </menu>

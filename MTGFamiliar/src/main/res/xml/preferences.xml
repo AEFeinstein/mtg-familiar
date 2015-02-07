@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright 2011 Adam Feinstein and April King. This file is part of MTG 
 	Familiar. MTG Familiar is free software: you can redistribute it and/or modify 
 	it under the terms of the GNU General Public License as published by the 
@@ -14,11 +13,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- General preferences -->
-    <PreferenceScreen
-        android:title="@string/pref_screen_general">
+    <PreferenceScreen android:title="@string/pref_screen_general">
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_default_fragment">
+        <PreferenceCategory android:title="@string/pref_cat_default_fragment">
 
             <ListPreference
                 android:defaultValue="@string/main_card_search"
@@ -26,17 +23,16 @@
                 android:entryValues="@array/default_fragment_array_entries"
                 android:key="@string/key_defaultFragment"
                 android:summary="@string/pref_default_fragment_mode_summary"
-                android:title="@string/pref_default_fragment_mode_title"/>
+                android:title="@string/pref_default_fragment_mode_title" />
         </PreferenceCategory>
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_updates">
+        <PreferenceCategory android:title="@string/pref_cat_updates">
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_autoupdate"
                 android:summary="@string/pref_auto_updates_summary"
-                android:title="@string/pref_auto_updates_title"/>
+                android:title="@string/pref_auto_updates_title" />
 
             <ListPreference
                 android:defaultValue="3"
@@ -44,12 +40,11 @@
                 android:entryValues="@array/update_frequency_days_values"
                 android:key="@string/key_updatefrequency"
                 android:summary="@string/pref_update_frequency_summary"
-                android:title="@string/pref_update_frequency_title"/>
+                android:title="@string/pref_update_frequency_title" />
 
         </PreferenceCategory>
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_widget">
+        <PreferenceCategory android:title="@string/pref_cat_widget">
 
             <MultiSelectListPreference
                 android:defaultValue="@array/default_widget_buttons_array_entries"
@@ -58,11 +53,10 @@
                 android:entryValues="@array/default_fragment_array_entries"
                 android:key="@string/key_widgetButtons"
                 android:summary="@string/pref_widget_mode_summary"
-                android:title="@string/pref_widget_mode_title"/>
+                android:title="@string/pref_widget_mode_title" />
         </PreferenceCategory>
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_theme">
+        <PreferenceCategory android:title="@string/pref_cat_theme">
 
             <ListPreference
                 android:dialogTitle="@string/pref_language"
@@ -70,7 +64,7 @@
                 android:entryValues="@array/pref_language_values"
                 android:key="@string/key_language"
                 android:summary="@string/pref_set_language"
-                android:title="@string/pref_language"/>
+                android:title="@string/pref_language" />
 
             <ListPreference
                 android:defaultValue="@string/pref_theme_light"
@@ -79,59 +73,56 @@
                 android:entryValues="@array/pref_themes"
                 android:key="@string/key_theme"
                 android:summary="@string/pref_theme_summary"
-                android:title="@string/pref_theme_title"/>
+                android:title="@string/pref_theme_title" />
         </PreferenceCategory>
 
     </PreferenceScreen>
 
     <!-- Search and results preferences -->
-    <PreferenceScreen
-        android:title="@string/pref_screen_search">
+    <PreferenceScreen android:title="@string/pref_screen_search">
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_result_list">
+        <PreferenceCategory android:title="@string/pref_cat_result_list">
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_consolidateSearch"
                 android:summary="@string/pref_consolidate_summary"
-                android:title="@string/pref_consolidate_title"/>
+                android:title="@string/pref_consolidate_title" />
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_setPref"
-                android:title="@string/pref_show_set_title"/>
+                android:title="@string/pref_show_set_title" />
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_manacostPref"
-                android:title="@string/pref_show_mana_title"/>
+                android:title="@string/pref_show_mana_title" />
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_typePref"
-                android:title="@string/pref_show_type_title"/>
+                android:title="@string/pref_show_type_title" />
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_abilityPref"
-                android:title="@string/pref_show_ability_title"/>
+                android:title="@string/pref_show_ability_title" />
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_ptPref"
-                android:title="@string/pref_show_pt_title"/>
+                android:title="@string/pref_show_pt_title" />
 
         </PreferenceCategory>
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_card_view">
+        <PreferenceCategory android:title="@string/pref_cat_card_view">
 
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/key_picFirst"
                 android:summary="@string/pref_show_art_summary"
-                android:title="@string/pref_show_art_title"/>
+                android:title="@string/pref_show_art_title" />
 
             <ListPreference
                 android:defaultValue="@string/main_card_language"
@@ -139,12 +130,11 @@
                 android:entryValues="@array/card_language_values"
                 android:key="@string/key_cardlanguage"
                 android:summary="@string/pref_card_language_summary"
-                android:title="@string/pref_card_language_title"/>
+                android:title="@string/pref_card_language_title" />
 
         </PreferenceCategory>
 
-        <PreferenceCategory
-            xmlns:robobunny="http://robobunny.com"
+        <PreferenceCategory xmlns:robobunny="http://robobunny.com"
             android:title="@string/pref_cat_card_cache">
 
             <com.robobunny.preferences.SeekBarPreference
@@ -153,20 +143,18 @@
                 android:max="100"
                 android:summary="@string/pref_image_cache_size_summary"
                 android:title="@string/pref_image_cache_size_title"
-                robobunny:min="1"
                 robobunny:interval="1"
-                robobunny:unitsRight="MB"/>
+                robobunny:min="1"
+                robobunny:unitsRight="MB" />
 
         </PreferenceCategory>
 
     </PreferenceScreen>
 
     <!-- Life counter preferences -->
-    <PreferenceScreen
-        android:title="@string/pref_screen_counter">
+    <PreferenceScreen android:title="@string/pref_screen_counter">
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_life_counter">
+        <PreferenceCategory android:title="@string/pref_cat_life_counter">
 
             <ListPreference
                 android:defaultValue="0"
@@ -174,7 +162,7 @@
                 android:entryValues="@array/display_array_values"
                 android:key="@string/key_displayMode"
                 android:summary="@string/pref_display_mode_summary"
-                android:title="@string/pref_display_mode_title"/>
+                android:title="@string/pref_display_mode_title" />
 
             <ListPreference
                 android:defaultValue="1000"
@@ -182,25 +170,24 @@
                 android:entryValues="@array/life_timer_array_values"
                 android:key="@string/key_lifeTimer"
                 android:summary="@string/pref_life_timer_summary"
-                android:title="@string/pref_life_timer_title"/>
+                android:title="@string/pref_life_timer_title" />
         </PreferenceCategory>
 
-        <PreferenceCategory
-            xmlns:robobunny="http://robobunny.com"
+        <PreferenceCategory xmlns:robobunny="http://robobunny.com"
             android:title="@string/pref_cat_life_screen">
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_wakelock"
                 android:summary="@string/pref_wake_lock_summary"
-                android:title="@string/pref_wake_lock_title"/>
+                android:title="@string/pref_wake_lock_title" />
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:dependency="@string/key_wakelock"
                 android:key="@string/key_dimlock"
                 android:summary="@string/pref_dim_lock_summary"
-                android:title="@string/pref_dim_lock_title"/>
+                android:title="@string/pref_dim_lock_title" />
 
             <com.robobunny.preferences.SeekBarPreference
                 android:defaultValue="1"
@@ -209,53 +196,49 @@
                 android:max="100"
                 android:summary="@string/pref_dim_lock_level_summary"
                 android:title="@string/pref_dim_lock_level_title"
-                robobunny:min="1"
                 robobunny:interval="1"
-                robobunny:unitsRight="%"/>
+                robobunny:min="1"
+                robobunny:unitsRight="%" />
 
         </PreferenceCategory>
 
     </PreferenceScreen>
 
     <!-- Round timer preferences -->
-    <PreferenceScreen
-        android:title="@string/pref_screen_timer">
+    <PreferenceScreen android:title="@string/pref_screen_timer">
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_timer">
+        <PreferenceCategory android:title="@string/pref_cat_timer">
 
             <RingtonePreference
                 android:key="@string/key_timerSound"
                 android:ringtoneType="notification"
                 android:showSilent="false"
                 android:summary="@string/pref_ringtone_summary"
-                android:title="@string/pref_ringtone_title"/>
+                android:title="@string/pref_ringtone_title" />
 
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/key_fifteenMinutePref"
-                android:title="@string/pref_fifteen_minutes_title"/>
+                android:title="@string/pref_fifteen_minutes_title" />
 
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/key_tenMinutePref"
-                android:title="@string/pref_ten_minutes_title"/>
+                android:title="@string/pref_ten_minutes_title" />
 
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/key_fiveMinutePref"
-                android:title="@string/pref_five_minutes_title"/>
+                android:title="@string/pref_five_minutes_title" />
 
         </PreferenceCategory>
 
     </PreferenceScreen>
 
     <!-- Trade and wishlist preferences -->
-    <PreferenceScreen
-        android:title="@string/pref_screen_trade_wishlist">
+    <PreferenceScreen android:title="@string/pref_screen_trade_wishlist">
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_trade_window">
+        <PreferenceCategory android:title="@string/pref_cat_trade_window">
 
             <ListPreference
                 android:defaultValue="1"
@@ -263,30 +246,29 @@
                 android:entryValues="@array/trade_option_values"
                 android:key="@string/key_tradePrice"
                 android:summary="@string/pref_trade_price_summary"
-                android:title="@string/pref_trade_price_title"/>
+                android:title="@string/pref_trade_price_title" />
 
         </PreferenceCategory>
 
-        <PreferenceCategory
-            android:title="@string/pref_cat_wishlist">
+        <PreferenceCategory android:title="@string/pref_cat_wishlist">
 
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/key_showTotalPriceWishlistPref"
                 android:summary="@string/pref_wishlist_totals_summary"
-                android:title="@string/pref_wishlist_totals_title"/>
+                android:title="@string/pref_wishlist_totals_title" />
 
             <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="@string/key_showIndividualPricesWishlistPref"
                 android:summary="@string/pref_wishlist_prices_summary"
-                android:title="@string/pref_wishlist_prices_title"/>
+                android:title="@string/pref_wishlist_prices_title" />
 
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="@string/key_verboseWishlistPref"
                 android:summary="@string/pref_wishlist_details_summary"
-                android:title="@string/pref_wishlist_details_title"/>
+                android:title="@string/pref_wishlist_details_title" />
 
         </PreferenceCategory>
 

@@ -36,7 +36,7 @@
         <item>@string/search_Timeshifted</item>
     </string-array>
     <string-array name="pt_spinner">
-        <item/>
+        <item />
         <item>-1</item>
         <item>0</item>
         <item>1</item>
@@ -66,7 +66,7 @@
         <item>3.5</item>
     </string-array>
     <string-array name="cmc_spinner">
-        <item/>
+        <item />
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -200,18 +200,18 @@
         <item>ru</item>
         <item>de</item>
     </string-array>
-	<string-array name="pref_language">
-		<item>@string/pref_English</item>
-		<item>@string/pref_French</item>
-		<item>@string/pref_Spanish</item>
-		<item>@string/pref_Polish</item>
-	</string-array>
-	<string-array name="pref_language_values">
-		<item>en</item>
-		<item>fr</item>
-		<item>es</item>
-		<item>pl</item>
-	</string-array>
+    <string-array name="pref_language">
+        <item>@string/pref_English</item>
+        <item>@string/pref_French</item>
+        <item>@string/pref_Spanish</item>
+        <item>@string/pref_Polish</item>
+    </string-array>
+    <string-array name="pref_language_values">
+        <item>en</item>
+        <item>fr</item>
+        <item>es</item>
+        <item>pl</item>
+    </string-array>
 
     <string-array name="life_timer_array_entries">
         <item>@string/pref_1_second</item>

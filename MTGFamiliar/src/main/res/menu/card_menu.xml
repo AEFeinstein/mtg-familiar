@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2011 Adam Feinstein
 
 This file is part of MTG Familiar.
@@ -18,35 +17,35 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:icon="@drawable/ic_menu_card_image"
         android:id="@+id/image"
-        app:showAsAction="ifRoom"
-        android:title="@string/card_view_image"/>
+        android:icon="@drawable/ic_menu_card_image"
+        android:title="@string/card_view_image"
+        app:showAsAction="ifRoom" />
     <item
-        android:icon="@drawable/ic_menu_price"
         android:id="@+id/price"
-        app:showAsAction="ifRoom"
-        android:title="@string/card_view_price"/>
+        android:icon="@drawable/ic_menu_price"
+        android:title="@string/card_view_price"
+        app:showAsAction="ifRoom" />
     <item
-        android:icon="@drawable/ic_menu_change_set"
         android:id="@+id/changeset"
-        app:showAsAction="ifRoom"
-        android:title="@string/card_view_change_set"/>
+        android:icon="@drawable/ic_menu_change_set"
+        android:title="@string/card_view_change_set"
+        app:showAsAction="ifRoom" />
     <item
-        android:icon="@drawable/ic_menu_rules"
         android:id="@+id/cardrulings"
+        android:icon="@drawable/ic_menu_rules"
         android:title="@string/card_view_rulings"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
     <item
-        android:icon="@drawable/ic_menu_wishlist"
         android:id="@+id/addtowishlist"
-        app:showAsAction="ifRoom"
-        android:title="@string/card_view_wishlist"/>
+        android:icon="@drawable/ic_menu_wishlist"
+        android:title="@string/card_view_wishlist"
+        app:showAsAction="ifRoom" />
     <item
-        android:icon="@drawable/ic_menu_legality"
         android:id="@+id/legality"
-        app:showAsAction="ifRoom"
-        android:title="@string/card_view_legality"/>
+        android:icon="@drawable/ic_menu_legality"
+        android:title="@string/card_view_legality"
+        app:showAsAction="ifRoom" />
 </menu>

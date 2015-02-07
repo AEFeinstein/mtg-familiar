@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2011 Adam Feinstein and April King.
 
 This file is part of MTG Familiar.
@@ -16,20 +15,19 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
--->
-<!--    android:icon="?attr/menu_music"
+--><!--    android:icon="?attr/menu_music"
     android:icon="?attr/menu_settings" -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/set_timer_ringtone"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_notifications_on"
         android:title="@string/timer_set_ringtone"
-        android:icon="@drawable/ic_menu_notifications_on"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/set_timer_warnings"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_warning"
         android:title="@string/timer_set_warnings"
-        android:icon="@drawable/ic_menu_warning"/>
+        app:showAsAction="ifRoom" />
 </menu>

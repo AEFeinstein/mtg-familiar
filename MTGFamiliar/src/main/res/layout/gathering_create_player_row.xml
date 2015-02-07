@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:id="@+id/dialog_layout_root">
+    android:id="@+id/dialog_layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <EditText
-        android:background="?attr/abc_edit_text_material"
-        style="@style/forty_eight"
         android:id="@+id/custom_name"
+        style="@style/forty_eight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/abc_edit_text_material"
         android:hint="@string/gathering_custom_name"
-        android:selectAllOnFocus="true"/>
+        android:selectAllOnFocus="true" />
 
     <LinearLayout
         style="@style/forty_eight"
@@ -24,20 +24,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/gathering_starting_life"/>
+            android:text="@string/gathering_starting_life" />
 
         <EditText
-            android:background="?attr/abc_edit_text_material"
-            style="@style/text.medium"
             android:id="@+id/starting_life"
+            style="@style/text.medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dip"
             android:layout_weight="1"
+            android:background="?attr/abc_edit_text_material"
             android:gravity="center"
             android:inputType="number"
             android:selectAllOnFocus="true"
-            android:text="@string/life_counter_twenty"/>
+            android:text="@string/life_counter_twenty" />
 
     </LinearLayout>
 
@@ -45,8 +45,8 @@
         android:id="@+id/divider"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
-        android:background="?attr/color_drawer_divider_item"/>
+        android:layout_marginTop="2dp"
+        android:background="?attr/color_drawer_divider_item" />
 
 </LinearLayout>

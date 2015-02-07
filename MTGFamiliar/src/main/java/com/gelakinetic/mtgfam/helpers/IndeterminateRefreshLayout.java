@@ -48,118 +48,117 @@ import org.jetbrains.annotations.NotNull;
  * refresh of the content wherever this gesture is used.</p>
  */
 public class IndeterminateRefreshLayout extends ViewGroup {
-	private static final float PROGRESS_BAR_HEIGHT = 4;
-	private static final int[] LAYOUT_ATTRS = new int[]{android.R.attr.enabled};
-	public boolean mRefreshing = false;
-	private IndeterminateProgressBar mProgressBar; //the thing that shows progress is going
-	private View mTarget; //the content that gets pulled down
-	private int mProgressBarHeight;
+    private static final float PROGRESS_BAR_HEIGHT = 4;
+    private static final int[] LAYOUT_ATTRS = new int[]{android.R.attr.enabled};
+    public boolean mRefreshing = false;
+    private IndeterminateProgressBar mProgressBar; //the thing that shows progress is going
+    private View mTarget; //the content that gets pulled down
+    private int mProgressBarHeight;
 
-	/**
-	 * Constructor that is called when inflating IndeterminateRefreshLayout from XML.
-	 *
-	 * @param context A Context to pass to Super
-	 * @param attrs   An AttributeSet to pass to Super
-	 */
-	public IndeterminateRefreshLayout(Context context, AttributeSet attrs) {
-		super(context, attrs);
+    /**
+     * Constructor that is called when inflating IndeterminateRefreshLayout from XML.
+     *
+     * @param context A Context to pass to Super
+     * @param attrs   An AttributeSet to pass to Super
+     */
+    public IndeterminateRefreshLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
-		assert getResources() != null;
+        assert getResources() != null;
 
-		setWillNotDraw(false);
-		mProgressBar = new IndeterminateProgressBar(this);
-		final DisplayMetrics metrics = getResources().getDisplayMetrics();
-		mProgressBarHeight = (int) (metrics.density * PROGRESS_BAR_HEIGHT);
+        setWillNotDraw(false);
+        mProgressBar = new IndeterminateProgressBar(this);
+        final DisplayMetrics metrics = getResources().getDisplayMetrics();
+        mProgressBarHeight = (int) (metrics.density * PROGRESS_BAR_HEIGHT);
 
-		final TypedArray typedArray = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS);
-		assert typedArray != null;
-		setEnabled(typedArray.getBoolean(0, true));
-		typedArray.recycle();
-	}
+        final TypedArray typedArray = context.obtainStyledAttributes(attrs, LAYOUT_ATTRS);
+        assert typedArray != null;
+        setEnabled(typedArray.getBoolean(0, true));
+        typedArray.recycle();
+    }
 
-	/**
-	 * Notify the widget that refresh state has changed. Do not call this when
-	 * refresh is triggered by a swipe gesture.
-	 *
-	 * @param refreshing Whether or not the view should show refresh progress.
-	 */
-	public void setRefreshing(boolean refreshing) {
-		if (mRefreshing != refreshing) {
-			ensureTarget();
-			mRefreshing = refreshing;
-			if (mRefreshing) {
-				mProgressBar.start();
-			}
-			else {
-				mProgressBar.stop();
-			}
-		}
-	}
+    /**
+     * Notify the widget that refresh state has changed. Do not call this when
+     * refresh is triggered by a swipe gesture.
+     *
+     * @param refreshing Whether or not the view should show refresh progress.
+     */
+    public void setRefreshing(boolean refreshing) {
+        if (mRefreshing != refreshing) {
+            ensureTarget();
+            mRefreshing = refreshing;
+            if (mRefreshing) {
+                mProgressBar.start();
+            } else {
+                mProgressBar.stop();
+            }
+        }
+    }
 
-	private void ensureTarget() {
-		// Don't bother getting the parent height if the parent hasn't been laid out yet.
-		if (mTarget == null) {
-			if (getChildCount() > 1 && !isInEditMode()) {
-				throw new IllegalStateException(
-						"IndeterminateRefreshLayout can host only one direct child");
-			}
-			mTarget = getChildAt(0);
-		}
-	}
+    private void ensureTarget() {
+        // Don't bother getting the parent height if the parent hasn't been laid out yet.
+        if (mTarget == null) {
+            if (getChildCount() > 1 && !isInEditMode()) {
+                throw new IllegalStateException(
+                        "IndeterminateRefreshLayout can host only one direct child");
+            }
+            mTarget = getChildAt(0);
+        }
+    }
 
-	@Override
-	public void draw(@NotNull Canvas canvas) {
-		super.draw(canvas);
-		mProgressBar.draw(canvas);
-	}
+    @Override
+    public void draw(@NotNull Canvas canvas) {
+        super.draw(canvas);
+        mProgressBar.draw(canvas);
+    }
 
-	@Override
-	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-		final int width = getMeasuredWidth();
-		final int height = getMeasuredHeight();
-		mProgressBar.setBounds(width, mProgressBarHeight);
-		if (getChildCount() == 0) {
-			return;
-		}
-		final View child = getChildAt(0);
-		final int childLeft = getPaddingLeft();
-		final int childTop = getPaddingTop();
-		final int childWidth = width - getPaddingLeft() - getPaddingRight();
-		final int childHeight = height - getPaddingTop() - getPaddingBottom();
-		assert child != null;
-		child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
-	}
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        final int width = getMeasuredWidth();
+        final int height = getMeasuredHeight();
+        mProgressBar.setBounds(width, mProgressBarHeight);
+        if (getChildCount() == 0) {
+            return;
+        }
+        final View child = getChildAt(0);
+        final int childLeft = getPaddingLeft();
+        final int childTop = getPaddingTop();
+        final int childWidth = width - getPaddingLeft() - getPaddingRight();
+        final int childHeight = height - getPaddingTop() - getPaddingBottom();
+        assert child != null;
+        child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+    }
 
-	@Override
-	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		if (getChildCount() > 1 && !isInEditMode()) {
-			throw new IllegalStateException("IndeterminateRefreshLayout can host only one direct child");
-		}
-		if (getChildCount() > 0) {
-			int width = MeasureSpec.makeMeasureSpec(
-					getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
-					MeasureSpec.EXACTLY);
-			int height = MeasureSpec.makeMeasureSpec(
-					getMeasuredHeight() - getPaddingTop() - getPaddingBottom(),
-					MeasureSpec.EXACTLY);
-			View child = getChildAt(0);
-			assert child != null;
-			child.measure(width, height);
-		}
-	}
+    @Override
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (getChildCount() > 1 && !isInEditMode()) {
+            throw new IllegalStateException("IndeterminateRefreshLayout can host only one direct child");
+        }
+        if (getChildCount() > 0) {
+            int width = MeasureSpec.makeMeasureSpec(
+                    getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
+                    MeasureSpec.EXACTLY);
+            int height = MeasureSpec.makeMeasureSpec(
+                    getMeasuredHeight() - getPaddingTop() - getPaddingBottom(),
+                    MeasureSpec.EXACTLY);
+            View child = getChildAt(0);
+            assert child != null;
+            child.measure(width, height);
+        }
+    }
 
-	/**
-	 * Set the four colors used in the progress animation. The first color will
-	 * also be the color of the bar that grows in response to a user swipe
-	 * gesture.
-	 *
-	 * @param i  A color
-	 * @param i1 A color
-	 * @param i2 A color
-	 * @param i3 A color
-	 */
-	public void setColors(int i, int i1, int i2, int i3) {
-		mProgressBar.setColorScheme(i, i1, i2, i3);
-	}
+    /**
+     * Set the four colors used in the progress animation. The first color will
+     * also be the color of the bar that grows in response to a user swipe
+     * gesture.
+     *
+     * @param i  A color
+     * @param i1 A color
+     * @param i2 A color
+     * @param i3 A color
+     */
+    public void setColors(int i, int i1, int i2, int i3) {
+        mProgressBar.setColorScheme(i, i1, i2, i3);
+    }
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 ** Copyright 2010, The Android Open Source Project
 **
@@ -18,23 +17,23 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_height="fill_parent"
-              android:layout_width="fill_parent"
-              android:background="@android:color/transparent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
 
     <ListView
         android:id="@android:id/list"
+        style="@style/list_view_divider"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingLeft="@dimen/preference_fragment_padding_side"
-        android:paddingRight="@dimen/preference_fragment_padding_side"
-        android:scrollbarStyle="outsideOverlay"
+        android:cacheColorHint="@android:color/transparent"
         android:clipToPadding="false"
         android:drawSelectorOnTop="false"
-        android:cacheColorHint="@android:color/transparent"
+        android:paddingLeft="@dimen/preference_fragment_padding_side"
+        android:paddingRight="@dimen/preference_fragment_padding_side"
         android:scrollbarAlwaysDrawVerticalTrack="true"
-        style="@style/list_view_divider"/>
+        android:scrollbarStyle="outsideOverlay" />
 
 </LinearLayout>

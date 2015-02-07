@@ -10,22 +10,22 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:baselineAligned="false"
-              android:gravity="center"
-              android:paddingLeft="16dp"
-              android:paddingRight="16dp"
-              android:orientation="vertical">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
     <!-- white -->
     <!-- blue -->
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -34,35 +34,35 @@
 
             <Button
                 android:id="@+id/white_minus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                style="@style/button"
                 android:text="@string/mana_pool_minus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dip"
-                android:src="@drawable/glyph_w"/>
+                android:src="@drawable/glyph_w" />
 
             <TextView
                 android:id="@+id/white_readout"
                 style="@style/text.xxlarge"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/mana_pool_zero"/>
+                android:text="@string/mana_pool_zero" />
 
             <Button
                 android:id="@+id/white_plus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5sp"
-                style="@style/button"
                 android:text="@string/mana_pool_plus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,36 +72,36 @@
 
             <Button
                 android:id="@+id/blue_minus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5sp"
-                style="@style/button"
                 android:text="@string/mana_pool_minus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dip"
-                android:src="@drawable/glyph_u"/>
+                android:src="@drawable/glyph_u" />
 
             <TextView
                 android:id="@+id/blue_readout"
                 style="@style/text.xxlarge"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-
                 android:layout_height="wrap_content"
+
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/mana_pool_zero"/>
+                android:text="@string/mana_pool_zero" />
 
             <Button
                 android:id="@+id/blue_plus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                style="@style/button"
                 android:text="@string/mana_pool_plus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
     <!-- black -->
@@ -109,9 +109,9 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -120,35 +120,35 @@
 
             <Button
                 android:id="@+id/black_minus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                style="@style/button"
                 android:text="@string/mana_pool_minus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dip"
-                android:src="@drawable/glyph_b"/>
+                android:src="@drawable/glyph_b" />
 
             <TextView
                 android:id="@+id/black_readout"
                 style="@style/text.xxlarge"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/mana_pool_zero"/>
+                android:text="@string/mana_pool_zero" />
 
             <Button
                 android:id="@+id/black_plus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5sp"
-                style="@style/button"
                 android:text="@string/mana_pool_plus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -158,35 +158,35 @@
 
             <Button
                 android:id="@+id/red_minus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5sp"
-                style="@style/button"
                 android:text="@string/mana_pool_minus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dip"
-                android:src="@drawable/glyph_r"/>
+                android:src="@drawable/glyph_r" />
 
             <TextView
                 android:id="@+id/red_readout"
                 style="@style/text.xxlarge"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/mana_pool_zero"/>
+                android:text="@string/mana_pool_zero" />
 
             <Button
                 android:id="@+id/red_plus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                style="@style/button"
                 android:text="@string/mana_pool_plus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
     <!-- green -->
@@ -194,9 +194,9 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -205,35 +205,35 @@
 
             <Button
                 android:id="@+id/green_minus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                style="@style/button"
                 android:text="@string/mana_pool_minus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dip"
-                android:src="@drawable/glyph_g"/>
+                android:src="@drawable/glyph_g" />
 
             <TextView
                 android:id="@+id/green_readout"
                 style="@style/text.xxlarge"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/mana_pool_zero"/>
+                android:text="@string/mana_pool_zero" />
 
             <Button
                 android:id="@+id/green_plus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5sp"
-                style="@style/button"
                 android:text="@string/mana_pool_plus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -243,35 +243,35 @@
 
             <Button
                 android:id="@+id/colorless_minus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5sp"
-                style="@style/button"
                 android:text="@string/mana_pool_minus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dip"
-                android:src="@drawable/glyph_x"/>
+                android:src="@drawable/glyph_x" />
 
             <TextView
                 android:id="@+id/colorless_readout"
                 style="@style/text.xxlarge"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/mana_pool_zero"/>
+                android:text="@string/mana_pool_zero" />
 
             <Button
                 android:id="@+id/colorless_plus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                style="@style/button"
                 android:text="@string/mana_pool_plus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
     <!-- spell -->
@@ -285,49 +285,49 @@
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
 
             <Button
                 android:id="@+id/spell_minus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                style="@style/button"
                 android:text="@string/mana_pool_minus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dip"
-                android:src="@drawable/glyph_spell"/>
+                android:src="@drawable/glyph_spell" />
 
             <TextView
                 android:id="@+id/spell_readout"
                 style="@style/text.xxlarge"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/mana_pool_zero"/>
+                android:text="@string/mana_pool_zero" />
 
             <Button
                 android:id="@+id/spell_plus"
+                style="@style/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                style="@style/button"
                 android:text="@string/mana_pool_plus"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 </LinearLayout>

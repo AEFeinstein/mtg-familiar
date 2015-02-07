@@ -41,101 +41,101 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements LoaderManager.LoaderCallbacks<Cursor> {
 
-	private static final String[] CARD_NAME_PROJECTION = new String[]{
-			CardDbAdapter.KEY_ID,
-			CardDbAdapter.KEY_NAME,
-	};
-	private static final Uri SEARCH_URI =
-			Uri.parse("content://" + CardSearchProvider.AUTHORITY + "/" + SearchManager.SUGGEST_URI_PATH_QUERY);
-	private final String[] mAutocompleteFilter = new String[1];
+    private static final String[] CARD_NAME_PROJECTION = new String[]{
+            CardDbAdapter.KEY_ID,
+            CardDbAdapter.KEY_NAME,
+    };
+    private static final Uri SEARCH_URI =
+            Uri.parse("content://" + CardSearchProvider.AUTHORITY + "/" + SearchManager.SUGGEST_URI_PATH_QUERY);
+    private final String[] mAutocompleteFilter = new String[1];
 
-	private final FamiliarFragment mFragment;
+    private final FamiliarFragment mFragment;
 
-	/**
-	 * Standard constructor.
-	 *
-	 * @param context  The context where the ListView associated with this SimpleListItemFactory is running
-	 * @param from     A list of column names representing the data to bind to the UI. Can be null if the cursor is not
-	 *                 available yet.
-	 * @param to       The views that should display column in the "from" parameter. These should all be TextViews. The
-	 *                 first N views in this list are given the values of the first N columns in the from parameter.
-	 *                 Can be null if the cursor is not available yet.
-	 * @param textView The text view which we are watching for changes
-	 */
-	public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, SafeAutoCompleteTextView textView) {
-		super(context.getActivity(), com.gelakinetic.mtgfam.R.layout.list_item_1, null, from, to, 0);
-		mFragment = context;
-		mFragment.getLoaderManager().initLoader(0, null, this);
-		textView.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+    /**
+     * Standard constructor.
+     *
+     * @param context  The context where the ListView associated with this SimpleListItemFactory is running
+     * @param from     A list of column names representing the data to bind to the UI. Can be null if the cursor is not
+     *                 available yet.
+     * @param to       The views that should display column in the "from" parameter. These should all be TextViews. The
+     *                 first N views in this list are given the values of the first N columns in the from parameter.
+     *                 Can be null if the cursor is not available yet.
+     * @param textView The text view which we are watching for changes
+     */
+    public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, SafeAutoCompleteTextView textView) {
+        super(context.getActivity(), com.gelakinetic.mtgfam.R.layout.list_item_1, null, from, to, 0);
+        mFragment = context;
+        mFragment.getLoaderManager().initLoader(0, null, this);
+        textView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                /* Don't care */
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
 				/* Don't care */
-			}
+            }
 
-			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-				/* Don't care */
-			}
-
-			@Override
-			public void afterTextChanged(Editable editable) {
+            @Override
+            public void afterTextChanged(Editable editable) {
 				/* Preform a query */
-				mAutocompleteFilter[0] = String.valueOf(editable);
-				mFragment.getLoaderManager().restartLoader(0, null, AutocompleteCursorAdapter.this);
-			}
-		});
-	}
+                mAutocompleteFilter[0] = String.valueOf(editable);
+                mFragment.getLoaderManager().restartLoader(0, null, AutocompleteCursorAdapter.this);
+            }
+        });
+    }
 
-	/**
-	 * Instantiate and return a new Loader for the given ID.
-	 *
-	 * @param id   The ID whose loader is to be created.
-	 * @param args Any arguments supplied by the caller.
-	 * @return Return a new Loader instance that is ready to start loading.
-	 */
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    /**
+     * Instantiate and return a new Loader for the given ID.
+     *
+     * @param id   The ID whose loader is to be created.
+     * @param args Any arguments supplied by the caller.
+     * @return Return a new Loader instance that is ready to start loading.
+     */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		/* Now create and return a CursorLoader that will take care of creating a Cursor for the data being displayed.
 		 */
-		String select = "(" + CardDbAdapter.KEY_NAME + ")";
-		return new CursorLoader(mFragment.getActivity(), SEARCH_URI, CARD_NAME_PROJECTION, select, mAutocompleteFilter,
-				CardDbAdapter.KEY_NAME + " COLLATE LOCALIZED ASC");
-	}
+        String select = "(" + CardDbAdapter.KEY_NAME + ")";
+        return new CursorLoader(mFragment.getActivity(), SEARCH_URI, CARD_NAME_PROJECTION, select, mAutocompleteFilter,
+                CardDbAdapter.KEY_NAME + " COLLATE LOCALIZED ASC");
+    }
 
-	/**
-	 * Called when a previously created loader has finished its load.
-	 *
-	 * @param loader The Loader that has finished.
-	 * @param data   The data generated by the Loader.
-	 */
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		this.swapCursor(data);
-	}
+    /**
+     * Called when a previously created loader has finished its load.
+     *
+     * @param loader The Loader that has finished.
+     * @param data   The data generated by the Loader.
+     */
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        this.swapCursor(data);
+    }
 
-	/**
-	 * Called when a previously created loader is being reset, and thus making its data unavailable.
-	 *
-	 * @param loader The Loader that is being reset.
-	 */
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		this.swapCursor(null);
-	}
+    /**
+     * Called when a previously created loader is being reset, and thus making its data unavailable.
+     *
+     * @param loader The Loader that is being reset.
+     */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        this.swapCursor(null);
+    }
 
-	/**
-	 * Converts the cursor into a CharSequence.
-	 *
-	 * @param cursor the cursor to convert to a CharSequence
-	 * @return a CharSequence representing the value
-	 */
-	@Override
-	public CharSequence convertToString(@NotNull Cursor cursor) {
-		try {
-			return cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-		} catch (Exception e) {
+    /**
+     * Converts the cursor into a CharSequence.
+     *
+     * @param cursor the cursor to convert to a CharSequence
+     * @return a CharSequence representing the value
+     */
+    @Override
+    public CharSequence convertToString(@NotNull Cursor cursor) {
+        try {
+            return cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+        } catch (Exception e) {
 			/* If there is any problem, return the empty string */
-			return "";
-		}
-	}
+            return "";
+        }
+    }
 }

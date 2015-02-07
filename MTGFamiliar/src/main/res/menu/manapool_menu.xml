@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
 Copyright 2011 Michael Shick and April King.
 
 This file is part of MTG Familiar.
@@ -18,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/clear_all"
         android:icon="@drawable/ic_menu_close"
-        app:showAsAction="ifRoom"
-        android:title="@string/mana_pool_clear_all"/>
+        android:title="@string/mana_pool_clear_all"
+        app:showAsAction="ifRoom" />
 
 </menu>

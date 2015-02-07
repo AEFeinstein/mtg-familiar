@@ -4,9 +4,7 @@
 
     <!-- Enabled states -->
 
-    <item android:state_checked="true"
-          android:drawable="@drawable/btn_check_on_light_b"/>
-    <item android:state_checked="false"
-          android:drawable="@drawable/btn_check_off_light_b"/>
+    <item android:drawable="@drawable/btn_check_on_light_b" android:state_checked="true" />
+    <item android:drawable="@drawable/btn_check_off_light_b" android:state_checked="false" />
 
 </selector>
