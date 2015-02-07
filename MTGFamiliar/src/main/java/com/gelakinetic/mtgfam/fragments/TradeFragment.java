@@ -157,6 +157,28 @@ public class TradeFragment extends FamiliarFragment {
 			}
 		});
 
+        lvTradeLeft.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                /* Remove the card */
+                mLeftList.remove(position);
+                /* Redraw this side */
+                mLeftAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
+        lvTradeRight.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                /* Remove the card */
+                mRightList.remove(position);
+                /* Redraw this side */
+                mRightAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
 		/* Return the view */
 		return myFragmentView;
 	}
