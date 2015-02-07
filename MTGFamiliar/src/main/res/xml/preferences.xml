@@ -224,14 +224,6 @@
         <PreferenceCategory
             android:title="@string/pref_cat_timer">
 
-            <ListPreference
-                android:defaultValue="50"
-                android:entries="@array/rt_defaulttimes"
-                android:entryValues="@array/rt_defaulttimesvalues"
-                android:key="@string/key_roundLength"
-                android:summary="@string/pref_default_time_summary"
-                android:title="@string/pref_default_time_title"/>
-
             <RingtonePreference
                 android:key="@string/key_timerSound"
                 android:ringtoneType="notification"

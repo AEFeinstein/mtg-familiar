@@ -11,6 +11,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:background="?attr/abc_edit_text_material"
             android:id="@+id/numberInput"
             android:layout_width="48dp"
             android:layout_height="match_parent"
@@ -27,7 +28,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:hint="@string/search_name"
-            android:inputType="text">
+            android:inputType="text"
+            android:background="?attr/abc_edit_text_material">
 
             <requestFocus/>
         </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
@@ -41,7 +43,7 @@
                 android:id="@+id/trader_foil"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:button="@drawable/btn_check_holo_light_foil"
+                android:button="?attr/btn_check_foil"
                 android:gravity="center"/>
         </LinearLayout>
     </LinearLayout>
@@ -59,6 +61,11 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_purple_500"/>
+
             <Button
                 android:id="@+id/addCardLeft"
                 style="?android:attr/buttonBarButtonStyle"
@@ -70,7 +77,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/color_drawer_divider_item"/>
+                android:background="@color/material_purple_500"/>
 
             <TextView
                 android:id="@+id/priceTextLeft"
@@ -110,6 +117,11 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/material_purple_500"/>
+
             <Button
                 android:id="@+id/addCardRight"
                 style="?android:attr/buttonBarButtonStyle"
@@ -121,7 +133,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/color_drawer_divider_item"/>
+                android:background="@color/material_purple_500"/>
 
             <TextView
                 android:id="@+id/priceTextRight"

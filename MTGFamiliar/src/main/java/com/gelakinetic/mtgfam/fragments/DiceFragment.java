@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
@@ -167,7 +167,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 					txtNumber.setText(String.valueOf(mLastNumber));
 				}
 
-				AlertDialog.Builder adb = new AlertDialog.Builder(mActivity);
+				AlertDialogPro.Builder adb = new AlertDialogPro.Builder(mActivity);
 				adb.setView(v);
 				adb.setTitle(getResources().getString(R.string.dice_choose_sides));
 				adb.setPositiveButton(mActivity.getResources().getString(R.string.dialog_ok),

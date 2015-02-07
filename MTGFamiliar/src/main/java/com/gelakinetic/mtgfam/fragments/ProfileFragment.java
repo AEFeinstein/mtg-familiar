@@ -19,7 +19,6 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,6 +37,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
@@ -121,16 +121,23 @@ public class ProfileFragment extends FamiliarFragment {
 		}
 	}
 
+	/**
+	 *
+	 * @param menu
+	 */
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-
 		MenuItem updateDCI = menu.findItem(R.id.profile_menu_update_dci);
 		MenuItem removeDCI = menu.findItem(R.id.profile_menu_remove_dci);
 		assert updateDCI != null;
 		assert removeDCI != null;
 
-		if (mDCINumber != null && !mDCINumber.isEmpty()) {
+		if(!getFamiliarActivity().mIsMenuVisible) {
+			updateDCI.setVisible(false);
+			removeDCI.setVisible(false);
+		}
+		else if (mDCINumber != null && !mDCINumber.isEmpty()) {
 			updateDCI.setVisible(false);
 			removeDCI.setVisible(true);
 		}
@@ -177,7 +184,7 @@ public class ProfileFragment extends FamiliarFragment {
 
 						dciEditText.setText(strDCI);
 
-						return new AlertDialog.Builder(getActivity())
+						return new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.profile_update_dci_dialog_title)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 									@Override

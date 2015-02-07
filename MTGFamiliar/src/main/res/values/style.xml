@@ -23,32 +23,40 @@
         <item name="android:dividerHeight">1dp</item>
     </style>
 
-    <style name="text.micro" parent="android:TextAppearance.Holo">
+    <style name="text.micro" parent="TextAppearance.AppCompat">
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="text.small" parent="android:TextAppearance.Holo">
+    <style name="text.small" parent="TextAppearance.AppCompat">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="text.medium" parent="android:TextAppearance.Holo">
+    <style name="text.medium" parent="TextAppearance.AppCompat">
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="text.large" parent="android:TextAppearance.Holo">
+    <style name="text.large" parent="TextAppearance.AppCompat">
         <item name="android:textSize">22sp</item>
     </style>
 
-    <style name="text.xlarge" parent="android:TextAppearance.Holo">
+    <style name="text.xlarge" parent="TextAppearance.AppCompat">
         <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="text.xxlarge" parent="android:TextAppearance.Holo">
+    <style name="text.xxlarge" parent="TextAppearance.AppCompat">
         <item name="android:textSize">45sp</item>
     </style>
 
-    <style name="text.xxxlarge" parent="android:TextAppearance.Holo">
+    <style name="text.xxxlarge" parent="TextAppearance.AppCompat">
         <item name="android:textSize">60sp</item>
+    </style>
+
+    <style name="button" parent="text.xlarge">
+        <item name="android:background">@drawable/btn_default_custom</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
     </style>
 
 </resources>

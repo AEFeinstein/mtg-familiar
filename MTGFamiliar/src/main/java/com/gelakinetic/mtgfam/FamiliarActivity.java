@@ -16,7 +16,6 @@
 
 package com.gelakinetic.mtgfam;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
@@ -39,14 +38,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -62,6 +62,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
@@ -97,7 +98,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class FamiliarActivity extends FragmentActivity {
+public class FamiliarActivity extends ActionBarActivity {
 	/* Tags for fragments */
 	public static final String DIALOG_TAG = "dialog";
 	public static final String FRAGMENT_TAG = "fragment";
@@ -139,7 +140,6 @@ public class FamiliarActivity extends FragmentActivity {
 	public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
 	/* What the drawer menu will be */
 	private final DrawerEntry[] mPageEntries = {
-			new DrawerEntry(R.string.main_pages, 0, true),
 			new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false),
 			new DrawerEntry(R.string.main_life_counter, R.attr.ic_drawer_life, false),
 			new DrawerEntry(R.string.main_mana_pool, R.attr.ic_drawer_mana, false),
@@ -151,14 +151,14 @@ public class FamiliarActivity extends FragmentActivity {
 			new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
 			new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
 			new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false),
-			new DrawerEntry(R.string.main_extras, 0, true),
+			new DrawerEntry(0, 0, true),
 			new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
 			new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
 			new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
 			new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
 			new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
-			new DrawerEntry(R.string.main_export_data_title, R.attr.ic_action_save, false),
-			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_action_collection, false),
+			new DrawerEntry(R.string.main_export_data_title, R.attr.ic_drawer_save, false),
+			new DrawerEntry(R.string.main_import_data_title, R.attr.ic_drawer_load, false),
 	};
 	private final Handler mInactivityHandler = new Handler();
 	/* Listen for changes to preferences */
@@ -465,18 +465,22 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		});
 
-		/* enable ActionBar app icon to behave as action to toggle nav drawer */
-		assert getActionBar() != null;
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle("");
-
-		/* ActionBarDrawerToggle ties together the the proper interactions between the sliding drawer and the action
-		bar app icon */
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			//toolbar.setCollapsible(true);
+			/* I don't like styling in java, but I can't get it to work other ways */
+			if (mPreferenceAdapter.getTheme().equals(getString(R.string.pref_theme_light))) {
+				toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat_Light);
+			}
+			else {
+				toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat);
+			}
+			toolbar.setSubtitleTextColor(getResources().getColor(android.R.color.white));
+			toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+			setSupportActionBar(toolbar);
+		}
 		mDrawerToggle = new ActionBarDrawerToggle(
-				this, /* host Activity */
-				mDrawerLayout, /* DrawerLayout object */
-				R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+				this,  mDrawerLayout, toolbar,
 				R.string.main_drawer_open, /* "open drawer" description for accessibility */
 				R.string.main_drawer_close /* "close drawer" description for accessibility */
 		) {
@@ -507,6 +511,10 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setTitle("");
 
 		/* Check to see if the change log should be shown */
 		PackageInfo pInfo;
@@ -941,7 +949,7 @@ public class FamiliarActivity extends FragmentActivity {
 
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
 				setShowsDialog(true);
-				AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+				AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
 
 				assert getPackageManager() != null;
 
@@ -970,7 +978,6 @@ public class FamiliarActivity extends FragmentActivity {
 						TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
 						text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
 						text.setMovementMethod(LinkMovementMethod.getInstance());
-						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 						builder.setView(dialogLayout);
 
 						return builder.create();
@@ -999,7 +1006,6 @@ public class FamiliarActivity extends FragmentActivity {
 
 						dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
 						dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 						builder.setView(dialogLayout);
 
 						return builder.create();
@@ -1043,7 +1049,6 @@ public class FamiliarActivity extends FragmentActivity {
 							}
 						});
 						dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-						dialogLayout.findViewById(R.id.image_button).setVisibility(View.GONE);
 
 						builder.setView(dialogLayout);
 						return builder.create();
@@ -1127,8 +1132,8 @@ public class FamiliarActivity extends FragmentActivity {
 		mRoundTimerUpdateHandler.removeCallbacks(timerUpdate);
 		mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1);
 
-		assert getActionBar() != null;
-		getActionBar().setDisplayShowTitleEnabled(true);
+		assert getSupportActionBar() != null;
+		getSupportActionBar().setDisplayShowTitleEnabled(true);
 	}
 
 	/**
@@ -1139,8 +1144,8 @@ public class FamiliarActivity extends FragmentActivity {
 		mUpdatingRoundTimer = false;
 
 		mRoundTimerUpdateHandler.removeCallbacks(timerUpdate);
-		assert getActionBar() != null;
-		getActionBar().setDisplayShowTitleEnabled(false);
+		assert getSupportActionBar() != null;
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 	}
 
 	/**
@@ -1216,8 +1221,8 @@ public class FamiliarActivity extends FragmentActivity {
 				}
 
 				if (mUpdatingRoundTimer) {
-					assert getActionBar() != null;
-					getActionBar().setTitle(timeLeftStr);
+					assert getSupportActionBar() != null;
+					getSupportActionBar().setTitle(timeLeftStr);
 				}
 				mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1000);
 			}
@@ -1314,12 +1319,12 @@ public class FamiliarActivity extends FragmentActivity {
 	public class DrawerEntry {
 		final int mNameResource;
 		final int mIconResource;
-		final boolean mIsHeader;
+		final boolean mIsDivider;
 
 		public DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
 			mNameResource = nameResource;
 			mIconResource = iconResource;
-			mIsHeader = isHeader;
+			mIsDivider = isHeader;
 		}
 	}
 
@@ -1354,8 +1359,8 @@ public class FamiliarActivity extends FragmentActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			int layout;
-			if (values[position].mIsHeader) {
-				layout = R.layout.drawer_list_header;
+			if (values[position].mIsDivider) {
+				layout = R.layout.drawer_list_divider;
 			}
 			else {
 				layout = R.layout.drawer_list_item;
@@ -1365,13 +1370,12 @@ public class FamiliarActivity extends FragmentActivity {
 			}
 
 			assert convertView != null;
-			if (values[position].mIsHeader) {
+			if (values[position].mIsDivider) {
 				/* Make sure the recycled view is the right type, inflate a new one if necessary */
-				if (convertView.findViewById(R.id.drawer_header_name) == null) {
+				if (convertView.findViewById(R.id.divider) == null) {
 					convertView = getLayoutInflater().inflate(layout, parent, false);
 				}
 				assert convertView != null;
-				((TextView) convertView.findViewById(R.id.drawer_header_name)).setText(values[position].mNameResource);
 				convertView.setFocusable(false);
 				convertView.setFocusableInTouchMode(false);
 			}
@@ -1382,16 +1386,9 @@ public class FamiliarActivity extends FragmentActivity {
 				}
 				assert convertView != null;
 				((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
-				((ImageView) convertView.findViewById(R.id.drawer_entry_icon))
-						.setImageResource(getResourceIdFromAttr(values[position].mIconResource));
+                ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconResource), 0, 0, 0);
 			}
 
-			if (position + 1 >= values.length || values[position + 1].mIsHeader) {
-				convertView.findViewById(R.id.divider).setVisibility(View.GONE);
-			}
-			else {
-				convertView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
-			}
 			return convertView;
 		}
 	}

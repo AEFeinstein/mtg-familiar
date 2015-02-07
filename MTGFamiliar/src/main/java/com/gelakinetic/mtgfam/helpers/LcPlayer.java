@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.helpers;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
@@ -110,11 +110,11 @@ public class LcPlayer {
 				}
 				mReadoutTextView.setText(mLife + "");
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(
-						mFragment.getResourceIdFromAttr(R.attr.holo_red)));
+						R.color.material_red_500));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mLife + "");
 					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
-							.getColor(mFragment.getResourceIdFromAttr(R.attr.holo_red)));
+							.getColor(R.color.material_red_500));
 				}
 				break;
 			case LifeCounterFragment.STAT_POISON:
@@ -124,11 +124,11 @@ public class LcPlayer {
 				}
 				mReadoutTextView.setText(mPoison + "");
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(
-						mFragment.getResourceIdFromAttr(R.attr.holo_green)));
+						R.color.material_green_500));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mPoison + "");
 					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
-							.getColor(mFragment.getResourceIdFromAttr(R.attr.holo_green)));
+							.getColor(R.color.material_green_500));
 				}
 				break;
 			case LifeCounterFragment.STAT_COMMANDER:
@@ -138,11 +138,11 @@ public class LcPlayer {
 				}
 				mReadoutTextView.setText(mLife + "");
 				mReadoutTextView.setTextColor(mFragment.getActivity().getResources().getColor(
-						mFragment.getResourceIdFromAttr(R.attr.holo_red)));
+						R.color.material_red_500));
 				if (mCommanderReadoutTextView != null) {
 					mCommanderReadoutTextView.setText(mLife + "");
 					mCommanderReadoutTextView.setTextColor(mFragment.getActivity().getResources()
-							.getColor(mFragment.getResourceIdFromAttr(R.attr.holo_red)));
+							.getColor(R.color.material_red_500));
 				}
 				break;
 		}
@@ -579,7 +579,7 @@ public class LcPlayer {
 							}
 						});
 
-						Dialog dialog = new AlertDialog.Builder(getActivity())
+						Dialog dialog = new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.life_counter_edit_name_dialog_title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -641,7 +641,7 @@ public class LcPlayer {
 							}
 						});
 
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+						AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
 						builder.setTitle(String.format(getResources().getString(R.string.life_counter_edh_dialog_title),
 								mCommanderDamage.get(position).mName))
 								.setView(view)
@@ -687,7 +687,7 @@ public class LcPlayer {
 							title = getResources().getString(R.string.life_counter_edit_life_dialog_title);
 						}
 
-						Dialog dialog = new AlertDialog.Builder(getActivity())
+						Dialog dialog = new AlertDialogPro.Builder(getActivity())
 								.setTitle(title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -783,7 +783,7 @@ public class LcPlayer {
 
 			if (mCommitting && position == 0) {
 				((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
-						mFragment.getResourceIdFromAttr(R.attr.holo_blue)));
+						R.color.material_purple_500));
 			}
 			else {
 				((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
@@ -797,14 +797,14 @@ public class LcPlayer {
 						((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
-										mFragment.getResourceIdFromAttr(R.attr.holo_green))
+										R.color.material_green_500)
 						);
 					}
 					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mLifeHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
-										mFragment.getResourceIdFromAttr(R.attr.holo_red))
+										R.color.material_red_500)
 						);
 					}
 					break;
@@ -815,14 +815,14 @@ public class LcPlayer {
 								.setText("+" + mPoisonHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
-										mFragment.getResourceIdFromAttr(R.attr.holo_green))
+										R.color.material_green_500)
 						);
 					}
 					else {
 						((TextView) view.findViewById(R.id.relative)).setText("" + mPoisonHistory.get(position).mDelta);
 						((TextView) view.findViewById(R.id.relative)).setTextColor(
 								mFragment.getActivity().getResources().getColor(
-										mFragment.getResourceIdFromAttr(R.attr.holo_red))
+										R.color.material_red_500)
 						);
 					}
 					break;

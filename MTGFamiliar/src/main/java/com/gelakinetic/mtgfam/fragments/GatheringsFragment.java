@@ -18,7 +18,6 @@
  */
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -35,6 +34,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
@@ -217,7 +217,7 @@ public class GatheringsFragment extends FamiliarFragment {
 							}
 						});
 
-						Dialog dialog = new AlertDialog.Builder(this.getActivity())
+						Dialog dialog = new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.gathering_enter_name)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -262,7 +262,7 @@ public class GatheringsFragment extends FamiliarFragment {
 					}
 					case DIALOG_GATHERING_EXIST: {
 						/* The user tried to save, and the gathering already exists. Prompt to overwrite */
-						return new AlertDialog.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.gathering_dialog_overwrite_title)
 								.setMessage(R.string.gathering_dialog_overwrite_text)
 								.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
@@ -295,7 +295,7 @@ public class GatheringsFragment extends FamiliarFragment {
 									getActivity().getFilesDir());
 						}
 
-						return new AlertDialog.Builder(getActivity())
+						return new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.gathering_delete)
 								.setItems(dProperNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {
@@ -322,7 +322,7 @@ public class GatheringsFragment extends FamiliarFragment {
 							return null;
 						}
 
-						return new AlertDialog.Builder(getActivity())
+						return new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.gathering_remove_player)
 								.setItems(aNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {
@@ -349,7 +349,7 @@ public class GatheringsFragment extends FamiliarFragment {
 									getActivity().getFilesDir());
 						}
 
-						return new AlertDialog.Builder(getActivity())
+						return new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.gathering_load)
 								.setItems(properNames, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialogInterface, int item) {

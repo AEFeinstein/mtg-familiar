@@ -139,7 +139,7 @@ public class PreferenceAdapter {
 
 	/* Last rules update */
 	public synchronized long getLastRulesUpdate() {
-		return this.prefs.getLong(context.getString(R.string.key_lastRulesUpdate), BuildDate.get(this.context).getTime());
+		return this.prefs.getLong(context.getString(R.string.key_lastRulesUpdate), 0);
 	}
 
 	public synchronized void setLastRulesUpdate(long lastRulesUpdate) {
@@ -332,11 +332,6 @@ public class PreferenceAdapter {
 	public synchronized void setPlayerData(String playerData) {
 		this.edit.putString(context.getString(R.string.key_player_data), playerData);
 		this.edit.commit();
-	}
-
-	/* Round length */
-	public synchronized String getRoundLength() {
-		return this.prefs.getString(context.getString(R.string.key_roundLength), "50");
 	}
 
 	/* Timer sound */

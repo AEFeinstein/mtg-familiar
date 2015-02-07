@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,13 +17,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
@@ -136,11 +140,10 @@ public abstract class FamiliarFragment extends Fragment {
 		super.onCreateOptionsMenu(menu, inflater);
 		menu.clear();
 
-		int resourceId = getResourceIdFromAttr(R.attr.ic_action_search);
 		if (getActivity() != null) {
 			if (canInterceptSearchKey()) {
 				menu.add(R.string.search_search)
-						.setIcon(resourceId)
+						.setIcon(R.drawable.ic_menu_search)
 						.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 							@Override
 							public boolean onMenuItemClick(MenuItem item) {
@@ -154,6 +157,11 @@ public abstract class FamiliarFragment extends Fragment {
 				SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 				SearchView sv = new SearchView(getActivity());
 				try {
+					for (TextView textView : findChildrenByClass(sv, TextView.class)) {
+						textView.setTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
+						textView.setHintTextColor(getResources().getColor(R.color.hint_foreground_material_dark));
+					}
+
 					sv.setSearchableInfo(searchManager.getSearchableInfo(
 							new ComponentName("com.gelakinetic.mtgfam", "com.gelakinetic.mtgfam.FamiliarActivity")));
 
@@ -163,17 +171,17 @@ public abstract class FamiliarFragment extends Fragment {
 						Field searchField = SearchView.class.getDeclaredField("mSearchButton");
 						searchField.setAccessible(true);
 						ImageView searchBtn = (ImageView) searchField.get(sv);
-						searchBtn.setImageResource(resourceId);
+						searchBtn.setImageResource(R.drawable.ic_menu_search);
 					} catch (NoSuchFieldException e) {
 						/* eat it */
 					} catch (IllegalAccessException e) {
 						/* eat it */
 					}
 
-					menu.add(R.string.name_search_hint)
-							.setIcon(resourceId)
-							.setActionView(sv)
-							.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+					MenuItem mi = menu.add(R.string.name_search_hint)
+							.setIcon(R.drawable.ic_menu_search);
+					MenuItemCompat.setActionView(mi, sv);
+					MenuItemCompat.setOnActionExpandListener(mi, new MenuItemCompat.OnActionExpandListener() {
 								@Override
 								public boolean onMenuItemActionExpand(MenuItem item) {
 									mIsSearchViewOpen = true;
@@ -189,9 +197,8 @@ public abstract class FamiliarFragment extends Fragment {
 									}
 									return true;
 								}
-							})
-							.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-									MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+							});
+					MenuItemCompat.setShowAsAction(mi, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
 				} catch (Resources.NotFoundException e) {
 					/* One user threw this once. I think the typed ComponentName fixes it, but just in case */
@@ -322,5 +329,43 @@ public abstract class FamiliarFragment extends Fragment {
 	 */
 	public int getResourceIdFromAttr(int attr) {
 		return ((FamiliarActivity) getActivity()).getResourceIdFromAttr(attr);
+	}
+
+	/**
+	 * Helper function to grab and EditTexts in a SearchView
+	 *
+	 * @param viewGroup A Group to recursively search for UI elements
+	 * @param clazz The class of UI element to search for
+	 * @param <V> The class of UI element to search for
+	 * @return An ArrayList of UI elements of the given class in the viewGroup
+	 */
+	public static <V extends View> Collection<V> findChildrenByClass(ViewGroup viewGroup, Class<V> clazz) {
+
+		return gatherChildrenByClass(viewGroup, clazz, new ArrayList<V>());
+	}
+
+	/**
+	 * Helper function to grab and EditTexts in a SearchView
+	 *
+	 * @param viewGroup A Group to recursively search for UI elements
+	 * @param clazz The class of UI element to search for
+	 * @param <V> The class of UI element to search for
+	 * @param childrenFound A collection of UI elements
+	 * @return An ArrayList of UI elements of the given class in the viewGroup
+	 */
+	private static <V extends View> Collection<V> gatherChildrenByClass(ViewGroup viewGroup, Class<V> clazz, Collection<V> childrenFound) {
+
+		for (int i = 0; i < viewGroup.getChildCount(); i++)
+		{
+			final View child = viewGroup.getChildAt(i);
+			if (clazz.isAssignableFrom(child.getClass())) {
+				childrenFound.add((V)child);
+			}
+			if (child instanceof ViewGroup) {
+				gatherChildrenByClass((ViewGroup) child, clazz, childrenFound);
+			}
+		}
+
+		return childrenFound;
 	}
 }

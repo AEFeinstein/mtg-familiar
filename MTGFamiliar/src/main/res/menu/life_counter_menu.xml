@@ -17,36 +17,37 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/add_player"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/life_counter_add_player"
-        android:icon="?attr/ic_action_add_person"/>
+        android:icon="@drawable/ic_menu_person_add"/>
     <item
         android:id="@+id/remove_player"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/life_counter_remove_player"
-        android:icon="?attr/ic_action_remove_person"/>
+        android:icon="@drawable/ic_menu_person_remove"/>
     <item
         android:id="@+id/display_mode"
         android:title="@string/life_counter_change_display"
-        android:showAsAction="ifRoom"
-        android:icon="?attr/ic_action_view_as_grid"/>
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_grid"/>
     <item
         android:id="@+id/set_gathering"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/life_counter_set_gathering"
-        android:icon="?attr/ic_action_group"/>
+        android:icon="@drawable/ic_menu_group"/>
     <item
         android:id="@+id/edit_gatherings"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/life_counter_change_default_gathering"
-        android:icon="?attr/ic_action_add_group"/>
+        android:icon="@drawable/ic_menu_group_add"/>
     <item
         android:id="@+id/announce_life"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/life_counter_announce_life"
-        android:icon="?attr/ic_action_volume_on"/>
+        android:icon="@drawable/ic_menu_volume_up"/>
 
 </menu>

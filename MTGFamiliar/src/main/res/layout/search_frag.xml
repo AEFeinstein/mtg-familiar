@@ -34,7 +34,8 @@
                 android:hint="@string/search_name"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:singleLine="true">
+                android:singleLine="true"
+                android:background="?attr/abc_edit_text_material">
 
                 <requestFocus/>
             </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
@@ -53,9 +54,11 @@
                     android:hint="@string/search_supertype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:background="?attr/abc_edit_text_material"/>
 
                 <EditText
+                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/subtypesearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -78,6 +81,7 @@
             <!-- EditText below by Adam Feinstein -->
 
             <EditText
+                android:background="?attr/abc_edit_text_material"
                 android:id="@+id/textsearch"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
@@ -113,7 +117,7 @@
                         android:id="@+id/checkBoxW"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_w"/>
+                        android:button="?attr/btn_check_w"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -127,7 +131,7 @@
                         android:id="@+id/checkBoxU"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_u"/>
+                        android:button="?attr/btn_check_u"/>
 
                 </LinearLayout>
 
@@ -142,7 +146,7 @@
                         android:id="@+id/checkBoxB"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_b"/>
+                        android:button="?attr/btn_check_b"/>
 
                 </LinearLayout>
 
@@ -157,7 +161,7 @@
                         android:id="@+id/checkBoxR"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_r"/>
+                        android:button="?attr/btn_check_r"/>
 
                 </LinearLayout>
 
@@ -172,7 +176,7 @@
                         android:id="@+id/checkBoxG"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_g"/>
+                        android:button="?attr/btn_check_g"/>
 
                 </LinearLayout>
 
@@ -187,7 +191,7 @@
                         android:id="@+id/checkBoxL"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="@drawable/btn_check_holo_light_l"/>
+                        android:button="?attr/btn_check_l"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -288,7 +292,7 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout11"
-                style="?android:attr/buttonBarStyle"
+                style="@android:style/Holo.ButtonBar"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginBottom="4dp"
@@ -339,6 +343,7 @@
                 android:layout_width="match_parent">
 
                 <EditText
+                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/flavorsearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -349,6 +354,7 @@
                     android:maxLines="1"/>
 
                 <EditText
+                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/artistsearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -364,7 +370,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/holo_blue"/>
+        android:background="@color/material_purple_500"/>
 
     <Button
         android:id="@+id/searchbutton"

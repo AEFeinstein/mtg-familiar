@@ -6,6 +6,7 @@
               android:id="@+id/dialog_layout_root">
 
     <EditText
+        android:background="?attr/abc_edit_text_material"
         style="@style/forty_eight"
         android:id="@+id/custom_name"
         android:layout_width="match_parent"
@@ -26,6 +27,7 @@
             android:text="@string/gathering_starting_life"/>
 
         <EditText
+            android:background="?attr/abc_edit_text_material"
             style="@style/text.medium"
             android:id="@+id/starting_life"
             android:layout_width="0dp"

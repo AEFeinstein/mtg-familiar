@@ -125,24 +125,6 @@
         <item>@string/search_All_printings</item>
         <item>@string/search_Reprints_only</item>
     </string-array>
-    <string-array name="rt_defaulttimes">
-        <item>@string/timer_30_minutes</item>
-        <item>@string/timer_35_minutes</item>
-        <item>@string/timer_40_minutes</item>
-        <item>@string/timer_45_minutes</item>
-        <item>@string/timer_50_minutes</item>
-        <item>@string/timer_55_minutes</item>
-        <item>@string/timer_1_hour</item>
-    </string-array>
-    <string-array name="rt_defaulttimesvalues">
-        <item>30</item>
-        <item>35</item>
-        <item>40</item>
-        <item>45</item>
-        <item>50</item>
-        <item>55</item>
-        <item>60</item>
-    </string-array>
     <string-array name="type_spinner">
         <item>@string/search_All_types</item>
         <item>@string/search_Any_types</item>

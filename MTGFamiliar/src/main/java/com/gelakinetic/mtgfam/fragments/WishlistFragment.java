@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
@@ -474,7 +475,7 @@ public class WishlistFragment extends FamiliarFragment {
 						}
 					}
 					case DIALOG_PRICE_SETTING: {
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+						AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
 
 						builder.setTitle(R.string.trader_pricing_dialog_title)
 								.setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
@@ -497,7 +498,7 @@ public class WishlistFragment extends FamiliarFragment {
 
 					}
 					case DIALOG_CONFIRMATION: {
-						return new AlertDialog.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.wishlist_empty_dialog_title)
 								.setMessage(R.string.wishlist_empty_dialog_text)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -522,7 +523,7 @@ public class WishlistFragment extends FamiliarFragment {
 
 					}
 					case DIALOG_SORT: {
-						return new AlertDialog.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.wishlist_sort_by)
 								.setSingleChoiceItems(R.array.wishlist_sort_type, wishlistSortType, null)
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
@@ -941,7 +942,7 @@ public class WishlistFragment extends FamiliarFragment {
 						}
 						else {
 							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
-							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
+							priceText.setTextColor(getResources().getColor(R.color.material_red_500));
 						}
 					}
 					else {
@@ -977,7 +978,7 @@ public class WishlistFragment extends FamiliarFragment {
 						}
 						if (!priceFound) {
 							priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
-							priceText.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
+							priceText.setTextColor(getResources().getColor(R.color.material_red_500));
 						}
 					}
 				}
