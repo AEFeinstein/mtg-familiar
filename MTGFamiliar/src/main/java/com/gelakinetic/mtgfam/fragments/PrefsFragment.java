@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.preference.PreferenceFragment;
-import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.R;
 

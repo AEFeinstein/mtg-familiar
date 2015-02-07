@@ -66,13 +66,14 @@ So, how generous are you feeling today?</string>
 	<string name="main_whats_new_title">What\'s New</string>
 	<string name="main_whats_new_in_title">What\'s New in Version</string>
 <string name="main_whats_new_text">
-- Sortable wishlist&lt;br&gt;&lt;br&gt;
-- Card images are cached offline&lt;br&gt;&lt;br&gt;
-- Save card images by long pressing them&lt;br&gt;&lt;br&gt;
-- Added X-sided die&lt;br&gt;&lt;br&gt;
-- Save your DCI number&lt;br&gt;&lt;br&gt;
-- Adjust brightness when the Life Counter dims&lt;br&gt;&lt;br&gt;
-- Commander legality checks
+- New Material design&lt;br&gt;&lt;br&gt;
+- Added JAR document&lt;br&gt;&lt;br&gt;
+- Added banned, restricted, and legal set lists to rules&lt;br&gt;&lt;br&gt;
+- Copy rules to the clipboard by long pressing&lt;br&gt;&lt;br&gt;
+- Added preference to select app language&lt;br&gt;&lt;br&gt;
+- Sort wishlists by set&lt;br&gt;&lt;br&gt;
+- Remove trade entries by long pressing&lt;br&gt;&lt;br&gt;
+- Bugfixes, as always
 </string>
 	<string name="main_tts_warning_title">Text-to-Speech</string>
 <string name="main_tts_warning_text">This application has text-to-speech capability for some of its features, but you don\'t seem to have it installed.
@@ -87,26 +88,19 @@ If you want to install it, use the "Install Text-to-Speech" link in the settings
 <string name="main_about_text">
 This app is my gift to the MTG community.&lt;br&gt;&lt;br&gt;
 Please send questions, comments, concerns, and praise to &lt;a href="mailto:mtg.familiar@gmail.com"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+Join the &lt;a href="https://plus.google.com/communities/110783165129365768059"&gt;beta community&lt;/a&gt; on Google+.&lt;br&gt;&lt;br&gt;
 Join the &lt;a href="https://github.com/AEFeinstein/mtg-familiar"&gt;open source project&lt;/a&gt; on GitHub.&lt;br&gt;&lt;br&gt;
-Thanks to zagaberoo for beautiful graphics and even more beautiful code.&lt;br&gt;&lt;br&gt;
-Thanks to April King for the massive QA effort, and learning Java. Shh, don\'t tell anyone about that.&lt;br&gt;&lt;br&gt;
-Thanks to Toastdeib for being my SQL guru sitting on top of the mountain.&lt;br&gt;&lt;br&gt;
-Thanks to Reuben for being the best kind of user. You know, the kind that becomes a developer!&lt;br&gt;&lt;br&gt;
-Thanks to Lotier from Reddit for coming out of nowhere with a great card trader activity!&lt;br&gt;&lt;br&gt;
-Thanks to Daniel for first learning Android, then making a wishlist!&lt;br&gt;&lt;br&gt;
-Thanks to chaudakh for the wonderful &lt;a href="http://forums.mtgsalvation.com/showthread.php?t=303454"&gt;Gatherer Extractor&lt;/a&gt; program.&lt;br&gt;&lt;br&gt;
-Thanks to Ghislain, Piotr, Víctor, and Emilio for translations.&lt;br&gt;&lt;br&gt;
-Thanks to Ryan Stapleton (&lt;a href="http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html"&gt;Bluewizard&lt;/a&gt;) for judge documents&lt;br&gt;&lt;br&gt;
-Thanks to Devin Collins for being the best person on GitHub.&lt;br&gt;&lt;br&gt;
-Thanks to Ian Kenley for Sunday Legacy and some code.&lt;br&gt;&lt;br&gt;
-Thanks to Robert Schultz for &lt;a href="http://www.mtgimage.com"&gt;mtgimage.com&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+Thanks to all the contributors including, but not limited to, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, and bcGiR.&lt;br&gt;&lt;br&gt;
+Thanks to all the translators including, but not limited to, Ghislain, Piotr, Víctor, Emilio, and Alan.&lt;br&gt;&lt;br&gt;
+Thanks to all those who manage data sources including, but not limited to, Ryan Stapleton (&lt;a href="http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html"&gt;Bluewizard.net&lt;/a&gt;), Robert Schultz (&lt;a href="http://www.mtgimage.com"&gt;mtgimage.com&lt;/a&gt;), and Chedy Hampson (&lt;a href="http://tcgplayer.com"&gt;TCGPlayer.com&lt;/a&gt;)&lt;br&gt;&lt;br&gt;
 Thanks to reddit\'s &lt;a href="http://www.reddit.com/r/magicTCG/"&gt;/r/magictcg&lt;/a&gt; for testing and feedback.&lt;br&gt;&lt;br&gt;
-Thanks to my brother for the icon.&lt;br&gt;&lt;br&gt;
-Thanks to Chedy @ &lt;a href="http://tcgplayer.com"&gt;TCGPlayer.com&lt;/a&gt; for the price API.&lt;br&gt;&lt;br&gt;
 Special thanks to Richard Garfield and the rest of the folks at &lt;a href="http://www.wizards.com/magic"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
--gelakinetic&lt;br&gt;&lt;br&gt;&lt;br&gt;
+-gelakinetic&lt;br&gt;&lt;br&gt;
 Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;&lt;br&gt;
 &lt;a href="https://github.com/octo-online/robospice"&gt;Robospice&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+&lt;a href="https://github.com/fengdai/AlertDialogPro"&gt;AlertDialogPro&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+&lt;a href="https://github.com/derekbrameyer/android-betterpickers"&gt;BetterPickers&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+&lt;a href="https://github.com/jpardogo/PagerSlidingTabStrip"&gt;PagerSlidingTabStrip&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
 Program licenced under the &lt;a href="http://www.gnu.org/licenses/gpl.html"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
 Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3.0/"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.
 </string>

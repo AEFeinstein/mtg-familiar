@@ -137,12 +137,12 @@ public class PreferenceAdapter {
 		this.edit.commit();
 	}
 
-	/* Last rules update */
-	public synchronized long getLastRulesUpdate() {
-		return this.prefs.getLong(context.getString(R.string.key_lastRulesUpdate), 0);
-	}
+    /* Last rules update */
+    public synchronized long getLastRulesUpdate() {
+        return this.prefs.getLong(context.getString(R.string.key_lastRulesUpdate), BuildDate.get(this.context).getTime());
+    }
 
-	public synchronized void setLastRulesUpdate(long lastRulesUpdate) {
+    public synchronized void setLastRulesUpdate(long lastRulesUpdate) {
 		this.edit.putLong(context.getString(R.string.key_lastRulesUpdate), lastRulesUpdate);
 		this.edit.commit();
 	}
