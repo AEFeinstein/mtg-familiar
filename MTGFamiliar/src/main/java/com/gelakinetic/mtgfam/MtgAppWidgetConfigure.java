@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -9,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
@@ -40,7 +40,7 @@ public class MtgAppWidgetConfigure extends Activity {
 		}
 
         /* Build the dialog */
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
+		AlertDialogPro.Builder adb = new AlertDialogPro.Builder(this);
 		adb
 				.setMultiChoiceItems(mLaunchers, mSelected, new DialogInterface.OnMultiChoiceClickListener() {
 					@Override

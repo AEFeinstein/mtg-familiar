@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
@@ -403,7 +403,7 @@ public class TradeFragment extends FamiliarFragment {
 							}
 						});
 
-						return new AlertDialog.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(lSide.get(positionForDialog).name)
 								.setView(view)
 								.setPositiveButton(R.string.dialog_done, new DialogInterface.OnClickListener() {
@@ -531,7 +531,7 @@ public class TradeFragment extends FamiliarFragment {
 							final String[] aSetCodes = setCodes.toArray(new String[setCodes.size()]);
 
 							/* Build and return the dialog */
-							return new AlertDialog.Builder(getActivity())
+							return new AlertDialogPro.Builder(getActivity())
 									.setTitle(R.string.card_view_set_dialog_title)
 									.setItems(aSets, new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialogInterface, int item) {
@@ -579,7 +579,7 @@ public class TradeFragment extends FamiliarFragment {
 					}
 					case DIALOG_PRICE_SETTING: {
 						/* Build the dialog with some choices */
-						return new AlertDialog.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.trader_pricing_dialog_title)
 								.setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
 												getString(R.string.trader_Average),
@@ -633,7 +633,7 @@ public class TradeFragment extends FamiliarFragment {
 							}
 						});
 
-						Dialog dialog = new AlertDialog.Builder(getActivity())
+						Dialog dialog = new AlertDialogPro.Builder(getActivity())
 								.setTitle(R.string.trader_save_dialog_title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -683,7 +683,7 @@ public class TradeFragment extends FamiliarFragment {
 						final String[] tradeNames = new String[validFiles.size()];
 						validFiles.toArray(tradeNames);
 
-						return new AlertDialog.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.trader_select_dialog_title)
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
@@ -727,7 +727,7 @@ public class TradeFragment extends FamiliarFragment {
 						final String[] tradeNames = new String[validFiles.size()];
 						validFiles.toArray(tradeNames);
 
-						return new AlertDialog.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.trader_delete_dialog_title)
 								.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int whichButton) {
@@ -748,7 +748,7 @@ public class TradeFragment extends FamiliarFragment {
 								.create();
 					}
 					case DIALOG_CONFIRMATION: {
-						return new AlertDialog.Builder(this.getActivity())
+						return new AlertDialogPro.Builder(this.getActivity())
 								.setTitle(R.string.trader_clear_dialog_title)
 								.setMessage(R.string.trader_clear_dialog_text)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -871,7 +871,7 @@ public class TradeFragment extends FamiliarFragment {
 
 			/* Set the color whether all values are loaded, and write the text */
 				int color = hasBadValues ?
-						this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
+						this.getActivity().getResources().getColor(R.color.material_red_500) :
 						this.getActivity().getResources().getColor(
 								getResourceIdFromAttr(R.attr.color_text));
 				mTotalPriceLeft.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
@@ -892,7 +892,7 @@ public class TradeFragment extends FamiliarFragment {
 
 			/* Set the color whether all values are loaded, and write the text */
 				int color = hasBadValues ?
-						this.getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)) :
+						this.getActivity().getResources().getColor(R.color.material_red_500) :
 						this.getActivity().getResources().getColor(
 								getResourceIdFromAttr(R.attr.color_text)
 						);
@@ -1108,7 +1108,7 @@ public class TradeFragment extends FamiliarFragment {
 				priceField.setText(data.hasPrice() ? data.getPriceString() : data.message);
 				if (data.hasPrice()) {
 					if (data.customPrice) {
-						priceField.setTextColor(getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_green)));
+						priceField.setTextColor(getActivity().getResources().getColor(R.color.material_green_500));
 					}
 					else {
 						priceField.setTextColor(getActivity().getResources().getColor(
@@ -1117,7 +1117,7 @@ public class TradeFragment extends FamiliarFragment {
 					}
 				}
 				else {
-					priceField.setTextColor(getActivity().getResources().getColor(getResourceIdFromAttr(R.attr.holo_red)));
+					priceField.setTextColor(getActivity().getResources().getColor(R.color.material_red_500));
 				}
 			}
 			return convertView;

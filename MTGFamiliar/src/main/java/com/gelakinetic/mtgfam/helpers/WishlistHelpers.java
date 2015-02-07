@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.helpers;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
@@ -174,7 +174,8 @@ public class WishlistHelpers {
 		}
 		else {
 			customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
-			customView.findViewById(R.id.divider).setVisibility(View.GONE);
+            customView.findViewById(R.id.divider1).setVisibility(View.GONE);
+            customView.findViewById(R.id.divider2).setVisibility(View.GONE);
 		}
 
 		/* Read the wishlist */
@@ -249,7 +250,7 @@ public class WishlistHelpers {
 		DatabaseManager.getInstance().closeDatabase();
 
 		/* make and return the actual dialog */
-		return new AlertDialog.Builder(ctx)
+		return new AlertDialogPro.Builder(ctx)
 				.setTitle(mCardName + " " + fragment.getString(R.string.wishlist_edit_dialog_title_end))
 				.setView(customView)
 				.setPositiveButton(fragment.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {

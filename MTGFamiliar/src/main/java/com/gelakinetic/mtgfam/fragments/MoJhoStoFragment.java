@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -20,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
@@ -207,7 +207,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 				switch (id) {
 					case DIALOG_RULES: {
 						/* Use a generic AlertDialog to display the rules text */
-						AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+						AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
 						builder.setNeutralButton(R.string.mojhosto_dialog_play, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.dismiss();

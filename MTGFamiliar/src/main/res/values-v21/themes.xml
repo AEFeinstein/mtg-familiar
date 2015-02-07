@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.light" parent="Theme.base.light" >
+        <item name="android:colorPrimary">@color/material_purple_500</item>
+        <item name="android:colorPrimaryDark">@color/material_purple_700</item>
+        <item name="com.gelakinetic.mtgfam:btn_ripple">@drawable/btn_ripple_light</item>
+    </style>
+
+    <style name="Theme.dark" parent="Theme.base.dark">
+        <item name="android:colorPrimary">@color/material_purple_500</item>
+        <item name="android:colorPrimaryDark">@color/material_purple_700</item>
+        <item name="com.gelakinetic.mtgfam:btn_ripple">@drawable/btn_ripple_dark</item>
+    </style>
+
+    <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
+        <item name="bpKeyBackground">@drawable/btn_ripple_borderless_light</item>
+        <item name="bpButtonBackground">@drawable/btn_ripple_borderless_light</item>
+    </style>
+
+    <style name="MyCustomBetterPickerTheme" parent="@style/BetterPickersDialogFragment">
+        <item name="bpKeyBackground">@drawable/btn_ripple_borderless_dark</item>
+        <item name="bpButtonBackground">@drawable/btn_ripple_borderless_dark</item>
+    </style>
+
+</resources>

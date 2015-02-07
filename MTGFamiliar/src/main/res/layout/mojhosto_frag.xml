@@ -51,11 +51,11 @@
 
             <Button
                 android:id="@+id/momir_button"
-                style="@style/text.small"
+                android:textSize="14dp"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:background="@drawable/btn_default_custom"
+                style="@style/button"
                 android:text="@string/mojhosto_random_creature"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -104,11 +104,11 @@
 
             <Button
                 android:id="@+id/stonehewer_button"
-                style="@style/text.small"
+                android:textSize="14dp"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:background="@drawable/btn_default_custom"
+                style="@style/button"
                 android:text="@string/mojhosto_random_equipment"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -129,28 +129,28 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="96dp"
+            android:layout_height="108dp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
             <Button
                 android:id="@+id/jhorira_instant_button"
-                style="@style/text.small"
+                android:textSize="14dp"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:background="@drawable/btn_default_custom"
+                style="@style/button"
                 android:text="@string/mojhosto_random_instants"
                 android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/jhorira_sorcery_button"
-                style="@style/text.small"
+                android:textSize="14dp"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_margin="4dp"
-                android:background="@drawable/btn_default_custom"
+                style="@style/button"
                 android:text="@string/mojhosto_random_sorceries"
                 android:textStyle="bold"/>
         </LinearLayout>

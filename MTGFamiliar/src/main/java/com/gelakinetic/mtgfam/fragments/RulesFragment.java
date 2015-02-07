@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -32,6 +31,7 @@ import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
+import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
@@ -411,7 +411,7 @@ public class RulesFragment extends FamiliarFragment {
 							}
 						}
 
-						Dialog dialog = new AlertDialog.Builder(getActivity())
+						Dialog dialog = new AlertDialogPro.Builder(getActivity())
 								.setTitle(title)
 								.setView(textEntryView)
 								.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {

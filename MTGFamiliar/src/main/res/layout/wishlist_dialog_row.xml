@@ -19,6 +19,7 @@
               android:id="@+id/dialog_layout_root">
 
     <EditText
+        android:background="?attr/abc_edit_text_material"
         android:id="@+id/numberInput"
         android:layout_width="50dp"
         android:layout_height="match_parent"

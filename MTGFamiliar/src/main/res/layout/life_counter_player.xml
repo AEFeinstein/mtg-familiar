@@ -71,7 +71,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:orientation="vertical">
 
                 <LinearLayout
-                    style="?android:attr/buttonBarStyle"
+                    style="@android:style/Holo.ButtonBar"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -105,7 +105,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 <!-- -1/-5 buttons -->
 
                 <LinearLayout
-                    style="?android:attr/buttonBarStyle"
+                    style="@android:style/Holo.ButtonBar"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -149,7 +149,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                     android:id="@+id/commanderCast"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="@drawable/btn_default_custom"
+                    style="@style/button"
                     android:text="@string/mana_pool_zero"
                     android:textStyle="bold"
                     android:visibility="visible"/>

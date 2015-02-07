@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/save_gathering"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/gathering_save"
-        android:icon="?attr/ic_action_save"/>
+        android:icon="@drawable/ic_menu_save"/>
 
     <item
         android:id="@+id/load_gathering"
-        android:icon="?attr/ic_action_collection"
-        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_folder_open"
+        app:showAsAction="ifRoom"
         android:title="@string/gathering_load"/>
 
     <item
         android:id="@+id/delete_gathering"
-        android:showAsAction="ifRoom"
-        android:icon="?attr/ic_action_discard"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_delete"
         android:title="@string/gathering_delete"/>
 
     <item
         android:id="@+id/add_player"
-        android:icon="?attr/ic_action_add_person"
-        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_person_add"
+        app:showAsAction="ifRoom"
         android:title="@string/gathering_add_player"/>
 
     <item
         android:id="@+id/remove_player"
-        android:icon="?attr/ic_action_remove_person"
-        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_person_remove"
+        app:showAsAction="ifRoom"
         android:title="@string/gathering_remove_player"/>
 
 </menu>

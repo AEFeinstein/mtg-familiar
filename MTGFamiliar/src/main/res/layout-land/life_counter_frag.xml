@@ -50,7 +50,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/divider"
         android:layout_width="1dip"
         android:layout_height="fill_parent"
-        android:background="?attr/holo_blue"/>
+        android:background="@color/material_purple_500"/>
 
     <!-- Command bar: reset, poison, etc. -->
 
