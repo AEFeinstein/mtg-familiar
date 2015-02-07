@@ -512,6 +512,14 @@ public class WishlistHelpers {
 		}
 	}
 
+    /* Comparator based on first set of a card */
+    public static class WishlistComparatorSet implements Comparator<CompressedWishlistInfo> {
+        @Override
+        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
+            return  wish1.mInfo.get(0).mSet.compareTo(wish2.mInfo.get(0).mSet);
+        }
+    }
+
 	/* Comparator based on price */
 	public static class WishlistComparatorPrice implements Comparator<CompressedWishlistInfo> {
 		/* Price setting constants */

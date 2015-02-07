@@ -41,6 +41,7 @@ import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorCmc;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorColor;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorName;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorPrice;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorSet;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -73,6 +74,7 @@ public class WishlistFragment extends FamiliarFragment {
 	private static final int SORT_TYPE_COLOR = 2;
 	private static final int SORT_TYPE_NAME = 3;
 	private static final int SORT_TYPE_PRICE = 4;
+    private static final int SORT_TYPE_SET = 5;
 
 	private static final int ASCENDING = 0;
 	private static final int DESCENDING = 1;
@@ -696,6 +698,9 @@ public class WishlistFragment extends FamiliarFragment {
 					case SORT_TYPE_PRICE:
 						Collections.sort(mCompressedWishlist, new WishlistComparatorPrice(mPriceSetting));
 						break;
+                    case SORT_TYPE_SET:
+                        Collections.sort(mCompressedWishlist, new WishlistComparatorSet());
+                        break;
 				}
 			}
 			else {
@@ -712,6 +717,9 @@ public class WishlistFragment extends FamiliarFragment {
 					case SORT_TYPE_PRICE:
 						Collections.sort(mCompressedWishlist, Collections.reverseOrder(new WishlistComparatorPrice(mPriceSetting)));
 						break;
+                    case SORT_TYPE_SET:
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new WishlistComparatorSet()));
+                        break;
 				}
 			}
 			mWishlistAdapter.notifyDataSetChanged();

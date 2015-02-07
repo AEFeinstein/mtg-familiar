@@ -26,6 +26,8 @@
         <item>&lt;</item>
         <item>=</item>
     </string-array>
+    <!-- Keep the character after last underscore in these references the same as the rarity code (C R U M T)
+         See strings.xml and onCreate method in SearchViewFragment -->
     <string-array name="rarities">
         <item>@string/search_Common</item>
         <item>@string/search_Uncommon</item>
@@ -198,6 +200,18 @@
         <item>ru</item>
         <item>de</item>
     </string-array>
+	<string-array name="pref_language">
+		<item>@string/pref_English</item>
+		<item>@string/pref_French</item>
+		<item>@string/pref_Spanish</item>
+		<item>@string/pref_Polish</item>
+	</string-array>
+	<string-array name="pref_language_values">
+		<item>en</item>
+		<item>fr</item>
+		<item>es</item>
+		<item>pl</item>
+	</string-array>
 
     <string-array name="life_timer_array_entries">
         <item>@string/pref_1_second</item>
@@ -224,5 +238,6 @@
         <item>@string/wishlist_type_color</item>
         <item>@string/wishlist_type_name</item>
         <item>@string/wishlist_type_price</item>
+        <item>@string/wishlist_type_set</item>
     </string-array>
 </resources>

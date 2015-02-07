@@ -1,6 +1,8 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -51,10 +53,13 @@ public class RulesFragment extends FamiliarFragment {
 	private static final String KEYWORD_KEY = "keyword";
 	private static final String GLOSSARY_KEY = "glossary";
 	private static final String BANNED_KEY = "banned";
+	private static final String FORMAT_KEY = "format";
 
-	/* Keys for banned and restricted table */
+	/* Keys for BannedItems */
 	private static final int BANNED = 1;
 	private static final int RESTRICTED = 2;
+	private static final int NONE = -1;
+	private static final int SETS = -2;
 
 	/* Dialog constant */
 	private static final int DIALOG_SEARCH = 1;
@@ -84,6 +89,7 @@ public class RulesFragment extends FamiliarFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		String keyword;
+		final String format;
 
 		/* Open a database connection */
 		SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
@@ -96,12 +102,13 @@ public class RulesFragment extends FamiliarFragment {
 		Bundle extras = getArguments();
 		int position;
 		boolean isGlossary;
-		boolean isBanned;
+		final boolean isBanned;
 		if (extras == null) {
 			mCategory = -1;
 			mSubcategory = -1;
 			position = 0;
 			keyword = null;
+			format = null;
 			isGlossary = false;
 			isBanned = false;
 		}
@@ -110,6 +117,7 @@ public class RulesFragment extends FamiliarFragment {
 			mSubcategory = extras.getInt(SUBCATEGORY_KEY, -1);
 			position = extras.getInt(POSITION_KEY, 0);
 			keyword = extras.getString(KEYWORD_KEY);
+			format = extras.getString(FORMAT_KEY);
 			isGlossary = extras.getBoolean(GLOSSARY_KEY, false);
 			isBanned = extras.getBoolean(BANNED_KEY, false);
 		}
@@ -118,6 +126,9 @@ public class RulesFragment extends FamiliarFragment {
 		mRules = new ArrayList<DisplayItem>();
 		boolean isClickable;
 		Cursor cursor;
+
+		Cursor setsCursor;
+		setsCursor = null;
 
 		/* Sub-optimal, but KitKat is silly */
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -150,9 +161,14 @@ public class RulesFragment extends FamiliarFragment {
 				cursor = CardDbAdapter.getGlossaryTerms(database);
 				isClickable = false;
 			}
-			else if (isBanned) {
-				cursor = CardDbAdapter.getBannedCards(database);
+			else if (isBanned && format != null) {
+				cursor = CardDbAdapter.getBannedCards(database, format);
+				setsCursor = CardDbAdapter.getLegalSets(database, format);
 				isClickable = false;
+			}
+			else if (isBanned && format == null) {
+				cursor = CardDbAdapter.fetchAllFormats(database);
+				isClickable = true;
 			}
 			else if (keyword == null) {
 				cursor = CardDbAdapter.getRules(mCategory, mSubcategory, database);
@@ -168,6 +184,26 @@ public class RulesFragment extends FamiliarFragment {
 		}
 
 		/* Add DisplayItems to mRules */
+		if (setsCursor != null) {
+			try {
+				if (setsCursor.getCount() > 0) {
+					setsCursor.moveToFirst();
+					mRules.add(new BannedItem(
+							format,
+							SETS,
+							setsCursor.getString(setsCursor.getColumnIndex(CardDbAdapter.KEY_LEGAL_SETS)), false));
+				}
+				setsCursor.close();
+			} catch (SQLiteDatabaseCorruptException e) {
+				handleFamiliarDbException(true);
+				return null;
+			}
+			if (cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
+				int listItemResource = R.layout.rules_list_detail_item;
+				RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
+				list.setAdapter(adapter);
+			}
+		}
 		if (cursor != null) {
 			try {
 				if (cursor.getCount() > 0) {
@@ -178,11 +214,16 @@ public class RulesFragment extends FamiliarFragment {
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TERM)),
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_DEFINITION)), false));
 						}
-						else if (isBanned) {
+						else if (isBanned && format != null) {
 							mRules.add(new BannedItem(
-									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FORMAT)),
+									format,
 									cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LEGALITY)),
 									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_BANNED_LIST)), false));
+						}
+						else if (isBanned && format == null) {
+							mRules.add(new BannedItem(
+									cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
+									NONE, "", true));
 						}
 						else {
 							mRules.add(new RuleItem(
@@ -197,7 +238,7 @@ public class RulesFragment extends FamiliarFragment {
 					if (!isGlossary && !isBanned && mCategory == -1 && keyword == null) {
 						/* If it's the initial rules page, add a Glossary link to the end*/
 						mRules.add(new GlossaryItem(getString(R.string.rules_glossary), "", true));
-						mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), -1, "", true));
+						mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), NONE, "", true));
 					}
 					int listItemResource = R.layout.rules_list_item;
 					/* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
@@ -223,18 +264,41 @@ public class RulesFragment extends FamiliarFragment {
 								}
 								else if (item instanceof BannedItem) {
 									args.putBoolean(BANNED_KEY, true);
+									if (isBanned && format == null) {
+										args.putString(FORMAT_KEY, item.getHeader());
+									}
 								}
 								RulesFragment frag = new RulesFragment();
 								startNewFragment(frag, args);
 							}
 						});
 					}
+					list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+						@Override
+						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+							DisplayItem item = mRules.get(position);
+							if(item instanceof RuleItem) {
+								// Gets a handle to the clipboard service.
+								ClipboardManager clipboard = (ClipboardManager)
+										getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+								// Creates a new text clip to put on the clipboard
+								ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
+								// Set the clipboard's primary clip.
+								clipboard.setPrimaryClip(clip);
+								// Alert the user
+								Toast.makeText(getActivity(), R.string.rules_coppied, Toast.LENGTH_SHORT).show();
+							}
+							return true;
+						}
+					});
 				}
 				else {
 					/* Cursor had a size of 0, boring */
 					cursor.close();
-					Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
-					getFragmentManager().popBackStack();
+					if (!isBanned) {
+						Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
+						getFragmentManager().popBackStack();
+					}
 				}
 			} catch (SQLiteDatabaseCorruptException e) {
 				handleFamiliarDbException(true);
@@ -242,9 +306,10 @@ public class RulesFragment extends FamiliarFragment {
 			}
 		}
 		else {
-			/* Cursor is null, weird */
-			Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
-			getFragmentManager().popBackStack();
+			if (!isBanned) { /* Cursor is null. weird. */
+				Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
+				getFragmentManager().popBackStack();
+			}
 		}
 
 		list.setSelection(position);
@@ -648,6 +713,12 @@ public class RulesFragment extends FamiliarFragment {
 				else if (legality == BANNED) {
 					mLegality = getString(R.string.rules_banned);
 				}
+				else if (legality == NONE) {
+					mLegality = "";
+				}
+				else if (legality == SETS) {
+					mLegality = getString(R.string.rules_legal_sets);
+				}
 				else {
 					mLegality = "";
 				}
@@ -660,12 +731,23 @@ public class RulesFragment extends FamiliarFragment {
 					mLegality = getString(R.string.rules_restricted);
 
 				}
+				else if (legality == NONE) {
+					mLegality = "";
+				}
+				else if (legality == SETS) {
+					mLegality = getString(R.string.rules_legal_sets);
+				}
 				else {
 					mLegality = "";
 				}
 			}
 			if (cards == null) {
-				this.mCards = "(" + getString(R.string.rules_no_cards) + ")";
+                if(legality == SETS) {
+                    this.mCards = getString(R.string.rules_bb_wb_sets);
+                }
+                else {
+                    this.mCards = getString(R.string.rules_no_cards);
+                }
 			}
 			else {
 				this.mCards = cards;
@@ -689,7 +771,7 @@ public class RulesFragment extends FamiliarFragment {
 				return this.mFormat;
 			}
 			else {
-				return this.mFormat + ": " + this.mLegality;
+				return this.mLegality;
 			}
 		}
 
@@ -727,7 +809,7 @@ public class RulesFragment extends FamiliarFragment {
 
 			boolean isGlossary = true;
 			for (DisplayItem item : items) {
-				if (RuleItem.class.isInstance(item)) {
+				if (RuleItem.class.isInstance(item) || BannedItem.class.isInstance(item)) {
 					isGlossary = false;
 					break;
 				}
@@ -786,13 +868,16 @@ public class RulesFragment extends FamiliarFragment {
 					rulesText.setVisibility(View.GONE);
 				}
 				else {
+                    boolean shouldLink = true;
+                    if(data instanceof BannedItem) {
+                        shouldLink = false;
+                    }
 					rulesText.setVisibility(View.VISIBLE);
-					rulesText.setText(formatText(text, true), BufferType.SPANNABLE);
+					rulesText.setText(formatText(text, shouldLink), BufferType.SPANNABLE);
 				}
 				if (!data.isClickable()) {
 					rulesText.setMovementMethod(LinkMovementMethod.getInstance());
 					rulesText.setClickable(false);
-					rulesText.setLongClickable(false);
 				}
 			}
 			return v;

@@ -1,0 +1,2 @@
+## Fixes Warning about sun.misc.Unsafe
+-dontwarn sun.misc.Unsafe

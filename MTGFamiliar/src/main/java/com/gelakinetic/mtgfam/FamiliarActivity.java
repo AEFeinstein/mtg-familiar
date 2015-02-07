@@ -193,6 +193,10 @@ public class FamiliarActivity extends ActionBarActivity {
 				cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
 				addImageCache(getSupportFragmentManager(), cacheParams);
 			}
+			else if (s.endsWith(getString(R.string.key_language))) {
+				FamiliarActivity.this.finish();
+				startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class));
+			}
 		}
 	};
 	/* Drawer elements */
@@ -285,6 +289,7 @@ public class FamiliarActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PrefsFragment.checkOverrideSystemLanguage(this);
 		mPreferenceAdapter = new PreferenceAdapter(this);
 
 		/* Figure out what theme the app is currently in, and change it if necessary */
@@ -354,6 +359,7 @@ public class FamiliarActivity extends ActionBarActivity {
 								mPreferenceAdapter.setLastLegalityUpdate(0);
 								mPreferenceAdapter.setLastIPGUpdate(0);
 								mPreferenceAdapter.setLastMTRUpdate(0);
+                                mPreferenceAdapter.setLastJARUpdate(0);
 								mPreferenceAdapter.setLastRulesUpdate(0);
 								mPreferenceAdapter.setLastTCGNameUpdate("");
 								mPreferenceAdapter.setLastUpdate("");
@@ -676,6 +682,7 @@ public class FamiliarActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		PrefsFragment.checkOverrideSystemLanguage(this);
 		if (mRoundEndTime != -1) {
 			startUpdatingDisplay();
 		}

@@ -191,6 +191,10 @@ public class DbUpdaterService extends IntentService {
 				updatedStuff.add(getString(R.string.update_added_ipg));
 			}
 
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_JAR)) {
+                updatedStuff.add(getString(R.string.update_added_jar));
+            }
+
 			/* If everything went well so far, commit the date and show the update complete notification */
 			if (commitDates) {
 				showUpdatedNotification(updatedStuff);

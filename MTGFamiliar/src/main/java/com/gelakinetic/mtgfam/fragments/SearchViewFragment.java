@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.content.res.TypedArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -64,6 +65,7 @@ public class SearchViewFragment extends FamiliarFragment {
 	private boolean[] mSetChecked;
 	private String[] mSetSymbols;
 	private String[] mFormatNames;
+	private char[] mRarityCodes;
 	private String[] mRarityNames;
 	private boolean[] mRarityChecked;
 	private int mSelectedFormat;
@@ -145,8 +147,21 @@ public class SearchViewFragment extends FamiliarFragment {
 
         /* Get the different rarities out of resources to populate the list of choices with */
 		Resources res = getResources();
-		mRarityNames = res.getStringArray(R.array.rarities);
-		mRarityChecked = new boolean[mRarityNames.length];
+		TypedArray mRarityNamesTemp = res.obtainTypedArray(R.array.rarities);
+		int i = mRarityNamesTemp.length();
+		mRarityNames = new String[i];
+		mRarityCodes = new char[i];
+		mRarityChecked = new boolean[i];
+		while (i-- > 0) {
+			int resID = mRarityNamesTemp.peekValue(i).resourceId;
+			String resEntryName = res.getResourceEntryName(resID);
+			int p = resEntryName.lastIndexOf("_");
+			if (-1 != p && p + 1 < resEntryName.length())
+				mRarityCodes[i] = resEntryName.charAt(p + 1);
+			else mRarityCodes[i] = ' ';
+			mRarityNames[i] = res.getString(resID);
+		}
+		mRarityNamesTemp.recycle();
 	}
 
 	/**
@@ -386,10 +401,10 @@ public class SearchViewFragment extends FamiliarFragment {
 		for (int i = 0; i < mRarityChecked.length; i++) {
 			if (mRarityChecked[i]) {
 				if (searchCriteria.rarity == null) {
-					searchCriteria.rarity = mRarityNames[i].charAt(0) + "";
+					searchCriteria.rarity = mRarityCodes[i] + "";
 				}
 				else {
-					searchCriteria.rarity += mRarityNames[i].charAt(0);
+					searchCriteria.rarity += mRarityCodes[i];
 				}
 			}
 		}
