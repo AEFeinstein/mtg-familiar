@@ -40,11 +40,11 @@ public class JudgesCornerFragment extends FamiliarFragment {
 	public static final String HTML_DOC = "html";
 	public static final String MTR_LOCAL_FILE = "MTR.html";
 	public static final String IPG_LOCAL_FILE = "IPG.html";
-    public static final String JAR_LOCAL_FILE = "JAR.html";
+	public static final String JAR_LOCAL_FILE = "JAR.html";
 	/* Constants to keep track of tabs */
 	private static final String TAG_MTR = "MTR";
 	private static final String TAG_IPG = "IPG";
-    private static final String TAG_JAR = "JAR";
+	private static final String TAG_JAR = "JAR";
 	private static final String TAG_COUNTER = "COUNTER";
 
 	/**
@@ -83,26 +83,19 @@ public class JudgesCornerFragment extends FamiliarFragment {
 				frag.setArguments(IpgBundle);
 				return frag;
 			}
+			if(mFragmentType.equals(TAG_JAR)) {
+				Bundle JarBundle = new Bundle();
+				JarBundle.putString(HTML_DOC, JAR_LOCAL_FILE);
+				FamiliarFragment frag = new HtmlDocFragment();
+				frag.setArguments(JarBundle);
+				return frag;
+			}
 			if(mFragmentType.equals(TAG_COUNTER)) {
 				return new DeckCounterFragment();
 			}
 			return new DeckCounterFragment();
 		}
 
-        Bundle JarBundle = new Bundle();
-        JarBundle.putString(HTML_DOC, JAR_LOCAL_FILE);
-
-		mTabManager.addTab(mTabHost.newTabSpec(TAG_MTR)
-				.setIndicator(getString(R.string.judges_corner_MTR)), HtmlDocFragment.class, MtrBundle);
-		mTabManager.addTab(mTabHost.newTabSpec(TAG_IPG)
-				.setIndicator(getString(R.string.judges_corner_IPG)), HtmlDocFragment.class, IpgBundle);
-        mTabManager.addTab(mTabHost.newTabSpec(TAG_JAR)
-                .setIndicator(getString(R.string.judges_corner_JAR)), HtmlDocFragment.class, JarBundle);
-		mTabManager.addTab(mTabHost.newTabSpec(TAG_COUNTER)
-				.setIndicator(getString(R.string.judges_corner_counter)), DeckCounterFragment.class, null);
-
-		if (savedInstanceState != null) {
-			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
 		/**
 		 * @return the title which represents this tab. In this sample this is used directly by
 		 * {@link android.support.v4.view.PagerAdapter#getPageTitle(int)}
@@ -122,6 +115,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 		 */
 		mTabs.add(new PagerItem(getString(R.string.judges_corner_MTR), TAG_MTR));
 		mTabs.add(new PagerItem(getString(R.string.judges_corner_IPG), TAG_IPG));
+		mTabs.add(new PagerItem(getString(R.string.judges_corner_JAR), TAG_JAR));
 		mTabs.add(new PagerItem(getString(R.string.judges_corner_counter), TAG_COUNTER));
 	}
 
@@ -154,9 +148,9 @@ public class JudgesCornerFragment extends FamiliarFragment {
 		viewPager.setAdapter(new SampleFragmentPagerAdapter(getChildFragmentManager()));
 		viewPager.setOffscreenPageLimit(2);
 
-        // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) view.findViewById(R.id.sliding_tabs);
-        tabs.setViewPager(viewPager);
+		// Bind the tabs to the ViewPager
+		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) view.findViewById(R.id.sliding_tabs);
+		tabs.setViewPager(viewPager);
 	}
 
 	/**
