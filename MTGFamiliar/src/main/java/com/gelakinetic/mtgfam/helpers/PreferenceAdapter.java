@@ -282,6 +282,11 @@ public class PreferenceAdapter {
 		return this.prefs.getBoolean(context.getString(R.string.key_showIndividualPricesWishlistPref), true);
 	}
 
+    /* Export the card sets with the wishlist */
+    public synchronized boolean getExportCardSet() {
+        return this.prefs.getBoolean(context.getString(R.string.key_card_set_wishlist), true);
+    }
+
 	/* Verbose wishlist */
 	public synchronized boolean getVerboseWishlist() {
 		return this.prefs.getBoolean(context.getString(R.string.key_verboseWishlistPref), false);

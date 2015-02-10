@@ -468,6 +468,8 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
 	<string name="pref_cat_card_cache">Image Caching</string>
 	<string name="pref_language">Language</string>
 	<string name="pref_set_language">Set a different language</string>
+    <string name="pref_wishlist_card_set_title">Export Set</string>
+    <string name="pref_wishlist_card_set_summary">If when exporting the wishlist, it should include set names</string>
 
 	<!-- Judge's Corner -->
 	<string name="judges_corner_MTR">MTR</string>
