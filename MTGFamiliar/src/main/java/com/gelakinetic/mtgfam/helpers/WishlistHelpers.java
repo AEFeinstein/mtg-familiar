@@ -320,13 +320,15 @@ public class WishlistHelpers {
 	}
 
 	/**
-	 * Take a wishlist and turn it into plaintext so that it can be shared via email or whatever
+	 * Take a wishlist and turn it into plaintext so that it can be shared via email or whatever,
+     * with the choice of including the set in the wishlist export
 	 *
 	 * @param mCompressedWishlist The wishlist to share
 	 * @param ctx                 The context to get localized strings with
+     * @param exportSet           If the set name should be exported with the wishlist
 	 * @return A string containing all the wishlist data
 	 */
-	public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, Context ctx) {
+	public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, Context ctx, boolean exportSet) {
 		StringBuilder readableWishlist = new StringBuilder();
 
 		for (CompressedWishlistInfo cwi : mCompressedWishlist) {
@@ -335,8 +337,10 @@ public class WishlistHelpers {
 						.append(isi.mNumberOf)
 						.append("x ")
 						.append(cwi.mCard.name)
-						.append(", ")
-						.append(isi.mSet);
+						.append(", ");
+                if (exportSet) {
+                    readableWishlist.append(isi.mSet);
+                }
 				if (isi.mIsFoil) {
 					readableWishlist
 							.append(" (")
