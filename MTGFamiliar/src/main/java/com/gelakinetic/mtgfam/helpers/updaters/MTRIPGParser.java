@@ -30,7 +30,7 @@ class MTRIPGParser {
     private static final String IPG_SOURCE =
             "https://sites.google.com/site/mtgfamiliar/rules/InfractionProcedureGuide-light.html";
     private static final String JAR_SOURCE =
-            "https://drive.google.com/file/d/0Bxp8EZC9AHuyVHc4TmVLUkpza0k/view?usp=sharing";
+            "https://sites.google.com/site/mtgfamiliar/rules/JudgingAtRegular-light.html";
     private static final String MTR_LOCAL_FILE = "MTR.html";
     private static final String IPG_LOCAL_FILE = "IPG.html";
     private static final String JAR_LOCAL_FILE = "JAR.html";
