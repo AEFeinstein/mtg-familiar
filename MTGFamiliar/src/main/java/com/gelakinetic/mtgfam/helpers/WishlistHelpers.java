@@ -336,10 +336,11 @@ public class WishlistHelpers {
 				readableWishlist
 						.append(isi.mNumberOf)
 						.append("x ")
-						.append(cwi.mCard.name)
-						.append(", ");
+						.append(cwi.mCard.name);
                 if (exportSet) {
-                    readableWishlist.append(isi.mSet);
+                    readableWishlist
+                            .append(", ")
+                            .append(isi.mSet);
                 }
 				if (isi.mIsFoil) {
 					readableWishlist
