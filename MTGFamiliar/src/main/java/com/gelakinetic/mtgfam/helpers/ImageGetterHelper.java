@@ -19,7 +19,9 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
@@ -69,7 +71,7 @@ public class ImageGetterHelper {
      * @return a formatted Spanned which JellyBean is happy with
      */
     public static Spanned formatHtmlString(String source) {
-		/* Make sure we're not formatting a null string */
+        /* Make sure we're not formatting a null string */
         if (source == null) {
             return new SpannedString("");
         }
@@ -84,16 +86,16 @@ public class ImageGetterHelper {
      * This could have been a new subclass of ImageGetter with a constructor that takes a resource, but I guess
      * I didn't feel like writing it that way on that day.
      *
-     * @param resources the Resources to get drawables from
+     * @param context the context to get resources to get drawables from
      * @return a custom ImageGetter
      */
-    public static ImageGetter GlyphGetter(final Resources resources) {
+    public static ImageGetter GlyphGetter(final Context context) {
         return new ImageGetter() {
             public Drawable getDrawable(String source) {
                 Drawable d = null;
                 source = source.replace("/", "");
 
-
+                Resources resources = context.getResources();
                 if (source.equalsIgnoreCase("w")) {
                     d = resources.getDrawable(R.drawable.glyph_w);
                 } else if (source.equalsIgnoreCase("u")) {
@@ -163,7 +165,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("hw") || source.equalsIgnoreCase("wh")) {
                     d = resources.getDrawable(R.drawable.glyph_hw);
                 } else if (source.equalsIgnoreCase("c")) {
-                    d = resources.getDrawable(R.drawable.glyph_c);
+                    d = resources.getDrawable(getResourceIdFromAttr(context.getTheme(), R.attr.glyph_c));
                 } else if (source.equalsIgnoreCase("z")) {
                     d = resources.getDrawable(R.drawable.glyph_z);
                 } else if (source.equalsIgnoreCase("y")) {
@@ -173,7 +175,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("h")) {
                     d = resources.getDrawable(R.drawable.glyph_half);
                 } else if (source.equalsIgnoreCase("pwk")) {
-                    d = resources.getDrawable(R.drawable.glyph_pwk);
+                    d = resources.getDrawable(getResourceIdFromAttr(context.getTheme(), R.attr.glyph_pwk));
                 } else {
                     for (int i = 0; i < drawableNumbers.length; i++) {
                         if (source.equals(Integer.valueOf(i).toString())) {
@@ -190,5 +192,19 @@ public class ImageGetterHelper {
                 return d;
             }
         };
+    }
+
+    /**
+     * This helper function translates an attribute into a resource ID
+     *
+     * @param attr The attribute ID
+     * @return the resource ID
+     */
+    public static int getResourceIdFromAttr(Resources.Theme theme, int attr) {
+        TypedArray ta = theme.obtainStyledAttributes(new int[]{attr});
+        assert ta != null;
+        int resId = ta.getResourceId(0, 0);
+        ta.recycle();
+        return resId;
     }
 }

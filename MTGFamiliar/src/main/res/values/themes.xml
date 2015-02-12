@@ -99,6 +99,9 @@
         <item name="com.gelakinetic.mtgfam:hms_picker_style">
             @style/MyCustomBetterPickerTheme.Light
         </item>
+
+        <item name="com.gelakinetic.mtgfam:glyph_pwk">@drawable/glyph_pwk_light</item>
+        <item name="com.gelakinetic.mtgfam:glyph_c">@drawable/glyph_c_light</item>
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat">
@@ -196,6 +199,9 @@
         <item name="com.gelakinetic.mtgfam:btn_check_foil">@drawable/btn_check_dark_foil</item>
 
         <item name="com.gelakinetic.mtgfam:hms_picker_style">@style/MyCustomBetterPickerTheme</item>
+
+        <item name="com.gelakinetic.mtgfam:glyph_pwk">@drawable/glyph_pwk_dark</item>
+        <item name="com.gelakinetic.mtgfam:glyph_c">@drawable/glyph_c_dark</item>
     </style>
 
     <style name="Theme.light" parent="Theme.base.light">

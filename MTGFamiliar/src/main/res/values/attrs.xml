@@ -9,6 +9,8 @@
         <attr name="grey_border" format="reference" />
         <attr name="color_text" format="reference" />
         <attr name="color_background" format="color|reference" />
+        <attr name="glyph_pwk" format="reference" />
+        <attr name="glyph_c" format="reference" />
 
         <!-- Rarity Colors -->
         <attr name="color_common" format="color|reference" />
