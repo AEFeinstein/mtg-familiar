@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2011 Adam Feinstein and April King.
 
 This file is part of MTG Familiar.
@@ -18,31 +17,31 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/trader_menu_clear"
         android:icon="@drawable/ic_menu_close"
-        app:showAsAction="ifRoom"
-        android:title="@string/trader_clear_fields"/>
+        android:title="@string/trader_clear_fields"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_settings"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_menu_import_export"
-        android:title="@string/trader_set_pricing"/>
+        android:title="@string/trader_set_pricing"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_save"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_menu_save"
-        android:title="@string/trader_save"/>
+        android:title="@string/trader_save"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_load"
         android:icon="@drawable/ic_menu_folder_open"
-        app:showAsAction="ifRoom"
-        android:title="@string/trader_load"/>
+        android:title="@string/trader_load"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_delete"
         android:icon="@drawable/ic_menu_delete"
-        app:showAsAction="ifRoom"
-        android:title="@string/trader_delete"/>
+        android:title="@string/trader_delete"
+        app:showAsAction="ifRoom" />
 
 </menu>

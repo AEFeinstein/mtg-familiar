@@ -11,40 +11,40 @@ import android.support.v4.app.DialogFragment;
  */
 public class FamiliarDialogFragment extends DialogFragment {
 
-	/**
-	 * All subclasses of Fragment must include a public empty constructor.
-	 * The framework will often re-instantiate a fragment class when needed,
-	 * in particular during state restore, and needs to be able to find this constructor
-	 * to instantiate it. If the empty constructor is not available, a runtime exception
-	 * will occur in some cases during state restore.
-	 */
-	public FamiliarDialogFragment() {
-	}
+    /**
+     * All subclasses of Fragment must include a public empty constructor.
+     * The framework will often re-instantiate a fragment class when needed,
+     * in particular during state restore, and needs to be able to find this constructor
+     * to instantiate it. If the empty constructor is not available, a runtime exception
+     * will occur in some cases during state restore.
+     */
+    public FamiliarDialogFragment() {
+    }
 
-	/**
-	 * Default constructor, except we always retain the instance state, as long as it isn't nested
-	 * (fragment isn't destroyed/created across activity recreation)
-	 *
-	 * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (getParentFragment() == null) {
-			this.setRetainInstance(true);
-		}
-	}
+    /**
+     * Default constructor, except we always retain the instance state, as long as it isn't nested
+     * (fragment isn't destroyed/created across activity recreation)
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getParentFragment() == null) {
+            this.setRetainInstance(true);
+        }
+    }
 
-	/**
-	 * Fixes a bug on rotation
-	 * http://stackoverflow.com/questions/8235080/fragments-dialogFragment-and-screen-rotation
-	 */
-	@Override
-	public void onDestroyView() {
-		if (getDialog() != null) {
-			getDialog().setDismissMessage(null);
-		}
-		super.onDestroyView();
-	}
+    /**
+     * Fixes a bug on rotation
+     * http://stackoverflow.com/questions/8235080/fragments-dialogFragment-and-screen-rotation
+     */
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null) {
+            getDialog().setDismissMessage(null);
+        }
+        super.onDestroyView();
+    }
 
 }

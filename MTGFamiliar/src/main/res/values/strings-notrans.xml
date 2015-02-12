@@ -2,35 +2,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!-- General-purpose strings -->
-    <string name="default_price">$0.00</string>
+    <string name="default_price" translatable="false">$0.00</string>
 
     <!-- Placeholder text -->
 
     <!-- Life counter activity -->
-    <string name="life_counter_twenty">20</string>
-    <string name="life_counter_plus_one">+1</string>
-    <string name="life_counter_plus_five">+5</string>
-    <string name="life_counter_minus_one">-1</string>
-    <string name="life_counter_minus_five">-5</string>
+    <string name="life_counter_twenty" translatable="false">20</string>
+    <string name="life_counter_plus_one" translatable="false">+1</string>
+    <string name="life_counter_plus_five" translatable="false">+5</string>
+    <string name="life_counter_minus_one" translatable="false">-1</string>
+    <string name="life_counter_minus_five" translatable="false">-5</string>
 
     <!-- Mana pool activity -->
-    <string name="mana_pool_plus">+</string>
-    <string name="mana_pool_minus">-</string>
-    <string name="mana_pool_zero">0</string>
+    <string name="mana_pool_plus" translatable="false">+</string>
+    <string name="mana_pool_minus" translatable="false">-</string>
+    <string name="mana_pool_zero" translatable="false">0</string>
 
     <!-- Card trading activity -->
-    <string name="trader_default_number_of">1x</string>
+    <string name="trader_default_number_of" translatable="false">1x</string>
 
     <!-- Default language -->
-    <string name="main_card_language">en</string>
+    <string name="main_card_language" translatable="false">en</string>
 
     <!-- Judge's corner -->
-    <string name="deck_counter_1">+1</string>
-    <string name="deck_counter_2">+2</string>
-    <string name="deck_counter_3">+3</string>
-    <string name="deck_counter_4">+4</string>
+    <string name="deck_counter_1" translatable="false">+1</string>
+    <string name="deck_counter_2" translatable="false">+2</string>
+    <string name="deck_counter_3" translatable="false">+3</string>
+    <string name="deck_counter_4" translatable="false">+4</string>
 
     <!-- Dice Fragment -->
-    <string name="dice_num_default_sides">50</string>
+    <string name="dice_num_default_sides" translatable="false">50</string>
 
 </resources>

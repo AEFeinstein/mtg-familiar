@@ -10,10 +10,10 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/master_layout"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:id="@+id/master_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -30,14 +30,14 @@
                 android:id="@+id/name_search"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
+                android:background="?attr/abc_edit_text_material"
                 android:gravity="center_vertical"
                 android:hint="@string/search_name"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:singleLine="true"
-                android:background="?attr/abc_edit_text_material">
+                android:singleLine="true">
 
-                <requestFocus/>
+                <requestFocus />
             </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
 
             <LinearLayout
@@ -51,22 +51,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="?attr/abc_edit_text_material"
                     android:hint="@string/search_supertype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true"
-                    android:background="?attr/abc_edit_text_material"/>
+                    android:singleLine="true" />
 
                 <EditText
-                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/subtypesearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="?attr/abc_edit_text_material"
                     android:hint="@string/search_subtype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true"/>
+                    android:singleLine="true" />
 
             </LinearLayout>
 
@@ -76,19 +76,19 @@
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="true"
                 android:entries="@array/type_spinner"
-                android:imeOptions="actionSearch"/>
+                android:imeOptions="actionSearch" />
 
             <!-- EditText below by Adam Feinstein -->
 
             <EditText
-                android:background="?attr/abc_edit_text_material"
                 android:id="@+id/textsearch"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
+                android:background="?attr/abc_edit_text_material"
                 android:hint="@string/search_text"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:singleLine="true"/>
+                android:singleLine="true" />
 
             <!-- Spinner below by Reuben Kriegel -->
 
@@ -98,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="true"
                 android:entries="@array/text_spinner"
-                android:imeOptions="actionSearch"/>
+                android:imeOptions="actionSearch" />
 
             <LinearLayout
                 style="@style/forty_eight"
@@ -117,7 +117,7 @@
                         android:id="@+id/checkBoxW"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="?attr/btn_check_w"/>
+                        android:button="?attr/btn_check_w" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -131,7 +131,7 @@
                         android:id="@+id/checkBoxU"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="?attr/btn_check_u"/>
+                        android:button="?attr/btn_check_u" />
 
                 </LinearLayout>
 
@@ -146,7 +146,7 @@
                         android:id="@+id/checkBoxB"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="?attr/btn_check_b"/>
+                        android:button="?attr/btn_check_b" />
 
                 </LinearLayout>
 
@@ -161,7 +161,7 @@
                         android:id="@+id/checkBoxR"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="?attr/btn_check_r"/>
+                        android:button="?attr/btn_check_r" />
 
                 </LinearLayout>
 
@@ -176,7 +176,7 @@
                         android:id="@+id/checkBoxG"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="?attr/btn_check_g"/>
+                        android:button="?attr/btn_check_g" />
 
                 </LinearLayout>
 
@@ -191,7 +191,7 @@
                         android:id="@+id/checkBoxL"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:button="?attr/btn_check_l"/>
+                        android:button="?attr/btn_check_l" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -201,7 +201,7 @@
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="true"
-                android:entries="@array/color_spinner"/>
+                android:entries="@array/color_spinner" />
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
@@ -214,14 +214,14 @@
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="@string/search_power"/>
+                    android:text="@string/search_power" />
 
                 <Spinner
                     android:id="@+id/powLogic"
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/logic_spinner"/>
+                    android:entries="@array/logic_spinner" />
 
                 <Spinner
                     android:id="@+id/powChoice"
@@ -229,7 +229,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/pt_spinner"/>
+                    android:entries="@array/pt_spinner" />
             </LinearLayout>
 
             <LinearLayout
@@ -243,14 +243,14 @@
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="@string/search_toughness"/>
+                    android:text="@string/search_toughness" />
 
                 <Spinner
                     android:id="@+id/touLogic"
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/logic_spinner"/>
+                    android:entries="@array/logic_spinner" />
 
                 <Spinner
                     android:id="@+id/touChoice"
@@ -258,7 +258,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/pt_spinner"/>
+                    android:entries="@array/pt_spinner" />
             </LinearLayout>
 
             <LinearLayout
@@ -272,14 +272,14 @@
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="@string/search_cmc"/>
+                    android:text="@string/search_cmc" />
 
                 <Spinner
                     android:id="@+id/cmcLogic"
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/logic_spinner"/>
+                    android:entries="@array/logic_spinner" />
 
                 <Spinner
                     android:id="@+id/cmcChoice"
@@ -287,7 +287,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/cmc_spinner"/>
+                    android:entries="@array/cmc_spinner" />
             </LinearLayout>
 
             <LinearLayout
@@ -309,7 +309,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/search_set"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/formatsearch"
@@ -318,7 +318,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/search_format"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/raritysearch"
@@ -327,7 +327,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/search_rarity"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <Spinner
@@ -335,7 +335,7 @@
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="true"
-                android:entries="@array/set_spinner"/>
+                android:entries="@array/set_spinner" />
 
             <LinearLayout
                 android:id="@+id/linearLayout1"
@@ -343,26 +343,26 @@
                 android:layout_width="match_parent">
 
                 <EditText
-                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/flavorsearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="?attr/abc_edit_text_material"
                     android:hint="@string/search_flavor_text"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:maxLines="1"/>
+                    android:maxLines="1" />
 
                 <EditText
-                    android:background="?attr/abc_edit_text_material"
                     android:id="@+id/artistsearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="?attr/abc_edit_text_material"
                     android:hint="@string/search_artist"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:maxLines="1"/>
+                    android:maxLines="1" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -370,7 +370,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_purple_500"/>
+        android:background="@color/material_purple_500" />
 
     <Button
         android:id="@+id/searchbutton"
@@ -378,6 +378,6 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="@string/search_search"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 </LinearLayout>

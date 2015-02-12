@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2011 Adam Feinstein
 
 This file is part of MTG Familiar.
@@ -21,10 +20,10 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
     <item
         android:id="@+id/copy"
-        android:title="@string/card_view_copy"/>
+        android:title="@string/card_view_copy" />
 
     <item
         android:id="@+id/copyall"
-        android:title="@string/card_view_copy_all"/>
+        android:title="@string/card_view_copy_all" />
 
 </menu>

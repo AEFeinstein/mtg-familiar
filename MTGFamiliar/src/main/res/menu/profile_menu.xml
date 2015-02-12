@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2014 Devin Collins
 
 This file is part of MTG Familiar.
@@ -18,17 +17,17 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/profile_menu_update_dci"
         android:icon="@drawable/ic_menu_person_add"
-        app:showAsAction="ifRoom"
-        android:title="@string/profile_update_dci"/>
+        android:title="@string/profile_update_dci"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/profile_menu_remove_dci"
         android:icon="@drawable/ic_menu_person_remove"
-        app:showAsAction="ifRoom"
-        android:title="@string/profile_remove_dci"/>
+        android:title="@string/profile_remove_dci"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/master_layout"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/master_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
     <ListView
-        style="@style/list_view_divider"
         android:id="@+id/result_list"
+        style="@style/list_view_divider"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:fastScrollEnabled="true"
-        tools:listitem="@layout/result_list_card_row"
         android:divider="?attr/color_drawer_divider_item"
-        android:dividerHeight="1dp"/>
+        android:dividerHeight="1dp"
+        android:fastScrollEnabled="true"
+        tools:listitem="@layout/result_list_card_row" />
 
 </LinearLayout>

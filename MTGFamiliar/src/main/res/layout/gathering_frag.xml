@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/linear_layout_root"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:id="@+id/linear_layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/forty_eight"
@@ -17,17 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:hint="@string/gathering_display_mode_title"
-            android:text="@string/gathering_display_mode_title"/>
+            android:text="@string/gathering_display_mode_title" />
 
         <Spinner
-            style="@style/text.medium"
             android:id="@+id/gathering_display_mode"
+            style="@style/text.medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dip"
             android:layout_weight="1"
             android:entries="@array/display_array_entries"
-            android:gravity="center"/>
+            android:gravity="center" />
 
     </LinearLayout>
 
@@ -35,7 +35,7 @@
         android:id="@+id/divider"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="?attr/color_drawer_divider_item"/>
+        android:background="?attr/color_drawer_divider_item" />
 
     <ScrollView
         android:id="@+id/gathering_scroll"
@@ -48,8 +48,7 @@
             android:id="@+id/gathering_player_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:orientation="vertical"></LinearLayout>
     </ScrollView>
 
 </LinearLayout>

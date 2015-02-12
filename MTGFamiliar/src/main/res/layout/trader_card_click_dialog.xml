@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@id/dialog_layout_root"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:id="@id/dialog_layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/forty_eight"
         android:layout_width="match_parent">
 
         <EditText
-            android:background="?attr/abc_edit_text_material"
             android:id="@+id/traderDialogNumber"
             android:layout_width="48dp"
             android:layout_height="match_parent"
+            android:background="?attr/abc_edit_text_material"
             android:ems="10"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="2"
-            android:selectAllOnFocus="true"/>
+            android:selectAllOnFocus="true" />
 
         <EditText
-            android:background="?attr/abc_edit_text_material"
             android:id="@+id/traderDialogPrice"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:background="?attr/abc_edit_text_material"
             android:gravity="center"
             android:inputType="numberDecimal"
             android:selectAllOnFocus="true"
-            android:text="@string/default_price"/>
+            android:text="@string/default_price" />
 
 
         <LinearLayout
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:button="?attr/btn_check_foil"
-                android:gravity="center"/>
+                android:gravity="center" />
         </LinearLayout>
 
     </LinearLayout>
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/trader_edit_dialog_remove"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/traderDialogResetPrice"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/trader_edit_dialog_reset_price"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View
@@ -79,7 +79,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:background="?attr/color_drawer_divider_item"/>
+        android:background="?attr/color_drawer_divider_item" />
 
     <LinearLayout
         style="@android:style/Holo.ButtonBar"
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/trader_edit_dialog_change_set"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/traderDialogInfo"
@@ -103,6 +103,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/trader_edit_dialog_info"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.light" parent="Theme.base.light" >
+    <style name="Theme.light" parent="Theme.base.light">
         <item name="android:colorPrimary">@color/material_purple_500</item>
         <item name="android:colorPrimaryDark">@color/material_purple_700</item>
         <item name="com.gelakinetic.mtgfam:btn_ripple">@drawable/btn_ripple_light</item>

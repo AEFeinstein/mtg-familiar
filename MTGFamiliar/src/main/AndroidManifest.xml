@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.gelakinetic.mtgfam"
-          android:versionCode="28"
-          android:versionName="3.1.2">
+    package="com.gelakinetic.mtgfam"
+    android:versionCode="29"
+    android:versionName="3.2.0">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,71 +17,71 @@
             android:name="com.gelakinetic.mtgfam.FamiliarActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+                android:resource="@xml/searchable" />
 
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="com.gelakinetic.mtgfam.activities.MainActivity"/>
+                android:value="com.gelakinetic.mtgfam.activities.MainActivity" />
         </activity>
 
         <activity
             android:name=".MtgAppWidgetConfigure"
             android:theme="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
         <!-- register the service for price look ups -->
         <service
             android:name="com.gelakinetic.mtgfam.helpers.PriceFetchService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!-- Register the service for database updates -->
-        <service android:name="com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService"/>
+        <service android:name="com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService" />
 
         <!-- for the round timer -->
         <receiver
             android:name="com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver"
-            android:process=":remote"/>
+            android:process=":remote" />
 
-        <service android:name="com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver$TtsService"/>
+        <service android:name="com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver$TtsService" />
 
         <!-- Provides search suggestions for cards by name. -->
         <provider
             android:name="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
             android:authorities="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
-            android:exported="true"/>
+            android:exported="true" />
 
         <!-- For the homescreen widget -->
         <receiver android:name="com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProviderDark">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/mtgfamiliar_appwidget_info_dark"/>
+                android:resource="@xml/mtgfamiliar_appwidget_info_dark" />
         </receiver>
         <receiver android:name="com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProviderLight">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/mtgfamiliar_appwidget_info_light"/>
+                android:resource="@xml/mtgfamiliar_appwidget_info_light" />
         </receiver>
 
     </application>

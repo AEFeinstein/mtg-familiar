@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="top"
-              android:baselineAligned="false"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="top"
+    android:baselineAligned="false"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
         style="@style/forty_eight"
+        android:layout_width="match_parent"
         android:orientation="horizontal">
 
         <EditText
-            android:background="?attr/abc_edit_text_material"
             android:id="@+id/number_input"
             android:layout_width="48dp"
             android:layout_height="match_parent"
+            android:background="?attr/abc_edit_text_material"
             android:ems="10"
             android:gravity="center"
+            android:imeOptions="actionSearch"
             android:inputType="number"
             android:maxLength="2"
             android:selectAllOnFocus="true"
-            android:imeOptions="actionSearch"
-            android:singleLine="true">
-        </EditText>
+            android:singleLine="true"></EditText>
 
         <com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
             android:id="@+id/name_search"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:hint="@string/wishlist_name"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/abc_edit_text_material"
+            android:hint="@string/wishlist_name"
             android:imeOptions="actionSearch"
             android:inputType="text"
-            android:singleLine="true"
-            android:background="?attr/abc_edit_text_material">
+            android:singleLine="true">
 
-            <requestFocus/>
+            <requestFocus />
         </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
 
         <LinearLayout
@@ -48,8 +47,8 @@
                 android:id="@+id/wishlistFoil"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:button="?attr/btn_check_foil"/>
+                android:button="?attr/btn_check_foil"
+                android:gravity="center" />
         </LinearLayout>
 
     </LinearLayout>
@@ -57,39 +56,39 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_purple_500"/>
+        android:background="@color/material_purple_500" />
 
     <Button
         android:id="@+id/add_card"
-        android:text="@string/wishlist_add_card"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        style="?android:attr/buttonBarButtonStyle"
-        android:textStyle="bold"/>
+        android:text="@string/wishlist_add_card"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_purple_500"/>
+        android:background="@color/material_purple_500" />
 
     <TextView
         android:id="@+id/priceText"
-        android:layout_height="48dp"
-        android:layout_width="match_parent"
         style="@style/text.medium"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:gravity="center"
-        android:text="@string/default_price"/>
+        android:text="@string/default_price" />
 
     <View
         android:id="@+id/divider_total_price"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/color_drawer_divider_item"/>
+        android:background="?attr/color_drawer_divider_item" />
 
     <ListView
         android:id="@+id/wishlist"
+        style="@style/list_view_divider"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        style="@style/list_view_divider"/>
+        android:layout_height="fill_parent" />
 
 </LinearLayout>

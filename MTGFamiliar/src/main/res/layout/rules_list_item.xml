@@ -17,10 +17,10 @@ You should have received a copy of the GNU General Public License
 along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:minHeight="47dp"
-              android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="47dp"
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/rules_item_header"
@@ -32,7 +32,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
         android:text="@string/mana_pool_zero"
-        android:textColor="@color/material_purple_500"/>
+        android:textColor="@color/material_purple_500" />
 
     <TextView
         android:id="@+id/rules_item_text"
@@ -45,6 +45,6 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
         android:layout_weight="1"
-        android:text="@string/app_name"/>
+        android:text="@string/app_name" />
 
 </LinearLayout>

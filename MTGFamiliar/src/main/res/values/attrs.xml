@@ -4,69 +4,71 @@
     <declare-styleable name="custom">
 
         <!-- misc -->
-        <attr name="btn_ripple" format="reference"/>
-        <attr name="abc_edit_text_material" format="reference"/>
-        <attr name="grey_border" format="reference"/>
-        <attr name="color_text" format="reference"/>
-        <attr name="color_background" format="color|reference"/>
+        <attr name="btn_ripple" format="reference" />
+        <attr name="abc_edit_text_material" format="reference" />
+        <attr name="grey_border" format="reference" />
+        <attr name="color_text" format="reference" />
+        <attr name="color_background" format="color|reference" />
+        <attr name="glyph_pwk" format="reference" />
+        <attr name="glyph_c" format="reference" />
 
         <!-- Rarity Colors -->
-        <attr name="color_common" format="color|reference"/>
-        <attr name="color_uncommon" format="color|reference"/>
-        <attr name="color_rare" format="color|reference"/>
-        <attr name="color_mythic" format="color|reference"/>
-        <attr name="color_timeshifted" format="color|reference"/>
+        <attr name="color_common" format="color|reference" />
+        <attr name="color_uncommon" format="color|reference" />
+        <attr name="color_rare" format="color|reference" />
+        <attr name="color_mythic" format="color|reference" />
+        <attr name="color_timeshifted" format="color|reference" />
 
         <!-- Drawer Colors -->
-        <attr name="color_drawer_background" format="color|reference"/>
-        <attr name="color_drawer_text_unselected" format="color|reference"/>
-        <attr name="color_drawer_divider_item" format="color|reference"/>
-        <attr name="selector_drawer_text" format="reference"/>
+        <attr name="color_drawer_background" format="color|reference" />
+        <attr name="color_drawer_text_unselected" format="color|reference" />
+        <attr name="color_drawer_divider_item" format="color|reference" />
+        <attr name="selector_drawer_text" format="reference" />
 
         <!-- Menu & Drawer Icons -->
-        <attr name="ic_drawer" format="reference"/>
-        <attr name="ic_drawer_about" format="reference"/>
-        <attr name="ic_drawer_dice" format="reference"/>
-        <attr name="ic_drawer_download" format="reference"/>
-        <attr name="ic_drawer_good" format="reference"/>
-        <attr name="ic_drawer_help" format="reference"/>
-        <attr name="ic_drawer_judge" format="reference"/>
-        <attr name="ic_drawer_life" format="reference"/>
-        <attr name="ic_drawer_mana" format="reference"/>
-        <attr name="ic_drawer_mojhosto" format="reference"/>
-        <attr name="ic_drawer_rules" format="reference"/>
-        <attr name="ic_drawer_search" format="reference"/>
-        <attr name="ic_drawer_settings" format="reference"/>
-        <attr name="ic_drawer_timer" format="reference"/>
-        <attr name="ic_drawer_trade" format="reference"/>
-        <attr name="ic_drawer_wishlist" format="reference"/>
-        <attr name="ic_drawer_profile" format="reference"/>
-        <attr name="ic_drawer_save" format="reference"/>
-        <attr name="ic_drawer_load" format="reference"/>
-        <attr name="lc_commander_disabled" format="reference"/>
-        <attr name="lc_commander_enabled" format="reference"/>
-        <attr name="lc_life_disabled" format="reference"/>
-        <attr name="lc_life_enabled" format="reference"/>
-        <attr name="lc_poison_disabled" format="reference"/>
-        <attr name="lc_poison_enabled" format="reference"/>
-        <attr name="lc_reset" format="reference"/>
+        <attr name="ic_drawer" format="reference" />
+        <attr name="ic_drawer_about" format="reference" />
+        <attr name="ic_drawer_dice" format="reference" />
+        <attr name="ic_drawer_download" format="reference" />
+        <attr name="ic_drawer_good" format="reference" />
+        <attr name="ic_drawer_help" format="reference" />
+        <attr name="ic_drawer_judge" format="reference" />
+        <attr name="ic_drawer_life" format="reference" />
+        <attr name="ic_drawer_mana" format="reference" />
+        <attr name="ic_drawer_mojhosto" format="reference" />
+        <attr name="ic_drawer_rules" format="reference" />
+        <attr name="ic_drawer_search" format="reference" />
+        <attr name="ic_drawer_settings" format="reference" />
+        <attr name="ic_drawer_timer" format="reference" />
+        <attr name="ic_drawer_trade" format="reference" />
+        <attr name="ic_drawer_wishlist" format="reference" />
+        <attr name="ic_drawer_profile" format="reference" />
+        <attr name="ic_drawer_save" format="reference" />
+        <attr name="ic_drawer_load" format="reference" />
+        <attr name="lc_commander_disabled" format="reference" />
+        <attr name="lc_commander_enabled" format="reference" />
+        <attr name="lc_life_disabled" format="reference" />
+        <attr name="lc_life_enabled" format="reference" />
+        <attr name="lc_poison_disabled" format="reference" />
+        <attr name="lc_poison_enabled" format="reference" />
+        <attr name="lc_reset" format="reference" />
 
         <attr name="drawer_background_indicator" format="reference" />
 
         <!-- close button -->
-        <attr name="ic_close" format="reference"/>
+        <attr name="ic_close" format="reference" />
 
         <!-- checkboxes -->
-        <attr name="btn_check_w" format="reference"/>
-        <attr name="btn_check_u" format="reference"/>
-        <attr name="btn_check_b" format="reference"/>
-        <attr name="btn_check_r" format="reference"/>
-        <attr name="btn_check_g" format="reference"/>
-        <attr name="btn_check_l" format="reference"/>
-        <attr name="btn_check_foil" format="reference"/>
+        <attr name="btn_check_w" format="reference" />
+        <attr name="btn_check_u" format="reference" />
+        <attr name="btn_check_b" format="reference" />
+        <attr name="btn_check_r" format="reference" />
+        <attr name="btn_check_g" format="reference" />
+        <attr name="btn_check_l" format="reference" />
+        <attr name="btn_check_foil" format="reference" />
 
         <!-- to style the hms time picker -->
-        <attr name="hms_picker_style" format="reference"/>
+        <attr name="hms_picker_style" format="reference" />
 
     </declare-styleable>
 

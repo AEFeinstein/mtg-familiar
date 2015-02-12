@@ -4,9 +4,7 @@
 
     <!-- Enabled states -->
 
-    <item android:state_checked="true"
-          android:drawable="@drawable/btn_check_on_dark_w"/>
-    <item android:state_checked="false"
-          android:drawable="@drawable/btn_check_off_dark_w"/>
+    <item android:drawable="@drawable/btn_check_on_dark_w" android:state_checked="true" />
+    <item android:drawable="@drawable/btn_check_off_dark_w" android:state_checked="false" />
 
 </selector>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
      Copyright 2011 Adam Feinstein This file is part of MTG Familiar. MTG 
 	Familiar is free software: you can redistribute it and/or modify it under 
 	the terms of the GNU General Public License as published by the Free Software 
@@ -11,39 +10,38 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="40dp"
-              android:orientation="horizontal"
-              android:baselineAligned="false"
-              android:layout_margin="4dp"
-              android:id="@+id/dialog_layout_root">
+    android:id="@+id/dialog_layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="40dp"
+    android:layout_margin="4dp"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
 
     <EditText
-        android:background="?attr/abc_edit_text_material"
         android:id="@+id/numberInput"
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:background="?attr/abc_edit_text_material"
         android:ems="10"
         android:gravity="center"
         android:inputType="number"
         android:maxLength="2"
-        android:selectAllOnFocus="true">
-    </EditText>
+        android:selectAllOnFocus="true"></EditText>
 
     <TextView
         android:id="@+id/cardset"
         style="@style/text.medium"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:gravity="center_vertical"
-        android:text="@string/search_set"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"/>
+        android:layout_marginRight="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/search_set" />
 
     <ImageView
         android:id="@+id/wishlistDialogFoil"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/glyph_foil"/>
+        android:src="@drawable/glyph_foil" />
 
 </LinearLayout>

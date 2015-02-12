@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /* //device/apps/common/assets/res/layout/tab_content.xml
 **
 ** Copyright 2011, The Android Open Source Project
@@ -29,13 +28,13 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/material_purple_500"
-        app:pstsIndicatorColor="@android:color/white"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        app:pstsIndicatorColor="@android:color/white" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
 </LinearLayout>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright 2011 Alex Levine
 
 This file is part of MTG Familiar.
@@ -20,47 +19,46 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:gravity="center_vertical"
-              android:orientation="vertical">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <TextView
             style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/timer_how_long"
-            android:layout_gravity="center"/>
+            android:text="@string/timer_how_long" />
 
         <com.doomonafireball.betterpickers.hmspicker.HmsPicker
-            android:layout_gravity="center"
             android:id="@+id/rt_time_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="5dp"
-            android:gravity="center_vertical"/>
+            android:gravity="center_vertical" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_purple_500"
-        />
+        android:background="@color/material_purple_500" />
 
     <Button
         android:id="@+id/rt_action_button"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="@string/timer_start"
-        style="?android:attr/buttonBarButtonStyle"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 </LinearLayout>

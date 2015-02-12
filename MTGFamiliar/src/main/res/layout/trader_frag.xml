@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         style="@style/forty_eight"
@@ -11,15 +11,15 @@
         android:orientation="horizontal">
 
         <EditText
-            android:background="?attr/abc_edit_text_material"
             android:id="@+id/numberInput"
             android:layout_width="48dp"
             android:layout_height="match_parent"
+            android:background="?attr/abc_edit_text_material"
             android:ems="10"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="2"
-            android:selectAllOnFocus="true"/>
+            android:selectAllOnFocus="true" />
 
         <com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
             android:id="@+id/namesearch"
@@ -27,11 +27,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:background="?attr/abc_edit_text_material"
             android:hint="@string/search_name"
-            android:inputType="text"
-            android:background="?attr/abc_edit_text_material">
+            android:inputType="text">
 
-            <requestFocus/>
+            <requestFocus />
         </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
 
         <LinearLayout
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:button="?attr/btn_check_foil"
-                android:gravity="center"/>
+                android:gravity="center" />
         </LinearLayout>
     </LinearLayout>
 
@@ -64,7 +64,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_purple_500"/>
+                android:background="@color/material_purple_500" />
 
             <Button
                 android:id="@+id/addCardLeft"
@@ -72,12 +72,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:text="@string/trader_add_card"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_purple_500"/>
+                android:background="@color/material_purple_500" />
 
             <TextView
                 android:id="@+id/priceTextLeft"
@@ -86,12 +86,12 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/default_price"/>
+                android:text="@string/default_price" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/color_drawer_divider_item"/>
+                android:background="?attr/color_drawer_divider_item" />
 
             <ListView
                 android:id="@+id/tradeListLeft"
@@ -100,7 +100,7 @@
                 android:layout_gravity="clip_horizontal"
                 android:divider="?attr/color_drawer_divider_item"
                 android:dividerHeight="1dp"
-                tools:listitem="@layout/trader_row"/>
+                tools:listitem="@layout/trader_row" />
         </LinearLayout>
 
         <View
@@ -109,7 +109,7 @@
             android:layout_height="fill_parent"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:background="?attr/color_drawer_divider_item"/>
+            android:background="?attr/color_drawer_divider_item" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -120,7 +120,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_purple_500"/>
+                android:background="@color/material_purple_500" />
 
             <Button
                 android:id="@+id/addCardRight"
@@ -128,12 +128,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:text="@string/trader_add_card"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_purple_500"/>
+                android:background="@color/material_purple_500" />
 
             <TextView
                 android:id="@+id/priceTextRight"
@@ -142,12 +142,12 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/default_price"/>
+                android:text="@string/default_price" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?attr/color_drawer_divider_item"/>
+                android:background="?attr/color_drawer_divider_item" />
 
             <ListView
                 android:id="@+id/tradeListRight"
@@ -156,7 +156,7 @@
                 android:layout_gravity="clip_horizontal"
                 android:divider="?attr/color_drawer_divider_item"
                 android:dividerHeight="1dp"
-                tools:listitem="@layout/trader_row"/>
+                tools:listitem="@layout/trader_row" />
         </LinearLayout>
     </LinearLayout>
 

@@ -18,15 +18,15 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <View
         android:id="@+id/divider"
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="?attr/color_drawer_divider_item"/>
+        android:background="?attr/color_drawer_divider_item" />
 
     <LinearLayout
         android:id="@+id/nplayer_row"
@@ -46,14 +46,14 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/life_counter_default_name"/>
+            android:text="@string/life_counter_default_name" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -69,7 +69,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:text="@string/life_counter_twenty"/>
+                    android:text="@string/life_counter_twenty" />
 
             </LinearLayout>
 
@@ -86,7 +86,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                     style="@style/list_view_divider"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="1dp"/>
+                    android:layout_margin="1dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -105,7 +105,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_minus_five"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/player_minus1"
@@ -114,7 +114,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_minus_one"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/player_plus1"
@@ -123,7 +123,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_plus_one"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/player_plus5"
@@ -132,7 +132,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/life_counter_plus_five"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -142,14 +142,14 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/life_counter_commander_cast"/>
+            android:text="@string/life_counter_commander_cast" />
 
         <Button
             android:id="@+id/commanderCast"
+            style="@style/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/button"
             android:text="@string/mana_pool_zero"
-            android:visibility="visible"/>
+            android:visibility="visible" />
     </LinearLayout>
 </LinearLayout>
