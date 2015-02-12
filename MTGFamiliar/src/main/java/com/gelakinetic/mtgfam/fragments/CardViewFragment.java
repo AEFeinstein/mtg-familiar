@@ -282,7 +282,7 @@ public class CardViewFragment extends FamiliarFragment {
      */
     private void setInfoFromID(final long id) throws FamiliarDbException {
 
-        ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
+        ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
         Cursor cCardById = CardDbAdapter.fetchCard(id, database);
@@ -627,7 +627,7 @@ public class CardViewFragment extends FamiliarFragment {
                             setShowsDialog(false);
                             return null;
                         }
-                        ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
+                        ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
                         View v = mActivity.getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null, false);
                         assert v != null; /* Because Android Studio */

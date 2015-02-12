@@ -66,7 +66,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
         this.mTo = to;
         this.mResources = context.getResources();
         this.mTheme = context.getTheme();
-        this.mImgGetter = ImageGetterHelper.GlyphGetter(mResources);
+        this.mImgGetter = ImageGetterHelper.GlyphGetter(context);
         this.mAlphaIndexer = new AlphabetIndexer(cursor, cursor.getColumnIndex(CardDbAdapter.KEY_NAME),
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }

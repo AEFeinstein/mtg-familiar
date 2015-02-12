@@ -769,7 +769,7 @@ public class WishlistFragment extends FamiliarFragment {
 			/* Show or hide full card information */
             convertView.findViewById(R.id.cardset).setVisibility(View.GONE);
             if (mShowCardInfo) {
-                Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getResources());
+                Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
 				/* make sure everything is showing */
                 convertView.findViewById(R.id.cardcost).setVisibility(View.VISIBLE);

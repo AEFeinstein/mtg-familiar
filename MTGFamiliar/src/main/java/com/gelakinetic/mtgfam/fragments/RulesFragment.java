@@ -496,7 +496,7 @@ public class RulesFragment extends FamiliarFragment {
         encodedInput = encodedInput.replace("{", "").replace("}", "");
 
         CharSequence cs = ImageGetterHelper
-                .formatStringWithGlyphs(encodedInput, ImageGetterHelper.GlyphGetter(getResources()));
+                .formatStringWithGlyphs(encodedInput, ImageGetterHelper.GlyphGetter(getActivity()));
         SpannableString result = new SpannableString(cs);
 
         if (shouldLink) {
