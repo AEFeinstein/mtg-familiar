@@ -82,7 +82,7 @@ class CardAndSetParser {
 
         int numTotalElements = 0;
         int elementsParsed = 0;
-        ArrayList<MtgSet> setsAdded = new ArrayList<MtgSet>();
+        ArrayList<MtgSet> setsAdded = new ArrayList<>();
 
         reader.beginObject();
         reader.nextName();
@@ -189,24 +189,34 @@ class CardAndSetParser {
                                     try {
                                         c.power = Integer.parseInt(pouTouStr);
                                     } catch (NumberFormatException e) {
-                                        if (pouTouStr.equals("*")) {
-                                            c.power = CardDbAdapter.STAR;
-                                        } else if (pouTouStr.equals("1+*")) {
-                                            c.power = CardDbAdapter.ONE_PLUS_STAR;
-                                        } else if (pouTouStr.equals("2+*")) {
-                                            c.power = CardDbAdapter.TWO_PLUS_STAR;
-                                        } else if (pouTouStr.equals("7-*")) {
-                                            c.power = CardDbAdapter.SEVEN_MINUS_STAR;
-                                        } else if (pouTouStr.equals("*{^2}")) {
-                                            c.power = CardDbAdapter.STAR_SQUARED;
-                                        } else if (pouTouStr.equals("{1/2}")) {
-                                            c.power = 0.5f;
-                                        } else if (pouTouStr.equals("1{1/2}")) {
-                                            c.power = 1.5f;
-                                        } else if (pouTouStr.equals("2{1/2}")) {
-                                            c.power = 2.5f;
-                                        } else if (pouTouStr.equals("3{1/2}")) {
-                                            c.power = 3.5f;
+                                        switch (pouTouStr) {
+                                            case "*":
+                                                c.power = CardDbAdapter.STAR;
+                                                break;
+                                            case "1+*":
+                                                c.power = CardDbAdapter.ONE_PLUS_STAR;
+                                                break;
+                                            case "2+*":
+                                                c.power = CardDbAdapter.TWO_PLUS_STAR;
+                                                break;
+                                            case "7-*":
+                                                c.power = CardDbAdapter.SEVEN_MINUS_STAR;
+                                                break;
+                                            case "*{^2}":
+                                                c.power = CardDbAdapter.STAR_SQUARED;
+                                                break;
+                                            case "{1/2}":
+                                                c.power = 0.5f;
+                                                break;
+                                            case "1{1/2}":
+                                                c.power = 1.5f;
+                                                break;
+                                            case "2{1/2}":
+                                                c.power = 2.5f;
+                                                break;
+                                            case "3{1/2}":
+                                                c.power = 3.5f;
+                                                break;
                                         }
                                     }
                                 } else if (s2.equalsIgnoreCase("h")) { /* toughness */
@@ -214,24 +224,34 @@ class CardAndSetParser {
                                     try {
                                         c.toughness = Integer.parseInt(pouTouStr);
                                     } catch (NumberFormatException e) {
-                                        if (pouTouStr.equals("*")) {
-                                            c.toughness = CardDbAdapter.STAR;
-                                        } else if (pouTouStr.equals("1+*")) {
-                                            c.toughness = CardDbAdapter.ONE_PLUS_STAR;
-                                        } else if (pouTouStr.equals("2+*")) {
-                                            c.toughness = CardDbAdapter.TWO_PLUS_STAR;
-                                        } else if (pouTouStr.equals("7-*")) {
-                                            c.toughness = CardDbAdapter.SEVEN_MINUS_STAR;
-                                        } else if (pouTouStr.equals("*{^2}")) {
-                                            c.toughness = CardDbAdapter.STAR_SQUARED;
-                                        } else if (pouTouStr.equals("{1/2}")) {
-                                            c.toughness = 0.5f;
-                                        } else if (pouTouStr.equals("1{1/2}")) {
-                                            c.toughness = 1.5f;
-                                        } else if (pouTouStr.equals("2{1/2}")) {
-                                            c.toughness = 2.5f;
-                                        } else if (pouTouStr.equals("3{1/2}")) {
-                                            c.toughness = 3.5f;
+                                        switch (pouTouStr) {
+                                            case "*":
+                                                c.toughness = CardDbAdapter.STAR;
+                                                break;
+                                            case "1+*":
+                                                c.toughness = CardDbAdapter.ONE_PLUS_STAR;
+                                                break;
+                                            case "2+*":
+                                                c.toughness = CardDbAdapter.TWO_PLUS_STAR;
+                                                break;
+                                            case "7-*":
+                                                c.toughness = CardDbAdapter.SEVEN_MINUS_STAR;
+                                                break;
+                                            case "*{^2}":
+                                                c.toughness = CardDbAdapter.STAR_SQUARED;
+                                                break;
+                                            case "{1/2}":
+                                                c.toughness = 0.5f;
+                                                break;
+                                            case "1{1/2}":
+                                                c.toughness = 1.5f;
+                                                break;
+                                            case "2{1/2}":
+                                                c.toughness = 2.5f;
+                                                break;
+                                            case "3{1/2}":
+                                                c.toughness = 3.5f;
+                                                break;
                                         }
                                     }
                                 } else if (s2.equalsIgnoreCase("i")) { /* loyalty */
@@ -295,7 +315,7 @@ class CardAndSetParser {
      * @throws IOException Thrown if something goes wrong with the InputStream from the web
      */
     public ArrayList<String[]> readUpdateJsonStream(PreferenceAdapter prefAdapter) throws IOException {
-        ArrayList<String[]> patchInfo = new ArrayList<String[]>();
+        ArrayList<String[]> patchInfo = new ArrayList<>();
         URL update;
         String label;
         String label2;
@@ -322,12 +342,16 @@ class CardAndSetParser {
                     String[] setData = new String[3];
                     while (reader.hasNext()) {
                         label2 = reader.nextName();
-                        if (label2.equals("Name")) {
-                            setData[SET_NAME] = reader.nextString();
-                        } else if (label2.equals("URL")) {
-                            setData[SET_URL] = reader.nextString();
-                        } else if (label2.equals("Code")) {
-                            setData[SET_CODE] = reader.nextString();
+                        switch (label2) {
+                            case "Name":
+                                setData[SET_NAME] = reader.nextString();
+                                break;
+                            case "URL":
+                                setData[SET_URL] = reader.nextString();
+                                break;
+                            case "Code":
+                                setData[SET_CODE] = reader.nextString();
+                                break;
                         }
                     }
                     patchInfo.add(setData);

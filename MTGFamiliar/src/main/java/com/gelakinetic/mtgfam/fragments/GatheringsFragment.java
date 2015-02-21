@@ -41,6 +41,8 @@ import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 /**
@@ -182,6 +184,7 @@ public class GatheringsFragment extends FamiliarFragment {
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
@@ -196,8 +199,7 @@ public class GatheringsFragment extends FamiliarFragment {
 
                         if (AreAnyFieldsEmpty()) {
                             Toast.makeText(getActivity(), R.string.gathering_empty_field, Toast.LENGTH_LONG).show();
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
                         LayoutInflater factory = LayoutInflater.from(this.getActivity());
@@ -282,8 +284,7 @@ public class GatheringsFragment extends FamiliarFragment {
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
                             Toast.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
                                     Toast.LENGTH_LONG).show();
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
                         ArrayList<String> dGatherings = GatheringsIO.getGatheringFileList(getActivity().getFilesDir());
@@ -306,7 +307,7 @@ public class GatheringsFragment extends FamiliarFragment {
                     }
                     case DIALOG_REMOVE_PLAYER: {
 						/* Remove a player from the Gathering and linear layout */
-                        ArrayList<String> names = new ArrayList<String>();
+                        ArrayList<String> names = new ArrayList<>();
                         for (int idx = 0; idx < mLinearLayout.getChildCount(); idx++) {
                             View player = mLinearLayout.getChildAt(idx);
                             assert player != null;
@@ -317,8 +318,7 @@ public class GatheringsFragment extends FamiliarFragment {
                         final String[] aNames = names.toArray(new String[names.size()]);
 
                         if (names.size() == 0) {
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
                         return new AlertDialogPro.Builder(getActivity())
@@ -336,8 +336,7 @@ public class GatheringsFragment extends FamiliarFragment {
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
                             Toast.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
                                     Toast.LENGTH_LONG).show();
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
                         ArrayList<String> gatherings = GatheringsIO.getGatheringFileList(getActivity().getFilesDir());
@@ -443,7 +442,7 @@ public class GatheringsFragment extends FamiliarFragment {
 
         mCurrentGatheringName = _gatheringName;
         int playersCount = mLinearLayout.getChildCount();
-        ArrayList<GatheringsPlayerData> players = new ArrayList<GatheringsPlayerData>(playersCount);
+        ArrayList<GatheringsPlayerData> players = new ArrayList<>(playersCount);
 
         for (int idx = 0; idx < playersCount; idx++) {
             View player = mLinearLayout.getChildAt(idx);

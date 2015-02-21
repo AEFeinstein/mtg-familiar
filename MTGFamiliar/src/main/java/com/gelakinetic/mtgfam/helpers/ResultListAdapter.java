@@ -118,103 +118,117 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
 
             TextView textField = (TextView) view.findViewById(mTo[i]);
 
-            if (CardDbAdapter.KEY_NAME.equals(mFrom[i])) {
-                String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                textField.setText(name);
-            } else if (CardDbAdapter.KEY_MANACOST.equals(mFrom[i])) {
-                String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                hideCost = false;
-                CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
-                textField.setText(csq);
-            } else if (CardDbAdapter.KEY_SET.equals(mFrom[i])) {
-                String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                hideSet = false;
-                textField.setText(name);
-                char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                switch (rarity) {
-                    case 'C':
-                        textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_common)));
-                        break;
-                    case 'U':
-                        textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
-                        break;
-                    case 'R':
-                        textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_rare)));
-                        break;
-                    case 'M':
-                        textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_mythic)));
-                        break;
-                    case 'T':
-                        textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
-                        break;
+            switch (mFrom[i]) {
+                case CardDbAdapter.KEY_NAME: {
+                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
+                    textField.setText(name);
+                    break;
                 }
-            } else if (CardDbAdapter.KEY_TYPE.equals(mFrom[i])) {
-                String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                hideType = false;
-                textField.setText(name);
-            } else if (CardDbAdapter.KEY_ABILITY.equals(mFrom[i])) {
-                String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                hideAbility = false;
-                CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
-                textField.setText(csq);
-            } else if (CardDbAdapter.KEY_POWER.equals(mFrom[i])) {
-                float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-                if (p != CardDbAdapter.NO_ONE_CARES) {
-                    String pow;
-                    hidePT = false;
-                    if (p == CardDbAdapter.STAR)
-                        pow = "*";
-                    else if (p == CardDbAdapter.ONE_PLUS_STAR)
-                        pow = "1+*";
-                    else if (p == CardDbAdapter.TWO_PLUS_STAR)
-                        pow = "2+*";
-                    else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-                        pow = "7-*";
-                    else if (p == CardDbAdapter.STAR_SQUARED)
-                        pow = "*^2";
-                    else {
-                        if (p == (int) p) {
-                            pow = Integer.valueOf((int) p).toString();
+                case CardDbAdapter.KEY_MANACOST: {
+                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
+                    hideCost = false;
+                    CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
+                    textField.setText(csq);
+                    break;
+                }
+                case CardDbAdapter.KEY_SET: {
+                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
+                    hideSet = false;
+                    textField.setText(name);
+                    char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
+                    switch (rarity) {
+                        case 'C':
+                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_common)));
+                            break;
+                        case 'U':
+                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
+                            break;
+                        case 'R':
+                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_rare)));
+                            break;
+                        case 'M':
+                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_mythic)));
+                            break;
+                        case 'T':
+                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
+                            break;
+                    }
+                    break;
+                }
+                case CardDbAdapter.KEY_TYPE: {
+                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
+                    hideType = false;
+                    textField.setText(name);
+                    break;
+                }
+                case CardDbAdapter.KEY_ABILITY: {
+                    String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
+                    hideAbility = false;
+                    CharSequence csq = ImageGetterHelper.formatStringWithGlyphs(name, mImgGetter);
+                    textField.setText(csq);
+                    break;
+                }
+                case CardDbAdapter.KEY_POWER:
+                    float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
+                    if (p != CardDbAdapter.NO_ONE_CARES) {
+                        String pow;
+                        hidePT = false;
+                        if (p == CardDbAdapter.STAR)
+                            pow = "*";
+                        else if (p == CardDbAdapter.ONE_PLUS_STAR)
+                            pow = "1+*";
+                        else if (p == CardDbAdapter.TWO_PLUS_STAR)
+                            pow = "2+*";
+                        else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
+                            pow = "7-*";
+                        else if (p == CardDbAdapter.STAR_SQUARED)
+                            pow = "*^2";
+                        else {
+                            if (p == (int) p) {
+                                pow = Integer.valueOf((int) p).toString();
+                            } else {
+                                pow = Float.valueOf(p).toString();
+                            }
+                        }
+                        textField.setText(pow);
+                    }
+                    break;
+                case CardDbAdapter.KEY_TOUGHNESS:
+                    float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
+                    if (t != CardDbAdapter.NO_ONE_CARES) {
+                        hidePT = false;
+                        String tou;
+                        if (t == CardDbAdapter.STAR)
+                            tou = "*";
+                        else if (t == CardDbAdapter.ONE_PLUS_STAR)
+                            tou = "1+*";
+                        else if (t == CardDbAdapter.TWO_PLUS_STAR)
+                            tou = "2+*";
+                        else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
+                            tou = "7-*";
+                        else if (t == CardDbAdapter.STAR_SQUARED)
+                            tou = "*^2";
+                        else {
+                            if (t == (int) t) {
+                                tou = Integer.valueOf((int) t).toString();
+                            } else {
+                                tou = Float.valueOf(t).toString();
+                            }
+                        }
+                        textField.setText(tou);
+                    }
+                    break;
+                case CardDbAdapter.KEY_LOYALTY:
+                    float l = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
+                    if (l != CardDbAdapter.NO_ONE_CARES) {
+                        hideLoyalty = false;
+                        if (l == (int) l) {
+                            textField.setText(Integer.toString((int) l));
                         } else {
-                            pow = Float.valueOf(p).toString();
+                            textField.setText(Float.toString(l));
                         }
                     }
-                    textField.setText(pow);
-                }
-            } else if (CardDbAdapter.KEY_TOUGHNESS.equals(mFrom[i])) {
-                float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-                if (t != CardDbAdapter.NO_ONE_CARES) {
-                    hidePT = false;
-                    String tou;
-                    if (t == CardDbAdapter.STAR)
-                        tou = "*";
-                    else if (t == CardDbAdapter.ONE_PLUS_STAR)
-                        tou = "1+*";
-                    else if (t == CardDbAdapter.TWO_PLUS_STAR)
-                        tou = "2+*";
-                    else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-                        tou = "7-*";
-                    else if (t == CardDbAdapter.STAR_SQUARED)
-                        tou = "*^2";
-                    else {
-                        if (t == (int) t) {
-                            tou = Integer.valueOf((int) t).toString();
-                        } else {
-                            tou = Float.valueOf(t).toString();
-                        }
-                    }
-                    textField.setText(tou);
-                }
-            } else if (CardDbAdapter.KEY_LOYALTY.equals(mFrom[i])) {
-                float l = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
-                if (l != CardDbAdapter.NO_ONE_CARES) {
-                    hideLoyalty = false;
-                    if (l == (int) l) {
-                        textField.setText(Integer.toString((int) l));
-                    } else {
-                        textField.setText(Float.toString(l));
-                    }
-                }
+                    break;
             }
         }
 

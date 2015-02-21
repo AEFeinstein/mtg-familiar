@@ -35,6 +35,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -259,7 +261,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
 		/* set the autocomplete for supertypes */
         String[] supertypes = getResources().getStringArray(R.array.supertypes);
-        ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<String>(this.getActivity(),
+        ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(this.getActivity(),
                 R.layout.list_item_1, supertypes);
         mSupertypeField.setThreshold(1);
         mSupertypeField.setAdapter(supertypeAdapter);
@@ -409,16 +411,22 @@ public class SearchViewFragment extends FamiliarFragment {
         try {
             pow = Float.parseFloat(power);
         } catch (NumberFormatException e) {
-            if (power.equals("*")) {
-                pow = CardDbAdapter.STAR;
-            } else if (power.equals("1+*")) {
-                pow = CardDbAdapter.ONE_PLUS_STAR;
-            } else if (power.equals("2+*")) {
-                pow = CardDbAdapter.TWO_PLUS_STAR;
-            } else if (power.equals("7-*")) {
-                pow = CardDbAdapter.SEVEN_MINUS_STAR;
-            } else if (power.equals("*^2")) {
-                pow = CardDbAdapter.STAR_SQUARED;
+            switch (power) {
+                case "*":
+                    pow = CardDbAdapter.STAR;
+                    break;
+                case "1+*":
+                    pow = CardDbAdapter.ONE_PLUS_STAR;
+                    break;
+                case "2+*":
+                    pow = CardDbAdapter.TWO_PLUS_STAR;
+                    break;
+                case "7-*":
+                    pow = CardDbAdapter.SEVEN_MINUS_STAR;
+                    break;
+                case "*^2":
+                    pow = CardDbAdapter.STAR_SQUARED;
+                    break;
             }
         }
         searchCriteria.powChoice = pow;
@@ -428,16 +436,22 @@ public class SearchViewFragment extends FamiliarFragment {
         try {
             tou = Float.parseFloat(toughness);
         } catch (NumberFormatException e) {
-            if (toughness.equals("*")) {
-                tou = CardDbAdapter.STAR;
-            } else if (toughness.equals("1+*")) {
-                tou = CardDbAdapter.ONE_PLUS_STAR;
-            } else if (toughness.equals("2+*")) {
-                tou = CardDbAdapter.TWO_PLUS_STAR;
-            } else if (toughness.equals("7-*")) {
-                tou = CardDbAdapter.SEVEN_MINUS_STAR;
-            } else if (toughness.equals("*^2")) {
-                tou = CardDbAdapter.STAR_SQUARED;
+            switch (toughness) {
+                case "*":
+                    tou = CardDbAdapter.STAR;
+                    break;
+                case "1+*":
+                    tou = CardDbAdapter.ONE_PLUS_STAR;
+                    break;
+                case "2+*":
+                    tou = CardDbAdapter.TWO_PLUS_STAR;
+                    break;
+                case "7-*":
+                    tou = CardDbAdapter.SEVEN_MINUS_STAR;
+                    break;
+                case "*^2":
+                    tou = CardDbAdapter.STAR_SQUARED;
+                    break;
             }
         }
         searchCriteria.touChoice = tou;
@@ -618,9 +632,7 @@ public class SearchViewFragment extends FamiliarFragment {
             this.removeDialog(getFragmentManager());
             checkDialogButtonColors();
 
-        } catch (IOException e) {
-            Toast.makeText(this.getActivity(), R.string.search_toast_cannot_load, Toast.LENGTH_LONG).show();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             Toast.makeText(this.getActivity(), R.string.search_toast_cannot_load, Toast.LENGTH_LONG).show();
         }
     }
@@ -718,6 +730,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 checkDialogButtonColors();
             }
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
@@ -767,15 +780,13 @@ public class SearchViewFragment extends FamiliarFragment {
                             return mRarityDialog;
                         }
                         default: {
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
                     }
                 } catch (NullPointerException e) {
 					/* if the db failed to open, these arrays will be null. */
-                    setShowsDialog(false);
                     handleFamiliarDbException(false);
-                    return null;
+                    return DontShowDialog();
                 }
             }
         };

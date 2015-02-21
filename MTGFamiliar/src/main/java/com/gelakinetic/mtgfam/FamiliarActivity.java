@@ -133,7 +133,6 @@ public class FamiliarActivity extends ActionBarActivity {
     private static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
             "&business=SZK4TAH2XBZNC&lc=US&item_name=MTG%20Familiar&currency_code=USD" +
             "&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
-    private static final String GITHUB_URL = "https://github.com/AEFeinstein/mtg-familiar";
     /* Timer to determine user inactivity for screen dimming in the life counter */
     private static final long INACTIVITY_MS = 30000;
     private static final int MESSAGE_CLEAR = 0;
@@ -530,6 +529,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 if (pInfo.versionCode <= 24) {
                     File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
                     File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
+                    File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
                     if (mtr.exists()) {
                         if (!mtr.delete()) {
                             Toast.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted),
@@ -537,6 +537,10 @@ public class FamiliarActivity extends ActionBarActivity {
                         }
                         if (!ipg.delete()) {
                             Toast.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        if (!jar.delete()) {
+                            Toast.makeText(this, jar.getName() + " " + getString(R.string.not_deleted),
                                     Toast.LENGTH_LONG).show();
                         }
                     }
@@ -909,6 +913,7 @@ public class FamiliarActivity extends ActionBarActivity {
              * @return The new dialog instance to be displayed. All dialogs are created with the AlertDialog builder, so
              * onCreateView() does not need to be implemented
              */
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
@@ -1051,8 +1056,7 @@ public class FamiliarActivity extends ActionBarActivity {
                         return builder.create();
                     }
                     default: {
-                        setShowsDialog(false);
-                        return null;
+                        return DontShowDialog();
                     }
                 }
             }

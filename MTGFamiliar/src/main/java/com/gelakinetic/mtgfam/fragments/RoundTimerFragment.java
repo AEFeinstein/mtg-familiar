@@ -28,6 +28,8 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Calendar;
 
 /**
@@ -289,6 +291,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
@@ -328,8 +331,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                                 .create();
                     }
                     default: {
-                        setShowsDialog(false);
-                        return null;
+                        return DontShowDialog();
                     }
                 }
             }

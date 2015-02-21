@@ -58,8 +58,8 @@ class RulesParser {
         this.mBufferedReader = null;
         this.mProgressReporter = progressReport;
 
-        this.mRules = new ArrayList<RuleItem>();
-        this.mGlossary = new ArrayList<GlossaryItem>();
+        this.mRules = new ArrayList<>();
+        this.mGlossary = new ArrayList<>();
     }
 
     /**

@@ -72,7 +72,7 @@ public class MtgAppWidgetConfigure extends Activity {
      */
     void finishAndUpdateWidget() {
 		/* Set the preferences from the dialog */
-        HashSet<String> selectedButtons = new HashSet<String>();
+        HashSet<String> selectedButtons = new HashSet<>();
         for (int i = 0; i < mSelected.length; i++) {
             if (mSelected[i]) {
                 selectedButtons.add(mLaunchers[i]);

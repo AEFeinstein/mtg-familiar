@@ -21,7 +21,7 @@ public class PrefsFragment extends PreferenceFragment {
         // Check if the system's language setting needs to be overridden
         String defaultLocale = context.getResources().getConfiguration().locale.getLanguage();
         boolean overrideSystemLanguage =
-                defaultLocale != prefs.getString(context.getString(R.string.key_language), defaultLocale);
+                !defaultLocale.equals(prefs.getString(context.getString(R.string.key_language), defaultLocale));
 
         if (overrideSystemLanguage) {
             String localeString = prefs.getString(context.getString(R.string.key_language), "");

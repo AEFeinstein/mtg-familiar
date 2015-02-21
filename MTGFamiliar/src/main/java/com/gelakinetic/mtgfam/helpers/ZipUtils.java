@@ -72,8 +72,6 @@ public class ZipUtils {
         try {
             unZipIt(new ZipFile(zipIn), context);
             Toast.makeText(context, context.getString(R.string.main_import_success), Toast.LENGTH_SHORT).show();
-        } catch (ZipException e) {
-            Toast.makeText(context, context.getString(R.string.main_import_fail), Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Toast.makeText(context, context.getString(R.string.main_import_fail), Toast.LENGTH_SHORT).show();
         }
@@ -86,7 +84,7 @@ public class ZipUtils {
      * @return An ArrayList of all the files in the root directory
      */
     private static ArrayList<File> findAllFiles(File... dirs) {
-        ArrayList<File> files = new ArrayList<File>();
+        ArrayList<File> files = new ArrayList<>();
         for (File dir : dirs) {
             File listFiles[] = dir.listFiles();
             assert listFiles != null;

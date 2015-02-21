@@ -50,12 +50,8 @@ public class SafeAutoCompleteTextView extends AutoCompleteTextView {
     public void onFilterComplete(int count) {
         try {
             super.onFilterComplete(count);
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | StaleDataException | InflateException e) {
             /* Ignore */
-        } catch (StaleDataException e) {
-			/* Ignore */
-        } catch (InflateException e) {
-			/* Ignore */
         }
     }
 
@@ -66,11 +62,7 @@ public class SafeAutoCompleteTextView extends AutoCompleteTextView {
     public void showDropDown() {
         try {
             super.showDropDown();
-        } catch (IllegalStateException e) {
-			/* Ignore */
-        } catch (StaleDataException e) {
-			/* Ignore */
-        } catch (InflateException e) {
+        } catch (IllegalStateException | StaleDataException | InflateException e) {
 			/* Ignore */
         }
     }

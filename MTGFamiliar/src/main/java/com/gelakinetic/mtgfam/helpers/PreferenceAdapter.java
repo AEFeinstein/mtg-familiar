@@ -416,7 +416,7 @@ public class PreferenceAdapter {
     }
 
     public synchronized Set<String> getWidgetButtons() {
-        return this.prefs.getStringSet(context.getString(R.string.key_widgetButtons), new HashSet<String>(
+        return this.prefs.getStringSet(context.getString(R.string.key_widgetButtons), new HashSet<>(
                 Arrays.asList(context.getResources().getStringArray(R.array.default_widget_buttons_array_entries))));
     }
 
@@ -455,8 +455,4 @@ public class PreferenceAdapter {
         return this.prefs.getInt(context.getString(R.string.key_imageCacheSize), 12);
     }
 
-    public void setImageCacheSize(int cacheSizeMB) {
-        this.edit.putInt(context.getString(R.string.key_imageCacheSize), cacheSizeMB);
-        this.edit.commit();
-    }
 }

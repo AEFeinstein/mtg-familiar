@@ -72,6 +72,8 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -79,7 +81,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -469,8 +470,8 @@ public class CardViewFragment extends FamiliarFragment {
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
         );
-        mSets = new LinkedHashSet<String>();
-        mCardIds = new LinkedHashSet<Long>();
+        mSets = new LinkedHashSet<>();
+        mCardIds = new LinkedHashSet<>();
         while (!cCardByName.isAfterLast()) {
             if (mSets.add(CardDbAdapter
                     .getTcgName(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
@@ -505,6 +506,7 @@ public class CardViewFragment extends FamiliarFragment {
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
+            @NotNull
             @Override
             @SuppressWarnings("SpellCheckingInspection")
             public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -516,8 +518,7 @@ public class CardViewFragment extends FamiliarFragment {
                 switch (id) {
                     case GET_IMAGE: {
                         if (mCardBitmap == null) {
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
                         Dialog dialog = new Dialog(mActivity);
@@ -545,8 +546,7 @@ public class CardViewFragment extends FamiliarFragment {
                     case GET_LEGALITY: {
                         if (mFormats == null || mLegalities == null) {
 							/* exception handled in AsyncTask */
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
 						/* create the item mapping */
@@ -554,9 +554,9 @@ public class CardViewFragment extends FamiliarFragment {
                         int[] to = new int[]{R.id.format, R.id.status};
 
 						/* prepare the list of all records */
-                        List<HashMap<String, String>> fillMaps = new ArrayList<HashMap<String, String>>();
+                        List<HashMap<String, String>> fillMaps = new ArrayList<>();
                         for (int i = 0; i < mFormats.length; i++) {
-                            HashMap<String, String> map = new HashMap<String, String>();
+                            HashMap<String, String> map = new HashMap<>();
                             map.put(from[0], mFormats[i]);
                             map.put(from[1], mLegalities[i]);
                             fillMaps.add(map);
@@ -574,8 +574,7 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                     case GET_PRICE: {
                         if (mPriceInfo == null) {
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
                         View v = mActivity.getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
@@ -624,8 +623,7 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                     case CARD_RULINGS: {
                         if (mRulingsArrayList == null) {
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
                         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
@@ -665,13 +663,11 @@ public class CardViewFragment extends FamiliarFragment {
                             return WishlistHelpers.getDialog(mCardName, CardViewFragment.this, false);
                         } catch (FamiliarDbException e) {
                             handleFamiliarDbException(false);
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
                     }
                     default: {
-                        setShowsDialog(false);
-                        return null;
+                        return DontShowDialog();
                     }
                 }
             }
@@ -1220,32 +1216,37 @@ public class CardViewFragment extends FamiliarFragment {
         private String getMtgiPicUrl(String mCardName, String mMagicCardsInfoSetCode, String mCardNumber,
                                      String cardLanguage) {
             String picURL;
-            if (mSetCode.equals("PP2")) {
-                picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
-                picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-                        .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-            } else if (mSetCode.equals("PCP")) {
-                if (mCardName.equalsIgnoreCase("tazeem")) {
-                    mCardName = "tazeem-release-promo";
-                    picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-                } else if (mCardName.equalsIgnoreCase("celestine reef")) {
-                    mCardName = "celestine-reef-pre-release-promo";
-                    picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-                } else if (mCardName.equalsIgnoreCase("horizon boughs")) {
-                    mCardName = "horizon-boughs-gateway-promo";
-                    picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-                } else {
-                    picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-                }
-                picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-                        .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-            } else if (mSetCode.equals("ARS")) {
-                picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
-                picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-                        .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-            } else {
-                picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
-                        mCardNumber + ".jpg";
+            switch (mSetCode) {
+                case "PP2":
+                    picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
+                    picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                    break;
+                case "PCP":
+                    if (mCardName.equalsIgnoreCase("tazeem")) {
+                        mCardName = "tazeem-release-promo";
+                        picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+                    } else if (mCardName.equalsIgnoreCase("celestine reef")) {
+                        mCardName = "celestine-reef-pre-release-promo";
+                        picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+                    } else if (mCardName.equalsIgnoreCase("horizon boughs")) {
+                        mCardName = "horizon-boughs-gateway-promo";
+                        picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+                    } else {
+                        picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
+                    }
+                    picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                    break;
+                case "ARS":
+                    picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
+                    picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                    break;
+                default:
+                    picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
+                            mCardNumber + ".jpg";
+                    break;
             }
             return picURL.toLowerCase(Locale.ENGLISH);
         }
@@ -1316,7 +1317,7 @@ public class CardViewFragment extends FamiliarFragment {
             BufferedReader br;
             String line;
 
-            mRulingsArrayList = new ArrayList<Ruling>();
+            mRulingsArrayList = new ArrayList<>();
 
             try {
                 url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mMultiverseId);
@@ -1336,8 +1337,6 @@ public class CardViewFragment extends FamiliarFragment {
                         mRulingsArrayList.add(r);
                     }
                 }
-            } catch (MalformedURLException mue) {
-                mErrorMessage = mue.getLocalizedMessage();
             } catch (IOException ioe) {
                 mErrorMessage = ioe.getLocalizedMessage();
             } finally {

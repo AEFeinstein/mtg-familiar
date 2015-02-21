@@ -25,6 +25,8 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class LcPlayer {
@@ -37,9 +39,9 @@ public class LcPlayer {
     /* Reference to parent fragment */
     private final LifeCounterFragment mFragment;
     /* Histories and adapters for life, poison, commander damage */
-    public ArrayList<HistoryEntry> mLifeHistory = new ArrayList<HistoryEntry>();
-    public ArrayList<HistoryEntry> mPoisonHistory = new ArrayList<HistoryEntry>();
-    public ArrayList<CommanderEntry> mCommanderDamage = new ArrayList<CommanderEntry>();
+    public ArrayList<HistoryEntry> mLifeHistory = new ArrayList<>();
+    public ArrayList<HistoryEntry> mPoisonHistory = new ArrayList<>();
+    public ArrayList<CommanderEntry> mCommanderDamage = new ArrayList<>();
     public CommanderDamageAdapter mCommanderDamageAdapter;
 
     /* Stats */
@@ -548,6 +550,7 @@ public class LcPlayer {
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
