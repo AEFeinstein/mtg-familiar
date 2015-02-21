@@ -26,7 +26,7 @@
         android:gravity="center"
         android:inputType="number"
         android:maxLength="2"
-        android:selectAllOnFocus="true"></EditText>
+        android:selectAllOnFocus="true"/>
 
     <TextView
         android:id="@+id/cardset"

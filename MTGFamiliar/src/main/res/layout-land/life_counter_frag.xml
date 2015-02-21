@@ -42,7 +42,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/commander_player"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal"/>
 
     <View
         android:id="@+id/divider"
