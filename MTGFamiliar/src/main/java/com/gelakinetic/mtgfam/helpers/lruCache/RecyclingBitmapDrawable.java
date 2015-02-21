@@ -25,6 +25,7 @@ import android.graphics.drawable.BitmapDrawable;
  * When the drawable is no longer being displayed or cached,
  * {@link android.graphics.Bitmap#recycle() recycle()} will be called on this drawable's bitmap.
  */
+@SuppressWarnings("ALL")
 public class RecyclingBitmapDrawable extends BitmapDrawable {
 
     static final String TAG = "CountingBitmapDrawable";

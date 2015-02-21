@@ -30,6 +30,7 @@ import java.io.FileDescriptor;
  * and height. Useful for when the input images might be too large to simply load directly into
  * memory.
  */
+@SuppressWarnings("ALL")
 public class ImageResizer extends ImageWorker {
     private static final String TAG = "ImageResizer";
     private int mImageWidth;

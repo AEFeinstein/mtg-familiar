@@ -53,6 +53,7 @@ import java.util.Set;
  * class, although usually a cache should be added directly to an {@link ImageWorker} by calling
  * {@link ImageWorker#addImageCache(android.support.v4.app.FragmentManager, ImageCacheParams)}.
  */
+@SuppressWarnings("ALL")
 public class ImageCache {
     private static final String TAG = "ImageCache";
 
