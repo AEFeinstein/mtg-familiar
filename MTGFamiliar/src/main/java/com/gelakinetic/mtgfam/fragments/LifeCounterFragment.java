@@ -32,6 +32,8 @@ import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,8 +67,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private static final int IMPROBABLE_NUMBER = 531865548;
     private static final String OVER_9000_KEY = "@over_9000";
     /* Keeping track of players, display state */
-    private final ArrayList<LcPlayer> mPlayers = new ArrayList<LcPlayer>();
-    private final LinkedList<String> mVocalizations = new LinkedList<String>();
+    private final ArrayList<LcPlayer> mPlayers = new ArrayList<>();
+    private final LinkedList<String> mVocalizations = new LinkedList<>();
     /* UI Elements, measurement */
     private GridLayout mGridLayout;
     private LinearLayout mCommanderPlayerView;
@@ -401,6 +403,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
@@ -513,8 +516,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
                             Toast.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist,
                                     Toast.LENGTH_LONG).show();
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
 						/* Get a list of Gatherings, and their names extracted from XML */
@@ -844,7 +846,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
             try {
                 String[] lifeHistory = data[2].split(",");
-                player.mLifeHistory = new ArrayList<HistoryEntry>(lifeHistory.length);
+                player.mLifeHistory = new ArrayList<>(lifeHistory.length);
                 HistoryEntry entry;
                 for (int i = lifeHistory.length - 1; i >= 0; i--) {
                     entry = new HistoryEntry();
@@ -856,10 +858,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     }
                     player.mLifeHistory.add(0, entry);
                 }
-            } catch (NumberFormatException e) {
-                player.mLifeHistory = new ArrayList<HistoryEntry>();
-            } catch (ArrayIndexOutOfBoundsException e) {
-                player.mLifeHistory = new ArrayList<HistoryEntry>();
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                player.mLifeHistory = new ArrayList<>();
             }
 
             try {
@@ -870,7 +870,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
             try {
                 String[] poisonHistory = data[4].split(",");
-                player.mPoisonHistory = new ArrayList<HistoryEntry>(poisonHistory.length);
+                player.mPoisonHistory = new ArrayList<>(poisonHistory.length);
                 HistoryEntry entry;
                 for (int i = poisonHistory.length - 1; i >= 0; i--) {
                     entry = new HistoryEntry();
@@ -883,25 +883,21 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     player.mPoisonHistory.add(0, entry);
                 }
 
-            } catch (NumberFormatException e) {
-                player.mPoisonHistory = new ArrayList<HistoryEntry>();
-            } catch (ArrayIndexOutOfBoundsException e) {
-                player.mPoisonHistory = new ArrayList<HistoryEntry>();
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                player.mPoisonHistory = new ArrayList<>();
             }
 
             try {
                 String[] commanderLifeString = data[6].split(",");
-                player.mCommanderDamage = new ArrayList<CommanderEntry>(commanderLifeString.length);
+                player.mCommanderDamage = new ArrayList<>(commanderLifeString.length);
                 CommanderEntry entry;
                 for (String aCommanderLifeString : commanderLifeString) {
                     entry = new CommanderEntry();
                     entry.mLife = Integer.parseInt(aCommanderLifeString);
                     player.mCommanderDamage.add(entry);
                 }
-            } catch (NumberFormatException e) {
-                player.mCommanderDamage = new ArrayList<CommanderEntry>();
-            } catch (ArrayIndexOutOfBoundsException e) {
-                player.mCommanderDamage = new ArrayList<CommanderEntry>();
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                player.mCommanderDamage = new ArrayList<>();
             }
 
             try {
@@ -1041,7 +1037,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     m9000Player.start();
                 } catch (IOException e) {
 					/* If the media was not played, fall back to TTSing "over 9000" */
-                    HashMap<String, String> ttsParams = new HashMap<String, String>();
+                    HashMap<String, String> ttsParams = new HashMap<>();
                     ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
                     ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
                     if (mTts.speak(getString(R.string.life_counter_over_9000), TextToSpeech.QUEUE_FLUSH, ttsParams) == TextToSpeech.ERROR) {
@@ -1049,7 +1045,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     }
                 }
             } else {
-                HashMap<String, String> ttsParams = new HashMap<String, String>();
+                HashMap<String, String> ttsParams = new HashMap<>();
                 ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
                 ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
 

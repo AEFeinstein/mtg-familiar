@@ -51,6 +51,7 @@ import java.util.zip.GZIPInputStream;
  * and gives the ability to list all Cards as well as retrieve or modify a
  * specific Card.
  */
+@SuppressWarnings("JavaDoc")
 public class CardDbAdapter {
 
     public static final int STAR = -1000;
@@ -95,7 +96,7 @@ public class CardDbAdapter {
     public static final String KEY_MULTIVERSEID = "multiverseID";
     public static final String KEY_CODE = "code";
     public static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
-    public static final String KEY_FORMAT = "format";
+    private static final String KEY_FORMAT = "format";
     public static final String KEY_LEGALITY = "legality";
     public static final String KEY_CATEGORY = "category";
     public static final String KEY_SUBCATEGORY = "subcategory";
@@ -261,11 +262,7 @@ public class CardDbAdapter {
         try {
             c = sqLiteDatabase.query(DATABASE_TABLE_SETS, new String[]{KEY_ID, KEY_NAME, KEY_CODE, KEY_CODE_MTGI}, null,
                     null, null, null, KEY_DATE + " DESC");
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        } catch (NullPointerException e) {
+        } catch (SQLiteException | IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -288,9 +285,7 @@ public class CardDbAdapter {
             c = mDb.query(true, DATABASE_TABLE_SETS, new String[]{KEY_ID}, statement, null, null, null, KEY_NAME, null);
             count = c.getCount();
             c.close();
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -308,9 +303,7 @@ public class CardDbAdapter {
         try {
             c = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI}, KEY_CODE + "=\"" + code + "\"", null, null,
                     null, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -337,9 +330,7 @@ public class CardDbAdapter {
         try {
             c = mDb.query(true, DATABASE_TABLE_CARDS, columns, KEY_ID
                     + "=" + id, null, null, null, KEY_NAME, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -382,9 +373,7 @@ public class CardDbAdapter {
 
         try {
             c = mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -447,9 +436,7 @@ public class CardDbAdapter {
 
         try {
             cursor = mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -521,9 +508,7 @@ public class CardDbAdapter {
 
         try {
             c = mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -550,9 +535,7 @@ public class CardDbAdapter {
         Cursor c;
         try {
             c = mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -1004,6 +987,9 @@ public class CardDbAdapter {
                         " AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE '%Scheme%'" +
                         " AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Vanguard%'";
             }
+
+            numLegalSetCursor.close();
+
             statement += " AND NOT EXISTS (SELECT * FROM "
                     + DATABASE_TABLE_BANNED_CARDS + " WHERE "
                     + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = "
@@ -1067,9 +1053,7 @@ public class CardDbAdapter {
                         + " DESC)";
             }
             c = mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
         if (c != null) {
@@ -1098,9 +1082,7 @@ public class CardDbAdapter {
             int ID = c.getInt(c.getColumnIndex(KEY_ID));
             c.close();
             return ID;
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         } catch (CursorIndexOutOfBoundsException e) {
             return -1; /* The other half doesn't exist... */
@@ -1127,9 +1109,7 @@ public class CardDbAdapter {
             c.moveToFirst();
             name = c.getString(c.getColumnIndex(KEY_NAME));
             c.close();
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -1212,9 +1192,7 @@ public class CardDbAdapter {
         try {
             return mDb.query(DATABASE_TABLE_FORMATS, new String[]{KEY_ID,
                     KEY_NAME,}, null, null, null, null, KEY_NAME);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1263,9 +1241,7 @@ public class CardDbAdapter {
             int legality = c.getInt(c.getColumnIndex(KEY_LEGALITY));
             c.close();
             return legality;
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1290,9 +1266,7 @@ public class CardDbAdapter {
             String tcgName = c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
             c.close();
             return tcgName;
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1310,9 +1284,7 @@ public class CardDbAdapter {
             boolean isModernLegal = (c.getCount() >= 1);
             c.close();
             return isModernLegal;
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1348,9 +1320,7 @@ public class CardDbAdapter {
                         + KEY_ENTRY + " IS NOT NULL";
                 return mDb.rawQuery(sql, null);
             }
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1399,9 +1369,7 @@ public class CardDbAdapter {
                     return mDb.rawQuery(sql, null);
                 }
             }
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
         return null;
@@ -1433,9 +1401,7 @@ public class CardDbAdapter {
                     return result;
                 }
             }
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
         return 0;
@@ -1463,9 +1429,7 @@ public class CardDbAdapter {
                 c.close();
                 return result;
             }
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
         return "";
@@ -1480,9 +1444,7 @@ public class CardDbAdapter {
         try {
             String sql = "SELECT * FROM " + DATABASE_TABLE_GLOSSARY;
             return mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1499,9 +1461,7 @@ public class CardDbAdapter {
                     KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST + " FROM " + DATABASE_TABLE_BANNED_CARDS +
                     " WHERE " + KEY_FORMAT + " = '" + format + "'" + " GROUP BY " + KEY_LEGALITY;
             return mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1518,9 +1478,7 @@ public class CardDbAdapter {
                     " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " = " + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
                     " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
             return mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1615,7 +1573,7 @@ public class CardDbAdapter {
      * @return
      */
     private static HashMap<String, String> buildColumnMap() {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         map.put(KEY_NAME, KEY_NAME);
         map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
         map.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS "
@@ -1649,9 +1607,7 @@ public class CardDbAdapter {
         try {
             cursor = builder.query(mDb, columns, selection, selectionArgs,
                     KEY_NAME, null, KEY_NAME);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
@@ -1711,9 +1667,7 @@ public class CardDbAdapter {
                             " ORDER BY " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " COLLATE UNICODE, " + DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC " +
                             ") GROUP BY " + KEY_NAME;
             return mDb.rawQuery(sql, null);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1775,18 +1729,14 @@ public class CardDbAdapter {
                 fos.close();
                 gis.close();
             }
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+        } catch (NotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
      * @param name
-     * @param mSetCode
+     * @param setCode
      * @param mDb      @return
      * @throws FamiliarDbException
      */
@@ -1808,9 +1758,7 @@ public class CardDbAdapter {
                 c.close();
                 return -1;
             }
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1849,9 +1797,7 @@ public class CardDbAdapter {
                 c.close();
                 return null;
             }
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        } catch (IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
     }
@@ -1948,7 +1894,7 @@ public class CardDbAdapter {
      */
     public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
         String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC", "CNS", "CNSC"};
-        ArrayList<String> nonModernLegalSets = new ArrayList<String>(Arrays.asList(extraSets));
+        ArrayList<String> nonModernLegalSets = new ArrayList<>(Arrays.asList(extraSets));
         for (String value : nonModernLegalSets) {
             if (value.equals(setCode)) {
                 return true;

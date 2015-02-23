@@ -14,7 +14,7 @@ public class Gathering implements Serializable {
      * Default constructor, make a new mPlayerList and set the display mode to normal (0)
      */
     public Gathering() {
-        mPlayerList = new ArrayList<GatheringsPlayerData>();
+        mPlayerList = new ArrayList<>();
         mDisplayMode = 0;
     }
 

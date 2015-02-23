@@ -302,8 +302,8 @@ public class ResultListFragment extends FamiliarFragment {
      */
     private void fillData() {
         if (mCursor != null) {
-            ArrayList<String> fromList = new ArrayList<String>();
-            ArrayList<Integer> toList = new ArrayList<Integer>();
+            ArrayList<String> fromList = new ArrayList<>();
+            ArrayList<Integer> toList = new ArrayList<>();
             fromList.add(CardDbAdapter.KEY_NAME);
             toList.add(R.id.cardname);
             if (getFamiliarActivity().mPreferenceAdapter.getSetPref()) {

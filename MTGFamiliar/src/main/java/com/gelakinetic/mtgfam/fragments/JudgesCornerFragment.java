@@ -50,7 +50,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
     /**
      * List of {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem} which represent this sample's tabs.
      */
-    private List<PagerItem> mTabs = new ArrayList<PagerItem>();
+    private final List<PagerItem> mTabs = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
      */
     class PagerItem {
         private final CharSequence mTitle;
-        private String mFragmentType;
+        private final String mFragmentType;
 
         PagerItem(CharSequence title, String fragmentType) {
             mTitle = title;

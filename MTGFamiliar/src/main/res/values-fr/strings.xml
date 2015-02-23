@@ -234,7 +234,6 @@
 <string name="pref_wishlist_prices_title">Afficher Prix Cartes</string>
 <string name="pref_wishlist_totals_summary">Afficher le prix total de la liste de voeux</string>
 <string name="pref_wishlist_totals_title">Afficher Prix Total</string>
-<string name="profile_dci_number">Numéro DCI</string>
 <string name="profile_invalid_dci">Numéro DCI saisi non valide</string>
 <string name="profile_no_dci">Vous n\'avez pas saisi votre numéro DCI</string>
 <string name="profile_planeswalker_points">Points de Planeswalker</string>

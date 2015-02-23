@@ -23,6 +23,7 @@ import android.os.Build.VERSION_CODES;
 /**
  * Class containing some static utility methods.
  */
+@SuppressWarnings("ALL")
 class Utils {
     private Utils() {
     }

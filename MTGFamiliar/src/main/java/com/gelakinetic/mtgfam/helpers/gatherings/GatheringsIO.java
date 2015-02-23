@@ -61,7 +61,7 @@ public class GatheringsIO {
      * @return All the names of the gatherings in filesDir
      */
     public static ArrayList<String> getGatheringFileList(File filesDir) {
-        ArrayList<String> returnList = new ArrayList<String>();
+        ArrayList<String> returnList = new ArrayList<>();
 
         File path = new File(filesDir, FOLDER_PATH);
         if (!path.exists()) {
@@ -169,8 +169,6 @@ public class GatheringsIO {
 
             out.write(dataXML);
             out.close();
-        } catch (FileNotFoundException e) {
-            /* eat it */
         } catch (IOException e) {
 			/* eat it */
         }
@@ -198,7 +196,7 @@ public class GatheringsIO {
      * @return A Gathering object containing players and a default display mode
      */
     private static Gathering ReadGatheringXML(File _gatheringFile) {
-        ArrayList<GatheringsPlayerData> playerList = new ArrayList<GatheringsPlayerData>();
+        ArrayList<GatheringsPlayerData> playerList = new ArrayList<>();
         Document dom;
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

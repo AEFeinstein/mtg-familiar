@@ -200,7 +200,7 @@ public class ImageGetterHelper {
      * @param attr The attribute ID
      * @return the resource ID
      */
-    public static int getResourceIdFromAttr(Resources.Theme theme, int attr) {
+    private static int getResourceIdFromAttr(Resources.Theme theme, int attr) {
         TypedArray ta = theme.obtainStyledAttributes(new int[]{attr});
         assert ta != null;
         int resId = ta.getResourceId(0, 0);

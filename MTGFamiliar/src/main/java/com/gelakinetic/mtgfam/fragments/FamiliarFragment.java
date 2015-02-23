@@ -54,7 +54,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param <V>       The class of UI element to search for
      * @return An ArrayList of UI elements of the given class in the viewGroup
      */
-    public static <V extends View> Collection<V> findChildrenByClass(ViewGroup viewGroup, Class<V> clazz) {
+    private static <V extends View> Collection<V> findChildrenByClass(ViewGroup viewGroup, Class<V> clazz) {
 
         return gatherChildrenByClass(viewGroup, clazz, new ArrayList<V>());
     }
@@ -208,9 +208,7 @@ public abstract class FamiliarFragment extends Fragment {
                         searchField.setAccessible(true);
                         ImageView searchBtn = (ImageView) searchField.get(sv);
                         searchBtn.setImageResource(R.drawable.ic_menu_search);
-                    } catch (NoSuchFieldException e) {
-						/* eat it */
-                    } catch (IllegalAccessException e) {
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
 						/* eat it */
                     }
 

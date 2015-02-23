@@ -41,6 +41,8 @@ import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This fragment contains a players profile information such as their DCI number and anything else
  * we can think of to go here
@@ -109,7 +111,7 @@ public class ProfileFragment extends FamiliarFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile_menu_update_dci:
-                showDialog(DIALOG_DCI_NUMBER);
+                showDialog();
                 return true;
             case R.id.profile_menu_remove_dci:
                 getFamiliarActivity().mPreferenceAdapter.setDCINumber("");
@@ -122,7 +124,9 @@ public class ProfileFragment extends FamiliarFragment {
     }
 
     /**
-     * @param menu
+     * Set up menu buttons depending on whether a DCI number has been entered
+     *
+     * @param menu The options menu in which you place your items.
      */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -144,7 +148,7 @@ public class ProfileFragment extends FamiliarFragment {
         }
     }
 
-    void showDialog(final int id) throws IllegalStateException {
+    void showDialog() throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -158,11 +162,12 @@ public class ProfileFragment extends FamiliarFragment {
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
 				/* We're setting this to false if we return null, so we should reset it every time to be safe */
                 setShowsDialog(true);
-                switch (id) {
+                switch (ProfileFragment.DIALOG_DCI_NUMBER) {
                     case DIALOG_DCI_NUMBER: {
                         View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                                 .inflate(R.layout.alert_dialog_text_entry, null, false);
@@ -213,8 +218,7 @@ public class ProfileFragment extends FamiliarFragment {
                                 .create();
                     }
                     default: {
-                        setShowsDialog(false);
-                        return null;
+                        return DontShowDialog();
                     }
                 }
             }

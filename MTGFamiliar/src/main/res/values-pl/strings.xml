@@ -234,7 +234,6 @@
 <string name="pref_wishlist_prices_title">Pokaż ceny</string>
 <string name="pref_wishlist_totals_summary">Wyświetl całkowitą cenę w Liście Życzeń</string>
 <string name="pref_wishlist_totals_title">Podaj całkowitą cenę</string>
-<string name="profile_dci_number">Numer DCI</string>
 <string name="profile_invalid_dci">Wprowadzono niepoprawny numer DCI</string>
 <string name="profile_no_dci">Nie wprowadziłeś swojego numeru DCI</string>
 <string name="profile_planeswalker_points">Planeswalker Points</string>

@@ -39,6 +39,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
@@ -122,7 +124,7 @@ public class RulesFragment extends FamiliarFragment {
         }
 
         ListView list = (ListView) myFragmentView.findViewById(R.id.result_list);
-        mRules = new ArrayList<DisplayItem>();
+        mRules = new ArrayList<>();
         boolean isClickable;
         Cursor cursor;
 
@@ -365,6 +367,7 @@ public class RulesFragment extends FamiliarFragment {
                 }
             }
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 searchArgs = null;
@@ -788,8 +791,8 @@ public class RulesFragment extends FamiliarFragment {
 
 			/* Enable fast scrolling for the glossary. Add all the first letters of the entries */
             if (isGlossary) {
-                LinkedHashSet<Integer> indicesLHS = new LinkedHashSet<Integer>();
-                LinkedHashSet<String> alphabetLHS = new LinkedHashSet<String>();
+                LinkedHashSet<Integer> indicesLHS = new LinkedHashSet<>();
+                LinkedHashSet<String> alphabetLHS = new LinkedHashSet<>();
 
 				/* Find the first index for each letter in the alphabet by looking at all the items */
                 for (int index = 0; index < items.size(); index++) {

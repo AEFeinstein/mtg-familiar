@@ -20,6 +20,8 @@ import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Random;
 
 /**
@@ -151,6 +153,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
         removeDialog(getFragmentManager());
 
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);

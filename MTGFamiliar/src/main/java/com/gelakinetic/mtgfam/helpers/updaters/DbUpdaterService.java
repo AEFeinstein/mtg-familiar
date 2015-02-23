@@ -103,7 +103,7 @@ public class DbUpdaterService extends IntentService {
             PreferenceAdapter mPrefAdapter = new PreferenceAdapter(this);
 
             ProgressReporter reporter = new ProgressReporter();
-            ArrayList<String> updatedStuff = new ArrayList<String>();
+            ArrayList<String> updatedStuff = new ArrayList<>();
             CardAndSetParser parser = new CardAndSetParser();
             boolean commitDates = true;
             boolean newRulesParsed = false;
@@ -130,8 +130,6 @@ public class DbUpdaterService extends IntentService {
                                         new URL(set[CardAndSetParser.SET_URL]).openStream());
                                 parser.readCardJsonStream(gis, reporter, database);
                                 updatedStuff.add(set[CardAndSetParser.SET_NAME]);
-                            } catch (MalformedURLException e) {
-								/* Eat it */
                             } catch (IOException e) {
 								/* Eat it */
                             }

@@ -38,6 +38,8 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -124,7 +126,7 @@ public class TradeFragment extends FamiliarFragment {
         mNumberEditText.setText("1");
 
 		/* Initialize the left list */
-        mLeftList = new ArrayList<MtgCard>();
+        mLeftList = new ArrayList<>();
         mLeftAdapter = new TradeListAdapter(this.getActivity(), mLeftList);
         ListView lvTradeLeft = (ListView) myFragmentView.findViewById(R.id.tradeListLeft);
         lvTradeLeft.setAdapter(mLeftAdapter);
@@ -135,7 +137,7 @@ public class TradeFragment extends FamiliarFragment {
         });
 
 		/* Initialize the right list */
-        mRightList = new ArrayList<MtgCard>();
+        mRightList = new ArrayList<>();
         mRightAdapter = new TradeListAdapter(this.getActivity(), mRightList);
         ListView lvTradeRight = (ListView) myFragmentView.findViewById(R.id.tradeListRight);
         lvTradeRight.setAdapter(mRightAdapter);
@@ -306,6 +308,7 @@ public class TradeFragment extends FamiliarFragment {
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
 				/* We're setting this to false if we return null, so we should reset it every time to be safe */
@@ -531,8 +534,8 @@ public class TradeFragment extends FamiliarFragment {
                                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, database);
 							/* Build set names and set codes */
-                            Set<String> sets = new LinkedHashSet<String>();
-                            Set<String> setCodes = new LinkedHashSet<String>();
+                            Set<String> sets = new LinkedHashSet<>();
+                            Set<String> setCodes = new LinkedHashSet<>();
                             while (!cards.isAfterLast()) {
                                 if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER)))) {
                                     setCodes.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)));
@@ -588,9 +591,8 @@ public class TradeFragment extends FamiliarFragment {
                                     .create();
                         } catch (FamiliarDbException e) {
 							/* Don't show the dialog, but pop a toast */
-                            setShowsDialog(false);
                             handleFamiliarDbException(true);
-                            return null;
+                            return DontShowDialog();
                         }
                     }
                     case DIALOG_PRICE_SETTING: {
@@ -680,7 +682,7 @@ public class TradeFragment extends FamiliarFragment {
                     case DIALOG_LOAD_TRADE: {
 						/* Find all the trade files */
                         String[] files = this.getActivity().fileList();
-                        ArrayList<String> validFiles = new ArrayList<String>();
+                        ArrayList<String> validFiles = new ArrayList<>();
                         for (String fileName : files) {
                             if (fileName.endsWith(TRADE_EXTENSION)) {
                                 validFiles.add(fileName.substring(0, fileName.indexOf(TRADE_EXTENSION)));
@@ -691,8 +693,7 @@ public class TradeFragment extends FamiliarFragment {
                         if (validFiles.size() == 0) {
                             Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG)
                                     .show();
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
 						/* Make an array of the trade file names */
@@ -724,7 +725,7 @@ public class TradeFragment extends FamiliarFragment {
                     case DIALOG_DELETE_TRADE: {
 						/* Find all the trade files */
                         String[] files = this.getActivity().fileList();
-                        ArrayList<String> validFiles = new ArrayList<String>();
+                        ArrayList<String> validFiles = new ArrayList<>();
                         for (String fileName : files) {
                             if (fileName.endsWith(TRADE_EXTENSION)) {
                                 validFiles.add(fileName.substring(0, fileName.indexOf(TRADE_EXTENSION)));
@@ -735,8 +736,7 @@ public class TradeFragment extends FamiliarFragment {
                         if (validFiles.size() == 0) {
                             Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG)
                                     .show();
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
 
 						/* Make an array of the trade file names */
@@ -788,8 +788,7 @@ public class TradeFragment extends FamiliarFragment {
                                 .create();
                     }
                     default: {
-                        setShowsDialog(false);
-                        return null;
+                        return DontShowDialog();
                     }
                 }
             }
@@ -817,8 +816,6 @@ public class TradeFragment extends FamiliarFragment {
             }
 
             fos.close();
-        } catch (FileNotFoundException e) {
-            Toast.makeText(this.getActivity(), R.string.trader_toast_save_error, Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             Toast.makeText(this.getActivity(), R.string.trader_toast_save_error, Toast.LENGTH_LONG).show();
         } catch (IllegalArgumentException e) {

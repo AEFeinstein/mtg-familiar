@@ -27,6 +27,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Random;
 
 /**
@@ -199,6 +201,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
 				/* This will be set to false if we are returning a null dialog. It prevents a crash */
@@ -316,9 +319,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
             permanents.close();
             DatabaseManager.getInstance().closeDatabase();
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(true);
-        } catch (SQLiteDatabaseCorruptException e) {
+        } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         }
     }
@@ -364,9 +365,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
             spells.close();
             DatabaseManager.getInstance().closeDatabase();
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(true);
-        } catch (SQLiteDatabaseCorruptException e) {
+        } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         }
     }

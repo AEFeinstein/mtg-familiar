@@ -49,6 +49,8 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -147,7 +149,7 @@ public class WishlistFragment extends FamiliarFragment {
         });
 
 		/* Set up the wishlist and adapter, it will be read in onResume() */
-        mCompressedWishlist = new ArrayList<CompressedWishlistInfo>();
+        mCompressedWishlist = new ArrayList<>();
         mWishlistAdapter = new WishlistArrayAdapter(mCompressedWishlist);
         listView.setAdapter(mWishlistAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -455,6 +457,7 @@ public class WishlistFragment extends FamiliarFragment {
 		/* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
+            @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 setShowsDialog(true);
@@ -464,8 +467,7 @@ public class WishlistFragment extends FamiliarFragment {
                             return WishlistHelpers.getDialog(cardName, WishlistFragment.this, true);
                         } catch (FamiliarDbException e) {
                             handleFamiliarDbException(false);
-                            setShowsDialog(false);
-                            return null;
+                            return DontShowDialog();
                         }
                     }
                     case DIALOG_PRICE_SETTING: {

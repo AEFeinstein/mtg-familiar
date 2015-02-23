@@ -21,7 +21,6 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,8 +50,6 @@ public class WishlistHelpers {
             }
 
             fos.close();
-        } catch (FileNotFoundException e) {
-            Toast.makeText(mCtx, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             Toast.makeText(mCtx, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
@@ -82,8 +79,6 @@ public class WishlistHelpers {
             }
 
             fos.close();
-        } catch (FileNotFoundException e) {
-            Toast.makeText(mCtx, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             Toast.makeText(mCtx, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
@@ -112,7 +107,7 @@ public class WishlistHelpers {
      */
     public static ArrayList<MtgCard> ReadWishlist(Context mCtx) {
 
-        ArrayList<MtgCard> lWishlist = new ArrayList<MtgCard>();
+        ArrayList<MtgCard> lWishlist = new ArrayList<>();
 
         try {
             String line;
@@ -181,9 +176,9 @@ public class WishlistHelpers {
         ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
 
 		/* Get all potential sets and rarities for this card */
-        final ArrayList<String> potentialSetCodes = new ArrayList<String>();
-        final ArrayList<Character> potentialRarities = new ArrayList<Character>();
-        final ArrayList<String> potentialNumbers = new ArrayList<String>();
+        final ArrayList<String> potentialSetCodes = new ArrayList<>();
+        final ArrayList<Character> potentialRarities = new ArrayList<>();
+        final ArrayList<String> potentialNumbers = new ArrayList<>();
 
 		/* Open the database */
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
@@ -375,7 +370,7 @@ public class WishlistHelpers {
          * @param card The MtgCard which will be the base for this object
          */
         public CompressedWishlistInfo(MtgCard card) {
-            mInfo = new ArrayList<IndividualSetInfo>();
+            mInfo = new ArrayList<>();
             mCard = card;
             add(mCard);
         }

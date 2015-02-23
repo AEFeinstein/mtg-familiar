@@ -344,7 +344,6 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="rules_copy_tag">MTG Rule</string>
 
     <!-- Profile activity -->
-    <string name="profile_dci_number">DCI Number</string>
     <string name="profile_update_dci">Update DCI Number</string>
     <string name="profile_remove_dci">Remove DCI Number</string>
     <string name="profile_update_dci_dialog_title">   Enter your DCI number</string>

@@ -181,7 +181,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
 
                     if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 											/* Do some speaking, on the alarm stream */
-                        HashMap<String, String> ttsParams = new HashMap<String, String>();
+                        HashMap<String, String> ttsParams = new HashMap<>();
                         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, WARNING_SPEECH);
                         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_ALARM));
                         mTts.speak(mTextToSpeak, TextToSpeech.QUEUE_FLUSH, ttsParams);

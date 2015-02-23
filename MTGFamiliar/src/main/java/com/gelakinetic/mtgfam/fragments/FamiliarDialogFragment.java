@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
@@ -47,4 +48,13 @@ public class FamiliarDialogFragment extends DialogFragment {
         super.onDestroyView();
     }
 
+    /**
+     * Lint complains if onCreateDialog returns null, but it's fine if the dialog won't be shown
+     * @return null, since the dialog won't be shown
+     */
+    @SuppressWarnings("SameReturnValue")
+    protected Dialog DontShowDialog() {
+        setShowsDialog(false);
+        return null;
+    }
 }

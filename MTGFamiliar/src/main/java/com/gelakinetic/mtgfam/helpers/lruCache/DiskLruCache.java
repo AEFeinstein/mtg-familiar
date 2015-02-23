@@ -99,6 +99,7 @@ import java.util.concurrent.TimeUnit;
  * Callers should handle other problems by catching {@code IOException} and
  * responding appropriately.
  */
+@SuppressWarnings("ALL")
 public final class DiskLruCache implements Closeable {
     private static final String JOURNAL_FILE = "journal";
     private static final String JOURNAL_FILE_TMP = "journal.tmp";

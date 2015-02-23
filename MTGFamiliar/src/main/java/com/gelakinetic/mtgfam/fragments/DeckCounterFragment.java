@@ -67,7 +67,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
             mDeckCountSequence = StringToArray(savedInstanceState.getString(SEQUENCE_KEY));
         } else {
             mDeckCount = 0;
-            mDeckCountSequence = new ArrayList<Integer>();
+            mDeckCountSequence = new ArrayList<>();
         }
 
         StringBuilder history = new StringBuilder();
@@ -169,7 +169,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      */
     private ArrayList<Integer> StringToArray(String string) {
         String parts[] = string.split(",");
-        ArrayList<Integer> list = new ArrayList<Integer>(parts.length - 1);
+        ArrayList<Integer> list = new ArrayList<>(parts.length - 1);
         for (String part : parts) {
             try {
                 list.add(Integer.parseInt(part));

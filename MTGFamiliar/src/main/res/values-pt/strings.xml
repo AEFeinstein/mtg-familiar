@@ -234,7 +234,6 @@
     <string name="pref_wishlist_prices_title">Mostrar preços das cartas</string>
     <string name="pref_wishlist_totals_summary">Mostrar o valor total da lista</string>
     <string name="pref_wishlist_totals_title">Mostrar Preço Total</string>
-    <string name="profile_dci_number">Número DCI</string>
     <string name="profile_invalid_dci">Número DCI inválido digitado</string>
     <string name="profile_no_dci">Você não digitou o número DCI</string>
     <string name="profile_planeswalker_points">Pontos Planeswalker</string>
@@ -359,7 +358,7 @@
     <string name="update_added_mtr">Novas Regras de Torneio Magic</string>
     <string name="update_added_rules">concluir novos regulamentos</string>
     <string name="update_notification">Procurando atualizações do banco de dados</string>
-    <string name="update_updating_rules">Atualizando regras completas ...</string>
+    <string name="update_updating_rules">Atualizando regras completas …</string>
     <string name="update_updating_set">Adicionando %s</string>
     <string name="wishlist_add_card">Adicionar</string>
     <string name="wishlist_ascending">Crescente</string>

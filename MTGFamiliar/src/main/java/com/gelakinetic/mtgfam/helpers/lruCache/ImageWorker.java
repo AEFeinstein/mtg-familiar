@@ -36,6 +36,7 @@ import java.lang.ref.WeakReference;
  * ImageView. It handles things like using a memory and disk cache, running the work in a background
  * thread and setting a placeholder image.
  */
+@SuppressWarnings("ALL")
 public abstract class ImageWorker {
     private static final String TAG = "ImageWorker";
     private static final int FADE_IN_TIME = 200;
