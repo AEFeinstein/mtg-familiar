@@ -100,7 +100,7 @@
     <string name="life_counter_spoken_poison_singular">%1$s tem %2$d contador de veneno.</string>
     <string name="main_about">Sobre o que</string>
     <string name="main_about_text">Este aplicativo é o meu presente para a comunidade MTG. &lt;br&gt; Por favor envie perguntas, comentários, preocupações e louvor a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt; mtg.familiar@gmail.com &lt;/a&gt;. &lt;br&gt; Junte-se à &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt; comunidade beta &lt;/a&gt; no Google+. &lt;br&gt; Junte-se à &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt; projeto open source &lt;/a&gt; no GitHub. &lt;br&gt; Obrigado a todos os colaboradores, incluindo, mas não limitado a, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener e bcGiR. &lt;br&gt; Obrigado a todos os tradutores, incluindo, mas não limitado a, Ghislain, Piotr, Víctor, Emilio, e Alan. &lt;br&gt; Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt; Bluewizard.net &lt;/a&gt;), Robert Schultz (&lt;a href=\"http://www.mtgimage.com\"&gt; mtgimage.com &lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt; TCGPlayer.com &lt;/a&gt;). &lt;br&gt; Graças a reddit  \'s &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt; / r / magictcg &lt;/a&gt; para testes e feedback. &lt;br&gt; agradecimento especial a Richard Garfield eo resto das pessoas em &lt;a href =\" http://www.wizards.com/magic \" &gt; Wizards of the Coast. &lt;/a&gt; &lt;br&gt; -gelakinetic &lt;br&gt; Magic the Gathering e Magic the Gathering cartões são ™ &amp; © Wizards of the Coast LLC. &lt;br&gt; &lt;a href = \"https://github.com/octo-online/robospice\"&gt; Robospice &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt; &lt;br&gt; &lt;a href = \"https:. / /github.com/fengdai/AlertDialogPro\"&gt;AlertDialogPro &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;. &lt;br&gt; &lt;a href = \"https://github.com/derekbrameyer/android -betterpickers \"&gt; BetterPickers &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;. &lt;br&gt; &lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt; PagerSlidingTabStrip &lt;/ a &gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;. &lt;br&gt; Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;. &lt;br&gt; mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .</string>
-    <string name="main_card_search">Pesquisa de carta</string>
+    <string name="main_card_search">Procurar Carta</string>
     <string name="main_dice">Dados</string>
     <string name="main_donate_dialog_title">Doações para desenvolvedores</string>
     <string name="main_donate_text">Quanto você pagaria por uma excelente aplicação de Magic como este? €1000? €10.000? &lt;br&gt;&lt;br&gt; Bem, se você está lendo isso, então você sabe que nós estamos dando livre. &lt;br&gt;&lt;br&gt; Escrever código é um trabalho árduo e nós, os desenvolvedores, nós apreciamos cada euro que recebemos . &lt;br&gt;&lt;br&gt; Temos um vício para manter rascunhos, ok? &lt;br&gt;&lt;br&gt; pode pressionar o botão abaixo e doar através do Paypal. € 1 é bom, 5 € são melhores. Você me entende. &lt;br&gt;&lt;br&gt; Então, como você está hoje generosidade?</string>
@@ -125,7 +125,7 @@
     <string name="main_profile">Perfil</string>
     <string name="main_rules">Regras</string>
     <string name="main_settings_title">Definições</string>
-    <string name="main_timer">Tempo Rodada</string>
+    <string name="main_timer">Cronônometro</string>
     <string name="main_trade">Trocas de Cartas</string>
     <string name="main_tts_warning_text">Esta aplicação tem a capacidade de usar a síntese de voz (Text-to-Speech) para algumas funções, mas não parece tê-lo instalado. Se você quer instalar, use o link \"Instalar Text-to-Speech \" no menu de configurações.</string>
     <string name="main_tts_warning_title">TTS (Text-to-Speech)</string>
@@ -181,7 +181,7 @@
     <string name="pref_dim_lock_level_summary">Selecione o nível de brilho para suavizar a tela</string>
     <string name="pref_dim_lock_level_title">Brilho da tela</string>
     <string name="pref_dim_lock_summary">Reduza o brilho da tela depois de inatividade</string>
-    <string name="pref_dim_lock_title">Ative tela suavização</string>
+    <string name="pref_dim_lock_title">Ativar tela de suavização</string>
     <string name="pref_display_mode_summary">Escolha como exibir o contador de vida</string>
     <string name="pref_display_mode_title">Modo de Visualização</string>
     <string name="pref_English">Inglês</string>
@@ -211,7 +211,7 @@
     <string name="pref_show_art_summary">Exibir uma imagem oficial da carta em vez de texto de regras.</string>
     <string name="pref_show_art_title">Sempre Mostrar Arte da Carta</string>
     <string name="pref_show_mana_title">Mostrar Custo de Mana</string>
-    <string name="pref_show_pt_title">Mostra Poder/Resistência</string>
+    <string name="pref_show_pt_title">Mostrar Poder/Resistência</string>
     <string name="pref_show_set_title">Mostrar Coleção</string>
     <string name="pref_show_type_title">Mostrar Tipo/Subtipo</string>
     <string name="pref_Spanish">Espanhol</string>
