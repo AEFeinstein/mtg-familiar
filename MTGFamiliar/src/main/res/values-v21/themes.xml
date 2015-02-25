@@ -23,4 +23,10 @@
         <item name="bpButtonBackground">@drawable/btn_ripple_borderless_dark</item>
     </style>
 
+    <style name="Theme.transparent" parent="Theme.AppCompat.Dialog">
+        <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
+        <item name="android:colorPrimary">@color/material_purple_500</item>
+        <item name="android:colorPrimaryDark">@color/material_purple_700</item>
+    </style>
+
 </resources>

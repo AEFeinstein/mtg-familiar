@@ -233,4 +233,9 @@
         <item name="bpButtonBackground">@drawable/btn_default_custom_borderless</item>
     </style>
 
+    <style name="Theme.transparent" parent="Theme.AppCompat.Dialog">
+        <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
+        <item name="colorPrimary">@color/material_purple_500</item>
+        <item name="colorPrimaryDark">@color/material_purple_700</item>
+    </style>
 </resources>
