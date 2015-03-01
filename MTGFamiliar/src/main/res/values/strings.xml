@@ -155,23 +155,6 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="search_Rare">Rare</string>
     <string name="search_Mythic">Mythic</string>
     <string name="search_Timeshifted">Timeshifted</string>
-    <string name="search_Artifact">Artifact</string>
-    <string name="search_Basic">Basic</string>
-    <string name="search_Creature">Creature</string>
-    <string name="search_Enchantment">Enchantment</string>
-    <string name="search_Instant">Instant</string>
-    <string name="search_Land">Land</string>
-    <string name="search_Legendary">Legendary</string>
-    <string name="search_Ongoing">Ongoing</string>
-    <string name="search_Plane">Plane</string>
-    <string name="search_Planeswalker">Planeswalker</string>
-    <string name="search_Scheme">Scheme</string>
-    <string name="search_Snow">Snow</string>
-    <string name="search_Sorcery">Sorcery</string>
-    <string name="search_Tribal">Tribal</string>
-    <string name="search_Vanguard">Vanguard</string>
-    <string name="search_World">World</string>
-    <string name="search_Conspiracy">Conspiracy</string>
 
     <!-- Card view activity -->
     <string name="card_view_transform">Transform</string>
