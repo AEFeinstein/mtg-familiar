@@ -1112,7 +1112,6 @@ public class CardViewFragment extends FamiliarFragment {
 
                 boolean bRetry = true;
 
-                boolean triedMtgImage = false;
                 boolean triedMtgi = false;
                 boolean triedGatherer = false;
 
@@ -1128,10 +1127,7 @@ public class CardViewFragment extends FamiliarFragment {
                             u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                             cardLanguage = "en";
                         } else {
-                            if (!triedMtgImage) {
-                                u = new URL("http://mtgimage.com/multiverseid/" + mMultiverseId + ".jpg");
-                                triedMtgImage = true;
-                            } else if (!triedMtgi) {
+                             if (!triedMtgi) {
                                 u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                                 triedMtgi = true;
                             } else {
