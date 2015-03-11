@@ -5,15 +5,16 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    height="314"
    width="329.6875"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="mtgfam-icon-material.svg"
-   inkscape:export-filename="/home/mfshick/mtgfam-material-example.png"
+   inkscape:export-filename="C:\Users\Adam Feinstein\Desktop\bitmap.png"
    inkscape:export-xdpi="279.53745"
    inkscape:export-ydpi="279.53745">
   <metadata
@@ -30,6 +31,21 @@
   </metadata>
   <defs
      id="defs8">
+    <linearGradient
+       id="linearGradient3778">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.15686275;"
+         offset="0"
+         id="stop3780" />
+      <stop
+         id="stop3788"
+         offset="0.3611111"
+         style="stop-color:#000000;stop-opacity:0.15686275;" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3782" />
+    </linearGradient>
     <clipPath
        id="presentation_clip_path"
        clipPathUnits="userSpaceOnUse">
@@ -103,6 +119,15 @@
          d="M -4,459 L 1135,459 1135,606 -4,606 -4,459 Z"
          id="path4308" />
     </g>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3778"
+       id="linearGradient3784"
+       x1="40.300671"
+       y1="27.162119"
+       x2="318.17331"
+       y2="305.03476"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -113,15 +138,15 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1855"
-     inkscape:window-height="1056"
+     inkscape:window-width="1856"
+     inkscape:window-height="1178"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="1.2127575"
-     inkscape:cx="111.62031"
-     inkscape:cy="156.862"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
+     inkscape:zoom="2.0987261"
+     inkscape:cx="164.84375"
+     inkscape:cy="157"
+     inkscape:window-x="56"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg2"
      fit-margin-top="5"
@@ -150,7 +175,7 @@
      d="m 164.84374,3.034635 c -28.34479,0 -52.43462,6.4510511 -76.982682,20.612552 C 63.313012,37.830496 45.674231,55.469268 31.490924,80.017321 17.329399,104.56537 10.878372,128.65518 10.878372,157.00001 c 0,1.18109 0.03219,2.33255 0.05459,3.49921 0.517901,-26.83174 6.986441,-49.95831 20.557876,-73.483473 C 45.674231,62.467694 63.313012,44.828922 87.861058,30.645613 112.40912,16.484112 136.49895,10.033061 164.84374,10.033061 c 28.34484,0 52.43463,6.451051 76.98269,20.612552 24.54805,14.183309 42.18683,31.822081 56.37013,56.370134 13.57142,23.525163 20.03998,46.651733 20.55788,73.483473 0.0225,-1.16666 0.0547,-2.31812 0.0547,-3.49921 0,-28.34483 -6.45105,-52.43464 -20.61256,-76.982689 C 284.01326,55.469268 266.37448,37.830496 241.82643,23.647187 217.27837,9.4856861 193.18858,3.034635 164.84374,3.034635 z"
      style="fill:#ffffff;fill-opacity:0.4;stroke:none" />
   <path
-     style="fill:#212121;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:0.10196079"
+     style="fill:url(#linearGradient3784);stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
      d="M 159.34375 22.5 L 40.1875 110.4375 L 125.3125 195.5625 L 78.03125 259.28125 L 114.4375 295.6875 L 124.625 305.875 C 137.35616 309.31772 150.55356 310.96875 164.84375 310.96875 C 193.18859 310.96875 217.26443 304.50528 241.8125 290.34375 C 266.36054 276.16045 284.00419 258.5168 298.1875 233.96875 C 312.34901 209.42069 318.8125 185.34482 318.8125 157 C 318.8125 148.63494 318.21953 140.65128 317.0625 132.90625 L 289.78125 105.625 L 253.46875 116.65625 L 159.34375 22.5 z "
      id="path5160" />
   <path
