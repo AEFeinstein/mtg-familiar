@@ -10,7 +10,6 @@
         style="@style/forty_eight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/abc_edit_text_material"
         android:hint="@string/gathering_custom_name"
         android:selectAllOnFocus="true" />
 
@@ -33,7 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dip"
             android:layout_weight="1"
-            android:background="?attr/abc_edit_text_material"
             android:gravity="center"
             android:inputType="number"
             android:selectAllOnFocus="true"

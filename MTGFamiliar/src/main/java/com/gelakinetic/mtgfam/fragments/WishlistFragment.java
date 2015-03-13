@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -33,7 +34,6 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.IndividualSetInfo;
@@ -88,7 +88,7 @@ public class WishlistFragment extends FamiliarFragment {
     private int wishlistSortOrder;  //ASCENDING v DESCENDING
 
     /* UI Elements */
-    private SafeAutoCompleteTextView mNameField;
+    private AutoCompleteTextView mNameField;
     private EditText mNumberField;
     private TextView mTotalPriceField;
     private CheckBox mFoilCheckBox;
@@ -126,7 +126,7 @@ public class WishlistFragment extends FamiliarFragment {
         };
 
 		/* set the autocomplete for card names */
-        mNameField = (SafeAutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
+        mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
         mNameField.setOnEditorActionListener(addCardListener);
 

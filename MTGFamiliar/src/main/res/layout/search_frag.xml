@@ -26,11 +26,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
+            <AutoCompleteTextView
                 android:id="@+id/name_search"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:background="?attr/abc_edit_text_material"
                 android:gravity="center_vertical"
                 android:hint="@string/search_name"
                 android:imeOptions="actionSearch"
@@ -38,7 +37,7 @@
                 android:singleLine="true">
 
                 <requestFocus />
-            </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
+            </AutoCompleteTextView>
 
             <LinearLayout
                 android:id="@+id/linearLayout12"
@@ -46,27 +45,27 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal">
 
-                <com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
+                <AutoCompleteTextView
                     android:id="@+id/supertypesearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="?attr/abc_edit_text_material"
                     android:hint="@string/search_supertype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    style="@style/Widget.AppCompat.AutoCompleteTextView"/>
 
                 <EditText
                     android:id="@+id/subtypesearch"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="?attr/abc_edit_text_material"
                     android:hint="@string/search_subtype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    style="@style/Widget.AppCompat.AutoCompleteTextView"/>
 
             </LinearLayout>
 
@@ -84,7 +83,6 @@
                 android:id="@+id/textsearch"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:background="?attr/abc_edit_text_material"
                 android:hint="@string/search_text"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
@@ -347,7 +345,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="?attr/abc_edit_text_material"
                     android:hint="@string/search_flavor_text"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
@@ -358,7 +355,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="?attr/abc_edit_text_material"
                     android:hint="@string/search_artist"
                     android:imeOptions="actionSearch"
                     android:inputType="text"

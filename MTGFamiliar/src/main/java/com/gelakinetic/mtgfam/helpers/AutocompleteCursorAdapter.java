@@ -28,6 +28,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.AutoCompleteTextView;
 import android.widget.SimpleCursorAdapter;
 
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
@@ -62,7 +63,7 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
      *                 Can be null if the cursor is not available yet.
      * @param textView The text view which we are watching for changes
      */
-    public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, SafeAutoCompleteTextView textView) {
+    public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, AutoCompleteTextView textView) {
         super(context.getActivity(), com.gelakinetic.mtgfam.R.layout.list_item_1, null, from, to, 0);
         mFragment = context;
         mFragment.getLoaderManager().initLoader(0, null, this);

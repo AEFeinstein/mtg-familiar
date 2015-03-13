@@ -21,7 +21,6 @@
         android:id="@+id/numberInput"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:background="?attr/abc_edit_text_material"
         android:ems="10"
         android:gravity="center"
         android:inputType="number"
