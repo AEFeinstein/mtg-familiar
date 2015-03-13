@@ -39,7 +39,7 @@
 
                 <Button
                     android:id="@+id/white_minus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_minus"
@@ -61,7 +61,7 @@
 
                 <Button
                     android:id="@+id/white_plus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_plus"
@@ -78,7 +78,7 @@
 
                 <Button
                     android:id="@+id/blue_minus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_minus"
@@ -101,7 +101,7 @@
 
                 <Button
                     android:id="@+id/blue_plus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_plus"
@@ -118,7 +118,7 @@
 
                 <Button
                     android:id="@+id/black_minus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_minus"
@@ -140,7 +140,7 @@
 
                 <Button
                     android:id="@+id/black_plus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_plus"
@@ -157,7 +157,7 @@
 
                 <Button
                     android:id="@+id/red_minus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_minus"
@@ -179,7 +179,7 @@
 
                 <Button
                     android:id="@+id/red_plus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_plus"
@@ -196,7 +196,7 @@
 
                 <Button
                     android:id="@+id/green_minus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_minus"
@@ -218,7 +218,7 @@
 
                 <Button
                     android:id="@+id/green_plus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_plus"
@@ -235,7 +235,7 @@
 
                 <Button
                     android:id="@+id/colorless_minus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_minus"
@@ -257,7 +257,7 @@
 
                 <Button
                     android:id="@+id/colorless_plus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_plus"
@@ -273,7 +273,7 @@
 
                 <Button
                     android:id="@+id/spell_minus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_minus"
@@ -295,7 +295,7 @@
 
                 <Button
                     android:id="@+id/spell_plus"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/mana_pool_plus"

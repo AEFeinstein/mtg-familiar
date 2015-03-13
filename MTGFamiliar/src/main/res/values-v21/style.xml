@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="button" parent="text.xlarge">
-        <item name="android:background">?attr/btn_ripple</item>
+    <style name="button_light" parent="text.xlarge">
+        <item name="android:background">@drawable/btn_ripple_light</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="button_light_dark" parent="text.xlarge">
+        <item name="android:background">@drawable/btn_ripple_dark</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:layout_marginRight">4dp</item>
         <item name="android:layout_marginTop">4dp</item>

@@ -696,17 +696,17 @@ public class SearchViewFragment extends FamiliarFragment {
         mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
         for (boolean aSetChecked : mSetChecked) {
             if (aSetChecked) {
-                mSetButton.setTextColor(getResources().getColor(R.color.material_purple_500));
+                mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
             }
         }
         mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
         if (mSelectedFormat != -1) {
-            mFormatButton.setTextColor(getResources().getColor(R.color.material_purple_500));
+            mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
         mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
         for (boolean aRarityChecked : mRarityChecked) {
             if (aRarityChecked) {
-                mRarityButton.setTextColor(getResources().getColor(R.color.material_purple_500));
+                mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
             }
         }
     }

@@ -35,6 +35,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -300,6 +301,11 @@ public class FamiliarActivity extends ActionBarActivity {
 		/* Switch the theme if the preference does not match the current theme */
         if (!themeString.equals(mPreferenceAdapter.getTheme())) {
             this.setTheme(otherTheme);
+        }
+
+        /* Set the system bar color programatically, for lollipop+ */
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
         }
 
         setContentView(R.layout.activity_main);

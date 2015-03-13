@@ -4,13 +4,16 @@
     <declare-styleable name="custom">
 
         <!-- misc -->
-        <attr name="btn_ripple" format="reference" />
+        <attr name="colorPrimary_attr" format="reference" />
+        <attr name="colorPrimaryDark_attr" format="reference" />
+        <attr name="colorPrimaryTransparent_attr" format="reference" />
         <attr name="abc_edit_text_material" format="reference" />
         <attr name="grey_border" format="reference" />
         <attr name="color_text" format="reference" />
         <attr name="color_background" format="color|reference" />
         <attr name="glyph_pwk" format="reference" />
         <attr name="glyph_c" format="reference" />
+        <attr name="button" format="reference" />
 
         <!-- Rarity Colors -->
         <attr name="color_common" format="color|reference" />

@@ -21,4 +21,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
     <solid android:color="@android:color/transparent" />
 
+    <stroke
+        android:width="2dp"
+        android:color="@color/colorPrimaryDark_dark" />
 </shape>

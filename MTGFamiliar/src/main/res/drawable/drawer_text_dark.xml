@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/material_purple_500" android:state_selected="true" />
-    <item android:color="@color/material_purple_500" android:state_checked="true" />
-    <item android:color="@color/material_purple_500" android:state_activated="true" />
+    <item android:color="@color/colorPrimary_dark" android:state_selected="true" />
+    <item android:color="@color/colorPrimary_dark" android:state_checked="true" />
+    <item android:color="@color/colorPrimary_dark" android:state_activated="true" />
     <item android:color="@color/drawer_text_unselected_dark" />
 </selector>

@@ -2,6 +2,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.base.light" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="com.gelakinetic.mtgfam:colorPrimary_attr">@color/colorPrimary_light</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimaryDark_attr">@color/colorPrimaryDark_light</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_light</item>
+
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
         <item name="searchViewStyle">@style/MySearchViewStyle</item>
 
@@ -105,6 +110,11 @@
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat">
+
+        <item name="com.gelakinetic.mtgfam:colorPrimary_attr">@color/colorPrimary_dark</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimaryDark_attr">@color/colorPrimaryDark_dark</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_dark</item>
+
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material</item>
 
         <item name="searchViewStyle">@style/MySearchViewStyle</item>
@@ -205,13 +215,15 @@
     </style>
 
     <style name="Theme.light" parent="Theme.base.light">
-        <item name="colorPrimary">@color/material_purple_500</item>
-        <item name="colorPrimaryDark">@color/material_purple_700</item>
+        <item name="colorPrimary">@color/material_blue_grey_400</item>
+        <item name="colorPrimaryDark">@color/material_blue_grey_600</item>
+        <item name="com.gelakinetic.mtgfam:button">@drawable/btn_default_custom_light</item>
     </style>
 
     <style name="Theme.dark" parent="Theme.base.dark">
-        <item name="colorPrimary">@color/material_purple_500</item>
-        <item name="colorPrimaryDark">@color/material_purple_700</item>
+        <item name="colorPrimary">@color/material_blue_grey_800</item>
+        <item name="colorPrimaryDark">@color/material_blue_grey_900</item>
+        <item name="com.gelakinetic.mtgfam:button">@drawable/btn_default_custom_dark</item>
     </style>
 
     <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
@@ -224,18 +236,19 @@
     </style>
 
     <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
-        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless</item>
-        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless</item>
+        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless_light</item>
+        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless_light</item>
     </style>
 
     <style name="MyCustomBetterPickerTheme" parent="@style/BetterPickersDialogFragment">
-        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless</item>
-        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless</item>
+        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless_dark</item>
+        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless_dark</item>
     </style>
 
     <style name="Theme.transparent" parent="Theme.AppCompat.Dialog">
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
-        <item name="colorPrimary">@color/material_purple_500</item>
-        <item name="colorPrimaryDark">@color/material_purple_700</item>
+        <item name="colorPrimary">@color/material_blue_grey_400</item>
+        <item name="colorPrimaryTransparent_attr">@color/material_blue_grey_400_transparent</item>
+        <item name="colorPrimaryDark">@color/material_blue_grey_600</item>
     </style>
 </resources>
