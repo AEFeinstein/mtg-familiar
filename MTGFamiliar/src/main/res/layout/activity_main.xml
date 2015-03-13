@@ -16,8 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary_attr"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            android:minHeight="?attr/actionBarSize" />
 
         <!-- The main content view -->
         <com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout

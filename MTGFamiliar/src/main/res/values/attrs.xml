@@ -4,11 +4,11 @@
     <declare-styleable name="custom">
 
         <!-- misc -->
-        <attr name="colorPrimary_attr" format="reference" />
-        <attr name="colorPrimaryDark_attr" format="reference" />
-        <attr name="colorPrimaryTransparent_attr" format="reference" />
+        <attr name="colorPrimary_attr" format="color|reference" />
+        <attr name="colorPrimaryDark_attr" format="color|reference" />
+        <attr name="colorPrimaryTransparent_attr" format="color|reference" />
         <attr name="grey_border" format="reference" />
-        <attr name="color_text" format="reference" />
+        <attr name="color_text" format="color|reference" />
         <attr name="color_background" format="color|reference" />
         <attr name="glyph_pwk" format="reference" />
         <attr name="glyph_c" format="reference" />
@@ -47,6 +47,9 @@
         <attr name="ic_drawer_profile" format="reference" />
         <attr name="ic_drawer_save" format="reference" />
         <attr name="ic_drawer_load" format="reference" />
+
+        <attr name="ic_menu_search" format="reference" />
+
         <attr name="lc_commander_disabled" format="reference" />
         <attr name="lc_commander_enabled" format="reference" />
         <attr name="lc_life_disabled" format="reference" />

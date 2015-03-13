@@ -8,7 +8,6 @@
         <item name="com.gelakinetic.mtgfam:colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_light</item>
 
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
-        <item name="searchViewStyle">@style/MySearchViewStyle</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -104,6 +103,8 @@
 
         <item name="com.gelakinetic.mtgfam:glyph_pwk">@drawable/glyph_pwk_light</item>
         <item name="com.gelakinetic.mtgfam:glyph_c">@drawable/glyph_c_light</item>
+
+        <item name="com.gelakinetic.mtgfam:ic_menu_search">@drawable/ic_menu_search_light</item>
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat">
@@ -113,8 +114,6 @@
         <item name="com.gelakinetic.mtgfam:colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_dark</item>
 
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material</item>
-
-        <item name="searchViewStyle">@style/MySearchViewStyle</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -206,6 +205,8 @@
 
         <item name="com.gelakinetic.mtgfam:glyph_pwk">@drawable/glyph_pwk_dark</item>
         <item name="com.gelakinetic.mtgfam:glyph_c">@drawable/glyph_c_dark</item>
+
+        <item name="com.gelakinetic.mtgfam:ic_menu_search">@drawable/ic_menu_search_dark</item>
     </style>
 
     <style name="Theme.light" parent="Theme.base.light">
@@ -218,13 +219,6 @@
         <item name="colorPrimary">@color/material_blue_grey_800</item>
         <item name="colorPrimaryDark">@color/material_blue_grey_900</item>
         <item name="com.gelakinetic.mtgfam:button">@drawable/btn_default_custom_dark</item>
-    </style>
-
-    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <!-- Close button icon -->
-        <item name="closeIcon">@drawable/ic_close_dark</item>
-        <!-- Search button icon -->
-        <item name="searchIcon">@drawable/ic_menu_search</item>
     </style>
 
     <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
