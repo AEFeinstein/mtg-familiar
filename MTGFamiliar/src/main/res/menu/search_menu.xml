@@ -21,19 +21,19 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
     <item
         android:id="@+id/search_menu_clear"
-        android:icon="@drawable/ic_menu_close"
+        android:icon="?attr/ic_menu_close"
         android:title="@string/search_clear_fields"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/search_menu_save_defaults"
-        android:icon="@drawable/ic_menu_save"
+        android:icon="?attr/ic_menu_save"
         android:title="@string/search_save_defaults"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/search_menu_load_defaults"
-        android:icon="@drawable/ic_menu_folder_open"
+        android:icon="?attr/ic_menu_folder_open"
         android:title="@string/search_load_defaults"
         app:showAsAction="ifRoom" />
 
