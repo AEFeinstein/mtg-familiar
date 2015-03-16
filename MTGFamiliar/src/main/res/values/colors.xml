@@ -55,19 +55,12 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="dark_grey">#BEBEBE</color>
 
     <!-- Theme Colors -->
-    <color name="material_blue_grey_400">#FF78909C</color>
-    <color name="material_blue_grey_400_transparent">#6078909C</color>
-    <color name="material_blue_grey_600">#FF546E7A</color>
-    <color name="material_blue_grey_800">#FF37474F</color>
-    <color name="material_blue_grey_800_transparent">#6037474F</color>
-    <color name="material_blue_grey_900">#FF263238</color>
-
-    <color name="colorPrimary_light" > #FF78909C</color>
+    <color name="colorPrimary_light" > #FF78909C</color> <!-- material_blue_grey_400 -->
     <color name="colorPrimaryTransparent_light" >#6078909C</color>
-    <color name="colorPrimaryDark_light" >#FF546E7A</color>
+    <color name="colorPrimaryDark_light" >#FF546E7A</color> <!-- material_blue_grey_600 -->
 
-    <color name="colorPrimary_dark" >#FF37474F</color>
+    <color name="colorPrimary_dark" >#FF37474F</color> <!-- material_blue_grey_800 -->
     <color name="colorPrimaryTransparent_dark" >#6037474F</color>
-    <color name="colorPrimaryDark_dark" >#FF263238</color>
+    <color name="colorPrimaryDark_dark" >#FF263238</color> <!-- material_blue_grey_900 -->
 
 </resources>
