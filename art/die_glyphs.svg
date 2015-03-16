@@ -10,15 +10,15 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="736.78009"
-   height="269.32709"
+   width="888"
+   height="1024"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="die_glyphs.svg"
-   inkscape:export-filename="C:\Users\afeinstein\Desktop\bitmap.png"
-   inkscape:export-xdpi="401.7175"
-   inkscape:export-ydpi="401.7175">
+   inkscape:export-filename="C:\Users\Adam Feinstein\Desktop\die.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <linearGradient
@@ -162,21 +162,21 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.5172264"
-     inkscape:cx="347.45126"
-     inkscape:cy="145.77008"
+     inkscape:zoom="0.93652344"
+     inkscape:cx="444"
+     inkscape:cy="512"
      inkscape:document-units="px"
-     inkscape:current-layer="g4258"
+     inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1855"
-     inkscape:window-height="1058"
-     inkscape:window-x="57"
+     inkscape:window-width="1856"
+     inkscape:window-height="1178"
+     inkscape:window-x="56"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     fit-margin-top="5"
-     fit-margin-left="5"
-     fit-margin-right="5"
-     fit-margin-bottom="5" />
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -193,38 +193,15 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(81.37398,88.69997)">
+     transform="translate(74.837042,228.3779)">
     <g
-       id="g4227"
-       transform="translate(-3.810023,0)">
-      <path
-         inkscape:connector-curvature="0"
-         inkscape:export-ydpi="99.310349"
-         inkscape:export-xdpi="99.310349"
-         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d2.png"
-         id="path2985"
-         d="m 184.62253,119.11714 c 0,30.37566 -24.62434,55 -55.00001,55 -30.375657,0 -54.999997,-24.62434 -54.999997,-55 0,-30.375664 24.62434,-55.000004 54.999997,-55.000004 30.37567,0 55.00001,24.62434 55.00001,55.000004 z"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0" />
-      <text
-         xml:space="preserve"
-         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-         x="111.5444"
-         y="142.19525"
-         id="text3046"
-         sodipodi:linespacing="125%"><tspan
-           sodipodi:role="line"
-           id="tspan3048"
-           x="111.5444"
-           y="142.19525">2</tspan></text>
-    </g>
-    <g
-       id="g4232"
-       transform="translate(4.8515563,0)">
+       id="g3095"
+       transform="matrix(2.3071322,0,0,2.2999996,-285.72114,137.65275)">
       <path
          inkscape:export-ydpi="92.07373"
          inkscape:export-xdpi="92.07373"
          inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d4.png"
-         transform="matrix(1.0575699,0,0,1.057787,14.006393,38.164274)"
+         transform="matrix(1.0575699,0,0,1.057787,18.857949,38.164274)"
          inkscape:transform-center-y="-18.333333"
          d="m 311.03905,128.52575 -120.0781,0 L 251,24.535057 z"
          inkscape:randomized="0"
@@ -238,22 +215,159 @@
          sodipodi:cx="251"
          sodipodi:sides="3"
          id="path2987"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:2.83640075;stroke-miterlimit:4;stroke-dasharray:none"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.23131025;stroke-miterlimit:4;stroke-dasharray:none"
          sodipodi:type="star" />
       <text
          xml:space="preserve"
-         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-         x="259.19083"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         x="264.04239"
          y="155.86713"
          id="text3054"
          sodipodi:linespacing="125%"><tspan
            sodipodi:role="line"
            id="tspan3056"
-           x="259.19083"
+           x="264.04239"
            y="155.86713">4</tspan></text>
     </g>
     <g
-       id="g3133">
+       id="g3085"
+       transform="matrix(2.3099642,0,0,2.2999996,-1275.3187,393.65273)">
+      <path
+         inkscape:export-ydpi="92.07373"
+         inkscape:export-xdpi="92.07373"
+         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d8.png"
+         transform="matrix(1.0575699,0,0,1.057787,318.85795,38.164274)"
+         inkscape:transform-center-y="-18.333336"
+         d="m 311.03905,128.52575 -120.0781,0 L 251,24.535057 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="true"
+         sodipodi:arg2="1.5707963"
+         sodipodi:arg1="0.52359878"
+         sodipodi:r2="34.663563"
+         sodipodi:r1="69.327126"
+         sodipodi:cy="93.862183"
+         sodipodi:cx="251"
+         sodipodi:sides="3"
+         id="path2987-2"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.23055518;stroke-miterlimit:4;stroke-dasharray:none"
+         sodipodi:type="star" />
+      <text
+         xml:space="preserve"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         x="566.13611"
+         y="156.21124"
+         id="text3062"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3064"
+           x="566.13611"
+           y="156.21124">8</tspan></text>
+    </g>
+    <g
+       id="g3068"
+       transform="matrix(2.307132,0,0,2.2999996,-1.2719698,470.70421)">
+      <path
+         inkscape:export-ydpi="92.07373"
+         inkscape:export-xdpi="92.07373"
+         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d20.png"
+         transform="matrix(1.05757,0,0,1.057787,23.85793,-106.64073)"
+         inkscape:transform-center-y="-18.333327"
+         d="m 311.03905,128.52575 -120.0781,0 L 251,24.535057 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="true"
+         sodipodi:arg2="1.5707963"
+         sodipodi:arg1="0.52359878"
+         sodipodi:r2="34.663563"
+         sodipodi:r1="69.327126"
+         sodipodi:cy="93.862183"
+         sodipodi:cx="251"
+         sodipodi:sides="3"
+         id="path2987-2-2"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.23131013;stroke-miterlimit:4;stroke-dasharray:none"
+         sodipodi:type="star" />
+      <text
+         xml:space="preserve"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         x="253.30803"
+         y="24.406242"
+         id="text3070"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3072"
+           x="253.30803"
+           y="24.406242">20</tspan></text>
+    </g>
+    <g
+       id="g3061"
+       transform="matrix(2.298219,0,0,2.2999986,-232.91519,470.70415)">
+      <path
+         inkscape:transform-center-y="-5.8065015"
+         transform="matrix(0.97213658,0,0,0.97210302,-809.11414,113.50332)"
+         d="m 969.78046,-199.764 59.49004,43.22203 -22.7232,69.934705 -73.5337,-2e-6 -22.72316,-69.934703 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="true"
+         sodipodi:arg2="-0.9424778"
+         sodipodi:arg1="-1.5707963"
+         sodipodi:r2="50.605228"
+         sodipodi:r1="62.551502"
+         sodipodi:cy="-137.21249"
+         sodipodi:cx="969.78046"
+         sodipodi:sides="5"
+         id="path4141"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.34227633;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="star" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3997"
+         y="3.56213"
+         x="100.20754"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         xml:space="preserve"><tspan
+           y="3.56213"
+           x="100.20754"
+           id="tspan3999"
+           sodipodi:role="line">1</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4001"
+         y="3.890255"
+         x="127.1448"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         xml:space="preserve"><tspan
+           y="3.890255"
+           x="127.1448"
+           id="tspan4003"
+           sodipodi:role="line">2</tspan></text>
+    </g>
+    <g
+       id="g3100"
+       transform="matrix(2.2999997,0,0,2.3000001,376.85377,-374.34732)">
+      <path
+         inkscape:connector-curvature="0"
+         inkscape:export-ydpi="99.310349"
+         inkscape:export-xdpi="99.310349"
+         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d2.png"
+         id="path2985"
+         d="m 180.81251,119.11714 c 0,30.37566 -24.62434,55 -55.00001,55 -30.37566,0 -55,-24.62434 -55,-55 0,-30.375664 24.62434,-55.000004 55,-55.000004 30.37567,0 55.00001,24.62434 55.00001,55.000004 z"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.30434787;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0" />
+      <text
+         xml:space="preserve"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         x="107.73438"
+         y="142.19525"
+         id="text3046"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3048"
+           x="107.73438"
+           y="142.19525">2</tspan></text>
+    </g>
+    <g
+       id="g3090"
+       transform="matrix(2.3,0,0,2.3000002,-313.14624,-118.34735)">
       <path
          transform="matrix(1.1398811,0,0,1.1398811,-67.186077,-11.812094)"
          inkscape:export-ydpi="115.77889"
@@ -271,11 +385,11 @@
          sodipodi:cx="432.5"
          sodipodi:sides="4"
          id="path2989"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:2.63185334;stroke-miterlimit:4;stroke-dasharray:none"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.14428401;stroke-miterlimit:4;stroke-dasharray:none"
          sodipodi:type="star" />
       <text
          xml:space="preserve"
-         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
          x="406.90622"
          y="141.86713"
          id="text3058"
@@ -286,126 +400,53 @@
            y="141.86713">6</tspan></text>
     </g>
     <g
-       id="g4237"
-       transform="translate(14.002509,0)">
-      <path
-         inkscape:export-ydpi="92.07373"
-         inkscape:export-xdpi="92.07373"
-         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d8.png"
-         transform="matrix(1.0575699,0,0,1.057787,304.85544,38.164274)"
-         inkscape:transform-center-y="-18.333336"
-         d="m 311.03905,128.52575 -120.0781,0 L 251,24.535057 z"
-         inkscape:randomized="0"
-         inkscape:rounded="0"
-         inkscape:flatsided="true"
-         sodipodi:arg2="1.5707963"
-         sodipodi:arg1="0.52359878"
-         sodipodi:r2="34.663563"
-         sodipodi:r1="69.327126"
-         sodipodi:cy="93.862183"
-         sodipodi:cx="251"
-         sodipodi:sides="3"
-         id="path2987-2"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:2.83640075;stroke-miterlimit:4;stroke-dasharray:none"
-         sodipodi:type="star" />
-      <text
-         xml:space="preserve"
-         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-         x="552.13361"
-         y="156.21124"
-         id="text3062"
-         sodipodi:linespacing="125%"><tspan
-           sodipodi:role="line"
-           id="tspan3064"
-           x="552.13361"
-           y="156.21124">8</tspan></text>
-    </g>
-    <g
-       id="g4258"
-       transform="translate(-675.70101,-144.805)">
-      <path
-         inkscape:export-ydpi="92.07373"
-         inkscape:export-xdpi="92.07373"
-         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d20.png"
-         transform="matrix(1.05757,0,0,1.057787,699.55894,38.164274)"
-         inkscape:transform-center-y="-18.333327"
-         d="m 311.03905,128.52575 -120.0781,0 L 251,24.535057 z"
-         inkscape:randomized="0"
-         inkscape:rounded="0"
-         inkscape:flatsided="true"
-         sodipodi:arg2="1.5707963"
-         sodipodi:arg1="0.52359878"
-         sodipodi:r2="34.663563"
-         sodipodi:r1="69.327126"
-         sodipodi:cy="93.862183"
-         sodipodi:cx="251"
-         sodipodi:sides="3"
-         id="path2987-2-2"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:2.83640051;stroke-miterlimit:4;stroke-dasharray:none"
-         sodipodi:type="star" />
-      <text
-         xml:space="preserve"
-         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-         x="929.00903"
-         y="169.21124"
-         id="text3070"
-         sodipodi:linespacing="125%"><tspan
-           sodipodi:role="line"
-           id="tspan3072"
-           x="929.00903"
-           y="169.21124">20</tspan></text>
-    </g>
-    <g
-       id="g3125"
-       transform="translate(-745,-144.805)">
+       id="g3073"
+       transform="matrix(2.2999999,0,0,2.3,-620.63099,214.70418)">
       <path
          inkscape:connector-curvature="0"
          inkscape:export-ydpi="99.310349"
          inkscape:export-xdpi="99.310349"
          inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d2.png"
          id="path2985-9"
-         d="m 1230.8125,119.11715 c 0,30.37565 -24.6243,54.99999 -55,54.99999 -30.3756,0 -55,-24.62434 -55,-54.99999 0,-30.375677 24.6244,-55.000017 55,-55.000017 30.3757,0 55,24.62434 55,55.000017 z"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:2.99999976;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0" />
-      <g
-         transform="translate(57.692688,8.1526279e-6)"
-         id="g3942">
-        <text
-           xml:space="preserve"
-           style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-           x="1067.12"
-           y="141.86713"
-           id="text3135"
-           sodipodi:linespacing="125%"><tspan
-             sodipodi:role="line"
-             id="tspan3137"
-             x="1067.12"
-             y="141.86713">1</tspan></text>
-        <text
-           xml:space="preserve"
-           style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-           x="1093.3384"
-           y="141.86713"
-           id="text3139"
-           sodipodi:linespacing="125%"><tspan
-             sodipodi:role="line"
-             id="tspan3141"
-             x="1093.3384"
-             y="141.86713">00</tspan></text>
-      </g>
+         d="m 485.8125,-25.68785 c 0,30.37565 -24.6243,54.99999 -55,54.99999 -30.3756,0 -55,-24.62434 -55,-54.99999 0,-30.375677 24.6244,-55.000017 55,-55.000017 30.3757,0 55,24.62434 55,55.000017 z"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.30434775;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3135"
+         y="-2.9378636"
+         x="379.81268"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         xml:space="preserve"><tspan
+           y="-2.9378636"
+           x="379.81268"
+           id="tspan3137"
+           sodipodi:role="line">1</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3139"
+         y="-2.9378636"
+         x="406.03107"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         xml:space="preserve"><tspan
+           y="-2.9378636"
+           x="406.03107"
+           id="tspan3141"
+           sodipodi:role="line">00</tspan></text>
     </g>
     <g
-       id="g4221">
+       id="g3105"
+       transform="matrix(2.2999999,0,0,2.3000002,118.39161,-374.34734)">
       <path
          inkscape:export-ydpi="88.448273"
          inkscape:export-xdpi="88.448273"
          inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/dcoin.png"
          id="path2985-3"
          d="m 35.809272,119.11714 c 0,30.37566 -24.624337,55 -55,55 -30.375663,0 -55,-24.62434 -55,-55 0,-30.375661 24.624337,-54.999999 55,-54.999999 30.375663,0 55,24.624338 55,54.999999 z"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.30434787;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0"
          inkscape:connector-curvature="0" />
       <text
          xml:space="preserve"
-         style="font-size:53.12544632px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
+         style="font-size:53.12544632px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
          x="-71.369354"
          y="132.52039"
          id="text3048"
@@ -420,55 +461,8 @@
            id="tspan3052" /></text>
     </g>
     <g
-       id="g4250"
-       transform="translate(-695.33886,-144.805)">
-      <path
-         inkscape:transform-center-y="-5.8065015"
-         transform="matrix(0.97213658,0,0,0.97210302,-113.77528,258.30832)"
-         d="m 969.78046,-199.764 59.49004,43.22203 -22.7232,69.934705 -73.5337,-2e-6 -22.72316,-69.934703 z"
-         inkscape:randomized="0"
-         inkscape:rounded="0"
-         inkscape:flatsided="true"
-         sodipodi:arg2="-0.9424778"
-         sodipodi:arg1="-1.5707963"
-         sodipodi:r2="50.605228"
-         sodipodi:r1="62.551502"
-         sodipodi:cy="-137.21249"
-         sodipodi:cx="969.78046"
-         sodipodi:sides="5"
-         id="path4141"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:3.0860393;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         sodipodi:type="star" />
-      <g
-         transform="translate(52.546399,87.320255)"
-         id="g4005">
-        <text
-           xml:space="preserve"
-           style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-           x="743"
-           y="61.046875"
-           id="text3997"
-           sodipodi:linespacing="125%"><tspan
-             sodipodi:role="line"
-             id="tspan3999"
-             x="743"
-             y="61.046875">1</tspan></text>
-        <text
-           xml:space="preserve"
-           style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-           x="769.93726"
-           y="61.375"
-           id="text4001"
-           sodipodi:linespacing="125%"><tspan
-             sodipodi:role="line"
-             id="tspan4003"
-             x="769.93726"
-             y="61.375">2</tspan></text>
-      </g>
-    </g>
-    <g
-       id="g4242"
-       transform="translate(-714.24898,-144.805)">
+       id="g3054"
+       transform="matrix(2.2999955,0,0,2.3,419.80281,-41.295551)">
       <path
          inkscape:export-ydpi="110.96032"
          inkscape:export-xdpi="110.96032"
@@ -476,57 +470,64 @@
          sodipodi:nodetypes="ccccc"
          inkscape:connector-curvature="0"
          id="path2993"
-         d="m 692.19366,64.117132 -52.13218,83.242358 c 18.03437,7.80964 35.64726,17.78805 53.12281,26.75765 l 52.13218,-26.75765 C 725.58064,121.9032 709.3856,91.568462 692.19366,64.117132 z"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none" />
-      <g
-         transform="translate(46.579722,82.489998)"
-         id="g4019">
-        <text
-           xml:space="preserve"
-           style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
-           x="613"
-           y="73.046875"
-           id="text4011"
-           sodipodi:linespacing="125%"><tspan
-             sodipodi:role="line"
-             id="tspan4013"
-             x="613"
-             y="73.046875">1</tspan></text>
-        <text
-           xml:space="preserve"
-           style="font-size:64px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Beleren;-inkscape-font-specification:Beleren Bold"
-           x="639.21851"
-           y="73.046875"
-           id="text4015"
-           sodipodi:linespacing="125%"><tspan
-             sodipodi:role="line"
-             id="tspan4017"
-             x="639.21851"
-             y="73.046875">0</tspan></text>
-      </g>
+         d="M -22.05532,-80.687868 -74.1875,2.55449 c 18.03437,7.80964 35.64726,17.78805 53.12281,26.75765 L 31.06749,2.55449 C 11.33166,-22.9018 -4.86338,-53.236538 -22.05532,-80.687868 z"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.30434918;stroke-miterlimit:4;stroke-dasharray:none" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4011"
+         y="10.731873"
+         x="-54.669258"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         xml:space="preserve"><tspan
+           y="10.731873"
+           x="-54.669258"
+           id="tspan4013"
+           sodipodi:role="line">1</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4015"
+         y="10.731873"
+         x="-28.450754"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
+         xml:space="preserve"><tspan
+           y="10.731873"
+           x="-28.450754"
+           id="tspan4017"
+           sodipodi:role="line">0</tspan></text>
     </g>
     <g
-       id="g3120"
-       transform="translate(-745,-144.805)">
+       id="g3080"
+       transform="matrix(2.2999999,0,0,2.3000001,-1261.6158,214.70335)">
       <path
          inkscape:connector-curvature="0"
          inkscape:export-ydpi="99.310349"
          inkscape:export-xdpi="99.310349"
          inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d2.png"
          id="path2985-9-7"
-         d="m 1380.8125,119.11751 c 0,30.37565 -24.6243,54.99999 -55,54.99999 -30.3756,0 -55,-24.62434 -55,-54.99999 0,-30.375673 24.6244,-55.000013 55,-55.000013 30.3757,0 55,24.62434 55,55.000013 z"
-         style="fill:#9C27B0;fill-opacity:1;stroke:#000000;stroke-width:2.99999976;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0" />
+         d="m 635.8125,-25.68749 c 0,30.37565 -24.6243,54.99999 -55,54.99999 -30.3756,0 -55,-24.62434 -55,-54.99999 0,-30.375673 24.6244,-55.000013 55,-55.000013 30.3757,0 55,24.62434 55,55.000013 z"
+         style="fill:#586c76;fill-opacity:1;stroke:#000000;stroke-width:1.30434763;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dashoffset:0" />
       <text
          sodipodi:linespacing="125%"
          id="text3107"
-         y="141.86749"
-         x="1305.4219"
-         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:beleren;-inkscape-font-specification:beleren"
+         y="-2.9375074"
+         x="560.42188"
+         style="font-size:64px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Roboto;-inkscape-font-specification:Roboto"
          xml:space="preserve"><tspan
-           y="141.86749"
-           x="1305.4219"
+           y="-2.9375074"
+           x="560.42188"
            id="tspan3109"
            sodipodi:role="line">X</tspan></text>
     </g>
-  </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3046"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Shonar Bangla;-inkscape-font-specification:Shonar Bangla"
+       transform="matrix(1,0,0,1.0007237,15821.838,32068.158)"><flowRegion
+         id="flowRegion3048"><rect
+           id="rect3050"
+           width="141.72856"
+           height="146.93918"
+           x="-14.068644"
+           y="-21.424889" /></flowRegion><flowPara
+         id="flowPara3052"></flowPara></flowRoot>  </g>
 </svg>
