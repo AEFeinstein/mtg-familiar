@@ -9,7 +9,7 @@
         <item name="android:layout_marginBottom">4dp</item>
     </style>
 
-    <style name="button_light_dark" parent="text.xlarge">
+    <style name="button_dark" parent="text.xlarge">
         <item name="android:background">@drawable/btn_ripple_dark</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:layout_marginRight">4dp</item>

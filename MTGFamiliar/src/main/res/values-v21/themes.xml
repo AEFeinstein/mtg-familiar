@@ -4,13 +4,11 @@
     <style name="Theme.light" parent="Theme.base.light">
         <item name="android:colorPrimary">@color/material_blue_grey_400</item>
         <item name="android:colorPrimaryDark">@color/material_blue_grey_600</item>
-        <item name="com.gelakinetic.mtgfam:button">@drawable/btn_ripple_light</item>
     </style>
 
     <style name="Theme.dark" parent="Theme.base.dark">
         <item name="android:colorPrimary">@color/material_blue_grey_800</item>
         <item name="android:colorPrimaryDark">@color/material_blue_grey_900</item>
-        <item name="com.gelakinetic.mtgfam:button">@drawable/btn_ripple_dark</item>
     </style>
 
     <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
