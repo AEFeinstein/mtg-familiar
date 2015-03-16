@@ -30,6 +30,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -229,6 +231,7 @@ public class FamiliarActivity extends ActionBarActivity {
             }
         }
     };
+    private DrawerEntryArrayAdapter mPagesAdapter;
 
     /**
      * Start the Spice Manager when the activity starts
@@ -341,9 +344,9 @@ public class FamiliarActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		/* set up the drawer's list view with items and click listener */
-        DrawerEntryArrayAdapter pagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
+        mPagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
 
-        mDrawerList.setAdapter(pagesAdapter);
+        mDrawerList.setAdapter(mPagesAdapter);
         mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -407,6 +410,7 @@ public class FamiliarActivity extends ActionBarActivity {
                     case R.string.main_card_search:
                     case R.string.main_life_counter:
                     case R.string.main_profile: {
+                        mPagesAdapter.colorDrawerEntry((TextView) view.findViewById(R.id.drawer_entry_name));
                         selectItem(mPageEntries[i].mNameResource, null);
                         break;
                     }
@@ -1366,6 +1370,7 @@ public class FamiliarActivity extends ActionBarActivity {
      */
     public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
         private final DrawerEntry[] values;
+        private Drawable mHighlightedDrawable;
 
         /**
          * Constructor. The context will be used to inflate views later. The array of values will be used to populate
@@ -1417,9 +1422,26 @@ public class FamiliarActivity extends ActionBarActivity {
                 assert convertView != null;
                 ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
                 ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconResource), 0, 0, 0);
+                /* Color the initial icon */
+                if(mCurrentFrag == position && mHighlightedDrawable == null) {
+                    colorDrawerEntry(((TextView) convertView.findViewById(R.id.drawer_entry_name)));
+                }
             }
 
             return convertView;
+        }
+
+        /**
+         * Applies the primary color to the selected icon in the drawer
+         *
+         * @param v The TextView to color
+         */
+        void colorDrawerEntry(TextView v) {
+            if(mHighlightedDrawable != null) {
+                mHighlightedDrawable.setColorFilter(null);
+            }
+            mHighlightedDrawable = v.getCompoundDrawables()[0];
+            mHighlightedDrawable.setColorFilter(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
         }
     }
 
