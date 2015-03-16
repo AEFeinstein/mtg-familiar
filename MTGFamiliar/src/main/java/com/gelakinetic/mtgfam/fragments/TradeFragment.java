@@ -166,6 +166,7 @@ public class TradeFragment extends FamiliarFragment {
                 mLeftList.remove(position);
                 /* Redraw this side */
                 mLeftAdapter.notifyDataSetChanged();
+                UpdateTotalPrices(LEFT);
                 return true;
             }
         });
@@ -177,6 +178,7 @@ public class TradeFragment extends FamiliarFragment {
                 mRightList.remove(position);
                 /* Redraw this side */
                 mRightAdapter.notifyDataSetChanged();
+                UpdateTotalPrices(RIGHT);
                 return true;
             }
         });
