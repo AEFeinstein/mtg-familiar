@@ -231,7 +231,6 @@ public class FamiliarActivity extends ActionBarActivity {
             }
         }
     };
-    private DrawerEntryArrayAdapter mPagesAdapter;
 
     /**
      * Start the Spice Manager when the activity starts
@@ -344,9 +343,9 @@ public class FamiliarActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		/* set up the drawer's list view with items and click listener */
-        mPagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
+        DrawerEntryArrayAdapter pagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
 
-        mDrawerList.setAdapter(mPagesAdapter);
+        mDrawerList.setAdapter(pagesAdapter);
         mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -410,7 +409,6 @@ public class FamiliarActivity extends ActionBarActivity {
                     case R.string.main_card_search:
                     case R.string.main_life_counter:
                     case R.string.main_profile: {
-                        mPagesAdapter.colorDrawerEntry((TextView) view.findViewById(R.id.drawer_entry_name));
                         selectItem(mPageEntries[i].mNameResource, null);
                         break;
                     }
@@ -1423,8 +1421,11 @@ public class FamiliarActivity extends ActionBarActivity {
                 ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
                 ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconResource), 0, 0, 0);
                 /* Color the initial icon */
-                if(mCurrentFrag == position && mHighlightedDrawable == null) {
+                if(mCurrentFrag == position) {
                     colorDrawerEntry(((TextView) convertView.findViewById(R.id.drawer_entry_name)));
+                }
+                else {
+                    ((TextView) convertView.findViewById(R.id.drawer_entry_name)).getCompoundDrawables()[0].setColorFilter(null);
                 }
             }
 
@@ -1434,13 +1435,13 @@ public class FamiliarActivity extends ActionBarActivity {
         /**
          * Applies the primary color to the selected icon in the drawer
          *
-         * @param v The TextView to color
+         * @param textView The TextView to color
          */
-        void colorDrawerEntry(TextView v) {
+        void colorDrawerEntry(TextView textView) {
             if(mHighlightedDrawable != null) {
                 mHighlightedDrawable.setColorFilter(null);
             }
-            mHighlightedDrawable = v.getCompoundDrawables()[0];
+            mHighlightedDrawable = textView.getCompoundDrawables()[0];
             mHighlightedDrawable.setColorFilter(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
         }
     }
