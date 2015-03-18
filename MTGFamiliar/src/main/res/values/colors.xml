@@ -33,12 +33,12 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 
     <!--Drawer Colors -->
     <color name="drawer_background_light">#EEEEEE</color>
-    <color name="drawer_text_unselected_light">#8A000000</color> <!-- TODO recolor icons too -->
+    <color name="drawer_text_unselected_light">#8A000000</color>
     <color name="drawer_divider_item_light">#1A000000</color>
     <color name="drawer_item_selected_light">#18000000</color>
 
     <color name="drawer_background_dark">#303030</color>
-    <color name="drawer_text_unselected_dark">#B3FFFFFF</color> <!-- TODO recolor icons too -->
+    <color name="drawer_text_unselected_dark">#B3FFFFFF</color>
     <color name="drawer_divider_item_dark">#26FFFFFF</color>
     <color name="drawer_item_selected_dark">#5CFFFFFF</color>
 
