@@ -142,7 +142,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
         }
 
         /* Color the die faces */
-        int color = getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr));
+        int color = getResources().getColor(R.color.colorPrimary_light);
         d2.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         d4.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         d6.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
