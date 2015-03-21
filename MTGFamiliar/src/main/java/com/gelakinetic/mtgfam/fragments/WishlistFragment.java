@@ -169,6 +169,7 @@ public class WishlistFragment extends FamiliarFragment {
 
 				/* Redraw the new wishlist */
                 mWishlistAdapter.notifyDataSetChanged();
+                sumTotalPrice();
                 return true;
             }
         });
