@@ -335,7 +335,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         super.onPrepareOptionsMenu(menu);
         MenuItem menuItem = menu.findItem(R.id.announce_life);
         assert menuItem != null;
-        if (!mTtsInit || !getFamiliarActivity().mIsMenuVisible) {
+        if (!mTtsInit || getFamiliarActivity() == null || !getFamiliarActivity().mIsMenuVisible) {
             menuItem.setVisible(false);
         } else {
             menuItem.setVisible(true);

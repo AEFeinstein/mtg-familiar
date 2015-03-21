@@ -553,7 +553,7 @@ public class GatheringsFragment extends FamiliarFragment {
         }
 
         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0 ||
-                !getFamiliarActivity().mIsMenuVisible) {
+                getFamiliarActivity() == null || !getFamiliarActivity().mIsMenuVisible) {
             deleteGathering.setVisible(false);
             loadGathering.setVisible(false);
         } else {
