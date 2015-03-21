@@ -231,6 +231,7 @@ public class FamiliarActivity extends ActionBarActivity {
             }
         }
     };
+    private DrawerEntryArrayAdapter mPagesAdapter;
 
     /**
      * Start the Spice Manager when the activity starts
@@ -343,9 +344,9 @@ public class FamiliarActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		/* set up the drawer's list view with items and click listener */
-        DrawerEntryArrayAdapter pagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
+        mPagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
 
-        mDrawerList.setAdapter(pagesAdapter);
+        mDrawerList.setAdapter(mPagesAdapter);
         mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -667,6 +668,7 @@ public class FamiliarActivity extends ActionBarActivity {
             startUpdatingDisplay();
         }
         mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
+        mPagesAdapter.notifyDataSetChanged(); /* To properly color icons when popping activities */
     }
 
     /**
