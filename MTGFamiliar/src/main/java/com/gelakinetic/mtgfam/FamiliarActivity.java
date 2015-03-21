@@ -30,11 +30,14 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -228,6 +231,7 @@ public class FamiliarActivity extends ActionBarActivity {
             }
         }
     };
+    private DrawerEntryArrayAdapter mPagesAdapter;
 
     /**
      * Start the Spice Manager when the activity starts
@@ -302,6 +306,11 @@ public class FamiliarActivity extends ActionBarActivity {
             this.setTheme(otherTheme);
         }
 
+        /* Set the system bar color programatically, for lollipop+ */
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
+        }
+
         setContentView(R.layout.activity_main);
 
         DatabaseManager.initializeInstance(new DatabaseHelper(getApplicationContext()));
@@ -335,9 +344,9 @@ public class FamiliarActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
 		/* set up the drawer's list view with items and click listener */
-        DrawerEntryArrayAdapter pagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
+        mPagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
 
-        mDrawerList.setAdapter(pagesAdapter);
+        mDrawerList.setAdapter(mPagesAdapter);
         mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -381,7 +390,7 @@ public class FamiliarActivity extends ActionBarActivity {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-				/* FamiliarFragments will automatically close the drawer when they hit onResume(). It's more precise
+                /* FamiliarFragments will automatically close the drawer when they hit onResume(). It's more precise
 				   than a delayed handler. Other options have to close the drawer themselves */
                 boolean shouldCloseDrawer = false;
                 switch (mPageEntries[i].mNameResource) {
@@ -659,6 +668,7 @@ public class FamiliarActivity extends ActionBarActivity {
             startUpdatingDisplay();
         }
         mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
+        mPagesAdapter.notifyDataSetChanged(); /* To properly color icons when popping activities */
     }
 
     /**
@@ -833,7 +843,37 @@ public class FamiliarActivity extends ActionBarActivity {
 			/* Check to see if the current fragment did anything with the search key */
             return ((FamiliarFragment) f).onInterceptSearchKey() || super.onKeyDown(keyCode, event);
         }
+        /* Dinky workaround for LG phones: https://code.google.com/p/android/issues/detail?id=78154 */
+        else if ((keyCode == KeyEvent.KEYCODE_MENU) &&
+                (Build.VERSION.SDK_INT == 16) &&
+                (Build.MANUFACTURER.compareTo("LGE") == 0)) {
+            return true;
+        }
+
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * Called when a key was released and not handled by any of the views inside of the activity.
+     * So, for example, key presses while the cursor is inside a TextView will not trigger the event
+     * (unless it is a navigation to another object) because TextView handles its own key presses.
+     * The default implementation handles KEYCODE_BACK to stop the activity and go back.
+     * This has a dinky workaround for LG phones
+     *
+     * @param keyCode The value in event.getKeyCode().
+     * @param event   Description of the key event.
+     * @return If you handled the event, return true. If you want to allow the event to be handled
+     * by the next receiver, return false.
+     */
+    @Override
+    public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_MENU) &&
+                (Build.VERSION.SDK_INT == 16) &&
+                (Build.MANUFACTURER.compareTo("LGE") == 0)) {
+            openOptionsMenu();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     /**
@@ -1181,7 +1221,9 @@ public class FamiliarActivity extends ActionBarActivity {
         mInactivityHandler.removeCallbacks(userInactive);
         mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
         mUserInactive = false;
-    }    /**
+    }
+
+    /**
      * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
      * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment
      */
@@ -1360,6 +1402,7 @@ public class FamiliarActivity extends ActionBarActivity {
      */
     public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
         private final DrawerEntry[] values;
+        private Drawable mHighlightedDrawable;
 
         /**
          * Constructor. The context will be used to inflate views later. The array of values will be used to populate
@@ -1411,9 +1454,28 @@ public class FamiliarActivity extends ActionBarActivity {
                 assert convertView != null;
                 ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
                 ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconResource), 0, 0, 0);
+                /* Color the initial icon */
+                if (mCurrentFrag == position) {
+                    colorDrawerEntry(((TextView) convertView.findViewById(R.id.drawer_entry_name)));
+                } else {
+                    ((TextView) convertView.findViewById(R.id.drawer_entry_name)).getCompoundDrawables()[0].setColorFilter(null);
+                }
             }
 
             return convertView;
+        }
+
+        /**
+         * Applies the primary color to the selected icon in the drawer
+         *
+         * @param textView The TextView to color
+         */
+        void colorDrawerEntry(TextView textView) {
+            if (mHighlightedDrawable != null) {
+                mHighlightedDrawable.setColorFilter(null);
+            }
+            mHighlightedDrawable = textView.getCompoundDrawables()[0];
+            mHighlightedDrawable.setColorFilter(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
         }
     }
 

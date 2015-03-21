@@ -136,7 +136,7 @@ public class ProfileFragment extends FamiliarFragment {
         assert updateDCI != null;
         assert removeDCI != null;
 
-        if (!getFamiliarActivity().mIsMenuVisible) {
+        if (getFamiliarActivity() == null || !getFamiliarActivity().mIsMenuVisible) {
             updateDCI.setVisible(false);
             removeDCI.setVisible(false);
         } else if (mDCINumber != null && !mDCINumber.isEmpty()) {

@@ -33,7 +33,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_purple_500" />
+        android:background="?attr/colorPrimary_attr" />
 
     <Button
         android:id="@+id/mtr_ipg_jump_to_top"

@@ -6,6 +6,6 @@
         android:id="@android:id/mask"
         android:drawable="@android:color/black" />
 
-    <item android:drawable="@drawable/btn_default_normal_custom" />
+    <item android:drawable="@drawable/btn_default_normal_custom_light" />
 
 </ripple>

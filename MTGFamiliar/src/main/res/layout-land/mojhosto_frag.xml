@@ -61,7 +61,7 @@
 
                 <Button
                     android:id="@+id/momir_button"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
@@ -114,7 +114,7 @@
 
                 <Button
                     android:id="@+id/stonehewer_button"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
@@ -148,7 +148,7 @@
 
                 <Button
                     android:id="@+id/jhorira_instant_button"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"
@@ -158,7 +158,7 @@
 
                 <Button
                     android:id="@+id/jhorira_sorcery_button"
-                    style="@style/button"
+                    style="?attr/button"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
                     android:layout_margin="4dp"

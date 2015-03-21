@@ -14,25 +14,23 @@
             android:id="@+id/numberInput"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:background="?attr/abc_edit_text_material"
             android:ems="10"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="2"
             android:selectAllOnFocus="true" />
 
-        <com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView
+        <AutoCompleteTextView
             android:id="@+id/namesearch"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="?attr/abc_edit_text_material"
             android:hint="@string/search_name"
             android:inputType="text">
 
             <requestFocus />
-        </com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView>
+        </AutoCompleteTextView>
 
         <LinearLayout
             android:layout_width="48dp"
@@ -64,7 +62,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_purple_500" />
+                android:background="?attr/colorPrimary_attr" />
 
             <Button
                 android:id="@+id/addCardLeft"
@@ -77,7 +75,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_purple_500" />
+                android:background="?attr/colorPrimary_attr" />
 
             <TextView
                 android:id="@+id/priceTextLeft"
@@ -120,7 +118,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_purple_500" />
+                android:background="?attr/colorPrimary_attr" />
 
             <Button
                 android:id="@+id/addCardRight"
@@ -133,7 +131,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/material_purple_500" />
+                android:background="?attr/colorPrimary_attr" />
 
             <TextView
                 android:id="@+id/priceTextRight"

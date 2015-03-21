@@ -10,7 +10,7 @@
         android:id="@+id/divider1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_purple_500" />
+        android:background="?attr/colorPrimary_attr" />
 
     <Button
         android:id="@+id/show_card_button"
@@ -24,7 +24,7 @@
         android:id="@+id/divider2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_purple_500" />
+        android:background="?attr/colorPrimary_attr" />
 
     <ScrollView
         android:layout_width="match_parent"

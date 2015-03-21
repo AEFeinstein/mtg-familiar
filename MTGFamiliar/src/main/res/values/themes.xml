@@ -2,17 +2,18 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.base.light" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="com.gelakinetic.mtgfam:colorPrimary_attr">@color/colorPrimary_light</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimaryDark_attr">@color/colorPrimaryDark_light</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_light</item>
+
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
-        <item name="searchViewStyle">@style/MySearchViewStyle</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
         <item name="com.gelakinetic.mtgfam:color_background">@color/background_light</item>
 
-        <item name="com.gelakinetic.mtgfam:abc_edit_text_material">
-            @drawable/abc_edit_text_material_light
-        </item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_light</item>
         <item name="com.gelakinetic.mtgfam:color_text">@android:color/primary_text_light</item>
 
@@ -32,31 +33,31 @@
         </item>
         <item name="com.gelakinetic.mtgfam:selector_drawer_text">@drawable/drawer_text_light</item>
 
-        <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_state_light
+        <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_light
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_judge">@drawable/ic_drawer_judge_state_light
+        <item name="com.gelakinetic.mtgfam:ic_drawer_judge">@drawable/ic_drawer_judge_light
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_life">@drawable/ic_drawer_life_state_light
+        <item name="com.gelakinetic.mtgfam:ic_drawer_life">@drawable/ic_drawer_life_light
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_mana">@drawable/ic_drawer_mana_state_light
+        <item name="com.gelakinetic.mtgfam:ic_drawer_mana">@drawable/ic_drawer_mana_light
         </item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_mojhosto">
-            @drawable/ic_drawer_mojhosto_state_light
+            @drawable/ic_drawer_mojhosto_light
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_rules">@drawable/ic_drawer_rules_state_light
+        <item name="com.gelakinetic.mtgfam:ic_drawer_rules">@drawable/ic_drawer_rules_light
         </item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_search">
-            @drawable/ic_drawer_search_state_light
+            @drawable/ic_drawer_search_light
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_state_light
+        <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_light
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_state_light
+        <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_light
         </item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_wishlist">
-            @drawable/ic_drawer_wishlist_state_light
+            @drawable/ic_drawer_wishlist_light
         </item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_profile">
-            @drawable/ic_drawer_profile_state_light
+            @drawable/ic_drawer_profile_light
         </item>
 
         <item name="com.gelakinetic.mtgfam:ic_drawer_about">@drawable/ic_drawer_about_light</item>
@@ -102,21 +103,47 @@
 
         <item name="com.gelakinetic.mtgfam:glyph_pwk">@drawable/glyph_pwk_light</item>
         <item name="com.gelakinetic.mtgfam:glyph_c">@drawable/glyph_c_light</item>
+
+        <item name="com.gelakinetic.mtgfam:ic_menu_search">@drawable/ic_menu_search_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_card_image">@drawable/ic_menu_card_image_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_change_set">@drawable/ic_menu_change_set_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_close">@drawable/ic_menu_close_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_delete">@drawable/ic_menu_delete_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_folder_open">@drawable/ic_menu_folder_open_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_grid">@drawable/ic_menu_grid_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_group">@drawable/ic_menu_group_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_group_add">@drawable/ic_menu_group_add_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_import_export">@drawable/ic_menu_import_export_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_legality">@drawable/ic_menu_legality_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_notifications_on">@drawable/ic_menu_notifications_on_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_person_add">@drawable/ic_menu_person_add_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_person_remove">@drawable/ic_menu_person_remove_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_price">@drawable/ic_menu_price_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_random">@drawable/ic_menu_random_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_rules">@drawable/ic_menu_rules_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_save">@drawable/ic_menu_save_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_share">@drawable/ic_menu_share_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_sort">@drawable/ic_menu_sort_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_volume_up">@drawable/ic_menu_volume_up_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_warning">@drawable/ic_menu_warning_light</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_wishlist">@drawable/ic_menu_wishlist_light</item>
+
+        <item name="com.gelakinetic.mtgfam:button">@style/button_light</item>
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat">
-        <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material</item>
 
-        <item name="searchViewStyle">@style/MySearchViewStyle</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimary_attr">@color/colorPrimary_dark</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimaryDark_attr">@color/colorPrimaryDark_dark</item>
+        <item name="com.gelakinetic.mtgfam:colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_dark</item>
+
+        <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material</item>
 
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
         <item name="com.gelakinetic.mtgfam:color_background">@color/background_dark</item>
 
-        <item name="com.gelakinetic.mtgfam:abc_edit_text_material">
-            @drawable/abc_edit_text_material_dark
-        </item>
         <item name="com.gelakinetic.mtgfam:grey_border">@drawable/grey_border_dark</item>
         <item name="com.gelakinetic.mtgfam:color_text">@android:color/primary_text_dark</item>
 
@@ -136,30 +163,30 @@
         </item>
         <item name="com.gelakinetic.mtgfam:selector_drawer_text">@drawable/drawer_text_dark</item>
 
-        <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_state_dark
+        <item name="com.gelakinetic.mtgfam:ic_drawer_dice">@drawable/ic_drawer_dice_dark
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_judge">@drawable/ic_drawer_judge_state_dark
+        <item name="com.gelakinetic.mtgfam:ic_drawer_judge">@drawable/ic_drawer_judge_dark
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_life">@drawable/ic_drawer_life_state_dark
+        <item name="com.gelakinetic.mtgfam:ic_drawer_life">@drawable/ic_drawer_life_dark
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_mana">@drawable/ic_drawer_mana_state_dark
+        <item name="com.gelakinetic.mtgfam:ic_drawer_mana">@drawable/ic_drawer_mana_dark
         </item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_mojhosto">
-            @drawable/ic_drawer_mojhosto_state_dark
+            @drawable/ic_drawer_mojhosto_dark
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_rules">@drawable/ic_drawer_rules_state_dark
+        <item name="com.gelakinetic.mtgfam:ic_drawer_rules">@drawable/ic_drawer_rules_dark
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_search">@drawable/ic_drawer_search_state_dark
+        <item name="com.gelakinetic.mtgfam:ic_drawer_search">@drawable/ic_drawer_search_dark
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_state_dark
+        <item name="com.gelakinetic.mtgfam:ic_drawer_timer">@drawable/ic_drawer_timer_dark
         </item>
-        <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_state_dark
+        <item name="com.gelakinetic.mtgfam:ic_drawer_trade">@drawable/ic_drawer_trade_dark
         </item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_wishlist">
-            @drawable/ic_drawer_wishlist_state_dark
+            @drawable/ic_drawer_wishlist_dark
         </item>
         <item name="com.gelakinetic.mtgfam:ic_drawer_profile">
-            @drawable/ic_drawer_profile_state_dark
+            @drawable/ic_drawer_profile_dark
         </item>
 
         <item name="com.gelakinetic.mtgfam:ic_drawer_about">@drawable/ic_drawer_about_dark</item>
@@ -202,40 +229,58 @@
 
         <item name="com.gelakinetic.mtgfam:glyph_pwk">@drawable/glyph_pwk_dark</item>
         <item name="com.gelakinetic.mtgfam:glyph_c">@drawable/glyph_c_dark</item>
+
+        <item name="com.gelakinetic.mtgfam:ic_menu_search">@drawable/ic_menu_search_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_card_image">@drawable/ic_menu_card_image_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_change_set">@drawable/ic_menu_change_set_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_close">@drawable/ic_menu_close_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_delete">@drawable/ic_menu_delete_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_folder_open">@drawable/ic_menu_folder_open_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_grid">@drawable/ic_menu_grid_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_group">@drawable/ic_menu_group_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_group_add">@drawable/ic_menu_group_add_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_import_export">@drawable/ic_menu_import_export_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_legality">@drawable/ic_menu_legality_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_notifications_on">@drawable/ic_menu_notifications_on_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_person_add">@drawable/ic_menu_person_add_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_person_remove">@drawable/ic_menu_person_remove_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_price">@drawable/ic_menu_price_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_random">@drawable/ic_menu_random_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_rules">@drawable/ic_menu_rules_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_save">@drawable/ic_menu_save_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_share">@drawable/ic_menu_share_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_sort">@drawable/ic_menu_sort_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_volume_up">@drawable/ic_menu_volume_up_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_warning">@drawable/ic_menu_warning_dark</item>
+		<item name="com.gelakinetic.mtgfam:ic_menu_wishlist">@drawable/ic_menu_wishlist_dark</item>
+
+        <item name="com.gelakinetic.mtgfam:button">@style/button_dark</item>
     </style>
 
     <style name="Theme.light" parent="Theme.base.light">
-        <item name="colorPrimary">@color/material_purple_500</item>
-        <item name="colorPrimaryDark">@color/material_purple_700</item>
+        <item name="colorPrimary">@color/colorPrimary_light</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_light</item>
     </style>
 
     <style name="Theme.dark" parent="Theme.base.dark">
-        <item name="colorPrimary">@color/material_purple_500</item>
-        <item name="colorPrimaryDark">@color/material_purple_700</item>
-    </style>
-
-    <style name="MySearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <!-- Background for the search query section (e.g. EditText) -->
-        <item name="queryBackground">@drawable/abc_edit_text_material_dark</item>
-        <!-- Close button icon -->
-        <item name="closeIcon">@drawable/ic_close_dark</item>
-        <!-- Search button icon -->
-        <item name="searchIcon">@drawable/ic_menu_search</item>
+        <item name="colorPrimary">@color/colorPrimary_dark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_dark</item>
     </style>
 
     <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
-        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless</item>
-        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless</item>
+        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless_light</item>
+        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless_light</item>
     </style>
 
     <style name="MyCustomBetterPickerTheme" parent="@style/BetterPickersDialogFragment">
-        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless</item>
-        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless</item>
+        <item name="bpKeyBackground">@drawable/btn_default_custom_borderless_dark</item>
+        <item name="bpButtonBackground">@drawable/btn_default_custom_borderless_dark</item>
     </style>
 
     <style name="Theme.transparent" parent="Theme.AppCompat.Dialog">
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
-        <item name="colorPrimary">@color/material_purple_500</item>
-        <item name="colorPrimaryDark">@color/material_purple_700</item>
+        <item name="colorPrimary">@color/colorPrimary_light</item>
+        <item name="colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_light</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_light</item>
     </style>
 </resources>

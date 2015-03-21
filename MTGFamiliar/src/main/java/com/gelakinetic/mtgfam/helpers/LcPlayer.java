@@ -772,7 +772,7 @@ public class LcPlayer {
 
             if (mCommitting && position == 0) {
                 ((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
-                        R.color.material_purple_500));
+                        mFragment.getResourceIdFromAttr(R.attr.colorPrimary_attr)));
             } else {
                 ((TextView) view.findViewById(R.id.absolute)).setTextColor(mFragment.getActivity().getResources().getColor(
                         mFragment.getResourceIdFromAttr(R.attr.color_text)));

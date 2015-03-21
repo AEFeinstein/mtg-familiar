@@ -52,7 +52,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/material_purple_500" />
+        android:background="?attr/colorPrimary_attr" />
 
     <Button
         android:id="@+id/rt_action_button"

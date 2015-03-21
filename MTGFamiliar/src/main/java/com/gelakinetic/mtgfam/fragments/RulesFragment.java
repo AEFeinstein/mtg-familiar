@@ -493,7 +493,9 @@ public class RulesFragment extends FamiliarFragment {
         encodedInput = mGlyphPattern.matcher(encodedInput).replaceAll("\\<img src=\"$1\"/\\>");
         if (mKeywordPattern != null) {
             encodedInput = mKeywordPattern.matcher(encodedInput)
-                    .replaceAll("\\<font color=\"0x0099cc\"\\>$1\\</font\\>");
+                    .replaceAll("\\<font color=\"" +
+                            String.format("0x%06X", 0xFFFFFF & getResources().getColor(R.color.colorPrimaryDark_light)) +
+                            "\"\\>$1\\</font\\>");
         }
         encodedInput = mHyperlinkPattern.matcher(encodedInput).replaceAll("\\<a href=\"http://$2$3\"\\>$2$3\\</a\\>");
         encodedInput = encodedInput.replace("{", "").replace("}", "");

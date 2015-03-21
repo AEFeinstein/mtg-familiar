@@ -19,7 +19,6 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <!--<solid android:color="@android:color/transparent"/>-->
     <solid android:color="@android:color/transparent" />
 
 </shape>

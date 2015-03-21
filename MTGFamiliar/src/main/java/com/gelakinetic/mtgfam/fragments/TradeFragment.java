@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -30,7 +31,6 @@ import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.SafeAutoCompleteTextView;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -88,7 +88,7 @@ public class TradeFragment extends FamiliarFragment {
     private ArrayList<MtgCard> mRightList;
 
     /* UI Elements */
-    private SafeAutoCompleteTextView mNameEditText;
+    private AutoCompleteTextView mNameEditText;
     private EditText mNumberEditText;
     private CheckBox mCheckboxFoil;
     private int mPriceFetchRequests = 0;
@@ -114,7 +114,7 @@ public class TradeFragment extends FamiliarFragment {
 		/* Inflate the view, pull out UI elements */
         View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
         assert myFragmentView != null;
-        mNameEditText = (SafeAutoCompleteTextView) myFragmentView.findViewById(R.id.namesearch);
+        mNameEditText = (AutoCompleteTextView) myFragmentView.findViewById(R.id.namesearch);
         mNumberEditText = (EditText) myFragmentView.findViewById(R.id.numberInput);
         mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.trader_foil);
         mTotalPriceRight = (TextView) myFragmentView.findViewById(R.id.priceTextRight);
@@ -166,6 +166,7 @@ public class TradeFragment extends FamiliarFragment {
                 mLeftList.remove(position);
                 /* Redraw this side */
                 mLeftAdapter.notifyDataSetChanged();
+                UpdateTotalPrices(LEFT);
                 return true;
             }
         });
@@ -177,6 +178,7 @@ public class TradeFragment extends FamiliarFragment {
                 mRightList.remove(position);
                 /* Redraw this side */
                 mRightAdapter.notifyDataSetChanged();
+                UpdateTotalPrices(RIGHT);
                 return true;
             }
         });

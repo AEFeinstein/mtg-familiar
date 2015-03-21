@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -139,6 +140,18 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                 }
             });
         }
+
+        /* Color the die faces */
+        int color = getResources().getColor(R.color.colorPrimary_light);
+        d2.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        d4.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        d6.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        d8.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        d10.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        d12.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        d20.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        d100.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        dN.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         return myFragmentView;
     }
 

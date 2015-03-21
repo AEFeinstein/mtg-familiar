@@ -47,43 +47,6 @@ public abstract class FamiliarFragment extends Fragment {
     }
 
     /**
-     * Helper function to grab and EditTexts in a SearchView
-     *
-     * @param viewGroup A Group to recursively search for UI elements
-     * @param clazz     The class of UI element to search for
-     * @param <V>       The class of UI element to search for
-     * @return An ArrayList of UI elements of the given class in the viewGroup
-     */
-    private static <V extends View> Collection<V> findChildrenByClass(ViewGroup viewGroup, Class<V> clazz) {
-
-        return gatherChildrenByClass(viewGroup, clazz, new ArrayList<V>());
-    }
-
-    /**
-     * Helper function to grab and EditTexts in a SearchView
-     *
-     * @param viewGroup     A Group to recursively search for UI elements
-     * @param clazz         The class of UI element to search for
-     * @param <V>           The class of UI element to search for
-     * @param childrenFound A collection of UI elements
-     * @return An ArrayList of UI elements of the given class in the viewGroup
-     */
-    private static <V extends View> Collection<V> gatherChildrenByClass(ViewGroup viewGroup, Class<V> clazz, Collection<V> childrenFound) {
-
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            final View child = viewGroup.getChildAt(i);
-            if (clazz.isAssignableFrom(child.getClass())) {
-                childrenFound.add((V) child);
-            }
-            if (child instanceof ViewGroup) {
-                gatherChildrenByClass((ViewGroup) child, clazz, childrenFound);
-            }
-        }
-
-        return childrenFound;
-    }
-
-    /**
      * Assume that every fragment has a menu
      * Assume that every fragment wants to retain it's instance state (onCreate/onDestroy called
      * once, onCreateView called on rotations etc)
@@ -180,7 +143,7 @@ public abstract class FamiliarFragment extends Fragment {
         if (getActivity() != null) {
             if (canInterceptSearchKey()) {
                 menu.add(R.string.search_search)
-                        .setIcon(R.drawable.ic_menu_search)
+                        .setIcon(getResourceIdFromAttr(R.attr.ic_menu_search))
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
@@ -193,27 +156,11 @@ public abstract class FamiliarFragment extends Fragment {
                 SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
                 SearchView sv = new SearchView(getActivity());
                 try {
-                    for (TextView textView : findChildrenByClass(sv, TextView.class)) {
-                        textView.setTextColor(getResources().getColor(R.color.abc_primary_text_material_dark));
-                        textView.setHintTextColor(getResources().getColor(R.color.hint_foreground_material_dark));
-                    }
-
                     sv.setSearchableInfo(searchManager.getSearchableInfo(
                             new ComponentName("com.gelakinetic.mtgfam", "com.gelakinetic.mtgfam.FamiliarActivity")));
 
-					/* Fix for https://code.google.com/p/android/issues/detail?id=54745
-					 * found here http://stackoverflow.com/questions/9771603/customizing-android-widget-searchView */
-                    try {
-                        Field searchField = SearchView.class.getDeclaredField("mSearchButton");
-                        searchField.setAccessible(true);
-                        ImageView searchBtn = (ImageView) searchField.get(sv);
-                        searchBtn.setImageResource(R.drawable.ic_menu_search);
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-						/* eat it */
-                    }
-
                     MenuItem mi = menu.add(R.string.name_search_hint)
-                            .setIcon(R.drawable.ic_menu_search);
+                            .setIcon(getResourceIdFromAttr(R.attr.ic_menu_search));
                     MenuItemCompat.setActionView(mi, sv);
                     MenuItemCompat.setOnActionExpandListener(mi, new MenuItemCompat.OnActionExpandListener() {
                         @Override

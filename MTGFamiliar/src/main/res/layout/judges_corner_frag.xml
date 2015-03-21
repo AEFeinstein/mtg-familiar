@@ -27,7 +27,7 @@
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/material_purple_500"
+        android:background="?attr/colorPrimary_attr"
         android:textColor="@android:color/white"
         app:pstsIndicatorColor="@android:color/white" />
 

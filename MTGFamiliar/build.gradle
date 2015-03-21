@@ -13,11 +13,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 22
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -25,8 +25,6 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 }
@@ -41,9 +39,9 @@ dependencies {
     compile files('libs/guava-14.0.jar')
     compile 'com.google.code.findbugs:jsr305:3.0.0'
     compile 'javax.inject:javax.inject:1'
-    compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.android.support:support-v13:21.0.3'
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:support-v13:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.1'
     compile 'com.jpardogo.materialtabstrip:library:1.0.8'
     compile("com.doomonafireball.betterpickers:library:1.5.3") {
