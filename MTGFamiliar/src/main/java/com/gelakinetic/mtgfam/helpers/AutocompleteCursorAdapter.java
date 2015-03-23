@@ -215,7 +215,7 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
             if (convertView != null) {
                 return convertView;
             } else {
-                return mFragment.getLayoutInflater(null).inflate(R.layout.list_item_1, null);
+                return new View(mFragment.getActivity());
             }
         }
     }
