@@ -335,7 +335,7 @@ public class WishlistHelpers {
 			for (IndividualSetInfo isi : cwi.mInfo) {
 				readableWishlist
 						.append(isi.mNumberOf)
-						.append("x ")
+                        .append(' ')
 						.append(cwi.mCard.name);
                 if (exportSet) {
                     readableWishlist

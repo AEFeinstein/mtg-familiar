@@ -376,18 +376,43 @@ public class WishlistFragment extends FamiliarFragment {
 	 */
 	private void shareWishlist() {
 		/* Use a more generic send text intent. It can also do emails */
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
-        boolean exportSets = getFamiliarActivity().mPreferenceAdapter.getExportCardSet();
-		sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), exportSets));
-		sendIntent.setType("text/plain");
+        new AlertDialog.Builder(getFamiliarActivity())
+                .setTitle(R.string.wishlist_export_title)
+                .setMessage(R.string.wishlist_export_text)
+                .setPositiveButton(R.string.dialog_yes,
+                        new AlertDialog.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), true));
+                                sendIntent.setType("text/plain");
 
-		try {
-			startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
-		} catch (android.content.ActivityNotFoundException ex) {
-			Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
-		}
+                                try {
+                                    startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
+                                }
+
+                            }})
+                .setNegativeButton(R.string.dialog_no,
+                    new AlertDialog.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), false));
+                            sendIntent.setType("text/plain");
+
+                            try {
+                                startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
+                            } catch (android.content.ActivityNotFoundException ex) {
+                                Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
+                            }
+
+                    }})
+                .show();
+
 
 	}
 
