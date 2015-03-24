@@ -288,12 +288,6 @@
                 android:summary="@string/pref_wishlist_details_summary"
                 android:title="@string/pref_wishlist_details_title"/>
 
-            <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="@string/key_card_set_wishlist"
-                android:summary="@string/pref_wishlist_card_set_summary"
-                android:title="@string/pref_wishlist_card_set_title" />
-
         </PreferenceCategory>
 
     </PreferenceScreen>
