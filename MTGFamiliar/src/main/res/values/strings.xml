@@ -11,25 +11,26 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <resources>
-    <!-- General-purpose strings -->
-    <string name="app_name">MTG Familiar</string>
-    <string name="name_search_hint">Search Names</string>
-    <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_yes">Yes</string>
-    <string name="dialog_done">Done</string>
-    <string name="dialog_both">Both</string>
-    <string name="dialog_life">Life</string>
-    <string name="dialog_thanks">Thanks!</string>
-    <string name="dialog_thanks_anyway">Thanks Anyway!</string>
-    <string name="dialog_enjoy">Enjoy!</string>
-    <string name="update_notification">Checking for database updates</string>
-    <string name="update_updating_set">Adding %s</string>
-    <string name="update_updating_rules">Updating comprehensive rules</string>
-    <string name="update_added">Added</string>
-    <string name="update_added_rules">new comprehensive rules</string>
-    <string name="update_added_mtr">new Magic Tournament Rules</string>
-    <string name="update_added_ipg">new Infraction Procedure Guide</string>
+	<!-- General-purpose strings -->
+	<string name="app_name">MTG Familiar</string>
+	<string name="name_search_hint">Search Names</string>
+	<string name="dialog_ok">OK</string>
+	<string name="dialog_cancel">Cancel</string>
+	<string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+	<string name="dialog_done">Done</string>
+	<string name="dialog_both">Both</string>
+	<string name="dialog_life">Life</string>
+	<string name="dialog_thanks">Thanks!</string>
+	<string name="dialog_thanks_anyway">Thanks Anyway!</string>
+	<string name="dialog_enjoy">Enjoy!</string>
+	<string name="update_notification">Checking for database updates</string>
+	<string name="update_updating_set">Adding %s</string>
+	<string name="update_updating_rules">Updating comprehensive rules</string>
+	<string name="update_added">Added</string>
+	<string name="update_added_rules">new comprehensive rules</string>
+	<string name="update_added_mtr">new Magic Tournament Rules</string>
+	<string name="update_added_ipg">new Infraction Procedure Guide</string>
     <string name="update_added_jar">new Judging at Regular</string>
     <string name="error">Error</string>
     <string name="error_database">A database error occurred. If it persists, try clearing the app data from the Android settings menu.</string>
@@ -289,9 +290,11 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="wishlist_type_name">Name</string>
     <string name="wishlist_type_price">Price</string>
     <string name="wishlist_type_set">Set</string>
-    <string name="wishlist_ascending">Ascending</string>
-    <string name="wishlist_descending">Descending</string>
-    <string name="wishlist_sort_by">Sort By</string>
+	<string name="wishlist_ascending">Ascending</string>
+	<string name="wishlist_descending">Descending</string>
+	<string name="wishlist_sort_by">Sort By</string>
+    <string name="wishlist_export_title">Export Set Names?</string>
+    <string name="wishlist_export_text">Would you like to include the names of the sets in your exported wishlist?</string>
 
     <!-- Round timer activity -->
     <string name="timer_how_long">How long is the round?</string>

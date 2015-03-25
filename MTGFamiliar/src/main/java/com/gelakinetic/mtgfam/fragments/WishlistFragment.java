@@ -373,51 +373,77 @@ public class WishlistFragment extends FamiliarFragment {
      */
     private void shareWishlist() {
 		/* Use a more generic send text intent. It can also do emails */
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity()));
-        sendIntent.setType("text/plain");
+        new AlertDialog.Builder(getFamiliarActivity())
+                .setTitle(R.string.wishlist_export_title)
+                .setMessage(R.string.wishlist_export_text)
+                .setPositiveButton(R.string.dialog_yes,
+                        new AlertDialog.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), true));
+                                sendIntent.setType("text/plain");
 
-        try {
-            startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
-        }
+                                try {
+                                    startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
+                                }
 
-    }
+                            }})
+                .setNegativeButton(R.string.dialog_no,
+                    new AlertDialog.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), false));
+                            sendIntent.setType("text/plain");
 
-    /**
-     * This notifies the fragment when a change has been made from a card's dialog
-     */
-    @Override
-    public void onWishlistChanged(String cardName) {
-        readAndCompressWishlist(cardName);
-        mWishlistAdapter.notifyDataSetChanged();
-    }
+                            try {
+                                startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
+                            } catch (android.content.ActivityNotFoundException ex) {
+                                Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
+                            }
 
-    /**
-     * Create the options menu
-     *
-     * @param menu     The options menu in which you place your items.
-     * @param inflater The inflater to use to inflate the menu
-     */
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.wishlist_menu, menu);
-    }
+                    }})
+                .show();
 
-    /**
-     * Handle a click from the options menu
-     *
-     * @param item The item clicked
-     * @return true if the click was handled, false otherwise
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.wishlist_menu_clear:
+
+	}
+
+	/**
+	 * This notifies the fragment when a change has been made from a card's dialog
+	 */
+	@Override
+	public void onWishlistChanged(String cardName) {
+		readAndCompressWishlist(cardName);
+		mWishlistAdapter.notifyDataSetChanged();
+	}
+
+	/**
+	 * Create the options menu
+	 *
+	 * @param menu     The options menu in which you place your items.
+	 * @param inflater The inflater to use to inflate the menu
+	 */
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.wishlist_menu, menu);
+	}
+
+	/**
+	 * Handle a click from the options menu
+	 *
+	 * @param item The item clicked
+	 * @return true if the click was handled, false otherwise
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.wishlist_menu_clear:
 				/* Show a dialog to confirm clearing the wishlist */
                 showDialog(DIALOG_CONFIRMATION, null);
                 return true;
