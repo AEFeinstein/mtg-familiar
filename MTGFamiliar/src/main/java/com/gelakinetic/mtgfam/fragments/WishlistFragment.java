@@ -64,6 +64,7 @@ public class WishlistFragment extends FamiliarFragment {
     private static final int DIALOG_PRICE_SETTING = 2;
     private static final int DIALOG_CONFIRMATION = 3;
     private static final int DIALOG_SORT = 4;
+    private static final int DIALOG_SHARE = 5;
 
     /* Price setting constants */
     private static final int LOW_PRICE = 0;
@@ -162,7 +163,7 @@ public class WishlistFragment extends FamiliarFragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-				/* Remove the card */
+                /* Remove the card */
                 mCompressedWishlist.remove(position);
 				/* Save the wishlist */
                 WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
@@ -198,8 +199,6 @@ public class WishlistFragment extends FamiliarFragment {
             card.foil = mFoilCheckBox.isChecked();
             card.numberOf = Integer.parseInt(numberOf);
             card.message = getString(R.string.wishlist_loading);
-
-
 
 			/* Get some extra information from the database */
             SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
@@ -369,81 +368,36 @@ public class WishlistFragment extends FamiliarFragment {
     }
 
     /**
-     * Called from the menu, this will launch an intent to share the wishlist in plaintext form
+     * This notifies the fragment when a change has been made from a card's dialog
      */
-    private void shareWishlist() {
-		/* Use a more generic send text intent. It can also do emails */
-        new AlertDialog.Builder(getFamiliarActivity())
-                .setTitle(R.string.wishlist_export_title)
-                .setMessage(R.string.wishlist_export_text)
-                .setPositiveButton(R.string.dialog_yes,
-                        new AlertDialog.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent sendIntent = new Intent();
-                                sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), true));
-                                sendIntent.setType("text/plain");
+    @Override
+    public void onWishlistChanged(String cardName) {
+        readAndCompressWishlist(cardName);
+        mWishlistAdapter.notifyDataSetChanged();
+    }
 
-                                try {
-                                    startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
-                                } catch (android.content.ActivityNotFoundException ex) {
-                                    Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
-                                }
+    /**
+     * Create the options menu
+     *
+     * @param menu     The options menu in which you place your items.
+     * @param inflater The inflater to use to inflate the menu
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.wishlist_menu, menu);
+    }
 
-                            }})
-                .setNegativeButton(R.string.dialog_no,
-                    new AlertDialog.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent sendIntent = new Intent();
-                            sendIntent.setAction(Intent.ACTION_SEND);
-                            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
-                            sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), false));
-                            sendIntent.setType("text/plain");
-
-                            try {
-                                startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
-                            } catch (android.content.ActivityNotFoundException ex) {
-                                Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
-                            }
-
-                    }})
-                .show();
-
-
-	}
-
-	/**
-	 * This notifies the fragment when a change has been made from a card's dialog
-	 */
-	@Override
-	public void onWishlistChanged(String cardName) {
-		readAndCompressWishlist(cardName);
-		mWishlistAdapter.notifyDataSetChanged();
-	}
-
-	/**
-	 * Create the options menu
-	 *
-	 * @param menu     The options menu in which you place your items.
-	 * @param inflater The inflater to use to inflate the menu
-	 */
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.wishlist_menu, menu);
-	}
-
-	/**
-	 * Handle a click from the options menu
-	 *
-	 * @param item The item clicked
-	 * @return true if the click was handled, false otherwise
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.wishlist_menu_clear:
+    /**
+     * Handle a click from the options menu
+     *
+     * @param item The item clicked
+     * @return true if the click was handled, false otherwise
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.wishlist_menu_clear:
 				/* Show a dialog to confirm clearing the wishlist */
                 showDialog(DIALOG_CONFIRMATION, null);
                 return true;
@@ -456,8 +410,8 @@ public class WishlistFragment extends FamiliarFragment {
                 showDialog(DIALOG_SORT, null);
                 return true;
             case R.id.wishlist_menu_share:
-				/* Launch an intent to share the plaintext wishlist */
-                shareWishlist();
+				/* Launch a dialog to share the plaintext wishlist */
+                showDialog(DIALOG_SHARE, null);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -498,9 +452,8 @@ public class WishlistFragment extends FamiliarFragment {
                         }
                     }
                     case DIALOG_PRICE_SETTING: {
-                        AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
-
-                        builder.setTitle(R.string.trader_pricing_dialog_title)
+                        return new AlertDialogPro.Builder(this.getActivity())
+                                .setTitle(R.string.trader_pricing_dialog_title)
                                 .setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
                                                 getString(R.string.trader_Average), getString(R.string.trader_High)},
                                         mPriceSetting,
@@ -516,9 +469,8 @@ public class WishlistFragment extends FamiliarFragment {
                                                 dialog.dismiss();
                                             }
                                         }
-                                );
-                        return builder.create();
-
+                                )
+                                .create();
                     }
                     case DIALOG_CONFIRMATION: {
                         return new AlertDialogPro.Builder(this.getActivity())
@@ -571,6 +523,46 @@ public class WishlistFragment extends FamiliarFragment {
                                     }
                                 })
                                 .setCancelable(true).create();
+                    }
+                    case DIALOG_SHARE: {
+                        /* Use a more generic send text intent. It can also do emails */
+                        return new AlertDialogPro.Builder(getFamiliarActivity())
+                                .setTitle(R.string.wishlist_export_title)
+                                .setMessage(R.string.wishlist_export_text)
+                                .setPositiveButton(R.string.dialog_yes,
+                                        new AlertDialog.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent sendIntent = new Intent();
+                                                sendIntent.setAction(Intent.ACTION_SEND);
+                                                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
+                                                sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), true));
+                                                sendIntent.setType("text/plain");
+
+                                                try {
+                                                    startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
+                                                } catch (android.content.ActivityNotFoundException ex) {
+                                                    Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
+                                                }
+
+                                            }
+                                        })
+                                .setNegativeButton(R.string.dialog_no,
+                                        new AlertDialog.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent sendIntent = new Intent();
+                                                sendIntent.setAction(Intent.ACTION_SEND);
+                                                sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
+                                                sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(), false));
+                                                sendIntent.setType("text/plain");
+
+                                                try {
+                                                    startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
+                                                } catch (android.content.ActivityNotFoundException ex) {
+                                                    Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        })
+                                .create();
                     }
                     default: {
                         savedInstanceState.putInt("id", id);
