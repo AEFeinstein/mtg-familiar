@@ -38,6 +38,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="toast_no_card">No card found with that name.</string>
     <string name="not_deleted">not deleted</string>
     <string name="no_network">Network is not available</string>
+    <string name="filter_title_view_card">View Card</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">PAGES</string>

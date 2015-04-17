@@ -25,6 +25,16 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
+            <intent-filter android:label="@string/filter_title_view_card">
+                <action android:name="android.intent.action.VIEW" />
+                <!-- Accepts URIs that begin with "http://gelakinetic.com/card" -->
+                <data android:scheme="http"
+                    android:host="gelakinetic.com"
+                    android:pathPrefix="/card" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

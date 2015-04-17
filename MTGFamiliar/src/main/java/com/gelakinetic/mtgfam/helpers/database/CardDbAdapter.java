@@ -384,6 +384,46 @@ public class CardDbAdapter {
     }
 
     /**
+     *
+     * @param l
+     * @param fields
+     * @param database
+     * @return
+     * @throws FamiliarDbException
+     */
+    public static Cursor fetchCardByMultiverseId(long l, String[] fields, SQLiteDatabase database) throws FamiliarDbException {
+        String sql = "SELECT ";
+        boolean first = true;
+        for (String field : fields) {
+            if (first) {
+                first = false;
+            } else {
+                sql += ", ";
+            }
+            sql += field;
+        }
+        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
+                + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
+                + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
+                + DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID + " = " + l
+                + " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
+                + " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
+                + " DESC";
+        Cursor c;
+
+        try {
+            c = database.rawQuery(sql, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
+    }
+
+    /**
      * @param mCompressedWishlist
      * @param mDb
      * @throws FamiliarDbException

@@ -29,6 +29,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -357,6 +358,7 @@ public class FamiliarActivity extends ActionBarActivity {
                             try {
                                 SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
                                 CardDbAdapter.dropCreateDB(database);
+                                DatabaseManager.getInstance().closeDatabase();
                                 mPreferenceAdapter.setLastLegalityUpdate(0);
                                 mPreferenceAdapter.setLastIPGUpdate(0);
                                 mPreferenceAdapter.setLastMTRUpdate(0);
@@ -572,15 +574,62 @@ public class FamiliarActivity extends ActionBarActivity {
                 args.putSerializable(SearchViewFragment.CRITERIA, sc);
                 selectItem(R.string.main_card_search, args);
             } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-				/* User clicked a card in the quick search autocomplete, jump right to it */
+                boolean shouldSelectItem = true;
+
                 Uri data = intent.getData();
                 Bundle args = new Bundle();
                 assert data != null;
 
-                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{Long.parseLong(data.getLastPathSegment())});
+                if(data.getAuthority().contains("CardSearchProvider")) {
+    				/* User clicked a card in the quick search autocomplete, jump right to it */
+                    args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                            new long[]{Long.parseLong(data.getLastPathSegment())});
+                }
+                else {
+                    /* User clicked a deep link, jump to the card(s) */
+                    try {
+                        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+                        Cursor cursor = null;
+                        // TODO query style instead?
+                        if(data.getPath().toLowerCase().contains("name")) {
+                            cursor = CardDbAdapter.fetchCardByName(data.getLastPathSegment(),
+                                    new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                        }
+                        else if(data.getPath().toLowerCase().contains("multiverseid")) {
+                            try {
+                                cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
+                                        new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                            } catch(NumberFormatException e) {
+                                cursor = null;
+                            }
+                        }
+                        if(cursor != null) {
+                            if(cursor.getCount() != 0) {
+                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            }
+                            else {
+                                /* TODO empty cursor, just return */
+                                Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
+                                this.finish();
+                                shouldSelectItem = false;
+                            }
+                            cursor.close();
+                        } else {
+                            /* null cursor, just return */
+                            Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
+                            this.finish();
+                            shouldSelectItem = false;
+                        }
+                        DatabaseManager.getInstance().closeDatabase();
+                    } catch (FamiliarDbException e) {
+                        e.printStackTrace();
+                    }
+                }
                 args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-
-                selectItem(R.string.main_card_search, args);
+                if(shouldSelectItem) {
+                    selectItem(R.string.main_card_search, args);
+                }
             } else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
                 selectItem(R.string.main_timer, null);
             } else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
