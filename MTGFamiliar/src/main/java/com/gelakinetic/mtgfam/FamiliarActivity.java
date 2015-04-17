@@ -518,48 +518,7 @@ public class FamiliarActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("");
 
-		/* Check to see if the change log should be shown */
-        PackageInfo pInfo;
-        try {
-            assert getPackageManager() != null;
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-
-            int lastVersion = mPreferenceAdapter.getLastVersion();
-            if (pInfo.versionCode != lastVersion) {
-				/* Clear the spice cache on upgrade. This way, no cached values w/o foil prices will exist*/
-                try {
-                    mSpiceManager.removeAllDataFromCache();
-                } catch (NullPointerException e) {
-					/* eat it. tasty */
-                }
-                showDialogFragment(DIALOG_CHANGE_LOG);
-                mPreferenceAdapter.setLastVersion(pInfo.versionCode);
-
-				/* Clear the mtr and ipg on update, to replace them with the newly colored versions, but only if we're
-				 * updating to 3.0.1 (v24) */
-                if (pInfo.versionCode <= 24) {
-                    File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
-                    File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
-                    File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
-                    if (mtr.exists()) {
-                        if (!mtr.delete()) {
-                            Toast.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                        if (!ipg.delete()) {
-                            Toast.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                        if (!jar.delete()) {
-                            Toast.makeText(this, jar.getName() + " " + getString(R.string.not_deleted),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-			/* Eat it, don't show change log */
-        }
+        boolean canShowChangeLog = true;
 
 		/* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
 		/* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
@@ -587,6 +546,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 }
                 else {
                     /* User clicked a deep link, jump to the card(s) */
+                    canShowChangeLog = false;
                     try {
                         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                         Cursor cursor = null;
@@ -609,7 +569,7 @@ public class FamiliarActivity extends ActionBarActivity {
                                         new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                             }
                             else {
-                                /* TODO empty cursor, just return */
+                                /* empty cursor, just return */
                                 Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
                                 this.finish();
                                 shouldSelectItem = false;
@@ -685,6 +645,51 @@ public class FamiliarActivity extends ActionBarActivity {
             }
 
             mDrawerList.setItemChecked(mCurrentFrag, true);
+        }
+
+		/* Check to see if the change log should be shown */
+        if(canShowChangeLog) {
+            PackageInfo pInfo;
+            try {
+                assert getPackageManager() != null;
+                pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
+                int lastVersion = mPreferenceAdapter.getLastVersion();
+                if (pInfo.versionCode != lastVersion) {
+				    /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices will exist*/
+                    try {
+                        mSpiceManager.removeAllDataFromCache();
+                    } catch (NullPointerException e) {
+					    /* eat it. tasty */
+                    }
+                    showDialogFragment(DIALOG_CHANGE_LOG);
+                    mPreferenceAdapter.setLastVersion(pInfo.versionCode);
+
+                    /* Clear the mtr and ipg on update, to replace them with the newly colored versions, but only if we're
+                     * updating to 3.0.1 (v24) */
+                    if (pInfo.versionCode <= 24) {
+                        File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
+                        File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
+                        File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
+                        if (mtr.exists()) {
+                            if (!mtr.delete()) {
+                                Toast.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            if (!ipg.delete()) {
+                                Toast.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            if (!jar.delete()) {
+                                Toast.makeText(this, jar.getName() + " " + getString(R.string.not_deleted),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+			    /* Eat it, don't show change log */
+            }
         }
 
 		/* Run the updater service if there is a network connection */
