@@ -383,6 +383,12 @@ public class CardViewFragment extends FamiliarFragment {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
+        while(DatabaseManager.getInstance().mOpenCounter.get() > 0) {
+            /* Database is busy, updating probably. Spin for a bit
+             * This happens when a deep link is opened for the first time
+             * The transactional update collides with fetching card data
+             */
+        }
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
         Cursor cCardById = CardDbAdapter.fetchCard(id, database);
 

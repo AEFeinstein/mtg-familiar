@@ -523,7 +523,7 @@ public class FamiliarActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("");
 
-        boolean canShowChangeLog = true;
+        boolean isDeepLink = true;
 
 		/* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
 		/* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
@@ -551,11 +551,10 @@ public class FamiliarActivity extends ActionBarActivity {
                 }
                 else {
                     /* User clicked a deep link, jump to the card(s) */
-                    canShowChangeLog = false;
+                    isDeepLink = false;
                     try {
                         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                         Cursor cursor = null;
-                        // TODO query style instead?
                         if(data.getPath().toLowerCase().contains("name")) {
                             cursor = CardDbAdapter.fetchCardByName(data.getLastPathSegment(),
                                     new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
@@ -653,7 +652,7 @@ public class FamiliarActivity extends ActionBarActivity {
         }
 
 		/* Check to see if the change log should be shown */
-        if(canShowChangeLog) {
+        if(isDeepLink) {
             PackageInfo pInfo;
             try {
                 assert getPackageManager() != null;
