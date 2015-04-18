@@ -365,4 +365,7 @@
 <string name="wishlist_type_price">Prix</string>
 <string name="wishlist_type_set">Extension</string>
 <string name="wishlist_view_card">Voir la carte</string>
+    <string name="search_type">Type</string>
+    <string name="search_mana_cost">Coût Mana</string>
+    <string name="dialog_no">Non</string>
 </resources>

@@ -365,4 +365,7 @@
 <string name="wishlist_type_price">Precio</string>
 <string name="wishlist_type_set">Expansión</string>
 <string name="wishlist_view_card">Ver carta</string>
+    <string name="search_type">Tipo</string>
+    <string name="search_mana_cost">Coste de Maná</string>
+    <string name="dialog_no">No</string>
 </resources>

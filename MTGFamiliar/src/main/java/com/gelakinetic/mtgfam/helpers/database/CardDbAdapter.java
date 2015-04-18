@@ -1943,4 +1943,24 @@ public class CardDbAdapter {
 
         return isModernLegalSet(setCode, mDb);
     }
+
+    public static String getSetNameFromCode(String setCode, SQLiteDatabase database) throws FamiliarDbException {
+
+        String columns[] = new String[]{KEY_NAME};
+        Cursor c;
+        try {
+            c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                    + "=\"" + setCode+"\"", null, null, null, KEY_NAME, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        String returnString = null;
+        if (c != null) {
+            c.moveToFirst();
+            returnString = c.getString(c.getColumnIndex(KEY_NAME));
+            c.close();
+        }
+        return returnString;
+    }
 }

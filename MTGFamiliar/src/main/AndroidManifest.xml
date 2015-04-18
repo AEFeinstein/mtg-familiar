@@ -27,9 +27,9 @@
 
             <intent-filter android:label="@string/filter_title_view_card">
                 <action android:name="android.intent.action.VIEW" />
-                <!-- Accepts URIs that begin with "http://gelakinetic.com/card" -->
-                <data android:scheme="http"
-                    android:host="gelakinetic.com"
+                <!-- Accepts URIs that begin with "android-app://com.gelakinetic.mtgfam/card" -->
+                <data android:scheme="android-app"
+                    android:host="com.gelakinetic.mtgfam"
                     android:pathPrefix="/card" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />

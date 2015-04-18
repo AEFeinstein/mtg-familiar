@@ -31,6 +31,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -157,6 +158,7 @@ public class CardViewFragment extends FamiliarFragment {
     /* State for reporting page views */
     private boolean mHasReportedView = false;
     private boolean mShouldReportView = false;
+    private String mDescription;
 
     /**
      * Kill any AsyncTask if it is still running
@@ -197,13 +199,12 @@ public class CardViewFragment extends FamiliarFragment {
      * @return An action describing this page view
      */
     public Action getAppIndexAction() {
-        final String description = mCardName; /* TODO */
 
         Thing object = new Thing.Builder()
-                .setType("http://schema.org/Thing") /* Optional, any valid schema.org type */
-                .setName(mCardName)                 /* Required, title field */
-                .setDescription(description)        /* Required, description field */
-                .setUrl(FamiliarActivity.APP_URI)   /* Required, deep link in the android-app:// format */
+                .setType("http://schema.org/Thing")                         /* Optional, any valid schema.org type */
+                .setName(getString(R.string.app_name) + ": " + mCardName)   /* Required, title field */
+                .setDescription(mDescription)                               /* Required, description field */
+                .setUrl(Uri.parse("android-app://com.gelakinetic.mtgfam/card/multiverseid/" + mMultiverseId))/* Required, deep link in the android-app:// format */
                 .build();
 
         return new Action.Builder(Action.TYPE_VIEW)
@@ -389,6 +390,15 @@ public class CardViewFragment extends FamiliarFragment {
         mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
         mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
 
+        /* Start building a description */
+        addToDescription(getString(R.string.search_name), mCardName);
+        try {
+            String setName = CardDbAdapter.getSetNameFromCode(mSetCode, database);
+            addToDescription(getString(R.string.search_set), setName);
+        } catch (FamiliarDbException e) {
+            /* no set for you */
+        }
+
         mMagicCardsInfoSetCode =
                 CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
                         database);
@@ -398,34 +408,42 @@ public class CardViewFragment extends FamiliarFragment {
             case 'C':
             case 'c':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_common)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Common));
                 break;
             case 'U':
             case 'u':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Uncommon));
                 break;
             case 'R':
             case 'r':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_rare)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Rare));
                 break;
             case 'M':
             case 'm':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_mythic)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Mythic));
                 break;
             case 'T':
             case 't':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Timeshifted));
                 break;
         }
 
         String sCost = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+        addToDescription(getString(R.string.search_mana_cost), sCost);
         CharSequence csCost = ImageGetterHelper.formatStringWithGlyphs(sCost, imgGetter);
         mCostTextView.setText(csCost);
 
         String sAbility = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+        addToDescription(getString(R.string.search_text), sAbility);
         CharSequence csAbility = ImageGetterHelper.formatStringWithGlyphs(sAbility, imgGetter);
         mAbilityTextView.setText(csAbility);
 
         String sFlavor = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+        addToDescription(getString(R.string.search_flavor_text), sFlavor);
         CharSequence csFlavor = ImageGetterHelper.formatStringWithGlyphs(sFlavor, imgGetter);
         mFlavorTextView.setText(csFlavor);
 
@@ -433,6 +451,9 @@ public class CardViewFragment extends FamiliarFragment {
         mTypeTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_TYPE)));
         mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
         mArtistTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
+
+        addToDescription(getString(R.string.search_type), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_TYPE)));
+        addToDescription(getString(R.string.search_artist), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
 
         int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
         float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
@@ -480,6 +501,8 @@ public class CardViewFragment extends FamiliarFragment {
                     powTouStr += t;
                 }
             }
+
+            addToDescription(getString(R.string.search_power), powTouStr);
 
             mPowTouTextView.setText(powTouStr);
         } else {
@@ -585,6 +608,20 @@ public class CardViewFragment extends FamiliarFragment {
 
         if(mShouldReportView) {
             reportViewIfAble();
+        }
+    }
+
+    /**
+     * Used to build a meta description of this card, for app indexing
+     * @param tag   A tag for this data
+     * @param data  The data to add to the description
+     */
+    private void addToDescription(String tag, String data) {
+        if(mDescription == null) {
+            mDescription = tag + ": \"" + data + "\"";
+        }
+        else {
+            mDescription += "\n" + tag + ": \"" + data + "\"";
         }
     }
 

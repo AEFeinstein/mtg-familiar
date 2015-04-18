@@ -365,4 +365,7 @@
 <string name="wishlist_type_price">Cena</string>
 <string name="wishlist_type_set">Edycja</string>
 <string name="wishlist_view_card">Zobacz kartę</string>
+    <string name="search_type">Typ</string>
+    <string name="search_mana_cost">Koszt Many</string>
+    <string name="dialog_no">Nie</string>
 </resources>
