@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="key_lastVersion">lastVersion</string>
-    <string name="key_lastLegalityUpdate">lastLegalityUpdate</string>
-    <string name="key_whiteMana">whiteMana</string>
-    <string name="key_blueMana">blueMana</string>
-    <string name="key_blackMana">blackMana</string>
-    <string name="key_redMana">redMana</string>
-    <string name="key_greenMana">greenMana</string>
-    <string name="key_colorlessMana">colorlessMana</string>
-    <string name="key_spellCount">spellCount</string>
-    <string name="key_lastRulesUpdate">lastRulesUpdate</string>
-    <string name="key_lastMTRUpdate">lastMTRUpdate</string>
-    <string name="key_lastIPGUpdate">lastIPGUpdate</string>
-    <string name="key_lastJARUpdate">lastJARUpdate</string>
-    <string name="key_ttsShowDialog">ttsShowDialog</string>
-    <string name="key_autoupdate">autoupdate</string>
-    <string name="key_consolidateSearch">consolidateSearch</string>
-    <string name="key_picFirst">picFirst</string>
-    <string name="key_wakelock">wakelock</string>
-    <string name="key_dimlock">dimlock</string>
-    <string name="key_dimlevel">dimlevel</string>
-    <string name="key_setPref">setPref</string>
-    <string name="key_manacostPref">manacostPref</string>
-    <string name="key_typePref">typePref</string>
-    <string name="key_abilityPref">abilityPref</string>
-    <string name="key_ptPref">ptPref</string>
-    <string name="key_fifteenMinutePref">fifteenMinutePref</string>
-    <string name="key_tenMinutePref">tenMinutePref</string>
-    <string name="key_fiveMinutePref">fiveMinutePref</string>
-    <string name="key_showTotalPriceWishlistPref">showTotalPriceWishlistPref</string>
-    <string name="key_showIndividualPricesWishlistPref">showIndividualPricesWishlistPref</string>
-    <string name="key_verboseWishlistPref">verboseWishlistPref</string>
-    <string name="key_mojhostoFirstTime">mojhostoFirstTime</string>
-    <string name="key_updatefrequency">updatefrequency</string>
-    <string name="key_defaultFragment">defaultFragment</string>
-    <string name="key_cardlanguage">cardlanguage</string>
-    <string name="key_displayMode">displayMode</string>
-    <string name="key_player_data">player_data</string>
-    <string name="key_timerSound">timerSound</string>
-    <string name="key_tradePrice">tradePrice</string>
-    <string name="key_date">date</string>
-    <string name="key_lastUpdate">lastUpdate</string>
-    <string name="key_lastTCGNameUpdate">lastTCGNameUpdate</string>
-    <string name="key_lifeTimer">lifeTimer</string>
-    <string name="key_currentRoundTimer">currentRoundTimer</string>
-    <string name="key_bounceDrawer">bounceDrawer</string>
-    <string name="key_widgetButtons">widgetButtons</string>
-    <string name="key_theme">theme</string>
-    <string name="key_dci_number">dciNumber</string>
-    <string name="key_imageCacheSize">imageCacheSize</string>
-	<string name="key_language">language</string>
+    <string name="key_lastVersion" translatable="false">lastVersion</string>
+    <string name="key_lastLegalityUpdate" translatable="false">lastLegalityUpdate</string>
+    <string name="key_whiteMana" translatable="false">whiteMana</string>
+    <string name="key_blueMana" translatable="false">blueMana</string>
+    <string name="key_blackMana" translatable="false">blackMana</string>
+    <string name="key_redMana" translatable="false">redMana</string>
+    <string name="key_greenMana" translatable="false">greenMana</string>
+    <string name="key_colorlessMana" translatable="false">colorlessMana</string>
+    <string name="key_spellCount" translatable="false">spellCount</string>
+    <string name="key_lastRulesUpdate" translatable="false">lastRulesUpdate</string>
+    <string name="key_lastMTRUpdate" translatable="false">lastMTRUpdate</string>
+    <string name="key_lastIPGUpdate" translatable="false">lastIPGUpdate</string>
+    <string name="key_lastJARUpdate" translatable="false">lastJARUpdate</string>
+    <string name="key_ttsShowDialog" translatable="false">ttsShowDialog</string>
+    <string name="key_autoupdate" translatable="false">autoupdate</string>
+    <string name="key_consolidateSearch" translatable="false">consolidateSearch</string>
+    <string name="key_picFirst" translatable="false">picFirst</string>
+    <string name="key_wakelock" translatable="false">wakelock</string>
+    <string name="key_dimlock" translatable="false">dimlock</string>
+    <string name="key_dimlevel" translatable="false">dimlevel</string>
+    <string name="key_setPref" translatable="false">setPref</string>
+    <string name="key_manacostPref" translatable="false">manacostPref</string>
+    <string name="key_typePref" translatable="false">typePref</string>
+    <string name="key_abilityPref" translatable="false">abilityPref</string>
+    <string name="key_ptPref" translatable="false">ptPref</string>
+    <string name="key_fifteenMinutePref" translatable="false">fifteenMinutePref</string>
+    <string name="key_tenMinutePref" translatable="false">tenMinutePref</string>
+    <string name="key_fiveMinutePref" translatable="false">fiveMinutePref</string>
+    <string name="key_showTotalPriceWishlistPref" translatable="false">showTotalPriceWishlistPref</string>
+    <string name="key_showIndividualPricesWishlistPref" translatable="false">showIndividualPricesWishlistPref</string>
+    <string name="key_verboseWishlistPref" translatable="false">verboseWishlistPref</string>
+    <string name="key_mojhostoFirstTime" translatable="false">mojhostoFirstTime</string>
+    <string name="key_updatefrequency" translatable="false">updatefrequency</string>
+    <string name="key_defaultFragment" translatable="false">defaultFragment</string>
+    <string name="key_cardlanguage" translatable="false">cardlanguage</string>
+    <string name="key_displayMode" translatable="false">displayMode</string>
+    <string name="key_player_data" translatable="false">player_data</string>
+    <string name="key_timerSound" translatable="false">timerSound</string>
+    <string name="key_tradePrice" translatable="false">tradePrice</string>
+    <string name="key_date" translatable="false">date</string>
+    <string name="key_lastUpdate" translatable="false">lastUpdate</string>
+    <string name="key_lastTCGNameUpdate" translatable="false">lastTCGNameUpdate</string>
+    <string name="key_lifeTimer" translatable="false">lifeTimer</string>
+    <string name="key_currentRoundTimer" translatable="false">currentRoundTimer</string>
+    <string name="key_bounceDrawer" translatable="false">bounceDrawer</string>
+    <string name="key_widgetButtons" translatable="false">widgetButtons</string>
+    <string name="key_theme" translatable="false">theme</string>
+    <string name="key_dci_number" translatable="false">dciNumber</string>
+    <string name="key_imageCacheSize" translatable="false">imageCacheSize</string>
+	<string name="key_language" translatable="false">language</string>
 </resources>

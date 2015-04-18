@@ -68,6 +68,9 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -151,6 +154,10 @@ public class CardViewFragment extends FamiliarFragment {
     /* Easier than calling getActivity() all the time, and handles being nested */
     private FamiliarActivity mActivity;
 
+    /* State for reporting page views */
+    private boolean mHasReportedView = false;
+    private boolean mShouldReportView = false;
+
     /**
      * Kill any AsyncTask if it is still running
      */
@@ -173,6 +180,96 @@ public class CardViewFragment extends FamiliarFragment {
         mActivity.clearLoading();
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
+        }
+    }
+
+    /**
+     * Called when the fragment stops, attempt to report the close
+     */
+    @Override
+    public void onStop() {
+        reportHideIfAble();
+        super.onStop();
+    }
+
+    /**
+     * Creates and returns the action describing this page view
+     * @return An action describing this page view
+     */
+    public Action getAppIndexAction() {
+        final String description = mCardName; /* TODO */
+
+        Thing object = new Thing.Builder()
+                .setType("http://schema.org/Thing") /* Optional, any valid schema.org type */
+                .setName(mCardName)                 /* Required, title field */
+                .setDescription(description)        /* Required, description field */
+                .setUrl(FamiliarActivity.APP_URI)   /* Required, deep link in the android-app:// format */
+                .build();
+
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .build();
+    }
+
+    /**
+     * Reports this view to the Google app indexing API, once, when the fragment is viewed
+     */
+    private void reportViewIfAble() {
+        /* If this view hasn't been reported yet, and the name exists */
+        if(!mHasReportedView) {
+            if(mCardName != null) {
+                /* Connect your client */
+                getFamiliarActivity().mClient.connect();
+                AppIndex.AppIndexApi.action(getFamiliarActivity().mClient, getAppIndexAction());
+
+                /* Manage state */
+                mHasReportedView = true;
+                mShouldReportView = false;
+            }
+            else {
+                mShouldReportView = true;
+            }
+        }
+    }
+
+    /**
+     * Ends the report to the Google app indexing API, once, when the fragment is no longer viewed
+     */
+    private void reportHideIfAble() {
+        /* If the view was previously reported, and the name exists */
+        if(mHasReportedView && mCardName != null) {
+            /* Call end() and disconnect the client */
+            AppIndex.AppIndexApi.end(getFamiliarActivity().mClient, getAppIndexAction());
+            getFamiliarActivity().mClient.disconnect();
+
+            /* manage state */
+            mHasReportedView = false;
+        }
+    }
+
+    /**
+     * Set a hint to the system about whether this fragment's UI is currently visible to the user.
+     * This hint defaults to true and is persistent across fragment instance state save and restore.
+     *
+     * An app may set this to false to indicate that the fragment's UI is scrolled out of visibility
+     * or is otherwise not directly visible to the user. This may be used by the system to
+     * prioritize operations such as fragment lifecycle updates or loader ordering behavior.
+     *
+     * In this case, it's used to report fragment views to Google app indexing
+     *
+     * @param isVisibleToUser true if this fragment's UI is currently visible to the user (default),
+     *                        false if it is not.
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            /* If the fragment is visible to the user, attempt to report the view */
+            reportViewIfAble();
+        }
+        else {
+            /* The view isn't visible anymore, attempt to report it */
+            reportHideIfAble();
         }
     }
 
@@ -267,7 +364,7 @@ public class CardViewFragment extends FamiliarFragment {
         long cardID = extras.getLong(CARD_ID);
 
         try {
-			/* from onCreateView */
+            /* from onCreateView */
             setInfoFromID(cardID);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
@@ -485,6 +582,10 @@ public class CardViewFragment extends FamiliarFragment {
             mActivity.supportInvalidateOptionsMenu();
         }
         DatabaseManager.getInstance().closeDatabase();
+
+        if(mShouldReportView) {
+            reportViewIfAble();
+        }
     }
 
     /**
@@ -1105,10 +1206,10 @@ public class CardViewFragment extends FamiliarFragment {
 
             final String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
 
-            // Check disk cache in background thread
+            /* Check disk cache in background thread */
             Bitmap bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
 
-            if (bitmap == null) { // Not found in disk cache
+            if (bitmap == null) { /* Not found in disk cache */
 
                 boolean bRetry = true;
 
@@ -1127,7 +1228,7 @@ public class CardViewFragment extends FamiliarFragment {
                             u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                             cardLanguage = "en";
                         } else {
-                             if (!triedMtgi) {
+                            if (!triedMtgi) {
                                 u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                                 triedMtgi = true;
                             } else {
@@ -1191,7 +1292,7 @@ public class CardViewFragment extends FamiliarFragment {
                 int newWidth = Math.round(bitmap.getWidth() * scale);
                 int newHeight = Math.round(bitmap.getHeight() * scale);
 
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); // todo this is leaky?
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); /* todo this is leaky? */
                 mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
                 bitmap.recycle();
             } catch (Exception e) {

@@ -96,6 +96,8 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.octo.android.robospice.SpiceManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -233,6 +235,9 @@ public class FamiliarActivity extends ActionBarActivity {
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
+
+    public static final Uri APP_URI = Uri.parse("android-app://com.gelakinetic.mtgfam/card/");
+    public GoogleApiClient mClient;
 
     /**
      * Start the Spice Manager when the activity starts
@@ -709,6 +714,9 @@ public class FamiliarActivity extends ActionBarActivity {
         cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
         cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
         addImageCache(getSupportFragmentManager(), cacheParams);
+
+        /* Set up app indexing */
+        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     /**
