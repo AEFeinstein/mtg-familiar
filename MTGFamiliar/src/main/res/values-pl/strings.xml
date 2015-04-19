@@ -130,7 +130,7 @@
 <string name="main_tts_warning_text">Ta aplikacja ma możliwość zastosowania syntezatora mowy, ale wydaje się, że nie masz go zainstalowanego. Jeśli chcesz go zainstalować, użyj przycisku \'Zainstaluj TTS (Text-To-Speech)\' z menu Ustawienia.</string>
 <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
 <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
-<string name="main_whats_new_text">- Nowy wygląd&lt;br&gt;&lt;br&gt; - Dodano dokument JAR&lt;br&gt;&lt;br&gt; - Dodano zakazane (banned), ograniczone (restricted) oraz dozwolone (legal) listy do zasad&lt;br&gt;&lt;br&gt; - Możliwość kopiowania zasad do schowka poprzez naciśnięcie i przytrzymanie&lt;br&gt;&lt;br&gt; - Dodano możliwość wyboru języka używanego w aplikacji&lt;br&gt;&lt;br&gt; - Ułóż Listę Życzeń według Edycji&lt;br&gt;&lt;br&gt; - Usuń hasła w polu wymiany przez naciśnięcie i przytrzymanie&lt;br&gt;&lt;br&gt; - I jak zwykle - naprawiono kilka błędów</string>
+<string name="main_whats_new_text">-Głębokie Linkowanie&lt;br&gt;&lt;br&gt;- I jak zwykle</string>
 <string name="main_whats_new_title">Nowości</string>
 <string name="main_wishlist">Lista Życzeń</string>
 <string name="mana_pool_clear_all">Wyczyść wszystko</string>
@@ -368,4 +368,7 @@
     <string name="search_type">Typ</string>
     <string name="search_mana_cost">Koszt Many</string>
     <string name="dialog_no">Nie</string>
+    <string name="filter_title_view_card">Pokaż kartę</string>
+    <string name="wishlist_export_title">Wyeksportować nazwy setów?</string>
+    <string name="wishlist_export_text">Czy chcesz dołączyć nazwy setów do eksportowanej Listy Życzeń?</string>
 </resources>

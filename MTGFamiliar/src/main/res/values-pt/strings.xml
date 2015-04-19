@@ -130,7 +130,7 @@
     <string name="main_tts_warning_text">Esta aplicação tem a capacidade de usar a síntese de voz (Text-to-Speech) para algumas funções, mas não parece tê-lo instalado. Se você quer instalar, use o link \"Instalar Text-to-Speech \" no menu de configurações.</string>
     <string name="main_tts_warning_title">TTS (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">O que há de Novo na Versão</string>
-    <string name="main_whats_new_text">- Novo design de materiais de busca – Adicionado busca de documento JAR  - Adicionado proibidos, restritos e lista de coleções legais com as regras da busca - regras de cópia para a área de transferência por muito tempo pressionando &lt;br&gt; &lt;br&gt; - preferência adicionada para selecionar o idioma do app busca - Organizar lista de desejos por conjunto da busca - Remova as entradas de comércio por muito tempo pressionando busca - Correções de bugs, como sempre</string>
+    <string name="main_whats_new_text">-Profunda Ligação&lt;br&gt;&lt;br&gt;Correções de bugs</string>
     <string name="main_whats_new_title">O que há de novo</string>
     <string name="main_wishlist">Lista de Desejos</string>
     <string name="mana_pool_clear_all">Limpar Tudo</string>
@@ -368,4 +368,7 @@
     <string name="search_type">Tipo</string>
     <string name="search_mana_cost">Custo de Mana</string>
     <string name="dialog_no">Não</string>
+    <string name="filter_title_view_card">Vizualizar Carta</string>
+    <string name="wishlist_export_title">Exportar os nomes das Coleções?</string>
+    <string name="wishlist_export_text">Gostaria de incluir os nomes das coleções em sua lista de desejos exportada?</string>
 </resources>

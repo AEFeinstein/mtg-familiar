@@ -68,14 +68,8 @@ So, how generous are you feeling today?</string>
     <string name="main_whats_new_title">What\'s New</string>
     <string name="main_whats_new_in_title">What\'s New in Version</string>
 <string name="main_whats_new_text">
-- New Material design&lt;br&gt;&lt;br&gt;
-- Added JAR document&lt;br&gt;&lt;br&gt;
-- Added banned, restricted, and legal set lists to rules&lt;br&gt;&lt;br&gt;
-- Copy rules to the clipboard by long pressing&lt;br&gt;&lt;br&gt;
-- Added preference to select app language&lt;br&gt;&lt;br&gt;
-- Sort wishlists by set&lt;br&gt;&lt;br&gt;
-- Remove trade entries by long pressing&lt;br&gt;&lt;br&gt;
-- Bugfixes, as always
+- Deep Linking&lt;br&gt;&lt;br&gt;
+- Bugfixes
 </string>
     <string name="main_tts_warning_title">Text-to-Speech</string>
 <string name="main_tts_warning_text">This application has text-to-speech capability for some of its features, but you don\'t seem to have it installed.
