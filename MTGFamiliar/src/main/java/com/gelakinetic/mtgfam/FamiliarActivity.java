@@ -236,8 +236,7 @@ public class FamiliarActivity extends ActionBarActivity {
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
 
-    public static final Uri APP_URI = Uri.parse("android-app://com.gelakinetic.mtgfam/card/");
-    public GoogleApiClient mClient;
+    public GoogleApiClient mGoogleApiClient;
 
     /**
      * Start the Spice Manager when the activity starts
@@ -595,7 +594,7 @@ public class FamiliarActivity extends ActionBarActivity {
         addImageCache(getSupportFragmentManager(), cacheParams);
 
         /* Set up app indexing */
-        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private boolean processIntent(Intent intent) {
@@ -631,6 +630,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 try {
                     SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                     Cursor cursor = null;
+                    boolean screenLaunched = false;
                     if (data.getPath().toLowerCase().contains("name")) {
                         cursor = CardDbAdapter.fetchCardByName(data.getLastPathSegment(),
                                 new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
@@ -641,20 +641,26 @@ public class FamiliarActivity extends ActionBarActivity {
                         } catch (NumberFormatException e) {
                             cursor = null;
                         }
+                    } else {
+                        /* Assume home screen deep link */
+                        launchHomeScreen();
+                        screenLaunched = true;
+                        shouldSelectItem = false;
                     }
+
                     if (cursor != null) {
                         if (cursor.getCount() != 0) {
                             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
                                     new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                         } else {
-                                /* empty cursor, just return */
+                            /* empty cursor, just return */
                             Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
                             this.finish();
                             shouldSelectItem = false;
                         }
                         cursor.close();
-                    } else {
-                            /* null cursor, just return */
+                    } else if(!screenLaunched) {
+                        /* null cursor, just return */
                         Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
                         this.finish();
                         shouldSelectItem = false;
@@ -692,40 +698,52 @@ public class FamiliarActivity extends ActionBarActivity {
             selectItem(R.string.main_profile, null, true, false);
         } else {
 			/* App launched as regular, show the default fragment */
-
-            String defaultFragment = mPreferenceAdapter.getDefaultFragment();
-
-            if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
-                selectItem(R.string.main_card_search, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
-                selectItem(R.string.main_life_counter, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
-                selectItem(R.string.main_mana_pool, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
-                selectItem(R.string.main_dice, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
-                selectItem(R.string.main_trade, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
-                selectItem(R.string.main_wishlist, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
-                selectItem(R.string.main_timer, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
-                selectItem(R.string.main_rules, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
-                selectItem(R.string.main_judges_corner, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
-                selectItem(R.string.main_mojhosto, null, true, false);
-            } else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
-                selectItem(R.string.main_profile, null, true, false);
-            } else {
-                selectItem(R.string.main_card_search, null, true, false);
-            }
+            launchHomeScreen();
         }
 
         mDrawerList.setItemChecked(mCurrentFrag, true);
         return isDeepLink;
     }
 
+    /**
+     * Launch the home fragment, based on a preference
+     */
+    private void launchHomeScreen() {
+        String defaultFragment = mPreferenceAdapter.getDefaultFragment();
+
+        if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
+            selectItem(R.string.main_card_search, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
+            selectItem(R.string.main_life_counter, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
+            selectItem(R.string.main_mana_pool, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
+            selectItem(R.string.main_dice, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
+            selectItem(R.string.main_trade, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
+            selectItem(R.string.main_wishlist, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
+            selectItem(R.string.main_timer, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
+            selectItem(R.string.main_rules, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
+            selectItem(R.string.main_judges_corner, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
+            selectItem(R.string.main_mojhosto, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
+            selectItem(R.string.main_profile, null, true, false);
+        } else {
+            selectItem(R.string.main_card_search, null, true, false);
+        }
+    }
+
+    /**
+     * Instead of starting a new Activity, any intents to start a new Familiar Activity will be
+     * received here, and this Activity should react properly
+     *
+     * @param intent The intent used to "start" this Activity
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -822,7 +840,7 @@ public class FamiliarActivity extends ActionBarActivity {
 
         try {
             if (!forceSelect && ((Object) newFrag).getClass().equals(((Object) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
-			    /* This is the same fragment, just close the menu TODO override this?*/
+			    /* This is the same fragment, just close the menu */
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
             }
@@ -848,7 +866,7 @@ public class FamiliarActivity extends ActionBarActivity {
             ft = fm.beginTransaction();
 
 			/* Replace or add the fragment */
-            ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG); // TODO used to be replace
+            ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG);
             if (!shouldClearFragmentStack) {
                 ft.addToBackStack(null);
             }

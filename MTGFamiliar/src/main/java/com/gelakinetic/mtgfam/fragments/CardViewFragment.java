@@ -190,7 +190,7 @@ public class CardViewFragment extends FamiliarFragment {
      */
     @Override
     public void onStop() {
-        reportHideIfAble();
+        reportAppIndexEndIfAble();
         super.onStop();
     }
 
@@ -201,10 +201,11 @@ public class CardViewFragment extends FamiliarFragment {
     public Action getAppIndexAction() {
 
         Thing object = new Thing.Builder()
-                .setType("http://schema.org/Thing")                         /* Optional, any valid schema.org type */
-                .setName(getString(R.string.app_name) + ": " + mCardName)   /* Required, title field */
-                .setDescription(mDescription)                               /* Required, description field */
-                .setUrl(Uri.parse("android-app://com.gelakinetic.mtgfam/card/multiverseid/" + mMultiverseId))/* Required, deep link in the android-app:// format */
+                .setType("http://schema.org/Thing") /* Optional, any valid schema.org type */
+                .setName(mCardName)                 /* Required, title field */
+                .setDescription(mDescription)       /* Required, description field */
+                /* Required, deep link in the android-app:// format */
+                .setUrl(Uri.parse("android-app://com.gelakinetic.mtgfam/card/multiverseid/" + mMultiverseId))
                 .build();
 
         return new Action.Builder(Action.TYPE_VIEW)
@@ -215,13 +216,13 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Reports this view to the Google app indexing API, once, when the fragment is viewed
      */
-    private void reportViewIfAble() {
+    private void reportAppIndexViewIfAble() {
         /* If this view hasn't been reported yet, and the name exists */
         if(!mHasReportedView) {
             if(mCardName != null) {
                 /* Connect your client */
-                getFamiliarActivity().mClient.connect();
-                AppIndex.AppIndexApi.action(getFamiliarActivity().mClient, getAppIndexAction());
+                getFamiliarActivity().mGoogleApiClient.connect();
+                AppIndex.AppIndexApi.action(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
 
                 /* Manage state */
                 mHasReportedView = true;
@@ -236,12 +237,12 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Ends the report to the Google app indexing API, once, when the fragment is no longer viewed
      */
-    private void reportHideIfAble() {
+    private void reportAppIndexEndIfAble() {
         /* If the view was previously reported, and the name exists */
         if(mHasReportedView && mCardName != null) {
             /* Call end() and disconnect the client */
-            AppIndex.AppIndexApi.end(getFamiliarActivity().mClient, getAppIndexAction());
-            getFamiliarActivity().mClient.disconnect();
+            AppIndex.AppIndexApi.end(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
+            getFamiliarActivity().mGoogleApiClient.disconnect();
 
             /* manage state */
             mHasReportedView = false;
@@ -266,11 +267,11 @@ public class CardViewFragment extends FamiliarFragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             /* If the fragment is visible to the user, attempt to report the view */
-            reportViewIfAble();
+            reportAppIndexViewIfAble();
         }
         else {
             /* The view isn't visible anymore, attempt to report it */
-            reportHideIfAble();
+            reportAppIndexEndIfAble();
         }
     }
 
@@ -613,7 +614,7 @@ public class CardViewFragment extends FamiliarFragment {
         DatabaseManager.getInstance().closeDatabase();
 
         if(mShouldReportView) {
-            reportViewIfAble();
+            reportAppIndexViewIfAble();
         }
     }
 
