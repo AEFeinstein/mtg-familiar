@@ -398,7 +398,7 @@ public class FamiliarActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 /* FamiliarFragments will automatically close the drawer when they hit onResume(). It's more precise
-				   than a delayed handler. Other options have to close the drawer themselves */
+                   than a delayed handler. Other options have to close the drawer themselves */
                 boolean shouldCloseDrawer = false;
                 switch (mPageEntries[i].mNameResource) {
                     case R.string.main_extras:
@@ -417,7 +417,7 @@ public class FamiliarActivity extends ActionBarActivity {
                     case R.string.main_card_search:
                     case R.string.main_life_counter:
                     case R.string.main_profile: {
-                        selectItem(mPageEntries[i].mNameResource, null);
+                        selectItem(mPageEntries[i].mNameResource, null, true, false);
                         break;
                     }
                     case R.string.main_settings_title: {
@@ -523,136 +523,16 @@ public class FamiliarActivity extends ActionBarActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("");
 
-        boolean isDeepLink = true;
+        boolean isDeepLink = false;
 
 		/* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
 		/* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
         if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-				/* Do a search by name, launched from the quick search */
-                String query = intent.getStringExtra(SearchManager.QUERY);
-                Bundle args = new Bundle();
-                SearchCriteria sc = new SearchCriteria();
-                sc.name = query;
-                args.putSerializable(SearchViewFragment.CRITERIA, sc);
-                selectItem(R.string.main_card_search, args);
-            } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-                boolean shouldSelectItem = true;
-
-                Uri data = intent.getData();
-                Bundle args = new Bundle();
-                assert data != null;
-
-                if(data.getAuthority().contains("CardSearchProvider")) {
-    				/* User clicked a card in the quick search autocomplete, jump right to it */
-                    args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                            new long[]{Long.parseLong(data.getLastPathSegment())});
-                }
-                else {
-                    /* User clicked a deep link, jump to the card(s) */
-                    isDeepLink = false;
-                    try {
-                        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
-                        Cursor cursor = null;
-                        if(data.getPath().toLowerCase().contains("name")) {
-                            cursor = CardDbAdapter.fetchCardByName(data.getLastPathSegment(),
-                                    new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-                        }
-                        else if(data.getPath().toLowerCase().contains("multiverseid")) {
-                            try {
-                                cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
-                                        new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-                            } catch(NumberFormatException e) {
-                                cursor = null;
-                            }
-                        }
-                        if(cursor != null) {
-                            if(cursor.getCount() != 0) {
-                                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                            }
-                            else {
-                                /* empty cursor, just return */
-                                Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
-                                this.finish();
-                                shouldSelectItem = false;
-                            }
-                            cursor.close();
-                        } else {
-                            /* null cursor, just return */
-                            Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
-                            this.finish();
-                            shouldSelectItem = false;
-                        }
-                        DatabaseManager.getInstance().closeDatabase();
-                    } catch (FamiliarDbException e) {
-                        e.printStackTrace();
-                    }
-                }
-                args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-                if(shouldSelectItem) {
-                    selectItem(R.string.main_card_search, args);
-                }
-            } else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
-                selectItem(R.string.main_timer, null);
-            } else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
-                selectItem(R.string.main_card_search, null);
-            } else if (ACTION_LIFE.equals(intent.getAction())) {
-                selectItem(R.string.main_life_counter, null);
-            } else if (ACTION_DICE.equals(intent.getAction())) {
-                selectItem(R.string.main_dice, null);
-            } else if (ACTION_TRADE.equals(intent.getAction())) {
-                selectItem(R.string.main_trade, null);
-            } else if (ACTION_MANA.equals(intent.getAction())) {
-                selectItem(R.string.main_mana_pool, null);
-            } else if (ACTION_WISH.equals(intent.getAction())) {
-                selectItem(R.string.main_wishlist, null);
-            } else if (ACTION_RULES.equals(intent.getAction())) {
-                selectItem(R.string.main_rules, null);
-            } else if (ACTION_JUDGE.equals(intent.getAction())) {
-                selectItem(R.string.main_judges_corner, null);
-            } else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
-                selectItem(R.string.main_mojhosto, null);
-            } else if (ACTION_PROFILE.equals(intent.getAction())) {
-                selectItem(R.string.main_profile, null);
-            } else {
-			/* App launched as regular, show the default fragment */
-
-                String defaultFragment = mPreferenceAdapter.getDefaultFragment();
-
-                if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
-                    selectItem(R.string.main_card_search, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
-                    selectItem(R.string.main_life_counter, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
-                    selectItem(R.string.main_mana_pool, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
-                    selectItem(R.string.main_dice, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
-                    selectItem(R.string.main_trade, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
-                    selectItem(R.string.main_wishlist, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
-                    selectItem(R.string.main_timer, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
-                    selectItem(R.string.main_rules, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
-                    selectItem(R.string.main_judges_corner, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
-                    selectItem(R.string.main_mojhosto, null);
-                } else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
-                    selectItem(R.string.main_profile, null);
-                } else {
-                    selectItem(R.string.main_card_search, null);
-                }
-            }
-
-            mDrawerList.setItemChecked(mCurrentFrag, true);
+            isDeepLink = processIntent(getIntent());
         }
 
 		/* Check to see if the change log should be shown */
-        if(isDeepLink) {
+        if (!isDeepLink) {
             PackageInfo pInfo;
             try {
                 assert getPackageManager() != null;
@@ -718,6 +598,140 @@ public class FamiliarActivity extends ActionBarActivity {
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    private boolean processIntent(Intent intent) {
+        boolean isDeepLink = false;
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			/* Do a search by name, launched from the quick search */
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Bundle args = new Bundle();
+            SearchCriteria sc = new SearchCriteria();
+            sc.name = query;
+            args.putSerializable(SearchViewFragment.CRITERIA, sc);
+            selectItem(R.string.main_card_search, args, false, true); /* Don't clear backstack, do force the intent */
+
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+
+            boolean shouldSelectItem = true;
+
+            Uri data = intent.getData();
+            Bundle args = new Bundle();
+            assert data != null;
+
+            boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
+            if (data.getAuthority().contains("CardSearchProvider")) {
+    			/* User clicked a card in the quick search autocomplete, jump right to it */
+                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                        new long[]{Long.parseLong(data.getLastPathSegment())});
+                shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
+            } else {
+                /* User clicked a deep link, jump to the card(s) */
+                isDeepLink = true;
+
+                try {
+                    SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+                    Cursor cursor = null;
+                    if (data.getPath().toLowerCase().contains("name")) {
+                        cursor = CardDbAdapter.fetchCardByName(data.getLastPathSegment(),
+                                new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                    } else if (data.getPath().toLowerCase().contains("multiverseid")) {
+                        try {
+                            cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
+                                    new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                        } catch (NumberFormatException e) {
+                            cursor = null;
+                        }
+                    }
+                    if (cursor != null) {
+                        if (cursor.getCount() != 0) {
+                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                                    new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                        } else {
+                                /* empty cursor, just return */
+                            Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
+                            this.finish();
+                            shouldSelectItem = false;
+                        }
+                        cursor.close();
+                    } else {
+                            /* null cursor, just return */
+                        Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
+                        this.finish();
+                        shouldSelectItem = false;
+                    }
+                    DatabaseManager.getInstance().closeDatabase();
+                } catch (FamiliarDbException e) {
+                    e.printStackTrace();
+                }
+            }
+            args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+            if (shouldSelectItem) {
+                selectItem(R.string.main_card_search, args, shouldClearFragmentStack, true);
+            }
+        } else if (ACTION_ROUND_TIMER.equals(intent.getAction())) {
+            selectItem(R.string.main_timer, null, true, false);
+        } else if (ACTION_CARD_SEARCH.equals(intent.getAction())) {
+            selectItem(R.string.main_card_search, null, true, false);
+        } else if (ACTION_LIFE.equals(intent.getAction())) {
+            selectItem(R.string.main_life_counter, null, true, false);
+        } else if (ACTION_DICE.equals(intent.getAction())) {
+            selectItem(R.string.main_dice, null, true, false);
+        } else if (ACTION_TRADE.equals(intent.getAction())) {
+            selectItem(R.string.main_trade, null, true, false);
+        } else if (ACTION_MANA.equals(intent.getAction())) {
+            selectItem(R.string.main_mana_pool, null, true, false);
+        } else if (ACTION_WISH.equals(intent.getAction())) {
+            selectItem(R.string.main_wishlist, null, true, false);
+        } else if (ACTION_RULES.equals(intent.getAction())) {
+            selectItem(R.string.main_rules, null, true, false);
+        } else if (ACTION_JUDGE.equals(intent.getAction())) {
+            selectItem(R.string.main_judges_corner, null, true, false);
+        } else if (ACTION_MOJHOSTO.equals(intent.getAction())) {
+            selectItem(R.string.main_mojhosto, null, true, false);
+        } else if (ACTION_PROFILE.equals(intent.getAction())) {
+            selectItem(R.string.main_profile, null, true, false);
+        } else {
+			/* App launched as regular, show the default fragment */
+
+            String defaultFragment = mPreferenceAdapter.getDefaultFragment();
+
+            if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
+                selectItem(R.string.main_card_search, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_life_counter))) {
+                selectItem(R.string.main_life_counter, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_mana_pool))) {
+                selectItem(R.string.main_mana_pool, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_dice))) {
+                selectItem(R.string.main_dice, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_trade))) {
+                selectItem(R.string.main_trade, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_wishlist))) {
+                selectItem(R.string.main_wishlist, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_timer))) {
+                selectItem(R.string.main_timer, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_rules))) {
+                selectItem(R.string.main_rules, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_judges_corner))) {
+                selectItem(R.string.main_judges_corner, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_mojhosto))) {
+                selectItem(R.string.main_mojhosto, null, true, false);
+            } else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
+                selectItem(R.string.main_profile, null, true, false);
+            } else {
+                selectItem(R.string.main_card_search, null, true, false);
+            }
+        }
+
+        mDrawerList.setItemChecked(mCurrentFrag, true);
+        return isDeepLink;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        processIntent(intent);
+    }
+
     /**
      * Check to see if we should display the round timer in the actionbar, and start the inactivity timer
      */
@@ -737,7 +751,7 @@ public class FamiliarActivity extends ActionBarActivity {
      *
      * @param resId The string resource ID of the entry
      */
-    private void selectItem(int resId, Bundle args) {
+    private void selectItem(int resId, Bundle args, boolean shouldClearFragmentStack, boolean forceSelect) {
 
         int position = 0;
         for (DrawerEntry entry : mPageEntries) {
@@ -807,8 +821,8 @@ public class FamiliarActivity extends ActionBarActivity {
         }
 
         try {
-            if (((Object) newFrag).getClass().equals(((Object) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
-			/* This is the same fragment, just close the menu */
+            if (!forceSelect && ((Object) newFrag).getClass().equals(((Object) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
+			    /* This is the same fragment, just close the menu TODO override this?*/
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
             }
@@ -823,16 +837,21 @@ public class FamiliarActivity extends ActionBarActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft;
         if (fm != null) {
-			/* Remove any current fragments on the back stack */
-            for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
-                fm.popBackStack();
+            if (shouldClearFragmentStack) {
+			    /* Remove any current fragments on the back stack */
+                for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
+                    fm.popBackStack();
+                }
             }
 
 			/* Begin a new transaction */
             ft = fm.beginTransaction();
 
 			/* Replace or add the fragment */
-            ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG);
+            ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG); // TODO used to be replace
+            if (!shouldClearFragmentStack) {
+                ft.addToBackStack(null);
+            }
             ft.commit();
         }
     }
@@ -1561,6 +1580,4 @@ public class FamiliarActivity extends ActionBarActivity {
             return null;
         }
     }
-
-
 }

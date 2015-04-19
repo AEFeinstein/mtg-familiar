@@ -15,7 +15,8 @@
         android:theme="@style/Theme.light">
         <activity
             android:name="com.gelakinetic.mtgfam.FamiliarActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
