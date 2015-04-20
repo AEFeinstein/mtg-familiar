@@ -159,6 +159,7 @@ public class CardViewFragment extends FamiliarFragment {
     private boolean mHasReportedView = false;
     private boolean mShouldReportView = false;
     private String mDescription;
+    private String mSetName;
 
     /**
      * Kill any AsyncTask if it is still running
@@ -196,14 +197,15 @@ public class CardViewFragment extends FamiliarFragment {
 
     /**
      * Creates and returns the action describing this page view
+     *
      * @return An action describing this page view
      */
     public Action getAppIndexAction() {
 
         Thing object = new Thing.Builder()
-                .setType("http://schema.org/Thing") /* Optional, any valid schema.org type */
-                .setName(mCardName)                 /* Required, title field */
-                .setDescription(mDescription)       /* Required, description field */
+                .setType("http://schema.org/Thing")         /* Optional, any valid schema.org type */
+                .setName(mCardName + " (" + mSetName + ")") /* Required, title field */
+                .setDescription(mDescription)               /* Required, description field */
                 /* Required, deep link in the android-app:// format */
                 .setUrl(Uri.parse("android-app://com.gelakinetic.mtgfam/card/multiverseid/" + mMultiverseId))
                 .build();
@@ -218,8 +220,8 @@ public class CardViewFragment extends FamiliarFragment {
      */
     private void reportAppIndexViewIfAble() {
         /* If this view hasn't been reported yet, and the name exists */
-        if(!mHasReportedView) {
-            if(mCardName != null) {
+        if (!mHasReportedView) {
+            if (mCardName != null) {
                 /* Connect your client */
                 getFamiliarActivity().mGoogleApiClient.connect();
                 AppIndex.AppIndexApi.action(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
@@ -227,8 +229,7 @@ public class CardViewFragment extends FamiliarFragment {
                 /* Manage state */
                 mHasReportedView = true;
                 mShouldReportView = false;
-            }
-            else {
+            } else {
                 mShouldReportView = true;
             }
         }
@@ -239,7 +240,7 @@ public class CardViewFragment extends FamiliarFragment {
      */
     private void reportAppIndexEndIfAble() {
         /* If the view was previously reported, and the name exists */
-        if(mHasReportedView && mCardName != null) {
+        if (mHasReportedView && mCardName != null) {
             /* Call end() and disconnect the client */
             AppIndex.AppIndexApi.end(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
             getFamiliarActivity().mGoogleApiClient.disconnect();
@@ -252,11 +253,11 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Set a hint to the system about whether this fragment's UI is currently visible to the user.
      * This hint defaults to true and is persistent across fragment instance state save and restore.
-     *
+     * <p/>
      * An app may set this to false to indicate that the fragment's UI is scrolled out of visibility
      * or is otherwise not directly visible to the user. This may be used by the system to
      * prioritize operations such as fragment lifecycle updates or loader ordering behavior.
-     *
+     * <p/>
      * In this case, it's used to report fragment views to Google app indexing
      *
      * @param isVisibleToUser true if this fragment's UI is currently visible to the user (default),
@@ -268,8 +269,7 @@ public class CardViewFragment extends FamiliarFragment {
         if (isVisibleToUser) {
             /* If the fragment is visible to the user, attempt to report the view */
             reportAppIndexViewIfAble();
-        }
-        else {
+        } else {
             /* The view isn't visible anymore, attempt to report it */
             reportAppIndexEndIfAble();
         }
@@ -384,7 +384,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
-        while(DatabaseManager.getInstance().mOpenCounter.get() > 0) {
+        while (DatabaseManager.getInstance().mOpenCounter.get() > 0) {
             /* Database is busy, updating probably. Spin for a bit
              * This happens when a deep link is opened for the first time
              * The transactional update collides with fetching card data
@@ -400,8 +400,8 @@ public class CardViewFragment extends FamiliarFragment {
         /* Start building a description */
         addToDescription(getString(R.string.search_name), mCardName);
         try {
-            String setName = CardDbAdapter.getSetNameFromCode(mSetCode, database);
-            addToDescription(getString(R.string.search_set), setName);
+            mSetName = CardDbAdapter.getSetNameFromCode(mSetCode, database);
+            addToDescription(getString(R.string.search_set), mSetName);
         } catch (FamiliarDbException e) {
             /* no set for you */
         }
@@ -591,7 +591,7 @@ public class CardViewFragment extends FamiliarFragment {
         cCardById.close();
 
 		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
-		   one set */
+           one set */
         Cursor cCardByName = CardDbAdapter.fetchCardByName(mCardName,
                 new String[]{
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
@@ -613,21 +613,21 @@ public class CardViewFragment extends FamiliarFragment {
         }
         DatabaseManager.getInstance().closeDatabase();
 
-        if(mShouldReportView) {
+        if (mShouldReportView) {
             reportAppIndexViewIfAble();
         }
     }
 
     /**
      * Used to build a meta description of this card, for app indexing
-     * @param tag   A tag for this data
-     * @param data  The data to add to the description
+     *
+     * @param tag  A tag for this data
+     * @param data The data to add to the description
      */
     private void addToDescription(String tag, String data) {
-        if(mDescription == null) {
+        if (mDescription == null) {
             mDescription = tag + ": \"" + data + "\"";
-        }
-        else {
+        } else {
             mDescription += "\n" + tag + ": \"" + data + "\"";
         }
     }
