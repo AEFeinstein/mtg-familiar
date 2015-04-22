@@ -224,7 +224,7 @@ public class CardViewFragment extends FamiliarFragment {
             if (mCardName != null) {
                 /* Connect your client */
                 getFamiliarActivity().mGoogleApiClient.connect();
-                AppIndex.AppIndexApi.action(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
+                AppIndex.AppIndexApi.start(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
 
                 /* Manage state */
                 mHasReportedView = true;

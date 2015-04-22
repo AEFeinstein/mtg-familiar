@@ -369,6 +369,6 @@
     <string name="search_mana_cost">Coste de Maná</string>
     <string name="dialog_no">No</string>
     <string name="filter_title_view_card">Ver carta</string>
-    <string name="wishlist_export_title">Exportar nombre del set?</string>
-    <string name="wishlist_export_text">Quieres incluir los nombres de los sets al exportar tu lista?</string>
+    <string name="wishlist_export_title">¿Exportar nombres de expansión?</string>
+    <string name="wishlist_export_text">​¿Quieres incluir los nombres de las expansiones en tu lista de deseos exportada?</string>
 </resources>
