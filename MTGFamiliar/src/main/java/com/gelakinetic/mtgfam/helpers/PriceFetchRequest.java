@@ -179,6 +179,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                         pi.mAverage = pi.mFoilAverage;
                         pi.mHigh = pi.mFoilAverage;
                     }
+					DatabaseManager.getInstance().closeDatabase(); /* database close if everything was ok */
                     return pi;
                 } catch (NumberFormatException error) {
                     exception = new SpiceException(error.getLocalizedMessage());
@@ -198,7 +199,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
             }
             retry--;
         }
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance().closeDatabase(); /* database close if something failed */
         if (exception != null) {
             throw exception;
         } else {
