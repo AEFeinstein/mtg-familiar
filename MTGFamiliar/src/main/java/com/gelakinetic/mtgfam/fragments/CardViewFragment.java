@@ -200,7 +200,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @return An action describing this page view
      */
-    public Action getAppIndexAction() {
+    Action getAppIndexAction() {
 
         Thing object = new Thing.Builder()
                 .setType("http://schema.org/Thing")         /* Optional, any valid schema.org type */

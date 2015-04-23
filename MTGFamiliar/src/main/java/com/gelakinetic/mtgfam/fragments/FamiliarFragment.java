@@ -16,16 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.concurrent.RejectedExecutionException;
 
 /**

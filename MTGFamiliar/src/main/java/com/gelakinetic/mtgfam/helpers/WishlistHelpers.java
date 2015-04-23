@@ -375,7 +375,7 @@ public class WishlistHelpers {
 		 * @param card The MtgCard which will be the base for this object
 		 */
 		public CompressedWishlistInfo(MtgCard card) {
-			mInfo = new ArrayList<IndividualSetInfo>();
+			mInfo = new ArrayList<>();
 			mCard = card;
 			add(mCard);
 		}
