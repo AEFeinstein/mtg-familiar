@@ -165,6 +165,8 @@ public class ResultListFragment extends FamiliarFragment {
                     }
                 }
             }
+            DatabaseManager.getInstance().closeDatabase();
+
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
@@ -179,7 +181,6 @@ public class ResultListFragment extends FamiliarFragment {
         if (mCursor != null) {
             mCursor.close();
         }
-        DatabaseManager.getInstance().closeDatabase();
     }
 
     /**

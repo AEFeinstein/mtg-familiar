@@ -130,7 +130,7 @@
 <string name="main_tts_warning_text">Cette appli permet la synthèse vocale parmi ses fonctionnalités, mais il semble que vous ne l\'ayiez pas installée. Si vous voulez l\'installer, utiliser le lien \"Installer Text-to-Speech\" dans le menu des paramètres.</string>
 <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
 <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
-<string name="main_whats_new_text">- Nouveau design matériel&lt;br&gt;&lt;br&gt; - Document JAR ajouté&lt;br&gt;&lt;br&gt; - Listes des extensions légales, restreintes et interdites aux règles&lt;br&gt;&lt;br&gt; - Copie des règles dans le presse-papier sur un appui long&lt;br&gt;&lt;br&gt; - Préférence ajoutée dans le choix de la langue de l\'application&lt;br&gt;&lt;br&gt; - Listes de voeux triées par extension&lt;br&gt;&lt;br&gt; - Suppression d\'une ligne d\'échange par un appui long&lt;br&gt;&lt;br&gt; - Corrections de bugs, comme toujours</string>
+<string name="main_whats_new_text">-Lien Profond&lt;br&gt;&lt;br&gt;- Corrections de bugs</string>
 <string name="main_whats_new_title">Nouveautés</string>
 <string name="main_wishlist">Liste de voeux</string>
 <string name="mana_pool_clear_all">Tout effacer</string>
@@ -365,4 +365,10 @@
 <string name="wishlist_type_price">Prix</string>
 <string name="wishlist_type_set">Extension</string>
 <string name="wishlist_view_card">Voir la carte</string>
+    <string name="search_type">Type</string>
+    <string name="search_mana_cost">Coût Mana</string>
+    <string name="dialog_no">Non</string>
+    <string name="filter_title_view_card">Vue Carte</string>
+    <string name="wishlist_export_title">Exporter les noms des extensions</string>
+    <string name="wishlist_export_text">Voulez-vous intégrer les noms des extensions dans l\'export de votre liste de vœux?</string>
 </resources>

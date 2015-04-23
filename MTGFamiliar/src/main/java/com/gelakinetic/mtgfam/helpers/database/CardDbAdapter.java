@@ -68,7 +68,7 @@ public class CardDbAdapter {
     public static final String DATABASE_NAME = "data";
     public static final String DATABASE_TABLE_CARDS = "cards";
     public static final String DATABASE_TABLE_SETS = "sets";
-    public static final int DATABASE_VERSION = 54;
+    public static final int DATABASE_VERSION = 55;
     public static final String KEY_ID = "_id";
     public static final String KEY_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1; // "name";
     public static final String KEY_SET = "expansion";
@@ -373,6 +373,46 @@ public class CardDbAdapter {
 
         try {
             c = mDb.rawQuery(sql, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
+    }
+
+    /**
+     *
+     * @param l
+     * @param fields
+     * @param database
+     * @return
+     * @throws FamiliarDbException
+     */
+    public static Cursor fetchCardByMultiverseId(long l, String[] fields, SQLiteDatabase database) throws FamiliarDbException {
+        String sql = "SELECT ";
+        boolean first = true;
+        for (String field : fields) {
+            if (first) {
+                first = false;
+            } else {
+                sql += ", ";
+            }
+            sql += field;
+        }
+        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
+                + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
+                + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
+                + DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID + " = " + l
+                + " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
+                + " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
+                + " DESC";
+        Cursor c;
+
+        try {
+            c = database.rawQuery(sql, null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -1902,5 +1942,25 @@ public class CardDbAdapter {
         }
 
         return isModernLegalSet(setCode, mDb);
+    }
+
+    public static String getSetNameFromCode(String setCode, SQLiteDatabase database) throws FamiliarDbException {
+
+        String columns[] = new String[]{KEY_NAME};
+        Cursor c;
+        try {
+            c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                    + "=\"" + setCode+"\"", null, null, null, KEY_NAME, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        String returnString = null;
+        if (c != null) {
+            c.moveToFirst();
+            returnString = c.getString(c.getColumnIndex(KEY_NAME));
+            c.close();
+        }
+        return returnString;
     }
 }

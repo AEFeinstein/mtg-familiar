@@ -31,6 +31,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -68,6 +69,9 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -151,6 +155,12 @@ public class CardViewFragment extends FamiliarFragment {
     /* Easier than calling getActivity() all the time, and handles being nested */
     private FamiliarActivity mActivity;
 
+    /* State for reporting page views */
+    private boolean mHasReportedView = false;
+    private boolean mShouldReportView = false;
+    private String mDescription;
+    private String mSetName;
+
     /**
      * Kill any AsyncTask if it is still running
      */
@@ -173,6 +183,95 @@ public class CardViewFragment extends FamiliarFragment {
         mActivity.clearLoading();
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
+        }
+    }
+
+    /**
+     * Called when the fragment stops, attempt to report the close
+     */
+    @Override
+    public void onStop() {
+        reportAppIndexEndIfAble();
+        super.onStop();
+    }
+
+    /**
+     * Creates and returns the action describing this page view
+     *
+     * @return An action describing this page view
+     */
+    Action getAppIndexAction() {
+
+        Thing object = new Thing.Builder()
+                .setType("http://schema.org/Thing")         /* Optional, any valid schema.org type */
+                .setName(mCardName + " (" + mSetName + ")") /* Required, title field */
+                .setDescription(mDescription)               /* Required, description field */
+                /* Required, deep link in the android-app:// format */
+                .setUrl(Uri.parse("android-app://com.gelakinetic.mtgfam/card/multiverseid/" + mMultiverseId))
+                .build();
+
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .build();
+    }
+
+    /**
+     * Reports this view to the Google app indexing API, once, when the fragment is viewed
+     */
+    private void reportAppIndexViewIfAble() {
+        /* If this view hasn't been reported yet, and the name exists */
+        if (!mHasReportedView) {
+            if (mCardName != null) {
+                /* Connect your client */
+                getFamiliarActivity().mGoogleApiClient.connect();
+                AppIndex.AppIndexApi.start(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
+
+                /* Manage state */
+                mHasReportedView = true;
+                mShouldReportView = false;
+            } else {
+                mShouldReportView = true;
+            }
+        }
+    }
+
+    /**
+     * Ends the report to the Google app indexing API, once, when the fragment is no longer viewed
+     */
+    private void reportAppIndexEndIfAble() {
+        /* If the view was previously reported, and the name exists */
+        if (mHasReportedView && mCardName != null) {
+            /* Call end() and disconnect the client */
+            AppIndex.AppIndexApi.end(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
+            getFamiliarActivity().mGoogleApiClient.disconnect();
+
+            /* manage state */
+            mHasReportedView = false;
+        }
+    }
+
+    /**
+     * Set a hint to the system about whether this fragment's UI is currently visible to the user.
+     * This hint defaults to true and is persistent across fragment instance state save and restore.
+     * <p/>
+     * An app may set this to false to indicate that the fragment's UI is scrolled out of visibility
+     * or is otherwise not directly visible to the user. This may be used by the system to
+     * prioritize operations such as fragment lifecycle updates or loader ordering behavior.
+     * <p/>
+     * In this case, it's used to report fragment views to Google app indexing
+     *
+     * @param isVisibleToUser true if this fragment's UI is currently visible to the user (default),
+     *                        false if it is not.
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            /* If the fragment is visible to the user, attempt to report the view */
+            reportAppIndexViewIfAble();
+        } else {
+            /* The view isn't visible anymore, attempt to report it */
+            reportAppIndexEndIfAble();
         }
     }
 
@@ -267,7 +366,7 @@ public class CardViewFragment extends FamiliarFragment {
         long cardID = extras.getLong(CARD_ID);
 
         try {
-			/* from onCreateView */
+            /* from onCreateView */
             setInfoFromID(cardID);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
@@ -285,12 +384,27 @@ public class CardViewFragment extends FamiliarFragment {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
+        while (DatabaseManager.getInstance().mOpenCounter.get() > 0) {
+            /* Database is busy, updating probably. Spin for a bit
+             * This happens when a deep link is opened for the first time
+             * The transactional update collides with fetching card data
+             */
+        }
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
         Cursor cCardById = CardDbAdapter.fetchCard(id, database);
 
 		/* http://magiccards.info/scans/en/mt/55.jpg */
         mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
         mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
+
+        /* Start building a description */
+        addToDescription(getString(R.string.search_name), mCardName);
+        try {
+            mSetName = CardDbAdapter.getSetNameFromCode(mSetCode, database);
+            addToDescription(getString(R.string.search_set), mSetName);
+        } catch (FamiliarDbException e) {
+            /* no set for you */
+        }
 
         mMagicCardsInfoSetCode =
                 CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
@@ -301,34 +415,42 @@ public class CardViewFragment extends FamiliarFragment {
             case 'C':
             case 'c':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_common)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Common));
                 break;
             case 'U':
             case 'u':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Uncommon));
                 break;
             case 'R':
             case 'r':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_rare)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Rare));
                 break;
             case 'M':
             case 'm':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_mythic)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Mythic));
                 break;
             case 'T':
             case 't':
                 mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
+                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Timeshifted));
                 break;
         }
 
         String sCost = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+        addToDescription(getString(R.string.search_mana_cost), sCost);
         CharSequence csCost = ImageGetterHelper.formatStringWithGlyphs(sCost, imgGetter);
         mCostTextView.setText(csCost);
 
         String sAbility = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+        addToDescription(getString(R.string.search_text), sAbility);
         CharSequence csAbility = ImageGetterHelper.formatStringWithGlyphs(sAbility, imgGetter);
         mAbilityTextView.setText(csAbility);
 
         String sFlavor = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+        addToDescription(getString(R.string.search_flavor_text), sFlavor);
         CharSequence csFlavor = ImageGetterHelper.formatStringWithGlyphs(sFlavor, imgGetter);
         mFlavorTextView.setText(csFlavor);
 
@@ -336,6 +458,9 @@ public class CardViewFragment extends FamiliarFragment {
         mTypeTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_TYPE)));
         mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
         mArtistTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
+
+        addToDescription(getString(R.string.search_type), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_TYPE)));
+        addToDescription(getString(R.string.search_artist), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
 
         int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
         float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
@@ -383,6 +508,8 @@ public class CardViewFragment extends FamiliarFragment {
                     powTouStr += t;
                 }
             }
+
+            addToDescription(getString(R.string.search_power), powTouStr);
 
             mPowTouTextView.setText(powTouStr);
         } else {
@@ -464,7 +591,7 @@ public class CardViewFragment extends FamiliarFragment {
         cCardById.close();
 
 		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
-		   one set */
+           one set */
         Cursor cCardByName = CardDbAdapter.fetchCardByName(mCardName,
                 new String[]{
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
@@ -485,6 +612,24 @@ public class CardViewFragment extends FamiliarFragment {
             mActivity.supportInvalidateOptionsMenu();
         }
         DatabaseManager.getInstance().closeDatabase();
+
+        if (mShouldReportView) {
+            reportAppIndexViewIfAble();
+        }
+    }
+
+    /**
+     * Used to build a meta description of this card, for app indexing
+     *
+     * @param tag  A tag for this data
+     * @param data The data to add to the description
+     */
+    private void addToDescription(String tag, String data) {
+        if (mDescription == null) {
+            mDescription = tag + ": \"" + data + "\"";
+        } else {
+            mDescription += "\n" + tag + ": \"" + data + "\"";
+        }
     }
 
     /**
@@ -1105,10 +1250,10 @@ public class CardViewFragment extends FamiliarFragment {
 
             final String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
 
-            // Check disk cache in background thread
+            /* Check disk cache in background thread */
             Bitmap bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
 
-            if (bitmap == null) { // Not found in disk cache
+            if (bitmap == null) { /* Not found in disk cache */
 
                 boolean bRetry = true;
 
@@ -1127,7 +1272,7 @@ public class CardViewFragment extends FamiliarFragment {
                             u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                             cardLanguage = "en";
                         } else {
-                             if (!triedMtgi) {
+                            if (!triedMtgi) {
                                 u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                                 triedMtgi = true;
                             } else {
@@ -1191,7 +1336,7 @@ public class CardViewFragment extends FamiliarFragment {
                 int newWidth = Math.round(bitmap.getWidth() * scale);
                 int newHeight = Math.round(bitmap.getHeight() * scale);
 
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); // todo this is leaky?
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); /* todo this is leaky? */
                 mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
                 bitmap.recycle();
             } catch (Exception e) {

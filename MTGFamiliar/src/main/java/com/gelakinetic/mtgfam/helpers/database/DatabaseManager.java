@@ -11,7 +11,7 @@ public class DatabaseManager {
 
     private static DatabaseManager mDatabaseManager;
     private static DatabaseHelper mDatabaseHelper;
-    private final AtomicInteger mOpenCounter = new AtomicInteger();
+    public final AtomicInteger mOpenCounter = new AtomicInteger();
     private SQLiteDatabase mDatabase;
     private boolean mTransactional;
 

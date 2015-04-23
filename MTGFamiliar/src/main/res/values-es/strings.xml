@@ -130,7 +130,7 @@
 <string name="main_tts_warning_text">Esta aplicación tiene la capacidad de usar síntesis de voz (Text-to-Speech) para algunas de sus funciones, pero parece que no la tienes instalada. Si quieres instalarla, usa el enlace \"Instalar Text-to-Speech\" en el menú de ajustes.</string>
 <string name="main_tts_warning_title">Síntesis de voz (Text-to-Speech)</string>
 <string name="main_whats_new_in_title">Novedades de la versión</string>
-<string name="main_whats_new_text">- Nuevo Material design.&lt;br&gt;&lt;br&gt; - Añadido el documento JAR.&lt;br&gt;&lt;br&gt; - Añadida a las reglas la lista de prohibidas, restringidas y legales.&lt;br&gt;&lt;br&gt; - Posibilidad de copiar las reglas de una carta al portapapeles manteniéndolas pulsadas.&lt;br&gt;&lt;br&gt; - Añadida la opción de seleccionar el idioma de la aplicación.&lt;br&gt;&lt;br&gt; - Añadida la opción de ordenar la lista de deseos por expansión.&lt;br&gt;&lt;br&gt; - Posibilidad de eliminar entradas de intercambios manteniéndolas pulsadas.&lt;br&gt;&lt;br&gt; - Arreglos de bugs, como siempre.</string>
+<string name="main_whats_new_text">-Enlace Profundo&lt;br&gt;&lt;br&gt;- Arreglos de bugs</string>
 <string name="main_whats_new_title">Novedades</string>
 <string name="main_wishlist">Lista de deseos</string>
 <string name="mana_pool_clear_all">Borrar todo</string>
@@ -365,4 +365,10 @@
 <string name="wishlist_type_price">Precio</string>
 <string name="wishlist_type_set">Expansión</string>
 <string name="wishlist_view_card">Ver carta</string>
+    <string name="search_type">Tipo</string>
+    <string name="search_mana_cost">Coste de Maná</string>
+    <string name="dialog_no">No</string>
+    <string name="filter_title_view_card">Ver carta</string>
+    <string name="wishlist_export_title">¿Exportar nombres de expansión?</string>
+    <string name="wishlist_export_text">​¿Quieres incluir los nombres de las expansiones en tu lista de deseos exportada?</string>
 </resources>
