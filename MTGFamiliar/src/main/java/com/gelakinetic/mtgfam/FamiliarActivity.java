@@ -359,10 +359,9 @@ public class FamiliarActivity extends ActionBarActivity {
                 switch (mPageEntries[i].mNameResource) {
                     case R.string.main_force_update_title: {
                         if (getNetworkState(true) != -1) {
+                            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
                             try {
-                                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
                                 CardDbAdapter.dropCreateDB(database);
-                                DatabaseManager.getInstance().closeDatabase();
                                 mPreferenceAdapter.setLastLegalityUpdate(0);
                                 mPreferenceAdapter.setLastIPGUpdate(0);
                                 mPreferenceAdapter.setLastMTRUpdate(0);
@@ -375,6 +374,7 @@ public class FamiliarActivity extends ActionBarActivity {
                             } catch (FamiliarDbException e) {
                                 e.printStackTrace();
                             }
+                            DatabaseManager.getInstance().closeDatabase();
                         }
                         shouldCloseDrawer = true;
                         break;
@@ -627,8 +627,8 @@ public class FamiliarActivity extends ActionBarActivity {
                 /* User clicked a deep link, jump to the card(s) */
                 isDeepLink = true;
 
+                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                     Cursor cursor = null;
                     boolean screenLaunched = false;
                     if (data.getScheme().toLowerCase().equals("card") &&
@@ -666,10 +666,10 @@ public class FamiliarActivity extends ActionBarActivity {
                         this.finish();
                         shouldSelectItem = false;
                     }
-                    DatabaseManager.getInstance().closeDatabase();
                 } catch (FamiliarDbException e) {
                     e.printStackTrace();
                 }
+                DatabaseManager.getInstance().closeDatabase();
             }
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
             if (shouldSelectItem) {

@@ -1,20 +1,20 @@
 /**
- Copyright 2011 Adam Feinstein
-
- This file is part of MTG Familiar.
-
- MTG Familiar is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- MTG Familiar is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright 2011 Adam Feinstein
+ * <p/>
+ * This file is part of MTG Familiar.
+ * <p/>
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p/>
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.fragments;
@@ -365,12 +365,8 @@ public class CardViewFragment extends FamiliarFragment {
         }
         long cardID = extras.getLong(CARD_ID);
 
-        try {
-            /* from onCreateView */
-            setInfoFromID(cardID);
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(true);
-        }
+        /* from onCreateView */
+        setInfoFromID(cardID);
     }
 
     /**
@@ -378,20 +374,27 @@ public class CardViewFragment extends FamiliarFragment {
      * It also saves information for AsyncTasks to use later and manages the transform/flip button
      *
      * @param id the ID of the the card to be displayed
-     * @throws FamiliarDbException
      */
-    private void setInfoFromID(final long id) throws FamiliarDbException {
+    private void setInfoFromID(final long id) {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
-        while (DatabaseManager.getInstance().mOpenCounter.get() > 0) {
+        while (DatabaseManager.getInstance().mTransactional &&
+                DatabaseManager.getInstance().mOpenCounter.get() > 0) {
             /* Database is busy, updating probably. Spin for a bit
              * This happens when a deep link is opened for the first time
              * The transactional update collides with fetching card data
              */
         }
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
-        Cursor cCardById = CardDbAdapter.fetchCard(id, database);
+        Cursor cCardById;
+        try {
+            cCardById = CardDbAdapter.fetchCard(id, database);
+        } catch (FamiliarDbException e) {
+            handleFamiliarDbException(true);
+            DatabaseManager.getInstance().closeDatabase();
+            return;
+        }
 
 		/* http://magiccards.info/scans/en/mt/55.jpg */
         mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
@@ -406,9 +409,15 @@ public class CardViewFragment extends FamiliarFragment {
             /* no set for you */
         }
 
-        mMagicCardsInfoSetCode =
-                CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
-                        database);
+        try {
+            mMagicCardsInfoSetCode =
+                    CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
+                            database);
+        } catch (FamiliarDbException e) {
+            handleFamiliarDbException(true);
+            DatabaseManager.getInstance().closeDatabase();
+            return;
+        }
         mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
         switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
@@ -550,7 +559,13 @@ public class CardViewFragment extends FamiliarFragment {
             } else if (mCardNumber.contains("b")) {
                 mTransformCardNumber = mCardNumber.replace("b", "a");
             }
-            mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
+            try {
+                mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(true);
+                DatabaseManager.getInstance().closeDatabase();
+                return;
+            }
             if (mTransformId == -1) {
                 mTransformButton.setVisibility(View.GONE);
                 mTransformButtonDivider.setVisibility(View.GONE);
@@ -559,12 +574,7 @@ public class CardViewFragment extends FamiliarFragment {
                     public void onClick(View v) {
                         mCardBitmap = null;
                         mCardNumber = mTransformCardNumber;
-                        try {
-                            setInfoFromID(mTransformId);
-                        } catch (FamiliarDbException e) {
-                            handleFamiliarDbException(true);
-                        }
-
+                        setInfoFromID(mTransformId);
                     }
                 });
             }
@@ -592,22 +602,35 @@ public class CardViewFragment extends FamiliarFragment {
 
 		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
            one set */
-        Cursor cCardByName = CardDbAdapter.fetchCardByName(mCardName,
-                new String[]{
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
-        );
+        Cursor cCardByName = null;
+        try {
+            cCardByName = CardDbAdapter.fetchCardByName(mCardName,
+                    new String[]{
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
+            );
+        } catch (FamiliarDbException e) {
+            handleFamiliarDbException(true);
+            DatabaseManager.getInstance().closeDatabase();
+            return;
+        }
         mSets = new LinkedHashSet<>();
         mCardIds = new LinkedHashSet<>();
         while (!cCardByName.isAfterLast()) {
-            if (mSets.add(CardDbAdapter
-                    .getTcgName(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
-                mCardIds.add(cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID)));
+            try {
+                if (mSets.add(CardDbAdapter
+                        .getTcgName(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
+                    mCardIds.add(cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID)));
+                }
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(true);
+                DatabaseManager.getInstance().closeDatabase();
+                return;
             }
             cCardByName.moveToNext();
         }
         cCardByName.close();
-		/* If it exists in only one set, remove the button from the menu */
+        /* If it exists in only one set, remove the button from the menu */
         if (mSets.size() == 1) {
             mActivity.supportInvalidateOptionsMenu();
         }
@@ -757,11 +780,7 @@ public class CardViewFragment extends FamiliarFragment {
                         builder.setTitle(R.string.card_view_set_dialog_title);
                         builder.setItems(aSets, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int item) {
-                                try {
-                                    setInfoFromID(aIds[item]);
-                                } catch (FamiliarDbException e) {
-                                    handleFamiliarDbException(true);
-                                }
+                                setInfoFromID(aIds[item]);
                             }
                         });
                         return builder.create();
@@ -804,12 +823,12 @@ public class CardViewFragment extends FamiliarFragment {
                         return builder.create();
                     }
                     case WISH_LIST_COUNTS: {
-                        try {
-                            return WishlistHelpers.getDialog(mCardName, CardViewFragment.this, false);
-                        } catch (FamiliarDbException e) {
+                        Dialog dialog = WishlistHelpers.getDialog(mCardName, CardViewFragment.this, false);
+                        if (dialog == null) {
                             handleFamiliarDbException(false);
                             return DontShowDialog();
                         }
+                        return dialog;
                     }
                     default: {
                         return DontShowDialog();
@@ -1161,8 +1180,8 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected Void doInBackground(Void... params) {
 
+            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
             try {
-                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                 Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
                 mLegalities = new String[cFormats.getCount()];
@@ -1196,12 +1215,12 @@ public class CardViewFragment extends FamiliarFragment {
                     cFormats.moveToNext();
                 }
                 cFormats.close();
-                DatabaseManager.getInstance().closeDatabase();
             } catch (FamiliarDbException e) {
                 CardViewFragment.this.handleFamiliarDbException(false);
                 mLegalities = null;
             }
 
+            DatabaseManager.getInstance().closeDatabase();
             return null;
         }
 

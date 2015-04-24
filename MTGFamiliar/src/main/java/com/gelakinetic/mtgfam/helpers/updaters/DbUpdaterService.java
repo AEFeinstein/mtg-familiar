@@ -108,9 +108,9 @@ public class DbUpdaterService extends IntentService {
             boolean commitDates = true;
             boolean newRulesParsed = false;
 
+            /* Get database access, which auto-opens it, close it, and open a transactional write */
+            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
             try {
-                /* Get database access, which auto-opens it, close it, and open a transactional write */
-                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
 
                 showStatusNotification();
 
@@ -168,8 +168,6 @@ public class DbUpdaterService extends IntentService {
                     }
                 }
 
-                DatabaseManager.getInstance().closeDatabase();
-
                 cancelStatusNotification();
             } catch (MalformedURLException e1) {
                 commitDates = false; /* don't commit the dates */
@@ -178,6 +176,7 @@ public class DbUpdaterService extends IntentService {
             } catch (FamiliarDbException e) {
                 commitDates = false;
             }
+            DatabaseManager.getInstance().closeDatabase();
 
 			/* Parse the MTR and IPG */
             MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);

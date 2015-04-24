@@ -72,8 +72,8 @@ public class ResultListFragment extends FamiliarFragment {
         Bundle args = this.getArguments();
 
 		/* Open up the database, search for stuff */
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 
 			/* If "id0" exists, then it's three cards and they should be merged
              * Otherwise, do a search with the given criteria
@@ -165,11 +165,10 @@ public class ResultListFragment extends FamiliarFragment {
                     }
                 }
             }
-            DatabaseManager.getInstance().closeDatabase();
-
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     /**

@@ -293,18 +293,20 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param cmc  The converted mana cost of the card to randomly fetch
      */
     private void getOneSpell(String type, int cmc) {
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
         try {
             String logic = "=";
             if (type.equals(EQUIPMENT)) {
                 logic = "<=";
             }
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
-            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
             Cursor permanents = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
                     CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, cmc, logic, null, null, null,
                     null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
 
             if (permanents.getCount() == 0) {
+                permanents.close();
+                DatabaseManager.getInstance().closeDatabase();
                 return;
             }
             int pos = mRandom.nextInt(permanents.getCount());
@@ -318,10 +320,10 @@ public class MoJhoStoFragment extends FamiliarFragment {
             startNewFragment(cvpFrag, args);
 
             permanents.close();
-            DatabaseManager.getInstance().closeDatabase();
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         }
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     /**
@@ -331,9 +333,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param type The supertype of the card to randomly fetch
      */
     private void getThreeSpells(String type) {
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
         try {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
-            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
             Cursor spells = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
                     CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, -1, null, null, null, null,
                     null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
@@ -364,9 +366,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
             startNewFragment(rlFrag, args);
 
             spells.close();
-            DatabaseManager.getInstance().closeDatabase();
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         }
+        DatabaseManager.getInstance().closeDatabase();
     }
 }

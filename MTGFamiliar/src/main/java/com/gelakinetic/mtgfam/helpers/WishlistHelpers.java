@@ -131,10 +131,8 @@ public class WishlistHelpers {
      * @param fragment       The fragment which hosts the dialog and receives onWishlistChanged()
      * @param showCardButton Whether the button to launch the CardViewFragment should be shown
      * @return A dialog which edits the wishlist
-     * @throws com.gelakinetic.mtgfam.helpers.database.FamiliarDbException
      */
-    public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment, boolean showCardButton)
-            throws FamiliarDbException {
+    public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment, boolean showCardButton) {
 
         final Context ctx = fragment.getActivity();
 
@@ -152,18 +150,18 @@ public class WishlistHelpers {
                 @Override
                 public void onClick(View view) {
                     Bundle args = new Bundle();
-                    try {
 						/* Open the database */
-                        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
+                    SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
+                    try {
 						/* Get the card ID, and send it to a new CardViewFragment */
                         args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.fetchIdByName(mCardName, db)});
                         args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-                        DatabaseManager.getInstance().closeDatabase();
                         CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
                         fragment.startNewFragment(cvpFrag, args);
                     } catch (FamiliarDbException e) {
                         fragment.handleFamiliarDbException(false);
                     }
+                    DatabaseManager.getInstance().closeDatabase();
                 }
             });
         } else {
@@ -184,12 +182,18 @@ public class WishlistHelpers {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
 
 		/* Get all the cards with relevant info from the database */
-        Cursor cards = CardDbAdapter.fetchCardByName(mCardName, new String[]{
-                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, db);
+        Cursor cards = null;
+        try {
+            cards = CardDbAdapter.fetchCardByName(mCardName, new String[]{
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
+                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, db);
+        } catch (FamiliarDbException e) {
+            DatabaseManager.getInstance().closeDatabase();
+            return null;
+        }
 
 		/* For each card, add it to the wishlist view */
         while (!cards.isAfterLast()) {
@@ -211,17 +215,22 @@ public class WishlistHelpers {
 
 			/* If this card has a foil version, add that too */
             View wishlistRowFoil = null;
-            if (CardDbAdapter.canBeFoil(setCode, db)) {
-                wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
-                        null, false);
-                assert wishlistRowFoil != null;
-                ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
-                ((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText("0");
-                wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
-                linearLayout.addView(wishlistRowFoil);
-                potentialSetCodes.add(setCode);
-                potentialRarities.add(rarity);
-                potentialNumbers.add(number);
+            try {
+                if (CardDbAdapter.canBeFoil(setCode, db)) {
+                    wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
+                            null, false);
+                    assert wishlistRowFoil != null;
+                    ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
+                    ((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText("0");
+                    wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
+                    linearLayout.addView(wishlistRowFoil);
+                    potentialSetCodes.add(setCode);
+                    potentialRarities.add(rarity);
+                    potentialNumbers.add(number);
+                }
+            } catch (FamiliarDbException e) {
+                DatabaseManager.getInstance().closeDatabase();
+                return null;
             }
 
 			/* Set any counts currently in the wishlist */

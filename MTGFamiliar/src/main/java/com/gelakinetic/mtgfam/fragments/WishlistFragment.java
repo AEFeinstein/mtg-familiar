@@ -165,7 +165,7 @@ public class WishlistFragment extends FamiliarFragment {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 /* Remove the card */
                 mCompressedWishlist.remove(position);
-				/* Save the wishlist */
+                /* Save the wishlist */
                 WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
 
 				/* Redraw the new wishlist */
@@ -192,6 +192,7 @@ public class WishlistFragment extends FamiliarFragment {
             return;
         }
 
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
         try {
 			/* Make the new card */
             MtgCard card = new MtgCard();
@@ -201,11 +202,11 @@ public class WishlistFragment extends FamiliarFragment {
             card.message = getString(R.string.wishlist_loading);
 
 			/* Get some extra information from the database */
-            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
             Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, CardDbAdapter.allData, database);
             if (cardCursor.getCount() == 0) {
                 Toast.makeText(WishlistFragment.this.getActivity(), getString(R.string.toast_no_card),
                         Toast.LENGTH_LONG).show();
+                DatabaseManager.getInstance().closeDatabase();
                 return;
             }
             card.type = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
@@ -227,7 +228,6 @@ public class WishlistFragment extends FamiliarFragment {
             }
 			/* Clean up */
             cardCursor.close();
-            DatabaseManager.getInstance().closeDatabase();
 
 			/* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
             if (mCompressedWishlist.contains(card)) {
@@ -268,6 +268,7 @@ public class WishlistFragment extends FamiliarFragment {
         } catch (NumberFormatException e) {
 			/* eat it */
         }
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     /**
@@ -312,8 +313,8 @@ public class WishlistFragment extends FamiliarFragment {
     private void readAndCompressWishlist(String changedCardName) {
 		/* Read the wishlist */
         ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
+        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
 			/* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
                 card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
@@ -360,11 +361,10 @@ public class WishlistFragment extends FamiliarFragment {
 			/* Fill extra card data from the database, for displaying full card info */
             CardDbAdapter.fillExtraWishlistData(mCompressedWishlist, database);
 
-            DatabaseManager.getInstance().closeDatabase();
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
         }
-
+        DatabaseManager.getInstance().closeDatabase();
     }
 
     /**
@@ -444,12 +444,12 @@ public class WishlistFragment extends FamiliarFragment {
                 setShowsDialog(true);
                 switch (id) {
                     case DIALOG_UPDATE_CARD: {
-                        try {
-                            return WishlistHelpers.getDialog(cardName, WishlistFragment.this, true);
-                        } catch (FamiliarDbException e) {
+                        Dialog dialog = WishlistHelpers.getDialog(cardName, WishlistFragment.this, true);
+                        if (dialog == null) {
                             handleFamiliarDbException(false);
                             return DontShowDialog();
                         }
+                        return dialog;
                     }
                     case DIALOG_PRICE_SETTING: {
                         return new AlertDialogPro.Builder(this.getActivity())

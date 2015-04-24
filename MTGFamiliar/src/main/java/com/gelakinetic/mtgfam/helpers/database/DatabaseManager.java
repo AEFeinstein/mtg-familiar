@@ -13,7 +13,7 @@ public class DatabaseManager {
     private static DatabaseHelper mDatabaseHelper;
     public final AtomicInteger mOpenCounter = new AtomicInteger();
     private SQLiteDatabase mDatabase;
-    private boolean mTransactional;
+    public boolean mTransactional;
 
     /**
      * Initializes the singleton DatabaseManager, mDatabaseManager, and stores the singleton DatabaseHelper

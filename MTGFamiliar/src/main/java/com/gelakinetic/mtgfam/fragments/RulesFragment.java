@@ -176,6 +176,7 @@ public class RulesFragment extends FamiliarFragment {
                 isClickable = false;
             }
         } catch (FamiliarDbException e) {
+            DatabaseManager.getInstance().closeDatabase();
             handleFamiliarDbException(true);
             return myFragmentView;
         }
@@ -192,6 +193,7 @@ public class RulesFragment extends FamiliarFragment {
                 }
                 setsCursor.close();
             } catch (SQLiteDatabaseCorruptException e) {
+                DatabaseManager.getInstance().closeDatabase();
                 handleFamiliarDbException(true);
                 return null;
             }
@@ -292,6 +294,7 @@ public class RulesFragment extends FamiliarFragment {
                     }
                 }
             } catch (SQLiteDatabaseCorruptException e) {
+                DatabaseManager.getInstance().closeDatabase();
                 handleFamiliarDbException(true);
                 return null;
             }
@@ -389,15 +392,15 @@ public class RulesFragment extends FamiliarFragment {
                         if (mCategory == -1) {
                             title = getString(R.string.rules_search_all);
                         } else {
+                            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                             try {
-                                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                                 title = String.format(getString(R.string.rules_search_cat),
                                         CardDbAdapter.getCategoryName(mCategory, mSubcategory, database));
-                                DatabaseManager.getInstance().closeDatabase();
                             } catch (FamiliarDbException e) {
                                 title = String.format(getString(R.string.rules_search_cat),
                                         getString(R.string.rules_this_cat));
                             }
+                            DatabaseManager.getInstance().closeDatabase();
                         }
 
                         Dialog dialog = new AlertDialogPro.Builder(getActivity())
@@ -507,6 +510,7 @@ public class RulesFragment extends FamiliarFragment {
         if (shouldLink) {
             Matcher m = mLinkPattern.matcher(cs);
             while (m.find()) {
+                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                 try {
                     String[] tokens = cs.subSequence(m.start(), m.end()).toString().split("(\\.)");
                     int firstInt = Integer.parseInt(tokens[0]);
@@ -519,9 +523,7 @@ public class RulesFragment extends FamiliarFragment {
                         if (dashIndex >= 0) {
                             entry = entry.substring(0, dashIndex);
                         }
-                        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                         position = CardDbAdapter.getRulePosition(linkCat, linkSub, entry, database);
-                        DatabaseManager.getInstance().closeDatabase();
                     }
                     final int linkPosition = position;
                     result.setSpan(new ClickableSpan() {
@@ -539,6 +541,7 @@ public class RulesFragment extends FamiliarFragment {
                 } catch (Exception e) {
 					/* Eat any exceptions; they'll just cause the link to not appear*/
                 }
+                DatabaseManager.getInstance().closeDatabase();
             }
         }
         return result;

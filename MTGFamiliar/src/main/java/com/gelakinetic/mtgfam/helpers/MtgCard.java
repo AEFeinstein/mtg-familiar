@@ -124,7 +124,7 @@ public class MtgCard {
         this.foil = foil;
     }
 
-    public static MtgCard MtgCardFromTradeString(String line) throws FamiliarDbException {
+    public static MtgCard MtgCardFromTradeString(String line) {
 
         MtgCard card = new MtgCard();
         String[] parts = line.split(DELIMITER);
@@ -146,7 +146,11 @@ public class MtgCard {
 
 		/* Defaults regardless */
         SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
-        card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
+        try {
+            card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
+        } catch (FamiliarDbException e) {
+            card.tcgName = null;
+        }
         DatabaseManager.getInstance().closeDatabase();
         card.message = "loading";
         return card;
