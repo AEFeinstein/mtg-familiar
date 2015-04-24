@@ -943,9 +943,9 @@ public class FamiliarActivity extends ActionBarActivity {
             return ((FamiliarFragment) f).onInterceptSearchKey() || super.onKeyDown(keyCode, event);
         }
         /* Dinky workaround for LG phones: https://code.google.com/p/android/issues/detail?id=78154 */
-        else if ((keyCode == KeyEvent.KEYCODE_MENU) &&
+        else if ((keyCode == KeyEvent.KEYCODE_MENU) /* &&
                 (Build.VERSION.SDK_INT == 16) &&
-                (Build.MANUFACTURER.compareTo("LGE") == 0)) {
+                (Build.MANUFACTURER.compareTo("LGE") == 0) */) {
             return true;
         }
 
@@ -966,10 +966,13 @@ public class FamiliarActivity extends ActionBarActivity {
      */
     @Override
     public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_MENU) &&
-                (Build.VERSION.SDK_INT == 16) &&
-                (Build.MANUFACTURER.compareTo("LGE") == 0)) {
-            openOptionsMenu();
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar.isOverflowMenuShowing()) {
+                toolbar.dismissPopupMenus();
+            } else {
+                toolbar.showOverflowMenu();
+            }
             return true;
         }
         return super.onKeyUp(keyCode, event);
