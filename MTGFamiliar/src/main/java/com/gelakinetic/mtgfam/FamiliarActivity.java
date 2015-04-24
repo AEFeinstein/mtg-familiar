@@ -631,21 +631,22 @@ public class FamiliarActivity extends ActionBarActivity {
                     SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
                     Cursor cursor = null;
                     boolean screenLaunched = false;
-                    if (data.getPath().toLowerCase().contains("name")) {
-                        cursor = CardDbAdapter.fetchCardByName(data.getLastPathSegment(),
-                                new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-                    } else if (data.getPath().toLowerCase().contains("multiverseid")) {
-                        try {
-                            cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
-                                    new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-                        } catch (NumberFormatException e) {
-                            cursor = null;
+                    if (data.getScheme().toLowerCase().equals("card") &&
+                        data.getAuthority().toLowerCase().equals("multiverseid")) {
+                        if(data.getLastPathSegment() == null) {
+                            /* Home screen deep link */
+                            launchHomeScreen();
+                            screenLaunched = true;
+                            shouldSelectItem = false;
                         }
-                    } else {
-                        /* Assume home screen deep link */
-                        launchHomeScreen();
-                        screenLaunched = true;
-                        shouldSelectItem = false;
+                        else {
+                            try {
+                                cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
+                                        new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                            } catch (NumberFormatException e) {
+                               cursor = null;
+                            }
+                        }
                     }
 
                     if (cursor != null) {
