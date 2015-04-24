@@ -379,20 +379,20 @@ public class CardViewFragment extends FamiliarFragment {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
-        while (DatabaseManager.getInstance().mTransactional &&
-                DatabaseManager.getInstance().mOpenCounter.get() > 0) {
+        while (DatabaseManager.getInstance(getActivity()).mTransactional &&
+                DatabaseManager.getInstance(getActivity()).mOpenCounter.get() > 0) {
             /* Database is busy, updating probably. Spin for a bit
              * This happens when a deep link is opened for the first time
              * The transactional update collides with fetching card data
              */
         }
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
         Cursor cCardById;
         try {
             cCardById = CardDbAdapter.fetchCard(id, database);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
-            DatabaseManager.getInstance().closeDatabase();
+            DatabaseManager.getInstance(getActivity()).closeDatabase();
             return;
         }
 
@@ -415,7 +415,7 @@ public class CardViewFragment extends FamiliarFragment {
                             database);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
-            DatabaseManager.getInstance().closeDatabase();
+            DatabaseManager.getInstance(getActivity()).closeDatabase();
             return;
         }
         mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
@@ -563,7 +563,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
-                DatabaseManager.getInstance().closeDatabase();
+                DatabaseManager.getInstance(getActivity()).closeDatabase();
                 return;
             }
             if (mTransformId == -1) {
@@ -611,7 +611,7 @@ public class CardViewFragment extends FamiliarFragment {
             );
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
-            DatabaseManager.getInstance().closeDatabase();
+            DatabaseManager.getInstance(getActivity()).closeDatabase();
             return;
         }
         mSets = new LinkedHashSet<>();
@@ -624,7 +624,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
-                DatabaseManager.getInstance().closeDatabase();
+                DatabaseManager.getInstance(getActivity()).closeDatabase();
                 return;
             }
             cCardByName.moveToNext();
@@ -634,7 +634,7 @@ public class CardViewFragment extends FamiliarFragment {
         if (mSets.size() == 1) {
             mActivity.supportInvalidateOptionsMenu();
         }
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance(getActivity()).closeDatabase();
 
         if (mShouldReportView) {
             reportAppIndexViewIfAble();
@@ -940,7 +940,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mActivity.setLoading();
 
                 PriceFetchRequest priceRequest;
-                priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId);
+                priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId, getActivity());
                 mActivity.mSpiceManager.execute(priceRequest,
                         mCardName + "-" + mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
 
@@ -1180,7 +1180,7 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
             try {
                 Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
@@ -1220,7 +1220,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mLegalities = null;
             }
 
-            DatabaseManager.getInstance().closeDatabase();
+            DatabaseManager.getInstance(getActivity()).closeDatabase();
             return null;
         }
 

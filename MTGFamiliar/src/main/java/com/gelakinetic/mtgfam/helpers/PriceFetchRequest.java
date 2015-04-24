@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -36,6 +37,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
     private final String mCardName;
     private final String mSetCode;
     private final int mMultiverseID;
+    private final Context mContext;
     private String mCardType;
     private String mCardNumber;
 
@@ -47,12 +49,13 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
      * @param cardNumber   The collector's number of the card to look up
      * @param multiverseID The multiverse ID of the card to look up
      */
-    public PriceFetchRequest(String cardName, String setCode, String cardNumber, int multiverseID) {
+    public PriceFetchRequest(String cardName, String setCode, String cardNumber, int multiverseID, Context context) {
         super(PriceInfo.class);
         this.mCardName = cardName;
         this.mSetCode = setCode;
         this.mCardNumber = cardNumber;
         this.mMultiverseID = multiverseID;
+        this.mContext = context;
     }
 
     /**
@@ -85,7 +88,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         int retry = 4; /* try the fetch four times, once with accent marks and again without if it fails */
         /* then the same for multicard ordering */
         SpiceException exception = null; /* Save the exception during while loops */
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(mContext).openDatabase(false);
         while (retry > 0) {
             try {
 				/* If the card number wasn't given, figure it out */
@@ -179,7 +182,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                         pi.mAverage = pi.mFoilAverage;
                         pi.mHigh = pi.mFoilAverage;
                     }
-					DatabaseManager.getInstance().closeDatabase(); /* database close if everything was ok */
+					DatabaseManager.getInstance(mContext).closeDatabase(); /* database close if everything was ok */
                     return pi;
                 } catch (NumberFormatException error) {
                     exception = new SpiceException(error.getLocalizedMessage());
@@ -199,7 +202,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
             }
             retry--;
         }
-        DatabaseManager.getInstance().closeDatabase(); /* database close if something failed */
+        DatabaseManager.getInstance(mContext).closeDatabase(); /* database close if something failed */
         if (exception != null) {
             throw exception;
         } else {

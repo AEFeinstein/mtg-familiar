@@ -124,7 +124,7 @@ public class MtgCard {
         this.foil = foil;
     }
 
-    public static MtgCard MtgCardFromTradeString(String line) {
+    public static MtgCard MtgCardFromTradeString(String line, Context context) {
 
         MtgCard card = new MtgCard();
         String[] parts = line.split(DELIMITER);
@@ -145,13 +145,13 @@ public class MtgCard {
         card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
 
 		/* Defaults regardless */
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(context).openDatabase(false);
         try {
             card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
         } catch (FamiliarDbException e) {
             card.tcgName = null;
         }
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance(context).closeDatabase();
         card.message = "loading";
         return card;
     }

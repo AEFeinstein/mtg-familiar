@@ -112,7 +112,7 @@ public class SearchViewFragment extends FamiliarFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
         try {
             /* Query the database for all sets and fill the arrays to populate the list of choices with */
             Cursor setCursor = CardDbAdapter.fetchAllSets(database);
@@ -145,7 +145,7 @@ public class SearchViewFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance(getActivity()).closeDatabase();
 
         /* Get the different rarities out of resources to populate the list of choices with */
         Resources res = getResources();

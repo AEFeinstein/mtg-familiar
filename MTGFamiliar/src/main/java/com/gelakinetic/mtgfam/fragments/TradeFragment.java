@@ -212,7 +212,7 @@ public class TradeFragment extends FamiliarFragment {
 		/* Parse the int after the "" check */
         int numberOf = Integer.parseInt(numberOfFromField);
 
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
         try {
             /* Get the rest of the relevant card info from the database */
             Cursor cardCursor = CardDbAdapter.fetchCardByName(cardName, new String[]{
@@ -225,7 +225,7 @@ public class TradeFragment extends FamiliarFragment {
             if (cardCursor.getCount() == 0) {
                 Toast.makeText(TradeFragment.this.getActivity(), getString(R.string.toast_no_card), Toast.LENGTH_LONG)
                         .show();
-                DatabaseManager.getInstance().closeDatabase();
+                DatabaseManager.getInstance(getActivity()).closeDatabase();
                 return;
             }
 
@@ -267,7 +267,7 @@ public class TradeFragment extends FamiliarFragment {
             /* Something went wrong, but it's not worth quitting */
             handleFamiliarDbException(false);
         }
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance(getActivity()).closeDatabase();
     }
 
     /**
@@ -342,7 +342,7 @@ public class TradeFragment extends FamiliarFragment {
                         priceText.setSelection(priceNumberStr.length());
 
 						/* Only show the foil checkbox if the card can be foil */
-                        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
                         try {
                             if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).setCode, database)) {
                                 view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
@@ -353,7 +353,7 @@ public class TradeFragment extends FamiliarFragment {
 							/* Err on the side of foil */
                             foilCheckbox.setVisibility(View.VISIBLE);
                         }
-                        DatabaseManager.getInstance().closeDatabase();
+                        DatabaseManager.getInstance(getActivity()).closeDatabase();
 
 						/* when the user checks or un-checks the foil box, if the price isn't custom, set it */
                         foilCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -400,7 +400,7 @@ public class TradeFragment extends FamiliarFragment {
 
                             @Override
                             public void onClick(View v) {
-                                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+                                SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
                                 try {
 									/* Get the card ID, and send it to a new CardViewPagerFragment */
                                     Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
@@ -419,7 +419,7 @@ public class TradeFragment extends FamiliarFragment {
                                 } catch (FamiliarDbException e) {
                                     TradeFragment.this.handleFamiliarDbException(false);
                                 }
-                                DatabaseManager.getInstance().closeDatabase();
+                                DatabaseManager.getInstance(getActivity()).closeDatabase();
                             }
                         });
 
@@ -529,7 +529,7 @@ public class TradeFragment extends FamiliarFragment {
                         MtgCard data = (sideForDialog == LEFT ?
                                 mLeftList.get(positionForDialog) : mRightList.get(positionForDialog));
 
-                        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
                         try {
 							/* Query the database for all versions of this card */
                             Cursor cards = CardDbAdapter.fetchCardByName(data.name, new String[]{
@@ -547,7 +547,7 @@ public class TradeFragment extends FamiliarFragment {
                             }
 							/* clean up */
                             cards.close();
-                            DatabaseManager.getInstance().closeDatabase();
+                            DatabaseManager.getInstance(getActivity()).closeDatabase();
 
 							/* Turn set names and set codes into arrays */
                             final String[] aSets = sets.toArray(new String[sets.size()]);
@@ -576,7 +576,7 @@ public class TradeFragment extends FamiliarFragment {
                                             data.priceInfo = null;
 
 											/* See if the new set can be foil */
-                                            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+                                            SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
                                             try {
                                                 if (!CardDbAdapter.canBeFoil(data.setCode, database)) {
                                                     data.foil = false;
@@ -584,7 +584,7 @@ public class TradeFragment extends FamiliarFragment {
                                             } catch (FamiliarDbException e) {
                                                 data.foil = false;
                                             }
-                                            DatabaseManager.getInstance().closeDatabase();
+                                            DatabaseManager.getInstance(getActivity()).closeDatabase();
 
 											/* Reload and notify the adapter */
                                             loadPrice(data, adapter);
@@ -595,7 +595,7 @@ public class TradeFragment extends FamiliarFragment {
                         } catch (FamiliarDbException e) {
 							/* Don't show the dialog, but pop a toast */
                             handleFamiliarDbException(true);
-                            DatabaseManager.getInstance().closeDatabase();
+                            DatabaseManager.getInstance(getActivity()).closeDatabase();
                             return DontShowDialog();
                         }
                     }
@@ -842,7 +842,7 @@ public class TradeFragment extends FamiliarFragment {
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getActivity().openFileInput(tradeName)));
             String line;
             while ((line = br.readLine()) != null) {
-                MtgCard card = MtgCard.MtgCardFromTradeString(line);
+                MtgCard card = MtgCard.MtgCardFromTradeString(line, getActivity());
 
                 if (card.tcgName == null) {
                     handleFamiliarDbException(false);
@@ -992,7 +992,7 @@ public class TradeFragment extends FamiliarFragment {
             }
         } else {
 			/* priceInfo is null, perform a query */
-            PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1);
+            PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
             mPriceFetchRequests++;
             getFamiliarActivity().setLoading();
             getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode,

@@ -293,7 +293,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param cmc  The converted mana cost of the card to randomly fetch
      */
     private void getOneSpell(String type, int cmc) {
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
         try {
             String logic = "=";
             if (type.equals(EQUIPMENT)) {
@@ -306,7 +306,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
             if (permanents.getCount() == 0) {
                 permanents.close();
-                DatabaseManager.getInstance().closeDatabase();
+                DatabaseManager.getInstance(getActivity()).closeDatabase();
                 return;
             }
             int pos = mRandom.nextInt(permanents.getCount());
@@ -323,7 +323,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         }
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance(getActivity()).closeDatabase();
     }
 
     /**
@@ -333,7 +333,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param type The supertype of the card to randomly fetch
      */
     private void getThreeSpells(String type) {
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
         try {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             Cursor spells = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
@@ -369,6 +369,6 @@ public class MoJhoStoFragment extends FamiliarFragment {
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         }
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance(getActivity()).closeDatabase();
     }
 }

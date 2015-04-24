@@ -72,7 +72,7 @@ public class ResultListFragment extends FamiliarFragment {
         Bundle args = this.getArguments();
 
 		/* Open up the database, search for stuff */
-        SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
         try {
 
 			/* If "id0" exists, then it's three cards and they should be merged
@@ -168,7 +168,7 @@ public class ResultListFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance(getActivity()).closeDatabase();
     }
 
     /**

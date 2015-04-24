@@ -109,7 +109,7 @@ public class DbUpdaterService extends IntentService {
             boolean newRulesParsed = false;
 
             /* Get database access, which auto-opens it, close it, and open a transactional write */
-            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
+            SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext()).openDatabase(true);
             try {
 
                 showStatusNotification();
@@ -176,7 +176,7 @@ public class DbUpdaterService extends IntentService {
             } catch (FamiliarDbException e) {
                 commitDates = false;
             }
-            DatabaseManager.getInstance().closeDatabase();
+            DatabaseManager.getInstance(getApplicationContext()).closeDatabase();
 
 			/* Parse the MTR and IPG */
             MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);

@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.helpers.database;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,10 +33,9 @@ public class DatabaseManager {
      *
      * @return The singleton DatabaseManager
      */
-    public static synchronized DatabaseManager getInstance() {
+    public static synchronized DatabaseManager getInstance(Context context) {
         if (mDatabaseManager == null) {
-            throw new IllegalStateException(DatabaseManager.class.getSimpleName() +
-                    " is not initialized, call initializeInstance(..) method first.");
+            initializeInstance(new DatabaseHelper(context));
         }
 
         return mDatabaseManager;

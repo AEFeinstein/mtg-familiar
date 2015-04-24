@@ -151,7 +151,7 @@ public class WishlistHelpers {
                 public void onClick(View view) {
                     Bundle args = new Bundle();
 						/* Open the database */
-                    SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
+                    SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity()).openDatabase(false);
                     try {
 						/* Get the card ID, and send it to a new CardViewFragment */
                         args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.fetchIdByName(mCardName, db)});
@@ -161,7 +161,7 @@ public class WishlistHelpers {
                     } catch (FamiliarDbException e) {
                         fragment.handleFamiliarDbException(false);
                     }
-                    DatabaseManager.getInstance().closeDatabase();
+                    DatabaseManager.getInstance(fragment.getActivity()).closeDatabase();
                 }
             });
         } else {
@@ -179,7 +179,7 @@ public class WishlistHelpers {
         final ArrayList<String> potentialNumbers = new ArrayList<>();
 
 		/* Open the database */
-        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase(false);
+        SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity()).openDatabase(false);
 
 		/* Get all the cards with relevant info from the database */
         Cursor cards = null;
@@ -191,7 +191,7 @@ public class WishlistHelpers {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, db);
         } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance().closeDatabase();
+            DatabaseManager.getInstance(fragment.getActivity()).closeDatabase();
             return null;
         }
 
@@ -229,7 +229,7 @@ public class WishlistHelpers {
                     potentialNumbers.add(number);
                 }
             } catch (FamiliarDbException e) {
-                DatabaseManager.getInstance().closeDatabase();
+                DatabaseManager.getInstance(fragment.getActivity()).closeDatabase();
                 return null;
             }
 
@@ -249,7 +249,7 @@ public class WishlistHelpers {
 
 		/* Clean up */
         cards.close();
-        DatabaseManager.getInstance().closeDatabase();
+        DatabaseManager.getInstance(fragment.getActivity()).closeDatabase();
 
 		/* make and return the actual dialog */
         return new AlertDialogPro.Builder(ctx)

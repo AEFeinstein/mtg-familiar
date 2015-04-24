@@ -359,7 +359,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 switch (mPageEntries[i].mNameResource) {
                     case R.string.main_force_update_title: {
                         if (getNetworkState(true) != -1) {
-                            SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(true);
+                            SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this).openDatabase(true);
                             try {
                                 CardDbAdapter.dropCreateDB(database);
                                 mPreferenceAdapter.setLastLegalityUpdate(0);
@@ -374,7 +374,7 @@ public class FamiliarActivity extends ActionBarActivity {
                             } catch (FamiliarDbException e) {
                                 e.printStackTrace();
                             }
-                            DatabaseManager.getInstance().closeDatabase();
+                            DatabaseManager.getInstance(FamiliarActivity.this).closeDatabase();
                         }
                         shouldCloseDrawer = true;
                         break;
@@ -627,7 +627,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 /* User clicked a deep link, jump to the card(s) */
                 isDeepLink = true;
 
-                SQLiteDatabase database = DatabaseManager.getInstance().openDatabase(false);
+                SQLiteDatabase database = DatabaseManager.getInstance(this).openDatabase(false);
                 try {
                     Cursor cursor = null;
                     boolean screenLaunched = false;
@@ -669,7 +669,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 } catch (FamiliarDbException e) {
                     e.printStackTrace();
                 }
-                DatabaseManager.getInstance().closeDatabase();
+                DatabaseManager.getInstance(this).closeDatabase();
             }
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
             if (shouldSelectItem) {
