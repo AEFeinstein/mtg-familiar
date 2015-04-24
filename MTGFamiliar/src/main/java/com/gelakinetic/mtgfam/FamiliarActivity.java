@@ -968,10 +968,12 @@ public class FamiliarActivity extends ActionBarActivity {
     public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            if (toolbar.isOverflowMenuShowing()) {
-                toolbar.dismissPopupMenus();
-            } else {
-                toolbar.showOverflowMenu();
+            if(toolbar != null) {
+                if (toolbar.isOverflowMenuShowing()) {
+                    toolbar.dismissPopupMenus();
+                } else {
+                    toolbar.showOverflowMenu();
+                }
             }
             return true;
         }

@@ -385,6 +385,11 @@ public class CardViewFragment extends FamiliarFragment {
              * This happens when a deep link is opened for the first time
              * The transactional update collides with fetching card data
              */
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                /* eat it */
+            }
         }
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
         Cursor cCardById;
