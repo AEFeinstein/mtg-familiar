@@ -97,52 +97,6 @@ public class ResultListFragment extends FamiliarFragment {
                         criteria.touLogic, criteria.cmc, criteria.cmcLogic, criteria.format, criteria.rarity,
                         criteria.flavor, criteria.artist, criteria.typeLogic, criteria.textLogic, criteria.setLogic,
                         true, returnTypes, consolidate, database);
-
-				/*
-				 * Cube Calculation
-				 */
-//				mCursor.moveToFirst();
-//				while(!mCursor.isAfterLast()) {
-//					MtgCard c = new MtgCard();
-//					c.name = mCursor.getString(mCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-//					mCursor.moveToNext();
-//				}
-//				String[] colors = {"Wubrgl","wUbrgl","wuBrgl","wubRgl","wubrGl","wubrgL"};
-//				int[] colorlogic = {2,2,2,2,2,2};
-//				String[] types = getActivity().getResources().getStringArray(R.array.supertypes);
-//				String[] cmcs = getActivity().getResources().getStringArray(R.array.cmc_spinner);
-//
-//				for(int i = 0; i < colors.length; i++) {
-//					for(String type : types) {
-//							if(type.equals("Creature")) {
-//								for(String cmc : cmcs) {
-//									try {
-//										int cm = Integer.parseInt(cmc);
-//										Cursor tmp = CardDbAdapter.Search(null, null, type, colors[i], colorlogic[i], null, CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, cm, "=", "Modern", /*rarity*/ null, null, null, 0, -1, CardDbAdapter.MOST_RECENT_PRINTING, false, new String[]{CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_ID}, true, database);
-//										Log.v("cube", colors[i] + " " + type + " " + cm + " " + tmp.getCount());
-//									} catch (NumberFormatException e) {
-//										/* ignore */
-//									}
-//								}
-//							}
-//							else {
-//								Cursor tmp = CardDbAdapter.Search(null, null, type, colors[i], colorlogic[i], null, CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, -1, null, "Modern", /*rarity*/ null, null, null, 0, -1, CardDbAdapter.MOST_RECENT_PRINTING, false, new String[]{CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_ID}, true, database);
-//								Log.v("cube", colors[i] + " " + type + " " + " - " + tmp.getCount());
-//							}
-//					}
-//				}
-//
-//				String[] golds = {"WUbrgl","WuBrgl","wubRgl","wubrGl","wUBrgl","wUbRgl","wUbrGl","wuBRgl","wuBrGl","wubRGl",
-//				"WUBrgl", "wUBRgl", "wuBRGl", "WubRGl", "WUbrGl", "WUbRgl","wUBrGl","WuBRgl","wUbRGl","WrBrGl",
-//				"WUBRgl","WUBrGl","WUbRGl","WuBRGl","wUBRGl",
-//				"WUBRGl"};
-//				int goldCount = 0;
-//				for(String gold : golds) {
-//					Cursor tmp = CardDbAdapter.Search(null, null, null, gold, 3, null, CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, -1, null, "Modern", /*rarity*/ null, null, null, 0, -1, CardDbAdapter.MOST_RECENT_PRINTING, false, new String[]{CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_ID}, true, database);
-//					goldCount += tmp.getCount();
-//				}
-//				Log.v("cube", "Multicolored " + goldCount);
-
             }
 
             if (this.isAdded()) {
@@ -168,7 +122,6 @@ public class ResultListFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
-        DatabaseManager.getInstance(getActivity()).closeDatabase();
     }
 
     /**
@@ -180,6 +133,7 @@ public class ResultListFragment extends FamiliarFragment {
         if (mCursor != null) {
             mCursor.close();
         }
+        DatabaseManager.getInstance(getActivity()).closeDatabase();
     }
 
     /**
