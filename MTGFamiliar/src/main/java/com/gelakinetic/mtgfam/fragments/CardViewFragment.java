@@ -143,6 +143,7 @@ public class CardViewFragment extends FamiliarFragment {
     private String mCardName;
     private String mMagicCardsInfoSetCode;
     private int mMultiverseId;
+    private String mCardType;
 
     /* Card info used to flip the card */
     private String mTransformCardNumber;
@@ -469,7 +470,8 @@ public class CardViewFragment extends FamiliarFragment {
         mFlavorTextView.setText(csFlavor);
 
         mNameTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)));
-        mTypeTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_TYPE)));
+        mCardType = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_TYPE));
+        mTypeTextView.setText(mCardType);
         mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
         mArtistTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
 
@@ -666,7 +668,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @param id the ID of the dialog to show
      */
     void showDialog(final int id) throws IllegalStateException {
-		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
+        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
 		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
@@ -1372,46 +1374,52 @@ public class CardViewFragment extends FamiliarFragment {
         /**
          * Jumps through hoops and returns a correctly formatted URL for magiccards.info's image
          *
-         * @param mCardName              The name of the card
-         * @param mMagicCardsInfoSetCode The set of the card
-         * @param mCardNumber            The number of the card
-         * @param cardLanguage           The language of the card
+         * @param cardName              The name of the card
+         * @param magicCardsInfoSetCode The set of the card
+         * @param cardNumber            The number of the card
+         * @param cardLanguage          The language of the card
          * @return a URL to the card's image
          */
-        private String getMtgiPicUrl(String mCardName, String mMagicCardsInfoSetCode, String mCardNumber,
+        private String getMtgiPicUrl(String cardName, String magicCardsInfoSetCode, String cardNumber,
                                      String cardLanguage) {
             String picURL;
-            switch (mSetCode) {
-                case "PP2":
-                    picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + mCardName + ".jpg";
-                    picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                    break;
-                case "PCP":
-                    if (mCardName.equalsIgnoreCase("tazeem")) {
-                        mCardName = "tazeem-release-promo";
-                        picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-                    } else if (mCardName.equalsIgnoreCase("celestine reef")) {
-                        mCardName = "celestine-reef-pre-release-promo";
-                        picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-                    } else if (mCardName.equalsIgnoreCase("horizon boughs")) {
-                        mCardName = "horizon-boughs-gateway-promo";
-                        picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-                    } else {
-                        picURL = "http://magiccards.info/extras/plane/planechase/" + mCardName + ".jpg";
-                    }
-                    picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                    break;
-                case "ARS":
-                    picURL = "http://magiccards.info/extras/scheme/archenemy/" + mCardName + ".jpg";
-                    picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
-                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                    break;
-                default:
-                    picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mMagicCardsInfoSetCode + "/" +
-                            mCardNumber + ".jpg";
-                    break;
+            if (mCardType.toLowerCase().contains(getString(R.string.search_Ongoing).toLowerCase()) ||
+                    /* extra space to not confuse with planeswalker */
+                    mCardType.toLowerCase().contains(getString(R.string.search_Plane).toLowerCase() + " ") ||
+                    mCardType.toLowerCase().contains(getString(R.string.search_Phenomenon).toLowerCase()) ||
+                    mCardType.toLowerCase().contains(getString(R.string.search_Scheme).toLowerCase())) {
+                switch (mSetCode) {
+                    case "PC2":
+                        picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + cardName + ".jpg";
+                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                                .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                        break;
+                    case "PCH":
+                        if (cardName.equalsIgnoreCase("tazeem")) {
+                            cardName = "tazeem-release-promo";
+                        } else if (cardName.equalsIgnoreCase("celestine reef")) {
+                            cardName = "celestine-reef-pre-release-promo";
+                        } else if (cardName.equalsIgnoreCase("horizon boughs")) {
+                            cardName = "horizon-boughs-gateway-promo";
+                        }
+                        picURL = "http://magiccards.info/extras/plane/planechase/" + cardName + ".jpg";
+                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                                .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                        break;
+                    case "ARC":
+                        picURL = "http://magiccards.info/extras/scheme/archenemy/" + cardName + ".jpg";
+                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                                .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                        break;
+                    default:
+                        picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + magicCardsInfoSetCode + "/" +
+                                cardNumber + ".jpg";
+                        break;
+                }
+            }
+            else {
+                picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + magicCardsInfoSetCode + "/" +
+                        cardNumber + ".jpg";
             }
             return picURL.toLowerCase(Locale.ENGLISH);
         }

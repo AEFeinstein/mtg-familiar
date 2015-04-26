@@ -11,6 +11,7 @@
         <item>@string/search_Land</item>
         <item>@string/search_Legendary</item>
         <item>@string/search_Ongoing</item>
+        <item>@string/search_Phenomenon</item>
         <item>@string/search_Plane</item>
         <item>@string/search_Planeswalker</item>
         <item>@string/search_Scheme</item>
