@@ -41,6 +41,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -294,7 +295,7 @@ public class FamiliarActivity extends ActionBarActivity {
         PrefsFragment.checkOverrideSystemLanguage(this);
         mPreferenceAdapter = new PreferenceAdapter(this);
 
-		/* Figure out what theme the app is currently in, and change it if necessary */
+        /* Figure out what theme the app is currently in, and change it if necessary */
         int resourceId = getResourceIdFromAttr(R.attr.color_drawer_background);
         String themeString = "";
         int otherTheme = 0;
@@ -326,6 +327,9 @@ public class FamiliarActivity extends ActionBarActivity {
                 getResources().getColor(getResourceIdFromAttr(R.attr.color_uncommon)),
                 getResources().getColor(getResourceIdFromAttr(R.attr.color_rare)),
                 getResources().getColor(getResourceIdFromAttr(R.attr.color_mythic)));
+
+        /* Set default preferences manually so that the listener doesn't do weird things on init */
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		/* Set up a listener to update the home screen widget whenever the user changes the preference */
         mPreferenceAdapter.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
@@ -424,6 +428,7 @@ public class FamiliarActivity extends ActionBarActivity {
                         ft.addToBackStack(null);
                         ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
                         ft.commit();
+                        shouldCloseDrawer = true;
                         break;
                     }
                     case R.string.main_force_update_title: {

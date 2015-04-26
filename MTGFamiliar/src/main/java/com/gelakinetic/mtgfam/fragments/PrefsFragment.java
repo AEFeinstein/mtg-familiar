@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.preference.PreferenceFragment;
 
 import com.gelakinetic.mtgfam.R;
+import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import java.util.Locale;
 
@@ -41,6 +41,6 @@ public class PrefsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
 
 		/* Load the preferences from an XML resource */
-        addPreferencesFromResource();
+        addPreferencesFromResource(R.xml.preferences);
     }
 }

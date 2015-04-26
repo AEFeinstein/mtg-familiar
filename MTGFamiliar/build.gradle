@@ -53,4 +53,5 @@ dependencies {
     compile("com.doomonafireball.betterpickers:library:1.5.3") {
         exclude group: 'com.android.support', module: 'support-v4'
     }
+    compile 'com.github.machinarius:preferencefragment:0.1.2'
 }
