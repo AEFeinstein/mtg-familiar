@@ -161,11 +161,10 @@ public class FamiliarActivity extends ActionBarActivity {
                         new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
                 sendBroadcast(intent);
-            } else if (s.equals(getString(R.string.key_theme))) {
-                supportInvalidateOptionsMenu(); /* to redraw the magnifying glass */
-                Intent i = new Intent(FamiliarActivity.this, FamiliarActivity.class);
-                startActivity(i);
+            } else if (s.equals(getString(R.string.key_theme)) || s.endsWith(getString(R.string.key_language))) {
+                /* Restart the activity for theme & language changes */
                 FamiliarActivity.this.finish();
+                startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class));
             } else if (s.endsWith(getString(R.string.key_imageCacheSize))) {
                 /* Close the old cache */
                 mImageCache.flush();
@@ -176,9 +175,6 @@ public class FamiliarActivity extends ActionBarActivity {
                 cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
                 cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
                 addImageCache(getSupportFragmentManager(), cacheParams);
-            } else if (s.endsWith(getString(R.string.key_language))) {
-                FamiliarActivity.this.finish();
-                startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class));
             }
         }
     };
@@ -550,7 +546,9 @@ public class FamiliarActivity extends ActionBarActivity {
                     } catch (NullPointerException e) {
 					    /* eat it. tasty */
                     }
-                    showDialogFragment(DIALOG_CHANGE_LOG);
+                    if(lastVersion != 0) {
+                        showDialogFragment(DIALOG_CHANGE_LOG);
+                    }
                     mPreferenceAdapter.setLastVersion(pInfo.versionCode);
 
                     /* Clear the mtr and ipg on update, to replace them with the newly colored versions, but only if we're
