@@ -700,9 +700,14 @@ public class FamiliarActivity extends ActionBarActivity {
             selectItem(R.string.main_mojhosto, null, true, false);
         } else if (ACTION_PROFILE.equals(intent.getAction())) {
             selectItem(R.string.main_profile, null, true, false);
+        } else if(Intent.ACTION_MAIN.equals(intent.getAction())) {
+            /* App launched as regular, show the default fragment if there isn't one already */
+            if(getSupportFragmentManager().getFragments() == null) {
+                launchHomeScreen();
+            }
         } else {
-			/* App launched as regular, show the default fragment */
-            launchHomeScreen();
+            /* Some unknown intent, just finish */
+            finish();
         }
 
         mDrawerList.setItemChecked(mCurrentFrag, true);
