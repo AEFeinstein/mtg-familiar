@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.base.light" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.base.light" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="com.gelakinetic.mtgfam:colorPrimary_attr">@color/colorPrimary_light</item>
         <item name="com.gelakinetic.mtgfam:colorPrimaryDark_attr">@color/colorPrimaryDark_light</item>
@@ -10,7 +10,6 @@
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
 
         <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
         <item name="com.gelakinetic.mtgfam:color_background">@color/background_light</item>
 
@@ -131,7 +130,7 @@
         <item name="com.gelakinetic.mtgfam:button">@style/button_light</item>
     </style>
 
-    <style name="Theme.base.dark" parent="Theme.AppCompat">
+    <style name="Theme.base.dark" parent="Theme.AppCompat.NoActionBar">
 
         <item name="com.gelakinetic.mtgfam:colorPrimary_attr">@color/colorPrimary_dark</item>
         <item name="com.gelakinetic.mtgfam:colorPrimaryDark_attr">@color/colorPrimaryDark_dark</item>
@@ -140,7 +139,6 @@
         <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material</item>
 
         <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
         <item name="com.gelakinetic.mtgfam:color_background">@color/background_dark</item>
 
