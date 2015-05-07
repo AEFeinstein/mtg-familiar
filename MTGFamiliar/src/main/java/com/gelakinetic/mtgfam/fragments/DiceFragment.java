@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.gelakinetic.mtgfam.helpers.Toast;
 import android.widget.ViewSwitcher;
 
 import com.alertdialogpro.AlertDialogPro;

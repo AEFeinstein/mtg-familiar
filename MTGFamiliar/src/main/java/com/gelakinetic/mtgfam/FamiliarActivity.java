@@ -65,7 +65,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.gelakinetic.mtgfam.helpers.Toast;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
@@ -251,6 +251,7 @@ public class FamiliarActivity extends ActionBarActivity {
     protected void onStop() {
         super.onStop();
         mSpiceManager.shouldStop();
+        Toast.cancelToast();
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
 import android.os.Environment;
-import android.widget.Toast;
+import com.gelakinetic.mtgfam.helpers.Toast;
 
 import com.gelakinetic.mtgfam.R;
 

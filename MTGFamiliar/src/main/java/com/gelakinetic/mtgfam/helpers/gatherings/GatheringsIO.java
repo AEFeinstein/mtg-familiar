@@ -2,7 +2,7 @@ package com.gelakinetic.mtgfam.helpers.gatherings;
 
 import android.content.Context;
 import android.util.Xml;
-import android.widget.Toast;
+import com.gelakinetic.mtgfam.helpers.Toast;
 
 import com.gelakinetic.mtgfam.R;
 
