@@ -164,7 +164,7 @@ public class FamiliarActivity extends ActionBarActivity {
             } else if (s.equals(getString(R.string.key_theme)) || s.endsWith(getString(R.string.key_language))) {
                 /* Restart the activity for theme & language changes */
                 FamiliarActivity.this.finish();
-                startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class));
+                startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
             } else if (s.endsWith(getString(R.string.key_imageCacheSize))) {
                 /* Close the old cache */
                 mImageCache.flush();
