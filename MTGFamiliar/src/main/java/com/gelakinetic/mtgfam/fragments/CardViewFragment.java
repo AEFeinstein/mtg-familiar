@@ -56,7 +56,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -957,7 +957,7 @@ public class CardViewFragment extends FamiliarFragment {
                                     mActivity.clearLoading();
 
                                     CardViewFragment.this.removeDialog(getFragmentManager());
-                                    Toast.makeText(mActivity, spiceException.getMessage(), Toast.LENGTH_SHORT).show();
+                                    ToastWrapper.makeText(mActivity, spiceException.getMessage(), ToastWrapper.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -970,8 +970,8 @@ public class CardViewFragment extends FamiliarFragment {
                                         mPriceInfo = result;
                                         showDialog(GET_PRICE);
                                     } else {
-                                        Toast.makeText(mActivity, R.string.card_view_price_not_found,
-                                                Toast.LENGTH_SHORT).show();
+                                        ToastWrapper.makeText(mActivity, R.string.card_view_price_not_found,
+                                                ToastWrapper.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -1167,7 +1167,7 @@ public class CardViewFragment extends FamiliarFragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             if (mToastString != null) {
-                Toast.makeText(mActivity, mToastString, Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(mActivity, mToastString, ToastWrapper.LENGTH_LONG).show();
             }
         }
     }
@@ -1451,7 +1451,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mImageScrollView.setVisibility(View.GONE);
                     mTextScrollView.setVisibility(View.VISIBLE);
                 }
-                Toast.makeText(mActivity, error, Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(mActivity, error, ToastWrapper.LENGTH_LONG).show();
             }
             mActivity.clearLoading();
         }
@@ -1541,7 +1541,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             } else {
                 removeDialog(getFragmentManager());
-                Toast.makeText(mActivity, mErrorMessage, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT).show();
             }
             mActivity.clearLoading();
         }

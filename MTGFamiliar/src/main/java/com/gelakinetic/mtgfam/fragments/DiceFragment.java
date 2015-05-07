@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import android.widget.ViewSwitcher;
 
 import com.alertdialogpro.AlertDialogPro;
@@ -199,14 +199,14 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                                 try {
                                     num = Integer.parseInt(txtNumber.getText().toString());
                                 } catch (NumberFormatException e) {
-                                    Toast.makeText(mActivity, getResources().getString(R.string.dice_num_too_large),
-                                            Toast.LENGTH_SHORT).show();
+                                    ToastWrapper.makeText(mActivity, getResources().getString(R.string.dice_num_too_large),
+                                            ToastWrapper.LENGTH_SHORT).show();
                                     return;
                                 }
 
                                 if (num < 1) {
-                                    Toast.makeText(mActivity, getResources().getString(R.string.dice_postive),
-                                            Toast.LENGTH_SHORT).show();
+                                    ToastWrapper.makeText(mActivity, getResources().getString(R.string.dice_postive),
+                                            ToastWrapper.LENGTH_SHORT).show();
                                 } else {
                                     mLastNumber = num;
                                     rollDie(num);

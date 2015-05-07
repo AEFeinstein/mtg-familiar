@@ -2,7 +2,7 @@ package com.gelakinetic.mtgfam.helpers.gatherings;
 
 import android.content.Context;
 import android.util.Xml;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.gelakinetic.mtgfam.R;
 
@@ -314,7 +314,7 @@ public class GatheringsIO {
         File path = new File(filesDir, FOLDER_PATH);
         File gatheringFile = new File(path, fileName);
         if (!gatheringFile.delete()) {
-            Toast.makeText(ctx, fileName + " " + ctx.getString(R.string.not_deleted), Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(ctx, fileName + " " + ctx.getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG).show();
         }
     }
 

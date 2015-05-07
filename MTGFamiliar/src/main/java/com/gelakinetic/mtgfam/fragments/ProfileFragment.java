@@ -35,7 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -194,9 +194,9 @@ public class ProfileFragment extends FamiliarFragment {
                                         String strNumber = dciEditText.getText().toString();
 
                                         if (strNumber.isEmpty()) {
-                                            Toast.makeText(getActivity(),
+                                            ToastWrapper.makeText(getActivity(),
                                                     getString(R.string.profile_invalid_dci),
-                                                    Toast.LENGTH_SHORT).show();
+                                                    ToastWrapper.LENGTH_SHORT).show();
 
                                             return;
                                         }

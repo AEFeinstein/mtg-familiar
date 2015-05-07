@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.gelakinetic.mtgfam.R;
 
@@ -83,7 +83,7 @@ public class ManaPoolFragment extends FamiliarFragment {
             }
         }
         if (!loadSuccessful) {
-            Toast.makeText(this.getActivity(), R.string.mana_pool_error_toast, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(this.getActivity(), R.string.mana_pool_error_toast, ToastWrapper.LENGTH_LONG).show();
             this.getActivity().getSupportFragmentManager().popBackStack();
             return null;
         }

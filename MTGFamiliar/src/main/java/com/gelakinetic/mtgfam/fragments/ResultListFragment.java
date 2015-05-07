@@ -15,7 +15,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
@@ -101,7 +101,7 @@ public class ResultListFragment extends FamiliarFragment {
 
             if (this.isAdded()) {
                 if (mCursor == null || mCursor.getCount() == 0) {
-                    Toast.makeText(this.getActivity(), getString(R.string.search_toast_no_results), Toast.LENGTH_SHORT
+                    ToastWrapper.makeText(this.getActivity(), getString(R.string.search_toast_no_results), ToastWrapper.LENGTH_SHORT
                     ).show();
                     if (!getActivity().isTaskRoot()) {
                         getActivity().finish();
@@ -114,8 +114,8 @@ public class ResultListFragment extends FamiliarFragment {
                     startCardViewFrag(id);
                 } else {
                     if (savedInstanceState == null) {
-                        Toast.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
-                                mCursor.getCount()), Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
+                                mCursor.getCount()), ToastWrapper.LENGTH_LONG).show();
                     }
                 }
             }

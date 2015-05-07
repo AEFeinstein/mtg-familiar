@@ -29,7 +29,7 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -280,7 +280,7 @@ public class RulesFragment extends FamiliarFragment {
                                 // Set the clipboard's primary clip.
                                 clipboard.setPrimaryClip(clip);
                                 // Alert the user
-                                Toast.makeText(getActivity(), R.string.rules_coppied, Toast.LENGTH_SHORT).show();
+                                ToastWrapper.makeText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT).show();
                             }
                             return true;
                         }
@@ -289,7 +289,7 @@ public class RulesFragment extends FamiliarFragment {
 					/* Cursor had a size of 0, boring */
                     cursor.close();
                     if (!isBanned) {
-                        Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
+                        ToastWrapper.makeText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT).show();
                         getFragmentManager().popBackStack();
                     }
                 }
@@ -300,7 +300,7 @@ public class RulesFragment extends FamiliarFragment {
             }
         } else {
             if (!isBanned) { /* Cursor is null. weird. */
-                Toast.makeText(getActivity(), R.string.rules_no_results_toast, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT).show();
                 getFragmentManager().popBackStack();
             }
         }
@@ -414,8 +414,8 @@ public class RulesFragment extends FamiliarFragment {
                                         }
                                         String keyword = nameInput.getText().toString();
                                         if (keyword.length() < 3) {
-                                            Toast.makeText(getActivity(),
-                                                    R.string.rules_short_key_toast, Toast.LENGTH_LONG).show();
+                                            ToastWrapper.makeText(getActivity(),
+                                                    R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG).show();
                                         } else {
                                             searchArgs = new Bundle();
                                             searchArgs.putString(KEYWORD_KEY, keyword);

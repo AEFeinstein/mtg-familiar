@@ -24,7 +24,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -529,7 +529,7 @@ public class SearchViewFragment extends FamiliarFragment {
             os.writeObject(searchCriteria);
             os.close();
         } catch (IOException e) {
-            Toast.makeText(this.getActivity(), R.string.search_toast_cannot_save, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(this.getActivity(), R.string.search_toast_cannot_save, ToastWrapper.LENGTH_LONG).show();
         }
     }
 
@@ -633,7 +633,7 @@ public class SearchViewFragment extends FamiliarFragment {
             checkDialogButtonColors();
 
         } catch (IOException | ClassNotFoundException e) {
-            Toast.makeText(this.getActivity(), R.string.search_toast_cannot_load, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(this.getActivity(), R.string.search_toast_cannot_load, ToastWrapper.LENGTH_LONG).show();
         }
     }
 

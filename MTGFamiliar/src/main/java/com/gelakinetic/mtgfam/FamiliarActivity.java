@@ -65,7 +65,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
@@ -251,7 +251,7 @@ public class FamiliarActivity extends ActionBarActivity {
     protected void onStop() {
         super.onStop();
         mSpiceManager.shouldStop();
-        Toast.cancelToast();
+        ToastWrapper.cancelToast();
     }
 
     @Override
@@ -560,16 +560,16 @@ public class FamiliarActivity extends ActionBarActivity {
                         File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
                         if (mtr.exists()) {
                             if (!mtr.delete()) {
-                                Toast.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted),
-                                        Toast.LENGTH_LONG).show();
+                                ToastWrapper.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG).show();
                             }
                             if (!ipg.delete()) {
-                                Toast.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted),
-                                        Toast.LENGTH_LONG).show();
+                                ToastWrapper.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG).show();
                             }
                             if (!jar.delete()) {
-                                Toast.makeText(this, jar.getName() + " " + getString(R.string.not_deleted),
-                                        Toast.LENGTH_LONG).show();
+                                ToastWrapper.makeText(this, jar.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG).show();
                             }
                         }
                     }
@@ -659,14 +659,14 @@ public class FamiliarActivity extends ActionBarActivity {
                                     new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                         } else {
                             /* empty cursor, just return */
-                            Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
                             this.finish();
                             shouldSelectItem = false;
                         }
                         cursor.close();
                     } else if(!screenLaunched) {
                         /* null cursor, just return */
-                        Toast.makeText(this, R.string.no_results_found, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
                         this.finish();
                         shouldSelectItem = false;
                     }
@@ -1448,12 +1448,12 @@ public class FamiliarActivity extends ActionBarActivity {
                 }
             }
             if (shouldShowToast) {
-                Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(FamiliarActivity.this, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
             }
             return -1;
         } catch (NullPointerException e) {
             if (shouldShowToast) {
-                Toast.makeText(FamiliarActivity.this, R.string.no_network, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(FamiliarActivity.this, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
             }
             return -1;
         }

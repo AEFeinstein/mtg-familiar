@@ -32,7 +32,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -198,7 +198,7 @@ public class GatheringsFragment extends FamiliarFragment {
 							name already exists, prompt the user to overwrite it or not. */
 
                         if (AreAnyFieldsEmpty()) {
-                            Toast.makeText(getActivity(), R.string.gathering_empty_field, Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(getActivity(), R.string.gathering_empty_field, ToastWrapper.LENGTH_LONG).show();
                             return DontShowDialog();
                         }
 
@@ -226,8 +226,8 @@ public class GatheringsFragment extends FamiliarFragment {
                                         assert nameInput.getText() != null;
                                         String gatheringName = nameInput.getText().toString().trim();
                                         if (gatheringName.length() <= 0) {
-                                            Toast.makeText(getActivity(), R.string.gathering_toast_no_name,
-                                                    Toast.LENGTH_LONG).show();
+                                            ToastWrapper.makeText(getActivity(), R.string.gathering_toast_no_name,
+                                                    ToastWrapper.LENGTH_LONG).show();
                                             return;
                                         }
 
@@ -282,8 +282,8 @@ public class GatheringsFragment extends FamiliarFragment {
                     case DIALOG_DELETE_GATHERING: {
 						/* Show all gatherings, and delete the selected one */
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
-                            Toast.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
-                                    Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
+                                    ToastWrapper.LENGTH_LONG).show();
                             return DontShowDialog();
                         }
 
@@ -334,8 +334,8 @@ public class GatheringsFragment extends FamiliarFragment {
                     case DIALOG_LOAD_GATHERING: {
 						/* Load a gathering, if there is a gathering to load */
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
-                            Toast.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
-                                    Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
+                                    ToastWrapper.LENGTH_LONG).show();
                             return DontShowDialog();
                         }
 
@@ -436,7 +436,7 @@ public class GatheringsFragment extends FamiliarFragment {
      */
     private void SaveGathering(String _gatheringName) {
         if (_gatheringName.length() <= 0) {
-            Toast.makeText(getActivity(), R.string.gathering_toast_no_name, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(getActivity(), R.string.gathering_toast_no_name, ToastWrapper.LENGTH_LONG).show();
             return;
         }
 

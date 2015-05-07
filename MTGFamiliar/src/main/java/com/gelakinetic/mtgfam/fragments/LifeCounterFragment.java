@@ -20,7 +20,7 @@ import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -514,8 +514,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     case DIALOG_SET_GATHERING: {
 						/* If there aren't any dialogs, don't show the dialog. Pop a toast instead */
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
-                            Toast.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist,
-                                    Toast.LENGTH_LONG).show();
+                            ToastWrapper.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist,
+                                    ToastWrapper.LENGTH_LONG).show();
                             return DontShowDialog();
                         }
 

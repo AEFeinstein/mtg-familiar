@@ -24,7 +24,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -204,8 +204,8 @@ public class WishlistFragment extends FamiliarFragment {
 			/* Get some extra information from the database */
             Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, CardDbAdapter.allData, database);
             if (cardCursor.getCount() == 0) {
-                Toast.makeText(WishlistFragment.this.getActivity(), getString(R.string.toast_no_card),
-                        Toast.LENGTH_LONG).show();
+                ToastWrapper.makeText(WishlistFragment.this.getActivity(), getString(R.string.toast_no_card),
+                        ToastWrapper.LENGTH_LONG).show();
                 DatabaseManager.getInstance(getActivity()).closeDatabase();
                 return;
             }
@@ -541,7 +541,7 @@ public class WishlistFragment extends FamiliarFragment {
                                                 try {
                                                     startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
                                                 } catch (android.content.ActivityNotFoundException ex) {
-                                                    Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
+                                                    ToastWrapper.makeText(getActivity(), getString(R.string.error_no_email_client), ToastWrapper.LENGTH_SHORT).show();
                                                 }
 
                                             }
@@ -558,7 +558,7 @@ public class WishlistFragment extends FamiliarFragment {
                                                 try {
                                                     startActivity(Intent.createChooser(sendIntent, getString(R.string.wishlist_share)));
                                                 } catch (android.content.ActivityNotFoundException ex) {
-                                                    Toast.makeText(getActivity(), getString(R.string.error_no_email_client), Toast.LENGTH_SHORT).show();
+                                                    ToastWrapper.makeText(getActivity(), getString(R.string.error_no_email_client), ToastWrapper.LENGTH_SHORT).show();
                                                 }
                                             }
                                         })

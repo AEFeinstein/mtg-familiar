@@ -22,7 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -223,7 +223,7 @@ public class TradeFragment extends FamiliarFragment {
 
 			/* Make sure there was a database hit */
             if (cardCursor.getCount() == 0) {
-                Toast.makeText(TradeFragment.this.getActivity(), getString(R.string.toast_no_card), Toast.LENGTH_LONG)
+                ToastWrapper.makeText(TradeFragment.this.getActivity(), getString(R.string.toast_no_card), ToastWrapper.LENGTH_LONG)
                         .show();
                 DatabaseManager.getInstance(getActivity()).closeDatabase();
                 return;
@@ -695,7 +695,7 @@ public class TradeFragment extends FamiliarFragment {
 
 						/* If there are no files, don't show the dialog */
                         if (validFiles.size() == 0) {
-                            Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG)
+                            ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
                                     .show();
                             return DontShowDialog();
                         }
@@ -738,7 +738,7 @@ public class TradeFragment extends FamiliarFragment {
 
 						/* If there are no files, don't show the dialog */
                         if (validFiles.size() == 0) {
-                            Toast.makeText(this.getActivity(), R.string.trader_toast_no_trades, Toast.LENGTH_LONG)
+                            ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
                                     .show();
                             return DontShowDialog();
                         }
@@ -760,8 +760,8 @@ public class TradeFragment extends FamiliarFragment {
                                         File toDelete = new File(getActivity().getFilesDir(), tradeNames[which] +
                                                 TRADE_EXTENSION);
                                         if (!toDelete.delete()) {
-                                            Toast.makeText(getActivity(), toDelete.getName() + " " +
-                                                    getString(R.string.not_deleted), Toast.LENGTH_LONG).show();
+                                            ToastWrapper.makeText(getActivity(), toDelete.getName() + " " +
+                                                    getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG).show();
                                         }
                                     }
                                 })
@@ -821,9 +821,9 @@ public class TradeFragment extends FamiliarFragment {
 
             fos.close();
         } catch (IOException e) {
-            Toast.makeText(this.getActivity(), R.string.trader_toast_save_error, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_save_error, ToastWrapper.LENGTH_LONG).show();
         } catch (IllegalArgumentException e) {
-            Toast.makeText(this.getActivity(), R.string.trader_toast_invalid_chars, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_invalid_chars, ToastWrapper.LENGTH_LONG).show();
         }
     }
 
@@ -863,7 +863,7 @@ public class TradeFragment extends FamiliarFragment {
         } catch (FileNotFoundException e) {
 			/* Do nothing, the autosave doesn't exist */
         } catch (IOException e) {
-            Toast.makeText(this.getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(this.getActivity(), e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
         }
     }
 

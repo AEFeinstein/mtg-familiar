@@ -2,7 +2,6 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
 import android.os.Environment;
-import com.gelakinetic.mtgfam.helpers.Toast;
 
 import com.gelakinetic.mtgfam.R;
 
@@ -48,16 +47,16 @@ public class ZipUtils {
         }
         try {
             zipIt(zipOut, files, context);
-            Toast.makeText(context, context.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
-                    Toast.LENGTH_SHORT).show();
+            ToastWrapper.makeText(context, context.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
+                    ToastWrapper.LENGTH_SHORT).show();
         } catch (ZipException e) {
             if (e.getMessage().equals("No entries")) {
-                Toast.makeText(context, context.getString(R.string.main_export_no_data), Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(context, context.getString(R.string.main_export_no_data), ToastWrapper.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(context, context.getString(R.string.main_export_fail), Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(context, context.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
-            Toast.makeText(context, context.getString(R.string.main_export_fail), Toast.LENGTH_SHORT).show();
+            ToastWrapper.makeText(context, context.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
         }
     }
 
@@ -71,9 +70,9 @@ public class ZipUtils {
         File zipIn = new File(sdCard, BACKUP_FILE_NAME);
         try {
             unZipIt(new ZipFile(zipIn), context);
-            Toast.makeText(context, context.getString(R.string.main_import_success), Toast.LENGTH_SHORT).show();
+            ToastWrapper.makeText(context, context.getString(R.string.main_import_success), ToastWrapper.LENGTH_SHORT).show();
         } catch (IOException e) {
-            Toast.makeText(context, context.getString(R.string.main_import_fail), Toast.LENGTH_SHORT).show();
+            ToastWrapper.makeText(context, context.getString(R.string.main_import_fail), ToastWrapper.LENGTH_SHORT).show();
         }
     }
 

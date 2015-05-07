@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.Toast;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.R;
@@ -51,7 +50,7 @@ public class WishlistHelpers {
 
             fos.close();
         } catch (IOException e) {
-            Toast.makeText(mCtx, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
         }
     }
 
@@ -80,7 +79,7 @@ public class WishlistHelpers {
 
             fos.close();
         } catch (IOException e) {
-            Toast.makeText(mCtx, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
         }
     }
 
@@ -117,7 +116,7 @@ public class WishlistHelpers {
                 lWishlist.add(new MtgCard(line, mCtx));
             }
         } catch (NumberFormatException e) {
-            Toast.makeText(mCtx, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
         } catch (IOException e) {
 			/* Catches file not found exception when wishlist doesn't exist */
         }
