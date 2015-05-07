@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 apply plugin: 'com.android.application'
@@ -39,18 +39,18 @@ dependencies {
     compile 'com.octo.android.robospice:robospice:1.4.14'
     compile 'com.octo.android.robospice:robospice-cache:1.4.14'
 
-    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:support-v4:22.1.1'
     compile 'com.android.support:support-v13:22.0.0'
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.1.1'
 
     compile 'org.jetbrains:annotations:13.0'
 
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.google.android.gms:play-services-appindexing:7.0.0'
+    compile 'com.google.android.gms:play-services-appindexing:7.3.0'
 
-    compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.1'
-    compile 'com.jpardogo.materialtabstrip:library:1.0.8'
-    compile("com.doomonafireball.betterpickers:library:1.5.3") {
+    compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.3'
+    compile 'com.jpardogo.materialtabstrip:library:1.0.9'
+    compile("com.doomonafireball.betterpickers:library:1.5.5") {
         exclude group: 'com.android.support', module: 'support-v4'
     }
     compile 'com.github.machinarius:preferencefragment:0.1.2'
