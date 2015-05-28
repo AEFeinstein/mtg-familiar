@@ -75,6 +75,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
     }
 
     public static final int MAX_NUM_RETRIES = 8;
+
     /**
      * This runs as a service, builds the TCGplayer.com URL, fetches the data, and parses the XML
      *
@@ -91,7 +92,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         SQLiteDatabase database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
         while (retry > 0) {
             try {
-				/* If the card number wasn't given, figure it out */
+                /* If the card number wasn't given, figure it out */
                 if (mCardNumber == null || mCardType == null) {
                     Cursor c = CardDbAdapter.fetchCardByNameAndSet(mCardName, mSetCode, CardDbAdapter.allData, database);
 
@@ -108,7 +109,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 
 				/* Get the TCGplayer.com set name, why can't everything be consistent? */
                 String tcgName = CardDbAdapter.getTcgName(mSetCode, database);
-				/* Figure out the tcgCardName, which is tricky for split cards */
+                /* Figure out the tcgCardName, which is tricky for split cards */
                 String tcgCardName;
                 int multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
 
@@ -156,7 +157,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                 }
 
 				/* Retry with accent marks removed */
-                if (retry <= MAX_NUM_RETRIES/2) {
+                if (retry <= MAX_NUM_RETRIES / 2) {
                     tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
                 }
 
@@ -190,13 +191,11 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                         pi.mAverage = pi.mFoilAverage;
                         pi.mHigh = pi.mFoilAverage;
                     }
-					DatabaseManager.getInstance(mContext, false).closeDatabase(false); /* database close if everything was ok */
+                    DatabaseManager.getInstance(mContext, false).closeDatabase(false); /* database close if everything was ok */
                     return pi;
                 } catch (NumberFormatException | DOMException error) {
                     exception = new SpiceException(error.getLocalizedMessage());
                 }
-            } catch (FamiliarDbException | IOException | ParserConfigurationException | SAXException e) {
-                exception = new SpiceException(e.getLocalizedMessage());
 
                 /* If this is a single card, skip over a bunch of retry cases */
                 if (retry == MAX_NUM_RETRIES && multiCardType == CardDbAdapter.NOPE) {
