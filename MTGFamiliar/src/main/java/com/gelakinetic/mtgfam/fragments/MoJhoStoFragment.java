@@ -114,7 +114,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
                     int cmc = Integer.parseInt((String) mStonehewerCmcChoice.getSelectedItem());
                     getOneSpell(EQUIPMENT, cmc);
                 } catch (NumberFormatException e) {
-					/* eat it */
+                    /* eat it */
                 }
             }
         });

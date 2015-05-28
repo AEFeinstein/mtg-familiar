@@ -24,13 +24,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -259,7 +259,7 @@ public class SearchViewFragment extends FamiliarFragment {
 
 		/* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
-		/* set the autocomplete for supertypes */
+        /* set the autocomplete for supertypes */
         String[] supertypes = getResources().getStringArray(R.array.supertypes);
         ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(this.getActivity(),
                 R.layout.list_item_1, supertypes);

@@ -16,10 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import java.util.concurrent.RejectedExecutionException;
 
@@ -177,7 +177,7 @@ public abstract class FamiliarFragment extends Fragment {
                     MenuItemCompat.setShowAsAction(mi, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
                 } catch (Resources.NotFoundException e) {
-					/* One user threw this once. I think the typed ComponentName fixes it, but just in case */
+                    /* One user threw this once. I think the typed ComponentName fixes it, but just in case */
                 }
             }
 

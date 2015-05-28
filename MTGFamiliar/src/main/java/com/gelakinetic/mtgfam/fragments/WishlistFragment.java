@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -34,6 +33,7 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.IndividualSetInfo;
@@ -182,7 +182,7 @@ public class WishlistFragment extends FamiliarFragment {
      * not null or have bad information.
      */
     private void addCardToWishlist() {
-		/* Do not allow empty fields */
+        /* Do not allow empty fields */
         String name = String.valueOf(mNameField.getText());
         String numberOf = (String.valueOf(mNumberField.getText()));
         if (name == null || name.equals("")) {

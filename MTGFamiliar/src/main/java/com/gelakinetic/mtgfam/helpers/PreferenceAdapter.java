@@ -392,7 +392,7 @@ public class PreferenceAdapter {
     /*  Round timer finish time */
     public synchronized long getRoundTimerEnd() {
         Long endTime = prefs.getLong(context.getString(R.string.key_currentRoundTimer), -1);
-		/* If the timer has expired, set it as -1 */
+        /* If the timer has expired, set it as -1 */
         if (endTime < System.currentTimeMillis()) {
             endTime = -1l;
             setRoundTimerEnd(endTime);

@@ -105,7 +105,7 @@ class MTRIPGParser {
             }
             updated = parseDocument(mode, url.openStream());
         } catch (IOException e) {
-			/* eat it */
+            /* eat it */
         }
         return updated;
     }

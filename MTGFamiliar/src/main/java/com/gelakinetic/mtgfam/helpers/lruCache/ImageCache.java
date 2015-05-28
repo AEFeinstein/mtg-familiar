@@ -495,7 +495,7 @@ public class ImageCache {
                 try {
                     mDiskCacheLock.wait();
                 } catch (InterruptedException e) {
-					/* Eat it */
+                    /* Eat it */
                 }
             }
             if (mDiskLruCache != null) {
@@ -629,7 +629,9 @@ public class ImageCache {
      * A holder class that contains cache parameters.
      */
     public static class ImageCacheParams {
-        public File diskCacheDir;        public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
+        public File diskCacheDir;
+        public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
+
         /**
          * Create a set of image cache parameters that can be provided to
          * {@link ImageCache#getInstance(android.support.v4.app.FragmentManager, ImageCacheParams)} or
@@ -646,7 +648,9 @@ public class ImageCache {
             } catch (NullPointerException e) {
                 diskCacheDir = null;
             }
-        }        public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
+        }
+
+        public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
 
         /**
          * Sets the memory cache size based on a percentage of the max available VM memory.
@@ -668,13 +672,12 @@ public class ImageCache {
             }
             memCacheSize = Math.round(percent * Runtime.getRuntime().maxMemory() / 1024);
         }
+
         public final CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
         public final int compressQuality = DEFAULT_COMPRESS_QUALITY;
         public final boolean memoryCacheEnabled = DEFAULT_MEM_CACHE_ENABLED;
         public final boolean diskCacheEnabled = DEFAULT_DISK_CACHE_ENABLED;
         public final boolean initDiskCacheOnCreate = DEFAULT_INIT_DISK_CACHE_ON_CREATE;
-
-
 
 
     }

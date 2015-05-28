@@ -50,6 +50,7 @@ public class FamiliarDialogFragment extends DialogFragment {
 
     /**
      * Lint complains if onCreateDialog returns null, but it's fine if the dialog won't be shown
+     *
      * @return null, since the dialog won't be shown
      */
     @SuppressWarnings("SameReturnValue")

@@ -108,7 +108,7 @@ class RulesParser {
     public boolean parseRules() {
         if (this.mBufferedReader == null) {
             /* This should only be the case if we called parseRules() before needsToUpdate()
-			 * or if needsToUpdate() returned false */
+             * or if needsToUpdate() returned false */
             return false;
         }
 

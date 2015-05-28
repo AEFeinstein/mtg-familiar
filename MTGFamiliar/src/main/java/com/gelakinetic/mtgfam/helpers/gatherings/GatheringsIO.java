@@ -2,9 +2,9 @@ package com.gelakinetic.mtgfam.helpers.gatherings;
 
 import android.content.Context;
 import android.util.Xml;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -170,7 +170,7 @@ public class GatheringsIO {
             out.write(dataXML);
             out.close();
         } catch (IOException e) {
-			/* eat it */
+            /* eat it */
         }
     }
 

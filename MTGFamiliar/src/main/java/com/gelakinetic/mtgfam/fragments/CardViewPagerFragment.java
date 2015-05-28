@@ -162,7 +162,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
                 This page is way off-screen to the left. */
                 view.setAlpha(0);
             } else if (position <= 0) { /* [-1,0]
-				Use the default slide transition when moving to the left page */
+                Use the default slide transition when moving to the left page */
                 view.setTranslationX(0);
                 view.setScaleX(1);
                 view.setScaleY(1);

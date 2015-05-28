@@ -14,12 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import android.widget.ViewSwitcher;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import org.jetbrains.annotations.NotNull;
 

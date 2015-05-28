@@ -128,7 +128,7 @@ public class RoundTimerFragment extends FamiliarFragment {
      * @param endTime The time the round will end, relative to System.currentTimeInMillis()
      */
     public static void showTimerRunningNotification(Context context, long endTime) {
-		/* Format the String */
+        /* Format the String */
         Calendar then = Calendar.getInstance();
         then.add(Calendar.MILLISECOND, (int) (endTime - System.currentTimeMillis()));
         String messageText = String.format(context.getString(R.string.timer_notification_ongoing), then);

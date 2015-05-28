@@ -118,7 +118,7 @@ public class WishlistHelpers {
         } catch (NumberFormatException e) {
             ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
         } catch (IOException e) {
-			/* Catches file not found exception when wishlist doesn't exist */
+            /* Catches file not found exception when wishlist doesn't exist */
         }
         return lWishlist;
     }
@@ -313,209 +313,206 @@ public class WishlistHelpers {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 						/* Abort! */
-						dialogInterface.dismiss();
-					}
-				})
-				.create();
-	}
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create();
+    }
 
-	/**
-	 * Take a wishlist and turn it into plaintext so that it can be shared via email or whatever,
+    /**
+     * Take a wishlist and turn it into plaintext so that it can be shared via email or whatever,
      * with the choice of including the set in the wishlist export
-	 *
-	 * @param mCompressedWishlist The wishlist to share
-	 * @param ctx                 The context to get localized strings with
+     *
+     * @param mCompressedWishlist The wishlist to share
+     * @param ctx                 The context to get localized strings with
      * @param exportSet           If the set name should be exported with the wishlist
-	 * @return A string containing all the wishlist data
-	 */
-	public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, Context ctx, boolean exportSet) {
-		StringBuilder readableWishlist = new StringBuilder();
+     * @return A string containing all the wishlist data
+     */
+    public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, Context ctx, boolean exportSet) {
+        StringBuilder readableWishlist = new StringBuilder();
 
-		for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-			for (IndividualSetInfo isi : cwi.mInfo) {
-				readableWishlist
-						.append(isi.mNumberOf)
+        for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+            for (IndividualSetInfo isi : cwi.mInfo) {
+                readableWishlist
+                        .append(isi.mNumberOf)
                         .append(' ')
-						.append(cwi.mCard.name);
+                        .append(cwi.mCard.name);
                 if (exportSet) {
                     readableWishlist
                             .append(", ")
                             .append(isi.mSet);
                 }
-				if (isi.mIsFoil) {
-					readableWishlist
-							.append(" (")
-							.append(ctx.getString(R.string.wishlist_foil))
-							.append(")");
-				}
-				readableWishlist.append("\r\n");
-			}
-		}
-		return readableWishlist.toString();
-	}
+                if (isi.mIsFoil) {
+                    readableWishlist
+                            .append(" (")
+                            .append(ctx.getString(R.string.wishlist_foil))
+                            .append(")");
+                }
+                readableWishlist.append("\r\n");
+            }
+        }
+        return readableWishlist.toString();
+    }
 
-	/**
-	 * This class encapsulates all non-duplicated information for two cards in different sets
-	 */
-	public static class IndividualSetInfo {
-		public String mSet;
-		public String mSetCode;
-		public String mNumber;
+    /**
+     * This class encapsulates all non-duplicated information for two cards in different sets
+     */
+    public static class IndividualSetInfo {
+        public String mSet;
+        public String mSetCode;
+        public String mNumber;
 
-		public Boolean mIsFoil;
-		public PriceInfo mPrice;
-		public String mMessage;
-		public Integer mNumberOf;
-		public Character mRarity;
-	}
+        public Boolean mIsFoil;
+        public PriceInfo mPrice;
+        public String mMessage;
+        public Integer mNumberOf;
+        public Character mRarity;
+    }
 
-	/**
-	 * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for different printings
-	 * of that card
-	 */
-	public static class CompressedWishlistInfo {
-		public final MtgCard mCard;
-		public final ArrayList<IndividualSetInfo> mInfo;
+    /**
+     * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for different printings
+     * of that card
+     */
+    public static class CompressedWishlistInfo {
+        public final MtgCard mCard;
+        public final ArrayList<IndividualSetInfo> mInfo;
 
-		/**
-		 * Constructor
-		 *
-		 * @param card The MtgCard which will be the base for this object
-		 */
-		public CompressedWishlistInfo(MtgCard card) {
-			mInfo = new ArrayList<>();
-			mCard = card;
-			add(mCard);
-		}
+        /**
+         * Constructor
+         *
+         * @param card The MtgCard which will be the base for this object
+         */
+        public CompressedWishlistInfo(MtgCard card) {
+            mInfo = new ArrayList<>();
+            mCard = card;
+            add(mCard);
+        }
 
-		/**
-		 * Add a new printing of a MtgCard to this object
-		 *
-		 * @param card The new printing to add to this object
-		 */
-		public void add(MtgCard card) {
-			IndividualSetInfo isi = new IndividualSetInfo();
+        /**
+         * Add a new printing of a MtgCard to this object
+         *
+         * @param card The new printing to add to this object
+         */
+        public void add(MtgCard card) {
+            IndividualSetInfo isi = new IndividualSetInfo();
 
-			isi.mSet = card.tcgName;
-			isi.mSetCode = card.setCode;
-			isi.mNumber = card.number;
-			isi.mIsFoil = card.foil;
-			isi.mPrice = null;
-			isi.mMessage = card.message;
-			isi.mNumberOf = card.numberOf;
-			isi.mRarity = card.rarity;
+            isi.mSet = card.tcgName;
+            isi.mSetCode = card.setCode;
+            isi.mNumber = card.number;
+            isi.mIsFoil = card.foil;
+            isi.mPrice = null;
+            isi.mMessage = card.message;
+            isi.mNumberOf = card.numberOf;
+            isi.mRarity = card.rarity;
 
-			mInfo.add(isi);
-		}
+            mInfo.add(isi);
+        }
 
-		/**
-		 * Check to see if two CompressedWishlistInfo objects are equivalent, or if this is equivalent to a MtgCard
-		 * object. The comparison is done on the MtgCard's name
-		 *
-		 * @param o The object to compare to this one
-		 * @return true if the specified object is equal to this string, false otherwise.
-		 */
-		@Override
-		public boolean equals(Object o) {
-			if (o instanceof CompressedWishlistInfo) {
-				return mCard.name.equals(((CompressedWishlistInfo) o).mCard.name);
-			}
-			else if (o instanceof MtgCard) {
-				return mCard.name.equals(((MtgCard) o).name);
-			}
-			return false;
-		}
+        /**
+         * Check to see if two CompressedWishlistInfo objects are equivalent, or if this is equivalent to a MtgCard
+         * object. The comparison is done on the MtgCard's name
+         *
+         * @param o The object to compare to this one
+         * @return true if the specified object is equal to this string, false otherwise.
+         */
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof CompressedWishlistInfo) {
+                return mCard.name.equals(((CompressedWishlistInfo) o).mCard.name);
+            } else if (o instanceof MtgCard) {
+                return mCard.name.equals(((MtgCard) o).name);
+            }
+            return false;
+        }
 
-		/**
-		 * Clear all the different printings for this object
-		 */
-		public void clearCompressedInfo() {
-			mInfo.clear();
-		}
-	}
+        /**
+         * Clear all the different printings for this object
+         */
+        public void clearCompressedInfo() {
+            mInfo.clear();
+        }
+    }
 
-	/* Comparator based on converted mana cost */
-	public static class WishlistComparatorCmc implements Comparator<CompressedWishlistInfo> {
-		@Override
-		public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-			if (wish1.mCard.cmc == wish2.mCard.cmc) {
-				return wish1.mCard.name.compareTo(wish2.mCard.name);
-			}
-			else if (wish1.mCard.cmc > wish2.mCard.cmc) {
-				return 1;
-			}
-			return -1;
-		}
-	}
+    /* Comparator based on converted mana cost */
+    public static class WishlistComparatorCmc implements Comparator<CompressedWishlistInfo> {
+        @Override
+        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
+            if (wish1.mCard.cmc == wish2.mCard.cmc) {
+                return wish1.mCard.name.compareTo(wish2.mCard.name);
+            } else if (wish1.mCard.cmc > wish2.mCard.cmc) {
+                return 1;
+            }
+            return -1;
+        }
+    }
 
-	/* Comparator based on color */
-	public static class WishlistComparatorColor implements Comparator<CompressedWishlistInfo> {
-		private static final String colors = "WUBRG";
-		private static final String nonColors = "LAC";
+    /* Comparator based on color */
+    public static class WishlistComparatorColor implements Comparator<CompressedWishlistInfo> {
+        private static final String colors = "WUBRG";
+        private static final String nonColors = "LAC";
 
-		/* Filters a color string to only include chars representing colors (e.g. "LG" (Dryad Arbor) will return "G"). */
-		public String getColors(String c) {
-			String validColors = "";
-			//1. Catch null/empty string
-			if (c == null || c.isEmpty()) {
-				return "";
-			}
-			//2. For each char, if a valid color, add to return String
-			for (int i = 0; i < c.length(); i++) {
-				if (colors.indexOf(c.charAt(i)) > -1) {
-					validColors += c.charAt(i);
-				}
-			}
-			return validColors;
-		}
+        /* Filters a color string to only include chars representing colors (e.g. "LG" (Dryad Arbor) will return "G"). */
+        public String getColors(String c) {
+            String validColors = "";
+            //1. Catch null/empty string
+            if (c == null || c.isEmpty()) {
+                return "";
+            }
+            //2. For each char, if a valid color, add to return String
+            for (int i = 0; i < c.length(); i++) {
+                if (colors.indexOf(c.charAt(i)) > -1) {
+                    validColors += c.charAt(i);
+                }
+            }
+            return validColors;
+        }
 
-		@Override
-		public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-			String colors1 = getColors(wish1.mCard.color);
-			String colors2 = getColors(wish2.mCard.color);
-			int priority1;
-			int priority2;
-			//1. If colorless, perform colorless comparison
-			if (colors1.length() + colors2.length() == 0) {
-				colors1 = wish1.mCard.color;
-				colors2 = wish2.mCard.color;
-				for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
-					priority1 = nonColors.indexOf(colors1.charAt(i));
-					priority2 = nonColors.indexOf(colors2.charAt(i));
-					if (priority1 != priority2) {
-						return priority1 < priority2 ? -1 : 1;
-					}
-				}
-				return wish1.mCard.name.compareTo(wish2.mCard.name);
-			}
-			//2. Else compare based on number of colors
-			if (colors1.length() < colors2.length()) {
-				return -1;
-			}
-			else if (colors1.length() > colors2.length()) {
-				return 1;
-			}
-			//3. Else if same number of colors exist, compare based on WUBRG-ness
-			else {
-				for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
-					priority1 = colors.indexOf(colors1.charAt(i));
-					priority2 = colors.indexOf(colors2.charAt(i));
-					if (priority1 != priority2) {
-						return priority1 < priority2 ? -1 : 1;
-					}
-				}
-				return wish1.mCard.name.compareTo(wish2.mCard.name);
-			}
-		}
-	}
+        @Override
+        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
+            String colors1 = getColors(wish1.mCard.color);
+            String colors2 = getColors(wish2.mCard.color);
+            int priority1;
+            int priority2;
+            //1. If colorless, perform colorless comparison
+            if (colors1.length() + colors2.length() == 0) {
+                colors1 = wish1.mCard.color;
+                colors2 = wish2.mCard.color;
+                for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
+                    priority1 = nonColors.indexOf(colors1.charAt(i));
+                    priority2 = nonColors.indexOf(colors2.charAt(i));
+                    if (priority1 != priority2) {
+                        return priority1 < priority2 ? -1 : 1;
+                    }
+                }
+                return wish1.mCard.name.compareTo(wish2.mCard.name);
+            }
+            //2. Else compare based on number of colors
+            if (colors1.length() < colors2.length()) {
+                return -1;
+            } else if (colors1.length() > colors2.length()) {
+                return 1;
+            }
+            //3. Else if same number of colors exist, compare based on WUBRG-ness
+            else {
+                for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
+                    priority1 = colors.indexOf(colors1.charAt(i));
+                    priority2 = colors.indexOf(colors2.charAt(i));
+                    if (priority1 != priority2) {
+                        return priority1 < priority2 ? -1 : 1;
+                    }
+                }
+                return wish1.mCard.name.compareTo(wish2.mCard.name);
+            }
+        }
+    }
 
-	/* Comparator based on name */
-	public static class WishlistComparatorName implements Comparator<CompressedWishlistInfo> {
-		@Override
-		public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-			return wish1.mCard.name.compareTo(wish2.mCard.name);
-		}
-	}
+    /* Comparator based on name */
+    public static class WishlistComparatorName implements Comparator<CompressedWishlistInfo> {
+        @Override
+        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
+            return wish1.mCard.name.compareTo(wish2.mCard.name);
+        }
+    }
 
     /* Comparator based on first set of a card */
     public static class WishlistComparatorSet implements Comparator<CompressedWishlistInfo> {

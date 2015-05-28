@@ -29,12 +29,12 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -237,7 +237,7 @@ public class RulesFragment extends FamiliarFragment {
                         mRules.add(new BannedItem(getString(R.string.rules_banned_and_restricted), NONE, "", true));
                     }
                     int listItemResource = R.layout.rules_list_item;
-					/* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
+                    /* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
 					 * the wrong layout*/
                     if (isGlossary || isBanned || mSubcategory >= 0 || keyword != null) {
                         listItemResource = R.layout.rules_list_detail_item;

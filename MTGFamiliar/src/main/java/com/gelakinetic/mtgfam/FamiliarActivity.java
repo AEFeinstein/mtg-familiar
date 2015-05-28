@@ -402,7 +402,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 switch (mPageEntries[i].mNameResource) {
                     case R.string.main_extras:
                     case R.string.main_pages: {
-						/* It's a header */
+                        /* It's a header */
                         break; /* don't close the drawer or change a selection */
                     }
                     case R.string.main_mana_pool:
@@ -546,7 +546,7 @@ public class FamiliarActivity extends ActionBarActivity {
                     } catch (NullPointerException e) {
 					    /* eat it. tasty */
                     }
-                    if(lastVersion != 0) {
+                    if (lastVersion != 0) {
                         showDialogFragment(DIALOG_CHANGE_LOG);
                     }
                     mPreferenceAdapter.setLastVersion(pInfo.versionCode);
@@ -635,19 +635,18 @@ public class FamiliarActivity extends ActionBarActivity {
                     Cursor cursor = null;
                     boolean screenLaunched = false;
                     if (data.getScheme().toLowerCase().equals("card") &&
-                        data.getAuthority().toLowerCase().equals("multiverseid")) {
-                        if(data.getLastPathSegment() == null) {
+                            data.getAuthority().toLowerCase().equals("multiverseid")) {
+                        if (data.getLastPathSegment() == null) {
                             /* Home screen deep link */
                             launchHomeScreen();
                             screenLaunched = true;
                             shouldSelectItem = false;
-                        }
-                        else {
+                        } else {
                             try {
                                 cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
                                         new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
                             } catch (NumberFormatException e) {
-                               cursor = null;
+                                cursor = null;
                             }
                         }
                     }
@@ -663,7 +662,7 @@ public class FamiliarActivity extends ActionBarActivity {
                             shouldSelectItem = false;
                         }
                         cursor.close();
-                    } else if(!screenLaunched) {
+                    } else if (!screenLaunched) {
                         /* null cursor, just return */
                         ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
                         this.finish();
@@ -700,9 +699,9 @@ public class FamiliarActivity extends ActionBarActivity {
             selectItem(R.string.main_mojhosto, null, true, false);
         } else if (ACTION_PROFILE.equals(intent.getAction())) {
             selectItem(R.string.main_profile, null, true, false);
-        } else if(Intent.ACTION_MAIN.equals(intent.getAction())) {
+        } else if (Intent.ACTION_MAIN.equals(intent.getAction())) {
             /* App launched as regular, show the default fragment if there isn't one already */
-            if(getSupportFragmentManager().getFragments() == null) {
+            if (getSupportFragmentManager().getFragments() == null) {
                 launchHomeScreen();
             }
         } else {
@@ -976,7 +975,7 @@ public class FamiliarActivity extends ActionBarActivity {
     public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            if(toolbar != null) {
+            if (toolbar != null) {
                 if (toolbar.isOverflowMenuShowing()) {
                     toolbar.dismissPopupMenus();
                 } else {

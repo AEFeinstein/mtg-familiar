@@ -183,7 +183,7 @@ public class LcPlayer {
         if (!mCommitting) {
             /* Create a new historyEntry */
             HistoryEntry entry = new HistoryEntry();
-			/* If there are no entries, assume life is mDefaultLifeTotal */
+            /* If there are no entries, assume life is mDefaultLifeTotal */
             if (mLifeHistory.size() == 0) {
                 entry.mDelta = mLife - mDefaultLifeTotal;
             } else {

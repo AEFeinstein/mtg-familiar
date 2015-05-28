@@ -115,7 +115,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 
 				/* Set up retries for multicard ordering */
                 if (multiCardType != CardDbAdapter.NOPE) {
-					/* Next time try the other order */
+                    /* Next time try the other order */
                     switch (retry % (MAX_NUM_RETRIES / 2)) {
                         case 0:
                             isAscending = false;

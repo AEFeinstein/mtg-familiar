@@ -167,7 +167,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onInit(int status) {
             if (status == TextToSpeech.SUCCESS) {
-				/* Try to say what needs to be said */
+                /* Try to say what needs to be said */
                 int result = mTts.setLanguage(getResources().getConfiguration().locale);
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
 					/* Fall back to ringtone */
