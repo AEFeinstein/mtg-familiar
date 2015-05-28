@@ -21,7 +21,6 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -88,7 +87,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         int retry = 4; /* try the fetch four times, once with accent marks and again without if it fails */
         /* then the same for multicard ordering */
         SpiceException exception = null; /* Save the exception during while loops */
-        SQLiteDatabase database = DatabaseManager.getInstance(mContext).openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
         while (retry > 0) {
             try {
 				/* If the card number wasn't given, figure it out */
@@ -182,27 +181,17 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                         pi.mAverage = pi.mFoilAverage;
                         pi.mHigh = pi.mFoilAverage;
                     }
-					DatabaseManager.getInstance(mContext).closeDatabase(); /* database close if everything was ok */
+					DatabaseManager.getInstance(mContext, false).closeDatabase(false); /* database close if everything was ok */
                     return pi;
-                } catch (NumberFormatException error) {
+                } catch (NumberFormatException | DOMException error) {
                     exception = new SpiceException(error.getLocalizedMessage());
-                } catch (DOMException e) {
-                    exception = new SpiceException(e.getLocalizedMessage());
                 }
-            } catch (FamiliarDbException e) {
-                exception = new SpiceException(e.getLocalizedMessage());
-            } catch (MalformedURLException e) {
-                exception = new SpiceException(e.getLocalizedMessage());
-            } catch (IOException e) {
-                exception = new SpiceException(e.getLocalizedMessage());
-            } catch (ParserConfigurationException e) {
-                exception = new SpiceException(e.getLocalizedMessage());
-            } catch (SAXException e) {
+            } catch (FamiliarDbException | IOException | ParserConfigurationException | SAXException e) {
                 exception = new SpiceException(e.getLocalizedMessage());
             }
             retry--;
         }
-        DatabaseManager.getInstance(mContext).closeDatabase(); /* database close if something failed */
+        DatabaseManager.getInstance(mContext, false).closeDatabase(false); /* database close if something failed */
         if (exception != null) {
             throw exception;
         } else {

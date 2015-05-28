@@ -192,7 +192,7 @@ public class WishlistFragment extends FamiliarFragment {
             return;
         }
 
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
 			/* Make the new card */
             MtgCard card = new MtgCard();
@@ -206,7 +206,7 @@ public class WishlistFragment extends FamiliarFragment {
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeText(WishlistFragment.this.getActivity(), getString(R.string.toast_no_card),
                         ToastWrapper.LENGTH_LONG).show();
-                DatabaseManager.getInstance(getActivity()).closeDatabase();
+                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
             }
             card.type = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
@@ -268,7 +268,7 @@ public class WishlistFragment extends FamiliarFragment {
         } catch (NumberFormatException e) {
 			/* eat it */
         }
-        DatabaseManager.getInstance(getActivity()).closeDatabase();
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**
@@ -313,7 +313,7 @@ public class WishlistFragment extends FamiliarFragment {
     private void readAndCompressWishlist(String changedCardName) {
 		/* Read the wishlist */
         ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
 			/* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
@@ -364,7 +364,7 @@ public class WishlistFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
         }
-        DatabaseManager.getInstance(getActivity()).closeDatabase();
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**

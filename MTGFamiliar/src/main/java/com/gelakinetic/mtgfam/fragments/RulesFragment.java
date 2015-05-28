@@ -94,7 +94,7 @@ public class RulesFragment extends FamiliarFragment {
         final String format;
 
 		/* Open a database connection */
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
 
 		/* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
@@ -176,7 +176,7 @@ public class RulesFragment extends FamiliarFragment {
                 isClickable = false;
             }
         } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance(getActivity()).closeDatabase();
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             handleFamiliarDbException(true);
             return myFragmentView;
         }
@@ -193,7 +193,7 @@ public class RulesFragment extends FamiliarFragment {
                 }
                 setsCursor.close();
             } catch (SQLiteDatabaseCorruptException e) {
-                DatabaseManager.getInstance(getActivity()).closeDatabase();
+                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 handleFamiliarDbException(true);
                 return null;
             }
@@ -294,7 +294,7 @@ public class RulesFragment extends FamiliarFragment {
                     }
                 }
             } catch (SQLiteDatabaseCorruptException e) {
-                DatabaseManager.getInstance(getActivity()).closeDatabase();
+                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 handleFamiliarDbException(true);
                 return null;
             }
@@ -337,7 +337,7 @@ public class RulesFragment extends FamiliarFragment {
         if (cursor != null) {
             cursor.close();
         }
-        DatabaseManager.getInstance(getActivity()).closeDatabase();
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
         return myFragmentView;
     }
@@ -392,7 +392,7 @@ public class RulesFragment extends FamiliarFragment {
                         if (mCategory == -1) {
                             title = getString(R.string.rules_search_all);
                         } else {
-                            SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
+                            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                             try {
                                 title = String.format(getString(R.string.rules_search_cat),
                                         CardDbAdapter.getCategoryName(mCategory, mSubcategory, database));
@@ -400,7 +400,7 @@ public class RulesFragment extends FamiliarFragment {
                                 title = String.format(getString(R.string.rules_search_cat),
                                         getString(R.string.rules_this_cat));
                             }
-                            DatabaseManager.getInstance(getActivity()).closeDatabase();
+                            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                         }
 
                         Dialog dialog = new AlertDialogPro.Builder(getActivity())
@@ -510,7 +510,7 @@ public class RulesFragment extends FamiliarFragment {
         if (shouldLink) {
             Matcher m = mLinkPattern.matcher(cs);
             while (m.find()) {
-                SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
+                SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                 try {
                     String[] tokens = cs.subSequence(m.start(), m.end()).toString().split("(\\.)");
                     int firstInt = Integer.parseInt(tokens[0]);
@@ -541,7 +541,7 @@ public class RulesFragment extends FamiliarFragment {
                 } catch (Exception e) {
 					/* Eat any exceptions; they'll just cause the link to not appear*/
                 }
-                DatabaseManager.getInstance(getActivity()).closeDatabase();
+                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             }
         }
         return result;

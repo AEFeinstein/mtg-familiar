@@ -145,13 +145,13 @@ public class MtgCard {
         card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
 
 		/* Defaults regardless */
-        SQLiteDatabase database = DatabaseManager.getInstance(context).openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false);
         try {
             card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
         } catch (FamiliarDbException e) {
             card.tcgName = null;
         }
-        DatabaseManager.getInstance(context).closeDatabase();
+        DatabaseManager.getInstance(context, false).closeDatabase(false);
         card.message = "loading";
         return card;
     }

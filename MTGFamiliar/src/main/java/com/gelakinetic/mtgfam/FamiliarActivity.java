@@ -65,7 +65,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
@@ -90,9 +89,9 @@ import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseHelper;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
@@ -316,7 +315,7 @@ public class FamiliarActivity extends ActionBarActivity {
 
         setContentView(R.layout.activity_main);
 
-        DatabaseManager.initializeInstance(new DatabaseHelper(getApplicationContext()));
+        DatabaseManager.initializeInstance(getApplicationContext());
 
         mRefreshLayout = ((IndeterminateRefreshLayout) findViewById(R.id.fragment_container));
         mRefreshLayout.setColors(
@@ -360,7 +359,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 switch (mPageEntries[i].mNameResource) {
                     case R.string.main_force_update_title: {
                         if (getNetworkState(true) != -1) {
-                            SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this).openDatabase(true);
+                            SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this, true).openDatabase(true);
                             try {
                                 CardDbAdapter.dropCreateDB(database);
                                 mPreferenceAdapter.setLastLegalityUpdate(0);
@@ -375,7 +374,7 @@ public class FamiliarActivity extends ActionBarActivity {
                             } catch (FamiliarDbException e) {
                                 e.printStackTrace();
                             }
-                            DatabaseManager.getInstance(FamiliarActivity.this).closeDatabase();
+                            DatabaseManager.getInstance(FamiliarActivity.this, true).closeDatabase(true);
                         }
                         shouldCloseDrawer = true;
                         break;
@@ -631,7 +630,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 /* User clicked a deep link, jump to the card(s) */
                 isDeepLink = true;
 
-                SQLiteDatabase database = DatabaseManager.getInstance(this).openDatabase(false);
+                SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
                 try {
                     Cursor cursor = null;
                     boolean screenLaunched = false;
@@ -673,7 +672,7 @@ public class FamiliarActivity extends ActionBarActivity {
                 } catch (FamiliarDbException e) {
                     e.printStackTrace();
                 }
-                DatabaseManager.getInstance(this).closeDatabase();
+                DatabaseManager.getInstance(this, false).closeDatabase(false);
             }
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
             if (shouldSelectItem) {

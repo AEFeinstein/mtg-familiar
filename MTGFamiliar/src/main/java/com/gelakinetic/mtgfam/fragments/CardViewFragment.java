@@ -380,25 +380,13 @@ public class CardViewFragment extends FamiliarFragment {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
-        while (DatabaseManager.getInstance(getActivity()).mTransactional &&
-                DatabaseManager.getInstance(getActivity()).mOpenCounter.get() > 0) {
-            /* Database is busy, updating probably. Spin for a bit
-             * This happens when a deep link is opened for the first time
-             * The transactional update collides with fetching card data
-             */
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                /* eat it */
-            }
-        }
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         Cursor cCardById;
         try {
             cCardById = CardDbAdapter.fetchCard(id, database);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
-            DatabaseManager.getInstance(getActivity()).closeDatabase();
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             return;
         }
 
@@ -421,7 +409,7 @@ public class CardViewFragment extends FamiliarFragment {
                             database);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
-            DatabaseManager.getInstance(getActivity()).closeDatabase();
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             return;
         }
         mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
@@ -570,7 +558,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
-                DatabaseManager.getInstance(getActivity()).closeDatabase();
+                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
             }
             if (mTransformId == -1) {
@@ -618,7 +606,7 @@ public class CardViewFragment extends FamiliarFragment {
             );
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
-            DatabaseManager.getInstance(getActivity()).closeDatabase();
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             return;
         }
         mSets = new LinkedHashSet<>();
@@ -631,7 +619,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
-                DatabaseManager.getInstance(getActivity()).closeDatabase();
+                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
             }
             cCardByName.moveToNext();
@@ -641,7 +629,7 @@ public class CardViewFragment extends FamiliarFragment {
         if (mSets.size() == 1) {
             mActivity.supportInvalidateOptionsMenu();
         }
-        DatabaseManager.getInstance(getActivity()).closeDatabase();
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
         if (mShouldReportView) {
             reportAppIndexViewIfAble();
@@ -1187,7 +1175,7 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity()).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
             try {
                 Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
@@ -1227,7 +1215,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mLegalities = null;
             }
 
-            DatabaseManager.getInstance(getActivity()).closeDatabase();
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             return null;
         }
 

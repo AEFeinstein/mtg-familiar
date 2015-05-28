@@ -34,7 +34,6 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -109,7 +108,7 @@ public class DbUpdaterService extends IntentService {
             boolean newRulesParsed = false;
 
             /* Get database access, which auto-opens it, close it, and open a transactional write */
-            SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext()).openDatabase(true);
+            SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
             try {
 
                 showStatusNotification();
@@ -169,14 +168,10 @@ public class DbUpdaterService extends IntentService {
                 }
 
                 cancelStatusNotification();
-            } catch (MalformedURLException e1) {
+            } catch (FamiliarDbException | IOException e1) {
                 commitDates = false; /* don't commit the dates */
-            } catch (IOException e) {
-                commitDates = false;
-            } catch (FamiliarDbException e) {
-                commitDates = false;
             }
-            DatabaseManager.getInstance(getApplicationContext()).closeDatabase();
+            DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
 
 			/* Parse the MTR and IPG */
             MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);
