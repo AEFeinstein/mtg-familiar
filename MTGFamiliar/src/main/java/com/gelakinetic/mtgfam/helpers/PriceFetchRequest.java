@@ -74,6 +74,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         return builder.parse(is);
     }
 
+    public static final int MAX_NUM_RETRIES = 8;
     /**
      * This runs as a service, builds the TCGplayer.com URL, fetches the data, and parses the XML
      *
@@ -83,8 +84,8 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
     @SuppressWarnings("SpellCheckingInspection")
     @Override
     public PriceInfo loadDataFromNetwork() throws SpiceException {
-        boolean isAscending = true;
-        int retry = 4; /* try the fetch four times, once with accent marks and again without if it fails */
+        boolean isAscending = false, firstHalf = false, secondHalf = false;
+        int retry = MAX_NUM_RETRIES; /* try the fetch up to eight times, for different accent mark & split card combos*/
         /* then the same for multicard ordering */
         SpiceException exception = null; /* Save the exception during while loops */
         SQLiteDatabase database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
@@ -110,6 +111,34 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 				/* Figure out the tcgCardName, which is tricky for split cards */
                 String tcgCardName;
                 int multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
+
+				/* Set up retries for multicard ordering */
+                if (multiCardType != CardDbAdapter.NOPE) {
+					/* Next time try the other order */
+                    switch (retry % (MAX_NUM_RETRIES / 2)) {
+                        case 0:
+                            isAscending = false;
+                            firstHalf = false;
+                            secondHalf = false;
+                            break;
+                        case 3:
+                            isAscending = true;
+                            firstHalf = false;
+                            secondHalf = false;
+                            break;
+                        case 2:
+                            isAscending = false;
+                            firstHalf = true;
+                            secondHalf = false;
+                            break;
+                        case 1:
+                            isAscending = false;
+                            firstHalf = false;
+                            secondHalf = true;
+                            break;
+                    }
+                }
+
                 if ((multiCardType == CardDbAdapter.TRANSFORM) && mCardNumber.contains("b")) {
                     tcgCardName = CardDbAdapter.getTransformName(mSetCode, mCardNumber.replace("b", "a"), database);
                 } else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
@@ -118,37 +147,17 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     if (multiID == -1) {
                         throw new FamiliarDbException(null);
                     }
-                    tcgCardName = CardDbAdapter.getSplitName(multiID, isAscending, database);
+                    tcgCardName = CardDbAdapter.getSplitName(multiID, isAscending, firstHalf, secondHalf, database);
                 } else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
                         multiCardType == CardDbAdapter.FUSE)) {
-                    tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, isAscending, database);
+                    tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, firstHalf, secondHalf, isAscending, database);
                 } else {
                     tcgCardName = mCardName;
                 }
 
 				/* Retry with accent marks removed */
-                if (retry < 3) {
+                if (retry <= MAX_NUM_RETRIES/2) {
                     tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
-                }
-
-				/* Set up retries for multicard ordering */
-                if (multiCardType != CardDbAdapter.NOPE) {
-					/* Next time try the other order */
-                    switch (retry) {
-                        case 4:
-                            isAscending = false;
-                            break;
-                        case 3:
-                            isAscending = true;
-                            break;
-                        case 2:
-                            isAscending = false;
-                            break;
-                    }
-                }
-				/* If it isnt a multicard, don't bother */
-                else if (retry == 4) {
-                    retry = 2;
                 }
 
 				/* Build the URL */
@@ -185,6 +194,13 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     return pi;
                 } catch (NumberFormatException | DOMException error) {
                     exception = new SpiceException(error.getLocalizedMessage());
+                }
+            } catch (FamiliarDbException | IOException | ParserConfigurationException | SAXException e) {
+                exception = new SpiceException(e.getLocalizedMessage());
+
+                /* If this is a single card, skip over a bunch of retry cases */
+                if (retry == MAX_NUM_RETRIES && multiCardType == CardDbAdapter.NOPE) {
+                    retry = 2;
                 }
             } catch (FamiliarDbException | IOException | ParserConfigurationException | SAXException e) {
                 exception = new SpiceException(e.getLocalizedMessage());

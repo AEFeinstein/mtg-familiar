@@ -1804,18 +1804,22 @@ public class CardDbAdapter {
     }
 
     /**
+     *
      * @param multiverseId
+     * @param isAscending
+     * @param firstHalf
+     * @param secondHalf
      * @param mDb
      * @return
      * @throws FamiliarDbException
      */
-    public static String getSplitName(int multiverseId, boolean ascending, SQLiteDatabase mDb) throws FamiliarDbException {
+    public static String getSplitName(int multiverseId, boolean isAscending, boolean firstHalf, boolean secondHalf, SQLiteDatabase mDb) throws FamiliarDbException {
         Cursor c;
         String statement = "SELECT " + KEY_NAME + ", " + KEY_NUMBER + " from "
                 + DATABASE_TABLE_CARDS + " WHERE " + KEY_MULTIVERSEID + " = "
                 + multiverseId + " ORDER BY " + KEY_NUMBER;
 
-        if (ascending) {
+        if (isAscending) {
             statement += " ASC";
         } else {
             statement += " DESC";
@@ -1826,11 +1830,20 @@ public class CardDbAdapter {
 
             if (c.getCount() == 2) {
                 c.moveToFirst();
-                String retVal = c.getString(c
-                        .getColumnIndex(KEY_NAME));
-                retVal += " // ";
-                c.moveToNext();
-                retVal += c.getString(c.getColumnIndex(KEY_NAME));
+                String retVal = null;
+                if(firstHalf) {
+                    retVal = c.getString(c.getColumnIndex(KEY_NAME));
+                }
+                else if (secondHalf) {
+                    c.moveToNext();
+                    retVal = c.getString(c.getColumnIndex(KEY_NAME));
+                }
+                else {
+                    retVal = c.getString(c.getColumnIndex(KEY_NAME));
+                    retVal += " // ";
+                    c.moveToNext();
+                    retVal += c.getString(c.getColumnIndex(KEY_NAME));
+                }
                 c.close();
                 return retVal;
             } else {
