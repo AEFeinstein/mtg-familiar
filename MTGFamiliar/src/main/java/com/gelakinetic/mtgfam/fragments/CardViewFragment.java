@@ -708,7 +708,7 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                     case GET_LEGALITY: {
                         if (mFormats == null || mLegalities == null) {
-							/* exception handled in AsyncTask */
+                            /* exception handled in AsyncTask */
                             return DontShowDialog();
                         }
 
@@ -773,7 +773,7 @@ public class CardViewFragment extends FamiliarFragment {
                         final Long[] aIds = mCardIds.toArray(new Long[mCardIds.size()]);
 
                         /* Sanity check */
-                        for(String set : aSets) {
+                        for (String set : aSets) {
                             if (set == null) {
                                 return DontShowDialog();
                             }

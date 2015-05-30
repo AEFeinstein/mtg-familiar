@@ -165,7 +165,7 @@ public class ProfileFragment extends FamiliarFragment {
             @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
-				/* We're setting this to false if we return null, so we should reset it every time to be safe */
+                /* We're setting this to false if we return null, so we should reset it every time to be safe */
                 setShowsDialog(true);
                 switch (ProfileFragment.DIALOG_DCI_NUMBER) {
                     case DIALOG_DCI_NUMBER: {

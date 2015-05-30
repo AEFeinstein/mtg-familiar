@@ -170,7 +170,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 /* Try to say what needs to be said */
                 int result = mTts.setLanguage(getResources().getConfiguration().locale);
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-					/* Fall back to ringtone */
+                    /* Fall back to ringtone */
                     Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
                     Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
                     r.play();

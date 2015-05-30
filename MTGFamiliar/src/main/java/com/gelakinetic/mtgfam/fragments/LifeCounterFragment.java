@@ -353,7 +353,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.add_player:
-				/* Add the player to the ArrayList, set the commander info, and draw the new view */
+                /* Add the player to the ArrayList, set the commander info, and draw the new view */
                 addPlayer();
                 setCommanderInfo(-1);
                 addPlayerView(mPlayers.get(mPlayers.size() - 1));

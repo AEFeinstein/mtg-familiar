@@ -194,7 +194,7 @@ public class WishlistFragment extends FamiliarFragment {
 
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
-			/* Make the new card */
+            /* Make the new card */
             MtgCard card = new MtgCard();
             card.name = name;
             card.foil = mFoilCheckBox.isChecked();

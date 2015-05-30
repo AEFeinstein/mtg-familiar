@@ -667,7 +667,7 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-		/* Handle item selection */
+        /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.search_menu_clear:
                 clear();

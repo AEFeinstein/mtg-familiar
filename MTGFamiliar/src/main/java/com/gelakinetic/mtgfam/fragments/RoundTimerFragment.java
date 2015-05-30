@@ -146,7 +146,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-		/* Clear any existing notifications just in case there's still one there */
+        /* Clear any existing notifications just in case there's still one there */
         notificationManager.cancel(TIMER_NOTIFICATION_ID);
 		/* Then show the new one */
         notificationManager.notify(TIMER_NOTIFICATION_ID, notification);

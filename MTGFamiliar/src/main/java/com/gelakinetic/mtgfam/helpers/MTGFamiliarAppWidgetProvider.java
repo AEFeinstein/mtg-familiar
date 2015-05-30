@@ -154,7 +154,7 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
         mMaxNumButtons = (int) (dp / 32);
 
 		/* Show the right number of buttons, and rebind the intents.
-		   Buttons wont work if scaled and rotated otherwise */
+           Buttons wont work if scaled and rotated otherwise */
         showButtonsFromPreferences(context, views, mMaxNumButtons);
         bindButtons(context, views);
 

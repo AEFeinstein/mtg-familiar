@@ -118,7 +118,7 @@ public class DbUpdaterService extends IntentService {
                 /* Look for new cards */
                 ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
                 if (patchInfo != null) {
-					/* Look through the list of available patches, and if it doesn't exist in the database, add it. */
+                    /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
                     for (String[] set : patchInfo) {
                         if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) {
                             try {

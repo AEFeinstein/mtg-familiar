@@ -384,7 +384,6 @@ public class CardDbAdapter {
     }
 
     /**
-     *
      * @param l
      * @param fields
      * @param database
@@ -1019,7 +1018,7 @@ public class CardDbAdapter {
                         + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='"
                         + format + "')";
             } else {
-				/* Otherwise filter silver bordered cards, giant cards */
+                /* Otherwise filter silver bordered cards, giant cards */
                 statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UNH'" +
                         " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UG'" +
                         " AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Plane %'" +
@@ -1777,7 +1776,7 @@ public class CardDbAdapter {
     /**
      * @param name
      * @param setCode
-     * @param mDb      @return
+     * @param mDb     @return
      * @throws FamiliarDbException
      */
     public static int getSplitMultiverseID(String name, String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
@@ -1804,7 +1803,6 @@ public class CardDbAdapter {
     }
 
     /**
-     *
      * @param multiverseId
      * @param isAscending
      * @param firstHalf

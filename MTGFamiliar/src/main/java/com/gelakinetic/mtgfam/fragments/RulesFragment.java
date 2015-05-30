@@ -238,7 +238,7 @@ public class RulesFragment extends FamiliarFragment {
                     }
                     int listItemResource = R.layout.rules_list_item;
                     /* These cases can't be exclusive; otherwise keyword search from anything but a subcategory will use
-					 * the wrong layout*/
+                     * the wrong layout*/
                     if (isGlossary || isBanned || mSubcategory >= 0 || keyword != null) {
                         listItemResource = R.layout.rules_list_detail_item;
                     }

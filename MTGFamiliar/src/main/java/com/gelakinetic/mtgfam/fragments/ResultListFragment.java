@@ -233,7 +233,7 @@ public class ResultListFragment extends FamiliarFragment {
         Bundle res = getFamiliarActivity().getFragmentResults();
         if (res != null) {
             if (mCursor.getCount() == 1) {
-				/* Jump back past the result list (it wasn't displayed because this card is a singleton) */
+                /* Jump back past the result list (it wasn't displayed because this card is a singleton) */
                 if (!getActivity().isTaskRoot()) {
                     getActivity().finish();
                 } else {

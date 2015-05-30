@@ -168,7 +168,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
                 view.setScaleY(1);
                 view.setAlpha(1);
             } else if (position <= 1) { /* (0,1]
-				Fade the page out. */
+                Fade the page out. */
                 view.setAlpha(1 - position);
 
 				/* Counteract the default slide transition */

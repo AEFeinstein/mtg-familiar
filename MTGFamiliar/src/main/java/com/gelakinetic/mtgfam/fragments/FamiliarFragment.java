@@ -230,7 +230,7 @@ public abstract class FamiliarFragment extends Fragment {
         try {
             getFamiliarActivity().removeDialogFragment(fm);
         } catch (NullPointerException e) {
-			/* no dialog to close */
+            /* no dialog to close */
         }
     }
 

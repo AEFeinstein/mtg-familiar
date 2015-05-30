@@ -67,7 +67,7 @@ public class DatabaseManager {
                 // Opening new database
                 if (mTransactional) {
                     mDatabase = mDatabaseHelper.getWritableDatabase();
-                    if(mDatabase != null) {
+                    if (mDatabase != null) {
                         mDatabase.execSQL("BEGIN EXCLUSIVE TRANSACTION");
                     }
                 } else {

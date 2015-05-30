@@ -476,7 +476,7 @@ public class FamiliarActivity extends ActionBarActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             //toolbar.setCollapsible(true);
-			/* I don't like styling in java, but I can't get it to work other ways */
+            /* I don't like styling in java, but I can't get it to work other ways */
             if (mPreferenceAdapter.getTheme().equals(getString(R.string.pref_theme_light))) {
                 toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat_Light);
             } else {

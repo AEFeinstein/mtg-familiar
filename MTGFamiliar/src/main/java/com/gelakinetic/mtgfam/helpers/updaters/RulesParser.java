@@ -121,7 +121,7 @@ class RulesParser {
 
             String line = this.mBufferedReader.readLine().trim();
             while (!line.equals(RULES_TOKEN)) {
-				/* Burn through lines until we hit the rules token */
+                /* Burn through lines until we hit the rules token */
                 line = mBufferedReader.readLine().trim();
             }
 

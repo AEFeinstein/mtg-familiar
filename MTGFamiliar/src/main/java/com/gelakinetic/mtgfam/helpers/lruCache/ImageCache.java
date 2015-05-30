@@ -521,7 +521,7 @@ public class ImageCache {
                             inputStream.close();
                         }
                     } catch (IOException e) {
-						/* Eat it */
+                        /* Eat it */
                     }
                 }
             }

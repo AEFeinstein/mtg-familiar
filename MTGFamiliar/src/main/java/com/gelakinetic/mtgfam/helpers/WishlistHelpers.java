@@ -149,7 +149,7 @@ public class WishlistHelpers {
                 @Override
                 public void onClick(View view) {
                     Bundle args = new Bundle();
-						/* Open the database */
+                        /* Open the database */
                     SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
                     try {
 						/* Get the card ID, and send it to a new CardViewFragment */

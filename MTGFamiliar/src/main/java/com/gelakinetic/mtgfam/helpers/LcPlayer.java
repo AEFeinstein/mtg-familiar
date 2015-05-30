@@ -211,7 +211,7 @@ public class LcPlayer {
                 }
             }
         } else if (!immediate) {
-			/* Modify current historyEntry */
+            /* Modify current historyEntry */
             switch (mMode) {
                 case LifeCounterFragment.STAT_POISON: {
                     mPoisonHistory.get(0).mDelta += delta;
