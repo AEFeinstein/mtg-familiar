@@ -54,6 +54,8 @@ import java.util.zip.GZIPInputStream;
 @SuppressWarnings("JavaDoc")
 public class CardDbAdapter {
 
+    public static final int DATABASE_VERSION = 56;
+
     public static final int STAR = -1000;
     public static final int ONE_PLUS_STAR = -1001;
     public static final int TWO_PLUS_STAR = -1002;
@@ -68,7 +70,6 @@ public class CardDbAdapter {
     public static final String DATABASE_NAME = "data";
     public static final String DATABASE_TABLE_CARDS = "cards";
     public static final String DATABASE_TABLE_SETS = "sets";
-    public static final int DATABASE_VERSION = 55;
     public static final String KEY_ID = "_id";
     public static final String KEY_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1; // "name";
     public static final String KEY_SET = "expansion";
