@@ -188,7 +188,7 @@ public class WishlistHelpers {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, db);
+                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, db);
         } catch (FamiliarDbException e) {
             DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
             return null;
@@ -197,7 +197,7 @@ public class WishlistHelpers {
 		/* For each card, add it to the wishlist view */
         while (!cards.isAfterLast()) {
             String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
-            String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER));
+            String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
             char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
             String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
@@ -396,7 +396,7 @@ public class WishlistHelpers {
         public void add(MtgCard card) {
             IndividualSetInfo isi = new IndividualSetInfo();
 
-            isi.mSet = card.tcgName;
+            isi.mSet = card.setName;
             isi.mSetCode = card.setCode;
             isi.mNumber = card.number;
             isi.mIsFoil = card.foil;

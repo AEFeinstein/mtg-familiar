@@ -199,7 +199,7 @@ public class TradeFragment extends FamiliarFragment {
         }
 
 		/* Get the card info from the UI */
-        String cardName, setCode, tcgName, cardNumber;
+        String cardName, setCode, setName, cardNumber;
         cardName = mNameEditText.getText().toString();
         String numberOfFromField = mNumberEditText.getText().toString();
         boolean foil = mCheckboxFoil.isChecked();
@@ -219,7 +219,7 @@ public class TradeFragment extends FamiliarFragment {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, database);
+                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, database);
 
 			/* Make sure there was a database hit */
             if (cardCursor.getCount() == 0) {
@@ -231,7 +231,7 @@ public class TradeFragment extends FamiliarFragment {
 
 			/* Read the information from the cursor, check if the card can be foil */
             setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            tcgName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER));
+            setName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             cardNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
             if (foil && !CardDbAdapter.canBeFoil(setCode, database)) {
                 foil = false;
@@ -241,7 +241,7 @@ public class TradeFragment extends FamiliarFragment {
             cardCursor.close();
 
 			/* Create the card, add it to a list, start a price fetch */
-            MtgCard data = new MtgCard(cardName, tcgName, setCode, numberOf, getString(R.string.wishlist_loading),
+            MtgCard data = new MtgCard(cardName, setName, setCode, numberOf, getString(R.string.wishlist_loading),
                     cardNumber, foil);
             switch (side) {
                 case LEFT: {
@@ -535,12 +535,12 @@ public class TradeFragment extends FamiliarFragment {
                             Cursor cards = CardDbAdapter.fetchCardByName(data.name, new String[]{
                                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME_TCGPLAYER}, database);
+                                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, database);
 							/* Build set names and set codes */
                             Set<String> sets = new LinkedHashSet<>();
                             Set<String> setCodes = new LinkedHashSet<>();
                             while (!cards.isAfterLast()) {
-                                if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME_TCGPLAYER)))) {
+                                if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)))) {
                                     setCodes.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)));
                                 }
                                 cards.moveToNext();
@@ -571,7 +571,7 @@ public class TradeFragment extends FamiliarFragment {
 
 											/* Change the card's information, and reload the price */
                                             data.setCode = (aSetCodes[item]);
-                                            data.tcgName = (aSets[item]);
+                                            data.setName = (aSets[item]);
                                             data.message = (getString(R.string.wishlist_loading));
                                             data.priceInfo = null;
 
@@ -844,7 +844,7 @@ public class TradeFragment extends FamiliarFragment {
             while ((line = br.readLine()) != null) {
                 MtgCard card = MtgCard.MtgCardFromTradeString(line, getActivity());
 
-                if (card.tcgName == null) {
+                if (card.setName == null) {
                     handleFamiliarDbException(false);
                     return;
                 }
@@ -1110,7 +1110,7 @@ public class TradeFragment extends FamiliarFragment {
 
 				/* Set the name, set number, and foil indicators */
                 ((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.name);
-                ((TextView) convertView.findViewById(R.id.traderRowSet)).setText(data.tcgName);
+                ((TextView) convertView.findViewById(R.id.traderRowSet)).setText(data.setName);
                 ((TextView) convertView.findViewById(R.id.traderNumber)).setText(data.hasPrice() ?
                         data.numberOf + "x" : "");
                 convertView.findViewById(R.id.traderRowFoil).setVisibility((data.foil ? View.VISIBLE : View.GONE));

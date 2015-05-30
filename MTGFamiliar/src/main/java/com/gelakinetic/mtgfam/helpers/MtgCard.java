@@ -49,7 +49,7 @@ public class MtgCard {
     public String color;
     public int multiverseId;
     /* Wish and trade list fields */
-    public String tcgName;
+    public String setName;
     public String setCode;
     public int numberOf;
     public int price; /* In cents */
@@ -115,7 +115,7 @@ public class MtgCard {
         this.name = name;
         this.number = number;
         this.setCode = setCode;
-        this.tcgName = tcgName;
+        this.setName = tcgName;
         this.numberOf = numberOf;
         this.price = 0;
         this.message = message;
@@ -147,9 +147,9 @@ public class MtgCard {
 		/* Defaults regardless */
         SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false);
         try {
-            card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
+            card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
         } catch (FamiliarDbException e) {
-            card.tcgName = null;
+            card.setName = null;
         }
         DatabaseManager.getInstance(context, false).closeDatabase(false);
         card.message = "loading";

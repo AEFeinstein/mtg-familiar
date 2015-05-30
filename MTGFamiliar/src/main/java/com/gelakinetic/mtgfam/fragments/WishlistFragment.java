@@ -219,7 +219,7 @@ public class WishlistFragment extends FamiliarFragment {
             card.flavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
             card.number = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
             card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
+            card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
             card.cmc = cardCursor.getInt((cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
             card.color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
 			/* Override choice if the card can't be foil */
@@ -317,7 +317,7 @@ public class WishlistFragment extends FamiliarFragment {
         try {
 			/* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
-                card.tcgName = CardDbAdapter.getTcgName(card.setCode, database);
+                card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
             }
 
 			/* Clear the wishlist, or just the card that changed */

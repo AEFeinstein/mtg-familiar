@@ -136,10 +136,9 @@ public class DbUpdaterService extends IntentService {
                             switchToChecking();
                         }
                     }
-
-					/* Look for new TCGPlayer.com versions of set names */
-                    parser.readTCGNameJsonStream(mPrefAdapter, database);
                 }
+                /* Look for new TCGPlayer.com versions of set names */
+                parser.readTCGNameJsonStream(mPrefAdapter, database);
 
 				/* Parse the rules
 				 * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was

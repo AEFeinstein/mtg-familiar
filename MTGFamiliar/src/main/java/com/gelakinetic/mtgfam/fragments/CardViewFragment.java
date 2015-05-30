@@ -614,7 +614,7 @@ public class CardViewFragment extends FamiliarFragment {
         while (!cCardByName.isAfterLast()) {
             try {
                 if (mSets.add(CardDbAdapter
-                        .getTcgName(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
+                        .getSetNameFromCode(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
                     mCardIds.add(cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID)));
                 }
             } catch (FamiliarDbException e) {
@@ -771,6 +771,13 @@ public class CardViewFragment extends FamiliarFragment {
                     case CHANGE_SET: {
                         final String[] aSets = mSets.toArray(new String[mSets.size()]);
                         final Long[] aIds = mCardIds.toArray(new Long[mCardIds.size()]);
+
+                        /* Sanity check */
+                        for(String set : aSets) {
+                            if (set == null) {
+                                return DontShowDialog();
+                            }
+                        }
                         AlertDialogPro.Builder builder = new AlertDialogPro.Builder(mActivity);
                         builder.setTitle(R.string.card_view_set_dialog_title);
                         builder.setItems(aSets, new DialogInterface.OnClickListener() {
