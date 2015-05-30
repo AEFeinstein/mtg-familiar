@@ -65,9 +65,11 @@ public class DatabaseManager {
         public synchronized SQLiteDatabase openDatabase() {
             if (mOpenCounter.incrementAndGet() == 1) {
                 // Opening new database
-                if (mTransactional && mDatabase != null) {
+                if (mTransactional) {
                     mDatabase = mDatabaseHelper.getWritableDatabase();
-                    mDatabase.execSQL("BEGIN DEFERRED TRANSACTION");
+                    if(mDatabase != null) {
+                        mDatabase.execSQL("BEGIN EXCLUSIVE TRANSACTION");
+                    }
                 } else {
                     mDatabase = mDatabaseHelper.getReadableDatabase();
                 }
