@@ -368,7 +368,11 @@ public abstract class ImageWorker {
             // the cache
             if (mImageCache != null && !isCancelled() && getAttachedImageView() != null
                     && !mExitTasksEarly) {
-                bitmap = mImageCache.getBitmapFromDiskCache(dataString);
+                try {
+                    bitmap = mImageCache.getBitmapFromDiskCache(dataString);
+                } catch(NullPointerException e) {
+                    bitmap = null;
+                }
             }
 
             // If the bitmap was not found in the cache and this task has not been cancelled by

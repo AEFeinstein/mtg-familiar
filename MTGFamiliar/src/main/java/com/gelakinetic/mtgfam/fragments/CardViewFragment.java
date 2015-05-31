@@ -923,7 +923,7 @@ public class CardViewFragment extends FamiliarFragment {
             /*disable menu buttons if the card isn't initialized */
             return false;
         }
-		/* Handle item selection */
+        /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.image: {
                 if (getFamiliarActivity().getNetworkState(true) == -1) {
@@ -1127,12 +1127,21 @@ public class CardViewFragment extends FamiliarFragment {
                     cardLanguage = "en";
                 }
                 String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
-                Bitmap bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+                Bitmap bmpImage;
+                try {
+                    bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+                } catch (NullPointerException e) {
+                    bmpImage = null;
+                }
 
 				/* Check if this is an english only image */
                 if (bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
                     imageKey = Integer.toString(mMultiverseId) + "en";
-                    bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+                    try {
+                        bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+                    } catch (NullPointerException e) {
+                        bmpImage = null;
+                    }
                 }
 
 				/* nope, not here */
@@ -1293,7 +1302,12 @@ public class CardViewFragment extends FamiliarFragment {
             final String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
 
             /* Check disk cache in background thread */
-            Bitmap bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+            Bitmap bitmap;
+            try {
+                bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+            } catch (NullPointerException e) {
+                bitmap = null;
+            }
 
             if (bitmap == null) { /* Not found in disk cache */
 
