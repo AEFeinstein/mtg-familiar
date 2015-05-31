@@ -244,7 +244,11 @@ public class ResultListFragment extends FamiliarFragment {
 
         mListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startCardViewFrag(id);
+                try {
+                    startCardViewFrag(id);
+                } catch (FamiliarDbException e) {
+                    handleFamiliarDbException(true);
+                }
             }
         });
 
@@ -303,43 +307,47 @@ public class ResultListFragment extends FamiliarFragment {
      *
      * @param id The id of the card to display, or -1 for a random card
      */
-    private void startCardViewFrag(long id) {
-        Bundle args = new Bundle();
-        int cardPosition = 0;
+    private void startCardViewFrag(long id) throws FamiliarDbException{
+        try {
+            Bundle args = new Bundle();
+            int cardPosition = 0;
 
-		/* Build the array of ids sequentially, make note of the chosen card's position */
-        long cardIds[] = new long[mCursor.getCount()];
-        mCursor.moveToFirst();
-        for (int i = 0; i < mCursor.getCount(); i++, mCursor.moveToNext()) {
-            cardIds[i] = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));
-            if (cardIds[i] == id) {
-                cardPosition = i;
-            }
-        }
-
-        if (id == -1) {
-            Random rand = new Random(System.currentTimeMillis());
-
-			/* Shuffle the array of ids */
-            /* implements http://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
-            long temp;
-            int k, j;
-            for (k = cardIds.length - 1; k > 0; k--) {
-                j = rand.nextInt(k + 1);/* j = random integer with 0 <= j <= i */
-                temp = cardIds[j];
-                cardIds[j] = cardIds[k];
-                cardIds[k] = temp;
+		    /* Build the array of ids sequentially, make note of the chosen card's position */
+            long cardIds[] = new long[mCursor.getCount()];
+            mCursor.moveToFirst();
+            for (int i = 0; i < mCursor.getCount(); i++, mCursor.moveToNext()) {
+                cardIds[i] = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));
+                if (cardIds[i] == id) {
+                    cardPosition = i;
+                }
             }
 
-			/* Start at the beginning of the random sequence */
-            cardPosition = 0;
-        }
+            if (id == -1) {
+                Random rand = new Random(System.currentTimeMillis());
 
-		/* Load the array of ids and position into the bundle, start the fragment */
-        args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, cardPosition);
-        args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, cardIds);
-        CardViewPagerFragment cardViewPagerFragment = new CardViewPagerFragment();
-        startNewFragment(cardViewPagerFragment, args);
+		    	/* Shuffle the array of ids */
+              /* implements http://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
+                long temp;
+                int k, j;
+                for (k = cardIds.length - 1; k > 0; k--) {
+                    j = rand.nextInt(k + 1);/* j = random integer with 0 <= j <= i */
+                    temp = cardIds[j];
+                    cardIds[j] = cardIds[k];
+                    cardIds[k] = temp;
+                }
+
+		    	/* Start at the beginning of the random sequence */
+                cardPosition = 0;
+            }
+
+		    /* Load the array of ids and position into the bundle, start the fragment */
+            args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, cardPosition);
+            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, cardIds);
+            CardViewPagerFragment cardViewPagerFragment = new CardViewPagerFragment();
+            startNewFragment(cardViewPagerFragment, args);
+        } catch (IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
     }
 
     /**
@@ -365,7 +373,11 @@ public class ResultListFragment extends FamiliarFragment {
 		/* Handle item selection */
         switch (item.getItemId()) {
             case R.id.search_menu_random_search:
-                startCardViewFrag(-1);
+                try {
+                    startCardViewFrag(-1);
+                } catch (FamiliarDbException e) {
+                    handleFamiliarDbException(true);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

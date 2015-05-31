@@ -264,7 +264,11 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
      * @return the starting position of that section within the adapter, constrained to fall within the adapter bounds
      */
     public int getPositionForSection(int section) {
-        return mAlphaIndexer.getPositionForSection(section); /* use the indexer */
+        try {
+            return mAlphaIndexer.getPositionForSection(section); /* use the indexer */
+        } catch(IllegalStateException e) {
+            return 0;
+        }
     }
 
     /**
