@@ -1344,8 +1344,12 @@ public class CardViewFragment extends FamiliarFragment {
 
                     } catch (Exception e) {
 						/* Something went wrong */
-                        error = getString(R.string.card_view_image_not_found);
-
+                        try {
+                            error = getString(R.string.card_view_image_not_found);
+                        } catch (RuntimeException re) {
+                            /* in case the fragment isn't attached to an activity */
+                            error = e.toString();
+                        }
                         if (!triedGatherer) {
                             bRetry = true;
                         }
