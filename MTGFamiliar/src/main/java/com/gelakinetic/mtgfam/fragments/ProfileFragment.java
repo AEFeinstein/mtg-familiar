@@ -148,7 +148,7 @@ public class ProfileFragment extends FamiliarFragment {
         }
     }
 
-    void showDialog() throws IllegalStateException {
+    private void showDialog() throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 

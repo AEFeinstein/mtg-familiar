@@ -254,7 +254,7 @@ public class LcPlayer {
         switch (displayMode) {
             case LifeCounterFragment.DISPLAY_COMMANDER:
             case LifeCounterFragment.DISPLAY_NORMAL: {
-				/* Inflate the player view */
+                /* Inflate the player view */
                 mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, null, false);
                 assert mView != null;
                 mHistoryList = (ListView) mView.findViewById(R.id.player_history);
@@ -540,7 +540,7 @@ public class LcPlayer {
      * @param id       the ID of the dialog to show
      * @param position Which commander the player is taking damage from
      */
-    void showDialog(final int id, final int position) throws IllegalStateException {
+    private void showDialog(final int id, final int position) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -656,15 +656,15 @@ public class LcPlayer {
                     }
                     case DIALOG_CHANGE_LIFE: {
 						/* Inflate a view to type in a new life, then show it in an AlertDialog */
-                        View textEntryView = mFragment.getActivity().getLayoutInflater().inflate(
+                        View textEntryView2 = mFragment.getActivity().getLayoutInflater().inflate(
                                 R.layout.alert_dialog_text_entry, null, false);
-                        assert textEntryView != null;
-                        final EditText lifeInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+                        assert textEntryView2 != null;
+                        final EditText lifeInput = (EditText) textEntryView2.findViewById(R.id.text_entry);
                         lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
                         if (mReadoutTextView.getText() != null) {
                             lifeInput.append(mReadoutTextView.getText());
                         }
-                        textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
+                        textEntryView2.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 lifeInput.setText("");
@@ -680,7 +680,7 @@ public class LcPlayer {
 
                         Dialog dialog = new AlertDialogPro.Builder(getActivity())
                                 .setTitle(title)
-                                .setView(textEntryView)
+                                .setView(textEntryView2)
                                 .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         assert lifeInput.getText() != null;

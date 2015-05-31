@@ -477,7 +477,7 @@ public class SearchViewFragment extends FamiliarFragment {
     /**
      * This function clears all the search options, it's called from the ActionBar
      */
-    void clear() {
+    private void clear() {
         mNameField.setText("");
         mSupertypeField.setText("");
         mSubtypeField.setText("");
@@ -718,7 +718,7 @@ public class SearchViewFragment extends FamiliarFragment {
      *
      * @param id the id of the dialog to be shown
      */
-    void showDialog(final int id) throws IllegalStateException {
+    private void showDialog(final int id) throws IllegalStateException {
         removeDialog(getFragmentManager());
 
 		/* Create and show the dialog. */
@@ -752,7 +752,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 };
                 try {
-					/* Build the dialogs to display format, rarity, and set choices. The arrays were already filled in
+                    /* Build the dialogs to display format, rarity, and set choices. The arrays were already filled in
 					   onCreate() */
                     switch (id) {
                         case SET_LIST: {

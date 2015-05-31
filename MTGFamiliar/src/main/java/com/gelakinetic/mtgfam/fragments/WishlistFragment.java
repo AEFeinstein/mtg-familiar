@@ -222,7 +222,7 @@ public class WishlistFragment extends FamiliarFragment {
             card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
             card.cmc = cardCursor.getInt((cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
             card.color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
-			/* Override choice if the card can't be foil */
+            /* Override choice if the card can't be foil */
             if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
                 card.foil = false;
             }
@@ -424,7 +424,7 @@ public class WishlistFragment extends FamiliarFragment {
      * @param id       the ID of the dialog to show
      * @param cardName The name of the card to use if this is a dialog to change wishlist counts
      */
-    void showDialog(final int id, final String cardName) throws IllegalStateException {
+    private void showDialog(final int id, final String cardName) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -581,7 +581,7 @@ public class WishlistFragment extends FamiliarFragment {
      * @param mSetCode    The set code of the card to find a price for
      * @param mCardNumber The collector's number
      */
-    void loadPrice(final String mCardName, final String mSetCode, String mCardNumber) {
+    private void loadPrice(final String mCardName, final String mSetCode, String mCardNumber) {
         PriceFetchRequest priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, -1, getActivity());
         mPriceFetchRequests++;
         getFamiliarActivity().setLoading();
@@ -595,11 +595,8 @@ public class WishlistFragment extends FamiliarFragment {
              */
             @Override
             public void onRequestFailure(SpiceException spiceException) {
+                /* because this can return when the fragment is in the background */
                 if (WishlistFragment.this.isAdded()) {
-					/* because this can return when the fragment is in the background */
-                    if (!WishlistFragment.this.isAdded()) {
-                        return;
-                    }
 					/* Find the compressed wishlist info for this card */
                     for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                         if (cwi.mCard.name.equals(mCardName)) {
@@ -628,12 +625,9 @@ public class WishlistFragment extends FamiliarFragment {
              */
             @Override
             public void onRequestSuccess(final PriceInfo result) {
+                /* because this can return when the fragment is in the background */
                 if (WishlistFragment.this.isAdded()) {
-					/* because this can return when the fragment is in the background */
-                    if (!WishlistFragment.this.isAdded()) {
-                        return;
-                    }
-					/* Find the compressed wishlist info for this card */
+                	/* Find the compressed wishlist info for this card */
                     for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                         if (cwi.mCard.name.equals(mCardName)) {
 							/* Find all foil and non foil compressed items with the same set code */
@@ -663,7 +657,7 @@ public class WishlistFragment extends FamiliarFragment {
     /**
      * Add together the price of all the cards in the wishlist and display it
      */
-    void sumTotalPrice() {
+    private void sumTotalPrice() {
         if (mShowTotalWishlistPrice) {
             float totalPrice = 0;
 
@@ -695,7 +689,7 @@ public class WishlistFragment extends FamiliarFragment {
     /**
      * Sorts the wishlist based on wishlistSortType and wishlistSortOrder
      */
-    void sortWishlist() {
+    private void sortWishlist() {
 		/* If no sort type specified, return */
         if (wishlistSortType != SORT_TYPE_NONE) {
             if (wishlistSortOrder == ASCENDING) {

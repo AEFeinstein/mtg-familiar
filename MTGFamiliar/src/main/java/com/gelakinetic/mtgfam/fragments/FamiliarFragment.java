@@ -241,7 +241,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param shouldFinish if the current fragment should exit
      */
     public void handleFamiliarDbException(boolean shouldFinish) {
-		/* Show a toast on the UI thread */
+        /* Show a toast on the UI thread */
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

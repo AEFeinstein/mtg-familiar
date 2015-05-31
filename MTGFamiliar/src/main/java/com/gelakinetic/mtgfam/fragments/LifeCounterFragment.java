@@ -359,7 +359,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 addPlayerView(mPlayers.get(mPlayers.size() - 1));
                 return true;
             case R.id.remove_player:
-				/* Show a dialog of players to remove */
+                /* Show a dialog of players to remove */
                 showDialog(DIALOG_REMOVE_PLAYER);
                 return true;
             case R.id.announce_life:
@@ -389,7 +389,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      *
      * @param id the ID of the dialog to show
      */
-    void showDialog(final int id) throws IllegalStateException {
+    private void showDialog(final int id) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 

@@ -128,7 +128,7 @@ class RulesParser {
             line = mBufferedReader.readLine(); /* Step past the token */
 
             while (!line.equals(GLOSSARY_TOKEN)) {
-				/* Parse the line */
+                /* Parse the line */
                 if (line.length() == 0) {
                     if (currentRule != null) {
 						/* Rule is over and we have one; add it to the list and null it */

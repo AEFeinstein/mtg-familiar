@@ -170,7 +170,7 @@ public class GatheringsFragment extends FamiliarFragment {
      *
      * @param id the ID of the dialog to show
      */
-    void showDialog(final int id) throws IllegalStateException {
+    private void showDialog(final int id) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -195,7 +195,7 @@ public class GatheringsFragment extends FamiliarFragment {
                 switch (id) {
                     case DIALOG_SAVE_GATHERING: {
                         /* If there are no empty fields, try to save the Gathering. If a gathering with the same
-							name already exists, prompt the user to overwrite it or not. */
+                            name already exists, prompt the user to overwrite it or not. */
 
                         if (AreAnyFieldsEmpty()) {
                             ToastWrapper.makeText(getActivity(), R.string.gathering_empty_field, ToastWrapper.LENGTH_LONG).show();

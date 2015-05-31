@@ -201,7 +201,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @return An action describing this page view
      */
-    Action getAppIndexAction() {
+    private Action getAppIndexAction() {
 
         Thing object = new Thing.Builder()
                 .setType("http://schema.org/Thing")         /* Optional, any valid schema.org type */
@@ -597,7 +597,7 @@ public class CardViewFragment extends FamiliarFragment {
 
 		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
            one set */
-        Cursor cCardByName = null;
+        Cursor cCardByName;
         try {
             cCardByName = CardDbAdapter.fetchCardByName(mCardName,
                     new String[]{
@@ -655,7 +655,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param id the ID of the dialog to show
      */
-    void showDialog(final int id) throws IllegalStateException {
+    private void showDialog(final int id) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -920,7 +920,7 @@ public class CardViewFragment extends FamiliarFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mCardName == null) {
-			/*disable menu buttons if the card isn't initialized */
+            /*disable menu buttons if the card isn't initialized */
             return false;
         }
 		/* Handle item selection */
@@ -1249,6 +1249,27 @@ public class CardViewFragment extends FamiliarFragment {
 
         private String error;
 
+        int mHeight;
+        int mWidth;
+        int mBorder;
+
+        /* Get the size of the window on the UI thread, not the worker thread */
+        final Runnable getWindowSize = new Runnable() {
+            @Override
+            public void run() {
+                Rect rectangle = new Rect();
+                mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
+
+                assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
+                mHeight = ((rectangle.bottom - rectangle.top) - mActivity.getSupportActionBar().getHeight()) - mBorder;
+                mWidth = (rectangle.right - rectangle.left) - mBorder;
+
+                synchronized (this) {
+                    this.notify();
+                }
+            }
+        };
+
         /**
          * First check www.MagicCards.info for the card image in the user's preferred language
          * If that fails, check www.MagicCards.info for the card image in English
@@ -1323,35 +1344,32 @@ public class CardViewFragment extends FamiliarFragment {
             }
 
             try {
-				/* Resize the image */
-                int height = 0, width = 0;
-                float scale;
 				/* 16dp */
-                int border = (int) TypedValue.applyDimension(
+                mBorder = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
                 if (loadTo == MAIN_PAGE) {
-                    Rect rectangle = new Rect();
-                    mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
-
-                    assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
-                    height = ((rectangle.bottom - rectangle.top) - mActivity.getSupportActionBar().getHeight()) - border;
-                    width = (rectangle.right - rectangle.left) - border;
+                    /* Block the worker thread until the size is figured out */
+                    synchronized (getWindowSize) {
+                        getActivity().runOnUiThread(getWindowSize);
+                        getWindowSize.wait();
+                    }
                 } else if (loadTo == DIALOG) {
                     Display display = ((WindowManager) mActivity
                             .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
                     Point p = new Point();
                     display.getSize(p);
-                    height = p.y - border;
-                    width = p.x - border;
+                    mHeight = p.y - mBorder;
+                    mWidth = p.x - mBorder;
                 }
 
-                float screenAspectRatio = (float) height / (float) (width);
+                float screenAspectRatio = (float) mHeight / (float) (mWidth);
                 float cardAspectRatio = (float) bitmap.getHeight() / (float) bitmap.getWidth();
 
+                float scale;
                 if (screenAspectRatio > cardAspectRatio) {
-                    scale = (width) / (float) bitmap.getWidth();
+                    scale = (mWidth) / (float) bitmap.getWidth();
                 } else {
-                    scale = (height) / (float) bitmap.getHeight();
+                    scale = (mHeight) / (float) bitmap.getHeight();
                 }
 
                 int newWidth = Math.round(bitmap.getWidth() * scale);

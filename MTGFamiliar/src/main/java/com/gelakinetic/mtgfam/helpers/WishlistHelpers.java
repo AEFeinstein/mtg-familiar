@@ -152,7 +152,7 @@ public class WishlistHelpers {
                         /* Open the database */
                     SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
                     try {
-						/* Get the card ID, and send it to a new CardViewFragment */
+                        /* Get the card ID, and send it to a new CardViewFragment */
                         args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.fetchIdByName(mCardName, db)});
                         args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
                         CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
@@ -181,7 +181,7 @@ public class WishlistHelpers {
         SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
 
 		/* Get all the cards with relevant info from the database */
-        Cursor cards = null;
+        Cursor cards;
         try {
             cards = CardDbAdapter.fetchCardByName(mCardName, new String[]{
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,

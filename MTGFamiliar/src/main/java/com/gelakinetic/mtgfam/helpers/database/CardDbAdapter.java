@@ -96,7 +96,7 @@ public class CardDbAdapter {
     };
     public static final String KEY_MULTIVERSEID = "multiverseID";
     public static final String KEY_CODE = "code";
-    public static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
+    private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
     private static final String KEY_FORMAT = "format";
     public static final String KEY_LEGALITY = "legality";
     public static final String KEY_CATEGORY = "category";
@@ -1633,7 +1633,7 @@ public class CardDbAdapter {
      */
     private static Cursor query(String selection, String[] selectionArgs,
                                 String[] columns, SQLiteDatabase mDb) throws FamiliarDbException {
-		/*
+        /*
 		 * The SQLiteBuilder provides a map for all possible columns requested
 		 * to actual columns in the database, creating a simple column alias
 		 * mechanism by which the ContentProvider does not need to know the real
@@ -1829,7 +1829,7 @@ public class CardDbAdapter {
 
             if (c.getCount() == 2) {
                 c.moveToFirst();
-                String retVal = null;
+                String retVal;
                 if (firstHalf) {
                     retVal = c.getString(c.getColumnIndex(KEY_NAME));
                 } else if (secondHalf) {

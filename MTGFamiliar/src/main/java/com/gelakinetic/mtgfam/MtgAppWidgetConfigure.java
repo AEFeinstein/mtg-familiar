@@ -70,7 +70,7 @@ public class MtgAppWidgetConfigure extends Activity {
     /**
      * This finishes the Activity and updates the widget. Appropriately named.
      */
-    void finishAndUpdateWidget() {
+    private void finishAndUpdateWidget() {
         /* Set the preferences from the dialog */
         HashSet<String> selectedButtons = new HashSet<>();
         for (int i = 0; i < mSelected.length; i++) {

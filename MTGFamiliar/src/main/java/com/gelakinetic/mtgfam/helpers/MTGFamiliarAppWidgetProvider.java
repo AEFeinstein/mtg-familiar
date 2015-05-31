@@ -88,7 +88,7 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
      * @param context The Context used to create the intents
      * @param views   The RemoteViews which holds the widget
      */
-    void bindButtons(Context context, RemoteViews views) {
+    private void bindButtons(Context context, RemoteViews views) {
         /* Attach all the intents to all the buttons */
         for (int i = 0; i < buttonResources.length; i++) {
             Intent intentQuick = new Intent(context, FamiliarActivity.class);
@@ -105,7 +105,7 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
      * @param views         The RemoteViews which holds the widget
      * @param maxNumButtons The maximum number of buttons to display, so things don't get too crammed
      */
-    void showButtonsFromPreferences(Context context, RemoteViews views, int maxNumButtons) {
+    private void showButtonsFromPreferences(Context context, RemoteViews views, int maxNumButtons) {
         String[] entries = context.getResources().getStringArray(R.array.default_fragment_array_entries);
         Set<String> buttons = (new PreferenceAdapter(context)).getWidgetButtons();
 

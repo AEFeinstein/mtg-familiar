@@ -136,7 +136,7 @@ public class PriceFetchService extends SpiceService {
      * @return The files bytes in byte[] form
      * @throws IOException Thrown if there is an exception reading the file
      */
-    byte[] fileToBytes(File file) throws IOException {
+    private byte[] fileToBytes(File file) throws IOException {
         byte[] buffer = new byte[(int) file.length()];
         InputStream ios = new FileInputStream(file);
         if (ios.read(buffer) == -1) {

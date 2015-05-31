@@ -158,7 +158,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
     /**
      * Present a fragment that lets the user choose the number of sides on the die
      */
-    void chooseDie() {
+    private void chooseDie() {
         if (!this.isVisible()) {
             return;
         }
@@ -228,7 +228,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
      *
      * @param dieFaces the number of "die faces" for the die being "rolled"
      */
-    void rollDie(int dieFaces) {
+    private void rollDie(int dieFaces) {
         if (mDieOutput != null) {
             mDieOutput.setText("" + (mRandom.nextInt(dieFaces) + 1));
         }
@@ -237,7 +237,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
     /**
      * "Flip" a "coin" and display the result as a Heads or Tails string
      */
-    void flipCoin() {
+    private void flipCoin() {
         if (mDieOutput != null) {
             String output;
             switch (mRandom.nextInt(2)) {

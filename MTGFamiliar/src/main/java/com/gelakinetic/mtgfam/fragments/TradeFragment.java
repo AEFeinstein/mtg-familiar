@@ -297,7 +297,7 @@ public class TradeFragment extends FamiliarFragment {
      * @param sideForDialog     If this is for a specific card, this is the side of the trade the card lives in.
      * @param positionForDialog If this is for a specific card, this is the position of the card in the list.
      */
-    void showDialog(final int id, final int sideForDialog, final int positionForDialog) throws IllegalStateException {
+    private void showDialog(final int id, final int sideForDialog, final int positionForDialog) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -314,7 +314,7 @@ public class TradeFragment extends FamiliarFragment {
             @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
-				/* We're setting this to false if we return null, so we should reset it every time to be safe */
+                /* We're setting this to false if we return null, so we should reset it every time to be safe */
                 setShowsDialog(true);
                 switch (id) {
                     case DIALOG_UPDATE_CARD: {
@@ -805,7 +805,7 @@ public class TradeFragment extends FamiliarFragment {
      *
      * @param tradeName The name of the trade, to be used as a file name
      */
-    void SaveTrade(String tradeName) {
+    private void SaveTrade(String tradeName) {
         FileOutputStream fos;
 
         try {
@@ -832,7 +832,7 @@ public class TradeFragment extends FamiliarFragment {
      *
      * @param tradeName The name of the trade to load
      */
-    void LoadTrade(String tradeName) {
+    private void LoadTrade(String tradeName) {
         try {
 			/* Clear the current lists */
             mLeftList.clear();

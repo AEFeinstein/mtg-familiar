@@ -437,7 +437,7 @@ public class PreferenceAdapter {
         return theme;
     }
 
-    void setTheme(String theme) {
+    private void setTheme(String theme) {
         this.edit.putString(context.getString(R.string.key_theme), theme);
         this.edit.commit();
     }

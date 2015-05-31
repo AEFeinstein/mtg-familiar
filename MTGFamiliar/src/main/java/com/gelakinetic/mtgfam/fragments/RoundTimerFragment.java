@@ -148,7 +148,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         /* Clear any existing notifications just in case there's still one there */
         notificationManager.cancel(TIMER_NOTIFICATION_ID);
-		/* Then show the new one */
+        /* Then show the new one */
         notificationManager.notify(TIMER_NOTIFICATION_ID, notification);
     }
 
@@ -278,7 +278,7 @@ public class RoundTimerFragment extends FamiliarFragment {
     /**
      * Remove any showing dialogs, and show the requested one
      */
-    void showDialog() throws IllegalStateException {
+    private void showDialog() throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 

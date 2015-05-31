@@ -18,7 +18,7 @@ public class DatabaseManager {
     private static class AtomicDatabase {
         private SQLiteDatabase mDatabase;
         private final AtomicInteger mOpenCounter = new AtomicInteger();
-        private boolean mTransactional;
+        private final boolean mTransactional;
         private DatabaseManager mDatabaseManager;
         private DatabaseHelper mDatabaseHelper;
 
@@ -36,7 +36,7 @@ public class DatabaseManager {
          *
          * @param context A context to initialize with
          */
-        protected synchronized void initializeInstance(Context context) {
+        synchronized void initializeInstance(Context context) {
             if (mDatabaseManager == null) {
                 mDatabaseManager = new DatabaseManager();
                 mDatabaseHelper = new DatabaseHelper(context);
@@ -49,7 +49,7 @@ public class DatabaseManager {
          * @param context A context to create a DatabaseManager with, if necessary
          * @return The DatabaseManager
          */
-        protected synchronized DatabaseManager getInstance(Context context) {
+        synchronized DatabaseManager getInstance(Context context) {
             if (mDatabaseManager == null) {
                 initializeInstance(context);
             }
@@ -90,8 +90,8 @@ public class DatabaseManager {
         }
     }
 
-    private static AtomicDatabase mDatabase = new AtomicDatabase(false);
-    private static AtomicDatabase mTransactionalDatabase = new AtomicDatabase(true);
+    private static final AtomicDatabase mDatabase = new AtomicDatabase(false);
+    private static final AtomicDatabase mTransactionalDatabase = new AtomicDatabase(true);
 
     /**
      * Initializes the DatabaseManagers, mDatabaseManager, and stores the singleton DatabaseHelper

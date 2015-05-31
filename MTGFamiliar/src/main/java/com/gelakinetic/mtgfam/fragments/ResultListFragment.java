@@ -321,7 +321,7 @@ public class ResultListFragment extends FamiliarFragment {
             Random rand = new Random(System.currentTimeMillis());
 
 			/* Shuffle the array of ids */
-			/* implements http://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
+            /* implements http://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
             long temp;
             int k, j;
             for (k = cardIds.length - 1; k > 0; k--) {

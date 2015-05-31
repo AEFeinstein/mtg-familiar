@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * This class extends SQLiteOpenHelper in order to copy in the zipped database, and create tables
  */
-public class DatabaseHelper extends SQLiteOpenHelper {
+class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Create a helper object to create, open, and/or manage a database. The database is not actually created or opened

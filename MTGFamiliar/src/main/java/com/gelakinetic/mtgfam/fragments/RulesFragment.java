@@ -246,7 +246,7 @@ public class RulesFragment extends FamiliarFragment {
                     list.setAdapter(adapter);
 
                     if (isClickable) {
-						/* This only happens for rule mItems with no subcategory, so the cast, should be safe */
+                        /* This only happens for rule mItems with no subcategory, so the cast, should be safe */
                         list.setOnItemClickListener(new OnItemClickListener() {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 DisplayItem item = mRules.get(position);
@@ -345,7 +345,7 @@ public class RulesFragment extends FamiliarFragment {
     /**
      * Remove any showing dialogs, and show the requested one
      */
-    void showDialog() throws IllegalStateException {
+    private void showDialog() throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 

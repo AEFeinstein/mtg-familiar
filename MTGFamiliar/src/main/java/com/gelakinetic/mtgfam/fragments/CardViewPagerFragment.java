@@ -180,7 +180,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
                 view.setScaleY(scaleFactor);
 
             } else { /* (1,+Infinity] */
-				/* This page is way off-screen to the right. */
+                /* This page is way off-screen to the right. */
                 view.setAlpha(0);
             }
         }

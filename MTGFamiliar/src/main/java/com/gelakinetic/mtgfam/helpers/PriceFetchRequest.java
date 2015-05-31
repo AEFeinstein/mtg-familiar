@@ -74,7 +74,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         return builder.parse(is);
     }
 
-    public static final int MAX_NUM_RETRIES = 8;
+    private static final int MAX_NUM_RETRIES = 8;
 
     /**
      * This runs as a service, builds the TCGplayer.com URL, fetches the data, and parses the XML
@@ -221,7 +221,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
      * @param element The Element containing XML information
      * @return The String in the XML with the corresponding tag
      */
-    String getString(String tagName, Element element) {
+    private String getString(String tagName, Element element) {
         NodeList list = element.getElementsByTagName(tagName);
         if (list != null && list.getLength() > 0) {
             NodeList subList = list.item(0).getChildNodes();

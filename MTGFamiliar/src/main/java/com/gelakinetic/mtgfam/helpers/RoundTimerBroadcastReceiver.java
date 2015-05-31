@@ -175,7 +175,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                     Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
                     r.play();
                 } else {
-					/* Request audio focus for playback on the alarm stream */
+                    /* Request audio focus for playback on the alarm stream */
                     int res = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_ALARM,
                             AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
 

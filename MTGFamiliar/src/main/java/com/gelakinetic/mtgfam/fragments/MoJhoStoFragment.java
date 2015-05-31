@@ -187,8 +187,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
      *
      * @param id the ID of the dialog to show
      */
-    void showDialog(final int id) throws IllegalStateException {
-		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
+    private void showDialog(final int id) throws IllegalStateException {
+        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
 		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
@@ -304,6 +304,10 @@ public class MoJhoStoFragment extends FamiliarFragment {
                     CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, cmc, logic, null, null, null,
                     null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
 
+            if(permanents == null) {
+                throw new FamiliarDbException(new Exception("permanents failure"));
+            }
+
             if (permanents.getCount() == 0) {
                 permanents.close();
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
@@ -340,6 +344,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
                     CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, -1, null, null, null, null,
                     null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
 
+            if(spells == null) {
+                throw new FamiliarDbException(new Exception("three spell failure"));
+            }
 			/* Get 3 random, distinct numbers */
             int pos[] = new int[3];
             pos[0] = mRandom.nextInt(spells.getCount());

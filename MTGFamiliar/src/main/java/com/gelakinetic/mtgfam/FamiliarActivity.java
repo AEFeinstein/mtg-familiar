@@ -49,8 +49,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
@@ -104,7 +104,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class FamiliarActivity extends ActionBarActivity {
+public class FamiliarActivity extends AppCompatActivity {
     /* Tags for fragments */
     public static final String DIALOG_TAG = "dialog";
     public static final String FRAGMENT_TAG = "fragment";
@@ -519,6 +519,7 @@ public class FamiliarActivity extends ActionBarActivity {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("");
@@ -526,7 +527,7 @@ public class FamiliarActivity extends ActionBarActivity {
         boolean isDeepLink = false;
 
 		/* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
-		/* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
+        /* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
         if (savedInstanceState == null) {
             isDeepLink = processIntent(getIntent());
         }
@@ -1047,7 +1048,7 @@ public class FamiliarActivity extends ActionBarActivity {
      *
      * @param id the ID of the dialog to show
      */
-    void showDialogFragment(final int id) throws IllegalStateException {
+    private void showDialogFragment(final int id) throws IllegalStateException {
 		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
 		currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -1457,19 +1458,19 @@ public class FamiliarActivity extends ActionBarActivity {
         }
     }
 
-    void addImageCache(FragmentManager fragmentManager,
-                       ImageCache.ImageCacheParams cacheParams) {
+    private void addImageCache(FragmentManager fragmentManager,
+                               ImageCache.ImageCacheParams cacheParams) {
         mImageCache = ImageCache.getInstance(fragmentManager, cacheParams);
         new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
     }
 
-    void initDiskCacheInternal() {
+    private void initDiskCacheInternal() {
         if (mImageCache != null) {
             mImageCache.initDiskCache();
         }
     }
 
-    void clearCacheInternal() {
+    private void clearCacheInternal() {
         if (mImageCache != null) {
             mImageCache.clearCache();
         }
@@ -1479,13 +1480,13 @@ public class FamiliarActivity extends ActionBarActivity {
 	 * Image Caching
 	 */
 
-    void flushCacheInternal() {
+    private void flushCacheInternal() {
         if (mImageCache != null) {
             mImageCache.flush();
         }
     }
 
-    void closeCacheInternal() {
+    private void closeCacheInternal() {
         if (mImageCache != null) {
             mImageCache.close();
             mImageCache = null;

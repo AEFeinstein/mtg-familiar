@@ -42,7 +42,7 @@ public class PriceInfo {
      *
      * @param bytes The byte representation of a PriceInfo
      */
-    void fromBytes(byte[] bytes) {
+    private void fromBytes(byte[] bytes) {
 
 		/* Bytes to longs */
         ByteBuffer buf2 = ByteBuffer.wrap(bytes);
