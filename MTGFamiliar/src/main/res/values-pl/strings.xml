@@ -130,7 +130,7 @@
 <string name="main_tts_warning_text">Ta aplikacja ma możliwość zastosowania syntezatora mowy, ale wydaje się, że nie masz go zainstalowanego. Jeśli chcesz go zainstalować, użyj przycisku \'Zainstaluj TTS (Text-To-Speech)\' z menu Ustawienia.</string>
 <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
 <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
-<string name="main_whats_new_text">-Głębokie Linkowanie&lt;br&gt;&lt;br&gt;- I jak zwykle</string>
+<string name="main_whats_new_text">- I jak zwykle</string>
 <string name="main_whats_new_title">Nowości</string>
 <string name="main_wishlist">Lista Życzeń</string>
 <string name="mana_pool_clear_all">Wyczyść wszystko</string>
