@@ -113,15 +113,19 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Cursor old;
-        if (data != null && data.isClosed()) {
-            old = this.swapCursor(null);
+        try {
+            Cursor old;
+            if (data != null && data.isClosed()) {
+                old = this.swapCursor(null);
 
-        } else {
-            old = this.swapCursor(data);
-        }
-        if (old != null) {
-            old.close();
+            } else {
+                old = this.swapCursor(data);
+            }
+            if (old != null) {
+                old.close();
+            }
+        } catch (NullPointerException e) {
+            ; /* eat it */
         }
     }
 
