@@ -1,10 +1,5 @@
 package com.gelakinetic.mtgfam.helpers.updaters;
 
-import android.database.sqlite.SQLiteDatabase;
-
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,14 +24,7 @@ class RulesParser {
     private static final String GLOSSARY_TOKEN = "GLOSSARY_VERYLONGSTRINGOFLETTERSUNLIKELYTOBEFOUNDINTHEACTUALRULES";
     @SuppressWarnings("SpellCheckingInspection")
     private static final String EOF_TOKEN = "EOF_VERYLONGSTRINGOFLETTERSUNLIKELYTOBEFOUNDINTHEACTUALRULES";
-    /**
-     * Returned from fetchAndLoad() if some of the rules/terms failed, but some succeeded.
-     */
-    private static final int ERRORS = 1;
-    /**
-     * Returned from fetchAndLoad() if a catastrophic failure occurs.
-     */
-    private static final int FAILURE = 2;
+
     /* Instance variables */
     private final Date mLastUpdated;
     private final RulesProgressReporter mProgressReporter;
@@ -131,13 +119,13 @@ class RulesParser {
                 /* Parse the line */
                 if (line.length() == 0) {
                     if (currentRule != null) {
-						/* Rule is over and we have one; add it to the list and null it */
+                        /* Rule is over and we have one; add it to the list and null it */
                         this.mRules.add(currentRule);
                         currentRule = null;
                     }
                 } else {
                     if (Character.isDigit(line.charAt(0))) {
-						/* If the line starts with a number, it's the start of a rule */
+                        /* If the line starts with a number, it's the start of a rule */
                         int category, subcategory;
                         String entry, text;
 
@@ -184,7 +172,7 @@ class RulesParser {
             line = mBufferedReader.readLine().trim(); /* Step past the token */
 
             while (!line.equals(EOF_TOKEN)) {
-				/* Parse the line */
+                /* Parse the line */
                 if (line.length() == 0) {
                     if (currentTerm != null) {
 						/* Term is over and we have one; add it to the list and null it */
@@ -216,46 +204,24 @@ class RulesParser {
      * Loads in the rules and glossary to the database, updating the count as it goes. The expected usage is that the
      * main activity will have a progress dialog that gets updated as the count does.
      *
-     * @return SUCCESS if nothing goes wrong, ERRORS if some errors occur but some data is loaded, and FAILURE if
-     * everything fails and no data is loaded.
+     * @param rulesToAdd         A place to store rules before inserting into the database
+     * @param glossaryItemsToAdd A place to store glossary items vefore inserting into the database
      */
-    public int loadRulesAndGlossary(SQLiteDatabase database) {
-        try {
-            CardDbAdapter.dropRulesTables(database);
-            CardDbAdapter.createRulesTables(database);
+    public void loadRulesAndGlossary(ArrayList<RuleItem> rulesToAdd, ArrayList<GlossaryItem> glossaryItemsToAdd) {
+        int numTotalElements = mRules.size() + mGlossary.size();
+        int elementsParsed = 0;
+        mProgressReporter.reportRulesProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
 
-            int statusCode = SUCCESS;
-            int numTotalElements = mRules.size() + mGlossary.size();
-            int elementsParsed = 0;
+        for (RuleItem rule : mRules) {
+            rulesToAdd.add(rule);
+            elementsParsed++;
             mProgressReporter.reportRulesProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
+        }
 
-            for (RuleItem rule : mRules) {
-                try {
-                    CardDbAdapter.insertRule(rule.category, rule.subcategory, rule.entry, rule.text, rule.position, database);
-                } catch (FamiliarDbException sqe) {
-                    statusCode = ERRORS;
-                } finally {
-                    elementsParsed++;
-                    mProgressReporter.reportRulesProgress(
-                            (int) Math.round(100 * elementsParsed / (double) numTotalElements));
-                }
-            }
-
-            for (GlossaryItem term : mGlossary) {
-                try {
-                    CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
-
-                } catch (FamiliarDbException sqe) {
-                    statusCode = ERRORS;
-                } finally {
-                    elementsParsed++;
-                    mProgressReporter.reportRulesProgress(
-                            (int) Math.round(100 * elementsParsed / (double) numTotalElements));
-                }
-            }
-            return statusCode;
-        } catch (FamiliarDbException sqe) {
-            return FAILURE;
+        for (GlossaryItem term : mGlossary) {
+            glossaryItemsToAdd.add(term);
+            elementsParsed++;
+            mProgressReporter.reportRulesProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
         }
     }
 
@@ -285,7 +251,7 @@ class RulesParser {
     /**
      * Nested class which encapsulates all necessary information about a rule
      */
-    private class RuleItem {
+    class RuleItem {
         public final int category;
         public final int subcategory;
         public final String entry;
@@ -322,7 +288,7 @@ class RulesParser {
     /**
      * Nested class which encapsulates all necessary information about a glossary entry
      */
-    private class GlossaryItem {
+    class GlossaryItem {
         public final String term;
         public String definition;
 

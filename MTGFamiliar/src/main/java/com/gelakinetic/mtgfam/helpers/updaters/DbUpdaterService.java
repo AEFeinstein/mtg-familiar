@@ -28,6 +28,8 @@ import android.support.v4.app.NotificationCompat;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -107,41 +109,48 @@ public class DbUpdaterService extends IntentService {
             boolean commitDates = true;
             boolean newRulesParsed = false;
 
-            /* Get database access, which auto-opens it, close it, and open a transactional write */
-            SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
             try {
 
                 showStatusNotification();
 
+                ArrayList<MtgCard> cardsToAdd = new ArrayList<>();
+                ArrayList<MtgSet> setsToAdd = new ArrayList<>();
+                ArrayList<CardAndSetParser.NameAndMetadata> tcgNames = new ArrayList<>();
+
 				/* Look for updates with the banned / restricted lists and formats */
-                parser.readLegalityJsonStream(database, mPrefAdapter);
+                CardAndSetParser.LegalInfo legalInfo = parser.readLegalityJsonStream(mPrefAdapter);
                 /* Look for new cards */
                 ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
                 if (patchInfo != null) {
+                    /* Get readable database access */
+                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), false).openDatabase(false);
+
                     /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
                     for (String[] set : patchInfo) {
-                        if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) {
+                        if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) { /* this is fine, readable */
                             try {
                                 /* Change the notification to the specific set */
                                 switchToUpdating(String.format(getString(R.string.update_updating_set),
                                         set[CardAndSetParser.SET_NAME]));
                                 GZIPInputStream gis = new GZIPInputStream(
                                         new URL(set[CardAndSetParser.SET_URL]).openStream());
-                                parser.readCardJsonStream(gis, reporter, database);
+                                parser.readCardJsonStream(gis, reporter, cardsToAdd, setsToAdd);
                                 updatedStuff.add(set[CardAndSetParser.SET_NAME]);
                             } catch (IOException e) {
-								/* Eat it */
+                                /* Eat it */
                             }
-							/* Change the notification to generic "checking for updates" */
+                            /* Change the notification to generic "checking for updates" */
                             switchToChecking();
                         }
                     }
+                    /* close the database */
+                    DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false);
                 }
                 /* Look for new TCGPlayer.com versions of set names */
-                parser.readTCGNameJsonStream(mPrefAdapter, database);
+                parser.readTCGNameJsonStream(mPrefAdapter, tcgNames);
 
 				/* Parse the rules
-				 * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
+                 * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
 				 * built. This is a safe assumption to make, since any market release will have the latest database baked
 				 * in.
 				 */
@@ -149,28 +158,86 @@ public class DbUpdaterService extends IntentService {
                 long lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
 
                 RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
+                ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();
+                ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
+
                 if (rp.needsToUpdate()) {
                     if (rp.parseRules()) {
                         switchToUpdating(getString(R.string.update_updating_rules));
-                        int code = rp.loadRulesAndGlossary(database);
+                        rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
 
 						/* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
-						 * should let them know and try again next update.
+                         * should let them know and try again next update.
 						 */
-                        if (code == RulesParser.SUCCESS) {
-                            newRulesParsed = true;
-                            updatedStuff.add(getString(R.string.update_added_rules));
-                        }
+                        newRulesParsed = true;
+                        updatedStuff.add(getString(R.string.update_added_rules));
 
                         switchToChecking();
                     }
                 }
 
+                /* Open a writable database, as briefly as possible TODO dont open if theres no data? */
+
+                if (legalInfo != null ||
+                        setsToAdd.size() > 0 ||
+                        cardsToAdd.size() > 0 ||
+                        tcgNames.size() > 0 ||
+                        rulesToAdd.size() > 0 ||
+                        glossaryItemsToAdd.size() > 0) {
+                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                    /* Add all the data we've downloaded */
+                    if (legalInfo != null) {
+                        CardDbAdapter.dropLegalTables(database);
+                        CardDbAdapter.createLegalTables(database);
+                        for (String format : legalInfo.formats) {
+                            CardDbAdapter.createFormat(format, database);
+                        }
+                        for (CardAndSetParser.NameAndMetadata legalSet : legalInfo.legalSets) {
+                            CardDbAdapter.addLegalSet(legalSet.name, legalSet.metadata, database);
+                        }
+                        for (CardAndSetParser.NameAndMetadata bannedCard : legalInfo.bannedCards) {
+                            CardDbAdapter.addLegalCard(bannedCard.name, bannedCard.metadata, CardDbAdapter.BANNED, database);
+                        }
+                        for (CardAndSetParser.NameAndMetadata restrictedCard : legalInfo.restrictedCards) {
+                            CardDbAdapter.addLegalCard(restrictedCard.name, restrictedCard.metadata, CardDbAdapter.RESTRICTED, database);
+                        }
+                    }
+
+                    /* Add card and set data */
+                    for (MtgSet set : setsToAdd) {
+                        CardDbAdapter.createSet(set, database);
+                    }
+
+                    for (MtgCard card : cardsToAdd) {
+                        CardDbAdapter.createCard(card, database);
+                    }
+
+                    /* Add tcg name data */
+                    for (CardAndSetParser.NameAndMetadata tcgName : tcgNames) {
+                        CardDbAdapter.addTcgName(tcgName.name, tcgName.metadata, database);
+                    }
+
+                    /* Add stored rules */
+                    if (rulesToAdd.size() > 0 || glossaryItemsToAdd.size() > 0) {
+                        CardDbAdapter.dropRulesTables(database);
+                        CardDbAdapter.createRulesTables(database);
+                    }
+
+                    for (RulesParser.RuleItem rule : rulesToAdd) {
+                        CardDbAdapter.insertRule(rule.category, rule.subcategory, rule.entry, rule.text, rule.position, database);
+                    }
+
+                    for (RulesParser.GlossaryItem term : glossaryItemsToAdd) {
+                        CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
+                    }
+
+                    /* Close the writable database */
+                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+                }
                 cancelStatusNotification();
             } catch (FamiliarDbException | IOException e1) {
                 commitDates = false; /* don't commit the dates */
             }
-            DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
 
 			/* Parse the MTR and IPG */
             MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);
@@ -201,7 +268,7 @@ public class DbUpdaterService extends IntentService {
                 cancelStatusNotification();
             }
         } catch (Exception e) {
-			/* Generally pokemon handling is bad, but I don't want to leave a notification */
+            /* Generally pokemon handling is bad, but I don't want to leave a notification */
             cancelStatusNotification();
         }
     }
