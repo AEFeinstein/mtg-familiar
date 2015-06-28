@@ -176,7 +176,7 @@ public class DbUpdaterService extends IntentService {
                     }
                 }
 
-                /* Open a writable database, as briefly as possible TODO dont open if theres no data? */
+                /* Open a writable database, as briefly as possible */
 
                 if (legalInfo != null ||
                         setsToAdd.size() > 0 ||
