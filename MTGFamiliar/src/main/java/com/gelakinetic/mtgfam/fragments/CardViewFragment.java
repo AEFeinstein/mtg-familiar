@@ -52,6 +52,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
@@ -60,6 +61,7 @@ import android.widget.TextView;
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
@@ -127,6 +129,8 @@ public class CardViewFragment extends FamiliarFragment {
     private ImageView mCardImageView;
     private ScrollView mTextScrollView;
     private ScrollView mImageScrollView;
+    private LinearLayout mColorIndicatorLayout;
+
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
     private AsyncTask<Void, Void, Void> mAsyncTask;
     private RecyclingBitmapDrawable mCardBitmap;
@@ -312,6 +316,7 @@ public class CardViewFragment extends FamiliarFragment {
         mTextScrollView = (ScrollView) myFragmentView.findViewById(R.id.cardTextScrollView);
         mImageScrollView = (ScrollView) myFragmentView.findViewById(R.id.cardImageScrollView);
         mCardImageView = (ImageView) myFragmentView.findViewById(R.id.cardpic);
+        mColorIndicatorLayout = (LinearLayout) myFragmentView.findViewById(R.id.color_indicator_view);
 
         registerForContextMenu(mNameTextView);
         registerForContextMenu(mCostTextView);
@@ -591,6 +596,21 @@ public class CardViewFragment extends FamiliarFragment {
         } else {
             mImageScrollView.setVisibility(View.GONE);
             mTextScrollView.setVisibility(View.VISIBLE);
+        }
+
+        /* Figure out how large the color indicator should be. Medium text is 18sp, with a border its 22sp */
+        int dimension = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP, 22, getResources().getDisplayMetrics());
+
+        mColorIndicatorLayout.removeAllViews();
+        ColorIndicatorView civ = new ColorIndicatorView(this.getActivity(), dimension, dimension/15,
+                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)));
+        if(civ.hasColors()) {
+            mColorIndicatorLayout.setVisibility(View.VISIBLE);
+            mColorIndicatorLayout.addView(civ);
+        }
+        else {
+            mColorIndicatorLayout.setVisibility(View.GONE);
         }
 
         cCardById.close();

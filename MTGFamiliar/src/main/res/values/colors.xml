@@ -63,4 +63,11 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="colorPrimaryTransparent_dark" >#6037474F</color>
     <color name="colorPrimaryDark_dark" >#FF263238</color> <!-- material_blue_grey_900 -->
 
+    <!-- the colors of magic -->
+    <color name="icon_white">#fffafafa</color>
+    <color name="icon_blue">#ff1976d2</color>
+    <color name="icon_black">#ff616161</color>
+    <color name="icon_red">#fff44336</color>
+    <color name="icon_green">#ff4caf50</color>
+
 </resources>
