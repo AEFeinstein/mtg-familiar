@@ -22,6 +22,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
+import com.gelakinetic.mtgfam.helpers.SpaceTokenizer;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -75,7 +77,7 @@ public class SearchViewFragment extends FamiliarFragment {
     /* UI Elements */
     private AutoCompleteTextView mNameField;
     private EditText mTextField;
-    private AutoCompleteTextView mSupertypeField;
+    private MultiAutoCompleteTextView mSupertypeField;
     private EditText mSubtypeField;
     private EditText mCollectorsNumberField;
     private CheckBox mCheckboxW;
@@ -188,7 +190,7 @@ public class SearchViewFragment extends FamiliarFragment {
 		/* Get references to UI elements. When a search is preformed, these values will be queried */
         mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
         mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
-        mSupertypeField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
+        mSupertypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
         mSubtypeField = (EditText) myFragmentView.findViewById(R.id.subtypesearch);
         mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
         mArtistField = (EditText) myFragmentView.findViewById(R.id.artistsearch);
@@ -268,6 +270,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 R.layout.list_item_1, supertypes);
         mSupertypeField.setThreshold(1);
         mSupertypeField.setAdapter(supertypeAdapter);
+        mSupertypeField.setTokenizer(new SpaceTokenizer());
 
 		/* set the search button! */
         searchButton.setOnClickListener(new View.OnClickListener() {

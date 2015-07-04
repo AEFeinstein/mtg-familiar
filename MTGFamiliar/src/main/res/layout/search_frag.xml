@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal">
 
-                <AutoCompleteTextView
+                <MultiAutoCompleteTextView
                     android:id="@+id/supertypesearch"
                     style="@style/Widget.AppCompat.AutoCompleteTextView"
                     android:layout_width="match_parent"
