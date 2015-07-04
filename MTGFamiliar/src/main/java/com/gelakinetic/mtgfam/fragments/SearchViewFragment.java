@@ -77,6 +77,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private EditText mTextField;
     private AutoCompleteTextView mSupertypeField;
     private EditText mSubtypeField;
+    private EditText mCollectorsNumberField;
     private CheckBox mCheckboxW;
     private CheckBox mCheckboxU;
     private CheckBox mCheckboxB;
@@ -191,6 +192,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mSubtypeField = (EditText) myFragmentView.findViewById(R.id.subtypesearch);
         mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
         mArtistField = (EditText) myFragmentView.findViewById(R.id.artistsearch);
+        mCollectorsNumberField = (EditText) myFragmentView.findViewById(R.id.collectorsnumbersearch);
 
         Button searchButton = (Button) myFragmentView.findViewById(R.id.searchbutton);
 
@@ -256,6 +258,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mSubtypeField.setOnEditorActionListener(doSearchListener);
         mFlavorField.setOnEditorActionListener(doSearchListener);
         mArtistField.setOnEditorActionListener(doSearchListener);
+        mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
 
 		/* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
@@ -313,6 +316,7 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mSubtypeField.getText() != null;
         assert mFlavorField.getText() != null;
         assert mArtistField.getText() != null;
+        assert mCollectorsNumberField.getText() != null;
 
 		/* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString();
@@ -322,6 +326,7 @@ public class SearchViewFragment extends FamiliarFragment {
         searchCriteria.type = supertype + " - " + subtype;
         searchCriteria.flavor = mFlavorField.getText().toString();
         searchCriteria.artist = mArtistField.getText().toString();
+        searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString();
 
         if (searchCriteria.name.length() == 0) {
             searchCriteria.name = null;
@@ -337,6 +342,9 @@ public class SearchViewFragment extends FamiliarFragment {
         }
         if (searchCriteria.artist.length() == 0) {
             searchCriteria.artist = null;
+        }
+        if(searchCriteria.collectorsNumber.length() == 0) {
+            searchCriteria.collectorsNumber = null;
         }
 
 		/* Build a color string. capital letters means the user is search for that color */
@@ -484,6 +492,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mTextField.setText("");
         mArtistField.setText("");
         mFlavorField.setText("");
+        mCollectorsNumberField.setText("");
 
         mCheckboxW.setChecked(false);
         mCheckboxU.setChecked(false);
@@ -554,6 +563,7 @@ public class SearchViewFragment extends FamiliarFragment {
             mTextField.setText(criteria.text);
             mArtistField.setText(criteria.artist);
             mFlavorField.setText(criteria.flavor);
+            mCollectorsNumberField.setText(criteria.collectorsNumber);
 
             mCheckboxW.setChecked(criteria.color.contains("W"));
             mCheckboxU.setChecked(criteria.color.contains("U"));

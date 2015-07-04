@@ -96,7 +96,7 @@ public class ResultListFragment extends FamiliarFragment {
                         criteria.colorLogic, criteria.set, criteria.powChoice, criteria.powLogic, criteria.touChoice,
                         criteria.touLogic, criteria.cmc, criteria.cmcLogic, criteria.format, criteria.rarity,
                         criteria.flavor, criteria.artist, criteria.typeLogic, criteria.textLogic, criteria.setLogic,
-                        true, returnTypes, consolidate, database);
+                        criteria.collectorsNumber, true, returnTypes, consolidate, database);
             }
 
             if (this.isAdded()) {

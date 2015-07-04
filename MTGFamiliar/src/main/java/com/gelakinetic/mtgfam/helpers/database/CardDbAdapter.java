@@ -620,7 +620,7 @@ public class CardDbAdapter {
                                 String color, int colorlogic, String sets, float pow_choice,
                                 String pow_logic, float tou_choice, String tou_logic, int cmc,
                                 String cmcLogic, String format, String rarity, String flavor,
-                                String artist, int type_logic, int text_logic, int set_logic,
+                                String artist, int type_logic, int text_logic, int set_logic, String collectorsNumber,
                                 boolean backface, String[] returnTypes, boolean consolidate, SQLiteDatabase mDb)
             throws FamiliarDbException {
         Cursor c;
@@ -852,6 +852,11 @@ public class CardDbAdapter {
         if (artist != null) {
             statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_ARTIST
                     + " LIKE '%" + artist + "%')";
+        }
+
+        if (collectorsNumber != null) {
+            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER
+                    + " = '" + collectorsNumber + "')";
         }
 
         /*************************************************************************************/

@@ -28,4 +28,5 @@ public class SearchCriteria implements Serializable {
     public int typeLogic = 0;
     public int textLogic = 0;
     public int setLogic;
+    public String collectorsNumber;
 }

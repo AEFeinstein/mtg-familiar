@@ -302,7 +302,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             Cursor permanents = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
                     CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, cmc, logic, null, null, null,
-                    null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
+                    null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, null, false, returnTypes, true, database);
 
             if(permanents == null) {
                 throw new FamiliarDbException(new Exception("permanents failure"));
@@ -342,7 +342,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             Cursor spells = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
                     CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, -1, null, null, null, null,
-                    null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, false, returnTypes, true, database);
+                    null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, null, false, returnTypes, true, database);
 
             if(spells == null) {
                 throw new FamiliarDbException(new Exception("three spell failure"));

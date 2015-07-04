@@ -152,6 +152,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="search_Timeshifted">Timeshifted</string>
     <string name="search_type">Type</string>
     <string name="search_mana_cost">Mana Cost</string>
+    <string name="search_collectors_number">Collector\'s Number</string>
 
     <!-- Card view activity -->
     <string name="card_view_transform">Transform</string>

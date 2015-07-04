@@ -47,25 +47,25 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/supertypesearch"
+                    style="@style/Widget.AppCompat.AutoCompleteTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:hint="@string/search_supertype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true"
-                    style="@style/Widget.AppCompat.AutoCompleteTextView"/>
+                    android:singleLine="true" />
 
                 <EditText
                     android:id="@+id/subtypesearch"
+                    style="@style/Widget.AppCompat.AutoCompleteTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:hint="@string/search_subtype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true"
-                    style="@style/Widget.AppCompat.AutoCompleteTextView"/>
+                    android:singleLine="true" />
 
             </LinearLayout>
 
@@ -335,31 +335,39 @@
                 android:drawSelectorOnTop="true"
                 android:entries="@array/set_spinner" />
 
-            <LinearLayout
-                android:id="@+id/linearLayout1"
+
+            <EditText
+                android:id="@+id/flavorsearch"
                 style="@style/forty_eight"
-                android:layout_width="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/search_flavor_text"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
 
-                <EditText
-                    android:id="@+id/flavorsearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="@string/search_flavor_text"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:maxLines="1" />
+            <EditText
+                android:id="@+id/artistsearch"
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/search_artist"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
 
-                <EditText
-                    android:id="@+id/artistsearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="@string/search_artist"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:maxLines="1" />
-            </LinearLayout>
+            <EditText
+                android:id="@+id/collectorsnumbersearch"
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/search_collectors_number"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
         </LinearLayout>
     </ScrollView>
 
