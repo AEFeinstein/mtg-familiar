@@ -282,7 +282,7 @@ public class WishlistHelpers {
                             card.number = potentialNumbers.get(i);
 
 							/* Look through the wishlist for each card, set the numberOf or remove it if it exists, or
-							 * add the card if it doesn't */
+                             * add the card if it doesn't */
                             boolean added = false;
                             for (int j = 0; j < wishlist.size(); j++) {
                                 if (card.name.equals(wishlist.get(j).name)
@@ -305,14 +305,14 @@ public class WishlistHelpers {
 
 						/* Write the wishlist */
                         WriteWishlist(fragment.getActivity(), wishlist);
-						/* notify the fragment of a change in the wishlist */
+                        /* notify the fragment of a change in the wishlist */
                         fragment.onWishlistChanged(mCardName);
                     }
                 })
                 .setNegativeButton(fragment.getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-						/* Abort! */
+                        /* Abort! */
                         dialogInterface.dismiss();
                     }
                 })
@@ -542,16 +542,20 @@ public class WishlistHelpers {
 
             for (IndividualSetInfo isi : wish1.mInfo) {
                 try {
-                    switch (mPriceSetting) {
-                        case LOW_PRICE:
-                            sumWish1 += (isi.mPrice.mLow * isi.mNumberOf);
-                            break;
-                        case AVG_PRICE:
-                            sumWish1 += (isi.mPrice.mAverage * isi.mNumberOf);
-                            break;
-                        case HIGH_PRICE:
-                            sumWish1 += (isi.mPrice.mHigh * isi.mNumberOf);
-                            break;
+                    if (isi.mIsFoil) {
+                        sumWish1 += (isi.mPrice.mFoilAverage * isi.mNumberOf);
+                    } else {
+                        switch (mPriceSetting) {
+                            case LOW_PRICE:
+                                sumWish1 += (isi.mPrice.mLow * isi.mNumberOf);
+                                break;
+                            case AVG_PRICE:
+                                sumWish1 += (isi.mPrice.mAverage * isi.mNumberOf);
+                                break;
+                            case HIGH_PRICE:
+                                sumWish1 += (isi.mPrice.mHigh * isi.mNumberOf);
+                                break;
+                        }
                     }
                 } catch (NullPointerException e) {
 					/* eat it, no price is loaded */
@@ -560,16 +564,20 @@ public class WishlistHelpers {
 
             for (IndividualSetInfo isi : wish2.mInfo) {
                 try {
-                    switch (mPriceSetting) {
-                        case LOW_PRICE:
-                            sumWish2 += (isi.mPrice.mLow * isi.mNumberOf);
-                            break;
-                        case AVG_PRICE:
-                            sumWish2 += (isi.mPrice.mAverage * isi.mNumberOf);
-                            break;
-                        case HIGH_PRICE:
-                            sumWish2 += (isi.mPrice.mHigh * isi.mNumberOf);
-                            break;
+                    if (isi.mIsFoil) {
+                        sumWish2 += (isi.mPrice.mFoilAverage * isi.mNumberOf);
+                    } else {
+                        switch (mPriceSetting) {
+                            case LOW_PRICE:
+                                sumWish2 += (isi.mPrice.mLow * isi.mNumberOf);
+                                break;
+                            case AVG_PRICE:
+                                sumWish2 += (isi.mPrice.mAverage * isi.mNumberOf);
+                                break;
+                            case HIGH_PRICE:
+                                sumWish2 += (isi.mPrice.mHigh * isi.mNumberOf);
+                                break;
+                        }
                     }
                 } catch (NullPointerException e) {
 					/* eat it, no price is loaded */
