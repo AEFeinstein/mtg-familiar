@@ -8,6 +8,8 @@ import android.view.View;
 
 import com.gelakinetic.mtgfam.R;
 
+import java.util.Arrays;
+
 public class ColorIndicatorView extends View {
     private ShapeDrawable mBackground = null;
     private ShapeDrawable mDrawableShapes[] = new ShapeDrawable[5];
@@ -27,7 +29,7 @@ public class ColorIndicatorView extends View {
      * @param context The context
      */
     public ColorIndicatorView(Context context) {
-        this(context, 0, 0, "");
+        this(context, 0, 0, "", "");
     }
 
     /**
@@ -37,15 +39,24 @@ public class ColorIndicatorView extends View {
      * @param dimen   The width & height of the view, in pixels
      * @param border  How thick the border should be, in pixels
      * @param color   A string of characters representing colors
+     * @param manacost The mana cost of this card. If it matches the color, don't make an indicator
      */
-    public ColorIndicatorView(Context context, int dimen, int border, String color) {
+    public ColorIndicatorView(Context context, int dimen, int border, String color, String manacost) {
         super(context);
 
         int shapesIndex = 0;
         int numColors = 0;
 
+        /* Sanitize strings to check for a match */
+        manacost = sanitizeString(manacost);
+        color = sanitizeString(color);
+
+        if(color.equals(manacost)) {
+            /* Color matches manacost, don't bother with an indicator */
+            return;
+        }
+
         /* Count the number of colors, ignoring artifact and land */
-        color = color.toLowerCase();
         for (String colorChar : COLORS_CHARS) {
             if (color.contains(colorChar)) {
                 numColors++;
@@ -89,7 +100,69 @@ public class ColorIndicatorView extends View {
         }
     }
 
-    public boolean hasColors() {
+    /**
+     * Returns whether or not the indicator should be shown
+     * @return true if it should be shown, false otherwise
+     */
+    public boolean shouldInidcatorBeShown() {
         return mBackground != null;
+    }
+
+    /**
+     * Given a color or mana cost string, remove all non-color & duplicate chars
+     * @param str A mana cost or color string
+     * @return The sanitized string
+     */
+    public static String sanitizeString(String str) {
+        str = str.toLowerCase();
+        boolean colors[] = new boolean[5];
+        Arrays.fill(colors, false);
+
+        for (int i = 0; i < str.length(); i++) {
+            switch(str.charAt(i))
+            {
+                case 'w':
+                    colors[0] = true;
+                    break;
+                case 'u':
+                    colors[1] = true;
+                    break;
+                case 'b':
+                    colors[2] = true;
+                    break;
+                case 'r':
+                    colors[3] = true;
+                    break;
+                case 'g':
+                    colors[4] = true;
+                    break;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder(5);
+        for (int i = 0; i < colors.length; i++) {
+            if (colors[i]) {
+                switch(i)
+                {
+                    case 0:
+                        sb.append('w');
+                        break;
+                    case 1:
+                        sb.append('u');
+                        break;
+                    case 2:
+                        sb.append('b');
+                        break;
+                    case 3:
+                        sb.append('r');
+                        break;
+                    case 4:
+                        sb.append('g');
+                        break;
+                }
+            }
+        }
+
+        return sb.toString();
     }
 }

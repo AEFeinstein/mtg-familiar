@@ -604,8 +604,8 @@ public class CardViewFragment extends FamiliarFragment {
 
         mColorIndicatorLayout.removeAllViews();
         ColorIndicatorView civ = new ColorIndicatorView(this.getActivity(), dimension, dimension/15,
-                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)));
-        if(civ.hasColors()) {
+                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)), sCost);
+        if(civ.shouldInidcatorBeShown()) {
             mColorIndicatorLayout.setVisibility(View.VISIBLE);
             mColorIndicatorLayout.addView(civ);
         }
