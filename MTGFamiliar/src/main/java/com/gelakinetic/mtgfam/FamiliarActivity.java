@@ -541,7 +541,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
                 int lastVersion = mPreferenceAdapter.getLastVersion();
                 if (pInfo.versionCode != lastVersion) {
-				    /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices will exist*/
+                    /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices will exist*/
                     try {
                         mSpiceManager.removeAllDataFromCache();
                     } catch (NullPointerException e) {
@@ -622,7 +622,28 @@ public class FamiliarActivity extends AppCompatActivity {
             assert data != null;
 
             boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
-            if (data.getAuthority().contains("CardSearchProvider")) {
+            if (data.getAuthority().toLowerCase().contains("gatherer")) {
+                try {
+                    int multiverseIndex = data.toString().toLowerCase().indexOf("multiverseid") + 13;
+                    SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
+                    Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.toString().substring(multiverseIndex)),
+                            new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                    if (cursor.getCount() != 0) {
+                        args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                                new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                    } else {
+                        throw new Exception("Not Found");
+                    }
+                    cursor.close();
+                    DatabaseManager.getInstance(this, false).closeDatabase(false);
+                } catch (Exception e) {
+                    /* empty cursor, just return */
+                    ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
+                    this.finish();
+                    shouldSelectItem = false;
+                }
+                shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
+            } else if (data.getAuthority().contains("CardSearchProvider")) {
     			/* User clicked a card in the quick search autocomplete, jump right to it */
                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
                         new long[]{Long.parseLong(data.getLastPathSegment())});
