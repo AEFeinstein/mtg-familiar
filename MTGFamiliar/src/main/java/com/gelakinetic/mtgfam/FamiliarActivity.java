@@ -622,27 +622,45 @@ public class FamiliarActivity extends AppCompatActivity {
             assert data != null;
 
             boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
-            if (data.getAuthority().toLowerCase().contains("gatherer")) {
+            if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
+                SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
                 try {
-                    int multiverseIndex = data.toString().toLowerCase().indexOf("multiverseid") + 13;
-                    SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
-                    Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.toString().substring(multiverseIndex)),
-                            new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-                    if (cursor.getCount() != 0) {
-                        args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
-                                new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                    String queryParam;
+                    if ((queryParam = data.getQueryParameter("multiverseid")) != null) {
+                        Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
+                                new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                        if (cursor.getCount() != 0) {
+                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                                    new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
+                        }
+                        cursor.close();
+                        if(args.size() == 0) {
+                            throw new Exception("Not Found");
+                        }
+                    } else if((queryParam = data.getQueryParameter("name")) != null) {
+                        Cursor cursor = CardDbAdapter.fetchCardByName(queryParam,
+                                new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                        if (cursor.getCount() != 0) {
+                            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
+                                    new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                            shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
+                        }
+                        cursor.close();
+                        if (args.size() == 0) {
+                            throw new Exception("Not Found");
+                        }
                     } else {
                         throw new Exception("Not Found");
                     }
-                    cursor.close();
-                    DatabaseManager.getInstance(this, false).closeDatabase(false);
                 } catch (Exception e) {
                     /* empty cursor, just return */
                     ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
                     this.finish();
                     shouldSelectItem = false;
+                } finally {
+                    DatabaseManager.getInstance(this, false).closeDatabase(false);
                 }
-                shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
             } else if (data.getAuthority().contains("CardSearchProvider")) {
     			/* User clicked a card in the quick search autocomplete, jump right to it */
                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
