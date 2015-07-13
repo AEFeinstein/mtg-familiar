@@ -19,12 +19,12 @@
 package com.gelakinetic.mtgfam.helpers.updaters;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -52,7 +52,7 @@ public class DbUpdaterService extends IntentService {
     private static final int UPDATED_NOTIFICATION = 32;
 
     /* To build and display the notification */
-    private NotificationManager mNotificationManager;
+    private NotificationManagerCompat mNotificationManager;
     private NotificationCompat.Builder mBuilder;
 
     /* To keep track of progress percentage when adding cards in a set */
@@ -76,8 +76,7 @@ public class DbUpdaterService extends IntentService {
         super.onCreate();
 
         mHandler = new Handler();
-
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager = NotificationManagerCompat.from(this);
 
         Intent intent = new Intent(this, FamiliarActivity.class);
         PendingIntent mNotificationIntent = PendingIntent.getActivity(this, 0, intent, 0);

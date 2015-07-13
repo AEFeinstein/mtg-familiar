@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -14,6 +13,7 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -64,8 +64,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                         .build();
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-                NotificationManager notificationManager = (NotificationManager)
-                        context.getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.cancel(RoundTimerFragment.TIMER_NOTIFICATION_ID);
                 notificationManager.notify(RoundTimerFragment.TIMER_NOTIFICATION_ID, notification);
                 break;
@@ -180,14 +179,14 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                             AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
 
                     if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-											/* Do some speaking, on the alarm stream */
+                                            /* Do some speaking, on the alarm stream */
                         HashMap<String, String> ttsParams = new HashMap<>();
                         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, WARNING_SPEECH);
                         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_ALARM));
                         mTts.speak(mTextToSpeak, TextToSpeech.QUEUE_FLUSH, ttsParams);
                         return; /* if we don't return, the service will stop before speaking */
                     } else {
-						/* Fall back to ringtone */
+                        /* Fall back to ringtone */
                         Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
                         Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
                         r.play();

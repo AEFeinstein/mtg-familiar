@@ -2,17 +2,17 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -102,20 +102,38 @@ public class RoundTimerFragment extends FamiliarFragment {
         am.cancel(easterEggPI);
 
         if (set) {
-            /* Set all applicable alarms */
-            am.set(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
+            if (Build.VERSION.SDK_INT >= 19) {
+                /* Set all applicable alarms */
+                am.setExact(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
 
-            if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
-                am.set(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
-            }
-            if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
-                am.set(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
-            }
-            if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
-                am.set(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
-            }
-            if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
-                am.set(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
+                if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
+                }
+            } else {
+                /* Set all applicable alarms */
+                am.set(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
+
+                if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 10 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 10 * 60 * 1000, tenMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 15 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 15 * 60 * 1000, fifteenMinPI);
+                }
+                if (endTime - System.currentTimeMillis() > 12 * 60 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 12 * 60 * 60 * 1000, easterEggPI);
+                }
             }
         }
     }
@@ -133,23 +151,21 @@ public class RoundTimerFragment extends FamiliarFragment {
         then.add(Calendar.MILLISECOND, (int) (endTime - System.currentTimeMillis()));
         String messageText = String.format(context.getString(R.string.timer_notification_ongoing), then);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        Notification notification = builder
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(context.getString(R.string.main_timer))
                 .setContentText(messageText)
                 .setContentIntent(PendingIntent.getActivity(context, 7, new Intent(context,
                         FamiliarActivity.class).setAction(FamiliarActivity.ACTION_ROUND_TIMER), 0))
-                .setOngoing(true)
-                .build();
+                .setOngoing(true);
 
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        /* Get an instance of the NotificationManager service */
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         /* Clear any existing notifications just in case there's still one there */
         notificationManager.cancel(TIMER_NOTIFICATION_ID);
         /* Then show the new one */
-        notificationManager.notify(TIMER_NOTIFICATION_ID, notification);
+        notificationManager.notify(TIMER_NOTIFICATION_ID, builder.build());
     }
 
     /**
@@ -178,20 +194,18 @@ public class RoundTimerFragment extends FamiliarFragment {
             @Override
             public void onClick(View view) {
                 if (getFamiliarActivity().mPreferenceAdapter.getRoundTimerEnd() != -1) {
-					/* Commit the endTime as -1 */
+                    /* Commit the endTime as -1 */
                     getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(-1);
-					/* Cancel the alarms */
+                    /* Cancel the alarms */
                     setOrCancelAlarms(getActivity(), 0, false);
-					/* Stop the ActionBar timer display*/
+                    /* Stop the ActionBar timer display*/
                     getFamiliarActivity().stopUpdatingDisplay();
-					/* Set button text to start again */
+                    /* Set button text to start again */
                     mTimerButton.setText(R.string.timer_start);
-					/* Cancel the notification */
-                    NotificationManager notificationManager = (NotificationManager) getActivity()
-                            .getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(TIMER_NOTIFICATION_ID);
+                    /* Cancel the notification */
+                    NotificationManagerCompat.from(getActivity()).cancel(TIMER_NOTIFICATION_ID);
                 } else {
-					/* Figure out the end time */
+                    /* Figure out the end time */
                     int hours = mTimePicker.getHours();
                     int minutes = mTimePicker.getMinutes();
                     int seconds = mTimePicker.getSeconds();
@@ -201,7 +215,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                         return;
                     }
                     long endTime = System.currentTimeMillis() + timeInMillis;
-					/* Commit the end time */
+                    /* Commit the end time */
                     getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(endTime);
 
 					/* Set the alarm, and any warning alarms if applicable */
