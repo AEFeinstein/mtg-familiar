@@ -6,18 +6,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault" >
-        <activity
-            android:name=".FamiliarStubBroadcastActivity"
-            android:label="MyStubBroadcastActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".FamiliarDisplayActivity"
             android:allowEmbedded="true"
@@ -25,14 +16,6 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.DeviceDefault.Light" >
         </activity>
-
-        <receiver
-            android:name=".FamiliarPostNotificationReceiver"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.gelakinetic.mtgfam.SHOW_NOTIFICATION" />
-            </intent-filter>
-        </receiver>
 
         <meta-data
             android:name="com.google.android.gms.version"

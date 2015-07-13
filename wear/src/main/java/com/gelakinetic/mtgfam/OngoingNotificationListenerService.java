@@ -71,9 +71,9 @@ public class OngoingNotificationListenerService extends WearableListenerService 
                     // Create the ongoing notification
                     Notification.Builder notificationBuilder =
                             new Notification.Builder(this)
-                                    .setSmallIcon(R.mipmap.ic_launcher)
+                                    .setSmallIcon(R.drawable.ic_launcher)
                                     .setLargeIcon(BitmapFactory.decodeResource(
-                                            getResources(), R.mipmap.ic_launcher))
+                                            getResources(), R.drawable.ic_launcher))
                                     .setOngoing(true)
                                     .extend(new Notification.WearableExtender()
                                             .setDisplayIntent(notificationPendingIntent));
