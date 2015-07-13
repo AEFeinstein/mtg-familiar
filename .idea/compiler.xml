@@ -26,6 +26,8 @@
         <module name="MTGFamiliarProject" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="mtg-familiar" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
-
