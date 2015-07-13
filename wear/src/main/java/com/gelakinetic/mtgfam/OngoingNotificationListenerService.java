@@ -53,7 +53,7 @@ public class OngoingNotificationListenerService extends WearableListenerService 
             Log.v("TAG", event.toString());
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 String path = event.getDataItem().getUri().getPath();
-                if ("/PATH".equals(path)) {
+                if (FamiliarConstants.PATH.equals(path)) {
                     // Get the data out of the event
                     DataMapItem dataMapItem =
                             DataMapItem.fromDataItem(event.getDataItem());

@@ -26,6 +26,7 @@ import android.widget.CheckBox;
 import com.alertdialogpro.AlertDialogPro;
 import com.doomonafireball.betterpickers.hmspicker.HmsPicker;
 import com.gelakinetic.mtgfam.FamiliarActivity;
+import com.gelakinetic.mtgfam.FamiliarConstants;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
 import com.google.android.gms.common.api.ResultCallback;
@@ -250,7 +251,7 @@ public class RoundTimerFragment extends FamiliarFragment {
     private void showWearNotification(FamiliarActivity familiarActivity) {
 
         if (familiarActivity.mGoogleApiClient.isConnected()) {
-            PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/PATH");
+            PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(FamiliarConstants.PATH);
 
             // Add data to the request
             putDataMapRequest.getDataMap().putString("KEY_TITLE", String.format("hello world! %d", count++));
