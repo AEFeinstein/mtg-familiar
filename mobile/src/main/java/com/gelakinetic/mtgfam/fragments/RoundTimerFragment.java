@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,8 +28,6 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.FamiliarConstants;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -234,7 +231,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                     /* Set the button text to stop the timer */
                     mTimerButton.setText(R.string.timer_cancel);
                     /* Start Wear display timer */
-                    showWearNotification(getFamiliarActivity());
+                    showWearNotification(getFamiliarActivity(), endTime);
                 }
             }
         });
@@ -246,25 +243,15 @@ public class RoundTimerFragment extends FamiliarFragment {
         return v;
     }
 
-    private int count = 0;
-
-    private void showWearNotification(FamiliarActivity familiarActivity) {
+    private void showWearNotification(FamiliarActivity familiarActivity, long endTime) {
 
         if (familiarActivity.mGoogleApiClient.isConnected()) {
             PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(FamiliarConstants.PATH);
 
             // Add data to the request
-            putDataMapRequest.getDataMap().putString("KEY_TITLE", String.format("hello world! %d", count++));
-
+            putDataMapRequest.getDataMap().putLong(FamiliarConstants.KEY_END_TIME, endTime);
             PutDataRequest request = putDataMapRequest.asPutDataRequest();
-
-            Wearable.DataApi.putDataItem(familiarActivity.mGoogleApiClient, request)
-                    .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
-                        @Override
-                        public void onResult(DataApi.DataItemResult dataItemResult) {
-                            Log.d("TAG", "putDataItem status: " + dataItemResult.getStatus().toString());
-                        }
-                    });
+            Wearable.DataApi.putDataItem(familiarActivity.mGoogleApiClient, request);
         }
     }
 
