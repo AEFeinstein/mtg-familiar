@@ -10,13 +10,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault" >
-        <activity
-            android:name=".FamiliarDisplayActivity"
-            android:allowEmbedded="true"
-            android:exported="true"
-            android:taskAffinity=""
-            android:theme="@android:style/Theme.DeviceDefault.Light" >
-        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -27,8 +20,6 @@
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
-
-        <receiver android:name="RoundTimerInfoReceiver"  />
 
     </application>
 

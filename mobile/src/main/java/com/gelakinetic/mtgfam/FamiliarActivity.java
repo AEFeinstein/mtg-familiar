@@ -189,9 +189,9 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
                     putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_FIVE_MINUTE_WARNING,
                             mPreferenceAdapter.getFiveMinutePref());
                     putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_TEN_MINUTE_WARNING,
-                            mPreferenceAdapter.getFiveMinutePref());
+                            mPreferenceAdapter.getTenMinutePref());
                     putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_FIFTEEN_MINUTE_WARNING,
-                            mPreferenceAdapter.getFiveMinutePref());
+                            mPreferenceAdapter.getFifteenMinutePref());
 
                     PutDataRequest request = putDataMapRequest.asPutDataRequest();
                     Wearable.DataApi.putDataItem(mGoogleApiClient, request);
