@@ -1930,7 +1930,7 @@ public class CardDbAdapter {
      */
     public static int isMultiCard(String number, String setCode) {
         if (number.contains("a") || number.contains("b")) {
-            if (setCode.compareTo("ISD") == 0 || setCode.compareTo("DKA") == 0) {
+            if (setCode.compareTo("ISD") == 0 || setCode.compareTo("DKA") == 0|| setCode.compareTo("ORI") == 0) {
                 return TRANSFORM;
             } else if (setCode.compareTo("DGM") == 0) {
                 return FUSE;
