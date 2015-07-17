@@ -164,7 +164,7 @@ public class ImageGetterHelper {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_hr);
                 } else if (source.equalsIgnoreCase("hw") || source.equalsIgnoreCase("wh")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_hw);
-                } else if (source.equalsIgnoreCase("c")) {
+                } else if (source.equalsIgnoreCase("c") || source.equalsIgnoreCase("chaos")) {
                     d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_c));
                 } else if (source.equalsIgnoreCase("z")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_z);
