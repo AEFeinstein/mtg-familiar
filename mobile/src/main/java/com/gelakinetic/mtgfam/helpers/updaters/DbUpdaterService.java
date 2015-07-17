@@ -161,8 +161,8 @@ public class DbUpdaterService extends IntentService {
                 ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
 
                 if (rp.needsToUpdate()) {
+                    switchToUpdating(getString(R.string.update_updating_rules));
                     if (rp.parseRules()) {
-                        switchToUpdating(getString(R.string.update_updating_rules));
                         rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
 
 						/* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
@@ -170,9 +170,8 @@ public class DbUpdaterService extends IntentService {
 						 */
                         newRulesParsed = true;
                         updatedStuff.add(getString(R.string.update_added_rules));
-
-                        switchToChecking();
                     }
+                    switchToChecking();
                 }
 
                 /* Open a writable database, as briefly as possible */

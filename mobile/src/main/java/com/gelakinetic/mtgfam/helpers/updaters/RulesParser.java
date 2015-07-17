@@ -12,10 +12,6 @@ import java.util.Date;
 
 class RulesParser {
 
-    /**
-     * Returned from fetchAndLoad() if everything works correctly.
-     */
-    public static final int SUCCESS = 0;
     /* URL and delimiting tokens */
     private static final String SOURCE = "https://sites.google.com/site/mtgfamiliar/rules/MagicCompRules.txt";
     @SuppressWarnings("SpellCheckingInspection")
@@ -69,6 +65,7 @@ class RulesParser {
             String line = this.mBufferedReader.readLine();
             String[] parts = line.split("-");
             Calendar c = Calendar.getInstance();
+            c.clear();
             c.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
 
             if (c.getTime().after(this.mLastUpdated)) {
