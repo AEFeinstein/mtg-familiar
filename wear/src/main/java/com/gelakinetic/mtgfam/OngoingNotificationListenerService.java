@@ -21,9 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 public class OngoingNotificationListenerService extends WearableListenerService {
 
-    static final int NOTIFICATION_ID = 516;
+    public static final int NOTIFICATION_ID = 516;
+    public static final String UPDATE_TIMER_INFO = "com.gelakinetic.mtgfam.timer";
     private GoogleApiClient mGoogleApiClient;
 
+    /**
+     * TODO
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,6 +39,9 @@ public class OngoingNotificationListenerService extends WearableListenerService 
         Log.v("MTG", "OngoingNotificationListenerService onCreate");
     }
 
+    /**
+     * TODO
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -42,6 +49,10 @@ public class OngoingNotificationListenerService extends WearableListenerService 
         Log.v("MTG", "OngoingNotificationListenerService onDestroy");
     }
 
+    /**
+     * TODO
+     * @param dataEvents asd
+     */
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         final List<DataEvent> events = FreezableUtils.freezeIterable(dataEvents);
@@ -62,54 +73,75 @@ public class OngoingNotificationListenerService extends WearableListenerService 
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 String path = event.getDataItem().getUri().getPath();
                 if (FamiliarConstants.PATH.equals(path)) {
-                    // Get the data out of the event
+                    /* Get the data out of the event */
                     DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
-                    long endTime = dataMapItem.getDataMap().getLong(FamiliarConstants.KEY_END_TIME);
 
-                    // Build the intent to display our custom notification
-                    Intent notificationIntent = new Intent(this, FamiliarDisplayActivity.class);
-                    notificationIntent.putExtra(FamiliarDisplayActivity.EXTRA_END_TIME, endTime);
-                    PendingIntent notificationPendingIntent = PendingIntent.getActivity(
-                            this,
-                            0,
-                            notificationIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
+                    /* Either set or clear the timer, or just update warning settings */
+                    if (dataMapItem.getDataMap().containsKey(FamiliarConstants.KEY_END_TIME)) {
+                        long endTime = dataMapItem.getDataMap().getLong(FamiliarConstants.KEY_END_TIME);
 
-//                    // Create the ongoing notification
-//                    Notification.Builder notificationBuilder =
-//                            new Notification.Builder(this)
-////                                    .setSmallIcon(R.mipmap.ic_launcher)
-////                                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-//                                    .setOngoing(true)
-//                                    .setContentText("Text")
-//                                    .setContentTitle("Title")
-//                                    .setContentInfo("Info")
-//                                    .extend(new Notification.WearableExtender()
-//                                            .setDisplayIntent(notificationPendingIntent)
-//                                            .setBackground(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-//                                            .setContentIcon(R.mipmap.ic_launcher))
-//                                    .setOnlyAlertOnce(true);
-//
-//                    // Build the notification and show it
-//                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                    notificationManager.cancel(NOTIFICATION_ID);
-//                    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+                        if (endTime == 0) {
+                            /* An end time of 0 means cancel the notification */
 
-                    // Create the ongoing notification
-                    Notification.Builder notificationBuilder =
-                            new Notification.Builder(this)
+                            Log.v("MTG", "Broadcasting kill signal");
+                            Intent intent = new Intent(UPDATE_TIMER_INFO);
+                            intent.putExtra(FamiliarDisplayActivity.EXTRA_END_TIME, 0);
+                            sendBroadcast(intent);
+
+                            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                            notificationManager.cancel(NOTIFICATION_ID);
+
+                        } else {
+                            /* Build the intent to display our custom notification */
+                            Intent notificationIntent = new Intent(this, FamiliarDisplayActivity.class);
+                            notificationIntent.putExtra(FamiliarDisplayActivity.EXTRA_END_TIME, endTime);
+                            notificationIntent.putExtra(FamiliarDisplayActivity.EXTRA_FIVE_MINUTE_WARNING,
+                                    dataMapItem.getDataMap().getBoolean(FamiliarConstants.KEY_FIVE_MINUTE_WARNING));
+                            notificationIntent.putExtra(FamiliarDisplayActivity.EXTRA_TEN_MINUTE_WARNING,
+                                    dataMapItem.getDataMap().getBoolean(FamiliarConstants.KEY_TEN_MINUTE_WARNING));
+                            notificationIntent.putExtra(FamiliarDisplayActivity.EXTRA_FIFTEEN_MINUTE_WARNING,
+                                    dataMapItem.getDataMap().getBoolean(FamiliarConstants.KEY_FIFTEEN_MINUTE_WARNING));
+
+                            PendingIntent notificationPendingIntent = PendingIntent.getActivity(
+                                    this,
+                                    0,
+                                    notificationIntent,
+                                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            /* Create the ongoing notification */
+                            Notification.Builder notificationBuilder = new Notification.Builder(this)
                                     .setSmallIcon(R.mipmap.ic_launcher)
-                                    .setLargeIcon(BitmapFactory.decodeResource(
-                                            getResources(), R.mipmap.ic_launcher))
                                     .setOngoing(true)
                                     .extend(new Notification.WearableExtender()
-                                            .setDisplayIntent(notificationPendingIntent));
+                                            .setDisplayIntent(notificationPendingIntent)
+                                            .setBackground(BitmapFactory.decodeResource(getResources(), R.drawable.background))
+                                            .setHintHideIcon(true)
+                                            .setContentIcon(R.mipmap.ic_launcher));
 
-                    // Build the notification and show it
-                    NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-                    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+                            /* Cancel the notification */
+                            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                            notificationManager.cancel(NOTIFICATION_ID);
+                            /* Kill any running activities */
+                            Intent intent = new Intent(UPDATE_TIMER_INFO);
+                            intent.putExtra(FamiliarDisplayActivity.EXTRA_END_TIME, 0);
+                            sendBroadcast(intent);
+                            /* Build the notification and show it */
+                            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
 
-                    Log.v("MTG", "Notification Notified");
+                            Log.v("MTG", "Notification Notified");
+                        }
+                    } else if (dataMapItem.getDataMap().containsKey(FamiliarConstants.KEY_FIVE_MINUTE_WARNING)) {
+                        Log.v("MTG", "just broadcasting settings");
+                        /* Broadcast the 5/10/15 minute warning preferences */
+                        Intent intent = new Intent(UPDATE_TIMER_INFO);
+                        intent.putExtra(FamiliarDisplayActivity.EXTRA_FIVE_MINUTE_WARNING,
+                                dataMapItem.getDataMap().getBoolean(FamiliarConstants.KEY_FIVE_MINUTE_WARNING));
+                        intent.putExtra(FamiliarDisplayActivity.EXTRA_TEN_MINUTE_WARNING,
+                                dataMapItem.getDataMap().getBoolean(FamiliarConstants.KEY_TEN_MINUTE_WARNING));
+                        intent.putExtra(FamiliarDisplayActivity.EXTRA_FIFTEEN_MINUTE_WARNING,
+                                dataMapItem.getDataMap().getBoolean(FamiliarConstants.KEY_FIFTEEN_MINUTE_WARNING));
+                        sendBroadcast(intent);
+                    }
                 }
             }
         }

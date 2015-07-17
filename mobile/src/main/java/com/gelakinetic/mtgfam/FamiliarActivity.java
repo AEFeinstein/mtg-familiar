@@ -100,6 +100,8 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.octo.android.robospice.SpiceManager;
 
@@ -177,6 +179,23 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
                 cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
                 cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
                 addImageCache(getSupportFragmentManager(), cacheParams);
+            } else if(s.equals(getString(R.string.key_fiveMinutePref)) ||
+                    s.equals(getString(R.string.key_tenMinutePref)) ||
+                    s.equals(getString(R.string.key_fifteenMinutePref))) {
+                if (mGoogleApiClient.isConnected()) {
+                    PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(FamiliarConstants.PATH);
+
+                    // Add data to the request
+                    putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_FIVE_MINUTE_WARNING,
+                            mPreferenceAdapter.getFiveMinutePref());
+                    putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_TEN_MINUTE_WARNING,
+                            mPreferenceAdapter.getFiveMinutePref());
+                    putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_FIFTEEN_MINUTE_WARNING,
+                            mPreferenceAdapter.getFiveMinutePref());
+
+                    PutDataRequest request = putDataMapRequest.asPutDataRequest();
+                    Wearable.DataApi.putDataItem(mGoogleApiClient, request);
+                }
             }
         }
     };

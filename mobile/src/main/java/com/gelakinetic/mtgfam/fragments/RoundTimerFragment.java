@@ -208,6 +208,8 @@ public class RoundTimerFragment extends FamiliarFragment {
                     mTimerButton.setText(R.string.timer_start);
                     /* Cancel the notification */
                     NotificationManagerCompat.from(getActivity()).cancel(TIMER_NOTIFICATION_ID);
+                    /* And on the wearable */
+                    cancelWearNotification(getFamiliarActivity());
                 } else {
                     /* Figure out the end time */
                     int hours = mTimePicker.getHours();
@@ -243,6 +245,11 @@ public class RoundTimerFragment extends FamiliarFragment {
         return v;
     }
 
+    /**
+     * TODO
+     * @param familiarActivity
+     * @param endTime
+     */
     private void showWearNotification(FamiliarActivity familiarActivity, long endTime) {
 
         if (familiarActivity.mGoogleApiClient.isConnected()) {
@@ -250,6 +257,29 @@ public class RoundTimerFragment extends FamiliarFragment {
 
             // Add data to the request
             putDataMapRequest.getDataMap().putLong(FamiliarConstants.KEY_END_TIME, endTime);
+            putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_FIVE_MINUTE_WARNING,
+                    familiarActivity.mPreferenceAdapter.getFiveMinutePref());
+            putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_TEN_MINUTE_WARNING,
+                    familiarActivity.mPreferenceAdapter.getFiveMinutePref());
+            putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_FIFTEEN_MINUTE_WARNING,
+                    familiarActivity.mPreferenceAdapter.getFiveMinutePref());
+
+            PutDataRequest request = putDataMapRequest.asPutDataRequest();
+            Wearable.DataApi.putDataItem(familiarActivity.mGoogleApiClient, request);
+        }
+    }
+
+    /**
+     * TODO
+     * @param familiarActivity
+     */
+    private void cancelWearNotification(FamiliarActivity familiarActivity) {
+
+        if (familiarActivity.mGoogleApiClient.isConnected()) {
+            PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(FamiliarConstants.PATH);
+
+            // Add data to the request
+            putDataMapRequest.getDataMap().putLong(FamiliarConstants.KEY_END_TIME, 0);
             PutDataRequest request = putDataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(familiarActivity.mGoogleApiClient, request);
         }

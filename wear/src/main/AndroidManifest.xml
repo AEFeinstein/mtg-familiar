@@ -28,6 +28,8 @@
             </intent-filter>
         </service>
 
+        <receiver android:name="RoundTimerInfoReceiver"  />
+
     </application>
 
 </manifest>
