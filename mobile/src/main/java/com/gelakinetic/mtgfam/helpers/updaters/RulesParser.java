@@ -188,6 +188,10 @@ class RulesParser {
 				/* Then move to the next line */
                 line = mBufferedReader.readLine().trim();
             }
+            if (currentTerm != null) {
+				/* Document is over but we still have a term; add it to the list */
+                mGlossary.add(currentTerm);
+            }
 
             return true;
         } catch (IOException e) {
