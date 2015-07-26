@@ -1,12 +1,6 @@
 package com.gelakinetic.mtgfam;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.os.Vibrator;
+import android.content.Intent;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -17,91 +11,16 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class OngoingNotificationListenerService extends WearableListenerService {
 
-    private static final int NOTIFICATION_ID = 516;
+    /* An action to send broadcasts with */
+    static final String BROADCAST_ACTION = "com.gelakinetic.mtgfam";
 
-    /* Services and stuff */
+    /* The google api service */
     private static GoogleApiClient mGoogleApiClient;
-    private static Handler mHandler;
-    private static NotificationManager mNotificationManager;
-    private static Notification.Builder mNotificationBuilder;
-    private static Vibrator mVibrator;
-
-    /* Variables to be set by the mobile app */
-    private static long mEndTime = 0;
-    private static boolean mFiveMinuteWarning = false;
-    private static boolean mTenMinuteWarning = false;
-    private static boolean mFifteenMinuteWarning = false;
-
-    private static final Runnable mUpdateTimeRunnable = new Runnable() {
-        /**
-         * This runnable is posted once a second, updates the notification, and vibrates the watch
-         * if the warning is set and it is time.
-         */
-        @Override
-        public void run() {
-
-            Long currTime = System.currentTimeMillis();
-
-            if (currTime >= mEndTime) {
-                /* Time is up. BUZZZZZ */
-                mVibrator.vibrate(600);
-
-                /* Remove the notification and any tick updates */
-                mHandler.removeCallbacks(mUpdateTimeRunnable);
-                mNotificationManager.cancel(NOTIFICATION_ID);
-                mEndTime = 0;
-            } else {
-                /* Figure out when the next tick is */
-                long timeToNextSystemTick = (((currTime + 1000) / 1000) * 1000) - currTime;
-
-                /* Do this again in one second */
-                long postTime = SystemClock.uptimeMillis() + timeToNextSystemTick;
-                mHandler.postAtTime(mUpdateTimeRunnable, postTime);
-
-                /* Build the string */
-                Calendar then = Calendar.getInstance();
-                then.clear();
-                then.add(Calendar.MILLISECOND, (int) (mEndTime - System.currentTimeMillis()));
-                String messageText = String.format("%02d:%02d:%02d", then.get(Calendar.HOUR),
-                        then.get(Calendar.MINUTE), then.get(Calendar.SECOND));
-
-                /* Because the ID remains unchanged, the existing notification is updated. */
-                mNotificationBuilder.setContentTitle(messageText);
-                mNotificationManager.notify(
-                        OngoingNotificationListenerService.NOTIFICATION_ID,
-                        mNotificationBuilder.build());
-
-                /* Vibrate a pattern if the warnings are set up */
-                if (mFifteenMinuteWarning &&
-                        then.get(Calendar.HOUR) == 0 &&
-                        then.get(Calendar.MINUTE) == 15 &&
-                        then.get(Calendar.SECOND) == 0) {
-                    /* Buzz */
-                    mVibrator.vibrate(200);
-                }
-                if (mTenMinuteWarning &&
-                        then.get(Calendar.HOUR) == 0 &&
-                        then.get(Calendar.MINUTE) == 10 &&
-                        then.get(Calendar.SECOND) == 0) {
-                    /* Buzz Buzz */
-                    mVibrator.vibrate(new long[]{0, 200, 200, 200}, -1);
-                }
-                if (mFiveMinuteWarning &&
-                        then.get(Calendar.HOUR) == 0 &&
-                        then.get(Calendar.MINUTE) == 5 &&
-                        then.get(Calendar.SECOND) == 0) {
-                    /* Buzz Buzz Buzz*/
-                    mVibrator.vibrate(new long[]{0, 200, 200, 200, 200, 200}, -1);
-                }
-            }
-        }
-    };
 
     /**
      * Called by the system when the service is first created. Do not call this method directly
@@ -115,12 +34,6 @@ public class OngoingNotificationListenerService extends WearableListenerService 
                 .addApi(Wearable.API)
                 .build();
         mGoogleApiClient.connect();
-
-        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotificationBuilder = new Notification.Builder(this);
-
-        mHandler = new Handler();
     }
 
     /**
@@ -168,50 +81,40 @@ public class OngoingNotificationListenerService extends WearableListenerService 
                     /* Get the data out of the event */
                     DataMapItem dataMapItem = DataMapItem.fromDataItem(event.getDataItem());
 
-                    /* If this is a message with time data, process it */
-                    if (dataMapItem.getDataMap().containsKey(FamiliarConstants.KEY_END_TIME)) {
-
-                        /* An end time of 0 means cancel the notification */
-                        if (dataMapItem.getDataMap().getLong(FamiliarConstants.KEY_END_TIME) == 0) {
-                            /* Cancel the updater & notification */
-                            mHandler.removeCallbacks(mUpdateTimeRunnable);
-                            mNotificationManager.cancel(NOTIFICATION_ID);
-
-                        } else {
-                            /* Get when the timer should expire */
-                            mEndTime = dataMapItem.getDataMap()
-                                    .getLong(FamiliarConstants.KEY_END_TIME);
-
-                            /* Create the ongoing notification */
-                            mNotificationBuilder = mNotificationBuilder
-                                    .setSmallIcon(R.mipmap.ic_launcher)
-                                    .setOngoing(true)
-                                    .extend(new Notification.WearableExtender()
-                                            .setBackground(BitmapFactory
-                                             .decodeResource(getResources(), R.drawable.background))
-                                            .setHintHideIcon(true)
-                                            .setContentIcon(R.mipmap.ic_launcher));
-
-                            /* TODO add a button to cancel the timer */
-
-                            /* Remove any tick callbacks */
-                            mHandler.removeCallbacks(mUpdateTimeRunnable);
-                            /* Cancel the notification */
-                            mNotificationManager.cancel(NOTIFICATION_ID);
-                            /* The runnable will show the notification */
-                            mHandler.post(mUpdateTimeRunnable);
+                    boolean justUpdating = true;
+                    Intent extraData = new Intent();
+                    for (String key : dataMapItem.getDataMap().keySet()) {
+                        /* If the end time is nonzero, that means we're starting.
+                         * Otherwise, we're just updating the activity.
+                         */
+                        if (key.equals(FamiliarConstants.KEY_END_TIME)) {
+                            if (dataMapItem.getDataMap().getLong(FamiliarConstants.KEY_END_TIME)
+                                    != 0) {
+                                justUpdating = false;
+                            }
+                        }
+                        /* Transfer the data from the dataMap to an intent */
+                        if (Integer.class == dataMapItem.getDataMap().get(key).getClass()) {
+                            extraData.putExtra(key, (Integer) dataMapItem.getDataMap().get(key));
+                        } else if (String.class == dataMapItem.getDataMap().get(key).getClass()) {
+                            extraData.putExtra(key, (String) dataMapItem.getDataMap().get(key));
+                        } else if (Long.class == dataMapItem.getDataMap().get(key).getClass()) {
+                            extraData.putExtra(key, (Long) dataMapItem.getDataMap().get(key));
+                        } else if (Boolean.class == dataMapItem.getDataMap().get(key).getClass()) {
+                            extraData.putExtra(key, (Boolean) dataMapItem.getDataMap().get(key));
                         }
                     }
 
-                    /* If this message has warnings settings data, save that */
-                    if (dataMapItem.getDataMap()
-                            .containsKey(FamiliarConstants.KEY_FIVE_MINUTE_WARNING)) {
-                        mFiveMinuteWarning = dataMapItem.getDataMap()
-                                .getBoolean(FamiliarConstants.KEY_FIVE_MINUTE_WARNING);
-                        mTenMinuteWarning = dataMapItem.getDataMap()
-                                .getBoolean(FamiliarConstants.KEY_TEN_MINUTE_WARNING);
-                        mFifteenMinuteWarning = dataMapItem.getDataMap()
-                                .getBoolean(FamiliarConstants.KEY_FIFTEEN_MINUTE_WARNING);
+                    if (justUpdating) {
+                        /* If we're updating, send a broadcast to the existing service */
+                        Intent broadcast = new Intent(BROADCAST_ACTION);
+                        broadcast.putExtras(extraData);
+                        sendBroadcast(broadcast);
+                    } else {
+                        /* If we're starting the timer, start the service */
+                        Intent serviceIntent = new Intent(this, CountdownService.class);
+                        serviceIntent.putExtras(extraData);
+                        this.startService(serviceIntent);
                     }
                 }
             }
