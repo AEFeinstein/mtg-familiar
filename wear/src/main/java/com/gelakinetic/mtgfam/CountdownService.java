@@ -75,7 +75,7 @@ public class CountdownService extends Service {
 
         /* Build the initial notification */
         /* TODO add a button to cancel the timer? */
-        mNotificationBuilder = new Notification.Builder(null)
+        mNotificationBuilder = new Notification.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
                         R.mipmap.ic_launcher))
