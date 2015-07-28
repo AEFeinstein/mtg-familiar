@@ -47,9 +47,7 @@ dependencies {
     compile 'com.google.android.support:wearable:1.2.0'
     compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.3'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-    compile('com.doomonafireball.betterpickers:library:1.6.0') {
-        exclude group: 'com.android.support', module: 'support-v4'
-    }
+    compile 'com.code-troopers.betterpickers:library:2.0.0'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
     compile project(':FamiliarConstants')
 }

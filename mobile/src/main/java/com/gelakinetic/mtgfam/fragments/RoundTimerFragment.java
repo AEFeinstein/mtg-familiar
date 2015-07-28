@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.alertdialogpro.AlertDialogPro;
-import com.doomonafireball.betterpickers.hmspicker.HmsPicker;
+import com.codetroopers.betterpickers.hmspicker.HmsPicker;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.FamiliarConstants;
 import com.gelakinetic.mtgfam.R;
@@ -72,7 +72,7 @@ public class RoundTimerFragment extends FamiliarFragment {
      *
      * @param context The application context to build the PendingIntents with
      * @param endTime The time the round should end
-     * @param set     Whether to set the alarms after setting them
+     * @param set     Whether to set the alarms after cancelling them
      */
     public static void setOrCancelAlarms(Context context, long endTime, boolean set) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

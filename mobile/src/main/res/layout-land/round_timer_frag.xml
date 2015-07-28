@@ -39,7 +39,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:gravity="center"
             android:text="@string/timer_how_long" />
 
-        <com.doomonafireball.betterpickers.hmspicker.HmsPicker
+        <com.codetroopers.betterpickers.hmspicker.HmsPicker
             android:id="@+id/rt_time_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
