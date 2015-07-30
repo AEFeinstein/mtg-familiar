@@ -89,20 +89,12 @@ public class OngoingNotificationListenerService extends WearableListenerService 
                          */
                         if (key.equals(FamiliarConstants.KEY_END_TIME)) {
                             if (dataMapItem.getDataMap().getLong(FamiliarConstants.KEY_END_TIME)
-                                    != 0) {
+                                    != FamiliarConstants.CANCEL_FROM_MOBILE) {
                                 justUpdating = false;
                             }
                         }
                         /* Transfer the data from the dataMap to an intent */
-                        if (Integer.class == dataMapItem.getDataMap().get(key).getClass()) {
-                            extraData.putExtra(key, (Integer) dataMapItem.getDataMap().get(key));
-                        } else if (String.class == dataMapItem.getDataMap().get(key).getClass()) {
-                            extraData.putExtra(key, (String) dataMapItem.getDataMap().get(key));
-                        } else if (Long.class == dataMapItem.getDataMap().get(key).getClass()) {
-                            extraData.putExtra(key, (Long) dataMapItem.getDataMap().get(key));
-                        } else if (Boolean.class == dataMapItem.getDataMap().get(key).getClass()) {
-                            extraData.putExtra(key, (Boolean) dataMapItem.getDataMap().get(key));
-                        }
+                        extraData.putExtras(dataMapItem.getDataMap().toBundle());
                     }
 
                     if (justUpdating) {

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MTG Familiar</string>
+    <string name="cancel">Cancel</string>
 </resources>

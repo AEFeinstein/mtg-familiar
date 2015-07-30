@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,8 +13,18 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.util.Log;
 
-public class CountdownService extends Service {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+
+public class CountdownService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     /* An ID to track the notification */
     private static final int NOTIFICATION_ID = 516;
@@ -27,6 +38,7 @@ public class CountdownService extends Service {
     private static Vibrator mVibrator;
     private static NotificationManager mNotificationManager;
     private static Notification.Builder mNotificationBuilder;
+    private static GoogleApiClient mGoogleApiClient;
 
     /* For use with stopSelfResult() */
     private int mStartId;
@@ -64,6 +76,15 @@ public class CountdownService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+
+        Log.v("MTG", "onStartCommand");
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient.connect();
 
         /* Register the broadcast receiver */
         registerReceiver(mBroadcastReceiver,
@@ -73,8 +94,11 @@ public class CountdownService extends Service {
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+        Intent broadcast = new Intent(OngoingNotificationListenerService.BROADCAST_ACTION);
+        broadcast.putExtra(FamiliarConstants.KEY_END_TIME, FamiliarConstants.CANCEL_FROM_WEAR);
+        PendingIntent broadcastPendingIntent = PendingIntent.getBroadcast(this, 0, broadcast, 0);
+
         /* Build the initial notification */
-        /* TODO add a button to cancel the timer? */
         mNotificationBuilder = new Notification.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
@@ -84,7 +108,11 @@ public class CountdownService extends Service {
                         .setBackground(BitmapFactory
                                 .decodeResource(this.getResources(), R.drawable.background))
                         .setHintHideIcon(true)
-                        .setContentIcon(R.mipmap.ic_launcher));
+                        .setContentIcon(R.mipmap.ic_launcher)
+                .addAction(new Notification.Action(
+                        R.mipmap.ic_launcher,
+                        getString(R.string.cancel),
+                        broadcastPendingIntent)));
 
         /* Process the initial intent. This will create the notification */
         processIntent(intent);
@@ -94,6 +122,13 @@ public class CountdownService extends Service {
 
         /* Return, making sure to restart with the same intent if the service is killed */
         return Service.START_REDELIVER_INTENT;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.v("MTG", "onDestroy");
+        mGoogleApiClient.disconnect();
     }
 
     /**
@@ -145,10 +180,32 @@ public class CountdownService extends Service {
             mNotificationManager.cancel(NOTIFICATION_ID);
 
             long endTime = extras.getLong(FamiliarConstants.KEY_END_TIME);
-            if (endTime == 0) {
+            if (endTime == FamiliarConstants.CANCEL_FROM_MOBILE ||
+                    endTime == FamiliarConstants.CANCEL_FROM_WEAR) {
                 /* an end time of 0 means kill the notification */
                 unregisterReceiver(mBroadcastReceiver);
                 CountdownService.this.stopSelfResult(mStartId);
+                /* And tell the app in case this was canceled on the app */
+                if (endTime == FamiliarConstants.CANCEL_FROM_WEAR) {
+                    Log.v("MTG", "cancel button");
+                    /* This came from the cancel button, so tell the mobile */
+                    if (mGoogleApiClient.isConnected()) {
+                        PutDataMapRequest putDataMapReq = PutDataMapRequest.create(FamiliarConstants.PATH);
+                        putDataMapReq.getDataMap().putLong(FamiliarConstants.KEY_END_TIME,
+                                FamiliarConstants.CANCEL_FROM_WEAR);
+                        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+                        PendingResult<DataApi.DataItemResult> pendingResult =
+                                Wearable.DataApi.putDataItem(mGoogleApiClient, putDataReq);
+                        pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+                            @Override
+                            public void onResult(DataApi.DataItemResult dataItemResult) {
+                                Log.v("MTG", "onResult: " + dataItemResult.getStatus().getStatusMessage());
+                            }
+                        });
+
+                        Log.v("MTG", "message sent");
+                    }
+                }
             } else {
                 /* Display the notification */
                 mNotificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
@@ -223,5 +280,20 @@ public class CountdownService extends Service {
                 mCountDownTimer.start();
             }
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.v("MTG", "gAPI onConnected");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.v("MTG", "gAPI onConnectionSuspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.v("MTG", "gAPI onConnectionFailed");
     }
 }

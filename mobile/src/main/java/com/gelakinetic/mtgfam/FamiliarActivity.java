@@ -196,6 +196,8 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
                     PutDataRequest request = putDataMapRequest.asPutDataRequest();
                     Wearable.DataApi.putDataItem(mGoogleApiClient, request);
                 }
+            } else if(s.equals(getString(R.string.key_currentRoundTimer))) {
+                mRoundEndTime = mPreferenceAdapter.getRoundTimerEnd();
             }
         }
     };
