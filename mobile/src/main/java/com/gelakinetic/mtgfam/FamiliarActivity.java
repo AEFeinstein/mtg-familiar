@@ -97,19 +97,14 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
-import com.google.android.gms.wearable.Wearable;
 import com.octo.android.robospice.SpiceManager;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-public class FamiliarActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, OnConnectionFailedListener {
+public class FamiliarActivity extends AppCompatActivity {
     /* Tags for fragments */
     public static final String DIALOG_TAG = "dialog";
     public static final String FRAGMENT_TAG = "fragment";
@@ -179,25 +174,6 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
                 cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
                 cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
                 addImageCache(getSupportFragmentManager(), cacheParams);
-            } else if(s.equals(getString(R.string.key_fiveMinutePref)) ||
-                    s.equals(getString(R.string.key_tenMinutePref)) ||
-                    s.equals(getString(R.string.key_fifteenMinutePref))) {
-                if (mGoogleApiClient.isConnected()) {
-                    PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(FamiliarConstants.PATH);
-
-                    // Add data to the request
-                    putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_FIVE_MINUTE_WARNING,
-                            mPreferenceAdapter.getFiveMinutePref());
-                    putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_TEN_MINUTE_WARNING,
-                            mPreferenceAdapter.getTenMinutePref());
-                    putDataMapRequest.getDataMap().putBoolean(FamiliarConstants.KEY_FIFTEEN_MINUTE_WARNING,
-                            mPreferenceAdapter.getFifteenMinutePref());
-
-                    PutDataRequest request = putDataMapRequest.asPutDataRequest();
-                    Wearable.DataApi.putDataItem(mGoogleApiClient, request);
-                }
-            } else if(s.equals(getString(R.string.key_currentRoundTimer))) {
-                mRoundEndTime = mPreferenceAdapter.getRoundTimerEnd();
             }
         }
     };
@@ -574,7 +550,7 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
                     try {
                         mSpiceManager.removeAllDataFromCache();
                     } catch (NullPointerException e) {
-					    /* eat it. tasty */
+                        /* eat it. tasty */
                     }
                     if (lastVersion != 0) {
                         showDialogFragment(DIALOG_CHANGE_LOG);
@@ -604,7 +580,7 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
                     }
                 }
             } catch (PackageManager.NameNotFoundException e) {
-			    /* Eat it, don't show change log */
+                /* Eat it, don't show change log */
             }
         }
 
@@ -629,9 +605,6 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
         /* Set up app indexing */
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(AppIndex.API)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
                 .build();
 
         if (!mGoogleApiClient.isConnected()) {
@@ -673,10 +646,10 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
                             shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
                         }
                         cursor.close();
-                        if(args.size() == 0) {
+                        if (args.size() == 0) {
                             throw new Exception("Not Found");
                         }
-                    } else if((queryParam = data.getQueryParameter("name")) != null) {
+                    } else if ((queryParam = data.getQueryParameter("name")) != null) {
                         Cursor cursor = CardDbAdapter.fetchCardByName(queryParam,
                                 new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
                         if (cursor.getCount() != 0) {
@@ -1568,21 +1541,6 @@ public class FamiliarActivity extends AppCompatActivity implements GoogleApiClie
             mImageCache.close();
             mImageCache = null;
         }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        // TODO
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // TODO
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        // TODO
     }
 
     /**
