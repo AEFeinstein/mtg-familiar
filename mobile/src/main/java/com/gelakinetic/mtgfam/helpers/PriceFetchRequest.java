@@ -35,7 +35,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 
     private final String mCardName;
     private final String mSetCode;
-    private final int mMultiverseID;
+    private int mMultiverseID;
     private final Context mContext;
     private String mCardType;
     private String mCardNumber;
@@ -85,15 +85,15 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
     @SuppressWarnings("SpellCheckingInspection")
     @Override
     public PriceInfo loadDataFromNetwork() throws SpiceException {
-        boolean isAscending = false, firstHalf = false, secondHalf = false;
         int retry = MAX_NUM_RETRIES; /* try the fetch up to eight times, for different accent mark & split card combos*/
         /* then the same for multicard ordering */
         SpiceException exception = null; /* Save the exception during while loops */
         SQLiteDatabase database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
+        int multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
         while (retry > 0) {
             try {
                 /* If the card number wasn't given, figure it out */
-                if (mCardNumber == null || mCardType == null) {
+                if (mCardNumber == null || mCardType == null || mMultiverseID == -1) {
                     Cursor c = CardDbAdapter.fetchCardByNameAndSet(mCardName, mSetCode, CardDbAdapter.allData, database);
 
                     if (mCardNumber == null) {
@@ -104,6 +104,13 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                         mCardType = c.getString(c.getColumnIndex(CardDbAdapter.KEY_TYPE));
                     }
 
+                    if(mMultiverseID == -1) {
+                        mMultiverseID = CardDbAdapter.getSplitMultiverseID(mCardName, mSetCode, database);
+                        if (mMultiverseID == -1) {
+                            c.close();
+                            throw new FamiliarDbException(null);
+                        }
+                    }
                     c.close();
                 }
 
@@ -111,48 +118,35 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                 String tcgName = CardDbAdapter.getTcgName(mSetCode, database);
                 /* Figure out the tcgCardName, which is tricky for split cards */
                 String tcgCardName;
-                int multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
 
 				/* Set up retries for multicard ordering */
                 if (multiCardType != CardDbAdapter.NOPE) {
                     /* Next time try the other order */
                     switch (retry % (MAX_NUM_RETRIES / 2)) {
                         case 0:
-                            isAscending = false;
-                            firstHalf = false;
-                            secondHalf = false;
+                            /* Try just the a side */
+                            tcgCardName = CardDbAdapter.getTransformName(mSetCode, mCardNumber.replace("b", "a"), database);
                             break;
                         case 3:
-                            isAscending = true;
-                            firstHalf = false;
-                            secondHalf = false;
+                            /* Try just the b side */
+                            tcgCardName = CardDbAdapter.getTransformName(mSetCode, mCardNumber.replace("a", "b"), database);
                             break;
                         case 2:
-                            isAscending = false;
-                            firstHalf = true;
-                            secondHalf = false;
+                            /* Try the combined name in one direction */
+                            tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, true, database);
                             break;
                         case 1:
-                            isAscending = false;
-                            firstHalf = false;
-                            secondHalf = true;
+                            /* Try the combined name in the other direction */
+                            tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, false, database);
+                            break;
+                        default:
+                            /* Something went wrong */
+                            tcgCardName = mCardName;
                             break;
                     }
                 }
-
-                if ((multiCardType == CardDbAdapter.TRANSFORM) && mCardNumber.contains("b")) {
-                    tcgCardName = CardDbAdapter.getTransformName(mSetCode, mCardNumber.replace("b", "a"), database);
-                } else if (mMultiverseID == -1 && (multiCardType == CardDbAdapter.SPLIT ||
-                        multiCardType == CardDbAdapter.FUSE)) {
-                    int multiID = CardDbAdapter.getSplitMultiverseID(mCardName, mSetCode, database);
-                    if (multiID == -1) {
-                        throw new FamiliarDbException(null);
-                    }
-                    tcgCardName = CardDbAdapter.getSplitName(multiID, isAscending, firstHalf, secondHalf, database);
-                } else if (mMultiverseID != -1 && (multiCardType == CardDbAdapter.SPLIT ||
-                        multiCardType == CardDbAdapter.FUSE)) {
-                    tcgCardName = CardDbAdapter.getSplitName(mMultiverseID, firstHalf, secondHalf, isAscending, database);
-                } else {
+                else {
+                    /* This isn't a multicard */
                     tcgCardName = mCardName;
                 }
 
