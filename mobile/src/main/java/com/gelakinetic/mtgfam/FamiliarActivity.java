@@ -641,9 +641,9 @@ public class FamiliarActivity extends AppCompatActivity {
                         Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
                                 new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
                         if (cursor.getCount() != 0) {
+                            isDeepLink = true;
                             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
                                     new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                            shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
                         }
                         cursor.close();
                         if (args.size() == 0) {
@@ -653,9 +653,9 @@ public class FamiliarActivity extends AppCompatActivity {
                         Cursor cursor = CardDbAdapter.fetchCardByName(queryParam,
                                 new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
                         if (cursor.getCount() != 0) {
+                            isDeepLink = true;
                             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
                                     new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                            shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
                         }
                         cursor.close();
                         if (args.size() == 0) {
