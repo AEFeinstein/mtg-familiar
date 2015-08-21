@@ -131,8 +131,8 @@
 <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
 <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
 <string name="main_whats_new_text">
-- Dodano wyszukiwanie przy użyciu numeru karty ('collector's number')&lt;br&gt;
-- Dodano 'color indicator' &lt;br&gt;
+- Dodano wyszukiwanie przy użyciu numeru karty (\'collector\'s number\')&lt;br&gt;
+- Dodano \'color indicator\' &lt;br&gt;
 - Naprawiono błędy
 </string>
 <string name="main_whats_new_title">Nowości</string>
@@ -375,5 +375,5 @@
     <string name="filter_title_view_card">Pokaż kartę</string>
     <string name="wishlist_export_title">Wyeksportować nazwy setów?</string>
     <string name="wishlist_export_text">Czy chcesz dołączyć nazwy setów do eksportowanej Listy Życzeń?</string>
-    <string name="search_collectors_number">Collector's Number</string>
+    <string name="search_collectors_number">Collector\'s Number</string>
 </resources>
