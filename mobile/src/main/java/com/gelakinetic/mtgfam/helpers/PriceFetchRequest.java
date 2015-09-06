@@ -93,14 +93,14 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         while (retry > 0) {
             try {
                 /* If the card number wasn't given, figure it out */
-                if (mCardNumber == null || mCardType == null || mMultiverseID == -1) {
+                if (mCardNumber == null || mCardNumber.equals("") || mCardType == null || mCardType.equals("") || mMultiverseID == -1) {
                     Cursor c = CardDbAdapter.fetchCardByNameAndSet(mCardName, mSetCode, CardDbAdapter.allData, database);
 
-                    if (mCardNumber == null) {
+                    if (mCardNumber == null || mCardNumber.equals("")) {
                         mCardNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
                     }
 
-                    if (mCardType == null) {
+                    if (mCardType == null || mCardType.equals("")) {
                         mCardType = c.getString(c.getColumnIndex(CardDbAdapter.KEY_TYPE));
                     }
 
