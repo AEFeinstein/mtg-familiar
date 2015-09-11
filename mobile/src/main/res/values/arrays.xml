@@ -191,6 +191,8 @@
         <item>@string/pref_Japanese</item>
         <item>@string/pref_Russian</item>
         <item>@string/pref_German</item>
+        <item>@string/pref_Portuguese</item>
+        <item>@string/pref_Chinese</item>
     </string-array>
     <string-array name="card_language_values">
         <item>en</item>
@@ -200,6 +202,8 @@
         <item>jp</item>
         <item>ru</item>
         <item>de</item>
+        <item>pt</item>
+        <item>cn</item>
     </string-array>
     <string-array name="pref_language">
         <item>@string/pref_English</item>

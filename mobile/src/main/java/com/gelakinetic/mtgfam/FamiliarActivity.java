@@ -160,11 +160,11 @@ public class FamiliarActivity extends AppCompatActivity {
                         new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
                 sendBroadcast(intent);
-            } else if (s.equals(getString(R.string.key_theme)) || s.endsWith(getString(R.string.key_language))) {
+            } else if (s.equals(getString(R.string.key_theme)) || s.equals(getString(R.string.key_language))) {
                 /* Restart the activity for theme & language changes */
                 FamiliarActivity.this.finish();
                 startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
-            } else if (s.endsWith(getString(R.string.key_imageCacheSize))) {
+            } else if (s.equals(getString(R.string.key_imageCacheSize))) {
                 /* Close the old cache */
                 mImageCache.flush();
                 mImageCache.close();
