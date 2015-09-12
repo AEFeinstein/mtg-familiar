@@ -73,7 +73,6 @@ public class WishlistFragment extends FamiliarFragment {
 
     /* Sort type constants */
     private static final int SORT_TYPE_NONE = 0;
-    private int wishlistSortType = SORT_TYPE_NONE;  //Type to sort list by (e.g. Name)
     private static final int SORT_TYPE_CMC = 1;
     private static final int SORT_TYPE_COLOR = 2;
     private static final int SORT_TYPE_NAME = 3;
@@ -86,7 +85,8 @@ public class WishlistFragment extends FamiliarFragment {
     private boolean mShowCardInfo;
     private boolean mShowIndividualPrices;
     private boolean mShowTotalWishlistPrice;
-    private int wishlistSortOrder;  //ASCENDING v DESCENDING
+    private int mWishlistSortType = SORT_TYPE_NONE;  //Type to sort list by (e.g. Name)
+    private int mWishlistSortOrder;  //ASCENDING v DESCENDING
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
@@ -500,7 +500,7 @@ public class WishlistFragment extends FamiliarFragment {
                     case DIALOG_SORT: {
                         return new AlertDialogPro.Builder(this.getActivity())
                                 .setTitle(R.string.wishlist_sort_by)
-                                .setSingleChoiceItems(R.array.wishlist_sort_type, wishlistSortType, null)
+                                .setSingleChoiceItems(R.array.wishlist_sort_type, mWishlistSortType, null)
                                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
@@ -508,17 +508,17 @@ public class WishlistFragment extends FamiliarFragment {
                                 })
                                 .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        wishlistSortOrder = ASCENDING;
+                                        mWishlistSortOrder = ASCENDING;
                                         ListView lw = ((AlertDialog) dialog).getListView();
-                                        wishlistSortType = lw.getCheckedItemPosition();
+                                        mWishlistSortType = lw.getCheckedItemPosition();
                                         sortWishlist();
                                     }
                                 })
                                 .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        wishlistSortOrder = DESCENDING;
+                                        mWishlistSortOrder = DESCENDING;
                                         ListView lw = ((AlertDialog) dialog).getListView();
-                                        wishlistSortType = lw.getCheckedItemPosition();
+                                        mWishlistSortType = lw.getCheckedItemPosition();
                                         sortWishlist();
                                     }
                                 })
@@ -687,13 +687,13 @@ public class WishlistFragment extends FamiliarFragment {
     }
 
     /**
-     * Sorts the wishlist based on wishlistSortType and wishlistSortOrder
+     * Sorts the wishlist based on mWishlistSortType and mWishlistSortOrder
      */
     private void sortWishlist() {
 		/* If no sort type specified, return */
-        if (wishlistSortType != SORT_TYPE_NONE) {
-            if (wishlistSortOrder == ASCENDING) {
-                switch (wishlistSortType) {
+        if (mWishlistSortType != SORT_TYPE_NONE) {
+            if (mWishlistSortOrder == ASCENDING) {
+                switch (mWishlistSortType) {
                     case SORT_TYPE_CMC:
                         Collections.sort(mCompressedWishlist, new WishlistComparatorCmc());
                         break;
@@ -711,7 +711,7 @@ public class WishlistFragment extends FamiliarFragment {
                         break;
                 }
             } else {
-                switch (wishlistSortType) {
+                switch (mWishlistSortType) {
                     case SORT_TYPE_CMC:
                         Collections.sort(mCompressedWishlist, Collections.reverseOrder(new WishlistComparatorCmc()));
                         break;

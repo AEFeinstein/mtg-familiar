@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.gelakinetic.mtgfam.R;
@@ -111,7 +112,7 @@ public class MtgCard {
 
     }
 
-    public MtgCard(String name, String tcgName, String setCode, int numberOf, String message, String number, boolean foil) {
+    public MtgCard(String name, String tcgName, String setCode, int numberOf, String message, String number, boolean foil, String color, int cmc) {
         this.name = name;
         this.number = number;
         this.setCode = setCode;
@@ -122,6 +123,8 @@ public class MtgCard {
         this.rarity = (char) (int) '-';
         this.customPrice = false;
         this.foil = foil;
+        this.color = color;
+        this.cmc = cmc;
     }
 
     public static MtgCard MtgCardFromTradeString(String line, Context context) {
@@ -144,8 +147,27 @@ public class MtgCard {
         }
         card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
 
-		/* Defaults regardless */
         SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false);
+
+        if(parts.length > 7) {
+            card.cmc = Integer.parseInt(parts[7]);
+            card.color = parts[8];
+        }
+        else {
+            /* Pull from db */
+            try {
+                Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, new String[]{
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR}, database);
+                card.cmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
+                card.color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
+            } catch (FamiliarDbException e) {
+                card.cmc = 0;
+                card.color = "";
+            }
+        }
+
+		/* Defaults regardless */
         try {
             card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
         } catch (FamiliarDbException e) {
@@ -163,7 +185,15 @@ public class MtgCard {
     }
 
     public String toTradeString(int side) {
-        return side + DELIMITER + this.name + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.customPrice + DELIMITER + this.price + DELIMITER + this.foil + '\n';
+        return  side + DELIMITER +
+                this.name + DELIMITER +
+                this.setCode + DELIMITER +
+                this.numberOf + DELIMITER +
+                this.customPrice + DELIMITER +
+                this.price + DELIMITER +
+                this.foil + DELIMITER +
+                this.cmc +DELIMITER +
+                this.color + '\n';
     }
 
     /**

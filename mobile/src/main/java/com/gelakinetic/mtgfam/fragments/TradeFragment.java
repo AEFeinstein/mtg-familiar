@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +48,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -74,6 +77,7 @@ public class TradeFragment extends FamiliarFragment {
     private static final int DIALOG_DELETE_TRADE = 5;
     private static final int DIALOG_CONFIRMATION = 6;
     private static final int DIALOG_CHANGE_SET = 7;
+    private static final int DIALOG_SORT = 8;
 
     /* Save file constants */
     private static final String AUTOSAVE_NAME = "autosave";
@@ -96,6 +100,18 @@ public class TradeFragment extends FamiliarFragment {
     /* Settings */
     private int mPriceSetting;
     private String mCurrentTrade = "";
+
+    /* For sorting */
+    private static final int SORT_TYPE_NONE = 0;
+    private static final int SORT_TYPE_CMC = 1;
+    private static final int SORT_TYPE_COLOR = 2;
+    private static final int SORT_TYPE_NAME = 3;
+    private static final int SORT_TYPE_PRICE = 4;
+    private static final int SORT_TYPE_SET = 5;
+    private static final int ASCENDING = 0;
+    private static final int DESCENDING = 1;
+    private int mSortOrder;
+    private int mSortType;
 
     /**
      * Initialize the view and set up the button actions
@@ -199,7 +215,8 @@ public class TradeFragment extends FamiliarFragment {
         }
 
 		/* Get the card info from the UI */
-        String cardName, setCode, setName, cardNumber;
+        String cardName, setCode, setName, cardNumber, color;
+        int cmc;
         cardName = mNameEditText.getText().toString();
         String numberOfFromField = mNumberEditText.getText().toString();
         boolean foil = mCheckboxFoil.isChecked();
@@ -219,6 +236,8 @@ public class TradeFragment extends FamiliarFragment {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC, /* For sorting */
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR, /* For sorting */
                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, database);
 
 			/* Make sure there was a database hit */
@@ -236,13 +255,15 @@ public class TradeFragment extends FamiliarFragment {
             if (foil && !CardDbAdapter.canBeFoil(setCode, database)) {
                 foil = false;
             }
+            cmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
+            color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
 
 			/* Clean up */
             cardCursor.close();
 
 			/* Create the card, add it to a list, start a price fetch */
             MtgCard data = new MtgCard(cardName, setName, setCode, numberOf, getString(R.string.wishlist_loading),
-                    cardNumber, foil);
+                    cardNumber, foil, color, cmc);
             switch (side) {
                 case LEFT: {
                     mLeftList.add(0, data);
@@ -268,6 +289,9 @@ public class TradeFragment extends FamiliarFragment {
             handleFamiliarDbException(false);
         }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+
+        /* Sort the newly added card */
+        sortTrades(mSortType, mSortOrder);
     }
 
     /**
@@ -277,6 +301,8 @@ public class TradeFragment extends FamiliarFragment {
     public void onResume() {
         super.onResume();
         mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
+        mSortOrder = getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder();
+        mSortType = getFamiliarActivity().mPreferenceAdapter.getTradeSortType();
         /* Try to load the autosave trade, the function will handle FileNotFoundException */
         LoadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
     }
@@ -287,6 +313,8 @@ public class TradeFragment extends FamiliarFragment {
     @Override
     public void onPause() {
         super.onPause();
+        getFamiliarActivity().mPreferenceAdapter.setTradeSortOrder(mSortOrder);
+        getFamiliarActivity().mPreferenceAdapter.setTradeSortType(mSortType);
         SaveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
     }
 
@@ -791,6 +819,33 @@ public class TradeFragment extends FamiliarFragment {
                                 .setCancelable(true)
                                 .create();
                     }
+                    case DIALOG_SORT: {
+                        return new AlertDialogPro.Builder(this.getActivity())
+                                .setTitle(R.string.wishlist_sort_by)
+                                .setSingleChoiceItems(R.array.wishlist_sort_type, mSortType, null)
+                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mSortOrder = ASCENDING;
+                                        ListView lw = ((AlertDialog) dialog).getListView();
+                                        mSortType = lw.getCheckedItemPosition();
+                                        sortTrades(mSortType, mSortOrder);
+                                    }
+                                })
+                                .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mSortOrder = DESCENDING;
+                                        ListView lw = ((AlertDialog) dialog).getListView();
+                                        mSortType = lw.getCheckedItemPosition();
+                                        sortTrades(mSortType, mSortOrder);
+                                    }
+                                })
+                                .setCancelable(true).create();
+                    }
                     default: {
                         return DontShowDialog();
                     }
@@ -798,6 +853,54 @@ public class TradeFragment extends FamiliarFragment {
             }
         };
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+    }
+
+    /**
+     * Sort the trades
+     */
+    private void sortTrades(int sortType, int sortOrder) {
+		/* If no sort type specified, return */
+        if (sortType != SORT_TYPE_NONE) {
+            if (sortOrder == ASCENDING) {
+                switch (sortType) {
+                    case SORT_TYPE_CMC:
+                        Collections.sort(mLeftList, new TradeComparatorCmc());
+                        break;
+                    case SORT_TYPE_COLOR:
+                        Collections.sort(mLeftList, new TradeComparatorColor());
+                        break;
+                    case SORT_TYPE_NAME:
+                        Collections.sort(mLeftList, new TradeComparatorName());
+                        break;
+                    case SORT_TYPE_PRICE:
+                        Collections.sort(mLeftList, new TradeComparatorPrice());
+                        break;
+                    case SORT_TYPE_SET:
+                        Collections.sort(mLeftList, new TradeComparatorSet());
+                        break;
+                }
+            } else {
+                switch (sortType) {
+                    case SORT_TYPE_CMC:
+                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorCmc()));
+                        break;
+                    case SORT_TYPE_COLOR:
+                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorColor()));
+                        break;
+                    case SORT_TYPE_NAME:
+                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorName()));
+                        break;
+                    case SORT_TYPE_PRICE:
+                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorPrice()));
+                        break;
+                    case SORT_TYPE_SET:
+                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorSet()));
+                        break;
+                }
+            }
+            mLeftAdapter.notifyDataSetChanged();
+            mRightAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -877,7 +980,7 @@ public class TradeFragment extends FamiliarFragment {
             if (side == LEFT || side == BOTH) {
                 int totalPrice = 0;
                 boolean hasBadValues = false;
-			/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
+			    /* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
                 for (MtgCard data : mLeftList) {
                     if (data.hasPrice()) {
                         totalPrice += data.numberOf * data.price;
@@ -886,7 +989,7 @@ public class TradeFragment extends FamiliarFragment {
                     }
                 }
 
-			/* Set the color whether all values are loaded, and write the text */
+			    /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
                         this.getActivity().getResources().getColor(R.color.material_red_500) :
                         this.getActivity().getResources().getColor(
@@ -897,7 +1000,7 @@ public class TradeFragment extends FamiliarFragment {
             if (side == RIGHT || side == BOTH) {
                 int totalPrice = 0;
                 boolean hasBadValues = false;
-			/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
+		    	/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
                 for (MtgCard data : mRightList) {
                     if (data.hasPrice()) {
                         totalPrice += data.numberOf * data.price;
@@ -906,7 +1009,7 @@ public class TradeFragment extends FamiliarFragment {
                     }
                 }
 
-			/* Set the color whether all values are loaded, and write the text */
+		    	/* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
                         this.getActivity().getResources().getColor(R.color.material_red_500) :
                         this.getActivity().getResources().getColor(
@@ -942,6 +1045,10 @@ public class TradeFragment extends FamiliarFragment {
                 return true;
             case R.id.trader_menu_delete:
                 showDialog(DIALOG_DELETE_TRADE, 0, 0);
+                return true;
+            case R.id.trader_menu_sort:
+				/* Show a dialog to change the sort criteria the list uses */
+                showDialog(DIALOG_SORT, 0, 0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -1065,6 +1172,9 @@ public class TradeFragment extends FamiliarFragment {
                             if (mPriceFetchRequests == 0 && TradeFragment.this.isAdded()) {
                                 getFamiliarActivity().clearLoading();
                             }
+                            if(mSortType == SORT_TYPE_PRICE) {
+                                sortTrades(mSortType, mSortOrder);
+                            }
                         }
                     }
             );
@@ -1131,6 +1241,110 @@ public class TradeFragment extends FamiliarFragment {
                 }
             }
             return convertView;
+        }
+    }
+    
+    /* Comparators for sorting */
+    
+    /* Comparator based on converted mana cost */
+    public static class TradeComparatorCmc implements Comparator<MtgCard> {
+        @Override
+        public int compare(MtgCard wish1, MtgCard wish2) {
+            if (wish1.cmc == wish2.cmc) {
+                return wish1.name.compareTo(wish2.name);
+            } else if (wish1.cmc > wish2.cmc) {
+                return 1;
+            }
+            return -1;
+        }
+    }
+
+    /* Comparator based on color */
+    public static class TradeComparatorColor implements Comparator<MtgCard> {
+        private static final String colors = "WUBRG";
+        private static final String nonColors = "LAC";
+
+        /* Filters a color string to only include chars representing colors (e.g. "LG" (Dryad Arbor) will return "G"). */
+        public String getColors(String c) {
+            String validColors = "";
+            //1. Catch null/empty string
+            if (c == null || c.isEmpty()) {
+                return "";
+            }
+            //2. For each char, if a valid color, add to return String
+            for (int i = 0; i < c.length(); i++) {
+                if (colors.indexOf(c.charAt(i)) > -1) {
+                    validColors += c.charAt(i);
+                }
+            }
+            return validColors;
+        }
+
+        @Override
+        public int compare(MtgCard wish1, MtgCard wish2) {
+            String colors1 = getColors(wish1.color);
+            String colors2 = getColors(wish2.color);
+            int priority1;
+            int priority2;
+            //1. If colorless, perform colorless comparison
+            if (colors1.length() + colors2.length() == 0) {
+                colors1 = wish1.color;
+                colors2 = wish2.color;
+                for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
+                    priority1 = nonColors.indexOf(colors1.charAt(i));
+                    priority2 = nonColors.indexOf(colors2.charAt(i));
+                    if (priority1 != priority2) {
+                        return priority1 < priority2 ? -1 : 1;
+                    }
+                }
+                return wish1.name.compareTo(wish2.name);
+            }
+            //2. Else compare based on number of colors
+            if (colors1.length() < colors2.length()) {
+                return -1;
+            } else if (colors1.length() > colors2.length()) {
+                return 1;
+            }
+            //3. Else if same number of colors exist, compare based on WUBRG-ness
+            else {
+                for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
+                    priority1 = colors.indexOf(colors1.charAt(i));
+                    priority2 = colors.indexOf(colors2.charAt(i));
+                    if (priority1 != priority2) {
+                        return priority1 < priority2 ? -1 : 1;
+                    }
+                }
+                return wish1.name.compareTo(wish2.name);
+            }
+        }
+    }
+
+    /* Comparator based on name */
+    public static class TradeComparatorName implements Comparator<MtgCard> {
+        @Override
+        public int compare(MtgCard wish1, MtgCard wish2) {
+            return wish1.name.compareTo(wish2.name);
+        }
+    }
+
+    /* Comparator based on first set of a card */
+    public static class TradeComparatorSet implements Comparator<MtgCard> {
+        @Override
+        public int compare(MtgCard wish1, MtgCard wish2) {
+            return wish1.setName.compareTo(wish2.setName);
+        }
+    }
+
+    /* Comparator based on price */
+    public static class TradeComparatorPrice implements Comparator<MtgCard> {
+        @Override
+        public int compare(MtgCard wish1, MtgCard wish2) {
+            if (wish1.price == wish2.price) {
+                return wish1.name.compareTo(wish2.name);
+            } else if (wish1.price > wish2.price) {
+                return 1;
+            }
+            return -1;
         }
     }
 }

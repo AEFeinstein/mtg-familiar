@@ -455,4 +455,22 @@ public class PreferenceAdapter {
         return this.prefs.getInt(context.getString(R.string.key_imageCacheSize), 12);
     }
 
+    public void setTradeSortOrder(int tradeSortOrder) {
+        this.edit.putInt(context.getString(R.string.key_trade_sort_order), tradeSortOrder);
+        this.edit.commit();
+    }
+
+    public int getTradeSortOrder() {
+        return this.prefs.getInt(context.getString(R.string.key_trade_sort_order), 0);
+    }
+
+    public void setTradeSortType(int tradeSortType) {
+        this.edit.putInt(context.getString(R.string.key_trade_sort_type), tradeSortType);
+        this.edit.commit();
+    }
+
+    public int getTradeSortType() {
+        return this.prefs.getInt(context.getString(R.string.key_trade_sort_type), 0);
+    }
+
 }

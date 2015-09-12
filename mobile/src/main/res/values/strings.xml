@@ -268,6 +268,7 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="trader_Average">Average</string>
     <string name="trader_High">High</string>
     <string name="trader_pricing_dialog_title">Price Options</string>
+    <string name="trader_sort">Sort Trade</string>
 
     <!-- Wishlist activity -->
     <string name="wishlist_name">Name</string>
