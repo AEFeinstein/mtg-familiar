@@ -370,7 +370,7 @@ public abstract class ImageWorker {
                     && !mExitTasksEarly) {
                 try {
                     bitmap = mImageCache.getBitmapFromDiskCache(dataString);
-                } catch(NullPointerException e) {
+                } catch (NullPointerException e) {
                     bitmap = null;
                 }
             }

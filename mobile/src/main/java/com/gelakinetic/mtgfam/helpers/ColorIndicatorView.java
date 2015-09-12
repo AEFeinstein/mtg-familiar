@@ -35,10 +35,10 @@ public class ColorIndicatorView extends View {
     /**
      * Create a color indicator view
      *
-     * @param context The context
-     * @param dimen   The width & height of the view, in pixels
-     * @param border  How thick the border should be, in pixels
-     * @param color   A string of characters representing colors
+     * @param context  The context
+     * @param dimen    The width & height of the view, in pixels
+     * @param border   How thick the border should be, in pixels
+     * @param color    A string of characters representing colors
      * @param manacost The mana cost of this card. If it matches the color, don't make an indicator
      */
     public ColorIndicatorView(Context context, int dimen, int border, String color, String manacost) {
@@ -51,7 +51,7 @@ public class ColorIndicatorView extends View {
         manacost = sanitizeString(manacost);
         color = sanitizeString(color);
 
-        if(color.equals(manacost)) {
+        if (color.equals(manacost)) {
             /* Color matches manacost, don't bother with an indicator */
             return;
         }
@@ -90,7 +90,7 @@ public class ColorIndicatorView extends View {
      * @param canvas A canvas to draw on
      */
     protected void onDraw(Canvas canvas) {
-        if(mBackground != null) {
+        if (mBackground != null) {
             mBackground.draw(canvas);
         }
         for (ShapeDrawable shape : mDrawableShapes) {
@@ -102,6 +102,7 @@ public class ColorIndicatorView extends View {
 
     /**
      * Returns whether or not the indicator should be shown
+     *
      * @return true if it should be shown, false otherwise
      */
     public boolean shouldInidcatorBeShown() {
@@ -110,6 +111,7 @@ public class ColorIndicatorView extends View {
 
     /**
      * Given a color or mana cost string, remove all non-color & duplicate chars
+     *
      * @param str A mana cost or color string
      * @return The sanitized string
      */
@@ -119,8 +121,7 @@ public class ColorIndicatorView extends View {
         Arrays.fill(colors, false);
 
         for (int i = 0; i < str.length(); i++) {
-            switch(str.charAt(i))
-            {
+            switch (str.charAt(i)) {
                 case 'w':
                     colors[0] = true;
                     break;
@@ -142,8 +143,7 @@ public class ColorIndicatorView extends View {
         StringBuilder sb = new StringBuilder(5);
         for (int i = 0; i < colors.length; i++) {
             if (colors[i]) {
-                switch(i)
-                {
+                switch (i) {
                     case 0:
                         sb.append('w');
                         break;

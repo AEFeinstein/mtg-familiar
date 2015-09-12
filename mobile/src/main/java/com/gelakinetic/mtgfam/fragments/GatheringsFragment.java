@@ -240,7 +240,7 @@ public class GatheringsFragment extends FamiliarFragment {
                                                     existingGatheringFile, getActivity().getFilesDir());
 
                                             if (gatheringName.equals(givenName)) {
-												/* Show a dialog if the gathering already exists */
+                                                /* Show a dialog if the gathering already exists */
                                                 existing = true;
                                                 mProposedGathering = gatheringName;
                                                 showDialog(DIALOG_GATHERING_EXIST);

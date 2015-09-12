@@ -266,7 +266,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
     public int getPositionForSection(int section) {
         try {
             return mAlphaIndexer.getPositionForSection(section); /* use the indexer */
-        } catch(IllegalStateException e) {
+        } catch (IllegalStateException e) {
             return 0;
         }
     }

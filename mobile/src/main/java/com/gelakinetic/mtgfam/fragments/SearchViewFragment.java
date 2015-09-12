@@ -346,7 +346,7 @@ public class SearchViewFragment extends FamiliarFragment {
         if (searchCriteria.artist.length() == 0) {
             searchCriteria.artist = null;
         }
-        if(searchCriteria.collectorsNumber.length() == 0) {
+        if (searchCriteria.collectorsNumber.length() == 0) {
             searchCriteria.collectorsNumber = null;
         }
 
@@ -766,7 +766,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 };
                 try {
                     /* Build the dialogs to display format, rarity, and set choices. The arrays were already filled in
-					   onCreate() */
+                       onCreate() */
                     switch (id) {
                         case SET_LIST: {
                             mSetDialog = new AlertDialogPro.Builder(this.getActivity()).setTitle(R.string.search_sets)

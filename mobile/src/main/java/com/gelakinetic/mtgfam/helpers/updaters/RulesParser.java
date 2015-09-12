@@ -172,7 +172,7 @@ class RulesParser {
                 /* Parse the line */
                 if (line.length() == 0) {
                     if (currentTerm != null) {
-						/* Term is over and we have one; add it to the list and null it */
+                        /* Term is over and we have one; add it to the list and null it */
                         mGlossary.add(currentTerm);
                         currentTerm = null;
                     }

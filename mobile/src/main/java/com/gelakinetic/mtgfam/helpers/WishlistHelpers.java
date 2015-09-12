@@ -558,7 +558,7 @@ public class WishlistHelpers {
                         }
                     }
                 } catch (NullPointerException e) {
-					/* eat it, no price is loaded */
+                    /* eat it, no price is loaded */
                 }
             }
 

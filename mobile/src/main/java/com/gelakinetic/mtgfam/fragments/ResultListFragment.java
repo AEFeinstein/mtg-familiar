@@ -307,7 +307,7 @@ public class ResultListFragment extends FamiliarFragment {
      *
      * @param id The id of the card to display, or -1 for a random card
      */
-    private void startCardViewFrag(long id) throws FamiliarDbException{
+    private void startCardViewFrag(long id) throws FamiliarDbException {
         try {
             Bundle args = new Bundle();
             int cardPosition = 0;
@@ -370,7 +370,7 @@ public class ResultListFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-		/* Handle item selection */
+        /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.search_menu_random_search:
                 try {

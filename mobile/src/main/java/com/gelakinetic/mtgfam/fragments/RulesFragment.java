@@ -286,7 +286,7 @@ public class RulesFragment extends FamiliarFragment {
                         }
                     });
                 } else {
-					/* Cursor had a size of 0, boring */
+                    /* Cursor had a size of 0, boring */
                     cursor.close();
                     if (!isBanned) {
                         ToastWrapper.makeText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT).show();

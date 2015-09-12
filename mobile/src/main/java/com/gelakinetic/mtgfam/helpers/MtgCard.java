@@ -149,11 +149,10 @@ public class MtgCard {
 
         SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false);
 
-        if(parts.length > 7) {
+        if (parts.length > 7) {
             card.cmc = Integer.parseInt(parts[7]);
             card.color = parts[8];
-        }
-        else {
+        } else {
             /* Pull from db */
             try {
                 Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, new String[]{
@@ -185,14 +184,14 @@ public class MtgCard {
     }
 
     public String toTradeString(int side) {
-        return  side + DELIMITER +
+        return side + DELIMITER +
                 this.name + DELIMITER +
                 this.setCode + DELIMITER +
                 this.numberOf + DELIMITER +
                 this.customPrice + DELIMITER +
                 this.price + DELIMITER +
                 this.foil + DELIMITER +
-                this.cmc +DELIMITER +
+                this.cmc + DELIMITER +
                 this.color + '\n';
     }
 

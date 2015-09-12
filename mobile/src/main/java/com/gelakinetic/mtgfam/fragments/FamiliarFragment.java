@@ -248,7 +248,7 @@ public abstract class FamiliarFragment extends Fragment {
                 ToastWrapper.makeText(getActivity(), getString(R.string.error_database), ToastWrapper.LENGTH_LONG).show();
             }
         });
-		/* Finish the fragment if requested */
+        /* Finish the fragment if requested */
         if (shouldFinish) {
 			/* will be correct for nested ViewPager fragments too */
             FragmentManager fm = getActivity().getSupportFragmentManager();

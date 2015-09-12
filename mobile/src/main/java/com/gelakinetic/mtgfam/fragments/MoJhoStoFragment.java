@@ -189,7 +189,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
      */
     private void showDialog(final int id) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
-		currently showing dialog, so make our own transaction and take care of that here. */
+        currently showing dialog, so make our own transaction and take care of that here. */
 
 		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
@@ -304,7 +304,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
                     CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, cmc, logic, null, null, null,
                     null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, null, false, returnTypes, true, database);
 
-            if(permanents == null) {
+            if (permanents == null) {
                 throw new FamiliarDbException(new Exception("permanents failure"));
             }
 
@@ -344,7 +344,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
                     CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, -1, null, null, null, null,
                     null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, null, false, returnTypes, true, database);
 
-            if(spells == null) {
+            if (spells == null) {
                 throw new FamiliarDbException(new Exception("three spell failure"));
             }
 			/* Get 3 random, distinct numbers */

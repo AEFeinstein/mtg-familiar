@@ -226,7 +226,7 @@ public class WishlistFragment extends FamiliarFragment {
             if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
                 card.foil = false;
             }
-			/* Clean up */
+            /* Clean up */
             cardCursor.close();
 
 			/* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */

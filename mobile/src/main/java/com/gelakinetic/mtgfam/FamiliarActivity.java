@@ -586,7 +586,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
 		/* Run the updater service if there is a network connection */
         if (getNetworkState(false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
-			/* Only update the banning list if it hasn't been updated recently */
+            /* Only update the banning list if it hasn't been updated recently */
             long curTime = System.currentTimeMillis();
             int updateFrequency = Integer.valueOf(mPreferenceAdapter.getUpdateFrequency());
             int lastLegalityUpdate = mPreferenceAdapter.getLastLegalityUpdate();

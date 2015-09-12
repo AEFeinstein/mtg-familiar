@@ -193,7 +193,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                     }
                 }
             } else {
-				/* Fall back to ringtone */
+                /* Fall back to ringtone */
                 Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
                 Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
                 r.play();

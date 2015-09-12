@@ -603,13 +603,12 @@ public class CardViewFragment extends FamiliarFragment {
                 TypedValue.COMPLEX_UNIT_SP, 22, getResources().getDisplayMetrics());
 
         mColorIndicatorLayout.removeAllViews();
-        ColorIndicatorView civ = new ColorIndicatorView(this.getActivity(), dimension, dimension/15,
+        ColorIndicatorView civ = new ColorIndicatorView(this.getActivity(), dimension, dimension / 15,
                 cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)), sCost);
-        if(civ.shouldInidcatorBeShown()) {
+        if (civ.shouldInidcatorBeShown()) {
             mColorIndicatorLayout.setVisibility(View.VISIBLE);
             mColorIndicatorLayout.addView(civ);
-        }
-        else {
+        } else {
             mColorIndicatorLayout.setVisibility(View.GONE);
         }
 
@@ -1059,7 +1058,7 @@ public class CardViewFragment extends FamiliarFragment {
         super.onPrepareOptionsMenu(menu);
 
         MenuItem mi;
-		/* If the image has been loaded to the main page, remove the menu option for image */
+        /* If the image has been loaded to the main page, remove the menu option for image */
         if (loadTo == MAIN_PAGE && mCardBitmap != null) {
             mi = menu.findItem(R.id.image);
             if (mi != null) {

@@ -346,7 +346,7 @@ public class TradeFragment extends FamiliarFragment {
                 setShowsDialog(true);
                 switch (id) {
                     case DIALOG_UPDATE_CARD: {
-						/* Get some final references */
+                        /* Get some final references */
                         final ArrayList<MtgCard> lSide = (sideForDialog == LEFT ? mLeftList : mRightList);
                         final TradeListAdapter aaSide = (sideForDialog == LEFT ? mLeftAdapter : mRightAdapter);
                         final boolean oldFoil = lSide.get(positionForDialog).foil;
@@ -378,7 +378,7 @@ public class TradeFragment extends FamiliarFragment {
                                 view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
                             }
                         } catch (FamiliarDbException e) {
-							/* Err on the side of foil */
+                            /* Err on the side of foil */
                             foilCheckbox.setVisibility(View.VISIBLE);
                         }
                         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
@@ -412,7 +412,7 @@ public class TradeFragment extends FamiliarFragment {
                             @Override
                             public void onClick(View v) {
                                 lSide.get(positionForDialog).customPrice = false;
-								/* This loads the price if necessary, or uses cached info */
+                                /* This loads the price if necessary, or uses cached info */
                                 loadPrice(lSide.get(positionForDialog), aaSide);
                                 int price = lSide.get(positionForDialog).price;
                                 priceText.setText(String.format("%d.%02d", price / 100, price % 100));
@@ -430,7 +430,7 @@ public class TradeFragment extends FamiliarFragment {
                             public void onClick(View v) {
                                 SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                                 try {
-									/* Get the card ID, and send it to a new CardViewPagerFragment */
+                                    /* Get the card ID, and send it to a new CardViewPagerFragment */
                                     Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
                                             lSide.get(positionForDialog).setCode, new String[]{
                                                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
@@ -1172,7 +1172,7 @@ public class TradeFragment extends FamiliarFragment {
                             if (mPriceFetchRequests == 0 && TradeFragment.this.isAdded()) {
                                 getFamiliarActivity().clearLoading();
                             }
-                            if(mSortType == SORT_TYPE_PRICE) {
+                            if (mSortType == SORT_TYPE_PRICE) {
                                 sortTrades(mSortType, mSortOrder);
                             }
                         }
@@ -1245,7 +1245,7 @@ public class TradeFragment extends FamiliarFragment {
     }
     
     /* Comparators for sorting */
-    
+
     /* Comparator based on converted mana cost */
     public static class TradeComparatorCmc implements Comparator<MtgCard> {
         @Override

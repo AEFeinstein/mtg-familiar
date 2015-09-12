@@ -299,7 +299,7 @@ public class LcPlayer {
                     }
                     mCommanderReadoutTextView = (TextView) mCommanderRowView.findViewById(R.id.player_readout);
                 }
-				/* otherwise hide the commander casting button */
+                /* otherwise hide the commander casting button */
                 else {
                     mView.findViewById(R.id.commanderCastText).setVisibility(View.GONE);
                     mCommanderCastingButton.setVisibility(View.GONE);

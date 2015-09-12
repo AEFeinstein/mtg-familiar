@@ -150,7 +150,7 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
         try {
             return cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
         } catch (Exception e) {
-			/* If there is any problem, return the empty string */
+            /* If there is any problem, return the empty string */
             return "";
         }
     }

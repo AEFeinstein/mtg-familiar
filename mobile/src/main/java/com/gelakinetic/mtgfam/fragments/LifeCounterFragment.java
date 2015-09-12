@@ -363,7 +363,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 showDialog(DIALOG_REMOVE_PLAYER);
                 return true;
             case R.id.announce_life:
-				/* Vocalize the current life totals */
+                /* Vocalize the current life totals */
                 announceLifeTotals();
                 return true;
             case R.id.edit_gatherings:

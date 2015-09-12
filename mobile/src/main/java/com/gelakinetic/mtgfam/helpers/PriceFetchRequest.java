@@ -104,7 +104,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                         mCardType = c.getString(c.getColumnIndex(CardDbAdapter.KEY_TYPE));
                     }
 
-                    if(mMultiverseID == -1) {
+                    if (mMultiverseID == -1) {
                         mMultiverseID = CardDbAdapter.getSplitMultiverseID(mCardName, mSetCode, database);
                         if (mMultiverseID == -1) {
                             c.close();
@@ -144,8 +144,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                             tcgCardName = mCardName;
                             break;
                     }
-                }
-                else {
+                } else {
                     /* This isn't a multicard */
                     tcgCardName = mCardName;
                 }

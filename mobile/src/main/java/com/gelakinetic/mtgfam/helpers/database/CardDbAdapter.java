@@ -671,7 +671,7 @@ public class CardDbAdapter {
                                     + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%") + ")";
                         else
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_ABILITY + " LIKE " + sanitizeString("%"+s+"%") + ")";
+                                    + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%") + ")";
                     }
                     break;
                 case 1:
@@ -1630,7 +1630,7 @@ public class CardDbAdapter {
     private static Cursor query(String selection, String[] selectionArgs,
                                 String[] columns, SQLiteDatabase mDb) throws FamiliarDbException {
         /*
-		 * The SQLiteBuilder provides a map for all possible columns requested
+         * The SQLiteBuilder provides a map for all possible columns requested
 		 * to actual columns in the database, creating a simple column alias
 		 * mechanism by which the ContentProvider does not need to know the real
 		 * column names
@@ -1803,10 +1803,10 @@ public class CardDbAdapter {
     }
 
     /**
-     * @param multiverseId  The multiverse id to search for
-     * @param isAscending   Whether the query should be sorted in ascending or descending order
-     * @param mDb           The database to search
-     * @return              A String name
+     * @param multiverseId The multiverse id to search for
+     * @param isAscending  Whether the query should be sorted in ascending or descending order
+     * @param mDb          The database to search
+     * @return A String name
      * @throws FamiliarDbException
      */
     public static String getSplitName(int multiverseId, boolean isAscending, SQLiteDatabase mDb) throws FamiliarDbException {
@@ -1915,7 +1915,7 @@ public class CardDbAdapter {
      */
     public static int isMultiCard(String number, String setCode) {
         if (number.contains("a") || number.contains("b")) {
-            if (setCode.compareTo("ISD") == 0 || setCode.compareTo("DKA") == 0|| setCode.compareTo("ORI") == 0) {
+            if (setCode.compareTo("ISD") == 0 || setCode.compareTo("DKA") == 0 || setCode.compareTo("ORI") == 0) {
                 return TRANSFORM;
             } else if (setCode.compareTo("DGM") == 0) {
                 return FUSE;
@@ -1966,6 +1966,7 @@ public class CardDbAdapter {
 
     /**
      * Sanitize a string for both SQL and "Ae" characters
+     *
      * @param input
      * @return
      */
