@@ -101,7 +101,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     }
 
                     if (mCardType == null || mCardType.equals("")) {
-                        mCardType = c.getString(c.getColumnIndex(CardDbAdapter.KEY_TYPE));
+                        mCardType = CardDbAdapter.getTypeLine(c);
                     }
 
                     if (mMultiverseID == -1) {

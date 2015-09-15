@@ -463,12 +463,12 @@ public class CardViewFragment extends FamiliarFragment {
         mFlavorTextView.setText(csFlavor);
 
         mNameTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)));
-        mCardType = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_TYPE));
+        mCardType = CardDbAdapter.getTypeLine(cCardById);
         mTypeTextView.setText(mCardType);
         mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
         mArtistTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
 
-        addToDescription(getString(R.string.search_type), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_TYPE)));
+        addToDescription(getString(R.string.search_type), CardDbAdapter.getTypeLine(cCardById));
         addToDescription(getString(R.string.search_artist), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
 
         int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));

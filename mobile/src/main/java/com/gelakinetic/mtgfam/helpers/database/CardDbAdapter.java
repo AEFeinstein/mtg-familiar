@@ -54,7 +54,7 @@ import java.util.zip.GZIPInputStream;
 @SuppressWarnings("JavaDoc")
 public class CardDbAdapter {
 
-    public static final int DATABASE_VERSION = 62;
+    public static final int DATABASE_VERSION = 63;
 
     public static final int STAR = -1000;
     public static final int ONE_PLUS_STAR = -1001;
@@ -73,7 +73,8 @@ public class CardDbAdapter {
     public static final String KEY_ID = "_id";
     public static final String KEY_NAME = SearchManager.SUGGEST_COLUMN_TEXT_1; // "name";
     public static final String KEY_SET = "expansion";
-    public static final String KEY_TYPE = "type";
+    public static final String KEY_SUPERTYPE = "supertype";
+    public static final String KEY_SUBTYPE = "subtype";
     public static final String KEY_ABILITY = "cardtext";
     public static final String KEY_COLOR = "color";
     public static final String KEY_MANACOST = "manacost";
@@ -87,12 +88,12 @@ public class CardDbAdapter {
     public static final String KEY_NUMBER = "number";
     public static final String[] allData = {DATABASE_TABLE_CARDS + "." + KEY_ID,
             DATABASE_TABLE_CARDS + "." + KEY_NAME, DATABASE_TABLE_CARDS + "." + KEY_SET,
-            DATABASE_TABLE_CARDS + "." + KEY_NUMBER, DATABASE_TABLE_CARDS + "." + KEY_TYPE,
+            DATABASE_TABLE_CARDS + "." + KEY_NUMBER, DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE,
             DATABASE_TABLE_CARDS + "." + KEY_MANACOST, DATABASE_TABLE_CARDS + "." + KEY_ABILITY,
             DATABASE_TABLE_CARDS + "." + KEY_POWER, DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS,
             DATABASE_TABLE_CARDS + "." + KEY_LOYALTY, DATABASE_TABLE_CARDS + "." + KEY_RARITY,
             DATABASE_TABLE_CARDS + "." + KEY_FLAVOR, DATABASE_TABLE_CARDS + "." + KEY_CMC,
-            DATABASE_TABLE_CARDS + "." + KEY_COLOR
+            DATABASE_TABLE_CARDS + "." + KEY_COLOR, DATABASE_TABLE_CARDS + "." + KEY_SUBTYPE
     };
     public static final String KEY_MULTIVERSEID = "multiverseID";
     public static final String KEY_CODE = "code";
@@ -140,7 +141,8 @@ public class CardDbAdapter {
     public static final String DATABASE_CREATE_CARDS = "create table "
             + DATABASE_TABLE_CARDS + "(" + KEY_ID
             + " integer primary key autoincrement, " + KEY_NAME
-            + " text not null, " + KEY_SET + " text not null, " + KEY_TYPE
+            + " text not null, " + KEY_SET + " text not null, " + KEY_SUPERTYPE
+            + " text not null, " + KEY_SUBTYPE
             + " text not null, " + KEY_RARITY + " integer, " + KEY_MANACOST
             + " text, " + KEY_CMC + " integer not null, " + KEY_POWER
             + " real, " + KEY_TOUGHNESS + " real, " + KEY_LOYALTY
@@ -205,7 +207,19 @@ public class CardDbAdapter {
 
         initialValues.put(KEY_NAME, c.name);
         initialValues.put(KEY_SET, c.set);
-        initialValues.put(KEY_TYPE, c.type);
+        String types[] = c.type.split("\\s*-\\s*");
+        if(types.length > 0) {
+            initialValues.put(KEY_SUPERTYPE, types[0]);
+        }
+        else {
+            initialValues.put(KEY_SUPERTYPE, "");
+        }
+        if(types.length > 1) {
+            initialValues.put(KEY_SUBTYPE, types[1]);
+        }
+        else {
+            initialValues.put(KEY_SUBTYPE, "");
+        }
         initialValues.put(KEY_RARITY, (int) c.rarity);
         initialValues.put(KEY_MANACOST, c.manaCost);
         initialValues.put(KEY_CMC, c.cmc);
@@ -323,7 +337,7 @@ public class CardDbAdapter {
     public static Cursor fetchCard(long id, SQLiteDatabase mDb)
             throws FamiliarDbException {
 
-        String columns[] = new String[]{KEY_ID, KEY_NAME, KEY_SET, KEY_TYPE,
+        String columns[] = new String[]{KEY_ID, KEY_NAME, KEY_SET, KEY_SUPERTYPE, KEY_SUBTYPE,
                 KEY_RARITY, KEY_MANACOST, KEY_CMC, KEY_POWER,
                 KEY_TOUGHNESS, KEY_LOYALTY, KEY_ABILITY, KEY_FLAVOR,
                 KEY_ARTIST, KEY_NUMBER, KEY_COLOR, KEY_MULTIVERSEID};
@@ -491,7 +505,7 @@ public class CardDbAdapter {
             String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                 if (name != null && name.equals(cwi.mCard.name)) {
-                    cwi.mCard.type = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_TYPE));
+                    cwi.mCard.type = getTypeLine(cursor);
                     cwi.mCard.rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
                     cwi.mCard.manaCost = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
                     cwi.mCard.power = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
@@ -742,10 +756,10 @@ public class CardDbAdapter {
                     for (String s : supertypesParts) {
                         if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_TYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%") + ")";
+                                    + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%") + ")";
                         else
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_TYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
                     }
                     break;
                 case 1:
@@ -756,25 +770,25 @@ public class CardDbAdapter {
 
                             if (s.contains(EXCLUDE_TOKEN))
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_TYPE + " NOT LIKE "
+                                        + KEY_SUPERTYPE + " NOT LIKE "
                                         + sanitizeString("%" + s.substring(1) + "%") + ")";
                             else
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_TYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                        + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
                         } else if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_TYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
+                                    + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
                                     + ")";
                         else
                             statement += " OR (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_TYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
                     }
                     statement += ")";
                     break;
                 case 2:
                     for (String s : supertypesParts) {
                         statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                + KEY_TYPE + " NOT LIKE " + sanitizeString("%" + s + "%") + ")";
+                                + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s + "%") + ")";
                     }
                     break;
                 default:
@@ -791,11 +805,11 @@ public class CardDbAdapter {
                     for (String s : subtypesParts) {
                         if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_TYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
+                                    + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
                                     + ")";
                         else
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_TYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
                     }
                     break;
                 case 1:
@@ -805,25 +819,25 @@ public class CardDbAdapter {
                             firstRun = false;
                             if (s.contains(EXCLUDE_TOKEN))
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_TYPE + " NOT LIKE "
+                                        + KEY_SUBTYPE + " NOT LIKE "
                                         + sanitizeString("%" + s.substring(1) + "%") + ")";
                             else
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_TYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                        + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
                         } else if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_TYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
+                                    + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
                                     + ")";
                         else
                             statement += " OR (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_TYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
                     }
                     statement += ")";
                     break;
                 case 2:
                     for (String s : subtypesParts) {
                         statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                + KEY_TYPE + " NOT LIKE " + sanitizeString("%" + s + "%") + ")";
+                                + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s + "%") + ")";
                     }
                     break;
                 default:
@@ -1016,10 +1030,10 @@ public class CardDbAdapter {
                 /* Otherwise filter silver bordered cards, giant cards */
                 statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UNH'" +
                         " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UG'" +
-                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Plane %'" +
-                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Conspiracy%'" +
-                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE '%Scheme%'" +
-                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_TYPE + " NOT LIKE 'Vanguard%'";
+                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Plane'" +
+                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Conspiracy'" +
+                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE '%Scheme'" +
+                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Vanguard'";
             }
 
             numLegalSetCursor.close();
@@ -1974,5 +1988,18 @@ public class CardDbAdapter {
         return DatabaseUtils.sqlEscapeString(input
                 .replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0])
                 .trim());
+    }
+
+    public static String getTypeLine(Cursor cCardById) {
+        StringBuilder typeLine = new StringBuilder();
+        String supertype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUPERTYPE));
+        String subtype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUBTYPE));
+
+        typeLine.append(supertype);
+        if(subtype.length() > 0) {
+            typeLine.append(" - ");
+            typeLine.append(subtype);
+        }
+        return typeLine.toString();
     }
 }

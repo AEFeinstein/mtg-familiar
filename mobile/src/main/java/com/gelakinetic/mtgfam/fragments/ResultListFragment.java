@@ -65,8 +65,8 @@ public class ResultListFragment extends FamiliarFragment {
 
 		/* All the things we may want to display */
         String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_SET,
-                CardDbAdapter.KEY_RARITY, CardDbAdapter.KEY_MANACOST, CardDbAdapter.KEY_TYPE, CardDbAdapter.KEY_ABILITY,
-                CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS, CardDbAdapter.KEY_LOYALTY,
+                CardDbAdapter.KEY_RARITY, CardDbAdapter.KEY_MANACOST, CardDbAdapter.KEY_SUPERTYPE, CardDbAdapter.KEY_SUBTYPE,
+                CardDbAdapter.KEY_ABILITY, CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS, CardDbAdapter.KEY_LOYALTY,
                 CardDbAdapter.KEY_NUMBER};
 
         Bundle args = this.getArguments();
@@ -273,7 +273,8 @@ public class ResultListFragment extends FamiliarFragment {
                 toList.add(R.id.cardcost);
             }
             if (getFamiliarActivity().mPreferenceAdapter.getTypePref()) {
-                fromList.add(CardDbAdapter.KEY_TYPE);
+                /* This will handle both sub and super type */
+                fromList.add(CardDbAdapter.KEY_SUPERTYPE);
                 toList.add(R.id.cardtype);
             }
             if (getFamiliarActivity().mPreferenceAdapter.getAbilityPref()) {
