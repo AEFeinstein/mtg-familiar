@@ -99,8 +99,6 @@ public class CardDbAdapter {
     };
     public static final String KEY_MULTIVERSEID = "multiverseID";
     public static final String KEY_CODE = "code";
-    private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
-    private static final String KEY_FORMAT = "format";
     public static final String KEY_LEGALITY = "legality";
     public static final String KEY_CATEGORY = "category";
     public static final String KEY_SUBCATEGORY = "subcategory";
@@ -117,6 +115,8 @@ public class CardDbAdapter {
     public static final int TRANSFORM = 1;
     public static final int FUSE = 2;
     public static final int SPLIT = 3;
+    private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
+    private static final String KEY_FORMAT = "format";
     private static final String DATABASE_TABLE_FORMATS = "formats";
     private static final String DATABASE_CREATE_FORMATS = "create table "
             + DATABASE_TABLE_FORMATS + "(" + KEY_ID
@@ -210,16 +210,14 @@ public class CardDbAdapter {
         initialValues.put(KEY_NAME, c.name);
         initialValues.put(KEY_SET, c.set);
         String types[] = c.type.split("\\s*-\\s*");
-        if(types.length > 0) {
+        if (types.length > 0) {
             initialValues.put(KEY_SUPERTYPE, types[0]);
-        }
-        else {
+        } else {
             initialValues.put(KEY_SUPERTYPE, "");
         }
-        if(types.length > 1) {
+        if (types.length > 1) {
             initialValues.put(KEY_SUBTYPE, types[1]);
-        }
-        else {
+        } else {
             initialValues.put(KEY_SUBTYPE, "");
         }
         initialValues.put(KEY_RARITY, (int) c.rarity);
@@ -524,7 +522,7 @@ public class CardDbAdapter {
             cursor.moveToNext();
         }
 
-		/* Use the cursor to populate stuff */
+        /* Use the cursor to populate stuff */
         cursor.close();
     }
 
@@ -1016,11 +1014,11 @@ public class CardDbAdapter {
         String tbl = DATABASE_TABLE_CARDS;
         if (format != null) {
 
-			/* Check if the format is eternal or not, by the number of legal sets */
+            /* Check if the format is eternal or not, by the number of legal sets */
             String numLegalSetsSql = "SELECT * FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = \"" + format + "\"";
             Cursor numLegalSetCursor = mDb.rawQuery(numLegalSetsSql, null);
 
-			/* If the format is not eternal, filter by set */
+            /* If the format is not eternal, filter by set */
             if (numLegalSetCursor.getCount() > 0) {
                 tbl = "(" + DATABASE_TABLE_CARDS + " JOIN "
                         + DATABASE_TABLE_LEGAL_SETS + " ON "
@@ -1310,7 +1308,7 @@ public class CardDbAdapter {
             Cursor c = mDb.rawQuery(sql, null);
             c.moveToFirst();
 
-			/* Some users had this cursor come up empty. I couldn't replicate. This is safe */
+            /* Some users had this cursor come up empty. I couldn't replicate. This is safe */
             if (c.getCount() == 0) {
                 c.close();
                 return "";
@@ -1647,10 +1645,10 @@ public class CardDbAdapter {
                                 String[] columns, SQLiteDatabase mDb) throws FamiliarDbException {
         /*
          * The SQLiteBuilder provides a map for all possible columns requested
-		 * to actual columns in the database, creating a simple column alias
-		 * mechanism by which the ContentProvider does not need to know the real
-		 * column names
-		 */
+         * to actual columns in the database, creating a simple column alias
+         * mechanism by which the ContentProvider does not need to know the real
+         * column names
+         */
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DATABASE_TABLE_CARDS);
         builder.setProjectionMap(mColumnMap);
@@ -1687,10 +1685,10 @@ public class CardDbAdapter {
 
         return query(selection, selectionArgs, columns, mDb);
 
-		/*
-		 * This builds a query that looks like: SELECT <columns> FROM <table>
-		 * WHERE rowid = <rowId>
-		 */
+        /*
+         * This builds a query that looks like: SELECT <columns> FROM <table>
+         * WHERE rowid = <rowId>
+         */
     }
 
     /**
@@ -1998,7 +1996,7 @@ public class CardDbAdapter {
         String subtype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUBTYPE));
 
         typeLine.append(supertype);
-        if(subtype.length() > 0) {
+        if (subtype.length() > 0) {
             typeLine.append(" - ");
             typeLine.append(subtype);
         }

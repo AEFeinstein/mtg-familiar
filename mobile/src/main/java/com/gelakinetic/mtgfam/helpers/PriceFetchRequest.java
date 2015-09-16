@@ -33,10 +33,11 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 
+    private static final int MAX_NUM_RETRIES = 8;
     private final String mCardName;
     private final String mSetCode;
-    private int mMultiverseID;
     private final Context mContext;
+    private int mMultiverseID;
     private String mCardType;
     private String mCardNumber;
 
@@ -73,8 +74,6 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         InputSource is = new InputSource(new StringReader(xml));
         return builder.parse(is);
     }
-
-    private static final int MAX_NUM_RETRIES = 8;
 
     /**
      * This runs as a service, builds the TCGplayer.com URL, fetches the data, and parses the XML
@@ -114,12 +113,12 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     c.close();
                 }
 
-				/* Get the TCGplayer.com set name, why can't everything be consistent? */
+                /* Get the TCGplayer.com set name, why can't everything be consistent? */
                 String tcgName = CardDbAdapter.getTcgName(mSetCode, database);
                 /* Figure out the tcgCardName, which is tricky for split cards */
                 String tcgCardName;
 
-				/* Set up retries for multicard ordering */
+                /* Set up retries for multicard ordering */
                 if (multiCardType != CardDbAdapter.NOPE) {
                     /* Next time try the other order */
                     switch (retry % (MAX_NUM_RETRIES / 2)) {
@@ -149,24 +148,24 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     tcgCardName = mCardName;
                 }
 
-				/* Retry with accent marks removed */
+                /* Retry with accent marks removed */
                 if (retry <= MAX_NUM_RETRIES / 2) {
                     tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
                 }
 
-				/* Build the URL */
+                /* Build the URL */
                 URL priceUrl = new URL("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=MTGFAMILIA&s=" +
                         URLEncoder.encode(tcgName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") + "&p=" +
                         URLEncoder.encode(tcgCardName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") +
                         URLEncoder.encode((mCardType.startsWith("Basic Land") ? " (" + mCardNumber + ")" : ""), "UTF-8")
                 );
 
-				/* Fetch the information from the web */
+                /* Fetch the information from the web */
                 HttpURLConnection urlConnection = (HttpURLConnection) priceUrl.openConnection();
                 String result = IOUtils.toString(urlConnection.getInputStream());
                 urlConnection.disconnect();
 
-				/* Parse the XML */
+                /* Parse the XML */
                 Document document = loadXMLFromString(result);
                 Element element = document.getDocumentElement();
 
@@ -178,7 +177,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     pi.mFoilAverage = Double.parseDouble(getString("foilavgprice", element));
                     pi.mUrl = getString("link", element);
 
-					/* Some cards, like FTV, only have a foil price. This fixed problems down the road */
+                    /* Some cards, like FTV, only have a foil price. This fixed problems down the road */
                     if (pi.mLow == 0 && pi.mAverage == 0 && pi.mHigh == 0 && pi.mFoilAverage != 0) {
                         pi.mLow = pi.mFoilAverage;
                         pi.mAverage = pi.mFoilAverage;

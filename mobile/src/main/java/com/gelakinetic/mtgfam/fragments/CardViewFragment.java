@@ -173,7 +173,7 @@ public class CardViewFragment extends FamiliarFragment {
     public void onDestroy() {
         super.onDestroy();
 
-		/* Pass a non-null bundle to the ResultListFragment so it knows to exit if there was a list of 1 card
+        /* Pass a non-null bundle to the ResultListFragment so it knows to exit if there was a list of 1 card
          * If this wasn't launched by a ResultListFragment, it'll get eaten */
         Bundle args = new Bundle();
         mActivity.setFragmentResult(args);
@@ -395,7 +395,7 @@ public class CardViewFragment extends FamiliarFragment {
             return;
         }
 
-		/* http://magiccards.info/scans/en/mt/55.jpg */
+        /* http://magiccards.info/scans/en/mt/55.jpg */
         mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
         mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
 
@@ -582,7 +582,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
 
-		/* Do we load the image immediately to the main page, or do it in a dialog later? */
+        /* Do we load the image immediately to the main page, or do it in a dialog later? */
         if (loadTo == MAIN_PAGE) {
             mImageScrollView.setVisibility(View.VISIBLE);
             mTextScrollView.setVisibility(View.GONE);
@@ -614,7 +614,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         cCardById.close();
 
-		/* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
+        /* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
            one set */
         Cursor cCardByName;
         try {
@@ -678,14 +678,14 @@ public class CardViewFragment extends FamiliarFragment {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
             return;
         }
 
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             @NotNull
@@ -694,7 +694,7 @@ public class CardViewFragment extends FamiliarFragment {
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
 
-				/* This will be set to false if we are returning a null dialog. It prevents a crash */
+                /* This will be set to false if we are returning a null dialog. It prevents a crash */
                 setShowsDialog(true);
 
                 switch (id) {
@@ -731,11 +731,11 @@ public class CardViewFragment extends FamiliarFragment {
                             return DontShowDialog();
                         }
 
-						/* create the item mapping */
+                        /* create the item mapping */
                         String[] from = new String[]{"format", "status"};
                         int[] to = new int[]{R.id.format, R.id.status};
 
-						/* prepare the list of all records */
+                        /* prepare the list of all records */
                         List<HashMap<String, String>> fillMaps = new ArrayList<>();
                         for (int i = 0; i < mFormats.length; i++) {
                             HashMap<String, String> map = new HashMap<>();
@@ -1065,17 +1065,17 @@ public class CardViewFragment extends FamiliarFragment {
                 menu.removeItem(mi.getItemId());
             }
         }
-		/* This code removes the "change set" button if there is only one set.
-		 * Turns out some users use it to view the full set name when there is only one set/
-		 * I'm leaving it here, but commented, for posterity */
-		/*
- 		if (mSets != null && mSets.size() == 1) {
-			mi = menu.findItem(R.id.changeset);
-			if (mi != null) {
-				menu.removeItem(mi.getItemId());
-			}
-		}
-		*/
+        /* This code removes the "change set" button if there is only one set.
+         * Turns out some users use it to view the full set name when there is only one set/
+         * I'm leaving it here, but commented, for posterity */
+        /*
+         if (mSets != null && mSets.size() == 1) {
+            mi = menu.findItem(R.id.changeset);
+            if (mi != null) {
+                menu.removeItem(mi.getItemId());
+            }
+        }
+        */
     }
 
     /**
@@ -1140,7 +1140,7 @@ public class CardViewFragment extends FamiliarFragment {
 
                 FileOutputStream fStream = new FileOutputStream(fPath);
 
-				/* If the card is displayed, there's a real good chance it's cached */
+                /* If the card is displayed, there's a real good chance it's cached */
                 String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
                 if (cardLanguage == null) {
                     cardLanguage = "en";
@@ -1153,7 +1153,7 @@ public class CardViewFragment extends FamiliarFragment {
                     bmpImage = null;
                 }
 
-				/* Check if this is an english only image */
+                /* Check if this is an english only image */
                 if (bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
                     imageKey = Integer.toString(mMultiverseId) + "en";
                     try {
@@ -1163,7 +1163,7 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                 }
 
-				/* nope, not here */
+                /* nope, not here */
                 if (bmpImage == null) {
                     mToastString = getString(R.string.card_view_no_image);
                     return null;
@@ -1224,11 +1224,11 @@ public class CardViewFragment extends FamiliarFragment {
                             mLegalities[i] = getString(R.string.card_view_legal);
                             break;
                         case CardDbAdapter.RESTRICTED:
-							/* For backwards compatibility, we list cards that are legal
-							 * in commander, but can't be the commander as Restricted in
-							 * the legality file.  This prevents older version of the app
-							 * from throwing an IllegalStateException if we try including
-							 * a new legality. */
+                            /* For backwards compatibility, we list cards that are legal
+                             * in commander, but can't be the commander as Restricted in
+                             * the legality file.  This prevents older version of the app
+                             * from throwing an IllegalStateException if we try including
+                             * a new legality. */
                             if (mFormats[i].equalsIgnoreCase("Commander")) {
                                 mLegalities[i] = getString(R.string.card_view_no_commander);
                             } else {
@@ -1264,7 +1264,7 @@ public class CardViewFragment extends FamiliarFragment {
             try {
                 showDialog(GET_LEGALITY);
             } catch (IllegalStateException e) {
-				/* eat it */
+                /* eat it */
             }
             mActivity.clearLoading();
         }
@@ -1275,12 +1275,9 @@ public class CardViewFragment extends FamiliarFragment {
      */
     private class FetchPictureTask extends AsyncTask<Void, Void, Void> {
 
-        private String error;
-
         int mHeight;
         int mWidth;
         int mBorder;
-
         /* Get the size of the window on the UI thread, not the worker thread */
         final Runnable getWindowSize = new Runnable() {
             @Override
@@ -1297,6 +1294,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
         };
+        private String error;
 
         /**
          * First check www.MagicCards.info for the card image in the user's preferred language
@@ -1362,7 +1360,7 @@ public class CardViewFragment extends FamiliarFragment {
                         getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, mCardBitmap);
 
                     } catch (Exception e) {
-						/* Something went wrong */
+                        /* Something went wrong */
                         try {
                             error = getString(R.string.card_view_image_not_found);
                         } catch (RuntimeException re) {
@@ -1381,7 +1379,7 @@ public class CardViewFragment extends FamiliarFragment {
             }
 
             try {
-				/* 16dp */
+                /* 16dp */
                 mBorder = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
                 if (loadTo == MAIN_PAGE) {
@@ -1416,7 +1414,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
                 bitmap.recycle();
             } catch (Exception e) {
-				/* Some error resizing. Out of memory? */
+                /* Some error resizing. Out of memory? */
             }
             return null;
         }
@@ -1486,12 +1484,12 @@ public class CardViewFragment extends FamiliarFragment {
                     try {
                         showDialog(GET_IMAGE);
                     } catch (IllegalStateException e) {
-						/* eat it */
+                        /* eat it */
                     }
                 } else if (loadTo == MAIN_PAGE) {
                     removeDialog(getFragmentManager());
                     mCardImageView.setImageDrawable(mCardBitmap);
-					/* remove the image load button if it is the main page */
+                    /* remove the image load button if it is the main page */
                     mActivity.supportInvalidateOptionsMenu();
                 }
             } else {
@@ -1586,7 +1584,7 @@ public class CardViewFragment extends FamiliarFragment {
                 try {
                     showDialog(CARD_RULINGS);
                 } catch (IllegalStateException e) {
-					/* eat it */
+                    /* eat it */
                 }
             } else {
                 removeDialog(getFragmentManager());

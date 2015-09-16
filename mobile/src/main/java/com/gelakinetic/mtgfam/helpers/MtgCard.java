@@ -96,7 +96,7 @@ public class MtgCard {
         this.setCode = parts[1];
         this.numberOf = Integer.parseInt(parts[2]);
 
-		/* "foil" didn't exist in earlier versions, so it may not be part of the string */
+        /* "foil" didn't exist in earlier versions, so it may not be part of the string */
         if (parts.length > 3) {
             this.number = parts[3];
         }
@@ -132,13 +132,13 @@ public class MtgCard {
         MtgCard card = new MtgCard();
         String[] parts = line.split(DELIMITER);
 
-		/* Parse these parts out of the string */
+        /* Parse these parts out of the string */
         card.mSide = Integer.parseInt(parts[0]);
         card.name = parts[1];
         card.setCode = parts[2];
         card.numberOf = Integer.parseInt(parts[3]);
 
-		/* These parts may not exist */
+        /* These parts may not exist */
         card.customPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
         if (parts.length > 5) {
             card.price = Integer.parseInt(parts[5]);
@@ -166,7 +166,7 @@ public class MtgCard {
             }
         }
 
-		/* Defaults regardless */
+        /* Defaults regardless */
         try {
             card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
         } catch (FamiliarDbException e) {

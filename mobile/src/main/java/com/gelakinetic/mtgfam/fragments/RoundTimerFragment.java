@@ -94,7 +94,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
 
-		/* Cancel any pending alarms */
+        /* Cancel any pending alarms */
         am.cancel(AlarmPendingIntent);
         am.cancel(fiveMinPI);
         am.cancel(tenMinPI);
@@ -218,7 +218,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                     /* Commit the end time */
                     getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(endTime);
 
-					/* Set the alarm, and any warning alarms if applicable */
+                    /* Set the alarm, and any warning alarms if applicable */
                     setOrCancelAlarms(getActivity(), endTime, true);
                     /* Show the notification */
                     showTimerRunningNotification(getActivity(), endTime);
@@ -296,21 +296,21 @@ public class RoundTimerFragment extends FamiliarFragment {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
             return;
         }
 
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
             @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
 
-				/* This will be set to false if we are returning a null dialog. It prevents a crash */
+                /* This will be set to false if we are returning a null dialog. It prevents a crash */
                 setShowsDialog(true);
 
                 switch (RoundTimerFragment.DIALOG_SET_WARNINGS) {

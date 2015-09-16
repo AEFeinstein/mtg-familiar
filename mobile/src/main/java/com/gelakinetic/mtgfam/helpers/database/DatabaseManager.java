@@ -10,15 +10,72 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DatabaseManager {
 
+    private static final AtomicDatabase mDatabase = new AtomicDatabase(false);
+    private static final AtomicDatabase mTransactionalDatabase = new AtomicDatabase(true);
+
+    /**
+     * Initializes the DatabaseManagers, mDatabaseManager, and stores the singleton DatabaseHelper
+     *
+     * @param context A singleton DatabaseHelper to open databases with, later
+     */
+    public static synchronized void initializeInstance(Context context) {
+        mDatabase.initializeInstance(context);
+        mTransactionalDatabase.initializeInstance(context);
+    }
+
+    /**
+     * Returns a DatabaseManager, in order to open databases
+     *
+     * @param context         A context to construct a DatabaseHelper if necessary
+     * @param isTransactional Whether we should get a transactional instance or not
+     * @return The DatabaseManager
+     */
+    public static synchronized DatabaseManager getInstance(Context context,
+                                                           boolean isTransactional) {
+        if (isTransactional) {
+            return mTransactionalDatabase.getInstance(context);
+
+        } else {
+            return mDatabase.getInstance(context);
+
+        }
+    }
+
+    /**
+     * Opens a database, either a transactional one or not
+     *
+     * @param isTransactional Whether or not this database operation is transactional
+     */
+    public synchronized SQLiteDatabase openDatabase(boolean isTransactional) {
+        if (isTransactional) {
+            return mTransactionalDatabase.openDatabase();
+        } else {
+            return mDatabase.openDatabase();
+        }
+    }
+
+    /**
+     * Close a database opened with this class
+     *
+     * @param isTransactional Whether we should close the transactional database or not
+     */
+    public synchronized void closeDatabase(boolean isTransactional) {
+        if (isTransactional) {
+            mTransactionalDatabase.closeDatabase();
+        } else {
+            mDatabase.closeDatabase();
+        }
+    }
+
     /**
      * Routing all database access through one point failed when the database was accessed while the
      * updater service was running (transactional open). With this private class, there are now two
      * entry points: a writable transactional one, and a readable one.
      */
     private static class AtomicDatabase {
-        private SQLiteDatabase mDatabase;
         private final AtomicInteger mOpenCounter = new AtomicInteger();
         private final boolean mTransactional;
+        private SQLiteDatabase mDatabase;
         private DatabaseManager mDatabaseManager;
         private DatabaseHelper mDatabaseHelper;
 
@@ -87,63 +144,6 @@ public class DatabaseManager {
                 }
                 mDatabase.close();
             }
-        }
-    }
-
-    private static final AtomicDatabase mDatabase = new AtomicDatabase(false);
-    private static final AtomicDatabase mTransactionalDatabase = new AtomicDatabase(true);
-
-    /**
-     * Initializes the DatabaseManagers, mDatabaseManager, and stores the singleton DatabaseHelper
-     *
-     * @param context A singleton DatabaseHelper to open databases with, later
-     */
-    public static synchronized void initializeInstance(Context context) {
-        mDatabase.initializeInstance(context);
-        mTransactionalDatabase.initializeInstance(context);
-    }
-
-    /**
-     * Returns a DatabaseManager, in order to open databases
-     *
-     * @param context         A context to construct a DatabaseHelper if necessary
-     * @param isTransactional Whether we should get a transactional instance or not
-     * @return The DatabaseManager
-     */
-    public static synchronized DatabaseManager getInstance(Context context,
-                                                           boolean isTransactional) {
-        if (isTransactional) {
-            return mTransactionalDatabase.getInstance(context);
-
-        } else {
-            return mDatabase.getInstance(context);
-
-        }
-    }
-
-    /**
-     * Opens a database, either a transactional one or not
-     *
-     * @param isTransactional Whether or not this database operation is transactional
-     */
-    public synchronized SQLiteDatabase openDatabase(boolean isTransactional) {
-        if (isTransactional) {
-            return mTransactionalDatabase.openDatabase();
-        } else {
-            return mDatabase.openDatabase();
-        }
-    }
-
-    /**
-     * Close a database opened with this class
-     *
-     * @param isTransactional Whether we should close the transactional database or not
-     */
-    public synchronized void closeDatabase(boolean isTransactional) {
-        if (isTransactional) {
-            mTransactionalDatabase.closeDatabase();
-        } else {
-            mDatabase.closeDatabase();
         }
     }
 }

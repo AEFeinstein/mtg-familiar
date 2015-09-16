@@ -52,7 +52,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 Ringtone r = RingtoneManager.getRingtone(context, ringURI);
                 r.play();
 
-				/* Change the notification to show that the round ended */
+                /* Change the notification to show that the round ended */
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
                 Notification notification = builder
                         .setSmallIcon(R.drawable.notification_icon)
@@ -198,7 +198,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
                 r.play();
             }
-			/* The ringtone has played, so stop the service */
+            /* The ringtone has played, so stop the service */
             stopSelf();
         }
 
@@ -209,7 +209,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
          */
         @Override
         public void onUtteranceCompleted(String s) {
-			/* The TTS is done, so release audio focus and stop the service */
+            /* The TTS is done, so release audio focus and stop the service */
             mAudioManager.abandonAudioFocus(this);
             stopSelf();
         }
@@ -221,7 +221,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
          */
         @Override
         public void onAudioFocusChange(int focusChange) {
-			/* don't really care */
+            /* don't really care */
         }
     }
 }

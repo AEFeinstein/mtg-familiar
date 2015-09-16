@@ -116,7 +116,7 @@ public class DbUpdaterService extends IntentService {
                 ArrayList<MtgSet> setsToAdd = new ArrayList<>();
                 ArrayList<CardAndSetParser.NameAndMetadata> tcgNames = new ArrayList<>();
 
-				/* Look for updates with the banned / restricted lists and formats */
+                /* Look for updates with the banned / restricted lists and formats */
                 CardAndSetParser.LegalInfo legalInfo = parser.readLegalityJsonStream(mPrefAdapter);
                 /* Look for new cards */
                 ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
@@ -148,11 +148,11 @@ public class DbUpdaterService extends IntentService {
                 /* Look for new TCGPlayer.com versions of set names */
                 parser.readTCGNameJsonStream(mPrefAdapter, tcgNames);
 
-				/* Parse the rules
+                /* Parse the rules
                  * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
-				 * built. This is a safe assumption to make, since any market release will have the latest database baked
-				 * in.
-				 */
+                 * built. This is a safe assumption to make, since any market release will have the latest database baked
+                 * in.
+                 */
 
                 long lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
 
@@ -165,9 +165,9 @@ public class DbUpdaterService extends IntentService {
                     if (rp.parseRules()) {
                         rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
 
-						/* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
+                        /* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
                          * should let them know and try again next update.
-						 */
+                         */
                         newRulesParsed = true;
                         updatedStuff.add(getString(R.string.update_added_rules));
                     }
@@ -237,7 +237,7 @@ public class DbUpdaterService extends IntentService {
                 commitDates = false; /* don't commit the dates */
             }
 
-			/* Parse the MTR and IPG */
+            /* Parse the MTR and IPG */
             MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);
             if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR)) {
                 updatedStuff.add(getString(R.string.update_added_mtr));
@@ -251,7 +251,7 @@ public class DbUpdaterService extends IntentService {
                 updatedStuff.add(getString(R.string.update_added_jar));
             }
 
-			/* If everything went well so far, commit the date and show the update complete notification */
+            /* If everything went well so far, commit the date and show the update complete notification */
             if (commitDates) {
                 showUpdatedNotification(updatedStuff);
 

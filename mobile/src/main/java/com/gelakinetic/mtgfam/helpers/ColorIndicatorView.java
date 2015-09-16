@@ -11,9 +11,6 @@ import com.gelakinetic.mtgfam.R;
 import java.util.Arrays;
 
 public class ColorIndicatorView extends View {
-    private ShapeDrawable mBackground = null;
-    private ShapeDrawable mDrawableShapes[] = new ShapeDrawable[5];
-
     private static final String COLORS_CHARS[] = {"w", "u", "b", "r", "g"};
     private static final int COLOR_RESOURCES[] = {
             R.color.icon_white,
@@ -22,6 +19,8 @@ public class ColorIndicatorView extends View {
             R.color.icon_red,
             R.color.icon_green
     };
+    private ShapeDrawable mBackground = null;
+    private ShapeDrawable mDrawableShapes[] = new ShapeDrawable[5];
 
     /**
      * Necessary constructor
@@ -85,31 +84,6 @@ public class ColorIndicatorView extends View {
     }
 
     /**
-     * Draw the background, then draw the slices of the indicator
-     *
-     * @param canvas A canvas to draw on
-     */
-    protected void onDraw(Canvas canvas) {
-        if (mBackground != null) {
-            mBackground.draw(canvas);
-        }
-        for (ShapeDrawable shape : mDrawableShapes) {
-            if (shape != null) {
-                shape.draw(canvas);
-            }
-        }
-    }
-
-    /**
-     * Returns whether or not the indicator should be shown
-     *
-     * @return true if it should be shown, false otherwise
-     */
-    public boolean shouldInidcatorBeShown() {
-        return mBackground != null;
-    }
-
-    /**
      * Given a color or mana cost string, remove all non-color & duplicate chars
      *
      * @param str A mana cost or color string
@@ -164,5 +138,30 @@ public class ColorIndicatorView extends View {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Draw the background, then draw the slices of the indicator
+     *
+     * @param canvas A canvas to draw on
+     */
+    protected void onDraw(Canvas canvas) {
+        if (mBackground != null) {
+            mBackground.draw(canvas);
+        }
+        for (ShapeDrawable shape : mDrawableShapes) {
+            if (shape != null) {
+                shape.draw(canvas);
+            }
+        }
+    }
+
+    /**
+     * Returns whether or not the indicator should be shown
+     *
+     * @return true if it should be shown, false otherwise
+     */
+    public boolean shouldInidcatorBeShown() {
+        return mBackground != null;
     }
 }

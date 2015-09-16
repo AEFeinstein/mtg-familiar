@@ -44,12 +44,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
     /* constants for display mode */
     public static final int DISPLAY_NORMAL = 0;
-    private int mDisplayMode = DISPLAY_NORMAL;
     public static final int DISPLAY_COMPACT = 1;
     public static final int DISPLAY_COMMANDER = 2;
     /* constants for stat displaying */
     public final static int STAT_LIFE = 0;
-    private int mStatDisplaying = STAT_LIFE;
     public final static int STAT_POISON = 1;
     public final static int STAT_COMMANDER = 2;
     /* Life total constants */
@@ -69,6 +67,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     /* Keeping track of players, display state */
     private final ArrayList<LcPlayer> mPlayers = new ArrayList<>();
     private final LinkedList<String> mVocalizations = new LinkedList<>();
+    private int mDisplayMode = DISPLAY_NORMAL;
+    private int mStatDisplaying = STAT_LIFE;
     /* UI Elements, measurement */
     private GridLayout mGridLayout;
     private LinearLayout mCommanderPlayerView;
@@ -249,7 +249,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         mGridLayout.removeAllViews();
         mPlayers.clear();
 
-		/* Remove the screen on lock, restore the brightness */
+        /* Remove the screen on lock, restore the brightness */
         getActivity().getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         onUserActive();
     }
@@ -367,16 +367,16 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 announceLifeTotals();
                 return true;
             case R.id.edit_gatherings:
-				/* Start a GatheringsFragment to edit gatherings */
+                /* Start a GatheringsFragment to edit gatherings */
                 GatheringsFragment rlFrag = new GatheringsFragment();
                 startNewFragment(rlFrag, null);
                 return true;
             case R.id.set_gathering:
-				/* Show a dialog of gatherings a user can set */
+                /* Show a dialog of gatherings a user can set */
                 showDialog(DIALOG_SET_GATHERING);
                 return true;
             case R.id.display_mode:
-				/* Show a dialog to change the display mode (normal, compact, commander) */
+                /* Show a dialog to change the display mode (normal, compact, commander) */
                 showDialog(DIALOG_CHANGE_DISPLAY);
                 return true;
             default:
@@ -390,43 +390,43 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param id the ID of the dialog to show
      */
     private void showDialog(final int id) throws IllegalStateException {
-		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
-		currently showing dialog, so make our own transaction and take care of that here. */
+        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
+        currently showing dialog, so make our own transaction and take care of that here. */
 
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
             return;
         }
 
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
-				/* This will be set to false if we are returning a null dialog. It prevents a crash */
+                /* This will be set to false if we are returning a null dialog. It prevents a crash */
                 setShowsDialog(true);
 
                 AlertDialogPro.Builder builder = new AlertDialogPro.Builder(getActivity());
                 switch (id) {
                     case DIALOG_REMOVE_PLAYER: {
-						/* Get all the player names */
+                        /* Get all the player names */
                         String[] names = new String[mPlayers.size()];
                         for (int i = 0; i < mPlayers.size(); i++) {
                             names[i] = mPlayers.get(i).mName;
                         }
 
-						/* Build the dialog */
+                        /* Build the dialog */
                         builder.setTitle(getString(R.string.life_counter_remove_player));
 
                         builder.setItems(names, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
-								/* Remove the view from the GridLayout based on display mode, then remove the player
-								   from the ArrayList and redraw. Also notify other players to remove this player from
-								   the commander list, and reset the main commander player view in case that player was
-								   removed */
+                                /* Remove the view from the GridLayout based on display mode, then remove the player
+                                   from the ArrayList and redraw. Also notify other players to remove this player from
+                                   the commander list, and reset the main commander player view in case that player was
+                                   removed */
                                 if (mDisplayMode == DISPLAY_COMMANDER) {
                                     mGridLayout.removeView(mPlayers.get(item).mCommanderRowView);
                                 } else {
@@ -454,7 +454,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                                 .setPositiveButton(getString(R.string.dialog_both),
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
-												/* Remove all players, then add defaults */
+                                                /* Remove all players, then add defaults */
                                                 mPlayers.clear();
                                                 mLargestPlayerNumber = 0;
                                                 addPlayer();
@@ -462,7 +462,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
                                                 setCommanderInfo(-1);
 
-												/* Clear and then add the views */
+                                                /* Clear and then add the views */
                                                 changeDisplayMode(false);
                                                 dialog.dismiss();
                                             }
@@ -471,7 +471,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                                 .setNeutralButton(getString(R.string.dialog_life),
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
-												/* Only reset life totals */
+                                                /* Only reset life totals */
                                                 for (LcPlayer player : mPlayers) {
                                                     player.resetStats();
                                                 }
@@ -512,14 +512,14 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                         return builder.create();
                     }
                     case DIALOG_SET_GATHERING: {
-						/* If there aren't any dialogs, don't show the dialog. Pop a toast instead */
+                        /* If there aren't any dialogs, don't show the dialog. Pop a toast instead */
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
                             ToastWrapper.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist,
                                     ToastWrapper.LENGTH_LONG).show();
                             return DontShowDialog();
                         }
 
-						/* Get a list of Gatherings, and their names extracted from XML */
+                        /* Get a list of Gatherings, and their names extracted from XML */
                         final ArrayList<String> gatherings = GatheringsIO
                                 .getGatheringFileList(getActivity().getFilesDir());
                         final String[] properNames = new String[gatherings.size()];
@@ -528,12 +528,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                                     .ReadGatheringNameFromXML(gatherings.get(idx), getActivity().getFilesDir());
                         }
 
-						/* Set the AlertDialog title, items */
+                        /* Set the AlertDialog title, items */
                         builder.setTitle(R.string.life_counter_gathering_dialog_title);
                         builder.setItems(properNames, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, final int item) {
-								/* Read the gathering from XML, clear and set all the info! changeDisplayMode() adds
-								   the player Views */
+                                /* Read the gathering from XML, clear and set all the info! changeDisplayMode() adds
+                                   the player Views */
                                 Gathering gathering = GatheringsIO
                                         .ReadGatheringXML(gatherings.get(item), getActivity().getFilesDir());
 
@@ -574,11 +574,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 player1.mCommanderDamage.remove(toBeRemoved);
             } else {
                 for (int i = 0; i < mPlayers.size(); i++) {
-					/* An entry for this player exists, just set the name */
+                    /* An entry for this player exists, just set the name */
                     if (player1.mCommanderDamage.size() > i) {
                         player1.mCommanderDamage.get(i).mName = mPlayers.get(i).mName;
                     }
-					/* An entry for this player doesn't exist, create one and add it */
+                    /* An entry for this player doesn't exist, create one and add it */
                     else {
                         CommanderEntry ce = new CommanderEntry();
                         ce.mName = mPlayers.get(i).mName;
@@ -587,7 +587,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     }
                 }
             }
-			/* Redraw the information */
+            /* Redraw the information */
             if (player1.mCommanderDamageAdapter != null) {
                 player1.mCommanderDamageAdapter.notifyDataSetChanged();
             }
@@ -600,7 +600,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * commander mode.
      */
     private void changeDisplayMode(boolean shouldDefaultLives) {
-		/* update the preference */
+        /* update the preference */
         getFamiliarActivity().mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
 
         mGridLayout.removeAllViews();
@@ -651,8 +651,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         boolean areLivesDefault = true;
         for (LcPlayer player : mPlayers) {
-			/* Only reset a player's default life / life if that player is unaltered and doesn't have a noticeably
-			 * custom default life */
+            /* Only reset a player's default life / life if that player is unaltered and doesn't have a noticeably
+             * custom default life */
             if (!(player.mLifeHistory.size() == 0
                     && player.mPoisonHistory.size() == 0
                     && player.mLife == player.mDefaultLifeTotal
@@ -669,7 +669,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         }
 
         for (LcPlayer player : mPlayers) {
-			/* Draw the player's view */
+            /* Draw the player's view */
             addPlayerView(player);
         }
 
@@ -704,7 +704,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-						/* Show this player's info in mCommanderPlayerView */
+                        /* Show this player's info in mCommanderPlayerView */
                     mCommanderPlayerView.removeAllViews();
                     mCommanderPlayerView.addView(player.mView);
                     player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
@@ -719,7 +719,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             }
         }
 
-		/* If the size has already been measured, set the player's size */
+        /* If the size has already been measured, set the player's size */
         if (mListSizeHeight != -1) {
             player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
                     getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
@@ -765,7 +765,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private void addPlayer() {
         final LcPlayer player = new LcPlayer(this);
 
-		/* Increment the largest player number */
+        /* Increment the largest player number */
         mLargestPlayerNumber++;
         player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
         player.mDefaultLifeTotal = getDefaultLife();
@@ -786,8 +786,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         player.mDefaultLifeTotal = startingLife;
         player.mLife = startingLife;
 
-		/* If the player's name ends in a number, and the number is larger than mPlayerNumber, set mPlayerNumber as
-		   it */
+        /* If the player's name ends in a number, and the number is larger than mPlayerNumber, set mPlayerNumber as
+           it */
         try {
             String nameParts[] = player.mName.split(" ");
             int number = Integer.parseInt(nameParts[nameParts.length - 1]);
@@ -795,7 +795,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 mLargestPlayerNumber = number;
             }
         } catch (NumberFormatException e) {
-				/* eat it */
+                /* eat it */
         }
 
         mPlayers.add(player);
@@ -820,8 +820,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 player.mName = getResources().getString(R.string.life_counter_default_name);
             }
 
-			/* If the player's name ends in a number, and the number is larger than mPlayerNumber, set mPlayerNumber as
-			   it */
+            /* If the player's name ends in a number, and the number is larger than mPlayerNumber, set mPlayerNumber as
+               it */
             try {
                 String nameParts[] = player.mName.split(" ");
                 int number = Integer.parseInt(nameParts[nameParts.length - 1]);
@@ -829,7 +829,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     mLargestPlayerNumber = number;
                 }
             } catch (NumberFormatException e) {
-				/* eat it */
+                /* eat it */
             }
 
             try {
@@ -908,7 +908,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
             mPlayers.add(player);
         } catch (ArrayIndexOutOfBoundsException e) {
-			/* Eat it */
+            /* Eat it */
         }
     }
 
@@ -939,7 +939,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 } else {
                     mTtsInit = true;
                     if (mIsSearchViewOpen) {
-						/* Search view is open, pend menu refresh */
+                        /* Search view is open, pend menu refresh */
                         mAfterSearchClosedRunnable = new Runnable() {
                             @Override
                             public void run() {
@@ -947,7 +947,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                             }
                         };
                     } else {
-						/* Redraw menu */
+                        /* Redraw menu */
                         getActivity().supportInvalidateOptionsMenu();
                     }
                 }
@@ -968,8 +968,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 switch (mStatDisplaying) {
                     case STAT_LIFE:
                         if (p.mLife > 9000) {
-							/* If the life is over 9000, split the string on an IMPROBABLE_NUMBER, and insert a call to
-							   the m9000Player */
+                            /* If the life is over 9000, split the string on an IMPROBABLE_NUMBER, and insert a call to
+                               the m9000Player */
                             String tmp = String
                                     .format(getString(R.string.life_counter_spoken_life), p.mName, IMPROBABLE_NUMBER);
                             String parts[] = tmp.split(Integer.toString(IMPROBABLE_NUMBER));
@@ -1000,7 +1000,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             }
 
             if (mVocalizations.size() > 0) {
-				/* Get the audio focus, and tell everyone else to be quiet for a moment */
+                /* Get the audio focus, and tell everyone else to be quiet for a moment */
                 int res = mAudioManager.requestAudioFocus(
                         this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
                 if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -1036,7 +1036,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     m9000Player.prepare();
                     m9000Player.start();
                 } catch (IOException e) {
-					/* If the media was not played, fall back to TTSing "over 9000" */
+                    /* If the media was not played, fall back to TTSing "over 9000" */
                     HashMap<String, String> ttsParams = new HashMap<>();
                     ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
                     ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);

@@ -89,7 +89,7 @@ public class MtgAppWidgetConfigure extends Activity {
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-		/* Tell the widget to update */
+        /* Tell the widget to update */
         Intent intent = new Intent(this, MTGFamiliarAppWidgetProvider.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         assert AppWidgetManager.getInstance(getApplication()) != null;
@@ -100,7 +100,7 @@ public class MtgAppWidgetConfigure extends Activity {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
 
-		/* Return */
+        /* Return */
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
         setResult(RESULT_OK, resultValue);

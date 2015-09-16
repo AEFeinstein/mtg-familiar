@@ -11,9 +11,9 @@ import android.widget.Toast;
  */
 public class ToastWrapper {
 
-    private static Toast mToast;
     public static final int LENGTH_LONG = Toast.LENGTH_LONG;
     public static final int LENGTH_SHORT = Toast.LENGTH_SHORT;
+    private static Toast mToast;
 
     /**
      * Cancel current toast if present

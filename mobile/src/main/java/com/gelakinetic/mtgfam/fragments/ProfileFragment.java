@@ -152,14 +152,14 @@ public class ProfileFragment extends FamiliarFragment {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
             return;
         }
 
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             @NotNull

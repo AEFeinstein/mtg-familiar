@@ -50,18 +50,18 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		/* Inflate the view, pull out UI elements */
+        /* Inflate the view, pull out UI elements */
         View myFragmentView = inflater.inflate(R.layout.deck_counter_frag, container, false);
         assert myFragmentView != null;
         mDeckCountText = (TextSwitcher) myFragmentView.findViewById(R.id.deck_counter_count);
         mDeckCountHistory = (TextView) myFragmentView.findViewById(R.id.deck_counter_history);
 
-		/* Set the animations for the text switcher */
+        /* Set the animations for the text switcher */
         mDeckCountText.setFactory(this);
         mDeckCountText.setInAnimation(AnimationUtils.loadAnimation(this.getActivity(), android.R.anim.slide_in_left));
         mDeckCountText.setOutAnimation(AnimationUtils.loadAnimation(this.getActivity(), android.R.anim.slide_out_right));
 
-		/* Restore any state, if available */
+        /* Restore any state, if available */
         if (savedInstanceState != null) {
             mDeckCount = savedInstanceState.getInt(DECK_COUNT_KEY);
             mDeckCountSequence = StringToArray(savedInstanceState.getString(SEQUENCE_KEY));
@@ -77,7 +77,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
         mDeckCountHistory.setText(history.toString());
         mDeckCountText.setText("" + mDeckCount);
 
-		/* Attach actions to all the buttons */
+        /* Attach actions to all the buttons */
         myFragmentView.findViewById(R.id.deck_counter_1).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

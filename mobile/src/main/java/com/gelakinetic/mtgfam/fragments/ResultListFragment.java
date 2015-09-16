@@ -59,11 +59,11 @@ public class ResultListFragment extends FamiliarFragment {
 
         long id;
 
-		/* After a search, make sure the position is on top */
+        /* After a search, make sure the position is on top */
         mCursorPosition = 0;
         mCursorPositionOffset = 0;
 
-		/* All the things we may want to display */
+        /* All the things we may want to display */
         String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_SET,
                 CardDbAdapter.KEY_RARITY, CardDbAdapter.KEY_MANACOST, CardDbAdapter.KEY_SUPERTYPE, CardDbAdapter.KEY_SUBTYPE,
                 CardDbAdapter.KEY_ABILITY, CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS, CardDbAdapter.KEY_LOYALTY,
@@ -71,13 +71,13 @@ public class ResultListFragment extends FamiliarFragment {
 
         Bundle args = this.getArguments();
 
-		/* Open up the database, search for stuff */
+        /* Open up the database, search for stuff */
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
 
-			/* If "id0" exists, then it's three cards and they should be merged
+            /* If "id0" exists, then it's three cards and they should be merged
              * Otherwise, do a search with the given criteria
-			 */
+             */
             if ((id = args.getLong(CARD_ID_0)) != 0L) {
                 long id1 = args.getLong(CARD_ID_1);
                 long id2 = args.getLong(CARD_ID_2);
@@ -200,12 +200,12 @@ public class ResultListFragment extends FamiliarFragment {
             mCursorPositionOffset = savedInstanceState.getInt(CURSOR_POSITION_OFFSET);
         }
 
-		/* Inflate the view */
+        /* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
         assert myFragmentView != null; /* Because Android Studio */
         mListView = (ListView) myFragmentView.findViewById(R.id.result_list);
 
-		/* Sub-optimal, but KitKat is silly */
+        /* Sub-optimal, but KitKat is silly */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mListView.setOnScrollListener(new ListView.OnScrollListener() {
 
@@ -313,7 +313,7 @@ public class ResultListFragment extends FamiliarFragment {
             Bundle args = new Bundle();
             int cardPosition = 0;
 
-		    /* Build the array of ids sequentially, make note of the chosen card's position */
+            /* Build the array of ids sequentially, make note of the chosen card's position */
             long cardIds[] = new long[mCursor.getCount()];
             mCursor.moveToFirst();
             for (int i = 0; i < mCursor.getCount(); i++, mCursor.moveToNext()) {
@@ -326,7 +326,7 @@ public class ResultListFragment extends FamiliarFragment {
             if (id == -1) {
                 Random rand = new Random(System.currentTimeMillis());
 
-		    	/* Shuffle the array of ids */
+                /* Shuffle the array of ids */
               /* implements http://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
                 long temp;
                 int k, j;
@@ -337,11 +337,11 @@ public class ResultListFragment extends FamiliarFragment {
                     cardIds[k] = temp;
                 }
 
-		    	/* Start at the beginning of the random sequence */
+                /* Start at the beginning of the random sequence */
                 cardPosition = 0;
             }
 
-		    /* Load the array of ids and position into the bundle, start the fragment */
+            /* Load the array of ids and position into the bundle, start the fragment */
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, cardPosition);
             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, cardIds);
             CardViewPagerFragment cardViewPagerFragment = new CardViewPagerFragment();

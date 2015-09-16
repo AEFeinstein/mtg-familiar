@@ -81,7 +81,7 @@ public class GatheringsFragment extends FamiliarFragment {
 
         savedGathering.mDisplayMode = mDisplayModeSpinner.getSelectedItemPosition();
 
-		/* Pull all the information about players from the linear layout's children */
+        /* Pull all the information about players from the linear layout's children */
         for (int idx = 0; idx < mLinearLayout.getChildCount(); idx++) {
             View player = mLinearLayout.getChildAt(idx);
             assert player != null;
@@ -124,7 +124,7 @@ public class GatheringsFragment extends FamiliarFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mLargestPlayerNumber = 0;
 
-		/* Inflate a view */
+        /* Inflate a view */
         View myFragmentView = inflater.inflate(R.layout.gathering_frag, container, false);
         assert myFragmentView != null;
         mLinearLayout = (LinearLayout) myFragmentView.findViewById(R.id.gathering_player_list);
@@ -144,7 +144,7 @@ public class GatheringsFragment extends FamiliarFragment {
         super.onViewStateRestored(savedInstanceState);
 
 
-		/* Add some players */
+        /* Add some players */
         if (savedInstanceState == null) {
             AddPlayerRow(new GatheringsPlayerData(null, 20));
             AddPlayerRow(new GatheringsPlayerData(null, 20));
@@ -174,14 +174,14 @@ public class GatheringsFragment extends FamiliarFragment {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
             return;
         }
 
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             @NotNull
@@ -189,7 +189,7 @@ public class GatheringsFragment extends FamiliarFragment {
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
 
-				/* This will be set to false if we are returning a null dialog. It prevents a crash */
+                /* This will be set to false if we are returning a null dialog. It prevents a crash */
                 setShowsDialog(true);
 
                 switch (id) {
@@ -262,7 +262,7 @@ public class GatheringsFragment extends FamiliarFragment {
                         return dialog;
                     }
                     case DIALOG_GATHERING_EXIST: {
-						/* The user tried to save, and the gathering already exists. Prompt to overwrite */
+                        /* The user tried to save, and the gathering already exists. Prompt to overwrite */
                         return new AlertDialogPro.Builder(this.getActivity())
                                 .setTitle(R.string.gathering_dialog_overwrite_title)
                                 .setMessage(R.string.gathering_dialog_overwrite_text)
@@ -280,7 +280,7 @@ public class GatheringsFragment extends FamiliarFragment {
                                 .create();
                     }
                     case DIALOG_DELETE_GATHERING: {
-						/* Show all gatherings, and delete the selected one */
+                        /* Show all gatherings, and delete the selected one */
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
                             ToastWrapper.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
                                     ToastWrapper.LENGTH_LONG).show();
@@ -306,7 +306,7 @@ public class GatheringsFragment extends FamiliarFragment {
                                 }).create();
                     }
                     case DIALOG_REMOVE_PLAYER: {
-						/* Remove a player from the Gathering and linear layout */
+                        /* Remove a player from the Gathering and linear layout */
                         ArrayList<String> names = new ArrayList<>();
                         for (int idx = 0; idx < mLinearLayout.getChildCount(); idx++) {
                             View player = mLinearLayout.getChildAt(idx);
@@ -332,7 +332,7 @@ public class GatheringsFragment extends FamiliarFragment {
                                 .create();
                     }
                     case DIALOG_LOAD_GATHERING: {
-						/* Load a gathering, if there is a gathering to load */
+                        /* Load a gathering, if there is a gathering to load */
                         if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
                             ToastWrapper.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
                                     ToastWrapper.LENGTH_LONG).show();
@@ -393,7 +393,7 @@ public class GatheringsFragment extends FamiliarFragment {
                 showDialog(DIALOG_REMOVE_PLAYER);
                 return true;
             case R.id.add_player:
-				/* Use the correct default life for commander mode */
+                /* Use the correct default life for commander mode */
                 switch (mDisplayModeSpinner.getSelectedItemPosition()) {
                     case 1:
                     case 0: {
@@ -511,7 +511,7 @@ public class GatheringsFragment extends FamiliarFragment {
                     mLargestPlayerNumber = number;
                 }
             } catch (NumberFormatException e) {
-				/* eat it */
+                /* eat it */
             }
         }
         View newView = getLayoutInflater(null).inflate(R.layout.gathering_create_player_row, null, false);
@@ -547,8 +547,8 @@ public class GatheringsFragment extends FamiliarFragment {
                 removePlayer.setVisible(true);
             }
         } catch (NullPointerException e) {
-			/* the if () statement throwing a NullPointerException for some users. I don't know which part was null,
-			or why, but this catches it well enough */
+            /* the if () statement throwing a NullPointerException for some users. I don't know which part was null,
+            or why, but this catches it well enough */
             removePlayer.setVisible(true);
         }
 

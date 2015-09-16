@@ -391,7 +391,7 @@ class CardAndSetParser {
             if (jsonTopLevelName.equalsIgnoreCase("Date")) {
                 mCurrentRulesDate = reader.nextString();
 
-				/* compare date, maybe return, update shared prefs */
+                /* compare date, maybe return, update shared prefs */
                 String spDate = prefAdapter.getLegalityDate();
                 if (spDate != null && spDate.equals(mCurrentRulesDate)) {
                     reader.close();
@@ -443,23 +443,6 @@ class CardAndSetParser {
         reader.close();
 
         return legalInfo;
-    }
-
-    class LegalInfo {
-        ArrayList<NameAndMetadata> legalSets = new ArrayList<>();
-        ArrayList<NameAndMetadata> bannedCards = new ArrayList<>();
-        ArrayList<NameAndMetadata> restrictedCards = new ArrayList<>();
-        ArrayList<String> formats = new ArrayList<>();
-    }
-
-    class NameAndMetadata {
-        String name;
-        String metadata;
-
-        public NameAndMetadata(String restrictedCard, String formatName) {
-            name = restrictedCard;
-            metadata = formatName;
-        }
     }
 
     /**
@@ -534,5 +517,22 @@ class CardAndSetParser {
      */
     public interface CardProgressReporter {
         void reportJsonCardProgress(int progress);
+    }
+
+    class LegalInfo {
+        ArrayList<NameAndMetadata> legalSets = new ArrayList<>();
+        ArrayList<NameAndMetadata> bannedCards = new ArrayList<>();
+        ArrayList<NameAndMetadata> restrictedCards = new ArrayList<>();
+        ArrayList<String> formats = new ArrayList<>();
+    }
+
+    class NameAndMetadata {
+        String name;
+        String metadata;
+
+        public NameAndMetadata(String restrictedCard, String formatName) {
+            name = restrictedCard;
+            metadata = formatName;
+        }
     }
 }

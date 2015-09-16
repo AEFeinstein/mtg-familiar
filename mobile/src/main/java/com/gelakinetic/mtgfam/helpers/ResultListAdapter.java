@@ -232,7 +232,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
             }
         }
 
-		/* Hide the fields if they should be hidden (didn't exist in mTo)*/
+        /* Hide the fields if they should be hidden (didn't exist in mTo)*/
         if (hideCost) {
             view.findViewById(R.id.cardcost).setVisibility(View.GONE);
         }

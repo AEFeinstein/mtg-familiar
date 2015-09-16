@@ -49,12 +49,12 @@ public class CardViewPagerFragment extends FamiliarFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		/* Instantiate a ViewPager and a PagerAdapter. */
+        /* Instantiate a ViewPager and a PagerAdapter. */
         View v = inflater.inflate(R.layout.card_view_pager, container, false);
         assert v != null; /* Because Android Studio */
         mViewPager = (ViewPager) v.findViewById(R.id.pager);
 
-		/* Retain the instance */
+        /* Retain the instance */
         if (getParentFragment() == null) {
             this.setRetainInstance(true);
         }
@@ -171,10 +171,10 @@ public class CardViewPagerFragment extends FamiliarFragment {
                 Fade the page out. */
                 view.setAlpha(1 - position);
 
-				/* Counteract the default slide transition */
+                /* Counteract the default slide transition */
                 view.setTranslationX(pageWidth * -position);
 
-				/* Scale the page down (between MIN_SCALE and 1) */
+                /* Scale the page down (between MIN_SCALE and 1) */
                 float scaleFactor = MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position));
                 view.setScaleX(scaleFactor);
                 view.setScaleY(scaleFactor);

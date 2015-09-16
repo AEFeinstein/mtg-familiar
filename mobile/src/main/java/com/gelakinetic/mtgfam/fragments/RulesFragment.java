@@ -93,14 +93,14 @@ public class RulesFragment extends FamiliarFragment {
         String keyword;
         final String format;
 
-		/* Open a database connection */
+        /* Open a database connection */
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
 
-		/* Inflate the view */
+        /* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
         assert myFragmentView != null;
 
-		/* Get arguments to display a rules section, or use defaults */
+        /* Get arguments to display a rules section, or use defaults */
         Bundle extras = getArguments();
         int position;
         boolean isGlossary;
@@ -131,7 +131,7 @@ public class RulesFragment extends FamiliarFragment {
         Cursor setsCursor;
         setsCursor = null;
 
-		/* Sub-optimal, but KitKat is silly */
+        /* Sub-optimal, but KitKat is silly */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             list.setOnScrollListener(new ListView.OnScrollListener() {
 
@@ -156,7 +156,7 @@ public class RulesFragment extends FamiliarFragment {
             });
         }
 
-		/* Populate the cursor with information from the database */
+        /* Populate the cursor with information from the database */
         try {
             if (isGlossary) {
                 cursor = CardDbAdapter.getGlossaryTerms(database);
@@ -181,7 +181,7 @@ public class RulesFragment extends FamiliarFragment {
             return myFragmentView;
         }
 
-		/* Add DisplayItems to mRules */
+        /* Add DisplayItems to mRules */
         if (setsCursor != null) {
             try {
                 if (setsCursor.getCount() > 0) {
@@ -307,7 +307,7 @@ public class RulesFragment extends FamiliarFragment {
 
         list.setSelection(position);
 
-		/* Explanations for these regular expressions are available upon request. - Alex */
+        /* Explanations for these regular expressions are available upon request. - Alex */
         mUnderscorePattern = Pattern.compile("_(.+?)_");
         mExamplePattern = Pattern.compile("(Example:.+)$");
         mGlyphPattern = Pattern.compile("\\{([a-zA-Z0-9/]{1,3})\\}");
@@ -318,20 +318,20 @@ public class RulesFragment extends FamiliarFragment {
         }
         mHyperlinkPattern = Pattern.compile("<(http://)?(www|gatherer|mtgcommander)(.+?)>");
 
-		/*
-		 * Regex breakdown for Adam:
-		 * [1-9]: first character is between 1 and 9
-		 * [0-9]{2}: followed by two characters between 0 and 9 (i.e. a 3-digit number)
-		 * (...)?: maybe followed by the group:
-		 * \\.: period
-		 * ([a-z0-9]{1,3}(-[a-z]{1})?)?: maybe followed by one to three alphanumeric
-		 * characters, which are maybe followed by a hyphen and an alphabetical
-		 * character \\.?: maybe followed by another period
-		 *
-		 * I realize this isn't completely easy to read, but it might at least help
-		 * make some sense of the regex so I'm not just waving my hands and shouting
-		 * "WIZARDS!". I still reserve the right to do that, though. - Alex
-		 */
+        /*
+         * Regex breakdown for Adam:
+         * [1-9]: first character is between 1 and 9
+         * [0-9]{2}: followed by two characters between 0 and 9 (i.e. a 3-digit number)
+         * (...)?: maybe followed by the group:
+         * \\.: period
+         * ([a-z0-9]{1,3}(-[a-z]{1})?)?: maybe followed by one to three alphanumeric
+         * characters, which are maybe followed by a hyphen and an alphabetical
+         * character \\.?: maybe followed by another period
+         *
+         * I realize this isn't completely easy to read, but it might at least help
+         * make some sense of the regex so I'm not just waving my hands and shouting
+         * "WIZARDS!". I still reserve the right to do that, though. - Alex
+         */
         mLinkPattern = Pattern.compile("([1-9][0-9]{2}(\\.([a-z0-9]{1,4}(-[a-z])?)?\\.?)?)");
 
         if (cursor != null) {
@@ -346,17 +346,17 @@ public class RulesFragment extends FamiliarFragment {
      * Remove any showing dialogs, and show the requested one
      */
     private void showDialog() throws IllegalStateException {
-		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
-		currently showing dialog, so make our own transaction and take care of that here. */
+        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
+        currently showing dialog, so make our own transaction and take care of that here. */
 
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
             return;
         }
 
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             private Bundle searchArgs = null;
@@ -376,7 +376,7 @@ public class RulesFragment extends FamiliarFragment {
                 searchArgs = null;
                 switch (RulesFragment.DIALOG_SEARCH) {
                     case DIALOG_SEARCH: {
-						/* Inflate a view to type in the player's name, and show it in an AlertDialog */
+                        /* Inflate a view to type in the player's name, and show it in an AlertDialog */
                         View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
                                 null, false);
                         assert textEntryView != null;
@@ -529,7 +529,7 @@ public class RulesFragment extends FamiliarFragment {
                     result.setSpan(new ClickableSpan() {
                         @Override
                         public void onClick(View widget) {
-							/* Open a new activity instance*/
+                            /* Open a new activity instance*/
                             Bundle args = new Bundle();
                             args.putInt(CATEGORY_KEY, linkCat);
                             args.putInt(SUBCATEGORY_KEY, linkSub);
@@ -539,7 +539,7 @@ public class RulesFragment extends FamiliarFragment {
                         }
                     }, m.start(), m.end(), 0);
                 } catch (Exception e) {
-					/* Eat any exceptions; they'll just cause the link to not appear*/
+                    /* Eat any exceptions; they'll just cause the link to not appear*/
                 }
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             }
@@ -794,12 +794,12 @@ public class RulesFragment extends FamiliarFragment {
                 }
             }
 
-			/* Enable fast scrolling for the glossary. Add all the first letters of the entries */
+            /* Enable fast scrolling for the glossary. Add all the first letters of the entries */
             if (isGlossary) {
                 LinkedHashSet<Integer> indicesLHS = new LinkedHashSet<>();
                 LinkedHashSet<String> alphabetLHS = new LinkedHashSet<>();
 
-				/* Find the first index for each letter in the alphabet by looking at all the items */
+                /* Find the first index for each letter in the alphabet by looking at all the items */
                 for (int index = 0; index < items.size(); index++) {
                     String letter = items.get(index).getHeader().substring(0, 1).toUpperCase();
                     if (!alphabetLHS.contains(letter)) {

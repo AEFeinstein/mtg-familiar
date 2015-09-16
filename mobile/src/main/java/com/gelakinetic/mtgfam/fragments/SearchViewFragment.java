@@ -254,11 +254,11 @@ public class SearchViewFragment extends FamiliarFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		/* Inflate the view */
+        /* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.search_frag, container, false);
         assert myFragmentView != null;
 
-		/* Get references to UI elements. When a search is preformed, these values will be queried */
+        /* Get references to UI elements. When a search is preformed, these values will be queried */
         mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
         mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
         mTypeFieldsSet = false; /* If we get the fields again, we have to relink them to adapters */
@@ -293,7 +293,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic = (Spinner) myFragmentView.findViewById(R.id.cmcLogic);
         mCmcChoice = (Spinner) myFragmentView.findViewById(R.id.cmcChoice);
 
-		/* set the buttons to open the dialogs */
+        /* set the buttons to open the dialogs */
         mSetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showDialog(SET_LIST);
@@ -310,13 +310,13 @@ public class SearchViewFragment extends FamiliarFragment {
             }
         });
 
-		/* This is a better default, might want to reorder the array */
+        /* This is a better default, might want to reorder the array */
         mColorSpinner.setSelection(2);
 
-		/* The button colors change whether an option is selected or not */
+        /* The button colors change whether an option is selected or not */
         checkDialogButtonColors();
 
-		/* This listener will do searches directly from the TextViews. Attach it to everything! */
+        /* This listener will do searches directly from the TextViews. Attach it to everything! */
         TextView.OnEditorActionListener doSearchListener = new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
                 if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
@@ -334,13 +334,13 @@ public class SearchViewFragment extends FamiliarFragment {
         mArtistField.setOnEditorActionListener(doSearchListener);
         mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
 
-		/* set the autocomplete for card names */
+        /* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
 
         /* Try to set the type field autocomplete. May be ready, may not */
         setTypeAdapters();
 
-		/* set the search button! */
+        /* set the search button! */
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 doSearch();
@@ -356,7 +356,7 @@ public class SearchViewFragment extends FamiliarFragment {
     public void onResume() {
         super.onResume();
 
-		/* Do we want to consolidate different printings of the same card in results, or not? */
+        /* Do we want to consolidate different printings of the same card in results, or not? */
         boolean consolidate = getFamiliarActivity().mPreferenceAdapter.getConsolidateSearch();
         mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
     }
@@ -380,7 +380,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private SearchCriteria parseForm() {
         SearchCriteria searchCriteria = new SearchCriteria();
 
-		/* Because Android Studio whines */
+        /* Because Android Studio whines */
         assert mNameField.getText() != null;
         assert mTextField.getText() != null;
         assert mSupertypeField.getText() != null;
@@ -389,7 +389,7 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mArtistField.getText() != null;
         assert mCollectorsNumberField.getText() != null;
 
-		/* Read EditTexts */
+        /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString();
         searchCriteria.text = mTextField.getText().toString();
         String supertype = mSupertypeField.getText().toString();
@@ -418,7 +418,7 @@ public class SearchViewFragment extends FamiliarFragment {
             searchCriteria.collectorsNumber = null;
         }
 
-		/* Build a color string. capital letters means the user is search for that color */
+        /* Build a color string. capital letters means the user is search for that color */
         searchCriteria.color = null;
 
         if (mCheckboxW.isChecked()) {
@@ -802,7 +802,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private void showDialog(final int id) throws IllegalStateException {
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             @Override
@@ -816,7 +816,7 @@ public class SearchViewFragment extends FamiliarFragment {
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
 
-				/* This will be set to false if we are returning a null dialog. It prevents a crash */
+                /* This will be set to false if we are returning a null dialog. It prevents a crash */
                 setShowsDialog(true);
 
                 DialogInterface.OnMultiChoiceClickListener multiChoiceClickListener =
@@ -865,7 +865,7 @@ public class SearchViewFragment extends FamiliarFragment {
                         }
                     }
                 } catch (NullPointerException e) {
-					/* if the db failed to open, these arrays will be null. */
+                    /* if the db failed to open, these arrays will be null. */
                     handleFamiliarDbException(false);
                     return DontShowDialog();
                 }

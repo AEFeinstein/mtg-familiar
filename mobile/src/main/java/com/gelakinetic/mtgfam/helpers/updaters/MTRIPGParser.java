@@ -57,7 +57,7 @@ class MTRIPGParser {
     public boolean performMtrIpgUpdateIfNeeded(final int mode) {
         boolean updated = false;
 
-		/* First, inflate local files if they do not exist */
+        /* First, inflate local files if they do not exist */
         File output = null;
         switch (mode) {
             case MODE_IPG:
@@ -87,7 +87,7 @@ class MTRIPGParser {
             /* eat it */
         }
 
-		/* Then update via the internet */
+        /* Then update via the internet */
         try {
             URL url;
             switch (mode) {

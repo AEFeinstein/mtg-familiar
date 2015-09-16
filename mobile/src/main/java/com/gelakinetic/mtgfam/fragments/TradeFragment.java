@@ -82,25 +82,6 @@ public class TradeFragment extends FamiliarFragment {
     /* Save file constants */
     private static final String AUTOSAVE_NAME = "autosave";
     private static final String TRADE_EXTENSION = ".trade";
-
-    /* Trade information */
-    private TextView mTotalPriceLeft;
-    private TradeListAdapter mLeftAdapter;
-    private ArrayList<MtgCard> mLeftList;
-    private TextView mTotalPriceRight;
-    private TradeListAdapter mRightAdapter;
-    private ArrayList<MtgCard> mRightList;
-
-    /* UI Elements */
-    private AutoCompleteTextView mNameEditText;
-    private EditText mNumberEditText;
-    private CheckBox mCheckboxFoil;
-    private int mPriceFetchRequests = 0;
-
-    /* Settings */
-    private int mPriceSetting;
-    private String mCurrentTrade = "";
-
     /* For sorting */
     private static final int SORT_TYPE_NONE = 0;
     private static final int SORT_TYPE_CMC = 1;
@@ -110,6 +91,21 @@ public class TradeFragment extends FamiliarFragment {
     private static final int SORT_TYPE_SET = 5;
     private static final int ASCENDING = 0;
     private static final int DESCENDING = 1;
+    /* Trade information */
+    private TextView mTotalPriceLeft;
+    private TradeListAdapter mLeftAdapter;
+    private ArrayList<MtgCard> mLeftList;
+    private TextView mTotalPriceRight;
+    private TradeListAdapter mRightAdapter;
+    private ArrayList<MtgCard> mRightList;
+    /* UI Elements */
+    private AutoCompleteTextView mNameEditText;
+    private EditText mNumberEditText;
+    private CheckBox mCheckboxFoil;
+    private int mPriceFetchRequests = 0;
+    /* Settings */
+    private int mPriceSetting;
+    private String mCurrentTrade = "";
     private int mSortOrder;
     private int mSortType;
 
@@ -127,7 +123,7 @@ public class TradeFragment extends FamiliarFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		/* Inflate the view, pull out UI elements */
+        /* Inflate the view, pull out UI elements */
         View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
         assert myFragmentView != null;
         mNameEditText = (AutoCompleteTextView) myFragmentView.findViewById(R.id.namesearch);
@@ -136,12 +132,12 @@ public class TradeFragment extends FamiliarFragment {
         mTotalPriceRight = (TextView) myFragmentView.findViewById(R.id.priceTextRight);
         mTotalPriceLeft = (TextView) myFragmentView.findViewById(R.id.priceTextLeft);
 
-		/* Set the autocomplete adapter, default number */
+        /* Set the autocomplete adapter, default number */
         mNameEditText.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME},
                 new int[]{R.id.text1}, mNameEditText));
         mNumberEditText.setText("1");
 
-		/* Initialize the left list */
+        /* Initialize the left list */
         mLeftList = new ArrayList<>();
         mLeftAdapter = new TradeListAdapter(this.getActivity(), mLeftList);
         ListView lvTradeLeft = (ListView) myFragmentView.findViewById(R.id.tradeListLeft);
@@ -152,7 +148,7 @@ public class TradeFragment extends FamiliarFragment {
             }
         });
 
-		/* Initialize the right list */
+        /* Initialize the right list */
         mRightList = new ArrayList<>();
         mRightAdapter = new TradeListAdapter(this.getActivity(), mRightList);
         ListView lvTradeRight = (ListView) myFragmentView.findViewById(R.id.tradeListRight);
@@ -163,7 +159,7 @@ public class TradeFragment extends FamiliarFragment {
             }
         });
 
-		/* Set the buttons to add cards to the left or right */
+        /* Set the buttons to add cards to the left or right */
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addCardToTrade(LEFT);
@@ -199,7 +195,7 @@ public class TradeFragment extends FamiliarFragment {
             }
         });
 
-		/* Return the view */
+        /* Return the view */
         return myFragmentView;
     }
 
@@ -214,19 +210,19 @@ public class TradeFragment extends FamiliarFragment {
             return;
         }
 
-		/* Get the card info from the UI */
+        /* Get the card info from the UI */
         String cardName, setCode, setName, cardNumber, color;
         int cmc;
         cardName = mNameEditText.getText().toString();
         String numberOfFromField = mNumberEditText.getText().toString();
         boolean foil = mCheckboxFoil.isChecked();
 
-		/* Make sure it isn't the empty string */
+        /* Make sure it isn't the empty string */
         if (cardName.equals("") || numberOfFromField.equals("")) {
             return;
         }
 
-		/* Parse the int after the "" check */
+        /* Parse the int after the "" check */
         int numberOf = Integer.parseInt(numberOfFromField);
 
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
@@ -240,7 +236,7 @@ public class TradeFragment extends FamiliarFragment {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR, /* For sorting */
                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, database);
 
-			/* Make sure there was a database hit */
+            /* Make sure there was a database hit */
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeText(TradeFragment.this.getActivity(), getString(R.string.toast_no_card), ToastWrapper.LENGTH_LONG)
                         .show();
@@ -248,7 +244,7 @@ public class TradeFragment extends FamiliarFragment {
                 return;
             }
 
-			/* Read the information from the cursor, check if the card can be foil */
+            /* Read the information from the cursor, check if the card can be foil */
             setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
             setName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             cardNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
@@ -258,10 +254,10 @@ public class TradeFragment extends FamiliarFragment {
             cmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
             color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
 
-			/* Clean up */
+            /* Clean up */
             cardCursor.close();
 
-			/* Create the card, add it to a list, start a price fetch */
+            /* Create the card, add it to a list, start a price fetch */
             MtgCard data = new MtgCard(cardName, setName, setCode, numberOf, getString(R.string.wishlist_loading),
                     cardNumber, foil, color, cmc);
             switch (side) {
@@ -279,7 +275,7 @@ public class TradeFragment extends FamiliarFragment {
                 }
             }
 
-			/* Return the input fields to defaults */
+            /* Return the input fields to defaults */
             mNameEditText.setText("");
             mNumberEditText.setText("1");
             mCheckboxFoil.setChecked(false);
@@ -329,14 +325,14 @@ public class TradeFragment extends FamiliarFragment {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
             return;
         }
 
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             @NotNull
@@ -351,7 +347,7 @@ public class TradeFragment extends FamiliarFragment {
                         final TradeListAdapter aaSide = (sideForDialog == LEFT ? mLeftAdapter : mRightAdapter);
                         final boolean oldFoil = lSide.get(positionForDialog).foil;
 
-						/* Inflate the view and pull out UI elements */
+                        /* Inflate the view and pull out UI elements */
                         View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
                                 null, false);
                         assert view != null;
@@ -359,7 +355,7 @@ public class TradeFragment extends FamiliarFragment {
                         final EditText numberOf = (EditText) view.findViewById(R.id.traderDialogNumber);
                         final EditText priceText = (EditText) view.findViewById(R.id.traderDialogPrice);
 
-						/* Set initial values */
+                        /* Set initial values */
                         String numberOfStr = String.valueOf(lSide.get(positionForDialog).numberOf);
                         numberOf.setText(numberOfStr);
                         numberOf.setSelection(numberOfStr.length());
@@ -369,7 +365,7 @@ public class TradeFragment extends FamiliarFragment {
                         priceText.setText(priceNumberStr);
                         priceText.setSelection(priceNumberStr.length());
 
-						/* Only show the foil checkbox if the card can be foil */
+                        /* Only show the foil checkbox if the card can be foil */
                         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                         try {
                             if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).setCode, database)) {
@@ -383,7 +379,7 @@ public class TradeFragment extends FamiliarFragment {
                         }
                         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
-						/* when the user checks or un-checks the foil box, if the price isn't custom, set it */
+                        /* when the user checks or un-checks the foil box, if the price isn't custom, set it */
                         foilCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -396,7 +392,7 @@ public class TradeFragment extends FamiliarFragment {
                             }
                         });
 
-						/* Set up the button to remove this card from the trade */
+                        /* Set up the button to remove this card from the trade */
                         view.findViewById(R.id.traderDialogRemove).setOnClickListener(new OnClickListener() {
                             public void onClick(View v) {
                                 lSide.remove(positionForDialog);
@@ -406,7 +402,7 @@ public class TradeFragment extends FamiliarFragment {
                             }
                         });
 
-						/* If this has a custom price, show the button to default the price */
+                        /* If this has a custom price, show the button to default the price */
                         view.findViewById(R.id.traderDialogResetPrice).setOnClickListener(new OnClickListener() {
 
                             @Override
@@ -423,7 +419,7 @@ public class TradeFragment extends FamiliarFragment {
                         });
 
 
-						/* Set up the button to show info about this card */
+                        /* Set up the button to show info about this card */
                         view.findViewById(R.id.traderDialogInfo).setOnClickListener(new OnClickListener() {
 
                             @Override
@@ -451,7 +447,7 @@ public class TradeFragment extends FamiliarFragment {
                             }
                         });
 
-						/* Set up the button to change the set of this card */
+                        /* Set up the button to change the set of this card */
                         view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(new OnClickListener() {
                             public void onClick(View v) {
                                 showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
@@ -464,20 +460,20 @@ public class TradeFragment extends FamiliarFragment {
                                 .setPositiveButton(R.string.dialog_done, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-										/* Grab a reference to the card */
+                                        /* Grab a reference to the card */
                                         MtgCard data = lSide.get(positionForDialog);
 
                                         /* Assume non-custom price */
                                         data.customPrice = false;
 
-										/* Set this card's foil option */
+                                        /* Set this card's foil option */
                                         data.foil = foilCheckbox.isChecked();
 
-										/* validate number of cards text */
+                                        /* validate number of cards text */
                                         if (numberOf.length() == 0) {
                                             data.numberOf = 1;
                                         } else {
-											/* Set the numberOf */
+                                            /* Set the numberOf */
                                             assert numberOf.getEditableText() != null;
                                             try {
                                                 data.numberOf =
@@ -487,16 +483,16 @@ public class TradeFragment extends FamiliarFragment {
                                             }
                                         }
 
-										/* validate the price text */
+                                        /* validate the price text */
                                         assert priceText.getText() != null;
                                         String userInputPrice = priceText.getText().toString();
 
-										/* If the input price is blank, set it to zero */
+                                        /* If the input price is blank, set it to zero */
                                         if (userInputPrice.length() == 0) {
                                             data.customPrice = true;
                                             data.price = 0;
                                         } else {
-											/* Attempt to parse the price */
+                                            /* Attempt to parse the price */
                                             try {
                                                 data.price = (int) (Double.parseDouble(userInputPrice) * 100);
                                             } catch (NumberFormatException e) {
@@ -505,8 +501,8 @@ public class TradeFragment extends FamiliarFragment {
                                             }
                                         }
 
-										/* Check if the user hand-modified the price by comparing the current price
-										 * to the cached price */
+                                        /* Check if the user hand-modified the price by comparing the current price
+                                         * to the cached price */
                                         int oldPrice;
                                         if (data.priceInfo != null) {
                                             if (data.foil) {
@@ -539,7 +535,7 @@ public class TradeFragment extends FamiliarFragment {
                                             data.customPrice = true;
                                         }
 
-										/* Notify things to update */
+                                        /* Notify things to update */
                                         aaSide.notifyDataSetChanged();
                                         UpdateTotalPrices(sideForDialog);
                                     }
@@ -553,18 +549,18 @@ public class TradeFragment extends FamiliarFragment {
                                 .create();
                     }
                     case DIALOG_CHANGE_SET: {
-						/* Get the card */
+                        /* Get the card */
                         MtgCard data = (sideForDialog == LEFT ?
                                 mLeftList.get(positionForDialog) : mRightList.get(positionForDialog));
 
                         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                         try {
-							/* Query the database for all versions of this card */
+                            /* Query the database for all versions of this card */
                             Cursor cards = CardDbAdapter.fetchCardByName(data.name, new String[]{
                                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, database);
-							/* Build set names and set codes */
+                            /* Build set names and set codes */
                             Set<String> sets = new LinkedHashSet<>();
                             Set<String> setCodes = new LinkedHashSet<>();
                             while (!cards.isAfterLast()) {
@@ -573,20 +569,20 @@ public class TradeFragment extends FamiliarFragment {
                                 }
                                 cards.moveToNext();
                             }
-							/* clean up */
+                            /* clean up */
                             cards.close();
                             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
-							/* Turn set names and set codes into arrays */
+                            /* Turn set names and set codes into arrays */
                             final String[] aSets = sets.toArray(new String[sets.size()]);
                             final String[] aSetCodes = setCodes.toArray(new String[setCodes.size()]);
 
-							/* Build and return the dialog */
+                            /* Build and return the dialog */
                             return new AlertDialogPro.Builder(getActivity())
                                     .setTitle(R.string.card_view_set_dialog_title)
                                     .setItems(aSets, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialogInterface, int item) {
-											/* Figure out what we're updating */
+                                            /* Figure out what we're updating */
                                             MtgCard data;
                                             TradeListAdapter adapter;
                                             if (sideForDialog == LEFT) {
@@ -597,13 +593,13 @@ public class TradeFragment extends FamiliarFragment {
                                                 adapter = mRightAdapter;
                                             }
 
-											/* Change the card's information, and reload the price */
+                                            /* Change the card's information, and reload the price */
                                             data.setCode = (aSetCodes[item]);
                                             data.setName = (aSets[item]);
                                             data.message = (getString(R.string.wishlist_loading));
                                             data.priceInfo = null;
 
-											/* See if the new set can be foil */
+                                            /* See if the new set can be foil */
                                             SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                                             try {
                                                 if (!CardDbAdapter.canBeFoil(data.setCode, database)) {
@@ -614,21 +610,21 @@ public class TradeFragment extends FamiliarFragment {
                                             }
                                             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
-											/* Reload and notify the adapter */
+                                            /* Reload and notify the adapter */
                                             loadPrice(data, adapter);
                                             adapter.notifyDataSetChanged();
                                         }
                                     })
                                     .create();
                         } catch (FamiliarDbException e) {
-							/* Don't show the dialog, but pop a toast */
+                            /* Don't show the dialog, but pop a toast */
                             handleFamiliarDbException(true);
                             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                             return DontShowDialog();
                         }
                     }
                     case DIALOG_PRICE_SETTING: {
-						/* Build the dialog with some choices */
+                        /* Build the dialog with some choices */
                         return new AlertDialogPro.Builder(this.getActivity())
                                 .setTitle(R.string.trader_pricing_dialog_title)
                                 .setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
@@ -639,7 +635,7 @@ public class TradeFragment extends FamiliarFragment {
                                                 if (mPriceSetting != which) {
                                                     mPriceSetting = which;
 
-													/* Update ALL the prices! */
+                                                    /* Update ALL the prices! */
                                                     for (MtgCard data : mLeftList) {
                                                         if (!data.customPrice) {
                                                             data.message = getString(R.string.wishlist_loading);
@@ -656,7 +652,7 @@ public class TradeFragment extends FamiliarFragment {
                                                     }
                                                     mRightAdapter.notifyDataSetChanged();
 
-													/* And also update the preference */
+                                                    /* And also update the preference */
                                                     getFamiliarActivity().mPreferenceAdapter.setTradePrice(
                                                             String.valueOf(mPriceSetting));
 
@@ -668,14 +664,14 @@ public class TradeFragment extends FamiliarFragment {
                                 ).create();
                     }
                     case DIALOG_SAVE_TRADE: {
-						/* Inflate a view to type in the trade's name, and show it in an AlertDialog */
+                        /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
                         View textEntryView = getActivity().getLayoutInflater()
                                 .inflate(R.layout.alert_dialog_text_entry,
                                         null, false);
                         assert textEntryView != null;
                         final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
                         nameInput.append(mCurrentTrade);
-						/* Set the button to clear the text field */
+                        /* Set the button to clear the text field */
                         textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -693,7 +689,7 @@ public class TradeFragment extends FamiliarFragment {
                                         }
                                         String tradeName = nameInput.getText().toString();
 
-										/* Don't bother saving if there is no name */
+                                        /* Don't bother saving if there is no name */
                                         if (tradeName.length() == 0 || tradeName.equals("")) {
                                             return;
                                         }
@@ -712,7 +708,7 @@ public class TradeFragment extends FamiliarFragment {
                         return dialog;
                     }
                     case DIALOG_LOAD_TRADE: {
-						/* Find all the trade files */
+                        /* Find all the trade files */
                         String[] files = this.getActivity().fileList();
                         ArrayList<String> validFiles = new ArrayList<>();
                         for (String fileName : files) {
@@ -721,14 +717,14 @@ public class TradeFragment extends FamiliarFragment {
                             }
                         }
 
-						/* If there are no files, don't show the dialog */
+                        /* If there are no files, don't show the dialog */
                         if (validFiles.size() == 0) {
                             ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
                                     .show();
                             return DontShowDialog();
                         }
 
-						/* Make an array of the trade file names */
+                        /* Make an array of the trade file names */
                         final String[] tradeNames = new String[validFiles.size()];
                         validFiles.toArray(tradeNames);
 
@@ -736,17 +732,17 @@ public class TradeFragment extends FamiliarFragment {
                                 .setTitle(R.string.trader_select_dialog_title)
                                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-										/* Canceled. */
+                                        /* Canceled. */
                                         dialog.dismiss();
                                     }
                                 })
                                 .setItems(tradeNames, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface di, int which) {
-										/* Load the trade, set the current trade name */
+                                        /* Load the trade, set the current trade name */
                                         LoadTrade(tradeNames[which] + TRADE_EXTENSION);
                                         mCurrentTrade = tradeNames[which];
 
-										/* Alert things to update */
+                                        /* Alert things to update */
                                         mLeftAdapter.notifyDataSetChanged();
                                         mRightAdapter.notifyDataSetChanged();
                                         UpdateTotalPrices(BOTH);
@@ -755,7 +751,7 @@ public class TradeFragment extends FamiliarFragment {
                                 .create();
                     }
                     case DIALOG_DELETE_TRADE: {
-						/* Find all the trade files */
+                        /* Find all the trade files */
                         String[] files = this.getActivity().fileList();
                         ArrayList<String> validFiles = new ArrayList<>();
                         for (String fileName : files) {
@@ -764,14 +760,14 @@ public class TradeFragment extends FamiliarFragment {
                             }
                         }
 
-						/* If there are no files, don't show the dialog */
+                        /* If there are no files, don't show the dialog */
                         if (validFiles.size() == 0) {
                             ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
                                     .show();
                             return DontShowDialog();
                         }
 
-						/* Make an array of the trade file names */
+                        /* Make an array of the trade file names */
                         final String[] tradeNames = new String[validFiles.size()];
                         validFiles.toArray(tradeNames);
 
@@ -779,7 +775,7 @@ public class TradeFragment extends FamiliarFragment {
                                 .setTitle(R.string.trader_delete_dialog_title)
                                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
-										/* Canceled. */
+                                        /* Canceled. */
                                         dialog.dismiss();
                                     }
                                 })
@@ -801,7 +797,7 @@ public class TradeFragment extends FamiliarFragment {
                                 .setMessage(R.string.trader_clear_dialog_text)
                                 .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-										/* Clear the arrays and tell everything to update */
+                                        /* Clear the arrays and tell everything to update */
                                         mRightList.clear();
                                         mLeftList.clear();
                                         mRightAdapter.notifyDataSetChanged();
@@ -812,7 +808,7 @@ public class TradeFragment extends FamiliarFragment {
                                 })
                                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-										/* Canceled */
+                                        /* Canceled */
                                         dialog.dismiss();
                                     }
                                 })
@@ -859,7 +855,7 @@ public class TradeFragment extends FamiliarFragment {
      * Sort the trades
      */
     private void sortTrades(int sortType, int sortOrder) {
-		/* If no sort type specified, return */
+        /* If no sort type specified, return */
         if (sortType != SORT_TYPE_NONE) {
             if (sortOrder == ASCENDING) {
                 switch (sortType) {
@@ -912,7 +908,7 @@ public class TradeFragment extends FamiliarFragment {
         FileOutputStream fos;
 
         try {
-			/* MODE_PRIVATE will create the file (or replace a file of the same name) */
+            /* MODE_PRIVATE will create the file (or replace a file of the same name) */
             fos = this.getActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
 
             for (MtgCard cd : mLeftList) {
@@ -937,11 +933,11 @@ public class TradeFragment extends FamiliarFragment {
      */
     private void LoadTrade(String tradeName) {
         try {
-			/* Clear the current lists */
+            /* Clear the current lists */
             mLeftList.clear();
             mRightList.clear();
 
-			/* Read each card, line by line, load prices along the way */
+            /* Read each card, line by line, load prices along the way */
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getActivity().openFileInput(tradeName)));
             String line;
             while ((line = br.readLine()) != null) {
@@ -964,7 +960,7 @@ public class TradeFragment extends FamiliarFragment {
                 }
             }
         } catch (FileNotFoundException e) {
-			/* Do nothing, the autosave doesn't exist */
+            /* Do nothing, the autosave doesn't exist */
         } catch (IOException e) {
             ToastWrapper.makeText(this.getActivity(), e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
         }
@@ -980,7 +976,7 @@ public class TradeFragment extends FamiliarFragment {
             if (side == LEFT || side == BOTH) {
                 int totalPrice = 0;
                 boolean hasBadValues = false;
-			    /* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
+                /* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
                 for (MtgCard data : mLeftList) {
                     if (data.hasPrice()) {
                         totalPrice += data.numberOf * data.price;
@@ -989,7 +985,7 @@ public class TradeFragment extends FamiliarFragment {
                     }
                 }
 
-			    /* Set the color whether all values are loaded, and write the text */
+                /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
                         this.getActivity().getResources().getColor(R.color.material_red_500) :
                         this.getActivity().getResources().getColor(
@@ -1000,7 +996,7 @@ public class TradeFragment extends FamiliarFragment {
             if (side == RIGHT || side == BOTH) {
                 int totalPrice = 0;
                 boolean hasBadValues = false;
-		    	/* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
+                /* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
                 for (MtgCard data : mRightList) {
                     if (data.hasPrice()) {
                         totalPrice += data.numberOf * data.price;
@@ -1009,7 +1005,7 @@ public class TradeFragment extends FamiliarFragment {
                     }
                 }
 
-		    	/* Set the color whether all values are loaded, and write the text */
+                /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
                         this.getActivity().getResources().getColor(R.color.material_red_500) :
                         this.getActivity().getResources().getColor(
@@ -1029,7 +1025,7 @@ public class TradeFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-		/* Handle item selection */
+        /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.trader_menu_clear:
                 showDialog(DIALOG_CONFIRMATION, 0, 0);
@@ -1047,7 +1043,7 @@ public class TradeFragment extends FamiliarFragment {
                 showDialog(DIALOG_DELETE_TRADE, 0, 0);
                 return true;
             case R.id.trader_menu_sort:
-				/* Show a dialog to change the sort criteria the list uses */
+                /* Show a dialog to change the sort criteria the list uses */
                 showDialog(DIALOG_SORT, 0, 0);
                 return true;
             default:
@@ -1072,7 +1068,7 @@ public class TradeFragment extends FamiliarFragment {
      * @param adapter The adapter to notify when a price is downloaded
      */
     private void loadPrice(final MtgCard data, final TradeListAdapter adapter) {
-		/* If the priceInfo is already loaded, don't bother performing a query */
+        /* If the priceInfo is already loaded, don't bother performing a query */
         if (data.priceInfo != null) {
             if (data.foil) {
                 data.price = (int) (data.priceInfo.mFoilAverage * 100);
@@ -1098,7 +1094,7 @@ public class TradeFragment extends FamiliarFragment {
                 }
             }
         } else {
-			/* priceInfo is null, perform a query */
+            /* priceInfo is null, perform a query */
             PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
             mPriceFetchRequests++;
             getFamiliarActivity().setLoading();
@@ -1129,14 +1125,14 @@ public class TradeFragment extends FamiliarFragment {
                          */
                         @Override
                         public void onRequestSuccess(final PriceInfo result) {
-							/* Sanity check */
+                            /* Sanity check */
                             if (result == null) {
                                 data.priceInfo = null;
                             } else {
-								/* Set the PriceInfo object */
+                                /* Set the PriceInfo object */
                                 data.priceInfo = result;
 
-								/* Only reset the price to the downloaded one if the old price isn't custom */
+                                /* Only reset the price to the downloaded one if the old price isn't custom */
                                 if (!data.customPrice) {
                                     if (data.foil) {
                                         data.price = (int) (result.mFoilAverage * 100);
@@ -1162,10 +1158,10 @@ public class TradeFragment extends FamiliarFragment {
                                         }
                                     }
                                 }
-								/* Clear the message */
+                                /* Clear the message */
                                 data.message = null;
                             }
-							/* Notify the adapter and update total prices */
+                            /* Notify the adapter and update total prices */
                             UpdateTotalPrices(BOTH);
                             adapter.notifyDataSetChanged();
                             mPriceFetchRequests--;
@@ -1181,71 +1177,6 @@ public class TradeFragment extends FamiliarFragment {
         }
     }
 
-    /**
-     * This inner class helps to display card information from an ArrayList<> in a ListView
-     */
-    private class TradeListAdapter extends ArrayAdapter<MtgCard> {
-
-        private final ArrayList<MtgCard> items;
-
-        /**
-         * Constructor
-         *
-         * @param context A context to pass to super
-         * @param mItems  The list of items to display
-         */
-        public TradeListAdapter(Context context, ArrayList<MtgCard> mItems) {
-            super(context, R.layout.trader_row, mItems);
-            this.items = mItems;
-        }
-
-        /**
-         * This either inflates or recycles a view for a given row, and populates it with card information
-         *
-         * @param position    The position of the row, corresponds to an entry in the ArrayList
-         * @param convertView The view to recycle, or null if we have to inflate a new one
-         * @param parent      The parent ViewGroup
-         * @return The view to display for this row
-         */
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-			/* if the supplied view is null, inflate a new one */
-            if (convertView == null) {
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row, null, false);
-            }
-			/* Get the data from the ArrayList */
-            MtgCard data = items.get(position);
-            if (data != null) {
-                assert convertView != null;
-
-				/* Set the name, set number, and foil indicators */
-                ((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.name);
-                ((TextView) convertView.findViewById(R.id.traderRowSet)).setText(data.setName);
-                ((TextView) convertView.findViewById(R.id.traderNumber)).setText(data.hasPrice() ?
-                        data.numberOf + "x" : "");
-                convertView.findViewById(R.id.traderRowFoil).setVisibility((data.foil ? View.VISIBLE : View.GONE));
-
-				/* Set the price, and the color depending on custom status */
-                TextView priceField = (TextView) convertView.findViewById(R.id.traderRowPrice);
-                priceField.setText(data.hasPrice() ? data.getPriceString() : data.message);
-                if (data.hasPrice()) {
-                    if (data.customPrice) {
-                        priceField.setTextColor(getActivity().getResources().getColor(R.color.material_green_500));
-                    } else {
-                        priceField.setTextColor(getActivity().getResources().getColor(
-                                getResourceIdFromAttr(R.attr.color_text)
-                        ));
-                    }
-                } else {
-                    priceField.setTextColor(getActivity().getResources().getColor(R.color.material_red_500));
-                }
-            }
-            return convertView;
-        }
-    }
-    
-    /* Comparators for sorting */
-
     /* Comparator based on converted mana cost */
     public static class TradeComparatorCmc implements Comparator<MtgCard> {
         @Override
@@ -1258,6 +1189,8 @@ public class TradeFragment extends FamiliarFragment {
             return -1;
         }
     }
+    
+    /* Comparators for sorting */
 
     /* Comparator based on color */
     public static class TradeComparatorColor implements Comparator<MtgCard> {
@@ -1345,6 +1278,69 @@ public class TradeFragment extends FamiliarFragment {
                 return 1;
             }
             return -1;
+        }
+    }
+
+    /**
+     * This inner class helps to display card information from an ArrayList<> in a ListView
+     */
+    private class TradeListAdapter extends ArrayAdapter<MtgCard> {
+
+        private final ArrayList<MtgCard> items;
+
+        /**
+         * Constructor
+         *
+         * @param context A context to pass to super
+         * @param mItems  The list of items to display
+         */
+        public TradeListAdapter(Context context, ArrayList<MtgCard> mItems) {
+            super(context, R.layout.trader_row, mItems);
+            this.items = mItems;
+        }
+
+        /**
+         * This either inflates or recycles a view for a given row, and populates it with card information
+         *
+         * @param position    The position of the row, corresponds to an entry in the ArrayList
+         * @param convertView The view to recycle, or null if we have to inflate a new one
+         * @param parent      The parent ViewGroup
+         * @return The view to display for this row
+         */
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            /* if the supplied view is null, inflate a new one */
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row, null, false);
+            }
+            /* Get the data from the ArrayList */
+            MtgCard data = items.get(position);
+            if (data != null) {
+                assert convertView != null;
+
+                /* Set the name, set number, and foil indicators */
+                ((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.name);
+                ((TextView) convertView.findViewById(R.id.traderRowSet)).setText(data.setName);
+                ((TextView) convertView.findViewById(R.id.traderNumber)).setText(data.hasPrice() ?
+                        data.numberOf + "x" : "");
+                convertView.findViewById(R.id.traderRowFoil).setVisibility((data.foil ? View.VISIBLE : View.GONE));
+
+                /* Set the price, and the color depending on custom status */
+                TextView priceField = (TextView) convertView.findViewById(R.id.traderRowPrice);
+                priceField.setText(data.hasPrice() ? data.getPriceString() : data.message);
+                if (data.hasPrice()) {
+                    if (data.customPrice) {
+                        priceField.setTextColor(getActivity().getResources().getColor(R.color.material_green_500));
+                    } else {
+                        priceField.setTextColor(getActivity().getResources().getColor(
+                                getResourceIdFromAttr(R.attr.color_text)
+                        ));
+                    }
+                } else {
+                    priceField.setTextColor(getActivity().getResources().getColor(R.color.material_red_500));
+                }
+            }
+            return convertView;
         }
     }
 }

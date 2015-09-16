@@ -61,7 +61,7 @@ class RulesParser {
             this.mInputStream = url.openStream();
             this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream));
 
-			/*First line will be the date formatted as YYYY-MM-DD */
+            /*First line will be the date formatted as YYYY-MM-DD */
             String line = this.mBufferedReader.readLine();
             String[] parts = line.split("-");
             Calendar c = Calendar.getInstance();
@@ -162,7 +162,7 @@ class RulesParser {
                     }
                 }
 
-				/* Then move to the next line */
+                /* Then move to the next line */
                 line = mBufferedReader.readLine().trim();
             }
 
@@ -185,11 +185,11 @@ class RulesParser {
                     }
                 }
 
-				/* Then move to the next line */
+                /* Then move to the next line */
                 line = mBufferedReader.readLine().trim();
             }
             if (currentTerm != null) {
-				/* Document is over but we still have a term; add it to the list */
+                /* Document is over but we still have a term; add it to the list */
                 mGlossary.add(currentTerm);
             }
 
@@ -234,7 +234,7 @@ class RulesParser {
             this.mInputStream.close();
             this.mBufferedReader.close();
         } catch (IOException e) {
-			/* eat it */
+            /* eat it */
         }
 
         this.mInputStream = null;

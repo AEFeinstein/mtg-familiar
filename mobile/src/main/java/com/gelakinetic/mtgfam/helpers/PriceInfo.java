@@ -24,7 +24,7 @@ public class PriceInfo {
      */
     public byte[] toBytes() {
 
-		/* Longs to bytes */
+        /* Longs to bytes */
         byte[] bytes = new byte[8 * 4 + mUrl.length()];
         ByteBuffer buf = ByteBuffer.wrap(bytes);
         buf.putDouble(mLow);
@@ -44,7 +44,7 @@ public class PriceInfo {
      */
     private void fromBytes(byte[] bytes) {
 
-		/* Bytes to longs */
+        /* Bytes to longs */
         ByteBuffer buf2 = ByteBuffer.wrap(bytes);
         mLow = buf2.getDouble();
         mAverage = buf2.getDouble();

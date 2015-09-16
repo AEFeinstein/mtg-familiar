@@ -77,7 +77,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
         assert myFragmentView != null;
 
-		/* Add listeners to the portraits to show the full Vanguards */
+        /* Add listeners to the portraits to show the full Vanguards */
         myFragmentView.findViewById(R.id.imageViewMo).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showDialog(DIALOG_MOMIR);
@@ -96,7 +96,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             }
         });
 
-		/* Add the listeners to the buttons to display random cards */
+        /* Add the listeners to the buttons to display random cards */
         myFragmentView.findViewById(R.id.momir_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
@@ -131,11 +131,11 @@ public class MoJhoStoFragment extends FamiliarFragment {
             }
         });
 
-		/* Save the spinners to pull out the CMCs later */
+        /* Save the spinners to pull out the CMCs later */
         mMomirCmcChoice = (Spinner) myFragmentView.findViewById(R.id.momir_spinner);
         mStonehewerCmcChoice = (Spinner) myFragmentView.findViewById(R.id.stonehewer_spinner);
 
-		/* Return the view */
+        /* Return the view */
         return myFragmentView;
     }
 
@@ -191,25 +191,25 @@ public class MoJhoStoFragment extends FamiliarFragment {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
-		/* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
             return;
         }
 
         removeDialog(getFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             @NotNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
-				/* This will be set to false if we are returning a null dialog. It prevents a crash */
+                /* This will be set to false if we are returning a null dialog. It prevents a crash */
                 setShowsDialog(true);
 
                 switch (id) {
                     case DIALOG_RULES: {
-						/* Use a generic AlertDialog to display the rules text */
+                        /* Use a generic AlertDialog to display the rules text */
                         AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
                         builder.setNeutralButton(R.string.mojhosto_dialog_play, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -223,14 +223,14 @@ public class MoJhoStoFragment extends FamiliarFragment {
                     case DIALOG_MOMIR:
                     case DIALOG_STONEHEWER:
                     case DIALOG_JHOIRA: {
-						/* Use a raw dialog with a custom view (ImageView inside LinearLayout) to display the Vanguard*/
+                        /* Use a raw dialog with a custom view (ImageView inside LinearLayout) to display the Vanguard*/
                         Dialog dialog = new Dialog(this.getActivity());
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog.setContentView(R.layout.card_view_image_dialog);
                         ImageView image = (ImageView) dialog.findViewById(R.id.cardimage);
 
-						/* These drawables are re-sized on-the-fly, so only a single hi-res version exists in a resource
-						   folder without density */
+                        /* These drawables are re-sized on-the-fly, so only a single hi-res version exists in a resource
+                           folder without density */
                         switch (id) {
                             case DIALOG_MOMIR:
                                 image.setImageResource(R.drawable.mjs_momir);
@@ -243,33 +243,33 @@ public class MoJhoStoFragment extends FamiliarFragment {
                                 break;
                         }
 
-						/* Make a DP border */
+                        /* Make a DP border */
                         int border = (int) TypedValue.applyDimension(
                                 TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics());
 
-						/* Get the screen size in px */
+                        /* Get the screen size in px */
                         Rect rectangle = new Rect();
                         Window window = getActivity().getWindow();
                         window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
                         int windowHeight = rectangle.height();
                         int windowWidth = rectangle.width();
 
-						/* Get the drawable size in px */
+                        /* Get the drawable size in px */
                         assert image.getDrawable() != null;
                         int imageHeight = image.getDrawable().getIntrinsicHeight();
                         int imageWidth = image.getDrawable().getIntrinsicWidth();
 
-						/* Figure out how much to scale the drawable */
+                        /* Figure out how much to scale the drawable */
                         float scaleFactor;
                         if ((imageHeight / (float) imageWidth) > (windowHeight / (float) windowWidth)) {
-							/* Limiting factor is height */
+                            /* Limiting factor is height */
                             scaleFactor = (windowHeight - border) / (float) imageHeight;
                         } else {
-							/* Limiting factor is width */
+                            /* Limiting factor is width */
                             scaleFactor = (windowWidth - border) / (float) imageWidth;
                         }
 
-						/* Scale the drawable */
+                        /* Scale the drawable */
                         image.setLayoutParams(new LinearLayout.LayoutParams((int) (imageWidth * scaleFactor),
                                 (int) (imageHeight * scaleFactor)));
 
@@ -316,7 +316,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             int pos = mRandom.nextInt(permanents.getCount());
             permanents.moveToPosition(pos);
 
-			/* add a fragment */
+            /* add a fragment */
             Bundle args = new Bundle();
             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{permanents.getLong(permanents.getColumnIndex(CardDbAdapter.KEY_ID))});
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
@@ -347,7 +347,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             if (spells == null) {
                 throw new FamiliarDbException(new Exception("three spell failure"));
             }
-			/* Get 3 random, distinct numbers */
+            /* Get 3 random, distinct numbers */
             int pos[] = new int[3];
             pos[0] = mRandom.nextInt(spells.getCount());
             pos[1] = mRandom.nextInt(spells.getCount());
@@ -368,7 +368,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             spells.moveToPosition(pos[2]);
             args.putLong(ResultListFragment.CARD_ID_2, spells.getLong(spells.getColumnIndex(CardDbAdapter.KEY_ID)));
 
-			/* add a fragment */
+            /* add a fragment */
             ResultListFragment rlFrag = new ResultListFragment();
             startNewFragment(rlFrag, args);
 

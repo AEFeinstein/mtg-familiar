@@ -38,13 +38,13 @@ public class HtmlDocFragment extends FamiliarFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		/* Inflate the view, pull out UI elements */
+        /* Inflate the view, pull out UI elements */
         View view = inflater.inflate(R.layout.html_frag, container, false);
         assert view != null;
         final WebView webView = (WebView) view.findViewById(R.id.webview);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
-		/* The progress bar will spin until the web view is loaded */
+        /* The progress bar will spin until the web view is loaded */
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -58,7 +58,7 @@ public class HtmlDocFragment extends FamiliarFragment {
             }
         });
 
-		/* Get the document from the bundle, load it */
+        /* Get the document from the bundle, load it */
         File file = new File(getActivity().getFilesDir(), getArguments().getString(JudgesCornerFragment.HTML_DOC));
         StringBuilder html = new StringBuilder();
         BufferedReader reader = null;
@@ -82,7 +82,7 @@ public class HtmlDocFragment extends FamiliarFragment {
         }
         webView.loadDataWithBaseURL(null, html.toString(), "text/html", "utf-8", null);
 
-		/* Set up the button to jump to the top of the document */
+        /* Set up the button to jump to the top of the document */
         view.findViewById(R.id.mtr_ipg_jump_to_top).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 webView.scrollTo(0, 0);

@@ -146,37 +146,6 @@ public class FamiliarActivity extends AppCompatActivity {
     private static final int MESSAGE_FLUSH = 2;
     private static final int MESSAGE_CLOSE = 3;
     private static final String IMAGE_CACHE_DIR = "images";
-    /* Listen for changes to preferences */
-    private final SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-            if (s.equals(getString(R.string.key_widgetButtons))) {
-                Intent intent = new Intent(FamiliarActivity.this, MTGFamiliarAppWidgetProvider.class);
-                intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                assert AppWidgetManager.getInstance(getApplication()) != null;
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
-                assert appWidgetManager != null;
-                int ids[] = appWidgetManager.getAppWidgetIds(
-                        new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
-                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                sendBroadcast(intent);
-            } else if (s.equals(getString(R.string.key_theme)) || s.equals(getString(R.string.key_language))) {
-                /* Restart the activity for theme & language changes */
-                FamiliarActivity.this.finish();
-                startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
-            } else if (s.equals(getString(R.string.key_imageCacheSize))) {
-                /* Close the old cache */
-                mImageCache.flush();
-                mImageCache.close();
-
-				/* Set up the image cache */
-                ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
-                cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-                cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
-                addImageCache(getSupportFragmentManager(), cacheParams);
-            }
-        }
-    };
     /* Spice setup */
     public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
     /* What the drawer menu will be */
@@ -209,6 +178,38 @@ public class FamiliarActivity extends AppCompatActivity {
     public PreferenceAdapter mPreferenceAdapter;
     /* Image caching */
     public ImageCache mImageCache;
+    /* Listen for changes to preferences */
+    private final SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+            if (s.equals(getString(R.string.key_widgetButtons))) {
+                Intent intent = new Intent(FamiliarActivity.this, MTGFamiliarAppWidgetProvider.class);
+                intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                assert AppWidgetManager.getInstance(getApplication()) != null;
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplication());
+                assert appWidgetManager != null;
+                int ids[] = appWidgetManager.getAppWidgetIds(
+                        new ComponentName(getApplication(), MTGFamiliarAppWidgetProvider.class));
+                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                sendBroadcast(intent);
+            } else if (s.equals(getString(R.string.key_theme)) || s.equals(getString(R.string.key_language))) {
+                /* Restart the activity for theme & language changes */
+                FamiliarActivity.this.finish();
+                startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
+            } else if (s.equals(getString(R.string.key_imageCacheSize))) {
+                /* Close the old cache */
+                mImageCache.flush();
+                mImageCache.close();
+
+                /* Set up the image cache */
+                ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
+                cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+                cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
+                addImageCache(getSupportFragmentManager(), cacheParams);
+            }
+        }
+    };
+    public GoogleApiClient mGoogleApiClient;
     private ActionBarDrawerToggle mDrawerToggle;
     /* UI elements */
     private IndeterminateRefreshLayout mRefreshLayout;
@@ -218,6 +219,44 @@ public class FamiliarActivity extends AppCompatActivity {
     private boolean mUpdatingRoundTimer;
     private long mRoundEndTime;
     private Handler mRoundTimerUpdateHandler;
+    /**
+     * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
+     * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment
+     */
+    private final Runnable timerUpdate = new Runnable() {
+
+        @Override
+        public void run() {
+            if (mRoundEndTime > System.currentTimeMillis()) {
+                long timeLeftSeconds = (mRoundEndTime - System.currentTimeMillis()) / 1000;
+                String timeLeftStr;
+
+                if (timeLeftSeconds <= 0) {
+                    timeLeftStr = "00:00:00";
+                } else {
+                    /* This is a slight hack to handle the fact that it always rounds down. It will start the timer at
+                       50:00 instead of 49:59, or whatever */
+                    timeLeftSeconds++;
+                    timeLeftStr = String.format("%02d:%02d:%02d",
+                            timeLeftSeconds / 3600,
+                            (timeLeftSeconds % 3600) / 60,
+                            timeLeftSeconds % 60);
+                }
+
+                if (mUpdatingRoundTimer) {
+                    assert getSupportActionBar() != null;
+                    getSupportActionBar().setTitle(timeLeftStr);
+                }
+                mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1000);
+            } else {
+                stopUpdatingDisplay();
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+                if (fragment instanceof RoundTimerFragment) {
+                    ((RoundTimerFragment) fragment).timerEnded();
+                }
+            }
+        }
+    };
     private int mCurrentFrag;
     private boolean mUserInactive = false;
     private final Runnable userInactive = new Runnable() {
@@ -231,8 +270,6 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
-
-    public GoogleApiClient mGoogleApiClient;
 
     /**
      * Start the Spice Manager when the activity starts
@@ -308,7 +345,7 @@ public class FamiliarActivity extends AppCompatActivity {
             themeString = getString(R.string.pref_theme_light);
         }
 
-		/* Switch the theme if the preference does not match the current theme */
+        /* Switch the theme if the preference does not match the current theme */
         if (!themeString.equals(mPreferenceAdapter.getTheme())) {
             this.setTheme(otherTheme);
         }
@@ -332,13 +369,13 @@ public class FamiliarActivity extends AppCompatActivity {
         /* Set default preferences manually so that the listener doesn't do weird things on init */
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-		/* Set up a listener to update the home screen widget whenever the user changes the preference */
+        /* Set up a listener to update the home screen widget whenever the user changes the preference */
         mPreferenceAdapter.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
 
-		/* Create the handler to update the timer in the action bar */
+        /* Create the handler to update the timer in the action bar */
         mRoundTimerUpdateHandler = new Handler();
 
-		/* Check if we should make the timer notification */
+        /* Check if we should make the timer notification */
         mRoundEndTime = mPreferenceAdapter.getRoundTimerEnd();
         if (mRoundEndTime != -1) {
             RoundTimerFragment.showTimerRunningNotification(this, mRoundEndTime);
@@ -346,14 +383,14 @@ public class FamiliarActivity extends AppCompatActivity {
         }
         mUpdatingRoundTimer = false;
 
-		/* Get the drawer layout and list */
+        /* Get the drawer layout and list */
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		/* set a custom shadow that overlays the main content when the drawer opens */
+        /* set a custom shadow that overlays the main content when the drawer opens */
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-		/* set up the drawer's list view with items and click listener */
+        /* set up the drawer's list view with items and click listener */
         mPagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
 
         mDrawerList.setAdapter(mPagesAdapter);
@@ -531,13 +568,13 @@ public class FamiliarActivity extends AppCompatActivity {
 
         boolean isDeepLink = false;
 
-		/* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
+        /* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
         /* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
         if (savedInstanceState == null) {
             isDeepLink = processIntent(getIntent());
         }
 
-		/* Check to see if the change log should be shown */
+        /* Check to see if the change log should be shown */
         if (!isDeepLink) {
             PackageInfo pInfo;
             try {
@@ -584,19 +621,19 @@ public class FamiliarActivity extends AppCompatActivity {
             }
         }
 
-		/* Run the updater service if there is a network connection */
+        /* Run the updater service if there is a network connection */
         if (getNetworkState(false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
             /* Only update the banning list if it hasn't been updated recently */
             long curTime = System.currentTimeMillis();
             int updateFrequency = Integer.valueOf(mPreferenceAdapter.getUpdateFrequency());
             int lastLegalityUpdate = mPreferenceAdapter.getLastLegalityUpdate();
-			/* days to ms */
+            /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > (updateFrequency * 24 * 60 * 60)) {
                 startService(new Intent(this, DbUpdaterService.class));
             }
         }
 
-		/* Set up the image cache */
+        /* Set up the image cache */
         ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(this, IMAGE_CACHE_DIR);
         cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
         cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
@@ -616,7 +653,7 @@ public class FamiliarActivity extends AppCompatActivity {
         boolean isDeepLink = false;
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			/* Do a search by name, launched from the quick search */
+            /* Do a search by name, launched from the quick search */
             String query = intent.getStringExtra(SearchManager.QUERY);
             Bundle args = new Bundle();
             SearchCriteria sc = new SearchCriteria();
@@ -673,7 +710,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     DatabaseManager.getInstance(this, false).closeDatabase(false);
                 }
             } else if (data.getAuthority().contains("CardSearchProvider")) {
-    			/* User clicked a card in the quick search autocomplete, jump right to it */
+                /* User clicked a card in the quick search autocomplete, jump right to it */
                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
                         new long[]{Long.parseLong(data.getLastPathSegment())});
                 shouldClearFragmentStack = false; /* Don't clear backstack for search intents */
@@ -840,10 +877,10 @@ public class FamiliarActivity extends AppCompatActivity {
 
         mCurrentFrag = position;
         Fragment newFrag;
-		/* Pick the new fragment */
+        /* Pick the new fragment */
         switch (resId) {
             case R.string.main_card_search: {
-				/* If this is a quick search intent, launch either the card view or result list directly */
+                /* If this is a quick search intent, launch either the card view or result list directly */
                 if (args != null && args.containsKey(CardViewPagerFragment.CARD_ID_ARRAY)) {
                     newFrag = new CardViewPagerFragment();
                 } else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
@@ -899,12 +936,12 @@ public class FamiliarActivity extends AppCompatActivity {
 
         try {
             if (!forceSelect && ((Object) newFrag).getClass().equals(((Object) getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getClass())) {
-			    /* This is the same fragment, just close the menu */
+                /* This is the same fragment, just close the menu */
                 mDrawerLayout.closeDrawer(mDrawerList);
                 return;
             }
         } catch (NullPointerException e) {
-			/* no fragment to compare to */
+            /* no fragment to compare to */
         }
 
         if (args != null) {
@@ -915,16 +952,16 @@ public class FamiliarActivity extends AppCompatActivity {
         FragmentTransaction ft;
         if (fm != null) {
             if (shouldClearFragmentStack) {
-			    /* Remove any current fragments on the back stack */
+                /* Remove any current fragments on the back stack */
                 for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
                     fm.popBackStack();
                 }
             }
 
-			/* Begin a new transaction */
+            /* Begin a new transaction */
             ft = fm.beginTransaction();
 
-			/* Replace or add the fragment */
+            /* Replace or add the fragment */
             ft.replace(R.id.fragment_container, newFrag, FamiliarActivity.FRAGMENT_TAG);
             if (!shouldClearFragmentStack) {
                 ft.addToBackStack(null);
@@ -943,7 +980,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-		/* Sync the toggle state after onRestoreInstanceState has occurred. */
+        /* Sync the toggle state after onRestoreInstanceState has occurred. */
         mDrawerToggle.syncState();
     }
 
@@ -955,7 +992,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-		/* Pass any configuration change to the drawer toggles */
+        /* Pass any configuration change to the drawer toggles */
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
@@ -997,7 +1034,7 @@ public class FamiliarActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_SEARCH) {
             Fragment f = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-			/* Check to see if the current fragment did anything with the search key */
+            /* Check to see if the current fragment did anything with the search key */
             return ((FamiliarFragment) f).onInterceptSearchKey() || super.onKeyDown(keyCode, event);
         }
         /* Dinky workaround for LG phones: https://code.google.com/p/android/issues/detail?id=78154 */
@@ -1048,7 +1085,7 @@ public class FamiliarActivity extends AppCompatActivity {
             inputManager
                     .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         } catch (NullPointerException e) {
-			/* eat it */
+            /* eat it */
         }
     }
 
@@ -1099,12 +1136,12 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param id the ID of the dialog to show
      */
     private void showDialogFragment(final int id) throws IllegalStateException {
-		/* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
-		currently showing dialog, so make our own transaction and take care of that here. */
+        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
+        currently showing dialog, so make our own transaction and take care of that here. */
 
         removeDialogFragment(getSupportFragmentManager());
 
-		/* Create and show the dialog. */
+        /* Create and show the dialog. */
         FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
 
             /**
@@ -1120,7 +1157,7 @@ public class FamiliarActivity extends AppCompatActivity {
             public Dialog onCreateDialog(Bundle savedInstanceState) {
                 super.onCreateDialog(savedInstanceState);
 
-				/* This will be set to false if we are returning a null dialog. It prevents a crash */
+                /* This will be set to false if we are returning a null dialog. It prevents a crash */
                 setShowsDialog(true);
                 AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
 
@@ -1129,7 +1166,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 switch (id) {
                     case DIALOG_ABOUT: {
 
-						/* Set the title with the package version if possible */
+                        /* Set the title with the package version if possible */
                         try {
                             builder.setTitle(getString(R.string.main_about) + " " + getString(R.string.app_name) + " " +
                                     getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
@@ -1137,14 +1174,14 @@ public class FamiliarActivity extends AppCompatActivity {
                             builder.setTitle(getString(R.string.main_about) + " " + getString(R.string.app_name));
                         }
 
-						/* Set the neutral button */
+                        /* Set the neutral button */
                         builder.setNeutralButton(R.string.dialog_thanks, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-								/* Just close the dialog */
+                                /* Just close the dialog */
                             }
                         });
 
-						/* Set the custom view, with some images below the text */
+                        /* Set the custom view, with some images below the text */
                         LayoutInflater inflater = this.getActivity().getLayoutInflater();
                         View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
                         assert dialogLayout != null;
@@ -1165,11 +1202,11 @@ public class FamiliarActivity extends AppCompatActivity {
 
                         builder.setNeutralButton(R.string.dialog_enjoy, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-								/* Just close the dialog */
+                                /* Just close the dialog */
                             }
                         });
 
-						/* Set the custom view, with some images below the text */
+                        /* Set the custom view, with some images below the text */
                         LayoutInflater inflater = this.getActivity().getLayoutInflater();
                         View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
                         assert dialogLayout != null;
@@ -1184,12 +1221,12 @@ public class FamiliarActivity extends AppCompatActivity {
                         return builder.create();
                     }
                     case DIALOG_DONATE: {
-						/* Set the title */
+                        /* Set the title */
                         builder.setTitle(R.string.main_donate_dialog_title);
-						/* Set the buttons button */
+                        /* Set the buttons button */
                         builder.setNegativeButton(R.string.dialog_thanks_anyway, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-								/* Just close the dialog */
+                                /* Just close the dialog */
                             }
                         });
                         builder.setPositiveButton(R.string.main_donate_title, new DialogInterface.OnClickListener() {
@@ -1199,17 +1236,17 @@ public class FamiliarActivity extends AppCompatActivity {
                             }
                         });
 
-						/* Set the custom view */
+                        /* Set the custom view */
                         LayoutInflater inflater = this.getActivity().getLayoutInflater();
                         View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
 
-						/* Set the text */
+                        /* Set the text */
                         assert dialogLayout != null;
                         TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
                         text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_donate_text)));
                         text.setMovementMethod(LinkMovementMethod.getInstance());
 
-						/* Set the image view */
+                        /* Set the image view */
                         ImageView payPal = (ImageView) dialogLayout.findViewById(R.id.imageview1);
                         payPal.setImageResource(R.drawable.paypal_icon);
                         payPal.setOnClickListener(new View.OnClickListener() {
@@ -1227,20 +1264,20 @@ public class FamiliarActivity extends AppCompatActivity {
                         return builder.create();
                     }
                     case DIALOG_TTS: {
-						/* Then display a dialog informing them of TTS */
+                        /* Then display a dialog informing them of TTS */
 
                         builder.setTitle(R.string.main_tts_warning_title)
                                 .setMessage(R.string.main_tts_warning_text)
                                 .setPositiveButton(R.string.main_install_tts, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-										/* TTS couldn't init, try installing TTS data */
+                                        /* TTS couldn't init, try installing TTS data */
                                         try {
                                             Intent installIntent = new Intent();
                                             installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
                                             startActivity(installIntent);
                                         } catch (ActivityNotFoundException e) {
-											/* TTS not even installed */
+                                            /* TTS not even installed */
                                             Intent intent = new Intent(Intent.ACTION_VIEW);
                                             intent.setData(Uri.parse("market://details?id=com.google.android.tts"));
                                             startActivity(intent);
@@ -1334,7 +1371,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		/* The ringtone picker in the preference fragment and RoundTimerFragment will send a result here */
+        /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result here */
         if (data != null && data.getExtras() != null) {
             if (data.getExtras().keySet().contains(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)) {
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
@@ -1384,45 +1421,6 @@ public class FamiliarActivity extends AppCompatActivity {
         mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
         mUserInactive = false;
     }
-
-    /**
-     * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
-     * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment
-     */
-    private final Runnable timerUpdate = new Runnable() {
-
-        @Override
-        public void run() {
-            if (mRoundEndTime > System.currentTimeMillis()) {
-                long timeLeftSeconds = (mRoundEndTime - System.currentTimeMillis()) / 1000;
-                String timeLeftStr;
-
-                if (timeLeftSeconds <= 0) {
-                    timeLeftStr = "00:00:00";
-                } else {
-					/* This is a slight hack to handle the fact that it always rounds down. It will start the timer at
-					   50:00 instead of 49:59, or whatever */
-                    timeLeftSeconds++;
-                    timeLeftStr = String.format("%02d:%02d:%02d",
-                            timeLeftSeconds / 3600,
-                            (timeLeftSeconds % 3600) / 60,
-                            timeLeftSeconds % 60);
-                }
-
-                if (mUpdatingRoundTimer) {
-                    assert getSupportActionBar() != null;
-                    getSupportActionBar().setTitle(timeLeftStr);
-                }
-                mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1000);
-            } else {
-                stopUpdatingDisplay();
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-                if (fragment instanceof RoundTimerFragment) {
-                    ((RoundTimerFragment) fragment).timerEnded();
-                }
-            }
-        }
-    };
 
     /**
      * Save the current fragment.
@@ -1526,9 +1524,9 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     }
 
-	/*
-	 * Image Caching
-	 */
+    /*
+     * Image Caching
+     */
 
     private void flushCacheInternal() {
         if (mImageCache != null) {
@@ -1601,7 +1599,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
             assert convertView != null;
             if (values[position].mIsDivider) {
-				/* Make sure the recycled view is the right type, inflate a new one if necessary */
+                /* Make sure the recycled view is the right type, inflate a new one if necessary */
                 if (convertView.findViewById(R.id.divider) == null) {
                     convertView = getLayoutInflater().inflate(layout, parent, false);
                 }
@@ -1609,7 +1607,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 convertView.setFocusable(false);
                 convertView.setFocusableInTouchMode(false);
             } else {
-				/* Make sure the recycled view is the right type, inflate a new one if necessary */
+                /* Make sure the recycled view is the right type, inflate a new one if necessary */
                 if (convertView.findViewById(R.id.drawer_entry_name) == null) {
                     convertView = getLayoutInflater().inflate(layout, parent, false);
                 }
