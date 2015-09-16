@@ -122,7 +122,7 @@ public class SearchViewFragment extends FamiliarFragment {
         super.onCreate(savedInstanceState);
 
         /* Get a bunch of database info in a background task */
-        AsyncTask<Void, Void, Void> dbTask = new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... voids) {
@@ -178,12 +178,16 @@ public class SearchViewFragment extends FamiliarFragment {
 
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
-                /* Try to set the type field autocomplete. May be ready, may not */
-                setTypeAdapters();
                 return null;
             }
-        };
-        dbTask.execute();
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                /* Try to set the type field autocomplete. May be ready, may not */
+                setTypeAdapters();
+            }
+        }.execute();
 
         /* Get the different rarities out of resources to populate the list of choices with */
         Resources res = getResources();
@@ -257,6 +261,7 @@ public class SearchViewFragment extends FamiliarFragment {
 		/* Get references to UI elements. When a search is preformed, these values will be queried */
         mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
         mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
+        mTypeFieldsSet = false; /* If we get the fields again, we have to relink them to adapters */
         mSupertypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
         mSubtypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.subtypesearch);
         mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
