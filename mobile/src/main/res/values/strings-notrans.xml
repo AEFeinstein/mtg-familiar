@@ -33,28 +33,10 @@
     <!-- Dice Fragment -->
     <string name="dice_num_default_sides" translatable="false">50</string>
 
-    <!--Search View-->
-    <!--Until the card db is translated, these autocompletes should stay in English-->
-    <string name="search_Basic" translatable="false">Basic</string>
-    <string name="search_Legendary" translatable="false">Legendary</string>
-    <string name="search_Snow" translatable="false">Snow</string>
-    <string name="search_World" translatable="false">World</string>
+    <!-- Type checking for special image lookups -->
     <string name="search_Ongoing" translatable="false">Ongoing</string>
-
-    <string name="search_Instant" translatable="false">Instant</string>
-    <string name="search_Sorcery" translatable="false">Sorcery</string>
-
-    <string name="search_Artifact" translatable="false">Artifact</string>
-    <string name="search_Creature" translatable="false">Creature</string>
-    <string name="search_Enchantment" translatable="false">Enchantment</string>
-    <string name="search_Land" translatable="false">Land</string>
-    <string name="search_Planeswalker" translatable="false">Planeswalker</string>
-
-    <string name="search_Tribal" translatable="false">Tribal</string>
     <string name="search_Plane" translatable="false">Plane</string>
     <string name="search_Phenomenon" translatable="false">Phenomenon</string>
     <string name="search_Scheme" translatable="false">Scheme</string>
-    <string name="search_Vanguard" translatable="false">Vanguard</string>
-    <string name="search_Conspiracy" translatable="false">Conspiracy</string>
 
 </resources>

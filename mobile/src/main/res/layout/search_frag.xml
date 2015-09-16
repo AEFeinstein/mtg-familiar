@@ -54,9 +54,11 @@
                     android:hint="@string/search_supertype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:dropDownWidth="wrap_content"
+                    android:dropDownAnchor="@+id/linearLayout12"/>
 
-                <EditText
+                <MultiAutoCompleteTextView
                     android:id="@+id/subtypesearch"
                     style="@style/Widget.AppCompat.AutoCompleteTextView"
                     android:layout_width="match_parent"
@@ -65,7 +67,9 @@
                     android:hint="@string/search_subtype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:dropDownWidth="wrap_content"
+                    android:dropDownAnchor="@+id/linearLayout12"/>
 
             </LinearLayout>
 

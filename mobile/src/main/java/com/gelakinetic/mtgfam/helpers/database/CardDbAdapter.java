@@ -43,7 +43,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -2001,5 +2003,38 @@ public class CardDbAdapter {
             typeLine.append(subtype);
         }
         return typeLine.toString();
+    }
+
+    public static String[] getUniqueColumnArray(String colKey, SQLiteDatabase database) throws FamiliarDbException {
+        try {
+            String query =
+                    "SELECT " + KEY_ID + ", " + colKey +
+                            " FROM " + DATABASE_TABLE_CARDS +
+                            " GROUP BY " + colKey +
+                            " ORDER BY " + colKey;
+            Cursor cursor = database.rawQuery(query, null);
+
+            /* Skip over any empty entries in the column */
+            int colIndex = cursor.getColumnIndex(colKey);
+            cursor.moveToFirst();
+            while (cursor.getString(colIndex).equals("")) {
+                cursor.moveToNext();
+            }
+
+            /* HashSets contain unique values. Put each individual word in it */
+            HashSet<String> words = new HashSet<>();
+            while (!cursor.isAfterLast()) {
+                Collections.addAll(words, cursor.getString(colIndex).split("\\s+"));
+                cursor.moveToNext();
+            }
+
+            /* Turn the HashSet into an array, and sort it */
+            String[] wordsArr = words.toArray(new String[words.size()]);
+            Arrays.sort(wordsArr);
+            return wordsArr;
+
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
     }
 }

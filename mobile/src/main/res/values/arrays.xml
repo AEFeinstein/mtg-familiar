@@ -2,26 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!-- Arrays -->
-    <string-array name="supertypes">
-        <item>@string/search_Artifact</item>
-        <item>@string/search_Basic</item>
-        <item>@string/search_Creature</item>
-        <item>@string/search_Enchantment</item>
-        <item>@string/search_Instant</item>
-        <item>@string/search_Land</item>
-        <item>@string/search_Legendary</item>
-        <item>@string/search_Ongoing</item>
-        <item>@string/search_Phenomenon</item>
-        <item>@string/search_Plane</item>
-        <item>@string/search_Planeswalker</item>
-        <item>@string/search_Scheme</item>
-        <item>@string/search_Snow</item>
-        <item>@string/search_Sorcery</item>
-        <item>@string/search_Tribal</item>
-        <item>@string/search_Vanguard</item>
-        <item>@string/search_World</item>
-        <item>@string/search_Conspiracy</item>
-    </string-array>
     <string-array name="logic_spinner">
         <item>></item>
         <item>&lt;</item>
