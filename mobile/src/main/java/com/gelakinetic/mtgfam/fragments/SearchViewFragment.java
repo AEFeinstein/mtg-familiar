@@ -76,7 +76,6 @@ public class SearchViewFragment extends FamiliarFragment {
     private int mSelectedFormat;
 
     /* Autocomplete data structures */
-    private boolean mTypeFieldsSet = false;
     private String[] mSupertypes = null;
     private String[] mSubtypes = null;
 
@@ -121,74 +120,6 @@ public class SearchViewFragment extends FamiliarFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /* Get a bunch of database info in a background task */
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                try {
-                   /* Query the database for all sets and fill the arrays to populate the list of choices with */
-                    Cursor setCursor = CardDbAdapter.fetchAllSets(database);
-                    setCursor.moveToFirst();
-
-                    mSetNames = new String[setCursor.getCount()];
-                    mSetSymbols = new String[setCursor.getCount()];
-                    mSetChecked = new boolean[setCursor.getCount()];
-
-                    for (int i = 0; i < setCursor.getCount(); i++) {
-                        mSetSymbols[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
-                        mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-                        mSetChecked[i] = false;
-                        setCursor.moveToNext();
-                    }
-                    setCursor.close();
-                } catch (FamiliarDbException e) {
-                    handleFamiliarDbException(true);
-                }
-
-                try {
-                    /* Query the database for all formats and fill the arrays to populate the list of choices with */
-                    Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
-                    formatCursor.moveToFirst();
-
-                    mFormatNames = new String[formatCursor.getCount()];
-
-                    for (int i = 0; i < formatCursor.getCount(); i++) {
-                        mFormatNames[i] = formatCursor.getString(formatCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-                        formatCursor.moveToNext();
-                    }
-                    formatCursor.close();
-                    mSelectedFormat = -1;
-                } catch (FamiliarDbException e) {
-                    handleFamiliarDbException(true);
-                }
-
-                try {
-                    mSupertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, database);
-                } catch (FamiliarDbException e) {
-                    handleFamiliarDbException(true);
-                }
-
-                try {
-                    mSubtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, database);
-                } catch (FamiliarDbException e) {
-                    handleFamiliarDbException(true);
-                }
-
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                /* Try to set the type field autocomplete. May be ready, may not */
-                setTypeAdapters();
-            }
-        }.execute();
-
         /* Get the different rarities out of resources to populate the list of choices with */
         Resources res = getResources();
         TypedArray mRarityNamesTemp = res.obtainTypedArray(R.array.rarities);
@@ -206,38 +137,6 @@ public class SearchViewFragment extends FamiliarFragment {
             mRarityNames[i] = res.getString(resID);
         }
         mRarityNamesTemp.recycle();
-    }
-
-    /**
-     * If the MultiAutoCompleteTextViews and the backing String arrays are loaded, attach them.
-     * Because of the AsyncTask loading the String arrays from the database, I'm not sure which
-     * gets loaded first
-     */
-    private void setTypeAdapters() {
-        if (!mTypeFieldsSet &&
-                mSupertypeField != null && mSupertypes != null &&
-                mSubtypeField != null && mSubtypes != null) {
-            mTypeFieldsSet = true;
-
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    /* set the autocomplete for supertypes */
-                    ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
-                            SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
-                    mSupertypeField.setThreshold(1);
-                    mSupertypeField.setAdapter(supertypeAdapter);
-                    mSupertypeField.setTokenizer(new SpaceTokenizer());
-
-                    /* set the autocomplete for subtypes */
-                    ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
-                            SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
-                    mSubtypeField.setThreshold(1);
-                    mSubtypeField.setAdapter(subtypeAdapter);
-                    mSubtypeField.setTokenizer(new SpaceTokenizer());
-                }
-            });
-        }
     }
 
     /**
@@ -261,7 +160,6 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Get references to UI elements. When a search is preformed, these values will be queried */
         mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
         mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
-        mTypeFieldsSet = false; /* If we get the fields again, we have to relink them to adapters */
         mSupertypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
         mSubtypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.subtypesearch);
         mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
@@ -337,8 +235,99 @@ public class SearchViewFragment extends FamiliarFragment {
         /* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
 
-        /* Try to set the type field autocomplete. May be ready, may not */
-        setTypeAdapters();
+        /* Get a bunch of database info in a background task */
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+
+                /* Only actually get data if the arrays are null */
+                if(mSetNames == null) {
+                    try {
+                   /* Query the database for all sets and fill the arrays to populate the list of choices with */
+                        Cursor setCursor = CardDbAdapter.fetchAllSets(database);
+                        setCursor.moveToFirst();
+
+                        mSetNames = new String[setCursor.getCount()];
+                        mSetSymbols = new String[setCursor.getCount()];
+                        mSetChecked = new boolean[setCursor.getCount()];
+
+                        for (int i = 0; i < setCursor.getCount(); i++) {
+                            mSetSymbols[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
+                            mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+                            mSetChecked[i] = false;
+                            setCursor.moveToNext();
+                        }
+                        setCursor.close();
+                    } catch (FamiliarDbException e) {
+                        handleFamiliarDbException(true);
+                    }
+                }
+
+                if(mFormatNames == null) {
+                    try {
+                    /* Query the database for all formats and fill the arrays to populate the list of choices with */
+                        Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
+                        formatCursor.moveToFirst();
+
+                        mFormatNames = new String[formatCursor.getCount()];
+
+                        for (int i = 0; i < formatCursor.getCount(); i++) {
+                            mFormatNames[i] = formatCursor.getString(formatCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+                            formatCursor.moveToNext();
+                        }
+                        formatCursor.close();
+                        mSelectedFormat = -1;
+                    } catch (FamiliarDbException e) {
+                        handleFamiliarDbException(true);
+                    }
+                }
+
+                if(mSupertypes == null) {
+                    try {
+                        mSupertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, database);
+                    } catch (FamiliarDbException e) {
+                        handleFamiliarDbException(true);
+                    }
+                }
+
+                if(mSubtypes == null) {
+                    try {
+                        mSubtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, database);
+                    } catch (FamiliarDbException e) {
+                        handleFamiliarDbException(true);
+                    }
+                }
+
+                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        /* set the autocomplete for supertypes */
+                        ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
+                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
+                        mSupertypeField.setThreshold(1);
+                        mSupertypeField.setAdapter(supertypeAdapter);
+                        mSupertypeField.setTokenizer(new SpaceTokenizer());
+
+                        /* set the autocomplete for subtypes */
+                        ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
+                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
+                        mSubtypeField.setThreshold(1);
+                        mSubtypeField.setAdapter(subtypeAdapter);
+                        mSubtypeField.setTokenizer(new SpaceTokenizer());
+                    }
+                });
+            }
+        }.execute();
 
         /* set the search button! */
         searchButton.setOnClickListener(new View.OnClickListener() {
