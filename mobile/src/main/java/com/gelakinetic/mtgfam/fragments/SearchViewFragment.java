@@ -245,7 +245,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 /* Only actually get data if the arrays are null */
                 if(mSetNames == null) {
                     try {
-                   /* Query the database for all sets and fill the arrays to populate the list of choices with */
+                        /* Query the database for all sets and fill the arrays to populate the list of choices with */
                         Cursor setCursor = CardDbAdapter.fetchAllSets(database);
                         setCursor.moveToFirst();
 
@@ -267,7 +267,7 @@ public class SearchViewFragment extends FamiliarFragment {
 
                 if(mFormatNames == null) {
                     try {
-                    /* Query the database for all formats and fill the arrays to populate the list of choices with */
+                        /* Query the database for all formats and fill the arrays to populate the list of choices with */
                         Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
                         formatCursor.moveToFirst();
 
@@ -445,18 +445,20 @@ public class SearchViewFragment extends FamiliarFragment {
 
         searchCriteria.set = null;
 
-        for (int i = 0; i < mSetChecked.length; i++) {
-            if (mSetChecked[i]) {
-                if (searchCriteria.set == null) {
-                    searchCriteria.set = mSetSymbols[i];
-                } else {
-                    searchCriteria.set += "-" + mSetSymbols[i];
+        if(mSetChecked != null) {
+            for (int i = 0; i < mSetChecked.length; i++) {
+                if (mSetChecked[i]) {
+                    if (searchCriteria.set == null) {
+                        searchCriteria.set = mSetSymbols[i];
+                    } else {
+                        searchCriteria.set += "-" + mSetSymbols[i];
+                    }
                 }
             }
         }
 
         searchCriteria.format = null;
-        if (mSelectedFormat != -1) {
+        if (mSelectedFormat != -1 && mFormatNames != null) {
             searchCriteria.format = mFormatNames[mSelectedFormat];
         }
 
@@ -574,8 +576,10 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
 
-        for (int i = 0; i < mSetChecked.length; i++) {
-            mSetChecked[i] = false;
+        if(mSetChecked != null) {
+            for (int i = 0; i < mSetChecked.length; i++) {
+                mSetChecked[i] = false;
+            }
         }
         mSelectedFormat = -1;
         for (int i = 0; i < mRarityChecked.length; i++) {
@@ -685,15 +689,22 @@ public class SearchViewFragment extends FamiliarFragment {
             mCmcChoice.setSelection(Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
                     .indexOf(String.valueOf(criteria.cmc)));
 
-            if (criteria.set != null) {
-                List<String> sets = Arrays.asList(criteria.set.split("-"));
-                for (int i = 0; i < mSetChecked.length; i++)
-                    mSetChecked[i] = sets.contains(mSetSymbols[i]);
-            } else
-                for (int i = 0; i < mSetChecked.length; i++)
-                    mSetChecked[i] = false;
+            if(mSetChecked != null) {
+                if (criteria.set != null) {
+                    List<String> sets = Arrays.asList(criteria.set.split("-"));
+                    for (int i = 0; i < mSetChecked.length; i++)
+                        mSetChecked[i] = sets.contains(mSetSymbols[i]);
+                } else {
+                    for (int i = 0; i < mSetChecked.length; i++) {
+                        mSetChecked[i] = false;
+                    }
+                }
+            }
 
-            mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
+            if(mFormatNames != null) {
+                mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
+            }
+
             for (int i = 0; i < mRarityChecked.length; i++) {
                 mRarityChecked[i] = (criteria.rarity != null && criteria.rarity
                         .contains(mRarityNames[i].charAt(0) + ""));
