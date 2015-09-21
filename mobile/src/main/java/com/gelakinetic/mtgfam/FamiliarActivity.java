@@ -96,8 +96,7 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.octo.android.robospice.SpiceManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -209,7 +208,7 @@ public class FamiliarActivity extends AppCompatActivity {
             }
         }
     };
-    public GoogleApiClient mGoogleApiClient;
+    public AppIndexingWrapper mAppIndexingWrapper;
     private ActionBarDrawerToggle mDrawerToggle;
     /* UI elements */
     private IndeterminateRefreshLayout mRefreshLayout;
@@ -294,9 +293,7 @@ public class FamiliarActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
+        mAppIndexingWrapper.disconnectIfConnected();
 
         mPreferenceAdapter.unregisterOnSharedPreferenceChangeListener(mPreferenceChangeListener);
     }
@@ -640,13 +637,8 @@ public class FamiliarActivity extends AppCompatActivity {
         addImageCache(getSupportFragmentManager(), cacheParams);
 
         /* Set up app indexing */
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(AppIndex.API)
-                .build();
-
-        if (!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
-        }
+        mAppIndexingWrapper = new AppIndexingWrapper(this);
+        mAppIndexingWrapper.connectIfDisconnected();
     }
 
     private boolean processIntent(Intent intent) {

@@ -31,7 +31,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -71,9 +70,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
+import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -144,9 +141,9 @@ public class CardViewFragment extends FamiliarFragment {
     /* Card info, used to build the URL to fetch the picture */
     private String mCardNumber;
     private String mSetCode;
-    private String mCardName;
+    public String mCardName;
     private String mMagicCardsInfoSetCode;
-    private int mMultiverseId;
+    public int mMultiverseId;
     private String mCardType;
 
     /* Card info used to flip the card */
@@ -163,8 +160,8 @@ public class CardViewFragment extends FamiliarFragment {
     /* State for reporting page views */
     private boolean mHasReportedView = false;
     private boolean mShouldReportView = false;
-    private String mDescription;
-    private String mSetName;
+    public String mDescription;
+    public String mSetName;
 
     /**
      * Kill any AsyncTask if it is still running
@@ -201,26 +198,6 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Creates and returns the action describing this page view
-     *
-     * @return An action describing this page view
-     */
-    private Action getAppIndexAction() {
-
-        Thing object = new Thing.Builder()
-                .setType("http://schema.org/Thing")         /* Optional, any valid schema.org type */
-                .setName(mCardName + " (" + mSetName + ")") /* Required, title field */
-                .setDescription(mDescription)               /* Required, description field */
-                /* Required, deep link in the android-app:// format */
-                .setUrl(Uri.parse("android-app://com.gelakinetic.mtgfam/card/multiverseid/" + mMultiverseId))
-                .build();
-
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .build();
-    }
-
-    /**
      * Reports this view to the Google app indexing API, once, when the fragment is viewed
      */
     private void reportAppIndexViewIfAble() {
@@ -228,8 +205,8 @@ public class CardViewFragment extends FamiliarFragment {
         if (!mHasReportedView) {
             if (mCardName != null) {
                 /* Connect your client */
-                getFamiliarActivity().mGoogleApiClient.connect();
-                AppIndex.AppIndexApi.start(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
+                getFamiliarActivity().mAppIndexingWrapper.connect();
+                AppIndexingWrapper.startAppIndexing(getFamiliarActivity().mAppIndexingWrapper, this);
 
                 /* Manage state */
                 mHasReportedView = true;
@@ -247,8 +224,8 @@ public class CardViewFragment extends FamiliarFragment {
         /* If the view was previously reported, and the name exists */
         if (mHasReportedView && mCardName != null) {
             /* Call end() and disconnect the client */
-            AppIndex.AppIndexApi.end(getFamiliarActivity().mGoogleApiClient, getAppIndexAction());
-            getFamiliarActivity().mGoogleApiClient.disconnect();
+            AppIndexingWrapper.endAppIndexing(getFamiliarActivity().mAppIndexingWrapper, this);
+            getFamiliarActivity().mAppIndexingWrapper.disconnect();
 
             /* manage state */
             mHasReportedView = false;

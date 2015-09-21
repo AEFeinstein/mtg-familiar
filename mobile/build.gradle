@@ -30,6 +30,16 @@ android {
                     'proguard-rules.txt'
         }
     }
+    productFlavors {
+	standard {
+	}
+	foss {
+	}
+    }
+
+    dependencies {
+	standardCompile 'com.google.android.gms:play-services-appindexing:7.8.0'
+    }
 }
 
 dependencies {
