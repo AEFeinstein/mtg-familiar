@@ -31,14 +31,13 @@ android {
         }
     }
     productFlavors {
-	standard {
-	}
-	foss {
-	}
-    }
-
-    dependencies {
-	standardCompile 'com.google.android.gms:play-services-appindexing:7.8.0'
+        standard {
+            dependencies {
+                compile 'com.google.android.gms:play-services-appindexing:7.8.0'
+            }
+        }
+        foss {
+        }
     }
 }
 
@@ -52,7 +51,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.google.android.gms:play-services-appindexing:7.8.0'
     compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.4'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
     compile 'com.code-troopers.betterpickers:library:2.0.1'
