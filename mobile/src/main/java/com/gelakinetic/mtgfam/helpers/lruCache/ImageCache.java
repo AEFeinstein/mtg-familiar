@@ -637,6 +637,7 @@ public class ImageCache {
         public File diskCacheDir;
         public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
         public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
+
         /**
          * Create a set of image cache parameters that can be provided to
          * {@link ImageCache#getInstance(android.support.v4.app.FragmentManager, ImageCacheParams)} or

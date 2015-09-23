@@ -2034,7 +2034,7 @@ public class CardDbAdapter {
             return wordsArr;
 
         } catch (SQLiteException | IllegalStateException e) {
-            if(cursor != null) {
+            if (cursor != null) {
                 cursor.close();
             }
             throw new FamiliarDbException(e);

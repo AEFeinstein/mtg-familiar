@@ -83,6 +83,7 @@ import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
@@ -96,7 +97,6 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
-import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.octo.android.robospice.SpiceManager;
 
 import org.jetbrains.annotations.NotNull;

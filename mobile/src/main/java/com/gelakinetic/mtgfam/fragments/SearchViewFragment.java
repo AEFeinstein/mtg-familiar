@@ -243,7 +243,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
 
                 /* Only actually get data if the arrays are null */
-                if(mSetNames == null) {
+                if (mSetNames == null) {
                     try {
                         /* Query the database for all sets and fill the arrays to populate the list of choices with */
                         Cursor setCursor = CardDbAdapter.fetchAllSets(database);
@@ -265,7 +265,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 }
 
-                if(mFormatNames == null) {
+                if (mFormatNames == null) {
                     try {
                         /* Query the database for all formats and fill the arrays to populate the list of choices with */
                         Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
@@ -284,7 +284,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 }
 
-                if(mSupertypes == null) {
+                if (mSupertypes == null) {
                     try {
                         mSupertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, database);
                     } catch (FamiliarDbException e) {
@@ -292,7 +292,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 }
 
-                if(mSubtypes == null) {
+                if (mSubtypes == null) {
                     try {
                         mSubtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, database);
                     } catch (FamiliarDbException e) {
@@ -327,7 +327,7 @@ public class SearchViewFragment extends FamiliarFragment {
                             mSubtypeField.setTokenizer(new SpaceTokenizer());
                         }
                     });
-                } catch(NullPointerException e) {
+                } catch (NullPointerException e) {
                     /* If the UI thread isn't here, eat it */
                 }
             }
@@ -449,7 +449,7 @@ public class SearchViewFragment extends FamiliarFragment {
 
         searchCriteria.set = null;
 
-        if(mSetChecked != null) {
+        if (mSetChecked != null) {
             for (int i = 0; i < mSetChecked.length; i++) {
                 if (mSetChecked[i]) {
                     if (searchCriteria.set == null) {
@@ -580,7 +580,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
 
-        if(mSetChecked != null) {
+        if (mSetChecked != null) {
             for (int i = 0; i < mSetChecked.length; i++) {
                 mSetChecked[i] = false;
             }
@@ -693,7 +693,7 @@ public class SearchViewFragment extends FamiliarFragment {
             mCmcChoice.setSelection(Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
                     .indexOf(String.valueOf(criteria.cmc)));
 
-            if(mSetChecked != null) {
+            if (mSetChecked != null) {
                 if (criteria.set != null) {
                     List<String> sets = Arrays.asList(criteria.set.split("-"));
                     for (int i = 0; i < mSetChecked.length; i++)
@@ -705,7 +705,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 }
             }
 
-            if(mFormatNames != null) {
+            if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
             }
 

@@ -1,16 +1,17 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.support.v7.app.AppCompatActivity;
+
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 
-public class AppIndexingWrapper{
-    
+public class AppIndexingWrapper {
 
-    public static void startAppIndexing(AppIndexingWrapper appIndexingWrapper, CardViewFragment fragment){
+
+    public static void startAppIndexing(AppIndexingWrapper appIndexingWrapper, CardViewFragment fragment) {
         //Do nothing
     }
 
-    public static void endAppIndexing(AppIndexingWrapper appIndexingWrapper, CardViewFragment fragment){
+    public static void endAppIndexing(AppIndexingWrapper appIndexingWrapper, CardViewFragment fragment) {
         //Do nothing
     }
 
@@ -18,19 +19,19 @@ public class AppIndexingWrapper{
         //Do nothing
     }
 
-    public void connect(){
+    public void connect() {
         //Do nothing
     }
 
-    public void disconnect(){
+    public void disconnect() {
         //Do nothing
     }
 
-    public void disconnectIfConnected(){
+    public void disconnectIfConnected() {
         //Do nothing
     }
 
-    public void connectIfDisconnected(){
+    public void connectIfDisconnected() {
         //Do nothing
     }
 }
