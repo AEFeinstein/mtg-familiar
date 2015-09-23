@@ -206,7 +206,9 @@ public class CardViewFragment extends FamiliarFragment {
             if (mCardName != null) {
                 /* Connect your client */
                 getFamiliarActivity().mAppIndexingWrapper.connect();
-                AppIndexingWrapper.startAppIndexing(getFamiliarActivity().mAppIndexingWrapper, this);
+                AppIndexingWrapper.startAppIndexing(getFamiliarActivity().mAppIndexingWrapper,
+				this,
+				getFamiliarActivity().getApplicationContext().getPackageName());
 
                 /* Manage state */
                 mHasReportedView = true;
@@ -224,7 +226,9 @@ public class CardViewFragment extends FamiliarFragment {
         /* If the view was previously reported, and the name exists */
         if (mHasReportedView && mCardName != null) {
             /* Call end() and disconnect the client */
-            AppIndexingWrapper.endAppIndexing(getFamiliarActivity().mAppIndexingWrapper, this);
+            AppIndexingWrapper.endAppIndexing(getFamiliarActivity().mAppIndexingWrapper,
+			    this,
+			    getFamiliarActivity().getApplicationContext().getPackageName());
             getFamiliarActivity().mAppIndexingWrapper.disconnect();
 
             /* manage state */
