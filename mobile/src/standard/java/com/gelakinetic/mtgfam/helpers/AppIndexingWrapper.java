@@ -18,14 +18,13 @@ public class AppIndexingWrapper{
      * @param fragment   The fragment for this page view. 
      * @return An action describing the fragment's page view
      */
-    private static Action getAppIndexAction(CardViewFragment fragment){
-        
+    private static Action getAppIndexAction(CardViewFragment fragment, String packageName){
         Thing object = new Thing.Builder()
                 .setType("http://schema.org/Thing")         /* Optional, any valid schema.org type */
                 .setName(fragment.mCardName + " (" + fragment.mSetName + ")") /* Required, title field */
                 .setDescription(fragment.mDescription)               /* Required, description field */
                 /* Required, deep link in the android-app:// format */
-                .setUrl(Uri.parse("android-app://com.gelakinetic.mtgfam/card/multiverseid/" + fragment.mMultiverseId))
+                .setUrl(Uri.parse("android-app://" + packageName + "/card/multiverseid/" + fragment.mMultiverseId))
                 .build();
 
         return new Action.Builder(Action.TYPE_VIEW)
@@ -33,12 +32,12 @@ public class AppIndexingWrapper{
                 .build();
     }
 
-    public static void startAppIndexing(AppIndexingWrapper appIndexingWrapper, CardViewFragment fragment){
-        AppIndex.AppIndexApi.start(appIndexingWrapper.mGoogleApiClient, getAppIndexAction(fragment));
+    public static void startAppIndexing(AppIndexingWrapper appIndexingWrapper, CardViewFragment fragment, String packageName){
+        AppIndex.AppIndexApi.start(appIndexingWrapper.mGoogleApiClient, getAppIndexAction(fragment, packageName));
     }
 
-    public static void endAppIndexing(AppIndexingWrapper appIndexingWrapper, CardViewFragment fragment){
-        AppIndex.AppIndexApi.end(appIndexingWrapper.mGoogleApiClient, getAppIndexAction(fragment));
+    public static void endAppIndexing(AppIndexingWrapper appIndexingWrapper, CardViewFragment fragment, String packageName){
+        AppIndex.AppIndexApi.end(appIndexingWrapper.mGoogleApiClient, getAppIndexAction(fragment, packageName));
     }
 
     public AppIndexingWrapper(AppCompatActivity activity) {
