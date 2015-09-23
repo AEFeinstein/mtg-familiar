@@ -16,6 +16,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
     defaultConfig {
+        applicationId = "com.gelakinetic.mtgfam"
         minSdkVersion 14
         targetSdkVersion 23
     }
@@ -29,14 +30,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.txt'
         }
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
     productFlavors {
         standard {
+            applicationId = "com.gelakinetic.mtgfam"
             dependencies {
                 compile 'com.google.android.gms:play-services-appindexing:7.8.0'
             }
         }
         foss {
+            applicationId = "com.gelakinetic.mtgfam.foss"
         }
     }
 }

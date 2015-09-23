@@ -308,24 +308,28 @@ public class SearchViewFragment extends FamiliarFragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        /* set the autocomplete for supertypes */
-                        ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
-                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
-                        mSupertypeField.setThreshold(1);
-                        mSupertypeField.setAdapter(supertypeAdapter);
-                        mSupertypeField.setTokenizer(new SpaceTokenizer());
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            /* set the autocomplete for supertypes */
+                            ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
+                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
+                            mSupertypeField.setThreshold(1);
+                            mSupertypeField.setAdapter(supertypeAdapter);
+                            mSupertypeField.setTokenizer(new SpaceTokenizer());
 
-                        /* set the autocomplete for subtypes */
-                        ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
-                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
-                        mSubtypeField.setThreshold(1);
-                        mSubtypeField.setAdapter(subtypeAdapter);
-                        mSubtypeField.setTokenizer(new SpaceTokenizer());
-                    }
-                });
+                            /* set the autocomplete for subtypes */
+                            ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
+                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
+                            mSubtypeField.setThreshold(1);
+                            mSubtypeField.setAdapter(subtypeAdapter);
+                            mSubtypeField.setTokenizer(new SpaceTokenizer());
+                        }
+                    });
+                } catch(NullPointerException e) {
+                    /* If the UI thread isn't here, eat it */
+                }
             }
         }.execute();
 

@@ -152,7 +152,7 @@ public abstract class FamiliarFragment extends Fragment {
                 SearchView sv = new SearchView(getActivity());
                 try {
                     sv.setSearchableInfo(searchManager.getSearchableInfo(
-                            new ComponentName("com.gelakinetic.mtgfam", "com.gelakinetic.mtgfam.FamiliarActivity")));
+                            new ComponentName(getContext().getPackageName(), "com.gelakinetic.mtgfam.FamiliarActivity")));
 
                     MenuItem mi = menu.add(R.string.name_search_hint)
                             .setIcon(getResourceIdFromAttr(R.attr.ic_menu_search));

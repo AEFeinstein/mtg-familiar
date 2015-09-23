@@ -2004,13 +2004,14 @@ public class CardDbAdapter {
     }
 
     public static String[] getUniqueColumnArray(String colKey, SQLiteDatabase database) throws FamiliarDbException {
+        Cursor cursor = null;
         try {
             String query =
                     "SELECT " + KEY_ID + ", " + colKey +
                             " FROM " + DATABASE_TABLE_CARDS +
                             " GROUP BY " + colKey +
                             " ORDER BY " + colKey;
-            Cursor cursor = database.rawQuery(query, null);
+            cursor = database.rawQuery(query, null);
 
             /* Skip over any empty entries in the column */
             int colIndex = cursor.getColumnIndex(colKey);
@@ -2029,9 +2030,13 @@ public class CardDbAdapter {
             /* Turn the HashSet into an array, and sort it */
             String[] wordsArr = words.toArray(new String[words.size()]);
             Arrays.sort(wordsArr);
+            cursor.close();
             return wordsArr;
 
         } catch (SQLiteException | IllegalStateException e) {
+            if(cursor != null) {
+                cursor.close();
+            }
             throw new FamiliarDbException(e);
         }
     }
