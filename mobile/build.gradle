@@ -12,6 +12,10 @@ repositories {
     mavenCentral()
 }
 
+def computeVersionName() {
+    return "3.2.7"
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
@@ -19,6 +23,8 @@ android {
         applicationId = "com.gelakinetic.mtgfam"
         minSdkVersion 14
         targetSdkVersion 23
+        versionCode 36
+        versionName computeVersionName()
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -30,19 +36,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.txt'
         }
-        debug {
-            applicationIdSuffix ".debug"
-        }
     }
     productFlavors {
         standard {
-            applicationId = "com.gelakinetic.mtgfam"
             dependencies {
                 compile 'com.google.android.gms:play-services-appindexing:7.8.0'
             }
         }
         foss {
-            applicationId = "com.gelakinetic.mtgfam.foss"
+            versionName computeVersionName() + "-foss"
         }
     }
 }
