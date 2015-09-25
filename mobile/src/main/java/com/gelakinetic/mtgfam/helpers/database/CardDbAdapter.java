@@ -2003,7 +2003,7 @@ public class CardDbAdapter {
         return typeLine.toString();
     }
 
-    public static String[] getUniqueColumnArray(String colKey, SQLiteDatabase database) throws FamiliarDbException {
+    public static String[] getUniqueColumnArray(String colKey, boolean shouldSplit, SQLiteDatabase database) throws FamiliarDbException {
         Cursor cursor = null;
         try {
             String query =
@@ -2023,7 +2023,12 @@ public class CardDbAdapter {
             /* HashSets contain unique values. Put each individual word in it */
             HashSet<String> words = new HashSet<>();
             while (!cursor.isAfterLast()) {
-                Collections.addAll(words, cursor.getString(colIndex).split("\\s+"));
+                if(shouldSplit) {
+                    Collections.addAll(words, cursor.getString(colIndex).split("\\s+"));
+                }
+                else {
+                    words.add(cursor.getString(colIndex));
+                }
                 cursor.moveToNext();
             }
 

@@ -78,6 +78,7 @@ public class SearchViewFragment extends FamiliarFragment {
     /* Autocomplete data structures */
     private String[] mSupertypes = null;
     private String[] mSubtypes = null;
+    private String[] mArtists = null;
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
@@ -105,7 +106,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private AlertDialog mFormatDialog;
     private AlertDialog mRarityDialog;
     private EditText mFlavorField;
-    private EditText mArtistField;
+    private AutoCompleteTextView mArtistField = null;
     private Spinner mTextSpinner;
     private Spinner mTypeSpinner;
     private Spinner mSetSpinner;
@@ -163,7 +164,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mSupertypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
         mSubtypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.subtypesearch);
         mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
-        mArtistField = (EditText) myFragmentView.findViewById(R.id.artistsearch);
+        mArtistField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.artistsearch);
         mCollectorsNumberField = (EditText) myFragmentView.findViewById(R.id.collectorsnumbersearch);
 
         Button searchButton = (Button) myFragmentView.findViewById(R.id.searchbutton);
@@ -286,7 +287,7 @@ public class SearchViewFragment extends FamiliarFragment {
 
                 if (mSupertypes == null) {
                     try {
-                        mSupertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, database);
+                        mSupertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, true, database);
                     } catch (FamiliarDbException e) {
                         handleFamiliarDbException(true);
                     }
@@ -294,7 +295,15 @@ public class SearchViewFragment extends FamiliarFragment {
 
                 if (mSubtypes == null) {
                     try {
-                        mSubtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, database);
+                        mSubtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, true, database);
+                    } catch (FamiliarDbException e) {
+                        handleFamiliarDbException(true);
+                    }
+                }
+
+                if(mArtists == null) {
+                    try {
+                        mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_ARTIST, false, database);
                     } catch (FamiliarDbException e) {
                         handleFamiliarDbException(true);
                     }
@@ -325,6 +334,12 @@ public class SearchViewFragment extends FamiliarFragment {
                             mSubtypeField.setThreshold(1);
                             mSubtypeField.setAdapter(subtypeAdapter);
                             mSubtypeField.setTokenizer(new SpaceTokenizer());
+
+                            /* set the autocomplete for artists */
+                            ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
+                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mArtists);
+                            mArtistField.setThreshold(1);
+                            mArtistField.setAdapter(artistAdapter);
                         }
                     });
                 } catch (NullPointerException e) {
@@ -383,14 +398,14 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mCollectorsNumberField.getText() != null;
 
         /* Read EditTexts */
-        searchCriteria.name = mNameField.getText().toString();
-        searchCriteria.text = mTextField.getText().toString();
-        String supertype = mSupertypeField.getText().toString();
-        String subtype = mSubtypeField.getText().toString();
-        searchCriteria.type = supertype + " - " + subtype;
-        searchCriteria.flavor = mFlavorField.getText().toString();
-        searchCriteria.artist = mArtistField.getText().toString();
-        searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString();
+        searchCriteria.name = mNameField.getText().toString().trim();
+        searchCriteria.text = mTextField.getText().toString().trim();
+        String supertype = mSupertypeField.getText().toString().trim();
+        String subtype = mSubtypeField.getText().toString().trim();
+        searchCriteria.type = supertype.trim() + " - " + subtype.trim();
+        searchCriteria.flavor = mFlavorField.getText().toString().trim();
+        searchCriteria.artist = mArtistField.getText().toString().trim();
+        searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString().trim();
 
         if (searchCriteria.name.length() == 0) {
             searchCriteria.name = null;
