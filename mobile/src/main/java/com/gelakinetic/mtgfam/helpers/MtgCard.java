@@ -94,6 +94,17 @@ public class MtgCard {
 
         this.name = parts[0];
         this.setCode = parts[1];
+
+        /* Correct the set code for Duel Deck Anthologies */
+        if(this.setCode.equals("DD3")) {
+            SQLiteDatabase database = DatabaseManager.getInstance(mCtx, false).openDatabase(false);
+            try {
+                this.setCode = CardDbAdapter.getCorrectSetCode(this.name, this.setCode, database);
+            } catch (FamiliarDbException e) {
+                /* Eat it and use the old set code. */
+            }
+            DatabaseManager.getInstance(mCtx, false).closeDatabase(false);
+        }
         this.numberOf = Integer.parseInt(parts[2]);
 
         /* "foil" didn't exist in earlier versions, so it may not be part of the string */
@@ -129,6 +140,8 @@ public class MtgCard {
 
     public static MtgCard MtgCardFromTradeString(String line, Context context) {
 
+        SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false);
+
         MtgCard card = new MtgCard();
         String[] parts = line.split(DELIMITER);
 
@@ -136,6 +149,15 @@ public class MtgCard {
         card.mSide = Integer.parseInt(parts[0]);
         card.name = parts[1];
         card.setCode = parts[2];
+
+        /* Correct the set code for Duel Deck Anthologies */
+        if(card.setCode.equals("DD3")) {
+            try {
+                card.setCode = CardDbAdapter.getCorrectSetCode(card.name, card.setCode, database);
+            } catch (FamiliarDbException e) {
+                /* Eat it and use the old set code. */
+            }
+        }
         card.numberOf = Integer.parseInt(parts[3]);
 
         /* These parts may not exist */
@@ -146,8 +168,6 @@ public class MtgCard {
             card.price = 0;
         }
         card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
-
-        SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false);
 
         if (parts.length > 7) {
             card.cmc = Integer.parseInt(parts[7]);

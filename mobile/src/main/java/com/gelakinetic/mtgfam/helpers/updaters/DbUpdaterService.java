@@ -126,7 +126,8 @@ public class DbUpdaterService extends IntentService {
 
                     /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
                     for (String[] set : patchInfo) {
-                        if (!CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) { /* this is fine, readable */
+                        if (!set[CardAndSetParser.SET_CODE].equals("DD3") && /* Never download the old Duel Deck Anthologies patch */
+                                !CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) { /* this is fine, readable */
                             try {
                                 /* Change the notification to the specific set */
                                 switchToUpdating(String.format(getString(R.string.update_updating_set),

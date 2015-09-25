@@ -56,7 +56,7 @@ import java.util.zip.GZIPInputStream;
 @SuppressWarnings("JavaDoc")
 public class CardDbAdapter {
 
-    public static final int DATABASE_VERSION = 63;
+    public static final int DATABASE_VERSION = 64;
 
     public static final int STAR = -1000;
     public static final int ONE_PLUS_STAR = -1001;
@@ -1969,8 +1969,8 @@ public class CardDbAdapter {
             throw new FamiliarDbException(e);
         }
 
-        String returnString = null;
-        if (c != null) {
+        String returnString = "";
+        if (c != null && c.getCount() > 0) {
             c.moveToFirst();
             returnString = c.getString(c.getColumnIndex(KEY_NAME));
             c.close();
@@ -2039,5 +2039,40 @@ public class CardDbAdapter {
             }
             throw new FamiliarDbException(e);
         }
+    }
+
+    /**
+     * I messed up with Duel Deck Anthologies. Each deck should have had its own set code,
+     * rather than grouping them all together. This function fixes any saved cards when loaded
+     *
+     * @param name      The name of the card to get the correct set code for
+     * @param setCode   The incorrect set code (i.e. DD3)
+     * @param database  A database to query
+     * @return          The correct set code (i.e. DD3EVG)
+     */
+    public static String getCorrectSetCode(String name, String setCode, SQLiteDatabase database) throws FamiliarDbException{
+
+        Cursor cursor = null;
+        try {
+            String sql =
+                    "SELECT " + KEY_SET +
+                    " FROM " + DATABASE_TABLE_CARDS +
+                    " WHERE (" + KEY_NAME + " = " + sanitizeString(name) +
+                    " AND " + KEY_SET + " LIKE " + sanitizeString(setCode + "%") + ")";
+
+            cursor = database.rawQuery(sql, null);
+            if(cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                String correctCode = cursor.getString(cursor.getColumnIndex(KEY_SET));
+                cursor.close();
+                return correctCode;
+            }
+        } catch (SQLiteException | IllegalStateException e) {
+            if (cursor != null) {
+                cursor.close();
+            }
+            throw new FamiliarDbException(e);
+        }
+        return setCode;
     }
 }
