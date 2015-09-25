@@ -13,17 +13,17 @@ repositories {
 }
 
 def computeVersionName() {
-    return "3.2.7"
+    return "3.2.8"
 }
 
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
     defaultConfig {
-        applicationId = "com.gelakinetic.mtgfam"
+        applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 36
+        versionCode 37
         versionName computeVersionName()
     }
     packagingOptions {
