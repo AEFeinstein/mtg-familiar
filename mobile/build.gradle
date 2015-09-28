@@ -40,7 +40,7 @@ android {
     productFlavors {
         standard {
             dependencies {
-                compile 'com.google.android.gms:play-services-appindexing:7.8.0'
+                compile 'com.google.android.gms:play-services-appindexing:8.1.0'
             }
         }
         foss {
@@ -61,6 +61,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.4'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-    compile 'com.code-troopers.betterpickers:library:2.0.1'
+    compile 'com.code-troopers.betterpickers:library:2.1.0'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
 }
