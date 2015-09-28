@@ -155,8 +155,10 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      */
     private String ArrayToString(ArrayList<Integer> list) {
         String string = "";
-        for (Integer i : list) {
-            string += i + ",";
+        if (list != null) {
+            for (Integer i : list) {
+                string += i + ",";
+            }
         }
         return string;
     }
