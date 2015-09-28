@@ -301,7 +301,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 }
 
-                if(mArtists == null) {
+                if (mArtists == null) {
                     try {
                         mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_ARTIST, false, database);
                     } catch (FamiliarDbException e) {

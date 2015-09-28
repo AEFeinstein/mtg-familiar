@@ -21,7 +21,7 @@
             android:inputType="number"
             android:maxLength="2"
             android:selectAllOnFocus="true"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <AutoCompleteTextView
             android:id="@+id/name_search"

@@ -2023,10 +2023,9 @@ public class CardDbAdapter {
             /* HashSets contain unique values. Put each individual word in it */
             HashSet<String> words = new HashSet<>();
             while (!cursor.isAfterLast()) {
-                if(shouldSplit) {
+                if (shouldSplit) {
                     Collections.addAll(words, cursor.getString(colIndex).split("\\s+"));
-                }
-                else {
+                } else {
                     words.add(cursor.getString(colIndex));
                 }
                 cursor.moveToNext();
@@ -2050,23 +2049,23 @@ public class CardDbAdapter {
      * I messed up with Duel Deck Anthologies. Each deck should have had its own set code,
      * rather than grouping them all together. This function fixes any saved cards when loaded
      *
-     * @param name      The name of the card to get the correct set code for
-     * @param setCode   The incorrect set code (i.e. DD3)
-     * @param database  A database to query
-     * @return          The correct set code (i.e. DD3EVG)
+     * @param name     The name of the card to get the correct set code for
+     * @param setCode  The incorrect set code (i.e. DD3)
+     * @param database A database to query
+     * @return The correct set code (i.e. DD3EVG)
      */
-    public static String getCorrectSetCode(String name, String setCode, SQLiteDatabase database) throws FamiliarDbException{
+    public static String getCorrectSetCode(String name, String setCode, SQLiteDatabase database) throws FamiliarDbException {
 
         Cursor cursor = null;
         try {
             String sql =
                     "SELECT " + KEY_SET +
-                    " FROM " + DATABASE_TABLE_CARDS +
-                    " WHERE (" + KEY_NAME + " = " + sanitizeString(name) +
-                    " AND " + KEY_SET + " LIKE " + sanitizeString(setCode + "%") + ")";
+                            " FROM " + DATABASE_TABLE_CARDS +
+                            " WHERE (" + KEY_NAME + " = " + sanitizeString(name) +
+                            " AND " + KEY_SET + " LIKE " + sanitizeString(setCode + "%") + ")";
 
             cursor = database.rawQuery(sql, null);
-            if(cursor != null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 String correctCode = cursor.getString(cursor.getColumnIndex(KEY_SET));
                 cursor.close();

@@ -27,10 +27,19 @@
             <intent-filter android:label="@string/filter_title_view_card">
                 <action android:name="android.intent.action.VIEW" />
                 <!-- Accepts URIs that begin with "card://multiverseid/" -->
-                <data android:scheme="card" android:host="multiverseid" android:pathPrefix="/" />
+                <data
+                    android:scheme="card"
+                    android:host="multiverseid"
+                    android:pathPrefix="/" />
                 <!-- Accepts URLs from gatherer -->
-                <data android:scheme="http" android:host="gatherer.wizards.com" android:pathPrefix="/Pages/Card"/>
-                <data android:scheme="https" android:host="gatherer.wizards.com" android:pathPrefix="/Pages/Card"/>
+                <data
+                    android:scheme="http"
+                    android:host="gatherer.wizards.com"
+                    android:pathPrefix="/Pages/Card" />
+                <data
+                    android:scheme="https"
+                    android:host="gatherer.wizards.com"
+                    android:pathPrefix="/Pages/Card" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />

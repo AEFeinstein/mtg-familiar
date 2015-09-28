@@ -33,7 +33,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="2"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
     </ScrollView>
 
     <LinearLayout

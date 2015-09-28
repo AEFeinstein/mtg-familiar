@@ -56,7 +56,7 @@
                     android:inputType="text"
                     android:singleLine="true"
                     android:dropDownWidth="wrap_content"
-                    android:dropDownAnchor="@+id/linearLayout12"/>
+                    android:dropDownAnchor="@+id/linearLayout12" />
 
                 <MultiAutoCompleteTextView
                     android:id="@+id/subtypesearch"
@@ -69,7 +69,7 @@
                     android:inputType="text"
                     android:singleLine="true"
                     android:dropDownWidth="wrap_content"
-                    android:dropDownAnchor="@+id/linearLayout12"/>
+                    android:dropDownAnchor="@+id/linearLayout12" />
 
             </LinearLayout>
 

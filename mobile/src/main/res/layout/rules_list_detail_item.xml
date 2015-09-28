@@ -33,7 +33,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_marginLeft="8dp"
         android:text="@string/app_name"
         android:textColor="?android:textColorSecondary"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/rules_item_text"

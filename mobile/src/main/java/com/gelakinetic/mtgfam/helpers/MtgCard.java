@@ -96,7 +96,7 @@ public class MtgCard {
         this.setCode = parts[1];
 
         /* Correct the set code for Duel Deck Anthologies */
-        if(this.setCode.equals("DD3")) {
+        if (this.setCode.equals("DD3")) {
             SQLiteDatabase database = DatabaseManager.getInstance(mCtx, false).openDatabase(false);
             try {
                 this.setCode = CardDbAdapter.getCorrectSetCode(this.name, this.setCode, database);
@@ -151,7 +151,7 @@ public class MtgCard {
         card.setCode = parts[2];
 
         /* Correct the set code for Duel Deck Anthologies */
-        if(card.setCode.equals("DD3")) {
+        if (card.setCode.equals("DD3")) {
             try {
                 card.setCode = CardDbAdapter.getCorrectSetCode(card.name, card.setCode, database);
             } catch (FamiliarDbException e) {
