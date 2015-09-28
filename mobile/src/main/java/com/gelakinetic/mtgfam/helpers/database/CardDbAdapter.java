@@ -1984,7 +1984,7 @@ public class CardDbAdapter {
      * @param input
      * @return
      */
-    static String sanitizeString(String input) {
+    private static String sanitizeString(String input) {
         return DatabaseUtils.sqlEscapeString(input
                 .replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0])
                 .trim());

@@ -11,7 +11,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 public class AppIndexingWrapper {
 
-    public GoogleApiClient mGoogleApiClient;
+    private final GoogleApiClient mGoogleApiClient;
 
     /**
      * Creates and returns the action describing this page view

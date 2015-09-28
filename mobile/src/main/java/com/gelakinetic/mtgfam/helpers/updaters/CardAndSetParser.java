@@ -23,7 +23,6 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
@@ -364,11 +363,9 @@ class CardAndSetParser {
      *
      * @param prefAdapter The preference adapter is used to get the last update time
      * @return An object with all of the legal info, to be added to the database in one fell swoop
-     * @throws IOException                                                 Thrown if something goes wrong with the InputStream
-     * @throws com.gelakinetic.mtgfam.helpers.database.FamiliarDbException Thrown if something goes wrong with database writing
      */
     public LegalInfo readLegalityJsonStream(PreferenceAdapter prefAdapter)
-            throws IOException, FamiliarDbException {
+            throws IOException {
 
         LegalInfo legalInfo = new LegalInfo();
 
@@ -520,15 +517,15 @@ class CardAndSetParser {
     }
 
     class LegalInfo {
-        ArrayList<NameAndMetadata> legalSets = new ArrayList<>();
-        ArrayList<NameAndMetadata> bannedCards = new ArrayList<>();
-        ArrayList<NameAndMetadata> restrictedCards = new ArrayList<>();
-        ArrayList<String> formats = new ArrayList<>();
+        final ArrayList<NameAndMetadata> legalSets = new ArrayList<>();
+        final ArrayList<NameAndMetadata> bannedCards = new ArrayList<>();
+        final ArrayList<NameAndMetadata> restrictedCards = new ArrayList<>();
+        final ArrayList<String> formats = new ArrayList<>();
     }
 
     class NameAndMetadata {
-        String name;
-        String metadata;
+        final String name;
+        final String metadata;
 
         public NameAndMetadata(String restrictedCard, String formatName) {
             name = restrictedCard;

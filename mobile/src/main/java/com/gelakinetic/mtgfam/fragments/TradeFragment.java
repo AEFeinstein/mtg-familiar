@@ -1178,7 +1178,7 @@ public class TradeFragment extends FamiliarFragment {
     }
 
     /* Comparator based on converted mana cost */
-    public static class TradeComparatorCmc implements Comparator<MtgCard> {
+    private static class TradeComparatorCmc implements Comparator<MtgCard> {
         @Override
         public int compare(MtgCard wish1, MtgCard wish2) {
             if (wish1.cmc == wish2.cmc) {
@@ -1253,7 +1253,7 @@ public class TradeFragment extends FamiliarFragment {
     }
 
     /* Comparator based on name */
-    public static class TradeComparatorName implements Comparator<MtgCard> {
+    private static class TradeComparatorName implements Comparator<MtgCard> {
         @Override
         public int compare(MtgCard wish1, MtgCard wish2) {
             return wish1.name.compareTo(wish2.name);
@@ -1261,7 +1261,7 @@ public class TradeFragment extends FamiliarFragment {
     }
 
     /* Comparator based on first set of a card */
-    public static class TradeComparatorSet implements Comparator<MtgCard> {
+    private static class TradeComparatorSet implements Comparator<MtgCard> {
         @Override
         public int compare(MtgCard wish1, MtgCard wish2) {
             return wish1.setName.compareTo(wish2.setName);
@@ -1269,7 +1269,7 @@ public class TradeFragment extends FamiliarFragment {
     }
 
     /* Comparator based on price */
-    public static class TradeComparatorPrice implements Comparator<MtgCard> {
+    private static class TradeComparatorPrice implements Comparator<MtgCard> {
         @Override
         public int compare(MtgCard wish1, MtgCard wish2) {
             if (wish1.price == wish2.price) {

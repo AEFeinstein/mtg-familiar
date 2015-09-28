@@ -20,7 +20,7 @@ public class ColorIndicatorView extends View {
             R.color.icon_green
     };
     private ShapeDrawable mBackground = null;
-    private ShapeDrawable mDrawableShapes[] = new ShapeDrawable[5];
+    private final ShapeDrawable[] mDrawableShapes = new ShapeDrawable[5];
 
     /**
      * Necessary constructor
@@ -89,7 +89,7 @@ public class ColorIndicatorView extends View {
      * @param str A mana cost or color string
      * @return The sanitized string
      */
-    public static String sanitizeString(String str) {
+    private static String sanitizeString(String str) {
         str = str.toLowerCase();
         boolean colors[] = new boolean[5];
         Arrays.fill(colors, false);

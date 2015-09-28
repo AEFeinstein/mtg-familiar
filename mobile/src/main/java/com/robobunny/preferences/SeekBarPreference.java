@@ -56,9 +56,9 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
         mMaxValue = attrs.getAttributeIntValue(ANDROIDNS, "max", 100);
         mMinValue = attrs.getAttributeIntValue(APPLICATIONNS, "min", 0);
 
-        mUnitsLeft = getAttributeStringValue(attrs, APPLICATIONNS, "unitsLeft", "");
-        String units = getAttributeStringValue(attrs, APPLICATIONNS, "units", "");
-        mUnitsRight = getAttributeStringValue(attrs, APPLICATIONNS, "unitsRight", units);
+        mUnitsLeft = getAttributeStringValue(attrs, "unitsLeft", "");
+        String units = getAttributeStringValue(attrs, "units", "");
+        mUnitsRight = getAttributeStringValue(attrs, "unitsRight", units);
 
         try {
             String newInterval = attrs.getAttributeValue(APPLICATIONNS, "interval");
@@ -70,8 +70,8 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
 
     }
 
-    private String getAttributeStringValue(AttributeSet attrs, String namespace, String name, String defaultValue) {
-        String value = attrs.getAttributeValue(namespace, name);
+    private String getAttributeStringValue(AttributeSet attrs, String name, String defaultValue) {
+        String value = attrs.getAttributeValue(SeekBarPreference.APPLICATIONNS, name);
         if (value == null)
             value = defaultValue;
 
@@ -126,7 +126,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
      *
      * @param view
      */
-    void updateView(View view) {
+    private void updateView(View view) {
 
         try {
             mStatusText = (TextView) view.findViewById(R.id.seekBarPrefValue);
