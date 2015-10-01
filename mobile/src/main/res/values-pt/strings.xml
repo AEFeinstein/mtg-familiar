@@ -131,9 +131,10 @@
     <string name="main_tts_warning_title">TTS (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">O que há de Novo na Versão</string>
     <string name="main_whats_new_text">
-- Adicionado busca pelo número da coleção.&lt;br&gt;
-- Adicionado Indicador de cor.&lt;br&gt;
-- Correções de bugs.
+- Mais autocompletar (supertipo, subtipo, artista)&lt;br&gt;
+- Mais escolhas de idioma de imagem de carta&lt;br&gt;
+- Trocas organizáveis&lt;br&gt;
+- Solução de problemas
     </string>
     <string name="main_whats_new_title">O que há de novo</string>
     <string name="main_wishlist">Lista de Desejos</string>
@@ -376,4 +377,6 @@
     <string name="wishlist_export_title">Exportar os nomes das Coleções?</string>
     <string name="wishlist_export_text">Gostaria de incluir os nomes das coleções em sua lista de desejos exportada?</string>
     <string name="search_collectors_number">Número da Coleção</string>
+    <string name="pref_Chinese">Chinês</string>
+    <string name="trader_sort">Organizar</string>
 </resources>

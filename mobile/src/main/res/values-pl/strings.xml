@@ -131,9 +131,10 @@
     <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
 <string name="main_whats_new_text">
-- Dodano wyszukiwanie przy użyciu numeru karty (\'collector\'s number\')&lt;br&gt;
-- Dodano \'color indicator\' &lt;br&gt;
-- Naprawiono błędy
+- Więcej podpowiedzi wyszukiwania (supertype, subtype, artist)&lt;br&gt;
+- Obrazki kart - więcej możliwości wyboru języka&lt;br&gt;
+- Sortowanie Wymiany&lt;br&gt;
+- Naprawione bugi
 </string>
     <string name="main_whats_new_title">Nowości</string>
     <string name="main_wishlist">Lista Życzeń</string>
@@ -376,4 +377,6 @@
     <string name="wishlist_export_title">Wyeksportować nazwy setów?</string>
     <string name="wishlist_export_text">Czy chcesz dołączyć nazwy setów do eksportowanej Listy Życzeń?</string>
     <string name="search_collectors_number">Collector\'s Number</string>
+    <string name="pref_Chinese">Chiński</string>
+    <string name="trader_sort">Sortuj Wymianę</string>
 </resources>
