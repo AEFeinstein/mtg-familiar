@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +29,7 @@ class RulesParser {
     private final ArrayList<GlossaryItem> mGlossary;
     private InputStream mInputStream;
     private BufferedReader mBufferedReader;
+    protected String mPatchDate;
 
 
     /**
@@ -53,7 +55,7 @@ class RulesParser {
      *
      * @return Whether or this the rules need updating.
      */
-    public boolean needsToUpdate() {
+    public boolean needsToUpdate(PrintWriter logWriter) {
         URL url;
 
         try {
@@ -68,17 +70,20 @@ class RulesParser {
             c.clear();
             c.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
 
+            SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+            mPatchDate = format1.format(c.getTime());
+
             if (c.getTime().after(this.mLastUpdated)) {
                 return true;
             } else {
-                closeReader();
+                closeReader(logWriter);
                 return false;
             }
-        } catch (MalformedURLException e) {
-            closeReader();
-            return false;
         } catch (IOException e) {
-            closeReader();
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
+            closeReader(logWriter);
             return false;
         }
     }
@@ -90,7 +95,7 @@ class RulesParser {
      *
      * @return Whether or not the parsing is successful
      */
-    public boolean parseRules() {
+    public boolean parseRules(PrintWriter logWriter) {
         if (this.mBufferedReader == null) {
             /* This should only be the case if we called parseRules() before needsToUpdate()
              * or if needsToUpdate() returned false */
@@ -195,9 +200,12 @@ class RulesParser {
 
             return true;
         } catch (IOException e) {
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
             return false;
         } finally {
-            closeReader();
+            closeReader(logWriter);
         }
     }
 
@@ -229,12 +237,14 @@ class RulesParser {
     /**
      * Convenience method to close input streams
      */
-    private void closeReader() {
+    private void closeReader(PrintWriter logWriter) {
         try {
             this.mInputStream.close();
             this.mBufferedReader.close();
         } catch (IOException e) {
-            /* eat it */
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
         }
 
         this.mInputStream = null;

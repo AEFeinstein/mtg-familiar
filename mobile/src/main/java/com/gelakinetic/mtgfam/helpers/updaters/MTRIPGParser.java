@@ -12,7 +12,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -35,6 +37,7 @@ class MTRIPGParser {
     private static final String JAR_LOCAL_FILE = "JAR.html";
     private final Context mContext;
     private final PreferenceAdapter mPrefAdapter;
+    protected String mPrettyDate;
 
     /**
      * Default constructor
@@ -54,7 +57,7 @@ class MTRIPGParser {
      * @param mode Whether we are updating the IPG or MTR
      * @return True if the document was updated, false otherwise
      */
-    public boolean performMtrIpgUpdateIfNeeded(final int mode) {
+    public boolean performMtrIpgUpdateIfNeeded(final int mode, PrintWriter logWriter) {
         boolean updated = false;
 
         /* First, inflate local files if they do not exist */
@@ -84,7 +87,9 @@ class MTRIPGParser {
                 }
             }
         } catch (IOException e) {
-            /* eat it */
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
         }
 
         /* Then update via the internet */
@@ -105,7 +110,9 @@ class MTRIPGParser {
             }
             updated = parseDocument(mode, url.openStream());
         } catch (IOException e) {
-            /* eat it */
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
         }
         return updated;
     }
@@ -120,6 +127,9 @@ class MTRIPGParser {
         c.clear();
         c.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
         long documentDate = c.getTimeInMillis();
+
+        SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+        mPrettyDate = format1.format(c.getTime());
 
         boolean shouldUpdate;
         switch (mode) {

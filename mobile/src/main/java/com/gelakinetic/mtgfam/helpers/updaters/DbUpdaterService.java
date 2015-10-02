@@ -22,6 +22,7 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -35,7 +36,10 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,6 +103,21 @@ public class DbUpdaterService extends IntentService {
      */
     @Override
     public void onHandleIntent(Intent intent) {
+
+        /* Try to open up a log */
+        PrintWriter logWriter = null;
+        try {
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                /* Open the log */
+                File logfile = new File(Environment.getExternalStorageDirectory(), "mtgf_update.log");
+                logWriter = new PrintWriter(new FileWriter(logfile));
+                /* Datestamp it */
+                logWriter.write((new Date()).toString() + '\n');
+            }
+        } catch (IOException e) {
+            /* Couldn't open log, oh well */
+        }
+
         try {
             PreferenceAdapter mPrefAdapter = new PreferenceAdapter(this);
 
@@ -118,8 +137,20 @@ public class DbUpdaterService extends IntentService {
 
                 /* Look for updates with the banned / restricted lists and formats */
                 CardAndSetParser.LegalInfo legalInfo = parser.readLegalityJsonStream(mPrefAdapter);
+
+                /* Log the date */
+                if (logWriter != null) {
+                    logWriter.write("mCurrentRulesDate: " + parser.mCurrentRulesDate + '\n');
+                }
+
                 /* Look for new cards */
                 ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
+
+                /* Log the date */
+                if (logWriter != null) {
+                    logWriter.write("mCurrentPatchDate: " + parser.mCurrentPatchDate + '\n');
+                }
+
                 if (patchInfo != null) {
                     /* Get readable database access */
                     SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), false).openDatabase(false);
@@ -137,7 +168,9 @@ public class DbUpdaterService extends IntentService {
                                 parser.readCardJsonStream(gis, reporter, cardsToAdd, setsToAdd);
                                 updatedStuff.add(set[CardAndSetParser.SET_NAME]);
                             } catch (IOException e) {
-                                /* Eat it */
+                                if (logWriter != null) {
+                                    e.printStackTrace(logWriter);
+                                }
                             }
                             /* Change the notification to generic "checking for updates" */
                             switchToChecking();
@@ -146,8 +179,14 @@ public class DbUpdaterService extends IntentService {
                     /* close the database */
                     DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false);
                 }
+
                 /* Look for new TCGPlayer.com versions of set names */
                 parser.readTCGNameJsonStream(mPrefAdapter, tcgNames);
+
+                /* Log the date */
+                if (logWriter != null) {
+                    logWriter.write("mCurrentTCGNamePatchDate: " + parser.mCurrentTCGNamePatchDate + '\n');
+                }
 
                 /* Parse the rules
                  * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
@@ -161,9 +200,13 @@ public class DbUpdaterService extends IntentService {
                 ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();
                 ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
 
-                if (rp.needsToUpdate()) {
+                if (rp.needsToUpdate(logWriter)) {
+                    /* Log the date as we get it in needsToUpdate */
+                    if (logWriter != null) {
+                        logWriter.write("mCurrentRulesPatchDate: " + rp.mPatchDate + '\n');
+                    }
                     switchToUpdating(getString(R.string.update_updating_rules));
-                    if (rp.parseRules()) {
+                    if (rp.parseRules(logWriter)) {
                         rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
 
                         /* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
@@ -173,10 +216,23 @@ public class DbUpdaterService extends IntentService {
                         updatedStuff.add(getString(R.string.update_added_rules));
                     }
                     switchToChecking();
+                } else {
+                    /* Or log here if there's no update */
+                    if (logWriter != null) {
+                        logWriter.write("mCurrentRulesPatchDate: " + rp.mPatchDate + '\n');
+                    }
+                }
+
+                if (logWriter != null) {
+                    logWriter.write("legalInfo: " + ((legalInfo == null) ? "null" : "not null") + '\n');
+                    logWriter.write("setsToAdd: " + setsToAdd.size() + '\n');
+                    logWriter.write("cardsToAdd: " + cardsToAdd.size() + '\n');
+                    logWriter.write("tcgNames: " + tcgNames.size() + '\n');
+                    logWriter.write("rulesToAdd: " + rulesToAdd.size() + '\n');
+                    logWriter.write("glossaryItemsToAdd: " + glossaryItemsToAdd.size() + '\n');
                 }
 
                 /* Open a writable database, as briefly as possible */
-
                 if (legalInfo != null ||
                         setsToAdd.size() > 0 ||
                         cardsToAdd.size() > 0 ||
@@ -236,20 +292,32 @@ public class DbUpdaterService extends IntentService {
                 cancelStatusNotification();
             } catch (FamiliarDbException | IOException e1) {
                 commitDates = false; /* don't commit the dates */
+                if (logWriter != null) {
+                    e1.printStackTrace(logWriter);
+                }
             }
 
             /* Parse the MTR and IPG */
             MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR)) {
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR, logWriter)) {
                 updatedStuff.add(getString(R.string.update_added_mtr));
             }
-
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG)) {
-                updatedStuff.add(getString(R.string.update_added_ipg));
+            if (logWriter != null) {
+                logWriter.write("MTR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
 
-            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_JAR)) {
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_IPG, logWriter)) {
+                updatedStuff.add(getString(R.string.update_added_ipg));
+            }
+            if (logWriter != null) {
+                logWriter.write("IPG date: " + mtrIpgParser.mPrettyDate + '\n');
+            }
+
+            if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_JAR, logWriter)) {
                 updatedStuff.add(getString(R.string.update_added_jar));
+            }
+            if (logWriter != null) {
+                logWriter.write("JAR date: " + mtrIpgParser.mPrettyDate + '\n');
             }
 
             /* If everything went well so far, commit the date and show the update complete notification */
@@ -269,6 +337,14 @@ public class DbUpdaterService extends IntentService {
         } catch (Exception e) {
             /* Generally pokemon handling is bad, but I don't want to leave a notification */
             cancelStatusNotification();
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
+        }
+
+        /* close the log */
+        if (logWriter != null) {
+            logWriter.close();
         }
     }
 
