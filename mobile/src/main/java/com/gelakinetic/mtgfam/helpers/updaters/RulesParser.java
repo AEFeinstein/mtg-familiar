@@ -1,5 +1,7 @@
 package com.gelakinetic.mtgfam.helpers.updaters;
 
+import android.annotation.SuppressLint;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +31,6 @@ class RulesParser {
     private final ArrayList<GlossaryItem> mGlossary;
     private InputStream mInputStream;
     private BufferedReader mBufferedReader;
-    protected String mPatchDate;
-
 
     /**
      * Default Constructor
@@ -70,8 +70,13 @@ class RulesParser {
             c.clear();
             c.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
 
-            SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-            mPatchDate = format1.format(c.getTime());
+            /* Log the date */
+            if (logWriter != null) {
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+                String patchDate = format1.format(c.getTime());
+                logWriter.write("mCurrentRulesPatchDate: " + patchDate + '\n');
+            }
 
             if (c.getTime().after(this.mLastUpdated)) {
                 return true;

@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.helpers.updaters;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.os.Handler;
@@ -107,6 +108,8 @@ public class DbUpdaterService extends IntentService {
     @Override
     public void onHandleIntent(Intent intent) {
 
+        showStatusNotification();
+
         /* Try to open up a log */
         PrintWriter logWriter = null;
         try {
@@ -131,9 +134,6 @@ public class DbUpdaterService extends IntentService {
             boolean newRulesParsed = false;
 
             try {
-
-                showStatusNotification();
-
                 ArrayList<MtgCard> cardsToAdd = new ArrayList<>();
                 ArrayList<MtgSet> setsToAdd = new ArrayList<>();
                 ArrayList<CardAndSetParser.NameAndMetadata> tcgNames = new ArrayList<>();
@@ -155,13 +155,27 @@ public class DbUpdaterService extends IntentService {
                 }
 
                 if (patchInfo != null) {
+                    /* Make an arraylist of all the current set codes */
+                    ArrayList<String> currentSetCodes = new ArrayList<>();
                     /* Get readable database access */
                     SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), false).openDatabase(false);
+                    Cursor setCursor = CardDbAdapter.fetchAllSets(database);
+                    if (setCursor != null) {
+                        setCursor.moveToFirst();
+                        while (!setCursor.isAfterLast()) {
+                            String code = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
+                            currentSetCodes.add(code);
+                            setCursor.moveToNext();
+                        }
+                        /* Cleanup */
+                        setCursor.close();
+                    }
+                    DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false);
 
                     /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
                     for (String[] set : patchInfo) {
                         if (!set[CardAndSetParser.SET_CODE].equals("DD3") && /* Never download the old Duel Deck Anthologies patch */
-                                !CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) { /* this is fine, readable */
+                                !currentSetCodes.contains(set[CardAndSetParser.SET_CODE])) { /* check to see if the patch is known already */
                             int retries = 5;
                             while (retries > 0) {
                                 try {
@@ -178,26 +192,30 @@ public class DbUpdaterService extends IntentService {
                                     retries = 0;
                                 } catch (IOException e) {
                                     if (logWriter != null) {
+                                        logWriter.print("Retry " + retries + '\n');
                                         e.printStackTrace(logWriter);
                                     }
                                 }
                                 retries--;
                             }
-                            /* Change the notification to generic "checking for updates" */
-                            switchToChecking();
                         }
                     }
-                    /* close the database */
-                    DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false);
+
+                    /* Look for new TCGPlayer.com versions of set names, only if patchInfo exists
+                     * and there is a new set to add
+                     */
+                    if (setsToAdd.size() > 0) {
+                        parser.readTCGNameJsonStream(mPrefAdapter, tcgNames);
+
+                        /* Log the date */
+                        if (logWriter != null) {
+                            logWriter.write("mCurrentTCGNamePatchDate: " + parser.mCurrentTCGNamePatchDate + '\n');
+                        }
+                    }
                 }
 
-                /* Look for new TCGPlayer.com versions of set names */
-                parser.readTCGNameJsonStream(mPrefAdapter, tcgNames);
-
-                /* Log the date */
-                if (logWriter != null) {
-                    logWriter.write("mCurrentTCGNamePatchDate: " + parser.mCurrentTCGNamePatchDate + '\n');
-                }
+                /* Change the notification to generic "checking for updates" */
+                switchToChecking();
 
                 /* Parse the rules
                  * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
@@ -212,10 +230,6 @@ public class DbUpdaterService extends IntentService {
                 ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
 
                 if (rp.needsToUpdate(logWriter)) {
-                    /* Log the date as we get it in needsToUpdate */
-                    if (logWriter != null) {
-                        logWriter.write("mCurrentRulesPatchDate: " + rp.mPatchDate + '\n');
-                    }
                     switchToUpdating(getString(R.string.update_updating_rules));
                     if (rp.parseRules(logWriter)) {
                         rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
@@ -227,11 +241,6 @@ public class DbUpdaterService extends IntentService {
                         updatedStuff.add(getString(R.string.update_added_rules));
                     }
                     switchToChecking();
-                } else {
-                    /* Or log here if there's no update */
-                    if (logWriter != null) {
-                        logWriter.write("mCurrentRulesPatchDate: " + rp.mPatchDate + '\n');
-                    }
                 }
 
                 if (logWriter != null) {
@@ -274,7 +283,7 @@ public class DbUpdaterService extends IntentService {
 
                         /* Add the corresponding TCG name */
                         for (CardAndSetParser.NameAndMetadata tcgName : tcgNames) {
-                            if(tcgName.metadata.equalsIgnoreCase(set.code)) {
+                            if (tcgName.metadata.equalsIgnoreCase(set.code)) {
                                 CardDbAdapter.addTcgName(tcgName.name, tcgName.metadata, database);
                                 break;
                             }
@@ -303,7 +312,6 @@ public class DbUpdaterService extends IntentService {
                     /* Close the writable database */
                     DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
                 }
-                cancelStatusNotification();
             } catch (FamiliarDbException | IOException e1) {
                 commitDates = false; /* don't commit the dates */
                 if (logWriter != null) {
@@ -336,8 +344,6 @@ public class DbUpdaterService extends IntentService {
 
             /* If everything went well so far, commit the date and show the update complete notification */
             if (commitDates) {
-                showUpdatedNotification(updatedStuff);
-
                 parser.commitDates(mPrefAdapter);
 
                 long curTime = new Date().getTime();
@@ -345,16 +351,20 @@ public class DbUpdaterService extends IntentService {
                 if (newRulesParsed) {
                     mPrefAdapter.setLastRulesUpdate(curTime);
                 }
-            } else {
-                cancelStatusNotification();
+
+                if(updatedStuff.size() > 0) {
+                    showUpdatedNotification(updatedStuff);
+                }
             }
         } catch (Exception e) {
-            /* Generally pokemon handling is bad, but I don't want to leave a notification */
-            cancelStatusNotification();
+            /* Generally pokemon handling is bad, but I don't want miss anything */
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
         }
+
+        /* Always cancel the status notification */
+        cancelStatusNotification();
 
         /* close the log */
         if (logWriter != null) {
@@ -398,11 +408,14 @@ public class DbUpdaterService extends IntentService {
         mBuilder.setContentTitle(title);
         mNotificationManager.notify(STATUS_NOTIFICATION, mBuilder.build());
 
+        /* Periodically update the progress bar */
         mProgressUpdater = new Runnable() {
             public void run() {
                 mBuilder.setProgress(100, mProgress, false);
                 mNotificationManager.notify(STATUS_NOTIFICATION, mBuilder.build());
-                mHandler.postDelayed(mProgressUpdater, 200);
+                if(mProgress != 100) {
+                    mHandler.postDelayed(mProgressUpdater, 200);
+                }
             }
         };
         mHandler.postDelayed(mProgressUpdater, 200);

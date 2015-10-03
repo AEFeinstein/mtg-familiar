@@ -290,29 +290,6 @@ public class CardDbAdapter {
      * @return
      * @throws FamiliarDbException
      */
-    public static boolean doesSetExist(String code, SQLiteDatabase mDb) throws FamiliarDbException {
-
-        String statement = "(" + KEY_CODE + " = '" + code + "')";
-
-        Cursor c;
-        int count;
-        try {
-            c = mDb.query(true, DATABASE_TABLE_SETS, new String[]{KEY_ID}, statement, null, null, null, KEY_NAME, null);
-            count = c.getCount();
-            c.close();
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-
-        return count > 0;
-    }
-
-    /**
-     * @param code
-     * @param mDb
-     * @return
-     * @throws FamiliarDbException
-     */
     public static String getCodeMtgi(String code, SQLiteDatabase mDb) throws FamiliarDbException {
         Cursor c;
         try {
