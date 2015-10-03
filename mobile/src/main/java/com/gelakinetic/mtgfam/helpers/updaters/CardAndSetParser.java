@@ -64,16 +64,18 @@ class CardAndSetParser {
      * <p/>
      * There is some special processing for weird power and toughness too
      *
-     * @param in               An InputStream containing valid JSON
+     * @param reader           A JsonRead to parse from
      * @param progressReporter A percentage progress is reported through this class to be shown in the notification
      * @param cardsToAdd       An array list to place cards before adding to the database
      * @param setsToAdd        An array list to place sets before adding to the database
      * @throws IOException If something goes wrong with the InputStream, this will be thrown
      */
-    public void readCardJsonStream(InputStream in, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<MtgSet> setsToAdd)
+    public void readCardJsonStream(JsonReader reader, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<MtgSet> setsToAdd)
             throws IOException {
 
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "ISO-8859-1"));
+        ArrayList<MtgCard> tempCardsToAdd = new ArrayList<>();
+        ArrayList<MtgSet> tempSetsToAdd = new ArrayList<>();
+
         /* Three levels of strings for parsing nested JSON */
         String s, s1, s2;
         String pouTouStr;
@@ -120,7 +122,7 @@ class CardAndSetParser {
                                     set.date = reader.nextLong();
                                 }
                             }
-                            setsToAdd.add(set);
+                            tempSetsToAdd.add(set);
                             reader.endObject();
                         } else if (jt.equals(JsonToken.BEGIN_ARRAY)) {
                             reader.beginArray();
@@ -142,7 +144,7 @@ class CardAndSetParser {
                                         set.date = reader.nextLong();
                                     }
                                 }
-                                setsToAdd.add(set);
+                                tempSetsToAdd.add(set);
                                 reader.endObject();
                             }
                             reader.endArray();
@@ -275,7 +277,7 @@ class CardAndSetParser {
                                     }
                                 }
                             }
-                            cardsToAdd.add(c);
+                            tempCardsToAdd.add(c);
                             elementsParsed++;
                             progressReporter.reportJsonCardProgress(
                                     (int) Math.round(100 * elementsParsed / (double) numTotalElements));
@@ -296,6 +298,10 @@ class CardAndSetParser {
         }
         reader.endObject();
         reader.close();
+
+        /* Stage the sets and cards for database addition. Only gets here if no exception is thrown */
+        setsToAdd.addAll(tempSetsToAdd);
+        cardsToAdd.addAll(tempCardsToAdd);
     }
 
     /**
@@ -320,12 +326,10 @@ class CardAndSetParser {
             label = reader.nextName();
 
             if (label.equals("Date")) {
-                String lastUpdate = prefAdapter.getLastUpdate();
                 mCurrentPatchDate = reader.nextString();
-                if (lastUpdate.equals(mCurrentPatchDate)) {
-                    reader.close();
-                    return null;
-                }
+                /* Don't return if the date matches, a prior patch may have been partially applied.
+                 * Only the cards have one date per multiple files, so other date-checks are fine
+                 */
             } else if (label.equals("Patches")) {
                 reader.beginArray();
                 while (reader.hasNext()) {

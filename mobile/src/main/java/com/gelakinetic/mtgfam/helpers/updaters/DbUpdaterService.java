@@ -35,10 +35,13 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.google.gson.stream.JsonReader;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
@@ -109,7 +112,7 @@ public class DbUpdaterService extends IntentService {
         try {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 /* Open the log */
-                File logfile = new File(Environment.getExternalStorageDirectory(), "mtgf_update.log");
+                File logfile = new File(Environment.getExternalStorageDirectory(), "mtgf_update.txt");
                 logWriter = new PrintWriter(new FileWriter(logfile));
                 /* Datestamp it */
                 logWriter.write((new Date()).toString() + '\n');
@@ -159,18 +162,26 @@ public class DbUpdaterService extends IntentService {
                     for (String[] set : patchInfo) {
                         if (!set[CardAndSetParser.SET_CODE].equals("DD3") && /* Never download the old Duel Deck Anthologies patch */
                                 !CardDbAdapter.doesSetExist(set[CardAndSetParser.SET_CODE], database)) { /* this is fine, readable */
-                            try {
-                                /* Change the notification to the specific set */
-                                switchToUpdating(String.format(getString(R.string.update_updating_set),
-                                        set[CardAndSetParser.SET_NAME]));
-                                GZIPInputStream gis = new GZIPInputStream(
-                                        new URL(set[CardAndSetParser.SET_URL]).openStream());
-                                parser.readCardJsonStream(gis, reporter, cardsToAdd, setsToAdd);
-                                updatedStuff.add(set[CardAndSetParser.SET_NAME]);
-                            } catch (IOException e) {
-                                if (logWriter != null) {
-                                    e.printStackTrace(logWriter);
+                            int retries = 5;
+                            while (retries > 0) {
+                                try {
+                                    /* Change the notification to the specific set */
+                                    switchToUpdating(String.format(getString(R.string.update_updating_set),
+                                            set[CardAndSetParser.SET_NAME]));
+                                    URL urlToRead = new URL(set[CardAndSetParser.SET_URL]);
+                                    InputStream streamToRead = urlToRead.openStream();
+                                    GZIPInputStream gis = new GZIPInputStream(streamToRead);
+                                    JsonReader reader = new JsonReader(new InputStreamReader(gis, "ISO-8859-1"));
+                                    parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd);
+                                    updatedStuff.add(set[CardAndSetParser.SET_NAME]);
+                                    /* Everything was successful, retries = 0 breaks the while loop */
+                                    retries = 0;
+                                } catch (IOException e) {
+                                    if (logWriter != null) {
+                                        e.printStackTrace(logWriter);
+                                    }
                                 }
+                                retries--;
                             }
                             /* Change the notification to generic "checking for updates" */
                             switchToChecking();
@@ -236,7 +247,6 @@ public class DbUpdaterService extends IntentService {
                 if (legalInfo != null ||
                         setsToAdd.size() > 0 ||
                         cardsToAdd.size() > 0 ||
-                        tcgNames.size() > 0 ||
                         rulesToAdd.size() > 0 ||
                         glossaryItemsToAdd.size() > 0) {
                     SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
@@ -258,18 +268,22 @@ public class DbUpdaterService extends IntentService {
                         }
                     }
 
-                    /* Add card and set data */
+                    /* Add set data */
                     for (MtgSet set : setsToAdd) {
                         CardDbAdapter.createSet(set, database);
+
+                        /* Add the corresponding TCG name */
+                        for (CardAndSetParser.NameAndMetadata tcgName : tcgNames) {
+                            if(tcgName.metadata.equalsIgnoreCase(set.code)) {
+                                CardDbAdapter.addTcgName(tcgName.name, tcgName.metadata, database);
+                                break;
+                            }
+                        }
                     }
 
+                    /* Add cards */
                     for (MtgCard card : cardsToAdd) {
                         CardDbAdapter.createCard(card, database);
-                    }
-
-                    /* Add tcg name data */
-                    for (CardAndSetParser.NameAndMetadata tcgName : tcgNames) {
-                        CardDbAdapter.addTcgName(tcgName.name, tcgName.metadata, database);
                     }
 
                     /* Add stored rules */
