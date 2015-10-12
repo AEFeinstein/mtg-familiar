@@ -298,6 +298,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String logic = "=";
             if (type.equals(EQUIPMENT)) {
                 logic = "<=";
+                type = " - " + EQUIPMENT;
             }
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             Cursor permanents = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
