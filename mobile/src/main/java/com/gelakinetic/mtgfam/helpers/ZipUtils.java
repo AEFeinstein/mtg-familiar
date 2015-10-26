@@ -38,6 +38,7 @@ public class ZipUtils {
         ArrayList<File> files = findAllFiles(context.getFilesDir(),
                 new File(sharedPrefsDir));
 
+        // TODO permission
         File sdCard = Environment.getExternalStorageDirectory();
         File zipOut = new File(sdCard, BACKUP_FILE_NAME);
         if (zipOut.exists()) {
@@ -66,6 +67,7 @@ public class ZipUtils {
      * @param context The application context, for getting files and the like
      */
     public static void importData(Context context) {
+        // TODO permission
         File sdCard = Environment.getExternalStorageDirectory();
         File zipIn = new File(sdCard, BACKUP_FILE_NAME);
         try {

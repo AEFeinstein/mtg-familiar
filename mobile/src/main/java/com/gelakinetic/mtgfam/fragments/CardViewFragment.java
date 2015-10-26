@@ -1085,6 +1085,7 @@ public class CardViewFragment extends FamiliarFragment {
             String strPath;
 
             try {
+                // TODO permissions
                 strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
                         .getCanonicalPath() + "/MTGFamiliar";
             } catch (IOException ex) {
