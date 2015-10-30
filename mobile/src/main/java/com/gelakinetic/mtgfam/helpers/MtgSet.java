@@ -27,6 +27,7 @@ public class MtgSet {
     public String codeMagicCards;
     public String name;
     public long date;
+    public String digest;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -36,5 +37,6 @@ public class MtgSet {
         codeMagicCards = "";
         name = "";
         date = 0;
+        digest = "";
     }
 }

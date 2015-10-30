@@ -47,6 +47,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -136,6 +137,7 @@ public class DbUpdaterService extends IntentService {
             try {
                 ArrayList<MtgCard> cardsToAdd = new ArrayList<>();
                 ArrayList<MtgSet> setsToAdd = new ArrayList<>();
+                ArrayList<String> setsToDrop = new ArrayList<>();
                 ArrayList<CardAndSetParser.NameAndMetadata> tcgNames = new ArrayList<>();
 
                 /* Look for updates with the banned / restricted lists and formats */
@@ -144,6 +146,12 @@ public class DbUpdaterService extends IntentService {
                 /* Log the date */
                 if (logWriter != null) {
                     logWriter.write("mCurrentRulesDate: " + parser.mCurrentRulesDate + '\n');
+                }
+
+                /* Get the MD5 digests for the patches */
+                HashMap<String, String> patchDigests = parser.readDigestStream();
+                if (logWriter != null) {
+                    logWriter.write("patchDigests: " + patchDigests.size() + '\n');
                 }
 
                 /* Look for new cards */
@@ -157,6 +165,7 @@ public class DbUpdaterService extends IntentService {
                 if (patchInfo != null) {
                     /* Make an arraylist of all the current set codes */
                     ArrayList<String> currentSetCodes = new ArrayList<>();
+                    HashMap<String, String> storedDigests = new HashMap<>();
                     /* Get readable database access */
                     SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), false).openDatabase(false);
                     Cursor setCursor = CardDbAdapter.fetchAllSets(database);
@@ -164,6 +173,8 @@ public class DbUpdaterService extends IntentService {
                         setCursor.moveToFirst();
                         while (!setCursor.isAfterLast()) {
                             String code = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
+                            String digest = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_DIGEST));
+                            storedDigests.put(code, digest);
                             currentSetCodes.add(code);
                             setCursor.moveToNext();
                         }
@@ -174,29 +185,42 @@ public class DbUpdaterService extends IntentService {
 
                     /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
                     for (String[] set : patchInfo) {
-                        if (!set[CardAndSetParser.SET_CODE].equals("DD3") && /* Never download the old Duel Deck Anthologies patch */
-                                !currentSetCodes.contains(set[CardAndSetParser.SET_CODE])) { /* check to see if the patch is known already */
-                            int retries = 5;
-                            while (retries > 0) {
-                                try {
-                                    /* Change the notification to the specific set */
-                                    switchToUpdating(String.format(getString(R.string.update_updating_set),
-                                            set[CardAndSetParser.SET_NAME]));
-                                    URL urlToRead = new URL(set[CardAndSetParser.SET_URL]);
-                                    InputStream streamToRead = urlToRead.openStream();
-                                    GZIPInputStream gis = new GZIPInputStream(streamToRead);
-                                    JsonReader reader = new JsonReader(new InputStreamReader(gis, "ISO-8859-1"));
-                                    parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd);
-                                    updatedStuff.add(set[CardAndSetParser.SET_NAME]);
-                                    /* Everything was successful, retries = 0 breaks the while loop */
-                                    retries = 0;
-                                } catch (IOException e) {
-                                    if (logWriter != null) {
-                                        logWriter.print("Retry " + retries + '\n');
-                                        e.printStackTrace(logWriter);
-                                    }
+                        if (!set[CardAndSetParser.SET_CODE].equals("DD3")) { /* Never download the old Duel Deck Anthologies patch */
+                            try {
+                                /* If the digest doesn't match, mark the set for dropping
+                                 * and remove it from currentSetCodes so it redownloads
+                                 */
+                                if (!storedDigests.get(set[CardAndSetParser.SET_CODE])
+                                        .equals(patchDigests.get(set[CardAndSetParser.SET_CODE]))) {
+                                    currentSetCodes.remove(set[CardAndSetParser.SET_CODE]);
+                                    setsToDrop.add(set[CardAndSetParser.SET_CODE]);
                                 }
-                                retries--;
+                            } catch(NullPointerException e) {
+                                /* eat it */
+                            }
+                            if (!currentSetCodes.contains(set[CardAndSetParser.SET_CODE])) { /* check to see if the patch is known already */
+                                int retries = 5;
+                                while (retries > 0) {
+                                    try {
+                                        /* Change the notification to the specific set */
+                                        switchToUpdating(String.format(getString(R.string.update_updating_set),
+                                                set[CardAndSetParser.SET_NAME]));
+                                        URL urlToRead = new URL(set[CardAndSetParser.SET_URL]);
+                                        InputStream streamToRead = urlToRead.openStream();
+                                        GZIPInputStream gis = new GZIPInputStream(streamToRead);
+                                        JsonReader reader = new JsonReader(new InputStreamReader(gis, "ISO-8859-1"));
+                                        parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd, patchDigests);
+                                        updatedStuff.add(set[CardAndSetParser.SET_NAME]);
+                                         /* Everything was successful, retries = 0 breaks the while loop */
+                                        retries = 0;
+                                    } catch (IOException e) {
+                                        if (logWriter != null) {
+                                            logWriter.print("Retry " + retries + '\n');
+                                            e.printStackTrace(logWriter);
+                                        }
+                                    }
+                                    retries--;
+                                }
                             }
                         }
                     }
@@ -254,6 +278,7 @@ public class DbUpdaterService extends IntentService {
 
                 /* Open a writable database, as briefly as possible */
                 if (legalInfo != null ||
+                        setsToDrop.size() > 0 ||
                         setsToAdd.size() > 0 ||
                         cardsToAdd.size() > 0 ||
                         rulesToAdd.size() > 0 ||
@@ -275,6 +300,11 @@ public class DbUpdaterService extends IntentService {
                         for (CardAndSetParser.NameAndMetadata restrictedCard : legalInfo.restrictedCards) {
                             CardDbAdapter.addLegalCard(restrictedCard.name, restrictedCard.metadata, CardDbAdapter.RESTRICTED, database);
                         }
+                    }
+
+                    /* Drop any out of date sets */
+                    for(String code : setsToDrop) {
+                        CardDbAdapter.dropSetAndCards(code, database);
                     }
 
                     /* Add set data */

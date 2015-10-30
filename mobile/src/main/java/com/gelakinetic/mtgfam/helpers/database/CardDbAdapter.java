@@ -56,7 +56,7 @@ import java.util.zip.GZIPInputStream;
 @SuppressWarnings("JavaDoc")
 public class CardDbAdapter {
 
-    public static final int DATABASE_VERSION = 65;
+    public static final int DATABASE_VERSION = 66;
 
     public static final int STAR = -1000;
     public static final int ONE_PLUS_STAR = -1001;
@@ -117,6 +117,7 @@ public class CardDbAdapter {
     public static final int SPLIT = 3;
     private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
     private static final String KEY_FORMAT = "format";
+    public static final String KEY_DIGEST = "digest";
     private static final String DATABASE_TABLE_FORMATS = "formats";
     private static final String DATABASE_CREATE_FORMATS = "create table "
             + DATABASE_TABLE_FORMATS + "(" + KEY_ID
@@ -159,7 +160,7 @@ public class CardDbAdapter {
             + " integer primary key autoincrement, " + KEY_NAME
             + " text not null, " + KEY_CODE + " text not null unique, "
             + KEY_CODE_MTGI + " text not null, " + KEY_NAME_TCGPLAYER
-            + " text, " + KEY_DATE + " integer);";
+            + " text, "+ KEY_DIGEST + " text, " + KEY_DATE + " integer);";
     private static final String KEY_POSITION = "position";
     private static final String DATABASE_CREATE_RULES = "create table "
             + DATABASE_TABLE_RULES + "(" + KEY_ID
@@ -248,6 +249,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_NAME, set.name);
         initialValues.put(KEY_CODE_MTGI, set.codeMagicCards);
         initialValues.put(KEY_DATE, set.date);
+        initialValues.put(KEY_DIGEST, set.digest);
 
         mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
     }
@@ -275,7 +277,7 @@ public class CardDbAdapter {
 
         Cursor c;
         try {
-            c = sqLiteDatabase.query(DATABASE_TABLE_SETS, new String[]{KEY_ID, KEY_NAME, KEY_CODE, KEY_CODE_MTGI}, null,
+            c = sqLiteDatabase.query(DATABASE_TABLE_SETS, new String[]{KEY_ID, KEY_NAME, KEY_CODE, KEY_CODE_MTGI, KEY_DIGEST}, null,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | IllegalStateException | NullPointerException e) {
             throw new FamiliarDbException(e);
@@ -2055,5 +2057,22 @@ public class CardDbAdapter {
             throw new FamiliarDbException(e);
         }
         return setCode;
+    }
+
+    /**
+     * Drop an expansion and all of its cards
+     *
+     * @param setCode   The expansion to drop
+     * @param database  The database to drop from
+     * @throws FamiliarDbException  If something goes wrong
+     */
+    public static void dropSetAndCards(String setCode, SQLiteDatabase database) throws FamiliarDbException {
+
+        try {
+            database.delete(DATABASE_TABLE_CARDS, KEY_SET + " = " + sanitizeString(setCode), null);
+            database.delete(DATABASE_TABLE_SETS, KEY_CODE + " = " + sanitizeString(setCode), null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
     }
 }

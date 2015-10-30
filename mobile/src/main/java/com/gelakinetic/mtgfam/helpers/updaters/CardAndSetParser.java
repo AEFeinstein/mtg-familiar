@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class is used to parse various JSON update files and populate the database
@@ -47,6 +48,7 @@ class CardAndSetParser {
     private static final String PATCHES_URL = "https://sites.google.com/site/mtgfamiliar/manifests/patches.json";
     private static final String LEGALITY_URL = "https://sites.google.com/site/mtgfamiliar/manifests/legality.json";
     private static final String TCG_NAMES_URL = "https://sites.google.com/site/mtgfamiliar/manifests/TCGnames.json";
+    private static final String DIGESTS_URL = "https://sites.google.com/site/mtgfamiliar/manifests/digests.json";
 
     /**
      * Used to store various dates before committing them
@@ -68,9 +70,10 @@ class CardAndSetParser {
      * @param progressReporter A percentage progress is reported through this class to be shown in the notification
      * @param cardsToAdd       An array list to place cards before adding to the database
      * @param setsToAdd        An array list to place sets before adding to the database
+     * @param patchDigests     A hash map of digests per set, to be added to the set table in the database
      * @throws IOException If something goes wrong with the InputStream, this will be thrown
      */
-    public void readCardJsonStream(JsonReader reader, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<MtgSet> setsToAdd)
+    public void readCardJsonStream(JsonReader reader, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<MtgSet> setsToAdd, HashMap<String, String> patchDigests)
             throws IOException {
 
         ArrayList<MtgCard> tempCardsToAdd = new ArrayList<>();
@@ -122,6 +125,7 @@ class CardAndSetParser {
                                     set.date = reader.nextLong();
                                 }
                             }
+                            set.digest = patchDigests.get(set.code);
                             tempSetsToAdd.add(set);
                             reader.endObject();
                         } else if (jt.equals(JsonToken.BEGIN_ARRAY)) {
@@ -144,6 +148,7 @@ class CardAndSetParser {
                                         set.date = reader.nextLong();
                                     }
                                 }
+                                set.digest = patchDigests.get(set.code);
                                 tempSetsToAdd.add(set);
                                 reader.endObject();
                             }
@@ -510,6 +515,55 @@ class CardAndSetParser {
         mCurrentTCGNamePatchDate = null;
         mCurrentPatchDate = null;
         mCurrentRulesDate = null;
+    }
+
+    /**
+     * Reads the digests file, which has an MD5 digest for each patch. That way, if a patch changes,
+     * it can be redownloaded
+     *
+     * @return A hash map from set code to MD5 digest
+     */
+    public HashMap<String, String> readDigestStream() throws IOException {
+        URL update;
+        String label;
+        String label2;
+        String digest = null, code = null;
+
+        HashMap<String, String> digests = new HashMap<>();
+
+        update = new URL(DIGESTS_URL);
+        InputStreamReader isr = new InputStreamReader(update.openStream(), "ISO-8859-1");
+        JsonReader reader = new JsonReader(isr);
+
+        reader.beginObject();
+        while (reader.hasNext()) {
+            label = reader.nextName();
+
+            if (label.equals("Date")) {
+                /* Don't really care about the date */
+                reader.nextString();
+            } else if (label.equals("Digests")) {
+                reader.beginArray();
+                while (reader.hasNext()) {
+                    reader.beginObject();
+                    while (reader.hasNext()) {
+                        label2 = reader.nextName();
+                        if (label2.equals("Code")) {
+                            code = reader.nextString();
+                        } else if (label2.equals("Digest")) {
+                            digest = reader.nextString();
+                        }
+                    }
+                    digests.put(code, digest);
+                    reader.endObject();
+                }
+                reader.endArray();
+            }
+        }
+        reader.endObject();
+        reader.close();
+
+        return digests;
     }
 
     /**
