@@ -15,8 +15,8 @@ MTG Familiar is an Android app which has a suite of tools to play Magic: The Gat
 - Momir, Jhoira, Stonehewer randomizer
 
 ##How To Build
-- Download and install the latest [Android Studio build from the Canary channel](http://tools.android.com/download/studio/canary/latest)
-- Make sure you have installed Android SDK Platform 19, Android SDK build tools 19.0.3 and Android Support Library 19.1 from the Android SDK manager
+- Download and install the latest [Android Studio](https://developer.android.com/sdk/index.html)
+- Make sure you have installed the lastest Android SDK Platform, Android SDK Tools, Android SDK Platform-tools, Android SDK Build-tools, Android Support Repository, Android Support Library, and Google Play Services from the Android SDK manager
 - Check out this project with Android Studio's VCS tools
 - Press the build button
 
