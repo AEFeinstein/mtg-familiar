@@ -160,7 +160,7 @@ public class CardDbAdapter {
             + " integer primary key autoincrement, " + KEY_NAME
             + " text not null, " + KEY_CODE + " text not null unique, "
             + KEY_CODE_MTGI + " text not null, " + KEY_NAME_TCGPLAYER
-            + " text, "+ KEY_DIGEST + " text, " + KEY_DATE + " integer);";
+            + " text, " + KEY_DIGEST + " text, " + KEY_DATE + " integer);";
     private static final String KEY_POSITION = "position";
     private static final String DATABASE_CREATE_RULES = "create table "
             + DATABASE_TABLE_RULES + "(" + KEY_ID
@@ -360,7 +360,7 @@ public class CardDbAdapter {
                 + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
                 + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
                 + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name;
-        if(shouldGroup) {
+        if (shouldGroup) {
             sql += " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE;
         }
         sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
@@ -2063,9 +2063,9 @@ public class CardDbAdapter {
     /**
      * Drop an expansion and all of its cards
      *
-     * @param setCode   The expansion to drop
-     * @param database  The database to drop from
-     * @throws FamiliarDbException  If something goes wrong
+     * @param setCode  The expansion to drop
+     * @param database The database to drop from
+     * @throws FamiliarDbException If something goes wrong
      */
     public static void dropSetAndCards(String setCode, SQLiteDatabase database) throws FamiliarDbException {
 

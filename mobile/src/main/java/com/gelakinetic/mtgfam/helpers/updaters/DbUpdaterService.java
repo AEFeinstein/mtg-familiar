@@ -195,7 +195,7 @@ public class DbUpdaterService extends IntentService {
                                     currentSetCodes.remove(set[CardAndSetParser.SET_CODE]);
                                     setsToDrop.add(set[CardAndSetParser.SET_CODE]);
                                 }
-                            } catch(NullPointerException e) {
+                            } catch (NullPointerException e) {
                                 /* eat it */
                             }
                             if (!currentSetCodes.contains(set[CardAndSetParser.SET_CODE])) { /* check to see if the patch is known already */
@@ -303,7 +303,7 @@ public class DbUpdaterService extends IntentService {
                     }
 
                     /* Drop any out of date sets */
-                    for(String code : setsToDrop) {
+                    for (String code : setsToDrop) {
                         CardDbAdapter.dropSetAndCards(code, database);
                     }
 
@@ -382,7 +382,7 @@ public class DbUpdaterService extends IntentService {
                     mPrefAdapter.setLastRulesUpdate(curTime);
                 }
 
-                if(updatedStuff.size() > 0) {
+                if (updatedStuff.size() > 0) {
                     showUpdatedNotification(updatedStuff);
                 }
             }
@@ -443,7 +443,7 @@ public class DbUpdaterService extends IntentService {
             public void run() {
                 mBuilder.setProgress(100, mProgress, false);
                 mNotificationManager.notify(STATUS_NOTIFICATION, mBuilder.build());
-                if(mProgress != 100) {
+                if (mProgress != 100) {
                     mHandler.postDelayed(mProgressUpdater, 200);
                 }
             }

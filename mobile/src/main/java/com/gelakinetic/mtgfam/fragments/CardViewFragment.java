@@ -611,10 +611,9 @@ public class CardViewFragment extends FamiliarFragment {
         while (!cCardByName.isAfterLast()) {
             try {
                 String number = cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-                if(!(number == null || number.length() == 0)) {
+                if (!(number == null || number.length() == 0)) {
                     number = " (" + number + ")";
-                }
-                else {
+                } else {
                     number = "";
                 }
                 if (mPrintings.add(CardDbAdapter
