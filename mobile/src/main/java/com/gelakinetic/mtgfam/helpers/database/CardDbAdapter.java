@@ -342,7 +342,7 @@ public class CardDbAdapter {
      * @return
      * @throws FamiliarDbException
      */
-    public static Cursor fetchCardByName(String name, String[] fields, SQLiteDatabase mDb)
+    public static Cursor fetchCardByName(String name, String[] fields, boolean shouldGroup, SQLiteDatabase mDb)
             throws FamiliarDbException {
         // replace lowercase ae with Ae
         name = sanitizeString(name);
@@ -359,10 +359,11 @@ public class CardDbAdapter {
         sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
                 + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
                 + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
-                + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name
-                + " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
-                + " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
-                + " DESC";
+                + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name;
+        if(shouldGroup) {
+            sql += " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE;
+        }
+        sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
         Cursor c;
 
         try {

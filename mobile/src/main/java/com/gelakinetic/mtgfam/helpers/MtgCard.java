@@ -177,7 +177,7 @@ public class MtgCard {
             try {
                 Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, new String[]{
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR}, database);
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR}, true, database);
                 card.cmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
                 card.color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
             } catch (FamiliarDbException e) {

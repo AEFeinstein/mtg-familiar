@@ -151,7 +151,7 @@ public class CardViewFragment extends FamiliarFragment {
     private int mTransformId;
 
     /* To switch card between printings */
-    private LinkedHashSet<String> mSets;
+    private LinkedHashSet<String> mPrintings;
     private LinkedHashSet<Long> mCardIds;
 
     /* Easier than calling getActivity() all the time, and handles being nested */
@@ -598,19 +598,27 @@ public class CardViewFragment extends FamiliarFragment {
             cCardByName = CardDbAdapter.fetchCardByName(mCardName,
                     new String[]{
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER}, false, database
             );
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             return;
         }
-        mSets = new LinkedHashSet<>();
+        mPrintings = new LinkedHashSet<>();
         mCardIds = new LinkedHashSet<>();
         while (!cCardByName.isAfterLast()) {
             try {
-                if (mSets.add(CardDbAdapter
-                        .getSetNameFromCode(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database))) {
+                String number = cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                if(!(number == null || number.length() == 0)) {
+                    number = " (" + number + ")";
+                }
+                else {
+                    number = "";
+                }
+                if (mPrintings.add(CardDbAdapter
+                        .getSetNameFromCode(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database) + number)) {
                     mCardIds.add(cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID)));
                 }
             } catch (FamiliarDbException e) {
@@ -622,7 +630,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
         cCardByName.close();
         /* If it exists in only one set, remove the button from the menu */
-        if (mSets.size() == 1) {
+        if (mPrintings.size() == 1) {
             mActivity.supportInvalidateOptionsMenu();
         }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
@@ -765,7 +773,7 @@ public class CardViewFragment extends FamiliarFragment {
                         return adb.create();
                     }
                     case CHANGE_SET: {
-                        final String[] aSets = mSets.toArray(new String[mSets.size()]);
+                        final String[] aSets = mPrintings.toArray(new String[mPrintings.size()]);
                         final Long[] aIds = mCardIds.toArray(new Long[mCardIds.size()]);
 
                         /* Sanity check */
@@ -1046,7 +1054,7 @@ public class CardViewFragment extends FamiliarFragment {
          * Turns out some users use it to view the full set name when there is only one set/
          * I'm leaving it here, but commented, for posterity */
         /*
-         if (mSets != null && mSets.size() == 1) {
+         if (mPrintings != null && mPrintings.size() == 1) {
             mi = menu.findItem(R.id.changeset);
             if (mi != null) {
                 menu.removeItem(mi.getItemId());

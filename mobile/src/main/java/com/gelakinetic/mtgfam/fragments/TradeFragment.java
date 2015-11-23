@@ -234,7 +234,7 @@ public class TradeFragment extends FamiliarFragment {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC, /* For sorting */
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR, /* For sorting */
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, database);
+                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, database);
 
             /* Make sure there was a database hit */
             if (cardCursor.getCount() == 0) {
@@ -429,8 +429,7 @@ public class TradeFragment extends FamiliarFragment {
                                     /* Get the card ID, and send it to a new CardViewPagerFragment */
                                     Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
                                             lSide.get(positionForDialog).setCode, new String[]{
-                                                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database
-                                    );
+                                                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
 
                                     Bundle args = new Bundle();
                                     args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
@@ -559,7 +558,7 @@ public class TradeFragment extends FamiliarFragment {
                             Cursor cards = CardDbAdapter.fetchCardByName(data.name, new String[]{
                                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, database);
+                                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, database);
                             /* Build set names and set codes */
                             Set<String> sets = new LinkedHashSet<>();
                             Set<String> setCodes = new LinkedHashSet<>();
