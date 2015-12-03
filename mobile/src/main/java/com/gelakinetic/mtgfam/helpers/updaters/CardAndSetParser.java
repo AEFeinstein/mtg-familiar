@@ -30,6 +30,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,7 +127,9 @@ class CardAndSetParser {
                                     set.date = reader.nextLong();
                                 }
                             }
-                            set.digest = patchDigests.get(set.code);
+                            if(patchDigests != null) {
+                                set.digest = patchDigests.get(set.code);
+                            }
                             tempSetsToAdd.add(set);
                             reader.endObject();
                         } else if (jt.equals(JsonToken.BEGIN_ARRAY)) {
@@ -148,7 +152,9 @@ class CardAndSetParser {
                                         set.date = reader.nextLong();
                                     }
                                 }
-                                set.digest = patchDigests.get(set.code);
+                                if(patchDigests != null) {
+                                    set.digest = patchDigests.get(set.code);
+                                }
                                 tempSetsToAdd.add(set);
                                 reader.endObject();
                             }
@@ -312,57 +318,73 @@ class CardAndSetParser {
     /**
      * This method checks the hardcoded URL and downloads a list of patches to be checked
      *
-     * @param prefAdapter The preference adapter is used to get the last update time
+     * @param logWriter A writer to print debug statements when things go wrong
      * @return An ArrayList of String[] which contains the {Name, URL, Set Code} for each available patch
-     * @throws IOException Thrown if something goes wrong with the InputStream from the web
      */
-    public ArrayList<String[]> readUpdateJsonStream(PreferenceAdapter prefAdapter) throws IOException {
+    public ArrayList<String[]> readUpdateJsonStream(PrintWriter logWriter) {
+        HttpURLConnection connection = null;
+        InputStreamReader isr;
         ArrayList<String[]> patchInfo = new ArrayList<>();
-        URL update;
-        String label;
-        String label2;
 
-        update = new URL(PATCHES_URL);
-        InputStreamReader isr = new InputStreamReader(update.openStream(), "ISO-8859-1");
-        JsonReader reader = new JsonReader(isr);
+        try {
+            URL update;
+            String label;
+            String label2;
 
-        reader.beginObject();
-        while (reader.hasNext()) {
-            label = reader.nextName();
+            update = new URL(PATCHES_URL);
+            connection = (HttpURLConnection) update.openConnection();
+            connection.setInstanceFollowRedirects(true);
+            isr = new InputStreamReader(connection.getInputStream(), "ISO-8859-1");
 
-            if (label.equals("Date")) {
-                mCurrentPatchDate = reader.nextString();
+            JsonReader reader = new JsonReader(isr);
+
+            reader.beginObject();
+            while (reader.hasNext()) {
+                label = reader.nextName();
+
+                if (label.equals("Date")) {
+                    mCurrentPatchDate = reader.nextString();
                 /* Don't return if the date matches, a prior patch may have been partially applied.
                  * Only the cards have one date per multiple files, so other date-checks are fine
                  */
-            } else if (label.equals("Patches")) {
-                reader.beginArray();
-                while (reader.hasNext()) {
-                    reader.beginObject();
-                    String[] setData = new String[3];
+                } else if (label.equals("Patches")) {
+                    reader.beginArray();
                     while (reader.hasNext()) {
-                        label2 = reader.nextName();
-                        switch (label2) {
-                            case "Name":
-                                setData[SET_NAME] = reader.nextString();
-                                break;
-                            case "URL":
-                                setData[SET_URL] = reader.nextString();
-                                break;
-                            case "Code":
-                                setData[SET_CODE] = reader.nextString();
-                                break;
+                        reader.beginObject();
+                        String[] setData = new String[3];
+                        while (reader.hasNext()) {
+                            label2 = reader.nextName();
+                            switch (label2) {
+                                case "Name":
+                                    setData[SET_NAME] = reader.nextString();
+                                    break;
+                                case "URL":
+                                    setData[SET_URL] = reader.nextString();
+                                    break;
+                                case "Code":
+                                    setData[SET_CODE] = reader.nextString();
+                                    break;
+                            }
                         }
+                        patchInfo.add(setData);
+                        reader.endObject();
                     }
-                    patchInfo.add(setData);
-                    reader.endObject();
+                    reader.endArray();
                 }
-                reader.endArray();
             }
+            reader.endObject();
+            reader.close();
+            isr.close();
+        } catch(IOException e) {
+            if(connection != null) {
+                connection.disconnect();
+            }
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
+            return null;
         }
-        reader.endObject();
-        reader.close();
-
+        connection.disconnect();
         return patchInfo;
     }
 
@@ -371,10 +393,10 @@ class CardAndSetParser {
      * banned and restricted lists
      *
      * @param prefAdapter The preference adapter is used to get the last update time
+     * @param logWriter A writer to print debug statements when things go wrong
      * @return An object with all of the legal info, to be added to the database in one fell swoop
      */
-    public LegalInfo readLegalityJsonStream(PreferenceAdapter prefAdapter)
-            throws IOException {
+    public LegalInfo readLegalityJsonStream(PreferenceAdapter prefAdapter, PrintWriter logWriter) {
 
         LegalInfo legalInfo = new LegalInfo();
 
@@ -384,70 +406,86 @@ class CardAndSetParser {
         String formatName;
         String jsonArrayName;
         String jsonTopLevelName;
+        HttpURLConnection connection = null;
+        InputStream in;
 
-        URL legal = new URL(LEGALITY_URL);
-        InputStream in = new BufferedInputStream(legal.openStream());
+        try {
+            URL legal = new URL(LEGALITY_URL);
+            connection = (HttpURLConnection) legal.openConnection();
+            connection.setInstanceFollowRedirects(true);
+            in = new BufferedInputStream(connection.getInputStream());
 
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "ISO-8859-1"));
+            JsonReader reader = new JsonReader(new InputStreamReader(in, "ISO-8859-1"));
 
-        reader.beginObject();
-        while (reader.hasNext()) {
+            reader.beginObject();
+            while (reader.hasNext()) {
 
-            jsonTopLevelName = reader.nextName();
-            if (jsonTopLevelName.equalsIgnoreCase("Date")) {
-                mCurrentRulesDate = reader.nextString();
+                jsonTopLevelName = reader.nextName();
+                if (jsonTopLevelName.equalsIgnoreCase("Date")) {
+                    mCurrentRulesDate = reader.nextString();
 
-                /* compare date, maybe return, update shared prefs */
-                String spDate = prefAdapter.getLegalityDate();
-                if (spDate != null && spDate.equals(mCurrentRulesDate)) {
-                    reader.close();
-                    return null; /* dates match, nothing new here. */
-                }
+                    /* compare date, maybe return, update shared prefs */
+                    String spDate = prefAdapter.getLegalityDate();
+                    if (spDate != null && spDate.equals(mCurrentRulesDate)) {
+                        reader.close();
+                        return null; /* dates match, nothing new here. */
+                    }
 
-            } else if (jsonTopLevelName.equalsIgnoreCase("Formats")) {
-
-                reader.beginObject();
-                while (reader.hasNext()) {
-                    formatName = reader.nextName();
-
-                    legalInfo.formats.add(formatName);
+                } else if (jsonTopLevelName.equalsIgnoreCase("Formats")) {
 
                     reader.beginObject();
                     while (reader.hasNext()) {
-                        jsonArrayName = reader.nextName();
+                        formatName = reader.nextName();
 
-                        if (jsonArrayName.equalsIgnoreCase("Sets")) {
-                            reader.beginArray();
-                            while (reader.hasNext()) {
-                                legalSet = reader.nextString();
-                                legalInfo.legalSets.add(new NameAndMetadata(legalSet, formatName));
+                        legalInfo.formats.add(formatName);
+
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            jsonArrayName = reader.nextName();
+
+                            if (jsonArrayName.equalsIgnoreCase("Sets")) {
+                                reader.beginArray();
+                                while (reader.hasNext()) {
+                                    legalSet = reader.nextString();
+                                    legalInfo.legalSets.add(new NameAndMetadata(legalSet, formatName));
+                                }
+                                reader.endArray();
+                            } else if (jsonArrayName.equalsIgnoreCase("Banlist")) {
+                                reader.beginArray();
+                                while (reader.hasNext()) {
+                                    bannedCard = reader.nextString();
+                                    legalInfo.bannedCards.add(new NameAndMetadata(bannedCard, formatName));
+                                }
+                                reader.endArray();
+                            } else if (jsonArrayName.equalsIgnoreCase("Restrictedlist")) {
+                                reader.beginArray();
+                                while (reader.hasNext()) {
+                                    restrictedCard = reader.nextString();
+                                    legalInfo.restrictedCards.add(new NameAndMetadata(restrictedCard, formatName));
+                                }
+                                reader.endArray();
                             }
-                            reader.endArray();
-                        } else if (jsonArrayName.equalsIgnoreCase("Banlist")) {
-                            reader.beginArray();
-                            while (reader.hasNext()) {
-                                bannedCard = reader.nextString();
-                                legalInfo.bannedCards.add(new NameAndMetadata(bannedCard, formatName));
-                            }
-                            reader.endArray();
-                        } else if (jsonArrayName.equalsIgnoreCase("Restrictedlist")) {
-                            reader.beginArray();
-                            while (reader.hasNext()) {
-                                restrictedCard = reader.nextString();
-                                legalInfo.restrictedCards.add(new NameAndMetadata(restrictedCard, formatName));
-                            }
-                            reader.endArray();
                         }
+                        reader.endObject();
                     }
                     reader.endObject();
                 }
-                reader.endObject();
             }
+            reader.endObject();
+
+            reader.close();
+
+            in.close();
+        } catch (IOException e) {
+            if(connection != null) {
+                connection.disconnect();
+            }
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
+            return null;
         }
-        reader.endObject();
-
-        reader.close();
-
+        connection.disconnect();
         return legalInfo;
     }
 
@@ -455,51 +493,65 @@ class CardAndSetParser {
      * This method parses the mapping between set codes and the names TCGPlayer.com uses
      *
      * @param prefAdapter The preference adapter is used to get the last update time
+     * @param logWriter A writer to print debug statements when things go wrong
      * @param tcgNames    A place to store tcg names before adding to the database
-     * @throws IOException Thrown if something goes wrong with the InputStream
      */
-    public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, ArrayList<NameAndMetadata> tcgNames)
-            throws IOException {
+    public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, ArrayList<NameAndMetadata> tcgNames, PrintWriter logWriter) {
         URL update;
         String label;
         String label2;
         String name = null, code = null;
+        HttpURLConnection connection = null;
 
-        update = new URL(TCG_NAMES_URL);
-        InputStreamReader isr = new InputStreamReader(update.openStream(), "ISO-8859-1");
-        JsonReader reader = new JsonReader(isr);
+        try {
+            update = new URL(TCG_NAMES_URL);
+            connection = (HttpURLConnection) update.openConnection();
+            connection.setInstanceFollowRedirects(true);
+            InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "ISO-8859-1");
+            JsonReader reader = new JsonReader(isr);
 
-        reader.beginObject();
-        while (reader.hasNext()) {
-            label = reader.nextName();
+            reader.beginObject();
+            while (reader.hasNext()) {
+                label = reader.nextName();
 
-            if (label.equals("Date")) {
-                String lastUpdate = prefAdapter.getLastTCGNameUpdate();
-                mCurrentTCGNamePatchDate = reader.nextString();
-                if (lastUpdate.equals(mCurrentTCGNamePatchDate)) {
-                    reader.close();
-                    return;
-                }
-            } else if (label.equals("Sets")) {
-                reader.beginArray();
-                while (reader.hasNext()) {
-                    reader.beginObject();
-                    while (reader.hasNext()) {
-                        label2 = reader.nextName();
-                        if (label2.equals("Code")) {
-                            code = reader.nextString();
-                        } else if (label2.equals("TCGName")) {
-                            name = reader.nextString();
-                        }
+                if (label.equals("Date")) {
+                    String lastUpdate = prefAdapter.getLastTCGNameUpdate();
+                    mCurrentTCGNamePatchDate = reader.nextString();
+                    if (lastUpdate.equals(mCurrentTCGNamePatchDate)) {
+                        reader.close();
+                        return;
                     }
-                    tcgNames.add(new NameAndMetadata(name, code));
-                    reader.endObject();
+                } else if (label.equals("Sets")) {
+                    reader.beginArray();
+                    while (reader.hasNext()) {
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            label2 = reader.nextName();
+                            if (label2.equals("Code")) {
+                                code = reader.nextString();
+                            } else if (label2.equals("TCGName")) {
+                                name = reader.nextString();
+                            }
+                        }
+                        tcgNames.add(new NameAndMetadata(name, code));
+                        reader.endObject();
+                    }
+                    reader.endArray();
                 }
-                reader.endArray();
             }
+            reader.endObject();
+            reader.close();
+            isr.close();
+        } catch (IOException e) {
+            if(connection != null) {
+                connection.disconnect();
+            }
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
+            return;
         }
-        reader.endObject();
-        reader.close();
+        connection.disconnect();
     }
 
     /**
@@ -521,48 +573,64 @@ class CardAndSetParser {
      * Reads the digests file, which has an MD5 digest for each patch. That way, if a patch changes,
      * it can be redownloaded
      *
+     * @param logWriter A writer to print debug statements when things go wrong
      * @return A hash map from set code to MD5 digest
      */
-    public HashMap<String, String> readDigestStream() throws IOException {
+    public HashMap<String, String> readDigestStream(PrintWriter logWriter) {
         URL update;
         String label;
         String label2;
         String digest = null, code = null;
 
         HashMap<String, String> digests = new HashMap<>();
+        HttpURLConnection connection = null;
 
-        update = new URL(DIGESTS_URL);
-        InputStreamReader isr = new InputStreamReader(update.openStream(), "ISO-8859-1");
-        JsonReader reader = new JsonReader(isr);
+        try {
+            update = new URL(DIGESTS_URL);
+            connection = (HttpURLConnection) update.openConnection();
+            connection.setInstanceFollowRedirects(true);
+            InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "ISO-8859-1");
+            JsonReader reader = new JsonReader(isr);
 
-        reader.beginObject();
-        while (reader.hasNext()) {
-            label = reader.nextName();
+            reader.beginObject();
+            while (reader.hasNext()) {
+                label = reader.nextName();
 
-            if (label.equals("Date")) {
-                /* Don't really care about the date */
-                reader.nextString();
-            } else if (label.equals("Digests")) {
-                reader.beginArray();
-                while (reader.hasNext()) {
-                    reader.beginObject();
+                if (label.equals("Date")) {
+                    /* Don't really care about the date */
+                    reader.nextString();
+                } else if (label.equals("Digests")) {
+                    reader.beginArray();
                     while (reader.hasNext()) {
-                        label2 = reader.nextName();
-                        if (label2.equals("Code")) {
-                            code = reader.nextString();
-                        } else if (label2.equals("Digest")) {
-                            digest = reader.nextString();
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            label2 = reader.nextName();
+                            if (label2.equals("Code")) {
+                                code = reader.nextString();
+                            } else if (label2.equals("Digest")) {
+                                digest = reader.nextString();
+                            }
                         }
+                        digests.put(code, digest);
+                        reader.endObject();
                     }
-                    digests.put(code, digest);
-                    reader.endObject();
+                    reader.endArray();
                 }
-                reader.endArray();
             }
+            reader.endObject();
+            reader.close();
+            isr.close();
+        } catch (IOException e) {
+            if(connection != null) {
+                connection.disconnect();
+            }
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
+            return null;
         }
-        reader.endObject();
-        reader.close();
 
+        connection.disconnect();
         return digests;
     }
 

@@ -162,6 +162,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 
                 /* Fetch the information from the web */
                 HttpURLConnection urlConnection = (HttpURLConnection) priceUrl.openConnection();
+                urlConnection.setInstanceFollowRedirects(true);
                 String result = IOUtils.toString(urlConnection.getInputStream());
                 urlConnection.disconnect();
 

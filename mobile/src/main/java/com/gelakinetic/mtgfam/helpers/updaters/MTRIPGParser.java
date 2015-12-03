@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -93,6 +94,7 @@ class MTRIPGParser {
         }
 
         /* Then update via the internet */
+        HttpURLConnection connection = null;
         try {
             URL url;
             switch (mode) {
@@ -108,11 +110,17 @@ class MTRIPGParser {
                 default:
                     throw new FileNotFoundException("Invalid switch"); /* handled below */
             }
-            updated = parseDocument(mode, url.openStream());
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setInstanceFollowRedirects(true);
+            updated = parseDocument(mode, connection.getInputStream());
         } catch (IOException e) {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
+        }
+
+        if(connection != null) {
+            connection.disconnect();
         }
         return updated;
     }

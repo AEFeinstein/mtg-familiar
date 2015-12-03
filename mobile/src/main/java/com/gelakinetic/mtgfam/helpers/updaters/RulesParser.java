@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ class RulesParser {
     private final ArrayList<GlossaryItem> mGlossary;
     private InputStream mInputStream;
     private BufferedReader mBufferedReader;
+    private HttpURLConnection mConnection;
 
     /**
      * Default Constructor
@@ -60,7 +62,9 @@ class RulesParser {
 
         try {
             url = new URL(SOURCE);
-            this.mInputStream = url.openStream();
+            mConnection = (HttpURLConnection) url.openConnection();
+            mConnection.setInstanceFollowRedirects(true);
+            this.mInputStream = mConnection.getInputStream();
             this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream));
 
             /*First line will be the date formatted as YYYY-MM-DD */
@@ -250,6 +254,11 @@ class RulesParser {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
+        }
+
+        if(this.mConnection != null) {
+            this.mConnection.disconnect();
+            this.mConnection = null;
         }
 
         this.mInputStream = null;

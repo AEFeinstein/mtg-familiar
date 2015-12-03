@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -141,7 +142,7 @@ public class DbUpdaterService extends IntentService {
                 ArrayList<CardAndSetParser.NameAndMetadata> tcgNames = new ArrayList<>();
 
                 /* Look for updates with the banned / restricted lists and formats */
-                CardAndSetParser.LegalInfo legalInfo = parser.readLegalityJsonStream(mPrefAdapter);
+                CardAndSetParser.LegalInfo legalInfo = parser.readLegalityJsonStream(mPrefAdapter, logWriter);
 
                 /* Log the date */
                 if (logWriter != null) {
@@ -149,13 +150,13 @@ public class DbUpdaterService extends IntentService {
                 }
 
                 /* Get the MD5 digests for the patches */
-                HashMap<String, String> patchDigests = parser.readDigestStream();
-                if (logWriter != null) {
+                HashMap<String, String> patchDigests = parser.readDigestStream(logWriter);
+                if (logWriter != null && patchDigests != null) {
                     logWriter.write("patchDigests: " + patchDigests.size() + '\n');
                 }
 
                 /* Look for new cards */
-                ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(mPrefAdapter);
+                ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(logWriter);
 
                 /* Log the date */
                 if (logWriter != null) {
@@ -190,7 +191,8 @@ public class DbUpdaterService extends IntentService {
                                 /* If the digest doesn't match, mark the set for dropping
                                  * and remove it from currentSetCodes so it redownloads
                                  */
-                                if (!storedDigests.get(set[CardAndSetParser.SET_CODE])
+                                if (patchDigests != null &&
+                                        !storedDigests.get(set[CardAndSetParser.SET_CODE])
                                         .equals(patchDigests.get(set[CardAndSetParser.SET_CODE]))) {
                                     currentSetCodes.remove(set[CardAndSetParser.SET_CODE]);
                                     setsToDrop.add(set[CardAndSetParser.SET_CODE]);
@@ -201,15 +203,19 @@ public class DbUpdaterService extends IntentService {
                             if (!currentSetCodes.contains(set[CardAndSetParser.SET_CODE])) { /* check to see if the patch is known already */
                                 int retries = 5;
                                 while (retries > 0) {
+                                    HttpURLConnection connection = null;
                                     try {
                                         /* Change the notification to the specific set */
                                         switchToUpdating(String.format(getString(R.string.update_updating_set),
                                                 set[CardAndSetParser.SET_NAME]));
                                         URL urlToRead = new URL(set[CardAndSetParser.SET_URL]);
-                                        InputStream streamToRead = urlToRead.openStream();
+                                        connection = (HttpURLConnection) urlToRead.openConnection();
+                                        connection.setInstanceFollowRedirects(true);
+                                        InputStream streamToRead = connection.getInputStream();
                                         GZIPInputStream gis = new GZIPInputStream(streamToRead);
                                         JsonReader reader = new JsonReader(new InputStreamReader(gis, "ISO-8859-1"));
                                         parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd, patchDigests);
+                                        streamToRead.close();
                                         updatedStuff.add(set[CardAndSetParser.SET_NAME]);
                                          /* Everything was successful, retries = 0 breaks the while loop */
                                         retries = 0;
@@ -218,6 +224,12 @@ public class DbUpdaterService extends IntentService {
                                             logWriter.print("Retry " + retries + '\n');
                                             e.printStackTrace(logWriter);
                                         }
+                                        if(connection != null) {
+                                            connection.disconnect();
+                                        }
+                                    }
+                                    if(connection != null) {
+                                        connection.disconnect();
                                     }
                                     retries--;
                                 }
@@ -229,7 +241,7 @@ public class DbUpdaterService extends IntentService {
                      * and there is a new set to add
                      */
                     if (setsToAdd.size() > 0) {
-                        parser.readTCGNameJsonStream(mPrefAdapter, tcgNames);
+                        parser.readTCGNameJsonStream(mPrefAdapter, tcgNames, logWriter);
 
                         /* Log the date */
                         if (logWriter != null) {
@@ -342,7 +354,7 @@ public class DbUpdaterService extends IntentService {
                     /* Close the writable database */
                     DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
                 }
-            } catch (FamiliarDbException | IOException e1) {
+            } catch (FamiliarDbException e1) {
                 commitDates = false; /* don't commit the dates */
                 if (logWriter != null) {
                     e1.printStackTrace(logWriter);
