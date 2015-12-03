@@ -117,7 +117,7 @@ public class DbUpdaterService extends IntentService {
         try {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 /* Open the log */
-                File logfile = new File(Environment.getExternalStorageDirectory(), "mtgf_update.txt");
+                File logfile = new File(this.getApplicationContext().getExternalFilesDir(null), "mtgf_update.txt");
                 logWriter = new PrintWriter(new FileWriter(logfile));
                 /* Datestamp it */
                 logWriter.write((new Date()).toString() + '\n');

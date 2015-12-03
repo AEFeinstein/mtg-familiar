@@ -145,6 +145,8 @@ public class FamiliarActivity extends AppCompatActivity {
     private static final int MESSAGE_FLUSH = 2;
     private static final int MESSAGE_CLOSE = 3;
     private static final String IMAGE_CACHE_DIR = "images";
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 77;
+
     /* Spice setup */
     public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
     /* What the drawer menu will be */
@@ -1651,5 +1653,21 @@ public class FamiliarActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    /**
+     * Callback for when a permission is requested
+     *
+     * @param requestCode The request code passed in requestPermissions(String[], int).
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions which is either
+     *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
+     *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        getSupportFragmentManager().findFragmentById(R.id.fragment_container)
+                .onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

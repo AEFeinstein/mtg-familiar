@@ -174,7 +174,7 @@ public class ImageCache {
         // otherwise use internal cache dir
         final String cachePath =
                 Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
-                        !isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :
+                        !isExternalStorageRemovable() ? context.getExternalCacheDir().getPath() :
                         context.getCacheDir().getPath();
 
         return new File(cachePath + File.separator + uniqueName);
@@ -244,23 +244,6 @@ public class ImageCache {
     @TargetApi(VERSION_CODES.GINGERBREAD)
     private static boolean isExternalStorageRemovable() {
         return !Utils.hasGingerbread() || Environment.isExternalStorageRemovable();
-    }
-
-    /**
-     * Get the external app cache directory.
-     *
-     * @param context The context to use
-     * @return The external cache dir
-     */
-    @TargetApi(VERSION_CODES.FROYO)
-    private static File getExternalCacheDir(Context context) {
-        if (Utils.hasFroyo()) {
-            return context.getExternalCacheDir();
-        }
-
-        // Before Froyo we need to construct the external cache dir ourselves
-        final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
-        return new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
     }
 
     /**

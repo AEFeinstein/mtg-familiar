@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.gelakinetic.mtgfam.R;
 
@@ -38,8 +37,7 @@ public class ZipUtils {
         ArrayList<File> files = findAllFiles(context.getFilesDir(),
                 new File(sharedPrefsDir));
 
-        // TODO permission
-        File sdCard = Environment.getExternalStorageDirectory();
+        File sdCard = context.getExternalFilesDir(null);
         File zipOut = new File(sdCard, BACKUP_FILE_NAME);
         if (zipOut.exists()) {
             if (!zipOut.delete()) {
@@ -67,8 +65,7 @@ public class ZipUtils {
      * @param context The application context, for getting files and the like
      */
     public static void importData(Context context) {
-        // TODO permission
-        File sdCard = Environment.getExternalStorageDirectory();
+        File sdCard = context.getExternalFilesDir(null);
         File zipIn = new File(sdCard, BACKUP_FILE_NAME);
         try {
             unZipIt(new ZipFile(zipIn), context);

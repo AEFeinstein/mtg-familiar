@@ -1,7 +1,10 @@
 package com.gelakinetic.mtgfam.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -9,7 +12,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
 /**
@@ -21,6 +26,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
     public static final String CARD_ID_ARRAY = "card_id_array";
     public static final String STARTING_CARD_POSITION = "starting_card_id";
     private ViewPager mViewPager;
+    private CardViewPagerAdapter mPagerAdapter;
 
     /**
      * Assume that every fragment has a menu
@@ -82,8 +88,8 @@ public class CardViewPagerFragment extends FamiliarFragment {
         long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
         int currentPosition = args.getInt(STARTING_CARD_POSITION);
 
-        CardViewPagerAdapter pagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
-        mViewPager.setAdapter(pagerAdapter);
+        mPagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
+        mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(currentPosition);
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
     }
@@ -93,6 +99,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
      */
     private class CardViewPagerAdapter extends FragmentStatePagerAdapter {
         final long[] mCardIds;
+        private CardViewFragment mCurrentFragment;
 
         /**
          * Default Constructor
@@ -140,6 +147,30 @@ public class CardViewPagerFragment extends FamiliarFragment {
         public int getCount() {
             return mCardIds.length;
         }
+
+        /**
+         * @return Returns the current fragment being displayed by this adapter
+         */
+        public CardViewFragment getCurrentFragment() {
+            return mCurrentFragment;
+        }
+
+        /**
+         * Called to inform the adapter of which item is currently considered to be the "primary",
+         * that is the one show to the user as the current page.
+         * Also keeps track of the currently displayed fragment
+         *
+         * @param container The containing View from which the page will be removed.
+         * @param position The page position that is now the primary.
+         * @param object The same object that was returned by instantiateItem(View, int).
+         */
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            if (getCurrentFragment() != object) {
+                mCurrentFragment = ((CardViewFragment) object);
+            }
+            super.setPrimaryItem(container, position, object);
+        }
     }
 
     /**
@@ -182,6 +213,37 @@ public class CardViewPagerFragment extends FamiliarFragment {
             } else { /* (1,+Infinity] */
                 /* This page is way off-screen to the right. */
                 view.setAlpha(0);
+            }
+        }
+    }
+
+    /**
+     * Callback for when a permission is requested
+     *
+     * @param requestCode The request code passed in requestPermissions(String[], int).
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions which is either
+     *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
+     *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case FamiliarActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    /* Permission granted */
+                    String retstr = mPagerAdapter.getCurrentFragment().saveImage();
+                    if(retstr != null) {
+                        Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    /* Permission denied */
+                    Toast.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
+                            Toast.LENGTH_LONG).show();
+                }
             }
         }
     }

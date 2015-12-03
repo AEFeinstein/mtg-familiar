@@ -19,12 +19,14 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -34,6 +36,9 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.method.LinkMovementMethod;
@@ -56,6 +61,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -1081,94 +1087,28 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     class saveCardImageTask extends AsyncTask<Void, Void, Void> {
-        String mToastString;
+
+        String mToastString = null;
 
         @Override
         protected Void doInBackground(Void... voids) {
+
             if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 mToastString = getString(R.string.card_view_no_external_storage);
                 return null;
             }
 
-            String strPath;
-
-            try {
-                // TODO permissions
-                strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-                        .getCanonicalPath() + "/MTGFamiliar";
-            } catch (IOException ex) {
-                mToastString = getString(R.string.card_view_no_pictures_folder);
-                return null;
+            /* Check if permission is granted */
+            if (ContextCompat.checkSelfPermission(CardViewFragment.this.mActivity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                /* Request the permission */
+                ActivityCompat.requestPermissions(CardViewFragment.this.mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        FamiliarActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            } else {
+                /* Permission already granted */
+                mToastString = saveImage();
             }
 
-            File fPath = new File(strPath);
-
-            if (!fPath.exists()) {
-                fPath.mkdir();
-
-                if (!fPath.isDirectory()) {
-                    mToastString = getString(R.string.card_view_unable_to_create_dir);
-                    return null;
-                }
-            }
-
-            fPath = new File(strPath, mCardName + "_" + mSetCode + ".jpg");
-
-            if (fPath.exists()) {
-                fPath.delete();
-            }
-
-            try {
-                if (!fPath.createNewFile()) {
-                    mToastString = getString(R.string.card_view_unable_to_create_file);
-                    return null;
-                }
-
-                FileOutputStream fStream = new FileOutputStream(fPath);
-
-                /* If the card is displayed, there's a real good chance it's cached */
-                String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
-                if (cardLanguage == null) {
-                    cardLanguage = "en";
-                }
-                String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
-                Bitmap bmpImage;
-                try {
-                    bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
-                } catch (NullPointerException e) {
-                    bmpImage = null;
-                }
-
-                /* Check if this is an english only image */
-                if (bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
-                    imageKey = Integer.toString(mMultiverseId) + "en";
-                    try {
-                        bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
-                    } catch (NullPointerException e) {
-                        bmpImage = null;
-                    }
-                }
-
-                /* nope, not here */
-                if (bmpImage == null) {
-                    mToastString = getString(R.string.card_view_no_image);
-                    return null;
-                }
-
-                boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 90, fStream);
-
-                if (!bCompressed) {
-                    mToastString = getString(R.string.card_view_unable_to_save_image);
-                    return null;
-                }
-
-                strPath = fPath.getCanonicalPath();
-            } catch (IOException ex) {
-                mToastString = getString(R.string.card_view_save_failure);
-                return null;
-            }
-
-            mToastString = getString(R.string.card_view_image_saved) + strPath;
             return null;
         }
 
@@ -1555,7 +1495,7 @@ public class CardViewFragment extends FamiliarFragment {
                     if (is != null) {
                         is.close();
                     }
-                    if(connection != null) {
+                    if (connection != null) {
                         connection.disconnect();
                     }
                 } catch (IOException ioe) {
@@ -1586,5 +1526,114 @@ public class CardViewFragment extends FamiliarFragment {
             }
             mActivity.clearLoading();
         }
+    }
+
+    /**
+     * Callback for when a permission is requested
+     *
+     * @param requestCode The request code passed in requestPermissions(String[], int).
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions which is either
+     *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
+     *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case FamiliarActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    /* Permission granted */
+                    String retstr = saveImage();
+                    if(retstr != null) {
+                        Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    /* Permission denied */
+                    Toast.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    /**
+     * Saves the current card image to external storage
+     * @return A status string, to be displayed in a toast on the UI thread
+     */
+    String saveImage() {
+        String strPath;
+        try {
+            strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                    .getCanonicalPath() + "/MTGFamiliar";
+        } catch (IOException ex) {
+            return getString(R.string.card_view_no_pictures_folder);
+        }
+
+        File fPath = new File(strPath);
+
+        if (!fPath.exists()) {
+            fPath.mkdir();
+
+            if (!fPath.isDirectory()) {
+                return getString(R.string.card_view_unable_to_create_dir);
+            }
+        }
+
+        fPath = new File(strPath, mCardName + "_" + mSetCode + ".jpg");
+
+        if (fPath.exists()) {
+            fPath.delete();
+        }
+
+        try {
+            if (!fPath.createNewFile()) {
+                return getString(R.string.card_view_unable_to_create_file);
+            }
+
+            FileOutputStream fStream = new FileOutputStream(fPath);
+
+            /* If the card is displayed, there's a real good chance it's cached */
+            String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
+            if (cardLanguage == null) {
+                cardLanguage = "en";
+            }
+            String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
+            Bitmap bmpImage;
+            try {
+                bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+            } catch (NullPointerException e) {
+                bmpImage = null;
+            }
+
+                        /* Check if this is an english only image */
+            if (bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
+                imageKey = Integer.toString(mMultiverseId) + "en";
+                try {
+                    bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+                } catch (NullPointerException e) {
+                    bmpImage = null;
+                }
+            }
+
+                        /* nope, not here */
+            if (bmpImage == null) {
+                return getString(R.string.card_view_no_image);
+            }
+
+            boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 90, fStream);
+
+            if (!bCompressed) {
+                return getString(R.string.card_view_unable_to_save_image);
+            }
+
+            strPath = fPath.getCanonicalPath();
+        } catch (IOException ex) {
+            return getString(R.string.card_view_save_failure);
+        }
+
+        return getString(R.string.card_view_image_saved) + strPath;
     }
 }
