@@ -256,7 +256,7 @@ class RulesParser {
             }
         }
 
-        if(this.mConnection != null) {
+        if (this.mConnection != null) {
             this.mConnection.disconnect();
             this.mConnection = null;
         }

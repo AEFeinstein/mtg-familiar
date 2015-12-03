@@ -161,8 +161,8 @@ public class CardViewPagerFragment extends FamiliarFragment {
          * Also keeps track of the currently displayed fragment
          *
          * @param container The containing View from which the page will be removed.
-         * @param position The page position that is now the primary.
-         * @param object The same object that was returned by instantiateItem(View, int).
+         * @param position  The page position that is now the primary.
+         * @param object    The same object that was returned by instantiateItem(View, int).
          */
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
@@ -220,8 +220,8 @@ public class CardViewPagerFragment extends FamiliarFragment {
     /**
      * Callback for when a permission is requested
      *
-     * @param requestCode The request code passed in requestPermissions(String[], int).
-     * @param permissions The requested permissions. Never null.
+     * @param requestCode  The request code passed in requestPermissions(String[], int).
+     * @param permissions  The requested permissions. Never null.
      * @param grantResults The grant results for the corresponding permissions which is either
      *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
      *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
@@ -236,7 +236,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
                         && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     /* Permission granted */
                     String retstr = mPagerAdapter.getCurrentFragment().saveImage();
-                    if(retstr != null) {
+                    if (retstr != null) {
                         Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
                     }
                 } else {

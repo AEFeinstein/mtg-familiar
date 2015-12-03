@@ -127,7 +127,7 @@ class CardAndSetParser {
                                     set.date = reader.nextLong();
                                 }
                             }
-                            if(patchDigests != null) {
+                            if (patchDigests != null) {
                                 set.digest = patchDigests.get(set.code);
                             }
                             tempSetsToAdd.add(set);
@@ -152,7 +152,7 @@ class CardAndSetParser {
                                         set.date = reader.nextLong();
                                     }
                                 }
-                                if(patchDigests != null) {
+                                if (patchDigests != null) {
                                     set.digest = patchDigests.get(set.code);
                                 }
                                 tempSetsToAdd.add(set);
@@ -375,8 +375,8 @@ class CardAndSetParser {
             reader.endObject();
             reader.close();
             isr.close();
-        } catch(IOException e) {
-            if(connection != null) {
+        } catch (IOException e) {
+            if (connection != null) {
                 connection.disconnect();
             }
             if (logWriter != null) {
@@ -393,7 +393,7 @@ class CardAndSetParser {
      * banned and restricted lists
      *
      * @param prefAdapter The preference adapter is used to get the last update time
-     * @param logWriter A writer to print debug statements when things go wrong
+     * @param logWriter   A writer to print debug statements when things go wrong
      * @return An object with all of the legal info, to be added to the database in one fell swoop
      */
     public LegalInfo readLegalityJsonStream(PreferenceAdapter prefAdapter, PrintWriter logWriter) {
@@ -477,7 +477,7 @@ class CardAndSetParser {
 
             in.close();
         } catch (IOException e) {
-            if(connection != null) {
+            if (connection != null) {
                 connection.disconnect();
             }
             if (logWriter != null) {
@@ -493,7 +493,7 @@ class CardAndSetParser {
      * This method parses the mapping between set codes and the names TCGPlayer.com uses
      *
      * @param prefAdapter The preference adapter is used to get the last update time
-     * @param logWriter A writer to print debug statements when things go wrong
+     * @param logWriter   A writer to print debug statements when things go wrong
      * @param tcgNames    A place to store tcg names before adding to the database
      */
     public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, ArrayList<NameAndMetadata> tcgNames, PrintWriter logWriter) {
@@ -543,7 +543,7 @@ class CardAndSetParser {
             reader.close();
             isr.close();
         } catch (IOException e) {
-            if(connection != null) {
+            if (connection != null) {
                 connection.disconnect();
             }
             if (logWriter != null) {
@@ -621,7 +621,7 @@ class CardAndSetParser {
             reader.close();
             isr.close();
         } catch (IOException e) {
-            if(connection != null) {
+            if (connection != null) {
                 connection.disconnect();
             }
             if (logWriter != null) {

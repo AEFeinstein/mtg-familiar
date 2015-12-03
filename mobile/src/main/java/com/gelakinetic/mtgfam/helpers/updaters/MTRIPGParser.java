@@ -119,7 +119,7 @@ class MTRIPGParser {
             }
         }
 
-        if(connection != null) {
+        if (connection != null) {
             connection.disconnect();
         }
         return updated;

@@ -1658,8 +1658,8 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * Callback for when a permission is requested
      *
-     * @param requestCode The request code passed in requestPermissions(String[], int).
-     * @param permissions The requested permissions. Never null.
+     * @param requestCode  The request code passed in requestPermissions(String[], int).
+     * @param permissions  The requested permissions. Never null.
      * @param grantResults The grant results for the corresponding permissions which is either
      *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
      *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.

@@ -193,7 +193,7 @@ public class DbUpdaterService extends IntentService {
                                  */
                                 if (patchDigests != null &&
                                         !storedDigests.get(set[CardAndSetParser.SET_CODE])
-                                        .equals(patchDigests.get(set[CardAndSetParser.SET_CODE]))) {
+                                                .equals(patchDigests.get(set[CardAndSetParser.SET_CODE]))) {
                                     currentSetCodes.remove(set[CardAndSetParser.SET_CODE]);
                                     setsToDrop.add(set[CardAndSetParser.SET_CODE]);
                                 }
@@ -224,11 +224,11 @@ public class DbUpdaterService extends IntentService {
                                             logWriter.print("Retry " + retries + '\n');
                                             e.printStackTrace(logWriter);
                                         }
-                                        if(connection != null) {
+                                        if (connection != null) {
                                             connection.disconnect();
                                         }
                                     }
-                                    if(connection != null) {
+                                    if (connection != null) {
                                         connection.disconnect();
                                     }
                                     retries--;

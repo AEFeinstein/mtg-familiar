@@ -1531,8 +1531,8 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Callback for when a permission is requested
      *
-     * @param requestCode The request code passed in requestPermissions(String[], int).
-     * @param permissions The requested permissions. Never null.
+     * @param requestCode  The request code passed in requestPermissions(String[], int).
+     * @param permissions  The requested permissions. Never null.
      * @param grantResults The grant results for the corresponding permissions which is either
      *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
      *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
@@ -1547,7 +1547,7 @@ public class CardViewFragment extends FamiliarFragment {
                         && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     /* Permission granted */
                     String retstr = saveImage();
-                    if(retstr != null) {
+                    if (retstr != null) {
                         Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
                     }
                 } else {
@@ -1561,6 +1561,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /**
      * Saves the current card image to external storage
+     *
      * @return A status string, to be displayed in a toast on the UI thread
      */
     String saveImage() {
