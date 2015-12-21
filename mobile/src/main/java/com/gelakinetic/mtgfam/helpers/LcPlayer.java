@@ -103,6 +103,14 @@ public class LcPlayer {
      * @param mode either STAT_LIFE, STAT_POISON, or STAT_COMMANDER
      */
     public void setMode(int mode) {
+
+        /* Commit any changes before switching modes */
+        if(mCommitting) {
+            mCommitting = false;
+            mHandler.removeCallbacks(mLifePoisonCommitter);
+            mLifePoisonCommitter.run();
+        }
+
         mMode = mode;
         switch (mMode) {
             case LifeCounterFragment.STAT_LIFE:
