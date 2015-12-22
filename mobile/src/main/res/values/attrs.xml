@@ -11,7 +11,7 @@
         <attr name="color_text" format="color|reference" />
         <attr name="color_background" format="color|reference" />
         <attr name="glyph_pwk" format="reference" />
-        <attr name="glyph_c" format="reference" />
+        <attr name="glyph_chaos" format="reference" />
         <attr name="button" format="reference" />
 
         <!-- Rarity Colors -->
