@@ -26,6 +26,7 @@ import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,6 +34,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -1634,6 +1636,10 @@ public class CardViewFragment extends FamiliarFragment {
         } catch (IOException ex) {
             return getString(R.string.card_view_save_failure);
         }
+
+        /* Notify the system that a new image was saved */
+        getFamiliarActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.fromFile(fPath)));
 
         return getString(R.string.card_view_image_saved) + strPath;
     }
