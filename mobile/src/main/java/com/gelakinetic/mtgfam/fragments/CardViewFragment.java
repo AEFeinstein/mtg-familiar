@@ -1578,7 +1578,9 @@ public class CardViewFragment extends FamiliarFragment {
         File fPath = new File(strPath);
 
         if (!fPath.exists()) {
-            fPath.mkdir();
+            if (!fPath.mkdir()) {
+                return getString(R.string.card_view_unable_to_create_dir);
+            }
 
             if (!fPath.isDirectory()) {
                 return getString(R.string.card_view_unable_to_create_dir);
@@ -1588,7 +1590,9 @@ public class CardViewFragment extends FamiliarFragment {
         fPath = new File(strPath, mCardName + "_" + mSetCode + ".jpg");
 
         if (fPath.exists()) {
-            fPath.delete();
+            if (!fPath.delete()) {
+                return getString(R.string.card_view_unable_to_create_file);
+            }
         }
 
         try {
