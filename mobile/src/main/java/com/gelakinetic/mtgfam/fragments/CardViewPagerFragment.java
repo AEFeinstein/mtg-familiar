@@ -88,7 +88,9 @@ public class CardViewPagerFragment extends FamiliarFragment {
         long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
         int currentPosition = args.getInt(STARTING_CARD_POSITION);
 
-        mPagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
+        if(mPagerAdapter == null) {
+            mPagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
+        }
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(currentPosition);
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
