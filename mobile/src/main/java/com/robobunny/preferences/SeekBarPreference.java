@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -65,7 +64,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             if (newInterval != null)
                 mInterval = Integer.parseInt(newInterval);
         } catch (Exception e) {
-            Log.e(TAG, "Invalid interval value", e);
+            /* Eat it */
         }
 
     }
@@ -110,7 +109,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
                         ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         } catch (Exception ex) {
-            Log.e(TAG, "Error binding view: " + ex.toString());
+            /* Eat it */
         }
 
         //if dependency is false from the beginning, disable the seek bar
@@ -143,7 +142,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             unitsLeft.setText(mUnitsLeft);
 
         } catch (Exception e) {
-            Log.e(TAG, "Error updating seek bar preference", e);
+            /* Eat it */
         }
 
     }
@@ -199,7 +198,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
             try {
                 temp = (Integer) defaultValue;
             } catch (Exception ex) {
-                Log.e(TAG, "Invalid default value: " + defaultValue.toString());
+                /* Eat it */
             }
 
             persistInt(temp);
