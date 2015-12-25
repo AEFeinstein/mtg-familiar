@@ -105,7 +105,7 @@ public class LcPlayer {
     public void setMode(int mode) {
 
         /* Commit any changes before switching modes */
-        if(mCommitting) {
+        if (mCommitting) {
             mCommitting = false;
             mHandler.removeCallbacks(mLifePoisonCommitter);
             mLifePoisonCommitter.run();

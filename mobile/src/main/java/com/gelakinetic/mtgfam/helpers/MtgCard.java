@@ -243,7 +243,7 @@ public class MtgCard {
     /**
      * Build a string to share this card within a trade, in plaintext
      *
-     * @param sb The StringBuilder to append this string to
+     * @param sb      The StringBuilder to append this string to
      * @param foilStr The localized string for "foil," since there is no context
      * @return The total price of this card object, in cents
      */
@@ -255,12 +255,12 @@ public class MtgCard {
         sb.append(" [");
         sb.append(this.setName);
         sb.append("] ");
-        if(this.foil) {
+        if (this.foil) {
             sb.append("(");
             sb.append(foilStr);
             sb.append(") ");
         }
-        if(this.hasPrice()) {
+        if (this.hasPrice()) {
             sb.append(String.format("$%d.%02d", this.price / 100, this.price % 100));
             totalPrice = (this.price * this.numberOf);
         }

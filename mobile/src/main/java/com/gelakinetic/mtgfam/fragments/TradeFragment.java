@@ -1063,7 +1063,7 @@ public class TradeFragment extends FamiliarFragment {
 
         /* Add all the cards to the StringBuilder from the left, tallying the price */
         int totalPrice = 0;
-        for(MtgCard card : mLeftList) {
+        for (MtgCard card : mLeftList) {
             totalPrice += card.toTradeShareString(sb, getString(R.string.wishlist_foil));
         }
         sb.append(String.format("$%d.%02d\n", totalPrice / 100, totalPrice % 100));
@@ -1073,7 +1073,7 @@ public class TradeFragment extends FamiliarFragment {
 
         /* Add all the cards to the StringBuilder from the right, tallying the price */
         totalPrice = 0;
-        for(MtgCard card : mRightList) {
+        for (MtgCard card : mRightList) {
             totalPrice += card.toTradeShareString(sb, getString(R.string.wishlist_foil));
         }
         sb.append(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
