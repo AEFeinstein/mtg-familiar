@@ -374,8 +374,6 @@
     <string name="search_mana_cost">Coste de Maná</string>
     <string name="dialog_no">No</string>
     <string name="filter_title_view_card">Ver carta</string>
-    <string name="wishlist_export_title">¿Exportar nombres de expansión?</string>
-    <string name="wishlist_export_text">​¿Quieres incluir los nombres de las expansiones en tu lista de deseos exportada?</string>
     <string name="search_collectors_number">Número de coleccionista</string>
     <string name="pref_Chinese">Chino</string>
     <string name="trader_sort">Ordenar intercambios</string>

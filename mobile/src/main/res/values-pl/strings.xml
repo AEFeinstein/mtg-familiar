@@ -374,8 +374,6 @@
     <string name="search_mana_cost">Koszt Many</string>
     <string name="dialog_no">Nie</string>
     <string name="filter_title_view_card">Pokaż kartę</string>
-    <string name="wishlist_export_title">Wyeksportować nazwy setów?</string>
-    <string name="wishlist_export_text">Czy chcesz dołączyć nazwy setów do eksportowanej Listy Życzeń?</string>
     <string name="search_collectors_number">Collector\'s Number</string>
     <string name="pref_Chinese">Chiński</string>
     <string name="trader_sort">Sortuj Wymianę</string>

@@ -15,6 +15,7 @@ import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -325,31 +326,70 @@ public class WishlistHelpers {
      *
      * @param mCompressedWishlist The wishlist to share
      * @param ctx                 The context to get localized strings with
-     * @param exportSet           If the set name should be exported with the wishlist
+     * @param shareText           Whether or not the full card text should be exported
+     * @param sharePrice          Whether or not the card price should be exported
      * @return A string containing all the wishlist data
      */
-    public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist, Context ctx, boolean exportSet) {
+    public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist,
+                                             Context ctx, boolean shareText, boolean sharePrice,
+                                             int priceOption) {
         StringBuilder readableWishlist = new StringBuilder();
 
+        /* For each wishlist entry */
         for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+            /* Append the card name, always */
+            readableWishlist.append(cwi.mCard.name);
+            readableWishlist.append("\r\n");
+
+            /* Append the full text, if the user wants it */
+            if (shareText) {
+                cwi.mCard.appendCardText(readableWishlist);
+            }
+
+            /* For each set info in the wishlist */
             for (IndividualSetInfo isi : cwi.mInfo) {
+                /* Append the number of the card, per-set */
                 readableWishlist
                         .append(isi.mNumberOf)
                         .append(' ')
-                        .append(cwi.mCard.name);
-                if (exportSet) {
-                    readableWishlist
-                            .append(", ")
-                            .append(isi.mSet);
-                }
+                        .append(isi.mSet);
+                /* Append whether it is foil or not */
                 if (isi.mIsFoil) {
                     readableWishlist
                             .append(" (")
                             .append(ctx.getString(R.string.wishlist_foil))
                             .append(")");
                 }
+                /* Attempt to append the price */
+                if (sharePrice && isi.mPrice != null) {
+                    double price = 0;
+                    if (isi.mIsFoil) {
+                        price = isi.mPrice.mFoilAverage;
+                    } else {
+                        switch (priceOption) {
+                            case WishlistFragment.LOW_PRICE: {
+                                price = isi.mPrice.mLow;
+                                break;
+                            }
+                            case WishlistFragment.AVG_PRICE: {
+                                price = isi.mPrice.mAverage;
+                                break;
+                            }
+                            case WishlistFragment.HIGH_PRICE: {
+                                price = isi.mPrice.mHigh;
+                                break;
+                            }
+                        }
+                    }
+                    if (price != 0) {
+                        readableWishlist
+                                .append(", $")
+                                .append(String.format("%d.%02d", (int) price, (int) ((price - ((int) price)) * 100)));
+                    }
+                }
                 readableWishlist.append("\r\n");
             }
+            readableWishlist.append("\r\n");
         }
         return readableWishlist.toString();
     }

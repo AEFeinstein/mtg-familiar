@@ -268,4 +268,43 @@ public class MtgCard {
         sb.append("\n");
         return totalPrice;
     }
+
+    /**
+     * Append the card's oracle text to the StringBuilder.
+     * This is used when sharing a wishlist
+     *
+     * @param sb The StringBuilder to append data to
+     */
+    public void appendCardText(StringBuilder sb) {
+        if (!manaCost.isEmpty()) {
+            sb.append(manaCost);
+            sb.append("\r\n");
+        }
+        if (!type.isEmpty()) {
+            sb.append(type);
+            sb.append("\r\n");
+        }
+        if (!ability.isEmpty()) {
+            sb.append(ability.replace("<br>", "\r\n"));
+            sb.append("\r\n");
+        }
+
+        if (loyalty != CardDbAdapter.NO_ONE_CARES) {
+            sb.append(loyalty);
+            sb.append("\r\n");
+        } else if (power != CardDbAdapter.NO_ONE_CARES && toughness != CardDbAdapter.NO_ONE_CARES) {
+            if (power == (int) power) {
+                sb.append((int) power);
+            } else {
+                sb.append(power);
+            }
+            sb.append("/");
+            if (toughness == (int) toughness) {
+                sb.append((int) toughness);
+            } else {
+                sb.append(toughness);
+            }
+            sb.append("\r\n");
+        }
+    }
 }

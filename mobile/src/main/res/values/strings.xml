@@ -296,8 +296,6 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="wishlist_ascending">Ascending</string>
     <string name="wishlist_descending">Descending</string>
     <string name="wishlist_sort_by">Sort By</string>
-    <string name="wishlist_export_title">Export Set Names?</string>
-    <string name="wishlist_export_text">Would you like to include the names of the sets in your exported wishlist?</string>
 
     <!-- Round timer activity -->
     <string name="timer_how_long">How long is the round?</string>

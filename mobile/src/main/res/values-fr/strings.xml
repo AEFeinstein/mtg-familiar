@@ -374,8 +374,6 @@
     <string name="search_mana_cost">Coût Mana</string>
     <string name="dialog_no">Non</string>
     <string name="filter_title_view_card">Vue Carte</string>
-    <string name="wishlist_export_title">Exporter les noms des extensions</string>
-    <string name="wishlist_export_text">Voulez-vous intégrer les noms des extensions dans l\'export de votre liste de vœux?</string>
     <string name="search_collectors_number">Numéro de collection</string>
     <string name="pref_Chinese">Chinois</string>
     <string name="trader_sort">Trier Echange</string>
