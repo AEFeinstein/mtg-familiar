@@ -131,10 +131,13 @@
     <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
 <string name="main_whats_new_text">
-- Więcej podpowiedzi wyszukiwania (supertype, subtype, artist)&lt;br&gt;
-- Obrazki kart - więcej możliwości wyboru języka&lt;br&gt;
-- Sortowanie Wymiany&lt;br&gt;
-- Naprawione bugi
+- Dodano symbol bezkolorowej many&lt;br&gt;
+- Dodano alternatywną grafikę przy zmianie zestawów&lt;br&gt;
+- Dodano dzielenie się Wymianą&lt;br&gt;
+- Ulepszono dzielenie się Listą Życzeń&lt;br&gt;
+- Ulepszono jakość przechowywanego obrazu&lt;br&gt;
+- Naprawiono ekwipunek MojhoSto&lt;br&gt;
+- Naprawiono błąd w aktualizatorze
 </string>
     <string name="main_whats_new_title">Nowości</string>
     <string name="main_wishlist">Lista Życzeń</string>
@@ -377,4 +380,6 @@
     <string name="search_collectors_number">Collector\'s Number</string>
     <string name="pref_Chinese">Chiński</string>
     <string name="trader_sort">Sortuj Wymianę</string>
+    <string name="trade_share_title">Wymianą</string>
+    <string name="trader_share">Podziel się Wymianą</string>
 </resources>

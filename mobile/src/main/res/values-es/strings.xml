@@ -131,10 +131,13 @@
     <string name="main_tts_warning_title">Síntesis de voz (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">Novedades de la versión</string>
 <string name="main_whats_new_text">
-- Más opciones de autocompletado (supertipo, subtipo, artista).&lt;br&gt;
-- Más opciones de lenguaje de imágenes de cartas.&lt;br&gt;
-- Intercambios ordenables.&lt;br&gt;
-- Arreglos de bugs.
+- Añadido el símbolo de maná incoloro&lt;br&gt;
+- Añadidas las imágenes alternativas al cambiar de expansión&lt;br&gt;
+- Añadida la posibilidad de compartir intercambios&lt;br&gt;
+- Mejorada la manera de compartir la lista de deseos&lt;br&gt;
+- Mejorada la calidad de imágenes en caché&lt;br&gt;
+- Mejorado el equipo de MoJhoSto&lt;br&gt;
+- Arreglado un bug en el actualizador
 </string>
     <string name="main_whats_new_title">Novedades</string>
     <string name="main_wishlist">Lista de deseos</string>
@@ -377,4 +380,6 @@
     <string name="search_collectors_number">Número de coleccionista</string>
     <string name="pref_Chinese">Chino</string>
     <string name="trader_sort">Ordenar intercambios</string>
+    <string name="trade_share_title">Intercambios</string>
+    <string name="trader_share">Compartir intercambio</string>
 </resources>
