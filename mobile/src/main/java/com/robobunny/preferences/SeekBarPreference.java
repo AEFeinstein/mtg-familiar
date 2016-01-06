@@ -21,7 +21,6 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     private static final String ANDROIDNS = "http://schemas.android.com/apk/res/android";
     private static final String APPLICATIONNS = "http://robobunny.com";
     private static final int DEFAULT_VALUE = 50;
-    private final String TAG = getClass().getName();
     private int mMaxValue = 100;
     private int mMinValue = 0;
     private int mInterval = 1;
@@ -123,7 +122,7 @@ public class SeekBarPreference extends Preference implements OnSeekBarChangeList
     /**
      * Update a SeekBarPreference view with our current state
      *
-     * @param view
+     * @param view The SeekBar view to update (seek_bar_preference.xml)
      */
     private void updateView(View view) {
 

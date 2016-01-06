@@ -43,10 +43,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -351,7 +353,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
         /* Set the system bar color programatically, for lollipop+ */
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.colorPrimaryDark_attr)));
         }
 
         setContentView(R.layout.activity_main);
@@ -360,10 +362,10 @@ public class FamiliarActivity extends AppCompatActivity {
 
         mRefreshLayout = ((IndeterminateRefreshLayout) findViewById(R.id.fragment_container));
         mRefreshLayout.setColors(
-                getResources().getColor(getResourceIdFromAttr(R.attr.color_common)),
-                getResources().getColor(getResourceIdFromAttr(R.attr.color_uncommon)),
-                getResources().getColor(getResourceIdFromAttr(R.attr.color_rare)),
-                getResources().getColor(getResourceIdFromAttr(R.attr.color_mythic)));
+                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
+                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
+                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_rare)),
+                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_mythic)));
 
         /* Set default preferences manually so that the listener doesn't do weird things on init */
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -523,8 +525,8 @@ public class FamiliarActivity extends AppCompatActivity {
             } else {
                 toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat);
             }
-            toolbar.setSubtitleTextColor(getResources().getColor(android.R.color.white));
-            toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+            toolbar.setSubtitleTextColor(ContextCompat.getColor(this, android.R.color.white));
+            toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
             setSupportActionBar(toolbar);
         }
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -1629,7 +1631,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 mHighlightedDrawable.setColorFilter(null);
             }
             mHighlightedDrawable = textView.getCompoundDrawables()[0];
-            mHighlightedDrawable.setColorFilter(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
+            mHighlightedDrawable.setColorFilter(ContextCompat.getColor(FamiliarActivity.this, getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -1665,7 +1667,7 @@ public class FamiliarActivity extends AppCompatActivity {
      *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         getSupportFragmentManager().findFragmentById(R.id.fragment_container)
                 .onRequestPermissionsResult(requestCode, permissions, grantResults);

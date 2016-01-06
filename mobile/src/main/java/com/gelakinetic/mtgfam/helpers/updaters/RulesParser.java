@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,9 +77,7 @@ class RulesParser {
 
             /* Log the date */
             if (logWriter != null) {
-                @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-                String patchDate = format1.format(c.getTime());
+                String patchDate = DateFormat.getDateInstance().format(c.getTime());
                 logWriter.write("mCurrentRulesPatchDate: " + patchDate + '\n');
             }
 

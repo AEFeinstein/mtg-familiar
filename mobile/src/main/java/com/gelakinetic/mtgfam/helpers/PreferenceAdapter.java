@@ -364,7 +364,7 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
-    /* Last update */
+    /* Last update TODO delete this preference? */
     public synchronized String getLastUpdate() {
         return this.prefs.getString(context.getString(R.string.key_lastUpdate), "");
     }

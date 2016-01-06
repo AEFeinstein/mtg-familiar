@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -38,7 +39,7 @@ class MTRIPGParser {
     private static final String JAR_LOCAL_FILE = "JAR.html";
     private final Context mContext;
     private final PreferenceAdapter mPrefAdapter;
-    protected String mPrettyDate;
+    String mPrettyDate;
 
     /**
      * Default constructor
@@ -136,8 +137,7 @@ class MTRIPGParser {
         c.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]));
         long documentDate = c.getTimeInMillis();
 
-        SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-        mPrettyDate = format1.format(c.getTime());
+        mPrettyDate = DateFormat.getDateInstance().format(c.getTime());
 
         boolean shouldUpdate;
         switch (mode) {
