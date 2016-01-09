@@ -101,7 +101,7 @@
         </item>
 
         <item name="glyph_pwk">@drawable/glyph_pwk_light</item>
-        <item name="glyph_c">@drawable/glyph_c_light</item>
+        <item name="glyph_chaos">@drawable/glyph_chaos_light</item>
 
         <item name="ic_menu_search">@drawable/ic_menu_search_light</item>
         <item name="ic_menu_card_image">@drawable/ic_menu_card_image_light</item>
@@ -226,7 +226,7 @@
         <item name="hms_picker_style">@style/MyCustomBetterPickerTheme</item>
 
         <item name="glyph_pwk">@drawable/glyph_pwk_dark</item>
-        <item name="glyph_c">@drawable/glyph_c_dark</item>
+        <item name="glyph_chaos">@drawable/glyph_chaos_dark</item>
 
         <item name="ic_menu_search">@drawable/ic_menu_search_dark</item>
         <item name="ic_menu_card_image">@drawable/ic_menu_card_image_dark</item>

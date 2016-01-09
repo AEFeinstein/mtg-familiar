@@ -239,4 +239,72 @@ public class MtgCard {
     public boolean hasPrice() {
         return (this.priceInfo != null || (this.customPrice && this.price != 0));
     }
+
+    /**
+     * Build a string to share this card within a trade, in plaintext
+     *
+     * @param sb      The StringBuilder to append this string to
+     * @param foilStr The localized string for "foil," since there is no context
+     * @return The total price of this card object, in cents
+     */
+    public int toTradeShareString(StringBuilder sb, String foilStr) {
+        int totalPrice = 0;
+        sb.append(this.numberOf);
+        sb.append(" ");
+        sb.append(this.name);
+        sb.append(" [");
+        sb.append(this.setName);
+        sb.append("] ");
+        if (this.foil) {
+            sb.append("(");
+            sb.append(foilStr);
+            sb.append(") ");
+        }
+        if (this.hasPrice()) {
+            sb.append(String.format("$%d.%02d", this.price / 100, this.price % 100));
+            totalPrice = (this.price * this.numberOf);
+        }
+
+        sb.append("\n");
+        return totalPrice;
+    }
+
+    /**
+     * Append the card's oracle text to the StringBuilder.
+     * This is used when sharing a wishlist
+     *
+     * @param sb The StringBuilder to append data to
+     */
+    public void appendCardText(StringBuilder sb) {
+        if (!manaCost.isEmpty()) {
+            sb.append(manaCost);
+            sb.append("\r\n");
+        }
+        if (!type.isEmpty()) {
+            sb.append(type);
+            sb.append("\r\n");
+        }
+        if (!ability.isEmpty()) {
+            sb.append(ability.replace("<br>", "\r\n"));
+            sb.append("\r\n");
+        }
+
+        if (loyalty != CardDbAdapter.NO_ONE_CARES) {
+            sb.append(loyalty);
+            sb.append("\r\n");
+        } else if (power != CardDbAdapter.NO_ONE_CARES && toughness != CardDbAdapter.NO_ONE_CARES) {
+            if (power == (int) power) {
+                sb.append((int) power);
+            } else {
+                sb.append(power);
+            }
+            sb.append("/");
+            if (toughness == (int) toughness) {
+                sb.append((int) toughness);
+            } else {
+                sb.append(toughness);
+            }
+            sb.append("\r\n");
+        }
+    }
 }

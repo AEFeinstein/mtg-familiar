@@ -68,10 +68,13 @@ So, how generous are you feeling today?</string>
     <string name="main_whats_new_title">What\'s New</string>
     <string name="main_whats_new_in_title">What\'s New in Version</string>
 <string name="main_whats_new_text">
-- More autocomplete (supertype, subtype, artist)&lt;br&gt;
-- More card image language choices&lt;br&gt;
-- Sortable Trades&lt;br&gt;
-- Bug fixes
+- Added colorless mana symbol&lt;br&gt;
+- Added alternate art when changing sets&lt;br&gt;
+- Added trade sharing&lt;br&gt;
+- Improved wishlist sharing&lt;br&gt;
+- Improved cached image quality&lt;br&gt;
+- Fixed MoJhoSto equipment&lt;br&gt;
+- Fixed bug in updater
 </string>
     <string name="main_tts_warning_title">Text-to-Speech</string>
 <string name="main_tts_warning_text">This application has text-to-speech capability for some of its features, but you don\'t seem to have it installed.
@@ -270,6 +273,8 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="trader_High">High</string>
     <string name="trader_pricing_dialog_title">Price Options</string>
     <string name="trader_sort">Sort Trade</string>
+    <string name="trader_share">Share Trade</string>
+    <string name="trade_share_title">Trade</string>
 
     <!-- Wishlist activity -->
     <string name="wishlist_name">Name</string>
@@ -294,8 +299,6 @@ Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3
     <string name="wishlist_ascending">Ascending</string>
     <string name="wishlist_descending">Descending</string>
     <string name="wishlist_sort_by">Sort By</string>
-    <string name="wishlist_export_title">Export Set Names?</string>
-    <string name="wishlist_export_text">Would you like to include the names of the sets in your exported wishlist?</string>
 
     <!-- Round timer activity -->
     <string name="timer_how_long">How long is the round?</string>

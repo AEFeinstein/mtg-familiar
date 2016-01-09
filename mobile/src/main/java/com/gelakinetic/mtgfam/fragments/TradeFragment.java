@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -1045,8 +1046,50 @@ public class TradeFragment extends FamiliarFragment {
                 /* Show a dialog to change the sort criteria the list uses */
                 showDialog(DIALOG_SORT, 0, 0);
                 return true;
+            case R.id.trader_menu_share:
+                shareTrade();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Build a plaintext trade and share it
+     */
+    private void shareTrade() {
+
+        StringBuilder sb = new StringBuilder();
+
+        /* Add all the cards to the StringBuilder from the left, tallying the price */
+        int totalPrice = 0;
+        for (MtgCard card : mLeftList) {
+            totalPrice += card.toTradeShareString(sb, getString(R.string.wishlist_foil));
+        }
+        sb.append(String.format("$%d.%02d\n", totalPrice / 100, totalPrice % 100));
+
+        /* Simple divider */
+        sb.append("--------\n");
+
+        /* Add all the cards to the StringBuilder from the right, tallying the price */
+        totalPrice = 0;
+        for (MtgCard card : mRightList) {
+            totalPrice += card.toTradeShareString(sb, getString(R.string.wishlist_foil));
+        }
+        sb.append(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
+
+        /* Send the Intent on it's merry way */
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.trade_share_title);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
+        sendIntent.setType("text/plain");
+
+        try {
+            startActivity(Intent.createChooser(sendIntent, getString(R.string.trader_share)));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ToastWrapper.makeText(getActivity(), getString(R.string.error_no_email_client),
+                    ToastWrapper.LENGTH_SHORT).show();
         }
     }
 

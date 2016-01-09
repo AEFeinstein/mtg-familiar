@@ -30,7 +30,6 @@ import android.os.StatFs;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -375,7 +374,6 @@ public class ImageCache {
                                     diskCacheDir, 1, 1, mCacheParams.diskCacheSize);
                         } catch (final IOException e) {
                             mCacheParams.diskCacheDir = null;
-                            Log.e(TAG, "initDiskCache - " + e);
                         }
                     }
                 }
@@ -426,10 +424,8 @@ public class ImageCache {
                     } else {
                         snapshot.getInputStream(DISK_CACHE_INDEX).close();
                     }
-                } catch (final IOException e) {
-                    Log.e(TAG, "addBitmapToCache - " + e);
                 } catch (Exception e) {
-                    Log.e(TAG, "addBitmapToCache - " + e);
+                    /* Eat it */
                 } finally {
                     try {
                         if (out != null) {
@@ -497,7 +493,7 @@ public class ImageCache {
                         }
                     }
                 } catch (final IOException e) {
-                    Log.e(TAG, "getBitmapFromDiskCache - " + e);
+                    /* Eat it */
                 } finally {
                     try {
                         if (inputStream != null) {
@@ -565,7 +561,7 @@ public class ImageCache {
                 try {
                     mDiskLruCache.delete();
                 } catch (IOException e) {
-                    Log.e(TAG, "clearCache - " + e);
+                    /* Eat it */
                 }
                 mDiskLruCache = null;
                 initDiskCache();
@@ -583,7 +579,7 @@ public class ImageCache {
                 try {
                     mDiskLruCache.flush();
                 } catch (IOException e) {
-                    Log.e(TAG, "flush - " + e);
+                    /* Eat it */
                 }
             }
         }
@@ -602,7 +598,7 @@ public class ImageCache {
                         mDiskLruCache = null;
                     }
                 } catch (IOException e) {
-                    Log.e(TAG, "close - " + e);
+                    /* Eat it */
                 }
             }
         }

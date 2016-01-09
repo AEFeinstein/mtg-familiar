@@ -131,10 +131,13 @@
     <string name="main_tts_warning_title">TTS (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">O que há de Novo na Versão</string>
     <string name="main_whats_new_text">
-- Mais autocompletar (supertipo, subtipo, artista)&lt;br&gt;
-- Mais escolhas de idioma de imagem de carta&lt;br&gt;
-- Trocas organizáveis&lt;br&gt;
-- Solução de problemas
+- Adicionado símbolo de mana incolor&lt;br&gt;
+- Adicionado arte alterada quando mudar o set&lt;br&gt;
+- Adicionado compartilhamento de troca&lt;br&gt;
+- Melhorado compartilhamento de lista de desejo&lt;br&gt;
+- Melhorado qualidade de imagem armazenada&lt;br&gt;
+- Corrigido equipamento MoJhoSto&lt;br&gt;
+- Corrigido bug no atualizador
     </string>
     <string name="main_whats_new_title">O que há de novo</string>
     <string name="main_wishlist">Lista de Desejos</string>
@@ -374,9 +377,9 @@
     <string name="search_mana_cost">Custo de Mana</string>
     <string name="dialog_no">Não</string>
     <string name="filter_title_view_card">Vizualizar Carta</string>
-    <string name="wishlist_export_title">Exportar os nomes das Coleções?</string>
-    <string name="wishlist_export_text">Gostaria de incluir os nomes das coleções em sua lista de desejos exportada?</string>
     <string name="search_collectors_number">Número da Coleção</string>
     <string name="pref_Chinese">Chinês</string>
     <string name="trader_sort">Organizar</string>
+    <string name="trade_share_title">Troca</string>
+    <string name="trader_share">Compartilhar Troca</string>
 </resources>

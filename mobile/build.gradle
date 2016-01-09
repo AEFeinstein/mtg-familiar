@@ -61,6 +61,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.6'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-    compile 'com.code-troopers.betterpickers:library:2.2.1'
+    compile 'com.code-troopers.betterpickers:library:2.2.2'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
 }

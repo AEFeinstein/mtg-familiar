@@ -131,10 +131,13 @@
     <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
     <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
 <string name="main_whats_new_text">
-- Meilleure autocomplétion (sur-type, sous-type, artiste)&lt;br&gt;
-- Plus de choix de langues pour les images de cartes&lt;br&gt;
-- Echanges triables&lt;br&gt;
-- Corrections de bugs
+- Ajout du symbole de mana incolore&lt;br&gt;
+- Ajout d\'image alternative en changeant d\'extension&lt;br&gt;
+- Ajout du partage d\'échange&lt;br&gt;
+- Amélioration du partage de la liste de voeux&lt;br&gt;
+- Amélioration de la qualité des images mises en cache&lt;br&gt;
+- Correction d\'équipement MoJhoSto&lt;br&gt;
+- Correction d\'un bug dans l\'outil de mise à jour
 </string>
     <string name="main_whats_new_title">Nouveautés</string>
     <string name="main_wishlist">Liste de voeux</string>
@@ -374,9 +377,9 @@
     <string name="search_mana_cost">Coût Mana</string>
     <string name="dialog_no">Non</string>
     <string name="filter_title_view_card">Vue Carte</string>
-    <string name="wishlist_export_title">Exporter les noms des extensions</string>
-    <string name="wishlist_export_text">Voulez-vous intégrer les noms des extensions dans l\'export de votre liste de vœux?</string>
     <string name="search_collectors_number">Numéro de collection</string>
     <string name="pref_Chinese">Chinois</string>
     <string name="trader_sort">Trier Echange</string>
+    <string name="trade_share_title">Echange</string>
+    <string name="trader_share">Partager l\'échange</string>
 </resources>

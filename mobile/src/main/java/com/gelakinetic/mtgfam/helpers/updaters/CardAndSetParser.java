@@ -55,9 +55,9 @@ class CardAndSetParser {
     /**
      * Used to store various dates before committing them
      */
-    protected String mCurrentTCGNamePatchDate = null;
-    protected String mCurrentPatchDate = null;
-    protected String mCurrentRulesDate = null;
+    String mCurrentTCGNamePatchDate = null;
+    String mCurrentPatchDate = null;
+    String mCurrentRulesDate = null;
 
     /**
      * If a set has a patch, and doesn't exist in the database, this is called to parse an InputStream of JSON and add
