@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -172,6 +173,7 @@ public class CardDbAdapter {
     private static final int EXCLUDE_TOKEN_START = 1;
     // use a hash map for performance
     private static final HashMap<String, String> mColumnMap = buildColumnMap();
+    private static final Set<String> nonModernFoilSets = buildNonModernFoilSets();
     private static final String DB_NAME = "data";
 
     /**
@@ -1320,6 +1322,29 @@ public class CardDbAdapter {
     }
 
     /**
+     *
+     * @param mDb
+     * @return
+     * @throws FamiliarDbException
+     */
+    private static Set<String> getModernLegalSets(SQLiteDatabase mDb) throws FamiliarDbException {
+        Set<String> modernSets = new HashSet<>();
+        try {
+            String sql = "SELECT " + KEY_SET + " FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = 'Modern';";
+            Cursor c = mDb.rawQuery(sql, null);
+            c.moveToNext();
+            while (!c.isAfterLast()) {
+                modernSets.add(c.getString(0));
+                c.moveToNext();
+            }
+            c.close();
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+        return modernSets;
+    }
+
+    /**
      * @param category
      * @param subcategory
      * @param mDb
@@ -1611,6 +1636,13 @@ public class CardDbAdapter {
         map.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS "
                 + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
         return map;
+    }
+
+    private static Set<String> buildNonModernFoilSets() {
+        Set<String> nonModernFoilSets = new HashSet<>();
+        String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC", "CNS", "CNSC"};
+        nonModernFoilSets.addAll(Arrays.asList(extraSets));
+        return nonModernFoilSets;
     }
 
     /**
@@ -1927,15 +1959,19 @@ public class CardDbAdapter {
      * @throws FamiliarDbException
      */
     public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-        String[] extraSets = {"UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON", "LE", "SC", "CNS", "CNSC"};
-        ArrayList<String> nonModernLegalSets = new ArrayList<>(Arrays.asList(extraSets));
-        for (String value : nonModernLegalSets) {
-            if (value.equals(setCode)) {
-                return true;
-            }
-        }
+        return nonModernFoilSets.contains(setCode) || isModernLegalSet(setCode, mDb);
+    }
 
-        return isModernLegalSet(setCode, mDb);
+    /**
+     * @param mDb
+     * @return
+     * @throws FamiliarDbException
+     */
+    public static Set<String> getFoilSets(SQLiteDatabase mDb) throws FamiliarDbException {
+        Set<String> foilSets = new HashSet<>();
+        foilSets.addAll(nonModernFoilSets);
+        foilSets.addAll(getModernLegalSets(mDb));
+        return foilSets;
     }
 
     public static String getSetNameFromCode(String setCode, SQLiteDatabase database) throws FamiliarDbException {
