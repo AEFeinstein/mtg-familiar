@@ -126,7 +126,7 @@
     <string name="main_rules">Regras</string>
     <string name="main_settings_title">Definições</string>
     <string name="main_timer">Cronônometro</string>
-    <string name="main_trade">Trocas de Cartas</string>
+    <string name="main_trade">Troca de cartas</string>
     <string name="main_tts_warning_text">Esta aplicação tem a capacidade de usar a síntese de voz (Text-to-Speech) para algumas funções, mas não parece tê-lo instalado. Se você quer instalar, use o link \"Instalar Text-to-Speech \" no menu de configurações.</string>
     <string name="main_tts_warning_title">TTS (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">O que há de Novo na Versão</string>
