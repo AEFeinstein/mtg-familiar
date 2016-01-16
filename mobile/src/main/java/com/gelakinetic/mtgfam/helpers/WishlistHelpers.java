@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class has helpers used for reading, writing, and modifying the wishlist from different fragments
@@ -173,6 +176,19 @@ public class WishlistHelpers {
         /* Read the wishlist */
         ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
 
+        /* Find any counts currently in the wishlist */
+        final Map<String, String> targetCardNumberOfs = new HashMap<>();
+        final Map<String, String> targetFoilCardNumberOfs = new HashMap<>();
+        for (MtgCard card : wishlist) {
+            if (card.name.equals(mCardName)) {
+                if (card.foil) {
+                    targetFoilCardNumberOfs.put(card.setCode, card.numberOf + "");
+                } else {
+                    targetCardNumberOfs.put(card.setCode, card.numberOf + "");
+                }
+            }
+        }
+
         /* Get all potential sets and rarities for this card */
         final ArrayList<String> potentialSetCodes = new ArrayList<>();
         final ArrayList<Character> potentialRarities = new ArrayList<>();
@@ -195,6 +211,14 @@ public class WishlistHelpers {
             return null;
         }
 
+        Set<String> foilSets;
+        try {
+            foilSets = CardDbAdapter.getFoilSets(db);
+        } catch (FamiliarDbException e) {
+            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
+            return null;
+        }
+
         /* For each card, add it to the wishlist view */
         while (!cards.isAfterLast()) {
             String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
@@ -206,7 +230,9 @@ public class WishlistHelpers {
             View wishlistRow = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null, false);
             assert wishlistRow != null;
             ((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
-            ((EditText) wishlistRow.findViewById(R.id.numberInput)).setText("0");
+            String numberOf = targetCardNumberOfs.get(setCode);
+            numberOf = numberOf == null ? "0" : numberOf;
+            ((EditText) wishlistRow.findViewById(R.id.numberInput)).setText(numberOf);
             wishlistRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
             linearLayout.addView(wishlistRow);
             potentialSetCodes.add(setCode);
@@ -215,33 +241,19 @@ public class WishlistHelpers {
 
             /* If this card has a foil version, add that too */
             View wishlistRowFoil = null;
-            try {
-                if (CardDbAdapter.canBeFoil(setCode, db)) {
-                    wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
-                            null, false);
-                    assert wishlistRowFoil != null;
-                    ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
-                    ((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText("0");
-                    wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
-                    linearLayout.addView(wishlistRowFoil);
-                    potentialSetCodes.add(setCode);
-                    potentialRarities.add(rarity);
-                    potentialNumbers.add(number);
-                }
-            } catch (FamiliarDbException e) {
-                DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-                return null;
-            }
-
-            /* Set any counts currently in the wishlist */
-            for (MtgCard card : wishlist) {
-                if (card.name.equals(mCardName) && card.setCode.equals(setCode)) {
-                    if (card.foil && wishlistRowFoil != null) {
-                        ((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText(card.numberOf + "");
-                    } else {
-                        ((EditText) wishlistRow.findViewById(R.id.numberInput)).setText(card.numberOf + "");
-                    }
-                }
+            if (foilSets.contains(setCode)) {
+                wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
+                        null, false);
+                assert wishlistRowFoil != null;
+                ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
+                String foilNumberOf = targetFoilCardNumberOfs.get(setCode);
+                foilNumberOf = foilNumberOf == null ? "0" : foilNumberOf;
+                ((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText(foilNumberOf);
+                wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
+                linearLayout.addView(wishlistRowFoil);
+                potentialSetCodes.add(setCode);
+                potentialRarities.add(rarity);
+                potentialNumbers.add(number);
             }
 
             cards.moveToNext();
