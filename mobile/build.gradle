@@ -12,10 +12,6 @@ repositories {
     mavenCentral()
 }
 
-def computeVersionName() {
-    return "3.2.9"
-}
-
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
@@ -24,7 +20,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 38
-        versionName computeVersionName()
+        versionName "3.2.9"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -44,7 +40,7 @@ android {
             }
         }
         foss {
-            versionName computeVersionName() + "-foss"
+            versionName "3.2.9-foss"
         }
     }
 }
