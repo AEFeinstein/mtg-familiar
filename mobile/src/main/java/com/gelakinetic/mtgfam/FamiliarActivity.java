@@ -93,6 +93,7 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.TutorCards;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -333,6 +334,8 @@ public class FamiliarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         PrefsFragment.checkOverrideSystemLanguage(this);
         mPreferenceAdapter = new PreferenceAdapter(this);
+
+        TutorCards.startTutorCardsSearch(this);
 
         /* Figure out what theme the app is currently in, and change it if necessary */
         int resourceId = getResourceIdFromAttr(R.attr.color_drawer_background);
@@ -1366,6 +1369,8 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        TutorCards.onActivityResult(requestCode, resultCode, data);
 
         /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result here */
         if (data != null && data.getExtras() != null) {
