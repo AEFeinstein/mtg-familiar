@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers.updaters;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -26,13 +27,10 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,6 +49,10 @@ class CardAndSetParser {
     private static final String LEGALITY_URL = "https://sites.google.com/site/mtgfamiliar/manifests/legality.json";
     private static final String TCG_NAMES_URL = "https://sites.google.com/site/mtgfamiliar/manifests/TCGnames.json";
     private static final String DIGESTS_URL = "https://sites.google.com/site/mtgfamiliar/manifests/digests.json";
+//    private static final String PATCHES_URL = "http://gelakinetic.com/familiar-old/patches.json";
+//    private static final String LEGALITY_URL = "http://gelakinetic.com/familiar-old/legality.json";
+//    private static final String TCG_NAMES_URL = "http://gelakinetic.com/familiar-old/TCGnames.json";
+//    private static final String DIGESTS_URL = "http://gelakinetic.com/familiar-old/digests.json";
 
     /**
      * Used to store various dates before committing them
@@ -322,19 +324,18 @@ class CardAndSetParser {
      * @return An ArrayList of String[] which contains the {Name, URL, Set Code} for each available patch
      */
     public ArrayList<String[]> readUpdateJsonStream(PrintWriter logWriter) {
-        HttpURLConnection connection = null;
         InputStreamReader isr;
         ArrayList<String[]> patchInfo = new ArrayList<>();
 
         try {
-            URL update;
             String label;
             String label2;
 
-            update = new URL(PATCHES_URL);
-            connection = (HttpURLConnection) update.openConnection();
-            connection.setInstanceFollowRedirects(true);
-            isr = new InputStreamReader(connection.getInputStream(), "ISO-8859-1");
+            InputStream stream = FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter);
+            if(stream == null) {
+                throw new IOException("No Stream");
+            }
+            isr = new InputStreamReader(stream, "ISO-8859-1");
 
             JsonReader reader = new JsonReader(isr);
 
@@ -376,15 +377,11 @@ class CardAndSetParser {
             reader.close();
             isr.close();
         } catch (IOException e) {
-            if (connection != null) {
-                connection.disconnect();
-            }
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
             return null;
         }
-        connection.disconnect();
         return patchInfo;
     }
 
@@ -406,16 +403,13 @@ class CardAndSetParser {
         String formatName;
         String jsonArrayName;
         String jsonTopLevelName;
-        HttpURLConnection connection = null;
-        InputStream in;
 
         try {
-            URL legal = new URL(LEGALITY_URL);
-            connection = (HttpURLConnection) legal.openConnection();
-            connection.setInstanceFollowRedirects(true);
-            in = new BufferedInputStream(connection.getInputStream());
-
-            JsonReader reader = new JsonReader(new InputStreamReader(in, "ISO-8859-1"));
+            InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter);
+            if(stream == null) {
+                throw new IOException("No Stream");
+            }
+            JsonReader reader = new JsonReader(new InputStreamReader(stream, "ISO-8859-1"));
 
             reader.beginObject();
             while (reader.hasNext()) {
@@ -474,18 +468,12 @@ class CardAndSetParser {
             reader.endObject();
 
             reader.close();
-
-            in.close();
         } catch (IOException e) {
-            if (connection != null) {
-                connection.disconnect();
-            }
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
             return null;
         }
-        connection.disconnect();
         return legalInfo;
     }
 
@@ -497,17 +485,16 @@ class CardAndSetParser {
      * @param tcgNames    A place to store tcg names before adding to the database
      */
     public void readTCGNameJsonStream(PreferenceAdapter prefAdapter, ArrayList<NameAndMetadata> tcgNames, PrintWriter logWriter) {
-        URL update;
         String label;
         String label2;
         String name = null, code = null;
-        HttpURLConnection connection = null;
 
         try {
-            update = new URL(TCG_NAMES_URL);
-            connection = (HttpURLConnection) update.openConnection();
-            connection.setInstanceFollowRedirects(true);
-            InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "ISO-8859-1");
+            InputStream stream = FamiliarActivity.getHttpInputStream(TCG_NAMES_URL, logWriter);
+            if(stream == null) {
+                throw new IOException("No Stream");
+            }
+            InputStreamReader isr = new InputStreamReader(stream, "ISO-8859-1");
             JsonReader reader = new JsonReader(isr);
 
             reader.beginObject();
@@ -543,15 +530,10 @@ class CardAndSetParser {
             reader.close();
             isr.close();
         } catch (IOException e) {
-            if (connection != null) {
-                connection.disconnect();
-            }
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
-            return;
         }
-        connection.disconnect();
     }
 
     /**
@@ -577,19 +559,18 @@ class CardAndSetParser {
      * @return A hash map from set code to MD5 digest
      */
     public HashMap<String, String> readDigestStream(PrintWriter logWriter) {
-        URL update;
         String label;
         String label2;
         String digest = null, code = null;
 
         HashMap<String, String> digests = new HashMap<>();
-        HttpURLConnection connection = null;
 
         try {
-            update = new URL(DIGESTS_URL);
-            connection = (HttpURLConnection) update.openConnection();
-            connection.setInstanceFollowRedirects(true);
-            InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "ISO-8859-1");
+            InputStream stream = FamiliarActivity.getHttpInputStream(DIGESTS_URL, logWriter);
+            if(stream == null) {
+                throw new IOException("No Stream");
+            }
+            InputStreamReader isr = new InputStreamReader(stream, "ISO-8859-1");
             JsonReader reader = new JsonReader(isr);
 
             reader.beginObject();
@@ -621,16 +602,12 @@ class CardAndSetParser {
             reader.close();
             isr.close();
         } catch (IOException e) {
-            if (connection != null) {
-                connection.disconnect();
-            }
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
             return null;
         }
 
-        connection.disconnect();
         return digests;
     }
 

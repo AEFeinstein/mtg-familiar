@@ -1,16 +1,13 @@
 package com.gelakinetic.mtgfam.helpers.updaters;
 
-import android.annotation.SuppressLint;
+import com.gelakinetic.mtgfam.FamiliarActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,7 +30,6 @@ class RulesParser {
     private final ArrayList<GlossaryItem> mGlossary;
     private InputStream mInputStream;
     private BufferedReader mBufferedReader;
-    private HttpURLConnection mConnection;
 
     /**
      * Default Constructor
@@ -59,13 +55,12 @@ class RulesParser {
      * @return Whether or this the rules need updating.
      */
     public boolean needsToUpdate(PrintWriter logWriter) {
-        URL url;
 
         try {
-            url = new URL(SOURCE);
-            mConnection = (HttpURLConnection) url.openConnection();
-            mConnection.setInstanceFollowRedirects(true);
-            this.mInputStream = mConnection.getInputStream();
+            this.mInputStream = FamiliarActivity.getHttpInputStream(SOURCE, logWriter);
+            if(this.mInputStream == null) {
+                throw new IOException("No Stream");
+            }
             this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream));
 
             /*First line will be the date formatted as YYYY-MM-DD */
@@ -253,11 +248,6 @@ class RulesParser {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
-        }
-
-        if (this.mConnection != null) {
-            this.mConnection.disconnect();
-            this.mConnection = null;
         }
 
         this.mInputStream = null;

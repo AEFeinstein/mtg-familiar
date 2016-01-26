@@ -44,8 +44,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -203,33 +201,25 @@ public class DbUpdaterService extends IntentService {
                             if (!currentSetCodes.contains(set[CardAndSetParser.SET_CODE])) { /* check to see if the patch is known already */
                                 int retries = 5;
                                 while (retries > 0) {
-                                    HttpURLConnection connection = null;
                                     try {
                                         /* Change the notification to the specific set */
                                         switchToUpdating(String.format(getString(R.string.update_updating_set),
                                                 set[CardAndSetParser.SET_NAME]));
-                                        URL urlToRead = new URL(set[CardAndSetParser.SET_URL]);
-                                        connection = (HttpURLConnection) urlToRead.openConnection();
-                                        connection.setInstanceFollowRedirects(true);
-                                        InputStream streamToRead = connection.getInputStream();
-                                        GZIPInputStream gis = new GZIPInputStream(streamToRead);
-                                        JsonReader reader = new JsonReader(new InputStreamReader(gis, "ISO-8859-1"));
-                                        parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd, patchDigests);
-                                        streamToRead.close();
-                                        updatedStuff.add(set[CardAndSetParser.SET_NAME]);
-                                         /* Everything was successful, retries = 0 breaks the while loop */
-                                        retries = 0;
+                                        InputStream streamToRead = FamiliarActivity.getHttpInputStream(set[CardAndSetParser.SET_URL], logWriter);
+                                        if(streamToRead != null) {
+                                            GZIPInputStream gis = new GZIPInputStream(streamToRead);
+                                            JsonReader reader = new JsonReader(new InputStreamReader(gis, "ISO-8859-1"));
+                                            parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd, patchDigests);
+                                            streamToRead.close();
+                                            updatedStuff.add(set[CardAndSetParser.SET_NAME]);
+                                            /* Everything was successful, retries = 0 breaks the while loop */
+                                            retries = 0;
+                                        }
                                     } catch (IOException e) {
                                         if (logWriter != null) {
                                             logWriter.print("Retry " + retries + '\n');
                                             e.printStackTrace(logWriter);
                                         }
-                                        if (connection != null) {
-                                            connection.disconnect();
-                                        }
-                                    }
-                                    if (connection != null) {
-                                        connection.disconnect();
                                     }
                                     retries--;
                                 }

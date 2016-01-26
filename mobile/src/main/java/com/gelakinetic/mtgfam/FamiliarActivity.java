@@ -44,6 +44,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -103,7 +104,14 @@ import com.octo.android.robospice.SpiceManager;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class FamiliarActivity extends AppCompatActivity {
     /* Tags for fragments */
@@ -1534,6 +1542,76 @@ public class FamiliarActivity extends AppCompatActivity {
         if (mImageCache != null) {
             mImageCache.close();
             mImageCache = null;
+        }
+    }
+
+    /**
+     * TODO
+     *
+     * @param stringUrl
+     * @param logWriter
+     * @return
+     * @throws IOException
+     */
+    public static @Nullable
+    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter) throws IOException {
+        return getHttpInputStream(stringUrl, logWriter, 0);
+    }
+
+    /**
+     * TODO
+     *
+     * @param stringUrl
+     * @return
+     * @throws IOException
+     */
+    public static @Nullable InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter, int recursionLevel) throws IOException {
+
+        /* Don't allow infinite recursion */
+        if(recursionLevel > 10) {
+            return null;
+        }
+
+        /* Make the URL & connection objects, follow redirects, timeout after 5s */
+        URL url = new URL(stringUrl);
+        HttpURLConnection.setFollowRedirects(true);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setInstanceFollowRedirects(true);
+
+        /* Log the URL and response code, if it can */
+        if (logWriter != null) {
+            logWriter.write("URL : " + stringUrl + '\n');
+            logWriter.write("RESP: " + connection.getResponseCode() + '\n');
+        }
+
+        /* If the connection is not OK, debug print the response */
+        if(connection.getResponseCode() != HttpURLConnection.HTTP_OK ) {
+
+            /* Log the response, if it can */
+            if(logWriter != null) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                while((line = br.readLine()) != null) {
+                    logWriter.write("HTTP:" + line + '\n');
+                }
+            }
+
+            /* If the page was moved, recurse and try again */
+            if(connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM ||
+                connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+                    return getHttpInputStream(connection.getHeaderField("Location"), logWriter, recursionLevel + 1);
+            }
+            /* Otherwise it failed some other way, return null */
+            else {
+                return null;
+            }
+        }
+        else {
+            /* Close, reopen, and return the connection */
+            if(logWriter != null) {
+                logWriter.write('\n');
+            }
+            return connection.getInputStream();
         }
     }
 

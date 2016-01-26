@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.helpers.updaters;
 
 import android.content.Context;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
@@ -13,10 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -95,34 +93,31 @@ class MTRIPGParser {
         }
 
         /* Then update via the internet */
-        HttpURLConnection connection = null;
         try {
-            URL url;
+            String urlString;
             switch (mode) {
                 case MODE_IPG:
-                    url = new URL(IPG_SOURCE);
+                    urlString = IPG_SOURCE;
                     break;
                 case MODE_MTR:
-                    url = new URL(MTR_SOURCE);
+                    urlString = MTR_SOURCE;
                     break;
                 case MODE_JAR:
-                    url = new URL(JAR_SOURCE);
+                    urlString = JAR_SOURCE;
                     break;
                 default:
                     throw new FileNotFoundException("Invalid switch"); /* handled below */
             }
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setInstanceFollowRedirects(true);
-            updated = parseDocument(mode, connection.getInputStream());
+            InputStream stream = FamiliarActivity.getHttpInputStream(urlString, logWriter);
+            if(stream != null) {
+                updated = parseDocument(mode, stream);
+            }
         } catch (IOException e) {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
         }
 
-        if (connection != null) {
-            connection.disconnect();
-        }
         return updated;
     }
 
