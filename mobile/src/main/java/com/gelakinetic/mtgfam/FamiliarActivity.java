@@ -1584,35 +1584,44 @@ public class FamiliarActivity extends AppCompatActivity {
             logWriter.write("RESP: " + connection.getResponseCode() + '\n');
         }
 
-        /* If the connection is not OK, debug print the response */
-        if(connection.getResponseCode() != HttpURLConnection.HTTP_OK ) {
-
-            /* Log the response, if it can */
-            if(logWriter != null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                while((line = br.readLine()) != null) {
-                    logWriter.write("HTTP:" + line + '\n');
-                }
-            }
-
-            /* If the page was moved, recurse and try again */
-            if(connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM ||
-                connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
-                    return getHttpInputStream(connection.getHeaderField("Location"), logWriter, recursionLevel + 1);
-            }
-            /* Otherwise it failed some other way, return null */
-            else {
-                return null;
-            }
+        /* Log the body of the response */
+        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String line;
+        while((line = br.readLine()) != null) {
+            logWriter.write("HTTP:" + line + '\n');
         }
-        else {
-            /* Close, reopen, and return the connection */
-            if(logWriter != null) {
-                logWriter.write('\n');
-            }
-            return connection.getInputStream();
-        }
+
+        return null;
+
+//        /* If the connection is not OK, debug print the response */
+//        if(connection.getResponseCode() != HttpURLConnection.HTTP_OK ) {
+//
+//            /* Log the response, if it can */
+//            if(logWriter != null) {
+//                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//                String line;
+//                while((line = br.readLine()) != null) {
+//                    logWriter.write("HTTP:" + line + '\n');
+//                }
+//            }
+//
+//            /* If the page was moved, recurse and try again */
+//            if(connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM ||
+//                connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
+//                    return getHttpInputStream(connection.getHeaderField("Location"), logWriter, recursionLevel + 1);
+//            }
+//            /* Otherwise it failed some other way, return null */
+//            else {
+//                return null;
+//            }
+//        }
+//        else {
+//            /* Close, reopen, and return the connection */
+//            if(logWriter != null) {
+//                logWriter.write('\n');
+//            }
+//            return connection.getInputStream();
+//        }
     }
 
     /**
