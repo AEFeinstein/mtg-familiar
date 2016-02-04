@@ -57,7 +57,7 @@ import java.util.zip.GZIPInputStream;
 @SuppressWarnings("JavaDoc")
 public class CardDbAdapter {
 
-    public static final int DATABASE_VERSION = 68;
+    public static final int DATABASE_VERSION = 69;
 
     public static final int STAR = -1000;
     public static final int ONE_PLUS_STAR = -1001;
