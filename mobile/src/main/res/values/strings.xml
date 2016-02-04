@@ -68,12 +68,6 @@ So, how generous are you feeling today?</string>
     <string name="main_whats_new_title">What\'s New</string>
     <string name="main_whats_new_in_title">What\'s New in Version</string>
 <string name="main_whats_new_text">
-- Added colorless mana symbol&lt;br&gt;
-- Added alternate art when changing sets&lt;br&gt;
-- Added trade sharing&lt;br&gt;
-- Improved wishlist sharing&lt;br&gt;
-- Improved cached image quality&lt;br&gt;
-- Fixed MoJhoSto equipment&lt;br&gt;
 - Fixed bug in updater
 </string>
     <string name="main_tts_warning_title">Text-to-Speech</string>

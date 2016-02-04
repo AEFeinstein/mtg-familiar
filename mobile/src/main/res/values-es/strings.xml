@@ -131,12 +131,6 @@
     <string name="main_tts_warning_title">Síntesis de voz (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">Novedades de la versión</string>
 <string name="main_whats_new_text">
-- Añadido el símbolo de maná incoloro&lt;br&gt;
-- Añadidas las imágenes alternativas al cambiar de expansión&lt;br&gt;
-- Añadida la posibilidad de compartir intercambios&lt;br&gt;
-- Mejorada la manera de compartir la lista de deseos&lt;br&gt;
-- Mejorada la calidad de imágenes en caché&lt;br&gt;
-- Mejorado el equipo de MoJhoSto&lt;br&gt;
 - Arreglado un bug en el actualizador</string>
     <string name="main_whats_new_title">Novedades</string>
     <string name="main_wishlist">Lista de deseos</string>

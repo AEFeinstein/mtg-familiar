@@ -131,12 +131,6 @@
     <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
     <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
 <string name="main_whats_new_text">
-- Ajout du symbole de mana incolore&lt;br&gt;
-- Ajout d\'image alternative en changeant d\'extension&lt;br&gt;
-- Ajout du partage d\'échange&lt;br&gt;
-- Amélioration du partage de la liste de voeux&lt;br&gt;
-- Amélioration de la qualité des images mises en cache&lt;br&gt;
-- Correction d\'équipement MoJhoSto&lt;br&gt;
 - Correction d\'un bug dans l\'outil de mise à jour
 </string>
     <string name="main_whats_new_title">Nouveautés</string>

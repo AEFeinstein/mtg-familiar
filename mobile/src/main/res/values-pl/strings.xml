@@ -131,12 +131,6 @@
     <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
 <string name="main_whats_new_text">
-- Dodano symbol bezkolorowej many&lt;br&gt;
-- Dodano alternatywną grafikę przy zmianie zestawów&lt;br&gt;
-- Dodano dzielenie się Wymianą&lt;br&gt;
-- Ulepszono dzielenie się Listą Życzeń&lt;br&gt;
-- Ulepszono jakość przechowywanego obrazu&lt;br&gt;
-- Naprawiono ekwipunek MojhoSto&lt;br&gt;
 - Naprawiono błąd w aktualizatorze
 </string>
     <string name="main_whats_new_title">Nowości</string>
