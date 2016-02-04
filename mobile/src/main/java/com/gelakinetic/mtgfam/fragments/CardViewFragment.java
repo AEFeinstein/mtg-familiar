@@ -92,7 +92,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1283,10 +1282,7 @@ public class CardViewFragment extends FamiliarFragment {
                             }
                         }
 
-                        HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-                        connection.setInstanceFollowRedirects(true);
-                        mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), BitmapFactory.decodeStream(connection.getInputStream()));
-                        connection.disconnect();
+                        mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null)));
                         bitmap = mCardBitmap.getBitmap();
                         getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, mCardBitmap);
 
@@ -1469,12 +1465,12 @@ public class CardViewFragment extends FamiliarFragment {
             String line;
 
             mRulingsArrayList = new ArrayList<>();
-            HttpURLConnection connection = null;
             try {
                 url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mMultiverseId);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setInstanceFollowRedirects(true);
-                is = connection.getInputStream();
+                is = FamiliarActivity.getHttpInputStream(url, null);
+                if (is == null) {
+                    throw new IOException("null stream");
+                }
                 br = new BufferedReader(new InputStreamReader(new BufferedInputStream(is)));
 
                 String date = null, ruling;
@@ -1496,9 +1492,6 @@ public class CardViewFragment extends FamiliarFragment {
                 try {
                     if (is != null) {
                         is.close();
-                    }
-                    if (connection != null) {
-                        connection.disconnect();
                     }
                 } catch (IOException ioe) {
                     mErrorMessage = ioe.getLocalizedMessage();

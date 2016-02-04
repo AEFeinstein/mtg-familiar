@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -20,7 +21,6 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -161,10 +161,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                 );
 
                 /* Fetch the information from the web */
-                HttpURLConnection urlConnection = (HttpURLConnection) priceUrl.openConnection();
-                urlConnection.setInstanceFollowRedirects(true);
-                String result = IOUtils.toString(urlConnection.getInputStream());
-                urlConnection.disconnect();
+                String result = IOUtils.toString(FamiliarActivity.getHttpInputStream(priceUrl, null));
 
                 /* Parse the XML */
                 Document document = loadXMLFromString(result);

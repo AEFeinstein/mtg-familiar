@@ -49,10 +49,6 @@ class CardAndSetParser {
     private static final String LEGALITY_URL = "https://sites.google.com/site/mtgfamiliar/manifests/legality.json";
     private static final String TCG_NAMES_URL = "https://sites.google.com/site/mtgfamiliar/manifests/TCGnames.json";
     private static final String DIGESTS_URL = "https://sites.google.com/site/mtgfamiliar/manifests/digests.json";
-//    private static final String PATCHES_URL = "http://gelakinetic.com/familiar-old/patches.json";
-//    private static final String LEGALITY_URL = "http://gelakinetic.com/familiar-old/legality.json";
-//    private static final String TCG_NAMES_URL = "http://gelakinetic.com/familiar-old/TCGnames.json";
-//    private static final String DIGESTS_URL = "http://gelakinetic.com/familiar-old/digests.json";
 
     /**
      * Used to store various dates before committing them

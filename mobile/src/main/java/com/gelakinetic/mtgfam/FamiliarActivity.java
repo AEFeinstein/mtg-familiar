@@ -1546,85 +1546,6 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO
-     *
-     * @param stringUrl
-     * @param logWriter
-     * @return
-     * @throws IOException
-     */
-    public static @Nullable
-    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter) throws IOException {
-        return getHttpInputStream(stringUrl, logWriter, 0);
-    }
-
-    /**
-     * TODO
-     *
-     * @param stringUrl
-     * @return
-     * @throws IOException
-     */
-    public static @Nullable InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter, int recursionLevel) throws IOException {
-
-        /* Don't allow infinite recursion */
-        if(recursionLevel > 10) {
-            return null;
-        }
-
-        /* Make the URL & connection objects, follow redirects, timeout after 5s */
-        URL url = new URL(stringUrl);
-        HttpURLConnection.setFollowRedirects(true);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setInstanceFollowRedirects(true);
-
-        /* Log the URL and response code, if it can */
-        if (logWriter != null) {
-            logWriter.write("URL : " + stringUrl + '\n');
-            logWriter.write("RESP: " + connection.getResponseCode() + '\n');
-        }
-
-        /* Log the body of the response */
-        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String line;
-        while((line = br.readLine()) != null) {
-            logWriter.write("HTTP:" + line + '\n');
-        }
-
-        return null;
-
-//        /* If the connection is not OK, debug print the response */
-//        if(connection.getResponseCode() != HttpURLConnection.HTTP_OK ) {
-//
-//            /* Log the response, if it can */
-//            if(logWriter != null) {
-//                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//                String line;
-//                while((line = br.readLine()) != null) {
-//                    logWriter.write("HTTP:" + line + '\n');
-//                }
-//            }
-//
-//            /* If the page was moved, recurse and try again */
-//            if(connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM ||
-//                connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP) {
-//                    return getHttpInputStream(connection.getHeaderField("Location"), logWriter, recursionLevel + 1);
-//            }
-//            /* Otherwise it failed some other way, return null */
-//            else {
-//                return null;
-//            }
-//        }
-//        else {
-//            /* Close, reopen, and return the connection */
-//            if(logWriter != null) {
-//                logWriter.write('\n');
-//            }
-//            return connection.getInputStream();
-//        }
-    }
-
-    /**
      * This nested class encapsulates the necessary information for an entry in the drawer menu
      */
     public class DrawerEntry {
@@ -1758,5 +1679,124 @@ public class FamiliarActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         getSupportFragmentManager().findFragmentById(R.id.fragment_container)
                 .onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * Open an inputStream to the HTML content at the given URL
+     *
+     * @param stringUrl The URL to open a stream to, in String form
+     * @param logWriter A PrintWriter to log debug info to. Can be null
+     * @return An InputStream to the content at the URL, or null
+     * @throws IOException Thrown if something goes terribly wrong
+     */
+    public static
+    @Nullable
+    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter) throws IOException {
+        return getHttpInputStream(new URL(stringUrl), logWriter, 0);
+    }
+
+    /**
+     * Open an inputStream to the HTML content at the given URL
+     *
+     * @param url       The URL to open a stream to
+     * @param logWriter A PrintWriter to log debug info to. Can be null
+     * @return An InputStream to the content at the URL, or null
+     * @throws IOException Thrown if something goes terribly wrong
+     */
+    public static
+    @Nullable
+    InputStream getHttpInputStream(URL url, PrintWriter logWriter) throws IOException {
+        return getHttpInputStream(url, logWriter, 0);
+    }
+
+    /**
+     * Open an inputStream to the HTML content at the given URL, making recursive calls for
+     * redirection (HTTP 301, 302).
+     *
+     * @param url            The URL to open a stream to
+     * @param logWriter      A PrintWriter to log debug info to. Can be null
+     * @param recursionLevel The redirect recursion level. Starts at 0, doesn't go past 10
+     * @return An InputStream to the content at the URL, or null
+     * @throws IOException Thrown if something goes terribly wrong
+     */
+    public static
+    @Nullable
+    InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter,
+                                   int recursionLevel) throws IOException {
+
+        /* Don't allow infinite recursion */
+        if (recursionLevel > 10) {
+            return null;
+        }
+
+        /* Make the URL & connection objects, follow redirects, timeout after 5s */
+        HttpURLConnection.setFollowRedirects(true);
+        HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
+        connection.setConnectTimeout(5000);
+        connection.setInstanceFollowRedirects(true);
+
+        /* If the connection is not OK, debug print the response */
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            /* Log the URL and response code */
+            if (logWriter != null) {
+                logWriter.write("URL : " + url.toString() + '\n');
+                logWriter.write("RESP: " + connection.getResponseCode() + '\n');
+            }
+
+            /* Comb through header fields for a redirect location */
+            URL nextUrl = null;
+            for (String key : connection.getHeaderFields().keySet()) {
+                /* Log the header */
+                if (logWriter != null) {
+                    logWriter.write("HDR : [" + key + "] " + connection.getHeaderField(key) + '\n');
+                }
+
+                /* Found the URL to try next */
+                if (key != null && key.equalsIgnoreCase("location")) {
+                    nextUrl = new URL(connection.getHeaderField(key));
+                }
+            }
+
+            /* If the next location is still null, comb through the HTML
+             * This is kind of a hack for when sites.google.com is serving up malformed 302
+             * redirects and all the header fields end up being in this input stream
+             */
+            if (nextUrl == null) {
+                /* Open the stream */
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+                String line;
+                int linesRead = 0;
+                /* Read one line at a time */
+                while ((line = br.readLine()) != null) {
+                    /* Log the line */
+                    if (logWriter != null) {
+                        logWriter.write("HTML:" + line + '\n');
+                    }
+                    /* Check for a location */
+                    if (line.toLowerCase().contains("location")) {
+                        nextUrl = new URL(line.split("\\s+")[1]);
+                        break;
+                    }
+                    /* Count the line, make sure to quit after 1000 */
+                    linesRead++;
+                    if (linesRead > 1000) {
+                        break;
+                    }
+                }
+            }
+
+            if (nextUrl != null) {
+                /* If there is a URL to follow, follow it */
+                return getHttpInputStream(nextUrl, logWriter, recursionLevel + 1);
+            } else {
+                /* Otherwise return null */
+                return null;
+            }
+
+        } else {
+            /* HTTP response is A-OK. Return the inputStream */
+            return connection.getInputStream();
+        }
     }
 }
