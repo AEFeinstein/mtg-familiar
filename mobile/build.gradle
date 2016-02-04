@@ -19,8 +19,8 @@ android {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 38
-        versionName "3.2.9"
+        versionCode 39
+        versionName "3.2.10"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -40,7 +40,7 @@ android {
             }
         }
         foss {
-            versionName "3.2.9-foss"
+            versionName "3.2.10-foss"
         }
     }
 }
@@ -57,6 +57,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.5'
     compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.6'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-    compile 'com.code-troopers.betterpickers:library:2.2.2'
+    compile 'com.code-troopers.betterpickers:library:2.5.0'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
 }
