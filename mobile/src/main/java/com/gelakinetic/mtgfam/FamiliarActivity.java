@@ -275,6 +275,7 @@ public class FamiliarActivity extends AppCompatActivity {
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
 
+    private TutorCards mTutorCards = new TutorCards(this);
     /**
      * Start the Spice Manager when the activity starts
      */
@@ -334,8 +335,6 @@ public class FamiliarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         PrefsFragment.checkOverrideSystemLanguage(this);
         mPreferenceAdapter = new PreferenceAdapter(this);
-
-        TutorCards.startTutorCardsSearch(this);
 
         /* Figure out what theme the app is currently in, and change it if necessary */
         int resourceId = getResourceIdFromAttr(R.attr.color_drawer_background);
@@ -1370,7 +1369,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        TutorCards.onActivityResult(requestCode, resultCode, data);
+        mTutorCards.onActivityResult(requestCode, resultCode, data);
 
         /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result here */
         if (data != null && data.getExtras() != null) {
@@ -1676,5 +1675,23 @@ public class FamiliarActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         getSupportFragmentManager().findFragmentById(R.id.fragment_container)
                 .onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * TODO document
+     */
+    public void startTutorCardsSearch() {
+        mTutorCards.startTutorCardsSearch();
+    }
+
+    /**
+     * TODO document
+     *
+     * @param multiverseId
+     */
+    public void receiveTutorCardsResult(long multiverseId) {
+        ((FamiliarFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+                .receiveTutorCardsResult(multiverseId);
+        clearLoading(); /* TODO timeout to clear this too */
     }
 }

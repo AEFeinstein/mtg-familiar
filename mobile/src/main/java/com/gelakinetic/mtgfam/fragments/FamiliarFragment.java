@@ -305,4 +305,13 @@ public abstract class FamiliarFragment extends Fragment {
     public int getResourceIdFromAttr(int attr) {
         return ((FamiliarActivity) getActivity()).getResourceIdFromAttr(attr);
     }
+
+    /**
+     * Override this to receive results from Tutor Cards visual image search queries
+     *
+     * @param multiverseId The multiverseId of the card the query returned
+     */
+    public void receiveTutorCardsResult(long multiverseId) {
+
+    }
 }

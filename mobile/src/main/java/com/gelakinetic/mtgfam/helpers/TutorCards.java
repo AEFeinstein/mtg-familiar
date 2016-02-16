@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -40,17 +41,23 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
  */
 public class TutorCards {
 
+    private final FamiliarActivity mActivity;
+
+    public TutorCards(FamiliarActivity familiarActivity) {
+        mActivity = familiarActivity;
+    }
+
     /**
      * TODO
      */
-    private static class ServiceStatus {
+    private class ServiceStatus {
         boolean isReady;
     }
 
     /**
      * TODO
      */
-    private static class SearchPostResult {
+    private class SearchPostResult {
         boolean isResult;
         long wait;
         String id;
@@ -59,7 +66,7 @@ public class TutorCards {
     /**
      * TODO
      */
-    private static class SearchResult {
+    private class SearchResult {
         boolean isResult;
         SearchResultInfo info;
     }
@@ -67,22 +74,20 @@ public class TutorCards {
     /**
      * TODO
      */
-    private static class SearchResultInfo {
-        String gathererUrl;
-        String name;
+    private class SearchResultInfo {
+        long multiverseid;
+        long other[];
     }
 
     private static final int REQUEST_IMAGE_CAPTURE = 65;
 
     /**
      * TODO document
-     *
-     * @param activity
      */
-    public static void startTutorCardsSearch(Activity activity) {
+    public void startTutorCardsSearch() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-            activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
+            mActivity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
@@ -93,8 +98,11 @@ public class TutorCards {
      * @param resultCode
      * @param data
      */
-    public static void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            /* Show some background activity is happening */
+            mActivity.setLoading();
+
             /* Get the bitmap from the camera */
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -112,7 +120,7 @@ public class TutorCards {
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
-    static void getServiceStatus() throws IOException, NoSuchAlgorithmException {
+    void getServiceStatus() throws IOException, NoSuchAlgorithmException {
         /* Get an httpclient and create the GET */
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             @Override
@@ -154,7 +162,7 @@ public class TutorCards {
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
-    static SearchPostResult postSearchRequest(Bitmap bitmap) throws NoSuchAlgorithmException,
+    SearchPostResult postSearchRequest(Bitmap bitmap) throws NoSuchAlgorithmException,
             IOException {
         SearchPostResult result = null;
         /* Get an httpclient and create the POST */
@@ -228,7 +236,7 @@ public class TutorCards {
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
-    static SearchResult getResult(String id) throws IOException, NoSuchAlgorithmException {
+    SearchResult getResult(String id) throws IOException, NoSuchAlgorithmException {
         SearchResult result = null;
 
         /* Get an httpclient and create the GET */
@@ -266,7 +274,7 @@ public class TutorCards {
         return result;
     }
 
-    private static class TutorCardsTask extends AsyncTask<Bitmap, Void, Void> {
+    private class TutorCardsTask extends AsyncTask<Bitmap, Void, Void> {
 
         /**
          * TODO
@@ -294,8 +302,11 @@ public class TutorCards {
 
                     /* debug print */
                     if(searchResult.isResult) {
-                        Log.v("TutorCards", searchResult.info.name);
-                        Log.v("TutorCards", searchResult.info.gathererUrl);
+                        Log.v("TutorCards", searchResult.info.multiverseid + "");
+                        for (long other : searchResult.info.other) {
+                            Log.v("TutorCards other", other + "");
+                        }
+                        mActivity.receiveTutorCardsResult(searchResult.info.multiverseid);
                     }
                 }
             } catch (NoSuchAlgorithmException | IOException e) {
