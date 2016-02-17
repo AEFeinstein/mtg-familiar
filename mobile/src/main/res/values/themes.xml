@@ -128,6 +128,8 @@
         <item name="ic_menu_wishlist">@drawable/ic_menu_wishlist_light</item>
 
         <item name="button">@style/button_light</item>
+
+        <item name="camera_button">@drawable/camera_button_light</item>
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat.NoActionBar">
@@ -253,6 +255,8 @@
         <item name="ic_menu_wishlist">@drawable/ic_menu_wishlist_dark</item>
 
         <item name="button">@style/button_dark</item>
+
+        <item name="camera_button">@drawable/camera_button_dark</item>
     </style>
 
     <style name="Theme.light" parent="Theme.base.light">
