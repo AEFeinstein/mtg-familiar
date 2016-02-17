@@ -33,7 +33,7 @@ import java.util.Random;
 public class ResultListFragment extends FamiliarFragment {
 
     /* Constants for bundled arguments */
-    public static final String CARD_ID   = "id";
+    public static final String CARD_ID = "id";
     public static final String CARD_ID_0 = "id0";
     public static final String CARD_ID_1 = "id1";
     public static final String CARD_ID_2 = "id2";

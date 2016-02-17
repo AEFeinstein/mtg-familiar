@@ -276,6 +276,7 @@ public class FamiliarActivity extends AppCompatActivity {
     private DrawerEntryArrayAdapter mPagesAdapter;
 
     private TutorCards mTutorCards = new TutorCards(this);
+
     /**
      * Start the Spice Manager when the activity starts
      */
@@ -1682,7 +1683,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * search process
      */
     public void startTutorCardsSearch() {
-        if(getNetworkState(true) != -1) {
+        if (getNetworkState(true) != -1) {
             mTutorCards.startTutorCardsSearch();
         }
     }
@@ -1694,7 +1695,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param multiverseId The multiverse ID returned by the TutorCards query
      */
     public void receiveTutorCardsResult(long multiverseId) {
-        ((FamiliarFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+        ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
                 .receiveTutorCardsResult(multiverseId);
         clearLoading(); /* TODO timeout to clear this too */
     }

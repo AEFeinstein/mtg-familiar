@@ -91,7 +91,7 @@ public class TutorCards {
     public void startTutorCardsSearch() {
         /* For the first three searches, tell the user it's powered by TutorCards */
         int numSearches = mActivity.mPreferenceAdapter.getNumTutorCardsSearches();
-        if(numSearches < 3) {
+        if (numSearches < 3) {
             numSearches++;
             mActivity.mPreferenceAdapter.setNumTutorCardsSearches(numSearches);
             Toast.makeText(mActivity, R.string.tutor_cards_notice, Toast.LENGTH_LONG).show();
@@ -324,7 +324,7 @@ public class TutorCards {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(isReady) {
+            if (isReady) {
                 /* If the service is up, start the camera */
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
@@ -366,12 +366,10 @@ public class TutorCards {
                     if (searchResult.isResult) {
                         mActivity.receiveTutorCardsResult(searchResult.info.multiverseid);
                         return null;
-                    }
-                    else {
+                    } else {
                         /* TODO what happens if isResult is false? */
                     }
-                }
-                else {
+                } else {
                     /* TODO what happens if isResult is true? */
                 }
             } catch (NoSuchAlgorithmException | IOException e) {

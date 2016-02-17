@@ -1322,7 +1322,6 @@ public class CardDbAdapter {
     }
 
     /**
-     *
      * @param mDb
      * @return
      * @throws FamiliarDbException
