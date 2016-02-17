@@ -1678,16 +1678,20 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO document
+     * Checks to see if there is network connectivity, and if there is, starts the visual
+     * search process
      */
     public void startTutorCardsSearch() {
-        mTutorCards.startTutorCardsSearch();
+        if(getNetworkState(true) != -1) {
+            mTutorCards.startTutorCardsSearch();
+        }
     }
 
     /**
-     * TODO document
+     * When TutorCards returns a response over the network to a query, this function is called
+     * with the multiverse ID of the card in the image as a parameter
      *
-     * @param multiverseId
+     * @param multiverseId The multiverse ID returned by the TutorCards query
      */
     public void receiveTutorCardsResult(long multiverseId) {
         ((FamiliarFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container))

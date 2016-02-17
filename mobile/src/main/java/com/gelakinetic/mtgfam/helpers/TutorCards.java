@@ -7,10 +7,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -37,66 +38,67 @@ import cz.msebera.android.httpclient.impl.client.HttpClients;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 /**
- * Created by Adam on 1/24/2016.
+ * This class uses the API for https://tutor.cards to search for a card by image
  */
 public class TutorCards {
 
-    private final FamiliarActivity mActivity;
-
-    public TutorCards(FamiliarActivity familiarActivity) {
-        mActivity = familiarActivity;
-    }
-
-    /**
-     * TODO
+    /*
+     * Private classes which match the JSON returned by the tutor.cards service
      */
     private class ServiceStatus {
         boolean isReady;
     }
 
-    /**
-     * TODO
-     */
     private class SearchPostResult {
         boolean isResult;
         long wait;
         String id;
     }
 
-    /**
-     * TODO
-     */
     private class SearchResult {
         boolean isResult;
         SearchResultInfo info;
     }
 
-    /**
-     * TODO
-     */
     private class SearchResultInfo {
         long multiverseid;
         long other[];
     }
 
+    /* The FamiliarActivity which is hosting this object */
+    private final FamiliarActivity mActivity;
+
+    /* A random request code when requesting an image from the camera using an intent */
     private static final int REQUEST_IMAGE_CAPTURE = 65;
 
     /**
-     * TODO document
+     * Default constructor
+     *
+     * @param familiarActivity The Familiar Activity which is hosting this object
      */
-    public void startTutorCardsSearch() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
-            mActivity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
+    public TutorCards(@NotNull FamiliarActivity familiarActivity) {
+        mActivity = familiarActivity;
     }
 
     /**
-     * TODO document
+     * This starts the tutor.cards process. It starts an AsyncTask which will make sure the service
+     * is up, then if it is, launch the camera
+     */
+    public void startTutorCardsSearch() {
+        (new TutorCardsStartTask()).execute();
+    }
+
+    /**
+     * When the requested picture is taken, the result is passed to the hosting FamiliarActivity,
+     * which calls this function. Here the image is taken and passed to an AsyncTask to perform
+     * a query.
      *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param requestCode The integer request code originally supplied to startActivityForResult(),
+     *                    allowing you to identify who this result came from.
+     * @param resultCode  The integer result code returned by the child activity through its
+     *                    setResult().
+     * @param data        An Intent, which can return result data to the caller (various data can be
+     *                    attached to Intent "extras").
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
@@ -114,14 +116,17 @@ public class TutorCards {
     }
 
     /**
-     * TODO document
-     * TODO fix SSL stuff
+     * Checks if tutor.cards is up or down by sending an HTTP GET to https://tutor.cards/api/status
+     * This must not be called from the UI thread.
      *
+     * @return true if the service is up, false if it is down
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
-    void getServiceStatus() throws IOException, NoSuchAlgorithmException {
+    boolean getServiceStatus() throws IOException, NoSuchAlgorithmException {
         /* Get an httpclient and create the GET */
+
+        /* TODO remove SSL hack for production */
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             @Override
             public boolean verify(String arg0, SSLSession arg1) {
@@ -131,6 +136,7 @@ public class TutorCards {
         SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(),
                 SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+//        CloseableHttpClient httpclient = HttpClients.createDefault();
 
         HttpGet httpGet = new HttpGet("https://tutor.cards/api/status");
 
@@ -144,21 +150,22 @@ public class TutorCards {
             BufferedReader br = new BufferedReader(inStream);
             try {
                 String stringResponse = br.readLine();
-                Log.v("getServiceStatus", stringResponse);
                 ServiceStatus status = (new Gson()).fromJson(stringResponse, ServiceStatus.class);
-                Log.v("TutorCards", "isReady: " + status.isReady);
+                return status.isReady;
             } finally {
                 inStream.close();
             }
         }
+        return false;
     }
 
     /**
-     * TODO document
-     * TODO fix SSL stuff
+     * Send a bitmap image to tutor.cards for analysis. The service does not respond with a result,
+     * but responds with an ID to use to fetch the result later.
+     * This must not be called from the UI thread.
      *
-     * @param bitmap
-     * @return
+     * @param bitmap The bitmap to send to tutor.cards to analyze
+     * @return A SearchPostResult with the id of the query. The actual result will be fetched later
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
@@ -166,7 +173,7 @@ public class TutorCards {
             IOException {
         SearchPostResult result = null;
         /* Get an httpclient and create the POST */
-        // Do not do this in production!!!
+        /* TODO remove SSL hack for production */
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
 
             @Override
@@ -178,6 +185,7 @@ public class TutorCards {
         SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(),
                 SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+//        CloseableHttpClient httpclient = HttpClients.createDefault();
 
         HttpPost httppost = new HttpPost("https://tutor.cards/api/search");
 
@@ -218,7 +226,6 @@ public class TutorCards {
             BufferedReader br = new BufferedReader(inStream);
             try {
                 String stringResponse = br.readLine();
-                Log.v("postSearchRequest", stringResponse);
                 result = (new Gson()).fromJson(stringResponse, SearchPostResult.class);
             } finally {
                 inStream.close();
@@ -228,11 +235,12 @@ public class TutorCards {
     }
 
     /**
-     * TODO Document
-     * TODO fix SSL stuff
+     * After we send an image to tutor.cards, this function queries the service with the ID
+     * returned after sending the image and queries for a result.
+     * This must not be called from the UI thread.
      *
-     * @param id
-     * @return
+     * @param id The ID to send to tutor.cards to fetch a result
+     * @return A SearchResult containing the multiverseID from the analyzed image, or null
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
@@ -240,20 +248,19 @@ public class TutorCards {
         SearchResult result = null;
 
         /* Get an httpclient and create the GET */
-        // Do not do this in production!!!
+        /* TODO remove SSL hack for production */
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             @Override
             public boolean verify(String arg0, SSLSession arg1) {
-                // TODO Auto-generated method stub
                 return true;
             }
         });
         SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(),
                 SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+//        CloseableHttpClient httpclient = HttpClients.createDefault();
 
         HttpGet httpGet = new HttpGet("https://tutor.cards/api/result/" + id);
-        Log.v("getResult", "https://tutor.cards/api/result/" + id);
 
         /* Execute the GET and get the response. */
         HttpResponse response = httpclient.execute(httpGet);
@@ -265,7 +272,6 @@ public class TutorCards {
             BufferedReader br = new BufferedReader(inStream);
             try {
                 String stringResponse = br.readLine();
-                Log.v("getResult", stringResponse);
                 result = (new Gson()).fromJson(stringResponse, SearchResult.class);
             } finally {
                 inStream.close();
@@ -274,10 +280,52 @@ public class TutorCards {
         return result;
     }
 
+    private class TutorCardsStartTask extends AsyncTask<Void, Void, Void> {
+
+        boolean isReady = false;
+
+        /**
+         * This function checks the status of the tutor.cards service on a non-UI thread and saves
+         * it in a private boolean
+         *
+         * @param params Unused
+         * @return Unused
+         */
+        @Override
+        protected Void doInBackground(Void... params) {
+            /* Make sure the service is up first */
+            try {
+                isReady = getServiceStatus();
+            } catch (IOException | NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * If the tutor.cards service is up, this starts a camera intent to take a picture on
+         * the UI thread
+         *
+         * @param aVoid Unused
+         */
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(isReady) {
+                /* If the service is up, start the camera */
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
+                    mActivity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        }
+    }
+
     private class TutorCardsTask extends AsyncTask<Bitmap, Void, Void> {
 
         /**
-         * TODO
+         * This function sends a bitmap to tutor.cards for analysis using postSearchRequest().
+         * It then uses the query ID, after waiting, to fetch the result using getResult()
          *
          * @param params
          * @return
@@ -291,27 +339,33 @@ public class TutorCards {
                 /* If this isn't the result already */
                 if (!searchPostResult.isResult) {
 
-                    /* Spin around in the background as long as the API requests */
-                    long stopTime = System.currentTimeMillis() + searchPostResult.wait;
-                    while (System.currentTimeMillis() < stopTime) {
-                        ; /* Spin around */
+                    /* Sleep for the requested time */
+                    try {
+                        Thread.sleep(searchPostResult.wait);
+                    } catch (InterruptedException ie) {
+                        /* Eat it */
                     }
 
                     /* Get the actual result from the API */
                     SearchResult searchResult = getResult(searchPostResult.id);
 
-                    /* debug print */
-                    if(searchResult.isResult) {
-                        Log.v("TutorCards", searchResult.info.multiverseid + "");
-                        for (long other : searchResult.info.other) {
-                            Log.v("TutorCards other", other + "");
-                        }
+                    /* Send the result to the activity */
+                    if (searchResult.isResult) {
                         mActivity.receiveTutorCardsResult(searchResult.info.multiverseid);
+                        return null;
                     }
+                    else {
+                        /* TODO what happens if isResult is false? */
+                    }
+                }
+                else {
+                    /* TODO what happens if isResult is true? */
                 }
             } catch (NoSuchAlgorithmException | IOException e) {
                 e.printStackTrace();
             }
+            /* Clear the indeterminate loading animation */
+            mActivity.clearLoading();
             return null;
         }
     }
