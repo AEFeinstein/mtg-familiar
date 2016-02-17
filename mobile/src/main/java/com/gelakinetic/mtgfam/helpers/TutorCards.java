@@ -7,8 +7,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
+import com.gelakinetic.mtgfam.R;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -82,9 +84,20 @@ public class TutorCards {
 
     /**
      * This starts the tutor.cards process. It starts an AsyncTask which will make sure the service
-     * is up, then if it is, launch the camera
+     * is up, then if it is, launch the camera.
+     * It also displays a notice that the search is powered by TutorCards for the first three
+     * searches.
      */
     public void startTutorCardsSearch() {
+        /* For the first three searches, tell the user it's powered by TutorCards */
+        int numSearches = mActivity.mPreferenceAdapter.getNumTutorCardsSearches();
+        if(numSearches < 3) {
+            numSearches++;
+            mActivity.mPreferenceAdapter.setNumTutorCardsSearches(numSearches);
+            Toast.makeText(mActivity, R.string.tutor_cards_notice, Toast.LENGTH_LONG).show();
+        }
+
+        /* Start the process */
         (new TutorCardsStartTask()).execute();
     }
 
