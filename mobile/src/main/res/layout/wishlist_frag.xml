@@ -49,6 +49,13 @@
                 android:gravity="center" />
         </LinearLayout>
 
+        <ImageButton
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/camera_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="?attr/camera_button"/>
+
     </LinearLayout>
 
     <View

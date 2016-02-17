@@ -173,6 +173,14 @@ public class WishlistFragment extends FamiliarFragment {
                 return true;
             }
         });
+
+        myFragmentView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFamiliarActivity().startTutorCardsSearch();
+            }
+        });
+
         return myFragmentView;
     }
 
@@ -961,5 +969,32 @@ public class WishlistFragment extends FamiliarFragment {
             }
             return convertView;
         }
+    }
+
+    /**
+     * Receive the result from the card image search, then fill in the name edit text on the
+     * UI thread
+     *
+     * @param multiverseId The multiverseId of the card the query returned
+     */
+    @Override
+    public void receiveTutorCardsResult(long multiverseId) {
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false)
+                .openDatabase(false);
+        try {
+            Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
+            final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
+            getFamiliarActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mNameField.setText(name);
+                }
+            });
+            card.close();
+        } catch (FamiliarDbException e) {
+            e.printStackTrace();
+        }
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 }
