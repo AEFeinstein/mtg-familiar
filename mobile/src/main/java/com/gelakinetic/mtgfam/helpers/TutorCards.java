@@ -3,8 +3,9 @@ package com.gelakinetic.mtgfam.helpers;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.NoSuchAlgorithmException;
@@ -41,12 +43,15 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 /**
  * This class uses the API for https://tutor.cards to search for a card by image
+ * TODO add timeouts for network ops
  */
 public class TutorCards {
 
+    private boolean mIsReady;
+
     /*
-     * Private classes which match the JSON returned by the tutor.cards service
-     */
+         * Private classes which match the JSON returned by the tutor.cards service
+         */
     private class ServiceStatus {
         boolean isReady;
     }
@@ -73,6 +78,9 @@ public class TutorCards {
     /* A random request code when requesting an image from the camera using an intent */
     private static final int REQUEST_IMAGE_CAPTURE = 65;
 
+    /* The temporary image filename */
+    private static final String TMP_IMG_FILENAME = "tmp.jpg";
+
     /**
      * Default constructor
      *
@@ -89,6 +97,10 @@ public class TutorCards {
      * searches.
      */
     public void startTutorCardsSearch() {
+
+        /* Show the loading animation */
+        mActivity.setLoading();
+
         /* For the first three searches, tell the user it's powered by TutorCards */
         int numSearches = mActivity.mPreferenceAdapter.getNumTutorCardsSearches();
         if (numSearches < 3) {
@@ -118,13 +130,9 @@ public class TutorCards {
             /* Show some background activity is happening */
             mActivity.setLoading();
 
-            /* Get the bitmap from the camera */
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-
             /* Start the search with the bitmap in a task */
             TutorCardsTask tutorCardsTask = new TutorCardsTask();
-            tutorCardsTask.execute(imageBitmap);
+            tutorCardsTask.execute(BitmapFactory.decodeFile(getImageFile().getAbsolutePath()));
         }
     }
 
@@ -225,6 +233,10 @@ public class TutorCards {
         String imageString = "data:image/jpeg;base64," + Base64.encodeToString(baos.toByteArray(),
                 Base64.NO_WRAP | Base64.NO_PADDING | Base64.URL_SAFE);
 
+        /* Cleanup, don't need these anymore */
+        scaledBitmap.recycle();
+        bitmap.recycle();
+
         /* Add the image data as a parameter to the POST */
         List<NameValuePair> postParams = new ArrayList<>(1);
         postParams.add(new BasicNameValuePair("img", imageString));
@@ -295,8 +307,6 @@ public class TutorCards {
 
     private class TutorCardsStartTask extends AsyncTask<Void, Void, Void> {
 
-        boolean isReady = false;
-
         /**
          * This function checks the status of the tutor.cards service on a non-UI thread and saves
          * it in a private boolean
@@ -307,10 +317,12 @@ public class TutorCards {
         @Override
         protected Void doInBackground(Void... params) {
             /* Make sure the service is up first */
-            try {
-                isReady = getServiceStatus();
-            } catch (IOException | NoSuchAlgorithmException e) {
-                e.printStackTrace();
+            if (!mIsReady) {
+                try {
+                    mIsReady = getServiceStatus();
+                } catch (IOException | NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -324,14 +336,28 @@ public class TutorCards {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (isReady) {
+            if (mIsReady) {
                 /* If the service is up, start the camera */
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                /* Tell the camera to use the temporary image file */
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getImageFile()));
+
                 if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
                     mActivity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
+            } else {
+                mActivity.clearLoading();
+                /* TODO toast that service is unavailable */
             }
         }
+    }
+
+    /**
+     * @return The temporary image file used for searching
+     */
+    private File getImageFile() {
+        return new File(mActivity.getExternalFilesDir(null), TMP_IMG_FILENAME);
     }
 
     private class TutorCardsTask extends AsyncTask<Bitmap, Void, Void> {
@@ -340,14 +366,17 @@ public class TutorCards {
          * This function sends a bitmap to tutor.cards for analysis using postSearchRequest().
          * It then uses the query ID, after waiting, to fetch the result using getResult()
          *
-         * @param params
-         * @return
+         * @param params The Bitmap to be sent to TutorCards
+         * @return nothing
          */
         @Override
         protected Void doInBackground(Bitmap... params) {
             try {
                 /* Post the search request with the image */
                 SearchPostResult searchPostResult = postSearchRequest(params[0]);
+
+                /* Now that the image has been posted, delete the local copy */
+                getImageFile().delete();
 
                 /* If this isn't the result already */
                 if (!searchPostResult.isResult) {
@@ -376,6 +405,7 @@ public class TutorCards {
                 e.printStackTrace();
             }
             /* Clear the indeterminate loading animation */
+            /* TODO shouldn't reach here, pop a toast? */
             mActivity.clearLoading();
             return null;
         }

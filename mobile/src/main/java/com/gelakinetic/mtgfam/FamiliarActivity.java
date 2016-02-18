@@ -1697,6 +1697,6 @@ public class FamiliarActivity extends AppCompatActivity {
     public void receiveTutorCardsResult(long multiverseId) {
         ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
                 .receiveTutorCardsResult(multiverseId);
-        clearLoading(); /* TODO timeout to clear this too */
+        clearLoading();
     }
 }
