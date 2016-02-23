@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MTG Familiar</string>
+    <string name="dialog_no">Nein</string>
+    <string name="dialog_thanks">Danke!</string>
+</resources>
