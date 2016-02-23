@@ -105,4 +105,24 @@
     <string name="trader_add_card">Karte hinzufügen</string>
     <string name="trader_edit_dialog_remove">Entfernen</string>
     <string name="update_added">Hinzugefügt</string>
+    <string name="card_view_change_set">Set wechseln</string>
+    <string name="search_Common">Common</string>
+    <string name="rules_no_results_toast">Kein Ergebnis</string>
+    <string name="rules_no_cards">Keine Karten</string>
+    <string name="search_All_types">Alle Typen</string>
+    <string name="search_All_words">Alle Wörter</string>
+    <string name="search_Rare">Rare</string>
+    <string name="search_Uncommon">Uncommon</string>
+    <string name="search_artist">Künstler</string>
+    <string name="search_cmc">CMC</string>
+    <string name="search_format">Format</string>
+    <string name="search_formats">Formate</string>
+    <string name="card_view_other_half">Andere Seite</string>
+    <string name="card_view_price_dialog_high">Hoch:</string>
+    <string name="card_view_no_pictures_folder">Bilderordner konnte nicht gefunden werden, bitte versuchen Sie es noch einmal</string>
+    <string name="card_view_price_dialog_link">Hier klicken für alle Preise und Tendenzen</string>
+    <string name="card_view_price_dialog_low">Tief:</string>
+    <string name="card_view_set_dialog_title">Set auswählen</string>
+    <string name="card_view_transform">Transfomieren</string>
+    <string name="dialog_both"></string>
 </resources>
