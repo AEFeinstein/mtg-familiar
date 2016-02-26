@@ -125,4 +125,18 @@
     <string name="card_view_set_dialog_title">Set auswählen</string>
     <string name="card_view_transform">Transfomieren</string>
     <string name="dialog_both"></string>
+    <string name="card_view_copy_all">Karte in die Zwischenablage kopieren</string>
+    <string name="card_view_no_commander">Kann nicht Ihr Commander sein</string>
+    <string name="card_view_no_external_storage">Auf den externen Speicher konnte nicht zugegriffen werden. Überprüfen Sie bitte Ihre SD Karte.</string>
+    <string name="card_view_no_image">Kein Bild zum speichern gefunden. Bitte versuchen Sie es erneut.</string>
+    <string name="card_view_image_not_found">Bild nicht gefunden</string>
+    <string name="card_view_image_saved">Bild gespeichert unter </string>
+    <string name="card_view_price"></string>
+    <string name="card_view_save_failure">Bild konnte nicht gespeichert werden. Bitte versuchen sie es erneut.</string>
+    <string name="card_view_unable_to_create_dir">Das Bilderverzeichnis konnte nicht erstellt werden. Bitte versuchen Sie es erneut.</string>
+    <string name="card_view_unable_to_create_file">Bilddatei konnte nicht erzeugt werden. Bitte versuchen Sie es erneut.</string>
+    <string name="card_view_unable_to_save_image">Bild konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.</string>
+    <string name="dice_postive">Sie müssen eine positive Zahl eingeben</string>
+    <string name="error_database">Ein Datenbankfehler ist aufgetreten. Wenn dieser Fehler bestehen bleibt versuchen Sie die App Daten aus dem Android Einstellungen Menu heraus zu löschen</string>
+    <string name="error_no_email_client">Scheinbar haben Sie keinen aktive Email App installiert. Bitte konfigurieren SIe eine Email App</string>
 </resources>
