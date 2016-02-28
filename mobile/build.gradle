@@ -20,7 +20,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 38
-        versionName "3.2.9"
+        versionName "3.3.0"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -40,7 +40,7 @@ android {
             }
         }
         foss {
-            versionName "3.2.9-foss"
+            versionName "3.3.0-foss"
         }
     }
 }
@@ -51,13 +51,13 @@ dependencies {
     compile group: 'cz.msebera.android' , name: 'httpclient', version: '4.4.1.1'
     compile 'com.octo.android.robospice:robospice:1.4.14'
     compile 'com.octo.android.robospice:robospice-cache:1.4.14'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:support-v13:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.android.support:support-v13:23.2.0'
+    compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'org.jetbrains:annotations:13.0'
-    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.6'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-    compile 'com.code-troopers.betterpickers:library:2.2.2'
+    compile 'com.code-troopers.betterpickers:library:2.5.1'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
 }
