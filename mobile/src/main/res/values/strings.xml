@@ -465,5 +465,6 @@ Card Image Search powered by &lt;a href="https://tutor.cards"&gt;TutorCards&lt;/
     <string name="deck_counter_reset">Reset</string>
     <string name="deck_counter_undo">Undo</string>
     <string name="tutor_cards_notice">Powered by TutorCards</string>
+    <string name="tutor_cards_fail">Tutor.cards unreachable</string>
 
 </resources>

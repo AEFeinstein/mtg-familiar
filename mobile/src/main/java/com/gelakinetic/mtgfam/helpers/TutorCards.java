@@ -50,24 +50,17 @@ public class TutorCards {
     private boolean mIsReady;
 
     /*
-         * Private classes which match the JSON returned by the tutor.cards service
-         */
-    private class ServiceStatus {
+     * Private classes which match the JSON returned by the tutor.cards service
+     */
+    class TutorData {
         boolean isReady;
-    }
-
-    private class SearchPostResult {
         boolean isResult;
         long wait;
         String id;
+        TutorDataInfo info;
     }
 
-    private class SearchResult {
-        boolean isResult;
-        SearchResultInfo info;
-    }
-
-    private class SearchResultInfo {
+    private class TutorDataInfo {
         long multiverseid;
         long other[];
     }
@@ -171,7 +164,7 @@ public class TutorCards {
             BufferedReader br = new BufferedReader(inStream);
             try {
                 String stringResponse = br.readLine();
-                ServiceStatus status = (new Gson()).fromJson(stringResponse, ServiceStatus.class);
+                TutorData status = (new Gson()).fromJson(stringResponse, TutorData.class);
                 return status.isReady;
             } finally {
                 inStream.close();
@@ -186,13 +179,13 @@ public class TutorCards {
      * This must not be called from the UI thread.
      *
      * @param bitmap The bitmap to send to tutor.cards to analyze
-     * @return A SearchPostResult with the id of the query. The actual result will be fetched later
+     * @return A TutorData with the id of the query. The actual result will be fetched later
      * @throws NoSuchAlgorithmException
      * @throws IOException
      */
-    SearchPostResult postSearchRequest(Bitmap bitmap) throws NoSuchAlgorithmException,
+    TutorData postSearchRequest(Bitmap bitmap) throws NoSuchAlgorithmException,
             IOException {
-        SearchPostResult result = null;
+        TutorData result = null;
         /* Get an httpclient and create the POST */
         /* TODO remove SSL hack for production */
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
@@ -251,7 +244,7 @@ public class TutorCards {
             BufferedReader br = new BufferedReader(inStream);
             try {
                 String stringResponse = br.readLine();
-                result = (new Gson()).fromJson(stringResponse, SearchPostResult.class);
+                result = (new Gson()).fromJson(stringResponse, TutorData.class);
             } finally {
                 inStream.close();
             }
@@ -265,12 +258,12 @@ public class TutorCards {
      * This must not be called from the UI thread.
      *
      * @param id The ID to send to tutor.cards to fetch a result
-     * @return A SearchResult containing the multiverseID from the analyzed image, or null
+     * @return A TutorData containing the multiverseID from the analyzed image, or null
      * @throws IOException
      * @throws NoSuchAlgorithmException
      */
-    SearchResult getResult(String id) throws IOException, NoSuchAlgorithmException {
-        SearchResult result = null;
+    TutorData getResult(String id) throws IOException, NoSuchAlgorithmException {
+        TutorData result = null;
 
         /* Get an httpclient and create the GET */
         /* TODO remove SSL hack for production */
@@ -297,7 +290,7 @@ public class TutorCards {
             BufferedReader br = new BufferedReader(inStream);
             try {
                 String stringResponse = br.readLine();
-                result = (new Gson()).fromJson(stringResponse, SearchResult.class);
+                result = (new Gson()).fromJson(stringResponse, TutorData.class);
             } finally {
                 inStream.close();
             }
@@ -347,8 +340,9 @@ public class TutorCards {
                     mActivity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             } else {
+                /* Service isn't ready, clear the loading animation and pop a toast */
                 mActivity.clearLoading();
-                /* TODO toast that service is unavailable */
+                Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -373,13 +367,16 @@ public class TutorCards {
         protected Void doInBackground(Bitmap... params) {
             try {
                 /* Post the search request with the image */
-                SearchPostResult searchPostResult = postSearchRequest(params[0]);
+                TutorData searchPostResult = postSearchRequest(params[0]);
 
                 /* Now that the image has been posted, delete the local copy */
+                //noinspection ResultOfMethodCallIgnored
                 getImageFile().delete();
 
+                int tries = 0;
+
                 /* If this isn't the result already */
-                if (!searchPostResult.isResult) {
+                while (!searchPostResult.isResult && tries < 5) {
 
                     /* Sleep for the requested time */
                     try {
@@ -389,24 +386,31 @@ public class TutorCards {
                     }
 
                     /* Get the actual result from the API */
-                    SearchResult searchResult = getResult(searchPostResult.id);
+                    searchPostResult = getResult(searchPostResult.id);
 
                     /* Send the result to the activity */
-                    if (searchResult.isResult) {
-                        mActivity.receiveTutorCardsResult(searchResult.info.multiverseid);
+                    if (searchPostResult.isResult) {
+                        mActivity.receiveTutorCardsResult(searchPostResult.info.multiverseid);
+                        /* Return, we're done here */
                         return null;
-                    } else {
-                        /* TODO what happens if isResult is false? */
                     }
-                } else {
-                    /* TODO what happens if isResult is true? */
+
+                    /* if isResult is false, then this while loop continues */
+                    /* Increment the number of tries */
+                    tries++;
+                }
+
+                if (searchPostResult.isResult) {
+                    /* while loop was just skipped over, since the result is already here */
+                    mActivity.receiveTutorCardsResult(searchPostResult.info.multiverseid);
+                    return null;
                 }
             } catch (NoSuchAlgorithmException | IOException e) {
                 e.printStackTrace();
             }
-            /* Clear the indeterminate loading animation */
-            /* TODO shouldn't reach here, pop a toast? */
+            /* Shouldn't reach here, clear the loading animation and pop a toast */
             mActivity.clearLoading();
+            Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
             return null;
         }
     }
