@@ -124,7 +124,7 @@
     <string name="card_view_price_dialog_low">Tief:</string>
     <string name="card_view_set_dialog_title">Set auswählen</string>
     <string name="card_view_transform">Transfomieren</string>
-    <string name="dialog_both"></string>
+    <string name="dialog_both">Beide</string>
     <string name="card_view_no_external_storage">Auf den externen Speicher konnte nicht zugegriffen werden. Bitte überprüfen Sie Ihre SD Karte.</string>
     <string name="card_view_no_commander">Kann niicht Ihr Commander sein</string>
     <string name="card_view_price">Kartenpreis</string>
@@ -155,4 +155,25 @@
     <string name="trader_edit_dialog_info">Karteninformation</string>
     <string name="wishlist_name">Name</string>
     <string name="wishlist_type_name">Name</string>
+    <string name="card_view_copy_all">Karte in die Zwischenablage kopieren</string>
+    <string name="card_view_image_not_found">Kein Bild gefunden</string>
+    <string name="card_view_image_saved">Bild gespeichert unter</string>
+    <string name="card_view_unable_to_create_dir">Verzeichnis zum speichern der Bilder konnte nicht erstellt werden. Bitte versuchen Sie es erneut.</string>
+    <string name="error_database">Ein Fehler in der Datenbank ist aufgetreten. Wenn dieser Fehler bestehen bleibt, versuchen Sie die App Daten aus dem Android Einstellungen menu heraus zu löschen.</string>
+    <string name="gathering_dialog_overwrite_title">Überschreiben bestätigen</string>
+    <string name="main_export_data_title">Daten auf SD Karte speichern</string>
+    <string name="main_export_fail">Konnte die Daten nicht auf der SD Karte speichern </string>
+    <string name="main_export_no_data">Keine Daten zum speichern </string>
+    <string name="main_export_success">Datene erfolgreich gespeichert unter </string>
+    <string name="pref_cat_widget">Widget</string>
+    <string name="pref_dim_lock_level_title">Bildschirmhelligkeit</string>
+    <string name="pref_dim_lock_summary">Bildschirm bei Inaktivität abdunkeln</string>
+    <string name="pref_show_ability_title">Regeltext anzeigen</string>
+    <string name="search_toast_no_results">Kein Suchergebnis</string>
+    <string name="search_toast_results">%1$d Suchergebnis(se)</string>
+    <string name="timer_fifteen_minutes_left">Die Runde wird in fünfzehn Minuten enden</string>
+    <string name="timer_five_minutes_left">Die Runde wird in fünf Minuten enden</string>
+    <string name="timer_how_long">Wie lange ist die Runde?</string>
+    <string name="toast_no_card">Keine Karte mit diesem Namen gefunden</string>
+    <string name="wishlist_loading">Lädt</string>
 </resources>
