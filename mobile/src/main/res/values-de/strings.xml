@@ -63,7 +63,7 @@
     <string name="life_counter_Normal">Normal</string>
     <string name="life_counter_add_player">Spieler hinzufügen</string>
     <string name="life_counter_default_name">Spieler</string>
-    <string name="life_counter_edit_name_dialog_title"></string>
+    <string name="life_counter_edit_name_dialog_title">Namen eingeben</string>
     <string name="life_counter_remove_player">Spieler entfernen</string>
     <string name="life_counter_spoken_life">%1$s hat %2$d Lebenspunkt</string>
     <string name="life_counter_spoken_life_singular">%1$s hat %2$d Lebenspunkt</string>
@@ -126,4 +126,33 @@
     <string name="card_view_transform">Transfomieren</string>
     <string name="dialog_both"></string>
     <string name="card_view_no_external_storage">Auf den externen Speicher konnte nicht zugegriffen werden. Bitte überprüfen Sie Ihre SD Karte.</string>
+    <string name="card_view_no_commander">Kann niicht Ihr Commander sein</string>
+    <string name="card_view_price">Kartenpreis</string>
+    <string name="card_view_save_failure">Bild konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.</string>
+    <string name="card_view_unable_to_create_file">Bilddatei konnte nicht erstellt werden. Bitte versuchen Sie es erneut.</string>
+    <string name="card_view_unable_to_save_image">Bild konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.</string>
+    <string name="dice_postive">Sie müssen einen positiven Wert eingeben</string>
+    <string name="gathering_remove_player">Spieler entfernen</string>
+    <string name="life_counter_over_9000">über 9000</string>
+    <string name="main_install_tts">TTS installieren</string>
+    <string name="main_life_counter">Lebenspunktezähler</string>
+    <string name="main_profile">Profil</string>
+    <string name="main_tts_warning_title"></string>
+    <string name="mojhosto_momir_label">CMC =</string>
+    <string name="mojhosto_stonehewer_label"></string>
+    <string name="pref_cat_life_counter">Lebenspunktezähler</string>
+    <string name="pref_language">Sprache</string>
+    <string name="pref_screen_counter">Lebenspunktezähler</string>
+    <string name="pref_screen_general">Allgemeine Einstellungen</string>
+    <string name="pref_show_mana_title">Manakosten anzeigen</string>
+    <string name="pref_show_pt_title">Stärke/Widerstandskraft anzeigen</string>
+    <string name="pref_theme_dark">Dunkel</string>
+    <string name="pref_theme_light">Hell</string>
+    <string name="pref_theme_summary">Helles oder dunkles Thema auswählen</string>
+    <string name="search_power">Stärke</string>
+    <string name="search_search">Suchen!</string>
+    <string name="search_toughness">Widerstandskraft</string>
+    <string name="trader_edit_dialog_info">Karteninformation</string>
+    <string name="wishlist_name">Name</string>
+    <string name="wishlist_type_name">Name</string>
 </resources>
