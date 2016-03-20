@@ -123,7 +123,10 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_FLAVOR,
             DATABASE_TABLE_CARDS + "." + KEY_CMC,
             DATABASE_TABLE_CARDS + "." + KEY_COLOR,
-            DATABASE_TABLE_CARDS + "." + KEY_SUBTYPE
+            DATABASE_TABLE_CARDS + "." + KEY_SUBTYPE,
+            DATABASE_TABLE_CARDS + "." + KEY_ARTIST,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID,
+            DATABASE_TABLE_CARDS + "." + KEY_RULINGS
     };
 
     private static final String[] allSetDataKeys = {
@@ -841,7 +844,7 @@ public class CardDbAdapter {
         String supertypes = null;
         String subtypes = null;
 
-        if (cardtype != null && !cardtype.equals("-")) {
+        if (cardtype != null && !cardtype.matches("\\s*-\\s*")) {
             boolean containsSupertype = true;
             if (cardtype.substring(0, 2).equals("- ")) {
                 containsSupertype = false;
