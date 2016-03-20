@@ -88,12 +88,12 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         /* then the same for multicard ordering */
         SpiceException exception = null; /* Save the exception during while loops */
         SQLiteDatabase database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
-        int multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
+        CardDbAdapter.MultiCardType multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
         while (retry > 0) {
             try {
                 /* If the card number wasn't given, figure it out */
                 if (mCardNumber == null || mCardNumber.equals("") || mCardType == null || mCardType.equals("") || mMultiverseID == -1) {
-                    Cursor c = CardDbAdapter.fetchCardByNameAndSet(mCardName, mSetCode, CardDbAdapter.allData, database);
+                    Cursor c = CardDbAdapter.fetchCardByNameAndSet(mCardName, mSetCode, CardDbAdapter.allCardDataKeys, database);
 
                     if (mCardNumber == null || mCardNumber.equals("")) {
                         mCardNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
@@ -119,7 +119,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                 String tcgCardName;
 
                 /* Set up retries for multicard ordering */
-                if (multiCardType != CardDbAdapter.NOPE) {
+                if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
                     /* Next time try the other order */
                     switch (retry % (MAX_NUM_RETRIES / 2)) {
                         case 0:
@@ -188,7 +188,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                 }
 
                 /* If this is a single card, skip over a bunch of retry cases */
-                if (retry == MAX_NUM_RETRIES && multiCardType == CardDbAdapter.NOPE) {
+                if (retry == MAX_NUM_RETRIES && multiCardType == CardDbAdapter.MultiCardType.NOPE) {
                     retry = 2;
                 }
             } catch (FamiliarDbException | IOException | ParserConfigurationException | SAXException e) {

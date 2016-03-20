@@ -201,7 +201,7 @@ public class WishlistFragment extends FamiliarFragment {
             card.message = getString(R.string.wishlist_loading);
 
             /* Get some extra information from the database */
-            Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, CardDbAdapter.allData, true, database);
+            Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, CardDbAdapter.allCardDataKeys, true, database);
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeText(WishlistFragment.this.getActivity(), getString(R.string.toast_no_card),
                         ToastWrapper.LENGTH_LONG).show();

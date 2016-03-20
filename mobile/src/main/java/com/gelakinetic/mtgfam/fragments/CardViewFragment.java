@@ -513,24 +513,24 @@ public class CardViewFragment extends FamiliarFragment {
         boolean isMultiCard = false;
         switch (CardDbAdapter.isMultiCard(mCardNumber,
                 cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)))) {
-            case CardDbAdapter.NOPE:
+            case NOPE:
                 isMultiCard = false;
                 mTransformButton.setVisibility(View.GONE);
                 mTransformButtonDivider.setVisibility(View.GONE);
                 break;
-            case CardDbAdapter.TRANSFORM:
+            case TRANSFORM:
                 isMultiCard = true;
                 mTransformButton.setVisibility(View.VISIBLE);
                 mTransformButtonDivider.setVisibility(View.VISIBLE);
                 mTransformButton.setText(R.string.card_view_transform);
                 break;
-            case CardDbAdapter.FUSE:
+            case FUSE:
                 isMultiCard = true;
                 mTransformButton.setVisibility(View.VISIBLE);
                 mTransformButtonDivider.setVisibility(View.VISIBLE);
                 mTransformButton.setText(R.string.card_view_fuse);
                 break;
-            case CardDbAdapter.SPLIT:
+            case SPLIT:
                 isMultiCard = true;
                 mTransformButton.setVisibility(View.VISIBLE);
                 mTransformButtonDivider.setVisibility(View.VISIBLE);
