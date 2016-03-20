@@ -23,6 +23,7 @@ import com.alertdialogpro.AlertDialogPro;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -301,9 +302,11 @@ public class MoJhoStoFragment extends FamiliarFragment {
                 type = " - " + EQUIPMENT;
             }
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
-            Cursor permanents = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
-                    CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, cmc, logic, null, null, null,
-                    null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, null, false, returnTypes, true, database);
+            SearchCriteria criteria = new SearchCriteria();
+            criteria.type = type;
+            criteria.cmc = cmc;
+            criteria.cmcLogic = logic;
+            Cursor permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, database);
 
             if (permanents == null) {
                 throw new FamiliarDbException(new Exception("permanents failure"));
@@ -341,9 +344,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
-            Cursor spells = CardDbAdapter.Search(null, null, type, "wubrgl", 0, null,
-                    CardDbAdapter.NO_ONE_CARES, null, CardDbAdapter.NO_ONE_CARES, null, -1, null, null, null, null,
-                    null, 0, 0, CardDbAdapter.MOST_RECENT_PRINTING, null, false, returnTypes, true, database);
+            SearchCriteria criteria = new SearchCriteria();
+            criteria.type = type;
+            Cursor spells = CardDbAdapter.Search(criteria, false, returnTypes, true, database);
 
             if (spells == null) {
                 throw new FamiliarDbException(new Exception("three spell failure"));

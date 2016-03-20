@@ -174,11 +174,7 @@ public class ResultListFragment extends FamiliarFragment {
                 boolean consolidate = (criteria.setLogic == CardDbAdapter.MOST_RECENT_PRINTING ||
                         criteria.setLogic == CardDbAdapter.FIRST_PRINTING);
 
-                mCursor = CardDbAdapter.Search(criteria.name, criteria.text, criteria.type, criteria.color,
-                        criteria.colorLogic, criteria.set, criteria.powChoice, criteria.powLogic, criteria.touChoice,
-                        criteria.touLogic, criteria.cmc, criteria.cmcLogic, criteria.format, criteria.rarity,
-                        criteria.flavor, criteria.artist, criteria.typeLogic, criteria.textLogic, criteria.setLogic,
-                        criteria.collectorsNumber, true, returnTypes, consolidate, database);
+                mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate, database);
             }
 
             if (this.isAdded()) {
