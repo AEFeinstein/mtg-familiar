@@ -210,7 +210,7 @@
     <string name="life_counter_edit_life_dialog_title">Lebenspunkte eingeben</string>
     <string name="life_counter_edit_poison_dialog_title">Giftmarken eingeben</string>
     <string name="wishlist_share_title">MTG Familiar Wunschliste</string>
-    <string name="wishlist_edit_dialog_title_end"></string>
+    <string name="wishlist_edit_dialog_title_end">in die Wunschliste</string>
     <string name="search_rarity">Seltenheit</string>
     <string name="timer_ended">Die Runde ist zu Ende</string>
     <string name="trader_delete_dialog_title">Handel löschen</string>
@@ -228,4 +228,26 @@
     <string name="trader_save">Handel speichern</string>
     <string name="trader_save_dialog_title">Handel speichern</string>
     <string name="trader_select_dialog_title">Handel auswählen</string>
+    <string name="trader_toast_save_error">Handel konnte nicht gespeichert werden, bitte versuchen Sie es erneut</string>
+    <string name="update_added_ipg">Neuer Infration Procedure Guide</string>
+    <string name="update_added_mtr">Neue Magic Tournament Rules</string>
+    <string name="trader_clear_dialog_title">Handel zurücksetzen</string>
+    <string name="trader_share">Handel teilen</string>
+    <string name="trader_sort">Handel sortieren</string>
+    <string name="trader_toast_no_trades">Sie haben keine gespeicherten Handel</string>
+    <string name="profile_planeswalker_points">Planeswalker Punkte</string>
+    <string name="pref_wishlist_prices_title">Kartenpreise anzeigen</string>
+    <string name="rules_copy_tag">MTG Regel</string>
+    <string name="rules_search_all">Alle Regeln durchsuchen</string>
+    <string name="search_Most_recent_printing">Neuste Version</string>
+    <string name="rules_restricted">Eingeschränkt</string>
+    <string name="rules_banned">Ausgeschlossen</string>
+    <string name="rules_banned_and_restricted">Formate, Ausgeschlossen und Eingeschränkt Regelungen</string>
+    <string name="rules_banned_as_commander">Als Commander ausgeschlossen</string>
+    <string name="rules_bb_wb_sets">Alle schwarz- und weißrandigen Sets</string>
+    <string name="rules_coppied">Regel in die Zwischenablage kopiert</string>
+    <string name="rules_exit">Regeln verlassen</string>
+    <string name="search_flavor_text">Anekdotentext</string>
+    <string name="search_load_defaults">Standardeinstellungen laden</string>
+    <string name="search_save_defaults">Als Standard speichern</string>
 </resources>
