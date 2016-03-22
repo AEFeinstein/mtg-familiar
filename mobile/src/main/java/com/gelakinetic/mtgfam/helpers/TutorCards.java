@@ -140,17 +140,7 @@ public class TutorCards {
     boolean getServiceStatus() throws IOException, NoSuchAlgorithmException {
         /* Get an httpclient and create the GET */
 
-        /* TODO remove SSL hack for production */
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String arg0, SSLSession arg1) {
-                return true;
-            }
-        });
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(),
-                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
-//        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpClient httpclient = HttpClients.createDefault();
 
         HttpGet httpGet = new HttpGet("https://tutor.cards/api/status");
 
@@ -187,19 +177,7 @@ public class TutorCards {
             IOException {
         TutorData result = null;
         /* Get an httpclient and create the POST */
-        /* TODO remove SSL hack for production */
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-
-            @Override
-            public boolean verify(String arg0, SSLSession arg1) {
-                return true;
-            }
-        });
-
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(),
-                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
-//        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpClient httpclient = HttpClients.createDefault();
 
         HttpPost httppost = new HttpPost("https://tutor.cards/api/search");
 
@@ -266,17 +244,7 @@ public class TutorCards {
         TutorData result = null;
 
         /* Get an httpclient and create the GET */
-        /* TODO remove SSL hack for production */
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String arg0, SSLSession arg1) {
-                return true;
-            }
-        });
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault(),
-                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
-//        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpClient httpclient = HttpClients.createDefault();
 
         HttpGet httpGet = new HttpGet("https://tutor.cards/api/result/" + id);
 
