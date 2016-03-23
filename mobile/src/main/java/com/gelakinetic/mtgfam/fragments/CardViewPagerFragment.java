@@ -88,12 +88,41 @@ public class CardViewPagerFragment extends FamiliarFragment {
         long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
         int currentPosition = args.getInt(STARTING_CARD_POSITION);
 
-        if (mPagerAdapter == null) {
-            mPagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
-        }
+        mPagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setCurrentItem(currentPosition);
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
+    }
+
+    /**
+     * Callback for when a permission is requested
+     *
+     * @param requestCode  The request code passed in requestPermissions(String[], int).
+     * @param permissions  The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions which is either
+     *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
+     *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case FamiliarActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    /* Permission granted */
+                    String retstr = mPagerAdapter.getCurrentFragment().saveImage();
+                    if (retstr != null) {
+                        Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    /* Permission denied */
+                    Toast.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 
     /**
@@ -215,37 +244,6 @@ public class CardViewPagerFragment extends FamiliarFragment {
             } else { /* (1,+Infinity] */
                 /* This page is way off-screen to the right. */
                 view.setAlpha(0);
-            }
-        }
-    }
-
-    /**
-     * Callback for when a permission is requested
-     *
-     * @param requestCode  The request code passed in requestPermissions(String[], int).
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions which is either
-     *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
-     *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case FamiliarActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    /* Permission granted */
-                    String retstr = mPagerAdapter.getCurrentFragment().saveImage();
-                    if (retstr != null) {
-                        Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    /* Permission denied */
-                    Toast.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
-                            Toast.LENGTH_LONG).show();
-                }
             }
         }
     }
