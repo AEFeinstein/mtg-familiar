@@ -58,11 +58,69 @@ public class ResultListFragment extends FamiliarFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        long id;
-
         /* After a search, make sure the position is on top */
         mCursorPosition = 0;
         mCursorPositionOffset = 0;
+    }
+
+    /**
+     * Save the position of the list
+     *
+     * @param outState Bundle in which to place your saved state.
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        try {
+            outState.putInt(CURSOR_POSITION, mListView.getFirstVisiblePosition());
+            View tmp = mListView.getChildAt(0);
+            outState.putInt(CURSOR_POSITION_OFFSET, (tmp == null) ? 0 : tmp.getTop());
+        } catch (NullPointerException e) {
+            outState.putInt(CURSOR_POSITION, 0);
+            outState.putInt(CURSOR_POSITION_OFFSET, 0);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Called when the fragment is paused, save the list location
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCursorPosition = mListView.getFirstVisiblePosition();
+        View tmp = mListView.getChildAt(0);
+        mCursorPositionOffset = (tmp == null) ? 0 : tmp.getTop();
+    }
+
+    /**
+     * When the fragment resumes, fill mListView with mCursor, and move the selection to its prior state, so that the
+     * list doesn't appear to jump around when opening new fragments
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        fillData();
+        mListView.setSelectionFromTop(mCursorPosition, mCursorPositionOffset);
+    }
+
+    /**
+     * When the view is created, set up the ListView. The data will be filled in onResume
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
+     *                           fragment should not add the view itself, but this can be used to generate the
+     *                           LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
+     *                           here.
+     * @return the view if the fragment is showing, null if otherwise
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if (container == null) {
+            /* Something is happening when the fragment is on the back stack */
+            return null;
+        }
 
         /* All the things we may want to display */
         String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_SET,
@@ -75,6 +133,7 @@ public class ResultListFragment extends FamiliarFragment {
         /* Open up the database, search for stuff */
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
+            long id;
 
             /* This is just the multiverse ID, from a TutorCards search */
             if ((id = args.getLong(CARD_ID)) != 0L) {
@@ -145,78 +204,7 @@ public class ResultListFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
-    }
-
-    /**
-     * Be clean with the cursor!
-     */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mCursor != null) {
-            mCursor.close();
-        }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-    }
-
-    /**
-     * Save the position of the list
-     *
-     * @param outState Bundle in which to place your saved state.
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        try {
-            outState.putInt(CURSOR_POSITION, mListView.getFirstVisiblePosition());
-            View tmp = mListView.getChildAt(0);
-            outState.putInt(CURSOR_POSITION_OFFSET, (tmp == null) ? 0 : tmp.getTop());
-        } catch (NullPointerException e) {
-            outState.putInt(CURSOR_POSITION, 0);
-            outState.putInt(CURSOR_POSITION_OFFSET, 0);
-        }
-        super.onSaveInstanceState(outState);
-    }
-
-    /**
-     * Called when the fragment is paused, save the list location
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        mCursorPosition = mListView.getFirstVisiblePosition();
-        View tmp = mListView.getChildAt(0);
-        mCursorPositionOffset = (tmp == null) ? 0 : tmp.getTop();
-    }
-
-    /**
-     * When the fragment resumes, fill mListView with mCursor, and move the selection to its prior state, so that the
-     * list doesn't appear to jump around when opening new fragments
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        fillData();
-        mListView.setSelectionFromTop(mCursorPosition, mCursorPositionOffset);
-    }
-
-    /**
-     * When the view is created, set up the ListView. The data will be filled in onResume
-     *
-     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
-     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
-     *                           fragment should not add the view itself, but this can be used to generate the
-     *                           LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
-     *                           here.
-     * @return the view if the fragment is showing, null if otherwise
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        if (container == null) {
-            /* Something is happening when the fragment is on the back stack */
-            return null;
-        }
 
         if (savedInstanceState != null) {
             mCursorPosition = savedInstanceState.getInt(CURSOR_POSITION);
@@ -276,6 +264,17 @@ public class ResultListFragment extends FamiliarFragment {
         });
 
         return myFragmentView;
+    }
+
+    /**
+     * Be clean with the cursor!
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mCursor != null) {
+            mCursor.close();
+        }
     }
 
     /**
@@ -350,7 +349,7 @@ public class ResultListFragment extends FamiliarFragment {
                 Random rand = new Random(System.currentTimeMillis());
 
                 /* Shuffle the array of ids */
-              /* implements http://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
+                /* implements http://en.wikipedia.org/wiki/Fisher-Yates_shuffle */
                 long temp;
                 int k, j;
                 for (k = cardIds.length - 1; k > 0; k--) {
