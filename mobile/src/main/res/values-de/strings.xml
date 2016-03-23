@@ -442,4 +442,6 @@
     <string name="trader_set_pricing">Preis Optionen festlegen</string>
     <string name="wishlist_set_pricing">Preis Optionen festlegen</string>
     <string name="pref_consolidate_title">Ergebnisse neu sortieren</string>
+    <string name="tutor_cards_fail">TODO TRANSLATE</string>
+    <string name="tutor_cards_notice">TODO TRANSLATE</string>
 </resources>

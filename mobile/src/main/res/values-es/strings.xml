@@ -375,4 +375,6 @@
     <string name="trader_sort">Ordenar intercambios</string>
     <string name="trade_share_title">Intercambios</string>
     <string name="trader_share">Compartir intercambio</string>
+    <string name="tutor_cards_fail">TODO TRANSLATE</string>
+    <string name="tutor_cards_notice">TODO TRANSLATE</string>
 </resources>

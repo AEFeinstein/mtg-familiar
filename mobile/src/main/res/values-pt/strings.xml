@@ -376,4 +376,6 @@
     <string name="trader_sort">Organizar</string>
     <string name="trade_share_title">Troca</string>
     <string name="trader_share">Compartilhar Troca</string>
+    <string name="tutor_cards_fail">TODO TRANSLATE</string>
+    <string name="tutor_cards_notice">TODO TRANSLATE</string>
 </resources>
