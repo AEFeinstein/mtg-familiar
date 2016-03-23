@@ -33,6 +33,7 @@ import java.util.Random;
 public class ResultListFragment extends FamiliarFragment {
 
     /* Constants for bundled arguments */
+    public static final String CARD_ID = "id";
     public static final String CARD_ID_0 = "id0";
     public static final String CARD_ID_1 = "id1";
     public static final String CARD_ID_2 = "id2";
@@ -75,10 +76,32 @@ public class ResultListFragment extends FamiliarFragment {
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
 
+            /* This is just the multiverse ID, from a TutorCards search */
+            if ((id = args.getLong(CARD_ID)) != 0L) {
+                mCursor = CardDbAdapter.fetchCardByMultiverseId(id, new String[]{
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SUPERTYPE,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SUBTYPE,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MANACOST,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_POWER,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_TOUGHNESS,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_LOYALTY,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ABILITY,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_FLAVOR,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ARTIST,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MULTIVERSEID
+                }, database);
+            }
             /* If "id0" exists, then it's three cards and they should be merged
              * Otherwise, do a search with the given criteria
              */
-            if ((id = args.getLong(CARD_ID_0)) != 0L) {
+            else if ((id = args.getLong(CARD_ID_0)) != 0L) {
                 long id1 = args.getLong(CARD_ID_1);
                 long id2 = args.getLong(CARD_ID_2);
                 Cursor cs[] = new Cursor[3];

@@ -354,6 +354,15 @@ public class SearchViewFragment extends FamiliarFragment {
                 doSearch();
             }
         });
+
+        myFragmentView.findViewById(R.id.camera_button).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SearchViewFragment.this.getFamiliarActivity().startTutorCardsSearch();
+                    }
+                }
+        );
         return myFragmentView;
     }
 
@@ -903,5 +912,19 @@ public class SearchViewFragment extends FamiliarFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search_menu, menu);
+    }
+
+    /**
+     * TODO
+     *
+     * @param multiverseId The multiverse ID of the card the query returned
+     */
+    @Override
+    public void receiveTutorCardsResult(long multiverseId) {
+
+        Bundle args = new Bundle();
+        args.putSerializable(ResultListFragment.CARD_ID, multiverseId);
+        ResultListFragment rlFrag = new ResultListFragment();
+        startNewFragment(rlFrag, args);
     }
 }

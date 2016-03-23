@@ -94,6 +94,7 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.TutorCards;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -281,6 +282,8 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
+
+    private TutorCards mTutorCards = new TutorCards(this);
 
     /**
      * Start the Spice Manager when the activity starts
@@ -1375,6 +1378,8 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        mTutorCards.onActivityResult(requestCode, resultCode);
+
         /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result here */
         if (data != null && data.getExtras() != null) {
             if (data.getExtras().keySet().contains(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)) {
@@ -1679,6 +1684,28 @@ public class FamiliarActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         getSupportFragmentManager().findFragmentById(R.id.fragment_container)
                 .onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * Checks to see if there is network connectivity, and if there is, starts the visual
+     * search process
+     */
+    public void startTutorCardsSearch() {
+        if (getNetworkState(true) != -1) {
+            mTutorCards.startTutorCardsSearch();
+        }
+    }
+
+    /**
+     * When TutorCards returns a response over the network to a query, this function is called
+     * with the multiverse ID of the card in the image as a parameter
+     *
+     * @param multiverseId The multiverse ID returned by the TutorCards query
+     */
+    public void receiveTutorCardsResult(long multiverseId) {
+        ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+                .receiveTutorCardsResult(multiverseId);
+        clearLoading();
     }
 
     /**

@@ -473,4 +473,13 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
+    public int getNumTutorCardsSearches() {
+        return this.prefs.getInt(context.getString(R.string.key_num_tutor_cards_searches), 0);
+    }
+
+    public void setNumTutorCardsSearches(int NumTutorCardsSearches) {
+        this.edit.putInt(context.getString(R.string.key_num_tutor_cards_searches),
+                NumTutorCardsSearches);
+        this.edit.commit();
+    }
 }
