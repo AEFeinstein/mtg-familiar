@@ -176,27 +176,6 @@ public class ResultListFragment extends FamiliarFragment {
 
                 mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate, database);
             }
-
-            if (this.isAdded()) {
-                if (mCursor == null || mCursor.getCount() == 0) {
-                    ToastWrapper.makeText(this.getActivity(), getString(R.string.search_toast_no_results), ToastWrapper.LENGTH_SHORT
-                    ).show();
-                    if (!getActivity().isTaskRoot()) {
-                        getActivity().finish();
-                    } else {
-                        getFragmentManager().popBackStack();
-                    }
-                } else if (mCursor.getCount() == 1) {
-                    mCursor.moveToFirst();
-                    id = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));
-                    startCardViewFrag(id);
-                } else {
-                    if (savedInstanceState == null) {
-                        ToastWrapper.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
-                                mCursor.getCount()), ToastWrapper.LENGTH_LONG).show();
-                    }
-                }
-            }
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
@@ -245,6 +224,30 @@ public class ResultListFragment extends FamiliarFragment {
                     getActivity().finish();
                 } else {
                     getFragmentManager().popBackStack();
+                }
+            }
+        }
+        else if (this.isAdded()) {
+            if (mCursor == null || mCursor.getCount() == 0) {
+                ToastWrapper.makeText(this.getActivity(), getString(R.string.search_toast_no_results), ToastWrapper.LENGTH_SHORT
+                ).show();
+                if (!getActivity().isTaskRoot()) {
+                    getActivity().finish();
+                } else {
+                    getFragmentManager().popBackStack();
+                }
+            } else if (mCursor.getCount() == 1) {
+                mCursor.moveToFirst();
+                long id = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));
+                try {
+                    startCardViewFrag(id);
+                } catch (FamiliarDbException e) {
+                    handleFamiliarDbException(true);
+                }
+            } else {
+                if (savedInstanceState == null) {
+                    ToastWrapper.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
+                            mCursor.getCount()), ToastWrapper.LENGTH_LONG).show();
                 }
             }
         }
