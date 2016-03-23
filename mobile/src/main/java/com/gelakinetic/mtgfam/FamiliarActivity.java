@@ -1370,7 +1370,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        mTutorCards.onActivityResult(requestCode, resultCode, data);
+        mTutorCards.onActivityResult(requestCode, resultCode);
 
         /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result here */
         if (data != null && data.getExtras() != null) {

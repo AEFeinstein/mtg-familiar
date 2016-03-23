@@ -25,29 +25,20 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
 import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
-import cz.msebera.android.httpclient.conn.ssl.SSLConnectionSocketFactory;
 import cz.msebera.android.httpclient.impl.client.CloseableHttpClient;
 import cz.msebera.android.httpclient.impl.client.HttpClients;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 /**
  * This class uses the API for https://tutor.cards to search for a card by image
- * TODO add timeouts for network ops
  */
 public class TutorCards {
-
-    private boolean mIsReady;
 
     /*
      * Private classes which match the JSON returned by the tutor.cards service
@@ -62,7 +53,8 @@ public class TutorCards {
 
     private class TutorDataInfo {
         long multiverseid;
-        long other[];
+        long similar[];
+        long all[];
     }
 
     /* The FamiliarActivity which is hosting this object */
@@ -73,6 +65,9 @@ public class TutorCards {
 
     /* The temporary image filename */
     private static final String TMP_IMG_FILENAME = "tmp.jpg";
+
+    /* Whether or not Tutor.cards is ready to process */
+    private boolean mIsReady;
 
     /**
      * Default constructor
@@ -111,14 +106,14 @@ public class TutorCards {
      * which calls this function. Here the image is taken and passed to an AsyncTask to perform
      * a query.
      *
+     * @param data        An Intent, which can return result data to the caller (various data can be
+     *                    attached to Intent "extras").
      * @param requestCode The integer request code originally supplied to startActivityForResult(),
      *                    allowing you to identify who this result came from.
      * @param resultCode  The integer result code returned by the child activity through its
      *                    setResult().
-     * @param data        An Intent, which can return result data to the caller (various data can be
-     *                    attached to Intent "extras").
      */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             /* Show some background activity is happening */
             mActivity.setLoading();
@@ -358,9 +353,19 @@ public class TutorCards {
 
                     /* Send the result to the activity */
                     if (searchPostResult.isResult) {
-                        mActivity.receiveTutorCardsResult(searchPostResult.info.multiverseid);
-                        /* Return, we're done here */
-                        return null;
+                        /* Negative multiverse ids are for promos. Find the first positive id */
+                        if (searchPostResult.info.multiverseid < 0) {
+                            for (Long otherId : searchPostResult.info.all) {
+                                if (otherId > 0) {
+                                    mActivity.receiveTutorCardsResult(otherId);
+                                    return null;
+                                }
+                            }
+                        } else {
+                            mActivity.receiveTutorCardsResult(searchPostResult.info.multiverseid);
+                            /* Return, we're done here */
+                            return null;
+                        }
                     }
 
                     /* if isResult is false, then this while loop continues */
@@ -370,8 +375,19 @@ public class TutorCards {
 
                 if (searchPostResult.isResult) {
                     /* while loop was just skipped over, since the result is already here */
-                    mActivity.receiveTutorCardsResult(searchPostResult.info.multiverseid);
-                    return null;
+                    /* Negative multiverse ids are for promos. Find the first positive id */
+                    if (searchPostResult.info.multiverseid < 0) {
+                        for (Long otherId : searchPostResult.info.all) {
+                            if (otherId > 0) {
+                                mActivity.receiveTutorCardsResult(otherId);
+                                return null;
+                            }
+                        }
+                    } else {
+                        mActivity.receiveTutorCardsResult(searchPostResult.info.multiverseid);
+                            /* Return, we're done here */
+                        return null;
+                    }
                 }
             } catch (NoSuchAlgorithmException | IOException e) {
                 e.printStackTrace();
