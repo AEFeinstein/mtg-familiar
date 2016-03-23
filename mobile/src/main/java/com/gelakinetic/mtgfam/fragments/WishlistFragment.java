@@ -59,17 +59,15 @@ import java.util.Collections;
  */
 public class WishlistFragment extends FamiliarFragment {
 
+    /* Price setting constants */
+    public static final int LOW_PRICE = 0;
+    public static final int AVG_PRICE = 1;
+    public static final int HIGH_PRICE = 2;
     /* Dialog constants */
     private static final int DIALOG_UPDATE_CARD = 1;
     private static final int DIALOG_PRICE_SETTING = 2;
     private static final int DIALOG_CONFIRMATION = 3;
     private static final int DIALOG_SORT = 4;
-
-    /* Price setting constants */
-    public static final int LOW_PRICE = 0;
-    public static final int AVG_PRICE = 1;
-    public static final int HIGH_PRICE = 2;
-
     /* Sort type constants */
     private static final int SORT_TYPE_NONE = 0;
     private static final int SORT_TYPE_CMC = 1;
@@ -713,6 +711,33 @@ public class WishlistFragment extends FamiliarFragment {
     }
 
     /**
+     * Receive the result from the card image search, then fill in the name edit text on the
+     * UI thread
+     *
+     * @param multiverseId The multiverseId of the card the query returned
+     */
+    @Override
+    public void receiveTutorCardsResult(long multiverseId) {
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false)
+                .openDatabase(false);
+        try {
+            Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
+            final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
+            getFamiliarActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mNameField.setText(name);
+                }
+            });
+            card.close();
+        } catch (FamiliarDbException e) {
+            e.printStackTrace();
+        }
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+    }
+
+    /**
      * This nested class is the adapter which populates the listView in the drawer menu. It handles both entries and
      * headers
      */
@@ -969,32 +994,5 @@ public class WishlistFragment extends FamiliarFragment {
             }
             return convertView;
         }
-    }
-
-    /**
-     * Receive the result from the card image search, then fill in the name edit text on the
-     * UI thread
-     *
-     * @param multiverseId The multiverseId of the card the query returned
-     */
-    @Override
-    public void receiveTutorCardsResult(long multiverseId) {
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false)
-                .openDatabase(false);
-        try {
-            Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
-            final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
-            getFamiliarActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mNameField.setText(name);
-                }
-            });
-            card.close();
-        } catch (FamiliarDbException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 }

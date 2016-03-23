@@ -35,22 +35,23 @@
                 <AutoCompleteTextView
                     android:id="@+id/name_search"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:hint="@string/search_name"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:singleLine="true">
+
                     <requestFocus />
                 </AutoCompleteTextView>
 
                 <ImageButton
-                    style="?android:attr/buttonBarButtonStyle"
                     android:id="@+id/camera_button"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="?attr/camera_button"/>
+                    android:src="?attr/camera_button" />
 
             </LinearLayout>
             <LinearLayout
@@ -65,12 +66,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:dropDownAnchor="@+id/linearLayout12"
+                    android:dropDownWidth="wrap_content"
                     android:hint="@string/search_supertype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true"
-                    android:dropDownWidth="wrap_content"
-                    android:dropDownAnchor="@+id/linearLayout12" />
+                    android:singleLine="true" />
 
                 <MultiAutoCompleteTextView
                     android:id="@+id/subtypesearch"
@@ -78,12 +79,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:dropDownAnchor="@+id/linearLayout12"
+                    android:dropDownWidth="wrap_content"
                     android:hint="@string/search_subtype"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true"
-                    android:dropDownWidth="wrap_content"
-                    android:dropDownAnchor="@+id/linearLayout12" />
+                    android:singleLine="true" />
 
             </LinearLayout>
 

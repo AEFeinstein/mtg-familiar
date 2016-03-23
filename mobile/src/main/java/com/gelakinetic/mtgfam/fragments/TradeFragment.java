@@ -1226,6 +1226,35 @@ public class TradeFragment extends FamiliarFragment {
         }
     }
 
+    /**
+     * Receive the result from the card image search, then fill in the name edit text on the
+     * UI thread
+     *
+     * @param multiverseId The multiverseId of the card the query returned
+     */
+    @Override
+    public void receiveTutorCardsResult(long multiverseId) {
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false)
+                .openDatabase(false);
+        try {
+            Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
+            final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
+            getFamiliarActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mNameEditText.setText(name);
+                }
+            });
+            card.close();
+        } catch (FamiliarDbException e) {
+            e.printStackTrace();
+        }
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+    }
+    
+    /* Comparators for sorting */
+
     /* Comparator based on converted mana cost */
     private static class TradeComparatorCmc implements Comparator<MtgCard> {
         @Override
@@ -1238,8 +1267,6 @@ public class TradeFragment extends FamiliarFragment {
             return -1;
         }
     }
-    
-    /* Comparators for sorting */
 
     /* Comparator based on color */
     public static class TradeComparatorColor implements Comparator<MtgCard> {
@@ -1391,32 +1418,5 @@ public class TradeFragment extends FamiliarFragment {
             }
             return convertView;
         }
-    }
-
-    /**
-     * Receive the result from the card image search, then fill in the name edit text on the
-     * UI thread
-     *
-     * @param multiverseId The multiverseId of the card the query returned
-     */
-    @Override
-    public void receiveTutorCardsResult(long multiverseId) {
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false)
-                .openDatabase(false);
-        try {
-            Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
-            final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
-            getFamiliarActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mNameEditText.setText(name);
-                }
-            });
-            card.close();
-        } catch (FamiliarDbException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 }

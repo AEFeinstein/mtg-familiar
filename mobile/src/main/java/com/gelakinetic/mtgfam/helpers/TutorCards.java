@@ -40,32 +40,12 @@ import cz.msebera.android.httpclient.message.BasicNameValuePair;
  */
 public class TutorCards {
 
-    /*
-     * Private classes which match the JSON returned by the tutor.cards service
-     */
-    class TutorData {
-        boolean isReady;
-        boolean isResult;
-        long wait;
-        String id;
-        TutorDataInfo info;
-    }
-
-    private class TutorDataInfo {
-        long multiverseid;
-        long similar[];
-        long all[];
-    }
-
-    /* The FamiliarActivity which is hosting this object */
-    private final FamiliarActivity mActivity;
-
     /* A random request code when requesting an image from the camera using an intent */
     private static final int REQUEST_IMAGE_CAPTURE = 65;
-
     /* The temporary image filename */
     private static final String TMP_IMG_FILENAME = "tmp.jpg";
-
+    /* The FamiliarActivity which is hosting this object */
+    private final FamiliarActivity mActivity;
     /* Whether or not Tutor.cards is ready to process */
     private boolean mIsReady;
 
@@ -106,8 +86,6 @@ public class TutorCards {
      * which calls this function. Here the image is taken and passed to an AsyncTask to perform
      * a query.
      *
-     * @param data        An Intent, which can return result data to the caller (various data can be
-     *                    attached to Intent "extras").
      * @param requestCode The integer request code originally supplied to startActivityForResult(),
      *                    allowing you to identify who this result came from.
      * @param resultCode  The integer result code returned by the child activity through its
@@ -261,6 +239,30 @@ public class TutorCards {
         return result;
     }
 
+    /**
+     * @return The temporary image file used for searching
+     */
+    private File getImageFile() {
+        return new File(mActivity.getExternalFilesDir(null), TMP_IMG_FILENAME);
+    }
+
+    /*
+     * Private classes which match the JSON returned by the tutor.cards service
+     */
+    class TutorData {
+        boolean isReady;
+        boolean isResult;
+        long wait;
+        String id;
+        TutorDataInfo info;
+    }
+
+    private class TutorDataInfo {
+        long multiverseid;
+        long similar[];
+        long all[];
+    }
+
     private class TutorCardsStartTask extends AsyncTask<Void, Void, Void> {
 
         /**
@@ -308,13 +310,6 @@ public class TutorCards {
                 Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    /**
-     * @return The temporary image file used for searching
-     */
-    private File getImageFile() {
-        return new File(mActivity.getExternalFilesDir(null), TMP_IMG_FILENAME);
     }
 
     private class TutorCardsTask extends AsyncTask<Bitmap, Void, Void> {

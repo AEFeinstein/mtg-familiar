@@ -133,17 +133,15 @@ public class FamiliarActivity extends AppCompatActivity {
     public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
     public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
     public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
-
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 77;
     /* Constants used for displaying dialogs */
     private static final int DIALOG_ABOUT = 100;
     private static final int DIALOG_CHANGE_LOG = 101;
     private static final int DIALOG_DONATE = 102;
     private static final int DIALOG_TTS = 103;
-
     /* Constants used for saving state */
     private static final String CURRENT_FRAG = "CURRENT_FRAG";
     private static final String IS_REFRESHING = "IS_REFRESHING";
-
     /* PayPal URL */
     @SuppressWarnings("SpellCheckingInspection")
     private static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
@@ -156,8 +154,6 @@ public class FamiliarActivity extends AppCompatActivity {
     private static final int MESSAGE_FLUSH = 2;
     private static final int MESSAGE_CLOSE = 3;
     private static final String IMAGE_CACHE_DIR = "images";
-    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 77;
-
     /* Spice setup */
     public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
     /* What the drawer menu will be */
@@ -284,6 +280,125 @@ public class FamiliarActivity extends AppCompatActivity {
     private DrawerEntryArrayAdapter mPagesAdapter;
 
     private TutorCards mTutorCards = new TutorCards(this);
+
+    /**
+     * Open an inputStream to the HTML content at the given URL
+     *
+     * @param stringUrl The URL to open a stream to, in String form
+     * @param logWriter A PrintWriter to log debug info to. Can be null
+     * @return An InputStream to the content at the URL, or null
+     * @throws IOException Thrown if something goes terribly wrong
+     */
+    public static
+    @Nullable
+    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter) throws IOException {
+        return getHttpInputStream(new URL(stringUrl), logWriter, 0);
+    }
+
+    /**
+     * Open an inputStream to the HTML content at the given URL
+     *
+     * @param url       The URL to open a stream to
+     * @param logWriter A PrintWriter to log debug info to. Can be null
+     * @return An InputStream to the content at the URL, or null
+     * @throws IOException Thrown if something goes terribly wrong
+     */
+    public static
+    @Nullable
+    InputStream getHttpInputStream(URL url, PrintWriter logWriter) throws IOException {
+        return getHttpInputStream(url, logWriter, 0);
+    }
+
+    /**
+     * Open an inputStream to the HTML content at the given URL, making recursive calls for
+     * redirection (HTTP 301, 302).
+     *
+     * @param url            The URL to open a stream to
+     * @param logWriter      A PrintWriter to log debug info to. Can be null
+     * @param recursionLevel The redirect recursion level. Starts at 0, doesn't go past 10
+     * @return An InputStream to the content at the URL, or null
+     * @throws IOException Thrown if something goes terribly wrong
+     */
+    public static
+    @Nullable
+    InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter,
+                                   int recursionLevel) throws IOException {
+
+        /* Don't allow infinite recursion */
+        if (recursionLevel > 10) {
+            return null;
+        }
+
+        /* Make the URL & connection objects, follow redirects, timeout after 5s */
+        HttpURLConnection.setFollowRedirects(true);
+        HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
+        connection.setConnectTimeout(5000);
+        connection.setInstanceFollowRedirects(true);
+
+        /* If the connection is not OK, debug print the response */
+        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            /* Log the URL and response code */
+            if (logWriter != null) {
+                logWriter.write("URL : " + url.toString() + '\n');
+                logWriter.write("RESP: " + connection.getResponseCode() + '\n');
+            }
+
+            /* Comb through header fields for a redirect location */
+            URL nextUrl = null;
+            for (String key : connection.getHeaderFields().keySet()) {
+                /* Log the header */
+                if (logWriter != null) {
+                    logWriter.write("HDR : [" + key + "] " + connection.getHeaderField(key) + '\n');
+                }
+
+                /* Found the URL to try next */
+                if (key != null && key.equalsIgnoreCase("location")) {
+                    nextUrl = new URL(connection.getHeaderField(key));
+                }
+            }
+
+            /* If the next location is still null, comb through the HTML
+             * This is kind of a hack for when sites.google.com is serving up malformed 302
+             * redirects and all the header fields end up being in this input stream
+             */
+            if (nextUrl == null) {
+                /* Open the stream */
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+                String line;
+                int linesRead = 0;
+                /* Read one line at a time */
+                while ((line = br.readLine()) != null) {
+                    /* Log the line */
+                    if (logWriter != null) {
+                        logWriter.write("HTML:" + line + '\n');
+                    }
+                    /* Check for a location */
+                    if (line.toLowerCase().contains("location")) {
+                        nextUrl = new URL(line.split("\\s+")[1]);
+                        break;
+                    }
+                    /* Count the line, make sure to quit after 1000 */
+                    linesRead++;
+                    if (linesRead > 1000) {
+                        break;
+                    }
+                }
+            }
+
+            if (nextUrl != null) {
+                /* If there is a URL to follow, follow it */
+                return getHttpInputStream(nextUrl, logWriter, recursionLevel + 1);
+            } else {
+                /* Otherwise return null */
+                return null;
+            }
+
+        } else {
+            /* HTTP response is A-OK. Return the inputStream */
+            return connection.getInputStream();
+        }
+    }
 
     /**
      * Start the Spice Manager when the activity starts
@@ -1515,6 +1630,10 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Image Caching
+     */
+
     private void addImageCache(FragmentManager fragmentManager,
                                ImageCache.ImageCacheParams cacheParams) {
         mImageCache = ImageCache.getInstance(fragmentManager, cacheParams);
@@ -1533,10 +1652,6 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     * Image Caching
-     */
-
     private void flushCacheInternal() {
         if (mImageCache != null) {
             mImageCache.flush();
@@ -1548,6 +1663,44 @@ public class FamiliarActivity extends AppCompatActivity {
             mImageCache.close();
             mImageCache = null;
         }
+    }
+
+    /**
+     * Callback for when a permission is requested
+     *
+     * @param requestCode  The request code passed in requestPermissions(String[], int).
+     * @param permissions  The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions which is either
+     *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
+     *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        getSupportFragmentManager().findFragmentById(R.id.fragment_container)
+                .onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /**
+     * Checks to see if there is network connectivity, and if there is, starts the visual
+     * search process
+     */
+    public void startTutorCardsSearch() {
+        if (getNetworkState(true) != -1) {
+            mTutorCards.startTutorCardsSearch();
+        }
+    }
+
+    /**
+     * When TutorCards returns a response over the network to a query, this function is called
+     * with the multiverse ID of the card in the image as a parameter
+     *
+     * @param multiverseId The multiverse ID returned by the TutorCards query
+     */
+    public void receiveTutorCardsResult(long multiverseId) {
+        ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+                .receiveTutorCardsResult(multiverseId);
+        clearLoading();
     }
 
     /**
@@ -1667,163 +1820,6 @@ public class FamiliarActivity extends AppCompatActivity {
                     break;
             }
             return null;
-        }
-    }
-
-    /**
-     * Callback for when a permission is requested
-     *
-     * @param requestCode  The request code passed in requestPermissions(String[], int).
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions which is either
-     *                     android.content.pm.PackageManager.PERMISSION_GRANTED or
-     *                     android.content.pm.PackageManager.PERMISSION_DENIED. Never null.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        getSupportFragmentManager().findFragmentById(R.id.fragment_container)
-                .onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    /**
-     * Checks to see if there is network connectivity, and if there is, starts the visual
-     * search process
-     */
-    public void startTutorCardsSearch() {
-        if (getNetworkState(true) != -1) {
-            mTutorCards.startTutorCardsSearch();
-        }
-    }
-
-    /**
-     * When TutorCards returns a response over the network to a query, this function is called
-     * with the multiverse ID of the card in the image as a parameter
-     *
-     * @param multiverseId The multiverse ID returned by the TutorCards query
-     */
-    public void receiveTutorCardsResult(long multiverseId) {
-        ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
-                .receiveTutorCardsResult(multiverseId);
-        clearLoading();
-    }
-
-    /**
-     * Open an inputStream to the HTML content at the given URL
-     *
-     * @param stringUrl The URL to open a stream to, in String form
-     * @param logWriter A PrintWriter to log debug info to. Can be null
-     * @return An InputStream to the content at the URL, or null
-     * @throws IOException Thrown if something goes terribly wrong
-     */
-    public static
-    @Nullable
-    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter) throws IOException {
-        return getHttpInputStream(new URL(stringUrl), logWriter, 0);
-    }
-
-    /**
-     * Open an inputStream to the HTML content at the given URL
-     *
-     * @param url       The URL to open a stream to
-     * @param logWriter A PrintWriter to log debug info to. Can be null
-     * @return An InputStream to the content at the URL, or null
-     * @throws IOException Thrown if something goes terribly wrong
-     */
-    public static
-    @Nullable
-    InputStream getHttpInputStream(URL url, PrintWriter logWriter) throws IOException {
-        return getHttpInputStream(url, logWriter, 0);
-    }
-
-    /**
-     * Open an inputStream to the HTML content at the given URL, making recursive calls for
-     * redirection (HTTP 301, 302).
-     *
-     * @param url            The URL to open a stream to
-     * @param logWriter      A PrintWriter to log debug info to. Can be null
-     * @param recursionLevel The redirect recursion level. Starts at 0, doesn't go past 10
-     * @return An InputStream to the content at the URL, or null
-     * @throws IOException Thrown if something goes terribly wrong
-     */
-    public static
-    @Nullable
-    InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter,
-                                   int recursionLevel) throws IOException {
-
-        /* Don't allow infinite recursion */
-        if (recursionLevel > 10) {
-            return null;
-        }
-
-        /* Make the URL & connection objects, follow redirects, timeout after 5s */
-        HttpURLConnection.setFollowRedirects(true);
-        HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
-        connection.setConnectTimeout(5000);
-        connection.setInstanceFollowRedirects(true);
-
-        /* If the connection is not OK, debug print the response */
-        if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            /* Log the URL and response code */
-            if (logWriter != null) {
-                logWriter.write("URL : " + url.toString() + '\n');
-                logWriter.write("RESP: " + connection.getResponseCode() + '\n');
-            }
-
-            /* Comb through header fields for a redirect location */
-            URL nextUrl = null;
-            for (String key : connection.getHeaderFields().keySet()) {
-                /* Log the header */
-                if (logWriter != null) {
-                    logWriter.write("HDR : [" + key + "] " + connection.getHeaderField(key) + '\n');
-                }
-
-                /* Found the URL to try next */
-                if (key != null && key.equalsIgnoreCase("location")) {
-                    nextUrl = new URL(connection.getHeaderField(key));
-                }
-            }
-
-            /* If the next location is still null, comb through the HTML
-             * This is kind of a hack for when sites.google.com is serving up malformed 302
-             * redirects and all the header fields end up being in this input stream
-             */
-            if (nextUrl == null) {
-                /* Open the stream */
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(connection.getInputStream()));
-                String line;
-                int linesRead = 0;
-                /* Read one line at a time */
-                while ((line = br.readLine()) != null) {
-                    /* Log the line */
-                    if (logWriter != null) {
-                        logWriter.write("HTML:" + line + '\n');
-                    }
-                    /* Check for a location */
-                    if (line.toLowerCase().contains("location")) {
-                        nextUrl = new URL(line.split("\\s+")[1]);
-                        break;
-                    }
-                    /* Count the line, make sure to quit after 1000 */
-                    linesRead++;
-                    if (linesRead > 1000) {
-                        break;
-                    }
-                }
-            }
-
-            if (nextUrl != null) {
-                /* If there is a URL to follow, follow it */
-                return getHttpInputStream(nextUrl, logWriter, recursionLevel + 1);
-            } else {
-                /* Otherwise return null */
-                return null;
-            }
-
-        } else {
-            /* HTTP response is A-OK. Return the inputStream */
-            return connection.getInputStream();
         }
     }
 }

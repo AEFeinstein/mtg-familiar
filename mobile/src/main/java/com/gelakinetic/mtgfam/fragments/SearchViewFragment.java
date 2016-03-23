@@ -915,7 +915,9 @@ public class SearchViewFragment extends FamiliarFragment {
     }
 
     /**
-     * TODO
+     * Called when there is a result from Tutor.cards visual search
+     * It starts the ResultListFragment with the multiverseId to show
+     * the card
      *
      * @param multiverseId The multiverse ID of the card the query returned
      */
