@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 
-import com.alertdialogpro.AlertDialogPro;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.codetroopers.betterpickers.hmspicker.HmsPicker;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -329,7 +329,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                         chkTen.setChecked(ten);
                         chkFive.setChecked(five);
 
-                        return new AlertDialogPro.Builder(getActivity())
+                        return new AlertDialogWrapper.Builder(getActivity())
                                 .setView(v).setTitle(R.string.timer_warning_dialog_title)
                                 .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
 

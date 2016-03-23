@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alertdialogpro.AlertDialogPro;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
@@ -264,7 +264,7 @@ public class WishlistHelpers {
         DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
 
         /* make and return the actual dialog */
-        return new AlertDialogPro.Builder(ctx)
+        return new AlertDialogWrapper.Builder(ctx)
                 .setTitle(mCardName + " " + fragment.getString(R.string.wishlist_edit_dialog_title_end))
                 .setView(customView)
                 .setPositiveButton(fragment.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {

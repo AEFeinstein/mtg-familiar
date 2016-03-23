@@ -25,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alertdialogpro.AlertDialogPro;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
@@ -469,7 +469,7 @@ public class WishlistFragment extends FamiliarFragment {
                         return dialog;
                     }
                     case DIALOG_PRICE_SETTING: {
-                        return new AlertDialogPro.Builder(this.getActivity())
+                        return new AlertDialogWrapper.Builder(this.getActivity())
                                 .setTitle(R.string.trader_pricing_dialog_title)
                                 .setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
                                                 getString(R.string.trader_Average), getString(R.string.trader_High)},
@@ -490,7 +490,7 @@ public class WishlistFragment extends FamiliarFragment {
                                 .create();
                     }
                     case DIALOG_CONFIRMATION: {
-                        return new AlertDialogPro.Builder(this.getActivity())
+                        return new AlertDialogWrapper.Builder(this.getActivity())
                                 .setTitle(R.string.wishlist_empty_dialog_title)
                                 .setMessage(R.string.wishlist_empty_dialog_text)
                                 .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
@@ -515,7 +515,7 @@ public class WishlistFragment extends FamiliarFragment {
 
                     }
                     case DIALOG_SORT: {
-                        return new AlertDialogPro.Builder(this.getActivity())
+                        return new AlertDialogWrapper.Builder(this.getActivity())
                                 .setTitle(R.string.wishlist_sort_by)
                                 .setSingleChoiceItems(R.array.wishlist_sort_type, mWishlistSortType, null)
                                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {

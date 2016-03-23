@@ -30,7 +30,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import com.alertdialogpro.AlertDialogPro;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
@@ -403,7 +403,7 @@ public class RulesFragment extends FamiliarFragment {
                             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                         }
 
-                        Dialog dialog = new AlertDialogPro.Builder(getActivity())
+                        Dialog dialog = new AlertDialogWrapper.Builder(getActivity())
                                 .setTitle(title)
                                 .setView(textEntryView)
                                 .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {

@@ -65,7 +65,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alertdialogpro.AlertDialogPro;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
@@ -741,7 +741,7 @@ public class CardViewFragment extends FamiliarFragment {
                         ListView lv = new ListView(mActivity);
                         lv.setAdapter(adapter);
 
-                        AlertDialogPro.Builder builder = new AlertDialogPro.Builder(mActivity);
+                        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(mActivity);
                         builder.setView(lv);
                         builder.setTitle(R.string.card_view_legality);
                         return builder.create();
@@ -774,7 +774,7 @@ public class CardViewFragment extends FamiliarFragment {
                         priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + mPriceInfo.mUrl + "\">" +
                                 getString(R.string.card_view_price_dialog_link) + "</a>"));
 
-                        AlertDialogPro.Builder adb = new AlertDialogPro.Builder(mActivity);
+                        AlertDialogWrapper.Builder adb = new AlertDialogWrapper.Builder(mActivity);
                         adb.setView(v);
                         adb.setTitle(R.string.card_view_price_dialog_title);
                         return adb.create();
@@ -789,7 +789,7 @@ public class CardViewFragment extends FamiliarFragment {
                                 return DontShowDialog();
                             }
                         }
-                        AlertDialogPro.Builder builder = new AlertDialogPro.Builder(mActivity);
+                        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(mActivity);
                         builder.setTitle(R.string.card_view_set_dialog_title);
                         builder.setItems(aSets, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int item) {
@@ -830,7 +830,7 @@ public class CardViewFragment extends FamiliarFragment {
                                         mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
                         ));
 
-                        AlertDialogPro.Builder builder = new AlertDialogPro.Builder(mActivity);
+                        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(mActivity);
                         builder.setTitle(R.string.card_view_rulings_dialog_title);
                         builder.setView(v);
                         return builder.create();

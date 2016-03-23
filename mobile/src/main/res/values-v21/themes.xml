@@ -22,7 +22,6 @@
     </style>
 
     <style name="Theme.transparent" parent="Theme.AppCompat.Dialog">
-        <item name="alertDialogProTheme">@style/Theme.AlertDialogPro.Material.Light</item>
         <item name="android:colorPrimary">@color/colorPrimary_light</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark_light</item>
     </style>

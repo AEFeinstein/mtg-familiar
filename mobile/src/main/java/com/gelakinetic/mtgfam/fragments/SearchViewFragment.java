@@ -1,6 +1,5 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,7 +26,7 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.alertdialogpro.AlertDialogPro;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
@@ -102,9 +101,9 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mTouChoice;
     private Spinner mCmcLogic;
     private Spinner mCmcChoice;
-    private AlertDialog mSetDialog;
-    private AlertDialog mFormatDialog;
-    private AlertDialog mRarityDialog;
+    private Dialog mSetDialog;
+    private Dialog mFormatDialog;
+    private Dialog mRarityDialog;
     private EditText mFlavorField;
     private AutoCompleteTextView mArtistField = null;
     private Spinner mTextSpinner;
@@ -865,13 +864,13 @@ public class SearchViewFragment extends FamiliarFragment {
                        onCreate() */
                     switch (id) {
                         case SET_LIST: {
-                            mSetDialog = new AlertDialogPro.Builder(this.getActivity()).setTitle(R.string.search_sets)
+                            mSetDialog = new AlertDialogWrapper.Builder(this.getActivity()).setTitle(R.string.search_sets)
                                     .setMultiChoiceItems(mSetNames, mSetChecked, multiChoiceClickListener)
                                     .setPositiveButton(R.string.dialog_ok, clickListener).create();
                             return mSetDialog;
                         }
                         case FORMAT_LIST: {
-                            mFormatDialog = new AlertDialogPro.Builder(this.getActivity()).
+                            mFormatDialog = new AlertDialogWrapper.Builder(this.getActivity()).
                                     setTitle(R.string.search_formats).setSingleChoiceItems(mFormatNames,
                                     mSelectedFormat, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
@@ -882,7 +881,7 @@ public class SearchViewFragment extends FamiliarFragment {
                             return mFormatDialog;
                         }
                         case RARITY_LIST: {
-                            mRarityDialog = new AlertDialogPro.Builder(this.getActivity())
+                            mRarityDialog = new AlertDialogWrapper.Builder(this.getActivity())
                                     .setTitle(R.string.search_rarities).setMultiChoiceItems(mRarityNames,
                                             mRarityChecked, multiChoiceClickListener)
                                     .setPositiveButton(R.string.dialog_ok, clickListener).create();

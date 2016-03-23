@@ -69,7 +69,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alertdialogpro.AlertDialogPro;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
@@ -1281,7 +1281,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
                 /* This will be set to false if we are returning a null dialog. It prevents a crash */
                 setShowsDialog(true);
-                AlertDialogPro.Builder builder = new AlertDialogPro.Builder(this.getActivity());
+                AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(this.getActivity());
 
                 assert getPackageManager() != null;
 

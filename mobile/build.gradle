@@ -56,7 +56,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.github.fengdai:alertdialogpro-theme-material:0.2.6'
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {
+        transitive = true
+    }
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
     compile 'com.code-troopers.betterpickers:library:2.5.2'
     compile 'com.github.machinarius:preferencefragment:0.1.2'

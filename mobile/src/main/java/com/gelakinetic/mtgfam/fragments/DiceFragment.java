@@ -16,7 +16,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.alertdialogpro.AlertDialogPro;
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -183,7 +183,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     txtNumber.setText(String.valueOf(mLastNumber));
                 }
 
-                AlertDialogPro.Builder adb = new AlertDialogPro.Builder(mActivity);
+                AlertDialogWrapper.Builder adb = new AlertDialogWrapper.Builder(mActivity);
                 adb.setView(v);
                 adb.setTitle(getResources().getString(R.string.dice_choose_sides));
                 adb.setPositiveButton(mActivity.getResources().getString(R.string.dialog_ok),
