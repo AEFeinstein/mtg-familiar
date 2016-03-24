@@ -64,6 +64,11 @@ public class SearchViewFragment extends FamiliarFragment {
     /* Default search file */
     private static final String DEFAULT_CRITERIA_FILE = "defaultSearchCriteria.ser";
 
+    /* Keys for persisting state */
+    private static final String SAVED_SET_KEY = "SAVED_SET_KEY";
+    private static final String SAVED_RARITY_KEY = "SAVED_RARITY_KEY";
+    private static final String SAVED_FORMAT_KEY = "SAVED_FORMAT_KEY";
+
     /* Spinner Data Structures */
     private String[] mSetNames;
     private boolean[] mSetChecked;
@@ -126,7 +131,16 @@ public class SearchViewFragment extends FamiliarFragment {
         int i = mRarityNamesTemp.length();
         mRarityNames = new String[i];
         mRarityCodes = new char[i];
-        mRarityChecked = new boolean[i];
+
+        if (savedInstanceState != null) {
+            mSelectedFormat = savedInstanceState.getInt(SAVED_FORMAT_KEY);
+            mRarityChecked = savedInstanceState.getBooleanArray(SAVED_RARITY_KEY);
+            mSetChecked = savedInstanceState.getBooleanArray(SAVED_SET_KEY);
+        } else {
+            mRarityChecked = new boolean[i];
+            mSelectedFormat = -1;
+        }
+
         while (i-- > 0) {
             int resID = mRarityNamesTemp.peekValue(i).resourceId;
             String resEntryName = res.getResourceEntryName(resID);
@@ -251,12 +265,18 @@ public class SearchViewFragment extends FamiliarFragment {
 
                         mSetNames = new String[setCursor.getCount()];
                         mSetSymbols = new String[setCursor.getCount()];
-                        mSetChecked = new boolean[setCursor.getCount()];
+
+                        /* If this wasn't persisted, create it new */
+                        if (mSetChecked == null) {
+                            mSetChecked = new boolean[setCursor.getCount()];
+                            for (int i = 0; i < mSetChecked.length; i++) {
+                                mSetChecked[i] = false;
+                            }
+                        }
 
                         for (int i = 0; i < setCursor.getCount(); i++) {
                             mSetSymbols[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_CODE));
                             mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-                            mSetChecked[i] = false;
                             setCursor.moveToNext();
                         }
                         setCursor.close();
@@ -278,7 +298,6 @@ public class SearchViewFragment extends FamiliarFragment {
                             formatCursor.moveToNext();
                         }
                         formatCursor.close();
-                        mSelectedFormat = -1;
                     } catch (FamiliarDbException e) {
                         handleFamiliarDbException(true);
                     }
@@ -375,6 +394,21 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Do we want to consolidate different printings of the same card in results, or not? */
         boolean consolidate = getFamiliarActivity().mPreferenceAdapter.getConsolidateSearch();
         mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
+    }
+
+    /**
+     * Save the state of the dialog selections
+     *
+     * @param outState Bundle in which to place your saved state.
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState != null) {
+            outState.putInt(SAVED_FORMAT_KEY, mSelectedFormat);
+            outState.putBooleanArray(SAVED_RARITY_KEY, mRarityChecked);
+            outState.putBooleanArray(SAVED_SET_KEY, mSetChecked);
+        }
     }
 
     /**
@@ -796,7 +830,7 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void checkDialogButtonColors() {
 
-        if(!isAdded()) {
+        if (!isAdded()) {
             return;
         }
 
@@ -805,8 +839,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
         mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
 
-        if (mSetNames == null || mSetChecked == null || mSetSymbols == null || mFormatNames == null ||
-                mRarityNames == null || mRarityChecked == null) {
+        if (mSetChecked == null || mRarityChecked == null) {
             return;
         }
 
