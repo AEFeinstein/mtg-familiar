@@ -796,22 +796,29 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void checkDialogButtonColors() {
 
-        if (mSetNames == null || mSetChecked == null || mSetSymbols == null || mFormatNames == null ||
-                mRarityNames == null || mRarityChecked == null || !isAdded()) {
+        if(!isAdded()) {
             return;
         }
 
+        /* Set the default color */
         mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
+        mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
+        mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
+
+        if (mSetNames == null || mSetChecked == null || mSetSymbols == null || mFormatNames == null ||
+                mRarityNames == null || mRarityChecked == null) {
+            return;
+        }
+
+        /* Set the selected color, if necessary */
         for (boolean aSetChecked : mSetChecked) {
             if (aSetChecked) {
                 mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
             }
         }
-        mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
         if (mSelectedFormat != -1) {
             mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
-        mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
         for (boolean aRarityChecked : mRarityChecked) {
             if (aRarityChecked) {
                 mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
