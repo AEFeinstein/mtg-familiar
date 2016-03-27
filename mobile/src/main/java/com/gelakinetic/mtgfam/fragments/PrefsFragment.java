@@ -1,12 +1,11 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import java.util.Locale;
@@ -15,16 +14,14 @@ public class PrefsFragment extends PreferenceFragment {
 
     public static void checkOverrideSystemLanguage(Context context) {
 
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(context);
+        PreferenceAdapter adapter = new PreferenceAdapter(context);
 
         // Check if the system's language setting needs to be overridden
         String defaultLocale = context.getResources().getConfiguration().locale.getLanguage();
-        boolean overrideSystemLanguage =
-                !defaultLocale.equals(prefs.getString(context.getString(R.string.key_language), defaultLocale));
+        boolean overrideSystemLanguage = !defaultLocale.equals(adapter.getLanguage());
 
         if (overrideSystemLanguage) {
-            String localeString = prefs.getString(context.getString(R.string.key_language), "");
+            String localeString = adapter.getLanguage();
 
             // Change language setting in configuration
             Locale locale = new Locale(localeString);

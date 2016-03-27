@@ -545,7 +545,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mTransformCardNumber = mCardNumber.replace("b", "a");
             }
             try {
-                mTransformId = CardDbAdapter.getTransform(mSetCode, mTransformCardNumber, database);
+                mTransformId = CardDbAdapter.getIdFromSetAndNumber(mSetCode, mTransformCardNumber, database);
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);

@@ -482,4 +482,19 @@ public class PreferenceAdapter {
                 NumTutorCardsSearches);
         this.edit.commit();
     }
+
+    public int getDatabaseVersion() {
+        return this.prefs.getInt(context.getString(R.string.key_database_version), -1);
+    }
+
+    public void setDatabaseVersion(int databaseVersion) {
+        this.edit.putInt(context.getString(R.string.key_database_version),
+                databaseVersion);
+        this.edit.commit();
+    }
+
+    public String getLanguage() {
+        return this.prefs.getString(context.getString(R.string.key_language),
+                context.getResources().getConfiguration().locale.getLanguage());
+    }
 }

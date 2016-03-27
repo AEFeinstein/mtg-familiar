@@ -104,7 +104,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     }
 
                     if (mMultiverseID == -1) {
-                        mMultiverseID = CardDbAdapter.getSplitMultiverseID(mCardName, mSetCode, database);
+                        mMultiverseID = CardDbAdapter.getMultiverseIdFromNameAndSet(mCardName, mSetCode, database);
                         if (mMultiverseID == -1) {
                             c.close();
                             throw new FamiliarDbException(null);
@@ -124,11 +124,11 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     switch (retry % (MAX_NUM_RETRIES / 2)) {
                         case 0:
                             /* Try just the a side */
-                            tcgCardName = CardDbAdapter.getTransformName(mSetCode, mCardNumber.replace("b", "a"), database);
+                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(mSetCode, mCardNumber.replace("b", "a"), database);
                             break;
                         case 3:
                             /* Try just the b side */
-                            tcgCardName = CardDbAdapter.getTransformName(mSetCode, mCardNumber.replace("a", "b"), database);
+                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(mSetCode, mCardNumber.replace("a", "b"), database);
                             break;
                         case 2:
                             /* Try the combined name in one direction */
