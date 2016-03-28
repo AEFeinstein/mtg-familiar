@@ -129,6 +129,7 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_RULINGS
     };
 
+    /* All the columns in DATABASE_CREATE_SETS */
     private static final String[] allSetDataKeys = {
             DATABASE_TABLE_SETS + "." + KEY_ID,
             DATABASE_TABLE_SETS + "." + KEY_NAME,
@@ -747,14 +748,14 @@ public class CardDbAdapter {
             }
         }
 
-        /*************************************************************************************/
-        /**
+        /************************************************************************************
+         **
          * Reuben's version Differences: Original code is verbose only, but mine
          * allows for matching exact text, all words, or just any one word.
          */
         if (criteria.text != null) {
-            String[] cardTextParts = criteria.text.split(" "); /* Separate each */
-            /* individual */
+            /* Separate each individual */
+            String[] cardTextParts = criteria.text.split(" ");
 
             /**
              * The following switch statement tests to see which text search
@@ -816,9 +817,9 @@ public class CardDbAdapter {
                     break;
             }
         }
-        /** End Reuben's version */
+        /** End Reuben's version 
 
-        /**
+         **
          * Reuben's version Differences: Original version only allowed for
          * including all types, not any of the types or excluding the given
          * types.
@@ -844,8 +845,8 @@ public class CardDbAdapter {
         }
 
         if (supertypes != null) {
-            String[] supertypesParts = supertypes.split(" "); /* Separate each */
-            /* individual */
+            /* Separate each individual */
+            String[] supertypesParts = supertypes.split(" ");
 
             switch (criteria.typeLogic) {
                 case 0:
@@ -893,8 +894,8 @@ public class CardDbAdapter {
         }
 
         if (subtypes != null) {
-            String[] subtypesParts = subtypes.split(" "); /* Separate each */
-            /* individual */
+            /* Separate each individual */
+            String[] subtypesParts = subtypes.split(" ");
 
             switch (criteria.typeLogic) {
                 case 0:
@@ -940,8 +941,8 @@ public class CardDbAdapter {
                     break;
             }
         }
-        /** End Reuben's version */
-        /*************************************************************************************/
+        /** End Reuben's version 
+         *************************************************************************************/
 
         if (criteria.flavor != null) {
             statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_FLAVOR
@@ -958,8 +959,8 @@ public class CardDbAdapter {
                     + " = " + sanitizeString(criteria.collectorsNumber) + ")";
         }
 
-        /*************************************************************************************/
-        /**
+        /************************************************************************************
+         **
          * Code below added/modified by Reuben. Differences: Original version
          * only had 'Any' and 'All' options and lacked 'Exclusive' and 'Exact'
          * matching. In addition, original programming only provided exclusive
@@ -968,13 +969,12 @@ public class CardDbAdapter {
         if (!(criteria.color.equals("wubrgl") || (criteria.color.equals("WUBRGL") && criteria.colorLogic == 0))) {
             boolean firstPrint = true;
 
-            /* Can't contain these colors */
-            /**
+            /* Can't contain these colors 
+             **
              * ...if the chosen color logic was exactly (2) or none (3) of the
              * selected colors
              */
-            if (criteria.colorLogic > 1) /* if colorlogic is 2 or 3 it will be greater */
-            /* than 1 */ {
+            if (criteria.colorLogic > 1) {
                 statement += " AND ((";
                 for (byte b : criteria.color.getBytes()) {
                     char ch = (char) b;
@@ -1028,8 +1028,8 @@ public class CardDbAdapter {
             else
                 statement += ")";
         }
-        /** End of addition */
-        /*************************************************************************************/
+        /** End of addition 
+         *************************************************************************************/
 
         if (criteria.set != null) {
             statement += " AND (";
@@ -1383,8 +1383,8 @@ public class CardDbAdapter {
         format = sanitizeString(format);
 
         try {
-            /* The new way (single query per type, should be much faster) - Alex */
-            /* TODO clean this up */
+            /* The new way (single query per type, should be much faster) - Alex 
+             * TODO clean this up */
             String sql = "SELECT COALESCE(CASE (SELECT "
                     + KEY_SET
                     + " FROM "
@@ -1476,14 +1476,18 @@ public class CardDbAdapter {
     }
 
     /**
+     * TABLE DATABASE_TABLE_LEGAL_SETS
+     *
      * @param mDb The database to query
-     * @return
+     * @return A Set of Strings of all the Modern legal sets
      * @throws FamiliarDbException If something goes wrong
      */
     private static Set<String> getModernLegalSets(SQLiteDatabase mDb) throws FamiliarDbException {
         Set<String> modernSets = new HashSet<>();
         try {
-            String sql = "SELECT " + KEY_SET + " FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = 'Modern';";
+            String sql = "SELECT " + KEY_SET +
+                    " FROM " + DATABASE_TABLE_LEGAL_SETS +
+                    " WHERE " + KEY_FORMAT + " = 'Modern';";
             Cursor c = mDb.rawQuery(sql, null);
             c.moveToNext();
             while (!c.isAfterLast()) {
@@ -1498,10 +1502,14 @@ public class CardDbAdapter {
     }
 
     /**
-     * @param category
-     * @param subcategory
+     * TABLE DATABASE_TABLE_RULES
+     * <p/>
+     * Given a category and subcategory, return a Cursor pointing to all rules in that subcategory
+     *
+     * @param category    The integer category, or -1 for the main categories
+     * @param subcategory The integer subcategory, or -1 for no subcategory
      * @param mDb         The database to query
-     * @return
+     * @return A Cursor pointing to all rules in that category & subcategory
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor getRules(int category, int subcategory, SQLiteDatabase mDb)
@@ -1514,18 +1522,17 @@ public class CardDbAdapter {
                 return mDb.rawQuery(sql, null);
             } else if (subcategory == -1) {
                 /* No subcategory specified; return the subcategories under the given category */
-                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
-                        + " WHERE " + KEY_CATEGORY + " = "
-                        + String.valueOf(category) + " AND " + KEY_SUBCATEGORY
-                        + " > -1 AND " + KEY_ENTRY + " IS NULL";
+                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES +
+                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                        " AND " + KEY_SUBCATEGORY + " > -1" +
+                        " AND " + KEY_ENTRY + " IS NULL";
                 return mDb.rawQuery(sql, null);
             } else {
                 /* Both specified; return the rules under the given subcategory */
-                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
-                        + " WHERE " + KEY_CATEGORY + " = "
-                        + String.valueOf(category) + " AND " + KEY_SUBCATEGORY
-                        + " = " + String.valueOf(subcategory) + " AND "
-                        + KEY_ENTRY + " IS NOT NULL";
+                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES +
+                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                        " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                        " AND " + KEY_ENTRY + " IS NOT NULL";
                 return mDb.rawQuery(sql, null);
             }
         } catch (SQLiteException | IllegalStateException e) {
@@ -1534,46 +1541,47 @@ public class CardDbAdapter {
     }
 
     /**
-     * @param keyword
-     * @param category
-     * @param subcategory
+     * TABLE DATABASE_TABLE_RULES
+     * <p/>
+     * Given a keyword, category, and subcategory, return a Cursor pointing to all rules which
+     * match that keyword in that category & subcategory
+     *
+     * @param keyword     A keyword to look for in the rule
+     * @param category    The integer category, or -1 for the main categories
+     * @param subcategory The integer subcategory, or -1 for no subcategory
      * @param mDb         The database to query
-     * @return
+     * @return A Cursor pointing to all rules which match that keyword in that category & subcategory
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor getRulesByKeyword(String keyword, int category,
-                                           int subcategory, SQLiteDatabase mDb) throws FamiliarDbException {
+    public static Cursor getRulesByKeyword(String keyword, int category, int subcategory,
+                                           SQLiteDatabase mDb) throws FamiliarDbException {
         try {
-            /* Don't let them pass in an empty string; it'll return ALL the */
-            /* rules */
+            /* Don't let them pass in an empty string; it'll return ALL the rules */
             if (keyword != null && !keyword.trim().equals("")) {
                 keyword = sanitizeString("%" + keyword + "%");
 
                 if (category == -1) {
-                    /* No category; we're searching from the main page, so no */
-                    /* restrictions */
+                    /* No category; we're searching from the main page, so no restrictions */
                     String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
                             + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
                             + " AND " + KEY_ENTRY + " IS NOT NULL";
                     return mDb.rawQuery(sql, null);
                 } else if (subcategory == -1) {
-                    /* No subcategory; we're searching from a category page, so */
-                    /* restrict */
-                    /* within that */
+                    /* No subcategory; we're searching from a category page, so 
+                     * restrict within that */
                     String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
                             + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
-                            + " AND " + KEY_ENTRY + " IS NOT NULL AND "
-                            + KEY_CATEGORY + " = " + String.valueOf(category);
+                            + " AND " + KEY_ENTRY + " IS NOT NULL"
+                            + " AND " + KEY_CATEGORY + " = " + String.valueOf(category);
                     return mDb.rawQuery(sql, null);
                 } else {
-                    /* We're searching within a subcategory, so restrict within */
-                    /* that */
+                    /* We're searching within a subcategory, so restrict within 
+                     * that */
                     String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
                             + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
-                            + " AND " + KEY_ENTRY + " IS NOT NULL AND "
-                            + KEY_CATEGORY + " = " + String.valueOf(category)
-                            + " AND " + KEY_SUBCATEGORY + " = "
-                            + String.valueOf(subcategory);
+                            + " AND " + KEY_ENTRY + " IS NOT NULL"
+                            + " AND " + KEY_CATEGORY + " = " + String.valueOf(category)
+                            + " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory);
                     return mDb.rawQuery(sql, null);
                 }
             }
@@ -1584,23 +1592,26 @@ public class CardDbAdapter {
     }
 
     /**
-     * @param category
-     * @param subcategory
-     * @param entry
+     * TABLE DATABASE_TABLE_RULES
+     * <p/>
+     * Given a rule's category, subcategory, and entry, return that rule's position
+     *
+     * @param category    The rule's category
+     * @param subcategory The rule's subcategory
+     * @param entry       The rule's entry
      * @param mDb         The database to query
-     * @return
+     * @return The position of the rule, or 0 if not found
      * @throws FamiliarDbException If something goes wrong
      */
     public static int getRulePosition(int category, int subcategory, String entry, SQLiteDatabase mDb)
             throws FamiliarDbException {
         try {
             if (entry != null) {
-                String sql = "SELECT " + KEY_POSITION + " FROM "
-                        + DATABASE_TABLE_RULES + " WHERE " + KEY_CATEGORY
-                        + " = " + String.valueOf(category) + " AND "
-                        + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory)
-                        + " AND " + KEY_ENTRY + " = "
-                        + sanitizeString(entry);
+                String sql = "SELECT " + KEY_POSITION +
+                        " FROM " + DATABASE_TABLE_RULES +
+                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                        " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                        " AND " + KEY_ENTRY + " = " + sanitizeString(entry);
                 Cursor c = mDb.rawQuery(sql, null);
                 if (c != null) {
                     c.moveToFirst();
@@ -1616,20 +1627,24 @@ public class CardDbAdapter {
     }
 
     /**
-     * @param category
-     * @param subcategory
+     * TABLE DATABASE_TABLE_RULES
+     * <p/>
+     * Given a rule's category and subcategory, return the name of the category
+     *
+     * @param category    The rule's category
+     * @param subcategory The rule's subcategory
      * @param mDb         The database to query
-     * @return
+     * @return A String with the rule's name, or ""
      * @throws FamiliarDbException If something goes wrong
      */
     public static String getCategoryName(int category, int subcategory, SQLiteDatabase mDb)
             throws FamiliarDbException {
         try {
-            String sql = "SELECT " + KEY_RULE_TEXT + " FROM "
-                    + DATABASE_TABLE_RULES + " WHERE " + KEY_CATEGORY + " = "
-                    + String.valueOf(category) + " AND " + KEY_SUBCATEGORY
-                    + " = " + String.valueOf(subcategory) + " AND " + KEY_ENTRY
-                    + " IS NULL";
+            String sql = "SELECT " + KEY_RULE_TEXT +
+                    " FROM " + DATABASE_TABLE_RULES +
+                    " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                    " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                    " AND " + KEY_ENTRY + " IS NULL";
             Cursor c = mDb.rawQuery(sql, null);
             if (c != null) {
                 c.moveToFirst();
@@ -1644,8 +1659,12 @@ public class CardDbAdapter {
     }
 
     /**
+     * TABLE DATABASE_TABLE_GLOSSARY
+     * <p/>
+     * Return a cursor to all glossary terms for the rules
+     *
      * @param mDb The database to query
-     * @return
+     * @return A Cursor pointing to all glossary terms in the database
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor getGlossaryTerms(SQLiteDatabase mDb) throws FamiliarDbException {
@@ -1658,16 +1677,22 @@ public class CardDbAdapter {
     }
 
     /**
+     * TABLE DATABASE_TABLE_BANNED_CARDS
+     * <p/>
+     * Given a format, return a cursor pointing to all the cards banned in that format
+     *
      * @param mDb    The database to query
-     * @param format
-     * @return
+     * @param format The format to return banned cards for
+     * @return A Cursor pointing to all banned cards in a format
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor getBannedCards(SQLiteDatabase mDb, String format) throws FamiliarDbException {
         try {
-            String sql = "SELECT " + KEY_LEGALITY + ", GROUP_CONCAT(" +
-                    KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST + " FROM " + DATABASE_TABLE_BANNED_CARDS +
-                    " WHERE " + KEY_FORMAT + " = '" + format + "'" + " GROUP BY " + KEY_LEGALITY;
+            String sql = "SELECT " +
+                    KEY_LEGALITY + ", GROUP_CONCAT(" + KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST +
+                    " FROM " + DATABASE_TABLE_BANNED_CARDS +
+                    " WHERE " + KEY_FORMAT + " = '" + format + "'" +
+                    " GROUP BY " + KEY_LEGALITY;
             return mDb.rawQuery(sql, null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
@@ -1675,15 +1700,21 @@ public class CardDbAdapter {
     }
 
     /**
+     * TABLE DATABASE_TABLE_LEGAL_SETS
+     * <p/>
+     * Given a format, return a cursor pointing to all sets legal in that format
+     *
      * @param mDb    The database to query
-     * @param format
-     * @return
+     * @param format The format to return legal sets for
+     * @return A Cursor pointing to all legal sets for the given format
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor getLegalSets(SQLiteDatabase mDb, String format) throws FamiliarDbException {
         try {
-            String sql = "SELECT GROUP_CONCAT(" + DATABASE_TABLE_SETS + "." + KEY_NAME + ", '<br>') AS " + KEY_LEGAL_SETS +
-                    " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " = " + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
+            String sql = "SELECT GROUP_CONCAT" +
+                    "(" + DATABASE_TABLE_SETS + "." + KEY_NAME + ", '<br>') AS " + KEY_LEGAL_SETS +
+                    " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS +
+                    " ON " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " = " + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
                     " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
             return mDb.rawQuery(sql, null);
         } catch (SQLiteException | IllegalStateException e) {
@@ -1692,6 +1723,10 @@ public class CardDbAdapter {
     }
 
     /**
+     * TABLE DATABASE_CREATE_RULES
+     * <p/>
+     * Drop the rules and glossary tables
+     *
      * @param mDb The database to drop tables from
      * @throws FamiliarDbException If something goes wrong
      */
@@ -1705,6 +1740,10 @@ public class CardDbAdapter {
     }
 
     /**
+     * TABLE DATABASE_CREATE_RULES
+     * <p/>
+     * Create the rules and glossary tables
+     *
      * @param mDb The database to add tables to
      * @throws FamiliarDbException If something goes wrong
      */
@@ -1718,16 +1757,20 @@ public class CardDbAdapter {
     }
 
     /**
-     * @param category
-     * @param subcategory
-     * @param entry
-     * @param text
-     * @param position
+     * TABLE DATABASE_TABLE_RULES
+     * <p/>
+     * Insert a rule's title & text into the database with it's category, subcategory, and position
+     *
+     * @param category    The integer category
+     * @param subcategory The integer subcategory
+     * @param entry       The title of the rule
+     * @param text        The text of the rule
+     * @param position    The rule's position
      * @param mDb         The database to insert a rule into
      * @throws FamiliarDbException If something goes wrong
      */
-    public static void insertRule(int category, int subcategory, String entry,
-                                  String text, int position, SQLiteDatabase mDb) throws FamiliarDbException {
+    public static void insertRule(int category, int subcategory, String entry, String text,
+                                  int position, SQLiteDatabase mDb) throws FamiliarDbException {
         if (entry == null) {
             entry = "NULL";
         } else {
