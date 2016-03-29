@@ -103,7 +103,7 @@ public class TutorCards {
     }
 
     /**
-     * Checks if tutor.cards is up or down by sending an HTTP GET to https://tutor.cards/api/status
+     * Checks if tutor.cards is up or down by sending an HTTP GET to https://api.tutor.cards/v1/status
      * This must not be called from the UI thread.
      *
      * @return true if the service is up, false if it is down
@@ -115,7 +115,7 @@ public class TutorCards {
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
-        HttpGet httpGet = new HttpGet("https://tutor.cards/api/status");
+        HttpGet httpGet = new HttpGet("https://api.tutor.cards/v1/status");
 
         /* Execute the GET and get the response. */
         HttpResponse response = httpclient.execute(httpGet);
@@ -152,7 +152,7 @@ public class TutorCards {
         /* Get an httpclient and create the POST */
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
-        HttpPost httppost = new HttpPost("https://tutor.cards/api/search");
+        HttpPost httppost = new HttpPost("https://api.tutor.cards/v1/search");
 
         /* Resize the bitmap so the shorter length is 320px */
         int oldHeight = bitmap.getHeight();
@@ -219,7 +219,7 @@ public class TutorCards {
         /* Get an httpclient and create the GET */
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
-        HttpGet httpGet = new HttpGet("https://tutor.cards/api/result/" + id);
+        HttpGet httpGet = new HttpGet("https://api.tutor.cards/v1/result/" + id);
 
         /* Execute the GET and get the response. */
         HttpResponse response = httpclient.execute(httpGet);

@@ -1338,6 +1338,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
                         dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
                         dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
+                        dialogLayout.findViewById(R.id.imageview3).setVisibility(View.GONE);
                         builder.setView(dialogLayout);
 
                         return builder.create();
