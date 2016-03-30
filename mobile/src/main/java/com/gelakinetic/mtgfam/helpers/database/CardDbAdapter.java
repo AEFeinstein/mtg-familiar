@@ -241,9 +241,13 @@ public class CardDbAdapter {
     /* A collection of sets which have foil cards which are not modern legal */
     private static final Set<String> nonModernFoilSets = buildNonModernFoilSets();
 
+    /**********************************************************************************************
+     *                                                                                            *
+     *                                  Functions for all tables                                  *
+     *                                                                                            *
+     **********************************************************************************************/
+
     /**
-     * TABLE DATABASE_ALL
-     * <p/>
      * Drop all of the tables, then create fresh copies of all of the tables
      *
      * @param sqLiteDatabase The database to remake tables in
@@ -272,132 +276,154 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
-     * Add a MtgCard to DATABASE_TABLE_CARDS
+     * Copy the internally packaged gzipped database to where Android can access it
      *
-     * @param card The card to add to DATABASE_TABLE_CARDS
-     * @param mDb  The database to add the card to
+     * @param context The Context to get the packaged gzipped database from
      */
-    public static void createCard(MtgCard card, SQLiteDatabase mDb) {
-        ContentValues initialValues = new ContentValues();
+    public static void copyDB(Context context) {
+        PreferenceAdapter adapter = new PreferenceAdapter(context);
 
-        initialValues.put(KEY_NAME, card.name);
-        initialValues.put(KEY_SET, card.set);
-        String types[] = card.type.split("\\s*-\\s*");
-        if (types.length > 0) {
-            initialValues.put(KEY_SUPERTYPE, types[0]);
-        } else {
-            initialValues.put(KEY_SUPERTYPE, "");
+        try {
+
+            String dbPath = context.getFilesDir().getPath();
+            dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+
+            File folder = new File(dbPath);
+            if (!folder.exists()) {
+                if (!folder.mkdir()) {
+                    /* Couldn't make the folder, so exit */
+                    return;
+                }
+            }
+            File dbFile = new File(folder, DATABASE_NAME);
+            if (dbFile.exists()) {
+                if (!dbFile.delete()) {
+                    /* Couldn't delete the old database, so exit */
+                    return;
+                }
+                adapter.setLastUpdate("");
+                adapter.setDatabaseVersion(-1);
+            }
+            if (!dbFile.exists()) {
+
+                GZIPInputStream gis = new GZIPInputStream(context.getResources()
+                        .openRawResource(R.raw.datagz));
+                FileOutputStream fos = new FileOutputStream(dbFile);
+
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = gis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, length);
+                }
+
+                adapter.setDatabaseVersion(CardDbAdapter.DATABASE_VERSION);
+
+                /* Close the streams */
+                fos.flush();
+                fos.close();
+                gis.close();
+            }
+        } catch (NotFoundException | IOException e) {
+            e.printStackTrace();
         }
-        if (types.length > 1) {
-            initialValues.put(KEY_SUBTYPE, types[1]);
-        } else {
-            initialValues.put(KEY_SUBTYPE, "");
-        }
-        initialValues.put(KEY_RARITY, (int) card.rarity);
-        initialValues.put(KEY_MANACOST, card.manaCost);
-        initialValues.put(KEY_CMC, card.cmc);
-        initialValues.put(KEY_POWER, card.power);
-        initialValues.put(KEY_TOUGHNESS, card.toughness);
-        initialValues.put(KEY_LOYALTY, card.loyalty);
-        initialValues.put(KEY_ABILITY, card.ability);
-        initialValues.put(KEY_FLAVOR, card.flavor);
-        initialValues.put(KEY_ARTIST, card.artist);
-        initialValues.put(KEY_NUMBER, card.number);
-        initialValues.put(KEY_COLOR, card.color);
-        initialValues.put(KEY_MULTIVERSEID, card.multiverseId);
-
-        mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
     }
 
     /**
-     * TABLE DATABASE_TABLE_SETS
-     * <p/>
-     * Add a MtgSet to DATABASE_TABLE_SETS
+     * Helper function to check if the database is up to date
      *
-     * @param set The set to add to DATABASE_TABLE_SETS
-     * @param mDb The database to add the set to
+     * @param context The context used to get the database file
+     * @return true if the database does not exist, is too small, or has a lower version than
+     * DATABASE_VERSION
      */
-    public static void createSet(MtgSet set, SQLiteDatabase mDb) {
-        ContentValues initialValues = new ContentValues();
-
-        initialValues.put(KEY_CODE, set.code);
-        initialValues.put(KEY_NAME, set.name);
-        initialValues.put(KEY_CODE_MTGI, set.codeMagicCards);
-        initialValues.put(KEY_DATE, set.date);
-        initialValues.put(KEY_DIGEST, set.digest);
-
-        mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
+    public static boolean isDbOutOfDate(Context context) {
+        PreferenceAdapter adapter = new PreferenceAdapter(context);
+        String dbPath = context.getFilesDir().getPath();
+        dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
+        File f = new File(dbPath, DATABASE_NAME);
+        int dbVersion = adapter.getDatabaseVersion();
+        return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
     }
 
     /**
-     * TABLE DATABASE_TABLE_SETS
-     * <p/>
-     * Add a TcgPlayer.com set name to DATABASE_TABLE_SETS
+     * Builds a map for all columns that may be requested, which will be given
+     * to the SQLiteQueryBuilder. This is a good way to define aliases for
+     * column names, but must include all columns, even if the value is the key.
+     * This allows the ContentProvider to request columns w/o the need to know
+     * real column names and create the alias itself.
      *
-     * @param name The TcgPlayer.com name
-     * @param code The set code to add the TcgPlayer.com name to
-     * @param mDb  The database to add the TcgPlayer.com name to
+     * @return A column map
      */
-    public static void addTcgName(String name, String code, SQLiteDatabase mDb) {
-        ContentValues args = new ContentValues();
-
-        args.put(KEY_NAME_TCGPLAYER, name);
-
-        mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
+    private static HashMap<String, String> buildColumnMap() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(KEY_NAME, KEY_NAME);
+        map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
+        map.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS "
+                + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
+        map.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS "
+                + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
+        return map;
     }
 
+    /**********************************************************************************************
+     *                                                                                            *
+     *                               DATABASE_TABLE_CARDS Functions                               *
+     *                                                                                            *
+     **********************************************************************************************/
+
     /**
-     * TABLE DATABASE_TABLE_SETS
-     * <p/>
-     * Returns a cursor with all the information about all of the sets
+     * Return a String array of all the unique values in a given column in DATABASE_TABLE_CARDS
      *
-     * @param sqLiteDatabase The database to query
-     * @return a Cursor with all of the information about all of the sets
+     * @param colKey      The column to return unique values from
+     * @param shouldSplit Whether or not each individual word from the column should be considered
+     *                    unique, or whether the full String should be considered unique
+     * @param database    The database to query
+     * @return A String array of unique values from the given column
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchAllSets(SQLiteDatabase sqLiteDatabase) throws FamiliarDbException {
-
-        Cursor c;
+    public static String[] getUniqueColumnArray(String colKey, boolean shouldSplit,
+                                                SQLiteDatabase database) throws FamiliarDbException {
+        Cursor cursor = null;
         try {
-            c = sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
-                    null, null, null, KEY_DATE + " DESC");
-        } catch (SQLiteException | IllegalStateException | NullPointerException e) {
-            throw new FamiliarDbException(e);
-        }
+            String query =
+                    "SELECT " + KEY_ID + ", " + colKey +
+                            " FROM " + DATABASE_TABLE_CARDS +
+                            " GROUP BY " + colKey +
+                            " ORDER BY " + colKey;
+            cursor = database.rawQuery(query, null);
 
-        return c;
-    }
+            /* Skip over any empty entries in the column */
+            int colIndex = cursor.getColumnIndex(colKey);
+            cursor.moveToFirst();
+            while (cursor.getString(colIndex).equals("")) {
+                cursor.moveToNext();
+            }
 
-    /**
-     * TABLE DATABASE_TABLE_SETS
-     * <p/>
-     * Given a standard set code, return the Magiccards.info set code
-     *
-     * @param code The standard set code
-     * @param mDb  The database to query
-     * @return The Magiccards.info set code
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String getCodeMtgi(String code, SQLiteDatabase mDb) throws FamiliarDbException {
-        Cursor cursor;
-        try {
-            cursor = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI},
-                    KEY_CODE + "=\"" + code + "\"", null, null, null, null);
+            /* HashSets contain unique values. Put each individual word in it */
+            HashSet<String> words = new HashSet<>();
+            while (!cursor.isAfterLast()) {
+                if (shouldSplit) {
+                    Collections.addAll(words, cursor.getString(colIndex).split("\\s+"));
+                } else {
+                    words.add(cursor.getString(colIndex));
+                }
+                cursor.moveToNext();
+            }
+
+            /* Turn the HashSet into an array, and sort it */
+            String[] wordsArr = words.toArray(new String[words.size()]);
+            Arrays.sort(wordsArr);
+            cursor.close();
+            return wordsArr;
+
         } catch (SQLiteException | IllegalStateException e) {
+            if (cursor != null) {
+                cursor.close();
+            }
             throw new FamiliarDbException(e);
         }
-
-        cursor.moveToFirst();
-        String returnVal = cursor.getString(cursor.getColumnIndex(KEY_CODE_MTGI));
-        cursor.close();
-        return returnVal;
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Given a KEY_ID value, return a cursor with all of a card's information
      *
      * @param id  The KEY_ID value
@@ -424,8 +450,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TALBE DATABASE_TABLE_CARDS
-     * <p/>
      * Given a card's name, return a cursor with all of that card's requested information
      *
      * @param name        The name of the card to query
@@ -450,10 +474,9 @@ public class CardDbAdapter {
             }
             sql += field;
         }
-        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
-                + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
-                + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
-                + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name;
+        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS +
+                " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name;
         if (shouldGroup) {
             sql += " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE;
         }
@@ -473,8 +496,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Given a multiverse ID, return a cursor with all of that card's requested information
      *
      * @param multiverseId The card's multivers ID
@@ -496,10 +517,9 @@ public class CardDbAdapter {
             }
             sql += field;
         }
-        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
-                + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
-                + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
-                + DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID + " = " + multiverseId
+        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " +
+                DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
+                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID + " = " + multiverseId
                 + " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
                 + " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
                 + " DESC";
@@ -518,8 +538,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Given an ArrayList of CompressedWishlistInfo, fill in all the missing information by querying
      * the database
      *
@@ -542,9 +560,8 @@ public class CardDbAdapter {
         }
 
         sql += " FROM " + DATABASE_TABLE_CARDS +
-                " JOIN " + DATABASE_TABLE_SETS +
-                " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " +
-                DATABASE_TABLE_CARDS + "." + KEY_SET +
+                " JOIN " + DATABASE_TABLE_SETS + " ON " +
+                DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
                 " WHERE (";
 
         first = true;
@@ -627,8 +644,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Given a card name and set code, return a cursor with that card's requested data
      *
      * @param name    The card's name
@@ -679,8 +694,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Given a card name, return the KEY_ID for that card
      *
      * @param name The name of the card
@@ -719,8 +732,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * This function will query the database with the information in criteria and return a cursor
      * with the requested data
      *
@@ -817,7 +828,7 @@ public class CardDbAdapter {
                     break;
             }
         }
-        /** End Reuben's version 
+        /** End Reuben's version
 
          **
          * Reuben's version Differences: Original version only allowed for
@@ -941,7 +952,7 @@ public class CardDbAdapter {
                     break;
             }
         }
-        /** End Reuben's version 
+        /** End Reuben's version
          *************************************************************************************/
 
         if (criteria.flavor != null) {
@@ -969,7 +980,7 @@ public class CardDbAdapter {
         if (!(criteria.color.equals("wubrgl") || (criteria.color.equals("WUBRGL") && criteria.colorLogic == 0))) {
             boolean firstPrint = true;
 
-            /* Can't contain these colors 
+            /* Can't contain these colors
              **
              * ...if the chosen color logic was exactly (2) or none (3) of the
              * selected colors
@@ -1028,7 +1039,7 @@ public class CardDbAdapter {
             else
                 statement += ")";
         }
-        /** End of addition 
+        /** End of addition
          *************************************************************************************/
 
         if (criteria.set != null) {
@@ -1205,8 +1216,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Given a set and a card number, return the KEY_ID for that card
      *
      * @param set    The set code
@@ -1236,8 +1245,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Returns a card name queried by set and collector's number
      *
      * @param set    The set code
@@ -1267,593 +1274,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_FORMATS
-     * <p/>
-     * Create all tables relating to card legality
-     *
-     * @param mDb The database to create tables in
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static void createLegalTables(SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            mDb.execSQL(DATABASE_CREATE_FORMATS);
-            mDb.execSQL(DATABASE_CREATE_LEGAL_SETS);
-            mDb.execSQL(DATABASE_CREATE_BANNED_CARDS);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_FORMATS
-     * <p/>
-     * Drop all tables relating to legality
-     *
-     * @param mDb The database to drop tables from
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static void dropLegalTables(SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_FORMATS);
-            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_LEGAL_SETS);
-            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_BANNED_CARDS);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * DATABASE_TABLE_FORMATS
-     * <p/>
-     * Create a format in the database
-     *
-     * @param name The name of the format to create
-     * @param mDb  The database to create a format in
-     */
-    public static void createFormat(String name, SQLiteDatabase mDb) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_NAME, name);
-        mDb.insert(DATABASE_TABLE_FORMATS, null, initialValues);
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_LEGAL_SETS
-     * <p/>
-     * Add a set and format pair to the table of legal sets
-     *
-     * @param set    The set to add
-     * @param format The format the set is legal in
-     * @param mDb    The database to add legality data to
-     */
-    public static void addLegalSet(String set, String format, SQLiteDatabase mDb) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_SET, set);
-        initialValues.put(KEY_FORMAT, format);
-        mDb.insert(DATABASE_TABLE_LEGAL_SETS, null, initialValues);
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_BANNED_CARDS
-     * <p/>
-     * Add a card to the table of banned & restricted cards
-     *
-     * @param card   The name of the card to add to the banned cards table
-     * @param format The format the card is banned in
-     * @param status LEGAL, BANNED, or RESTRICTED
-     * @param mDb    The database to add a banned or restricted card to
-     */
-    public static void addLegalCard(String card, String format, int status, SQLiteDatabase mDb) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_NAME, card);
-        initialValues.put(KEY_LEGALITY, status);
-        initialValues.put(KEY_FORMAT, format);
-        mDb.insert(DATABASE_TABLE_BANNED_CARDS, null, initialValues);
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_FORMATS
-     * <p/>
-     * Fetch all formats that cards can be legal in
-     *
-     * @param mDb The database to query
-     * @return A cursor pointing to all formats
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static Cursor fetchAllFormats(SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            return mDb.query(DATABASE_TABLE_FORMATS, new String[]{KEY_ID,
-                    KEY_NAME,}, null, null, null, null, KEY_NAME);
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * Given a card and a format, check if that card is legal to play in that format
-     *
-     * @param mCardName The card to check legality for
-     * @param format    The format to check legality in
-     * @param mDb       The database to query
-     * @return LEGAL, BANNED, or RESTRICTED
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static int checkLegality(String mCardName, String format, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-        mCardName = sanitizeString(mCardName);
-        format = sanitizeString(format);
-
-        try {
-            /* The new way (single query per type, should be much faster) - Alex 
-             * TODO clean this up */
-            String sql = "SELECT COALESCE(CASE (SELECT "
-                    + KEY_SET
-                    + " FROM "
-                    + DATABASE_TABLE_CARDS
-                    + " WHERE "
-                    + KEY_NAME
-                    + " = "
-                    + mCardName
-                    + ") WHEN 'UG' THEN 1 WHEN 'UNH' THEN 1 WHEN 'ARS' THEN 1 WHEN 'PCP' THEN 1 "
-                    + "WHEN 'PP2' THEN 1 ELSE NULL END, "
-                    + "CASE (SELECT 1 FROM " + DATABASE_TABLE_CARDS
-                    + " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS
-                    + " ls ON ls." + KEY_SET + " = c." + KEY_SET + " WHERE ls."
-                    + KEY_FORMAT + " = " + format + " AND c." + KEY_NAME
-                    + " = " + mCardName
-                    + ") WHEN 1 THEN NULL ELSE CASE WHEN " + format
-                    + " = 'Legacy' " + "THEN NULL WHEN " + format
-                    + " = 'Vintage' THEN NULL WHEN " + format
-                    + " = 'Commander' THEN NULL ELSE 1 END END, (SELECT "
-                    + KEY_LEGALITY + " from " + DATABASE_TABLE_BANNED_CARDS
-                    + " WHERE " + KEY_NAME + " = " + mCardName + " AND "
-                    + KEY_FORMAT + " = " + format + "), 0) AS "
-                    + KEY_LEGALITY;
-
-            Cursor c = mDb.rawQuery(sql, null);
-
-            c.moveToFirst();
-            int legality = c.getInt(c.getColumnIndex(KEY_LEGALITY));
-            c.close();
-            return legality;
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_SETS
-     * <p/>
-     * Given a set code, return a String with the set name that TCGPlayer.com uses
-     *
-     * @param setCode The set code to search for
-     * @param mDb     The database to query
-     * @return The TCGPlayer.com name string
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String getTcgName(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            String sql = "SELECT " + KEY_NAME_TCGPLAYER +
-                    " FROM " + DATABASE_TABLE_SETS +
-                    " WHERE " + KEY_CODE + " = " + sanitizeString(setCode) + ";";
-            Cursor c = mDb.rawQuery(sql, null);
-            c.moveToFirst();
-
-            /* Some users had this cursor come up empty. I couldn't replicate. This is safe */
-            if (c.getCount() == 0) {
-                c.close();
-                return "";
-            }
-            String tcgName = c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
-            c.close();
-            return tcgName;
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_LEGAL_SETS
-     * <p/>
-     * Check if a set is legal in the Modern format
-     *
-     * @param setName The set name
-     * @param mDb     The database to query
-     * @return true if the set is modern legal, false otherwise
-     * @throws FamiliarDbException If something goes wrong
-     */
-    private static boolean isModernLegalSet(String setName, SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            String sql = "SELECT " + KEY_SET +
-                    " FROM " + DATABASE_TABLE_LEGAL_SETS +
-                    " WHERE " + KEY_SET + " = " + sanitizeString(setName) + ";";
-            Cursor c = mDb.rawQuery(sql, null);
-            boolean isModernLegal = (c.getCount() >= 1);
-            c.close();
-            return isModernLegal;
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_LEGAL_SETS
-     *
-     * @param mDb The database to query
-     * @return A Set of Strings of all the Modern legal sets
-     * @throws FamiliarDbException If something goes wrong
-     */
-    private static Set<String> getModernLegalSets(SQLiteDatabase mDb) throws FamiliarDbException {
-        Set<String> modernSets = new HashSet<>();
-        try {
-            String sql = "SELECT " + KEY_SET +
-                    " FROM " + DATABASE_TABLE_LEGAL_SETS +
-                    " WHERE " + KEY_FORMAT + " = 'Modern';";
-            Cursor c = mDb.rawQuery(sql, null);
-            c.moveToNext();
-            while (!c.isAfterLast()) {
-                modernSets.add(c.getString(0));
-                c.moveToNext();
-            }
-            c.close();
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-        return modernSets;
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_RULES
-     * <p/>
-     * Given a category and subcategory, return a Cursor pointing to all rules in that subcategory
-     *
-     * @param category    The integer category, or -1 for the main categories
-     * @param subcategory The integer subcategory, or -1 for no subcategory
-     * @param mDb         The database to query
-     * @return A Cursor pointing to all rules in that category & subcategory
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static Cursor getRules(int category, int subcategory, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-        try {
-            if (category == -1) {
-                /* No category specified; return the main categories */
-                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
-                        + " WHERE " + KEY_SUBCATEGORY + " = -1";
-                return mDb.rawQuery(sql, null);
-            } else if (subcategory == -1) {
-                /* No subcategory specified; return the subcategories under the given category */
-                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES +
-                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
-                        " AND " + KEY_SUBCATEGORY + " > -1" +
-                        " AND " + KEY_ENTRY + " IS NULL";
-                return mDb.rawQuery(sql, null);
-            } else {
-                /* Both specified; return the rules under the given subcategory */
-                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES +
-                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
-                        " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
-                        " AND " + KEY_ENTRY + " IS NOT NULL";
-                return mDb.rawQuery(sql, null);
-            }
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_RULES
-     * <p/>
-     * Given a keyword, category, and subcategory, return a Cursor pointing to all rules which
-     * match that keyword in that category & subcategory
-     *
-     * @param keyword     A keyword to look for in the rule
-     * @param category    The integer category, or -1 for the main categories
-     * @param subcategory The integer subcategory, or -1 for no subcategory
-     * @param mDb         The database to query
-     * @return A Cursor pointing to all rules which match that keyword in that category & subcategory
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static Cursor getRulesByKeyword(String keyword, int category, int subcategory,
-                                           SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            /* Don't let them pass in an empty string; it'll return ALL the rules */
-            if (keyword != null && !keyword.trim().equals("")) {
-                keyword = sanitizeString("%" + keyword + "%");
-
-                if (category == -1) {
-                    /* No category; we're searching from the main page, so no restrictions */
-                    String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
-                            + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
-                            + " AND " + KEY_ENTRY + " IS NOT NULL";
-                    return mDb.rawQuery(sql, null);
-                } else if (subcategory == -1) {
-                    /* No subcategory; we're searching from a category page, so 
-                     * restrict within that */
-                    String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
-                            + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
-                            + " AND " + KEY_ENTRY + " IS NOT NULL"
-                            + " AND " + KEY_CATEGORY + " = " + String.valueOf(category);
-                    return mDb.rawQuery(sql, null);
-                } else {
-                    /* We're searching within a subcategory, so restrict within 
-                     * that */
-                    String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
-                            + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
-                            + " AND " + KEY_ENTRY + " IS NOT NULL"
-                            + " AND " + KEY_CATEGORY + " = " + String.valueOf(category)
-                            + " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory);
-                    return mDb.rawQuery(sql, null);
-                }
-            }
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-        return null;
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_RULES
-     * <p/>
-     * Given a rule's category, subcategory, and entry, return that rule's position
-     *
-     * @param category    The rule's category
-     * @param subcategory The rule's subcategory
-     * @param entry       The rule's entry
-     * @param mDb         The database to query
-     * @return The position of the rule, or 0 if not found
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static int getRulePosition(int category, int subcategory, String entry, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-        try {
-            if (entry != null) {
-                String sql = "SELECT " + KEY_POSITION +
-                        " FROM " + DATABASE_TABLE_RULES +
-                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
-                        " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
-                        " AND " + KEY_ENTRY + " = " + sanitizeString(entry);
-                Cursor c = mDb.rawQuery(sql, null);
-                if (c != null) {
-                    c.moveToFirst();
-                    int result = c.getInt(c.getColumnIndex(KEY_POSITION));
-                    c.close();
-                    return result;
-                }
-            }
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-        return 0;
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_RULES
-     * <p/>
-     * Given a rule's category and subcategory, return the name of the category
-     *
-     * @param category    The rule's category
-     * @param subcategory The rule's subcategory
-     * @param mDb         The database to query
-     * @return A String with the rule's name, or ""
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String getCategoryName(int category, int subcategory, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-        try {
-            String sql = "SELECT " + KEY_RULE_TEXT +
-                    " FROM " + DATABASE_TABLE_RULES +
-                    " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
-                    " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
-                    " AND " + KEY_ENTRY + " IS NULL";
-            Cursor c = mDb.rawQuery(sql, null);
-            if (c != null) {
-                c.moveToFirst();
-                String result = c.getString(c.getColumnIndex(KEY_RULE_TEXT));
-                c.close();
-                return result;
-            }
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-        return "";
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_GLOSSARY
-     * <p/>
-     * Return a cursor to all glossary terms for the rules
-     *
-     * @param mDb The database to query
-     * @return A Cursor pointing to all glossary terms in the database
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static Cursor getGlossaryTerms(SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            String sql = "SELECT * FROM " + DATABASE_TABLE_GLOSSARY;
-            return mDb.rawQuery(sql, null);
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_BANNED_CARDS
-     * <p/>
-     * Given a format, return a cursor pointing to all the cards banned in that format
-     *
-     * @param mDb    The database to query
-     * @param format The format to return banned cards for
-     * @return A Cursor pointing to all banned cards in a format
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static Cursor getBannedCards(SQLiteDatabase mDb, String format) throws FamiliarDbException {
-        try {
-            String sql = "SELECT " +
-                    KEY_LEGALITY + ", GROUP_CONCAT(" + KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST +
-                    " FROM " + DATABASE_TABLE_BANNED_CARDS +
-                    " WHERE " + KEY_FORMAT + " = '" + format + "'" +
-                    " GROUP BY " + KEY_LEGALITY;
-            return mDb.rawQuery(sql, null);
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_LEGAL_SETS
-     * <p/>
-     * Given a format, return a cursor pointing to all sets legal in that format
-     *
-     * @param mDb    The database to query
-     * @param format The format to return legal sets for
-     * @return A Cursor pointing to all legal sets for the given format
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static Cursor getLegalSets(SQLiteDatabase mDb, String format) throws FamiliarDbException {
-        try {
-            String sql = "SELECT GROUP_CONCAT" +
-                    "(" + DATABASE_TABLE_SETS + "." + KEY_NAME + ", '<br>') AS " + KEY_LEGAL_SETS +
-                    " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS +
-                    " ON " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " = " + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
-                    " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
-            return mDb.rawQuery(sql, null);
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_CREATE_RULES
-     * <p/>
-     * Drop the rules and glossary tables
-     *
-     * @param mDb The database to drop tables from
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static void dropRulesTables(SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_RULES);
-            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_GLOSSARY);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_CREATE_RULES
-     * <p/>
-     * Create the rules and glossary tables
-     *
-     * @param mDb The database to add tables to
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static void createRulesTables(SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            mDb.execSQL(DATABASE_CREATE_RULES);
-            mDb.execSQL(DATABASE_CREATE_GLOSSARY);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_RULES
-     * <p/>
-     * Insert a rule's title & text into the database with it's category, subcategory, and position
-     *
-     * @param category    The integer category
-     * @param subcategory The integer subcategory
-     * @param entry       The title of the rule
-     * @param text        The text of the rule
-     * @param position    The rule's position
-     * @param mDb         The database to insert a rule into
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static void insertRule(int category, int subcategory, String entry, String text,
-                                  int position, SQLiteDatabase mDb) throws FamiliarDbException {
-        if (entry == null) {
-            entry = "NULL";
-        } else {
-            entry = sanitizeString(entry);
-        }
-        text = sanitizeString(text);
-        String positionStr;
-        if (position < 0) {
-            positionStr = "NULL";
-        } else {
-            positionStr = String.valueOf(position);
-        }
-        String sql = "INSERT INTO " + DATABASE_TABLE_RULES + " ("
-                + KEY_CATEGORY + ", " + KEY_SUBCATEGORY + ", " + KEY_ENTRY
-                + ", " + KEY_RULE_TEXT + ", " + KEY_POSITION + ") VALUES ("
-                + String.valueOf(category) + ", " + String.valueOf(subcategory)
-                + ", " + entry + ", " + text + ", " + positionStr + ");";
-        try {
-            mDb.execSQL(sql);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_GLOSSARY
-     * <p/>
-     * Insert a glossary term into DATABASE_TABLE_GLOSSARY
-     *
-     * @param term       The term to insert
-     * @param definition The definition for the glossary term
-     * @param mDb        The database to add the term to
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static void insertGlossaryTerm(String term, String definition, SQLiteDatabase mDb)
-            throws FamiliarDbException {
-        term = sanitizeString(term);
-        definition = sanitizeString(definition);
-        String sql = "INSERT INTO " + DATABASE_TABLE_GLOSSARY + " (" + KEY_TERM
-                + ", " + KEY_DEFINITION + ") VALUES (" + term + ", "
-                + definition + ");";
-        try {
-            mDb.execSQL(sql);
-        } catch (SQLiteException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * Builds a map for all columns that may be requested, which will be given
-     * to the SQLiteQueryBuilder. This is a good way to define aliases for
-     * column names, but must include all columns, even if the value is the key.
-     * This allows the ContentProvider to request columns w/o the need to know
-     * real column names and create the alias itself.
-     *
-     * @return A column map
-     */
-    private static HashMap<String, String> buildColumnMap() {
-        HashMap<String, String> map = new HashMap<>();
-        map.put(KEY_NAME, KEY_NAME);
-        map.put(BaseColumns._ID, "rowid AS " + BaseColumns._ID);
-        map.put(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, "rowid AS "
-                + SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID);
-        map.put(SearchManager.SUGGEST_COLUMN_SHORTCUT_ID, "rowid AS "
-                + SearchManager.SUGGEST_COLUMN_SHORTCUT_ID);
-        return map;
-    }
-
-    /**
-     * @return a Set of all set codes which are not Modern legal, but can still have foil cards
-     */
-    private static Set<String> buildNonModernFoilSets() {
-        Set<String> nonModernFoilSets = new HashSet<>();
-        String[] extraSets = {
-                "UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON",
-                "LE", "SC", "CNS", "CNSC"};
-        nonModernFoilSets.addAll(Arrays.asList(extraSets));
-        return nonModernFoilSets;
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Returns a Cursor positioned at the word specified by rowId
      *
      * @param rowId   id of word to retrieve
@@ -1895,8 +1315,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Returns a Cursor over all words that match the given query
      *
      * @param query The string to search for
@@ -1939,77 +1357,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * Helper function to check if the database is up to date
-     *
-     * @param context The context used to get the database file
-     * @return true if the database does not exist, is too small, or has a lower version than
-     * DATABASE_VERSION
-     */
-    public static boolean isDbOutOfDate(Context context) {
-        PreferenceAdapter adapter = new PreferenceAdapter(context);
-        String dbPath = context.getFilesDir().getPath();
-        dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
-        File f = new File(dbPath, DATABASE_NAME);
-        int dbVersion = adapter.getDatabaseVersion();
-        return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
-    }
-
-    /**
-     * Copy the internally packaged gzipped database to where Android can access it
-     *
-     * @param context The Context to get the packaged gzipped database from
-     */
-    public static void copyDB(Context context) {
-        PreferenceAdapter adapter = new PreferenceAdapter(context);
-
-        try {
-
-            String dbPath = context.getFilesDir().getPath();
-            dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
-
-            File folder = new File(dbPath);
-            if (!folder.exists()) {
-                if (!folder.mkdir()) {
-                    /* Couldn't make the folder, so exit */
-                    return;
-                }
-            }
-            File dbFile = new File(folder, DATABASE_NAME);
-            if (dbFile.exists()) {
-                if (!dbFile.delete()) {
-                    /* Couldn't delete the old database, so exit */
-                    return;
-                }
-                adapter.setLastUpdate("");
-                adapter.setDatabaseVersion(-1);
-            }
-            if (!dbFile.exists()) {
-
-                GZIPInputStream gis = new GZIPInputStream(context.getResources()
-                        .openRawResource(R.raw.datagz));
-                FileOutputStream fos = new FileOutputStream(dbFile);
-
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = gis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, length);
-                }
-
-                adapter.setDatabaseVersion(CardDbAdapter.DATABASE_VERSION);
-
-                /* Close the streams */
-                fos.flush();
-                fos.close();
-                gis.close();
-            }
-        } catch (NotFoundException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Given a card name and the set it's from, return the card's multiverse ID
      *
      * @param name    The card's name
@@ -2042,8 +1389,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
      * Given a multiverseId for a multicard, return the full card name, which has each half
      * of the card separated by "//"
      *
@@ -2085,6 +1430,860 @@ public class CardDbAdapter {
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
+    }
+
+    /**
+     * Add a MtgCard to DATABASE_TABLE_CARDS
+     *
+     * @param card The card to add to DATABASE_TABLE_CARDS
+     * @param mDb  The database to add the card to
+     */
+    public static void createCard(MtgCard card, SQLiteDatabase mDb) {
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put(KEY_NAME, card.name);
+        initialValues.put(KEY_SET, card.set);
+        String types[] = card.type.split("\\s*-\\s*");
+        if (types.length > 0) {
+            initialValues.put(KEY_SUPERTYPE, types[0]);
+        } else {
+            initialValues.put(KEY_SUPERTYPE, "");
+        }
+        if (types.length > 1) {
+            initialValues.put(KEY_SUBTYPE, types[1]);
+        } else {
+            initialValues.put(KEY_SUBTYPE, "");
+        }
+        initialValues.put(KEY_RARITY, (int) card.rarity);
+        initialValues.put(KEY_MANACOST, card.manaCost);
+        initialValues.put(KEY_CMC, card.cmc);
+        initialValues.put(KEY_POWER, card.power);
+        initialValues.put(KEY_TOUGHNESS, card.toughness);
+        initialValues.put(KEY_LOYALTY, card.loyalty);
+        initialValues.put(KEY_ABILITY, card.ability);
+        initialValues.put(KEY_FLAVOR, card.flavor);
+        initialValues.put(KEY_ARTIST, card.artist);
+        initialValues.put(KEY_NUMBER, card.number);
+        initialValues.put(KEY_COLOR, card.color);
+        initialValues.put(KEY_MULTIVERSEID, card.multiverseId);
+
+        mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
+    }
+
+    /**
+     * I messed up with Duel Deck Anthologies. Each deck should have had its own set code,
+     * rather than grouping them all together. This function fixes any saved cards when loaded
+     *
+     * @param name     The name of the card to get the correct set code for
+     * @param setCode  The incorrect set code (i.e. DD3)
+     * @param database A database to query
+     * @return The correct set code (i.e. DD3EVG)
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static String getCorrectSetCode(String name, String setCode, SQLiteDatabase database)
+            throws FamiliarDbException {
+
+        Cursor cursor = null;
+        try {
+            String sql =
+                    "SELECT " + KEY_SET +
+                            " FROM " + DATABASE_TABLE_CARDS +
+                            " WHERE (" + KEY_NAME + " = " + sanitizeString(name) +
+                            " AND " + KEY_SET + " LIKE " + sanitizeString(setCode + "%") + ")";
+
+            cursor = database.rawQuery(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                String correctCode = cursor.getString(cursor.getColumnIndex(KEY_SET));
+                cursor.close();
+                return correctCode;
+            }
+        } catch (SQLiteException | IllegalStateException e) {
+            if (cursor != null) {
+                cursor.close();
+            }
+            throw new FamiliarDbException(e);
+        }
+        return setCode;
+    }
+
+    /**
+     * Drop an expansion and all of its cards
+     *
+     * @param setCode  The expansion to drop
+     * @param database The database to drop from
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static void dropSetAndCards(String setCode, SQLiteDatabase database)
+            throws FamiliarDbException {
+
+        try {
+            database.delete(DATABASE_TABLE_CARDS, KEY_SET + " = " + sanitizeString(setCode), null);
+            database.delete(DATABASE_TABLE_SETS, KEY_CODE + " = " + sanitizeString(setCode), null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Given a Cursor pointed at a card, return the full type line (sub - super) for that card
+     *
+     * @param cCardById The cursor pointing to a card
+     * @return A String with the full type line
+     */
+    public static String getTypeLine(Cursor cCardById) {
+        StringBuilder typeLine = new StringBuilder();
+        String supertype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUPERTYPE));
+        String subtype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUBTYPE));
+
+        typeLine.append(supertype);
+        if (subtype.length() > 0) {
+            typeLine.append(" - ");
+            typeLine.append(subtype);
+        }
+        return typeLine.toString();
+    }
+
+    /**********************************************************************************************
+     *                                                                                            *
+     *                           DATABASE_TABLE_BANNED_CARDS Functions                            *
+     *                                                                                            *
+     **********************************************************************************************/
+
+    /**
+     * Add a card to the table of banned & restricted cards
+     *
+     * @param card   The name of the card to add to the banned cards table
+     * @param format The format the card is banned in
+     * @param status LEGAL, BANNED, or RESTRICTED
+     * @param mDb    The database to add a banned or restricted card to
+     */
+    public static void addLegalCard(String card, String format, int status, SQLiteDatabase mDb) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_NAME, card);
+        initialValues.put(KEY_LEGALITY, status);
+        initialValues.put(KEY_FORMAT, format);
+        mDb.insert(DATABASE_TABLE_BANNED_CARDS, null, initialValues);
+    }
+
+    /**
+     * Given a format, return a cursor pointing to all the cards banned in that format
+     *
+     * @param mDb    The database to query
+     * @param format The format to return banned cards for
+     * @return A Cursor pointing to all banned cards in a format
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Cursor getBannedCards(SQLiteDatabase mDb, String format) throws FamiliarDbException {
+        try {
+            String sql = "SELECT " +
+                    KEY_LEGALITY + ", GROUP_CONCAT(" + KEY_NAME + ", '<br>') AS " + KEY_BANNED_LIST +
+                    " FROM " + DATABASE_TABLE_BANNED_CARDS +
+                    " WHERE " + KEY_FORMAT + " = '" + format + "'" +
+                    " GROUP BY " + KEY_LEGALITY;
+            return mDb.rawQuery(sql, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Given a card and a format, check if that card is legal to play in that format
+     *
+     * @param mCardName The card to check legality for
+     * @param format    The format to check legality in
+     * @param mDb       The database to query
+     * @return LEGAL, BANNED, or RESTRICTED
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static int checkLegality(String mCardName, String format, SQLiteDatabase mDb)
+            throws FamiliarDbException {
+        mCardName = sanitizeString(mCardName);
+        format = sanitizeString(format);
+
+        try {
+            /* The new way (single query per type, should be much faster) - Alex
+             * TODO clean this up */
+            String sql = "SELECT COALESCE(CASE (SELECT "
+                    + KEY_SET
+                    + " FROM "
+                    + DATABASE_TABLE_CARDS
+                    + " WHERE "
+                    + KEY_NAME
+                    + " = "
+                    + mCardName
+                    + ") WHEN 'UG' THEN 1 WHEN 'UNH' THEN 1 WHEN 'ARS' THEN 1 WHEN 'PCP' THEN 1 "
+                    + "WHEN 'PP2' THEN 1 ELSE NULL END, "
+                    + "CASE (SELECT 1 FROM " + DATABASE_TABLE_CARDS
+                    + " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS
+                    + " ls ON ls." + KEY_SET + " = c." + KEY_SET + " WHERE ls."
+                    + KEY_FORMAT + " = " + format + " AND c." + KEY_NAME
+                    + " = " + mCardName
+                    + ") WHEN 1 THEN NULL ELSE CASE WHEN " + format
+                    + " = 'Legacy' " + "THEN NULL WHEN " + format
+                    + " = 'Vintage' THEN NULL WHEN " + format
+                    + " = 'Commander' THEN NULL ELSE 1 END END, (SELECT "
+                    + KEY_LEGALITY + " from " + DATABASE_TABLE_BANNED_CARDS
+                    + " WHERE " + KEY_NAME + " = " + mCardName + " AND "
+                    + KEY_FORMAT + " = " + format + "), 0) AS "
+                    + KEY_LEGALITY;
+
+            Cursor c = mDb.rawQuery(sql, null);
+
+            c.moveToFirst();
+            int legality = c.getInt(c.getColumnIndex(KEY_LEGALITY));
+            c.close();
+            return legality;
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**********************************************************************************************
+     *                                                                                            *
+     *                               DATABASE_TABLE_SETS Functions                                *
+     *                                                                                            *
+     **********************************************************************************************/
+
+    /**
+     * Add a MtgSet to DATABASE_TABLE_SETS
+     *
+     * @param set The set to add to DATABASE_TABLE_SETS
+     * @param mDb The database to add the set to
+     */
+    public static void createSet(MtgSet set, SQLiteDatabase mDb) {
+        ContentValues initialValues = new ContentValues();
+
+        initialValues.put(KEY_CODE, set.code);
+        initialValues.put(KEY_NAME, set.name);
+        initialValues.put(KEY_CODE_MTGI, set.codeMagicCards);
+        initialValues.put(KEY_DATE, set.date);
+        initialValues.put(KEY_DIGEST, set.digest);
+
+        mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
+    }
+
+    /**
+     * Add a TcgPlayer.com set name to DATABASE_TABLE_SETS
+     *
+     * @param name The TcgPlayer.com name
+     * @param code The set code to add the TcgPlayer.com name to
+     * @param mDb  The database to add the TcgPlayer.com name to
+     */
+    public static void addTcgName(String name, String code, SQLiteDatabase mDb) {
+        ContentValues args = new ContentValues();
+
+        args.put(KEY_NAME_TCGPLAYER, name);
+
+        mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
+    }
+
+    /**
+     * Returns a cursor with all the information about all of the sets
+     *
+     * @param sqLiteDatabase The database to query
+     * @return a Cursor with all of the information about all of the sets
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Cursor fetchAllSets(SQLiteDatabase sqLiteDatabase) throws FamiliarDbException {
+
+        Cursor c;
+        try {
+            c = sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
+                    null, null, null, KEY_DATE + " DESC");
+        } catch (SQLiteException | IllegalStateException | NullPointerException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        return c;
+    }
+
+    /**
+     * Given a standard set code, return the Magiccards.info set code
+     *
+     * @param code The standard set code
+     * @param mDb  The database to query
+     * @return The Magiccards.info set code
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static String getCodeMtgi(String code, SQLiteDatabase mDb) throws FamiliarDbException {
+        Cursor cursor;
+        try {
+            cursor = mDb.query(DATABASE_TABLE_SETS, new String[]{KEY_CODE_MTGI},
+                    KEY_CODE + "=\"" + code + "\"", null, null, null, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        cursor.moveToFirst();
+        String returnVal = cursor.getString(cursor.getColumnIndex(KEY_CODE_MTGI));
+        cursor.close();
+        return returnVal;
+    }
+
+    /**
+     * Given a set code, return the full set name
+     *
+     * @param setCode  The set code to look up
+     * @param database The database to query
+     * @return The full set name
+     * @throws FamiliarDbException
+     */
+    public static String getSetNameFromCode(String setCode, SQLiteDatabase database)
+            throws FamiliarDbException {
+
+        String columns[] = new String[]{KEY_NAME};
+        Cursor c;
+        try {
+            c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                    + "=\"" + setCode + "\"", null, null, null, KEY_NAME, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        String returnString = "";
+        if (c != null && c.getCount() > 0) {
+            c.moveToFirst();
+            returnString = c.getString(c.getColumnIndex(KEY_NAME));
+            c.close();
+        }
+        return returnString;
+    }
+
+
+    /**
+     * Given a set code, return a String with the set name that TCGPlayer.com uses
+     *
+     * @param setCode The set code to search for
+     * @param mDb     The database to query
+     * @return The TCGPlayer.com name string
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static String getTcgName(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            String sql = "SELECT " + KEY_NAME_TCGPLAYER +
+                    " FROM " + DATABASE_TABLE_SETS +
+                    " WHERE " + KEY_CODE + " = " + sanitizeString(setCode) + ";";
+            Cursor c = mDb.rawQuery(sql, null);
+            c.moveToFirst();
+
+            /* Some users had this cursor come up empty. I couldn't replicate. This is safe */
+            if (c.getCount() == 0) {
+                c.close();
+                return "";
+            }
+            String tcgName = c.getString(c.getColumnIndex(KEY_NAME_TCGPLAYER));
+            c.close();
+            return tcgName;
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Helper function to determine what kind of multicard a card is based on set and number
+     *
+     * @param number  The card number
+     * @param setCode The set the card is in
+     * @return TRANSFORM, FUSE, SPLIT, or NOPE
+     */
+    public static MultiCardType isMultiCard(String number, String setCode) {
+        if (number.contains("a") || number.contains("b")) {
+            if (setCode.compareTo("ISD") == 0 ||
+                    setCode.compareTo("DKA") == 0 ||
+                    setCode.compareTo("SOI") == 0 ||
+                    setCode.compareTo("EMN") == 0 ||
+                    setCode.compareTo("ORI") == 0) {
+                return MultiCardType.TRANSFORM;
+            } else if (setCode.compareTo("DGM") == 0) {
+                return MultiCardType.FUSE;
+            } else {
+                return MultiCardType.SPLIT;
+            }
+        }
+        return MultiCardType.NOPE;
+    }
+
+    /**
+     * @return a Set of all set codes which are not Modern legal, but can still have foil cards
+     */
+    private static Set<String> buildNonModernFoilSets() {
+        Set<String> nonModernFoilSets = new HashSet<>();
+        String[] extraSets = {
+                "UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON",
+                "LE", "SC", "CNS", "CNSC"};
+        nonModernFoilSets.addAll(Arrays.asList(extraSets));
+        return nonModernFoilSets;
+    }
+
+    /**********************************************************************************************
+     *                                                                                            *
+     *                             DATABASE_TABLE_LEGAL_SETS Functions                            *
+     *                                                                                            *
+     **********************************************************************************************/
+
+    /**
+     * Add a set and format pair to the table of legal sets
+     *
+     * @param set    The set to add
+     * @param format The format the set is legal in
+     * @param mDb    The database to add legality data to
+     */
+    public static void addLegalSet(String set, String format, SQLiteDatabase mDb) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_SET, set);
+        initialValues.put(KEY_FORMAT, format);
+        mDb.insert(DATABASE_TABLE_LEGAL_SETS, null, initialValues);
+    }
+
+    /**
+     * Check if a set is legal in the Modern format
+     *
+     * @param setName The set name
+     * @param mDb     The database to query
+     * @return true if the set is modern legal, false otherwise
+     * @throws FamiliarDbException If something goes wrong
+     */
+    private static boolean isModernLegalSet(String setName, SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            String sql = "SELECT " + KEY_SET +
+                    " FROM " + DATABASE_TABLE_LEGAL_SETS +
+                    " WHERE " + KEY_SET + " = " + sanitizeString(setName) + ";";
+            Cursor c = mDb.rawQuery(sql, null);
+            boolean isModernLegal = (c.getCount() >= 1);
+            c.close();
+            return isModernLegal;
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Helper function to determine if a set contains foil cards
+     *
+     * @param setCode The set code
+     * @param mDb     The database to query
+     * @return true if the set has foils, false otherwise
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
+        return nonModernFoilSets.contains(setCode) || isModernLegalSet(setCode, mDb);
+    }
+
+    /**
+     * @param mDb The database to query
+     * @return A Set of Strings of all the Modern legal sets
+     * @throws FamiliarDbException If something goes wrong
+     */
+    private static Set<String> getModernLegalSets(SQLiteDatabase mDb) throws FamiliarDbException {
+        Set<String> modernSets = new HashSet<>();
+        try {
+            String sql = "SELECT " + KEY_SET +
+                    " FROM " + DATABASE_TABLE_LEGAL_SETS +
+                    " WHERE " + KEY_FORMAT + " = 'Modern';";
+            Cursor c = mDb.rawQuery(sql, null);
+            c.moveToNext();
+            while (!c.isAfterLast()) {
+                modernSets.add(c.getString(0));
+                c.moveToNext();
+            }
+            c.close();
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+        return modernSets;
+    }
+
+    /**
+     * Helper function to return all set codes which can have foil cards.
+     *
+     * @param mDb The database to query
+     * @return A Set of set codes which can contain foil cards
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Set<String> getFoilSets(SQLiteDatabase mDb) throws FamiliarDbException {
+        Set<String> foilSets = new HashSet<>();
+        foilSets.addAll(nonModernFoilSets);
+        foilSets.addAll(getModernLegalSets(mDb));
+        return foilSets;
+    }
+
+    /**
+     * Given a format, return a cursor pointing to all sets legal in that format
+     *
+     * @param mDb    The database to query
+     * @param format The format to return legal sets for
+     * @return A Cursor pointing to all legal sets for the given format
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Cursor getLegalSets(SQLiteDatabase mDb, String format) throws FamiliarDbException {
+        try {
+            String sql = "SELECT GROUP_CONCAT" +
+                    "(" + DATABASE_TABLE_SETS + "." + KEY_NAME + ", '<br>') AS " + KEY_LEGAL_SETS +
+                    " FROM (" + DATABASE_TABLE_LEGAL_SETS + " JOIN " + DATABASE_TABLE_SETS +
+                    " ON " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " = " + DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
+                    " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + " = '" + format + "'";
+            return mDb.rawQuery(sql, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**********************************************************************************************
+     *                                                                                            *
+     *                              DATABASE_TABLE_FORMATS Functions                              *
+     *                                                                                            *
+     **********************************************************************************************/
+
+    /**
+     * DATABASE_TABLE_FORMATS
+     * <p/>
+     * Create a format in the database
+     *
+     * @param name The name of the format to create
+     * @param mDb  The database to create a format in
+     */
+    public static void createFormat(String name, SQLiteDatabase mDb) {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(KEY_NAME, name);
+        mDb.insert(DATABASE_TABLE_FORMATS, null, initialValues);
+    }
+
+    /**
+     * Create all tables relating to card legality
+     *
+     * @param mDb The database to create tables in
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static void createLegalTables(SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            mDb.execSQL(DATABASE_CREATE_FORMATS);
+            mDb.execSQL(DATABASE_CREATE_LEGAL_SETS);
+            mDb.execSQL(DATABASE_CREATE_BANNED_CARDS);
+        } catch (SQLiteException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Drop all tables relating to legality
+     *
+     * @param mDb The database to drop tables from
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static void dropLegalTables(SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_FORMATS);
+            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_LEGAL_SETS);
+            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_BANNED_CARDS);
+        } catch (SQLiteException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Fetch all formats that cards can be legal in
+     *
+     * @param mDb The database to query
+     * @return A cursor pointing to all formats
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Cursor fetchAllFormats(SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            return mDb.query(DATABASE_TABLE_FORMATS, new String[]{KEY_ID,
+                    KEY_NAME,}, null, null, null, null, KEY_NAME);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**********************************************************************************************
+     *                                                                                            *
+     *                               DATABASE_TABLE_RULES Functions                               *
+     *                                                                                            *
+     **********************************************************************************************/
+
+    /**
+     * TABLE DATABASE_CREATE_RULES
+     * <p/>
+     * Drop the rules and glossary tables
+     *
+     * @param mDb The database to drop tables from
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static void dropRulesTables(SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_RULES);
+            mDb.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_GLOSSARY);
+        } catch (SQLiteException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * TABLE DATABASE_CREATE_RULES
+     * <p/>
+     * Create the rules and glossary tables
+     *
+     * @param mDb The database to add tables to
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static void createRulesTables(SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            mDb.execSQL(DATABASE_CREATE_RULES);
+            mDb.execSQL(DATABASE_CREATE_GLOSSARY);
+        } catch (SQLiteException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Given a category and subcategory, return a Cursor pointing to all rules in that subcategory
+     *
+     * @param category    The integer category, or -1 for the main categories
+     * @param subcategory The integer subcategory, or -1 for no subcategory
+     * @param mDb         The database to query
+     * @return A Cursor pointing to all rules in that category & subcategory
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Cursor getRules(int category, int subcategory, SQLiteDatabase mDb)
+            throws FamiliarDbException {
+        try {
+            if (category == -1) {
+                /* No category specified; return the main categories */
+                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
+                        + " WHERE " + KEY_SUBCATEGORY + " = -1";
+                return mDb.rawQuery(sql, null);
+            } else if (subcategory == -1) {
+                /* No subcategory specified; return the subcategories under the given category */
+                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES +
+                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                        " AND " + KEY_SUBCATEGORY + " > -1" +
+                        " AND " + KEY_ENTRY + " IS NULL";
+                return mDb.rawQuery(sql, null);
+            } else {
+                /* Both specified; return the rules under the given subcategory */
+                String sql = "SELECT * FROM " + DATABASE_TABLE_RULES +
+                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                        " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                        " AND " + KEY_ENTRY + " IS NOT NULL";
+                return mDb.rawQuery(sql, null);
+            }
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Given a keyword, category, and subcategory, return a Cursor pointing to all rules which
+     * match that keyword in that category & subcategory
+     *
+     * @param keyword     A keyword to look for in the rule
+     * @param category    The integer category, or -1 for the main categories
+     * @param subcategory The integer subcategory, or -1 for no subcategory
+     * @param mDb         The database to query
+     * @return A Cursor pointing to all rules which match that keyword in that category & subcategory
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Cursor getRulesByKeyword(String keyword, int category, int subcategory,
+                                           SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            /* Don't let them pass in an empty string; it'll return ALL the rules */
+            if (keyword != null && !keyword.trim().equals("")) {
+                keyword = sanitizeString("%" + keyword + "%");
+
+                if (category == -1) {
+                    /* No category; we're searching from the main page, so no restrictions */
+                    String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
+                            + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
+                            + " AND " + KEY_ENTRY + " IS NOT NULL";
+                    return mDb.rawQuery(sql, null);
+                } else if (subcategory == -1) {
+                    /* No subcategory; we're searching from a category page, so
+                     * restrict within that */
+                    String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
+                            + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
+                            + " AND " + KEY_ENTRY + " IS NOT NULL"
+                            + " AND " + KEY_CATEGORY + " = " + String.valueOf(category);
+                    return mDb.rawQuery(sql, null);
+                } else {
+                    /* We're searching within a subcategory, so restrict within
+                     * that */
+                    String sql = "SELECT * FROM " + DATABASE_TABLE_RULES
+                            + " WHERE " + KEY_RULE_TEXT + " LIKE " + keyword
+                            + " AND " + KEY_ENTRY + " IS NOT NULL"
+                            + " AND " + KEY_CATEGORY + " = " + String.valueOf(category)
+                            + " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory);
+                    return mDb.rawQuery(sql, null);
+                }
+            }
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+        return null;
+    }
+
+    /**
+     * Given a rule's category, subcategory, and entry, return that rule's position
+     *
+     * @param category    The rule's category
+     * @param subcategory The rule's subcategory
+     * @param entry       The rule's entry
+     * @param mDb         The database to query
+     * @return The position of the rule, or 0 if not found
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static int getRulePosition(int category, int subcategory, String entry, SQLiteDatabase mDb)
+            throws FamiliarDbException {
+        try {
+            if (entry != null) {
+                String sql = "SELECT " + KEY_POSITION +
+                        " FROM " + DATABASE_TABLE_RULES +
+                        " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                        " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                        " AND " + KEY_ENTRY + " = " + sanitizeString(entry);
+                Cursor c = mDb.rawQuery(sql, null);
+                if (c != null) {
+                    c.moveToFirst();
+                    int result = c.getInt(c.getColumnIndex(KEY_POSITION));
+                    c.close();
+                    return result;
+                }
+            }
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+        return 0;
+    }
+
+    /**
+     * Given a rule's category and subcategory, return the name of the category
+     *
+     * @param category    The rule's category
+     * @param subcategory The rule's subcategory
+     * @param mDb         The database to query
+     * @return A String with the rule's name, or ""
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static String getCategoryName(int category, int subcategory, SQLiteDatabase mDb)
+            throws FamiliarDbException {
+        try {
+            String sql = "SELECT " + KEY_RULE_TEXT +
+                    " FROM " + DATABASE_TABLE_RULES +
+                    " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
+                    " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
+                    " AND " + KEY_ENTRY + " IS NULL";
+            Cursor c = mDb.rawQuery(sql, null);
+            if (c != null) {
+                c.moveToFirst();
+                String result = c.getString(c.getColumnIndex(KEY_RULE_TEXT));
+                c.close();
+                return result;
+            }
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+        return "";
+    }
+
+    /**
+     * Insert a rule's title & text into the database with it's category, subcategory, and position
+     *
+     * @param category    The integer category
+     * @param subcategory The integer subcategory
+     * @param entry       The title of the rule
+     * @param text        The text of the rule
+     * @param position    The rule's position
+     * @param mDb         The database to insert a rule into
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static void insertRule(int category, int subcategory, String entry, String text,
+                                  int position, SQLiteDatabase mDb) throws FamiliarDbException {
+        if (entry == null) {
+            entry = "NULL";
+        } else {
+            entry = sanitizeString(entry);
+        }
+        text = sanitizeString(text);
+        String positionStr;
+        if (position < 0) {
+            positionStr = "NULL";
+        } else {
+            positionStr = String.valueOf(position);
+        }
+        String sql = "INSERT INTO " + DATABASE_TABLE_RULES + " ("
+                + KEY_CATEGORY + ", " + KEY_SUBCATEGORY + ", " + KEY_ENTRY
+                + ", " + KEY_RULE_TEXT + ", " + KEY_POSITION + ") VALUES ("
+                + String.valueOf(category) + ", " + String.valueOf(subcategory)
+                + ", " + entry + ", " + text + ", " + positionStr + ");";
+        try {
+            mDb.execSQL(sql);
+        } catch (SQLiteException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**********************************************************************************************
+     *                                                                                            *
+     *                             DATABASE_TABLE_GLOSSARY Functions                              *
+     *                                                                                            *
+     **********************************************************************************************/
+
+    /**
+     * Insert a glossary term into DATABASE_TABLE_GLOSSARY
+     *
+     * @param term       The term to insert
+     * @param definition The definition for the glossary term
+     * @param mDb        The database to add the term to
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static void insertGlossaryTerm(String term, String definition, SQLiteDatabase mDb)
+            throws FamiliarDbException {
+        term = sanitizeString(term);
+        definition = sanitizeString(definition);
+        String sql = "INSERT INTO " + DATABASE_TABLE_GLOSSARY + " (" + KEY_TERM
+                + ", " + KEY_DEFINITION + ") VALUES (" + term + ", "
+                + definition + ");";
+        try {
+            mDb.execSQL(sql);
+        } catch (SQLiteException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * Return a cursor to all glossary terms for the rules
+     *
+     * @param mDb The database to query
+     * @return A Cursor pointing to all glossary terms in the database
+     * @throws FamiliarDbException If something goes wrong
+     */
+    public static Cursor getGlossaryTerms(SQLiteDatabase mDb) throws FamiliarDbException {
+        try {
+            String sql = "SELECT * FROM " + DATABASE_TABLE_GLOSSARY;
+            return mDb.rawQuery(sql, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**********************************************************************************************
+     *                                                                                            *
+     *                                      Helper Functions                                      *
+     *                                                                                            *
+     **********************************************************************************************/
+
+    /**
+     * Helper functin to sanitize a string, SQL queries, replace and "Ae" characters,
+     * and trim whitespace
+     *
+     * @param input A string to sanitize
+     * @return The sanitized String
+     */
+    private static String sanitizeString(String input) {
+        return DatabaseUtils.sqlEscapeString(input
+                .replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0])
+                .trim());
     }
 
     /**
@@ -2153,232 +2352,5 @@ public class CardDbAdapter {
                 .replace(Character.toChars(0xFC)[0] + "", "u")
                 .replace(Character.toChars(0xFD)[0] + "", "y")
                 .replace(Character.toChars(0xFF)[0] + "", "y");
-    }
-
-    /**
-     * Helper function to determine what kind of multicard a card is based on set and number
-     *
-     * @param number  The card number
-     * @param setCode The set the card is in
-     * @return TRANSFORM, FUSE, SPLIT, or NOPE
-     */
-    public static MultiCardType isMultiCard(String number, String setCode) {
-        if (number.contains("a") || number.contains("b")) {
-            if (setCode.compareTo("ISD") == 0 ||
-                    setCode.compareTo("DKA") == 0 ||
-                    setCode.compareTo("SOI") == 0 ||
-                    setCode.compareTo("EMN") == 0 ||
-                    setCode.compareTo("ORI") == 0) {
-                return MultiCardType.TRANSFORM;
-            } else if (setCode.compareTo("DGM") == 0) {
-                return MultiCardType.FUSE;
-            } else {
-                return MultiCardType.SPLIT;
-            }
-        }
-        return MultiCardType.NOPE;
-    }
-
-    /**
-     * Helper function to determine if a set contains foil cards
-     *
-     * @param setCode The set code
-     * @param mDb     The database to query
-     * @return true if the set has foils, false otherwise
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-        return nonModernFoilSets.contains(setCode) || isModernLegalSet(setCode, mDb);
-    }
-
-    /**
-     * Helper function to return all set codes which can have foil cards.
-     *
-     * @param mDb The database to query
-     * @return A Set of set codes which can contain foil cards
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static Set<String> getFoilSets(SQLiteDatabase mDb) throws FamiliarDbException {
-        Set<String> foilSets = new HashSet<>();
-        foilSets.addAll(nonModernFoilSets);
-        foilSets.addAll(getModernLegalSets(mDb));
-        return foilSets;
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_SETS
-     * <p/>
-     * Given a set code, return the full set name
-     *
-     * @param setCode  The set code to look up
-     * @param database The database to query
-     * @return The full set name
-     * @throws FamiliarDbException
-     */
-    public static String getSetNameFromCode(String setCode, SQLiteDatabase database)
-            throws FamiliarDbException {
-
-        String columns[] = new String[]{KEY_NAME};
-        Cursor c;
-        try {
-            c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
-                    + "=\"" + setCode + "\"", null, null, null, KEY_NAME, null);
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-
-        String returnString = "";
-        if (c != null && c.getCount() > 0) {
-            c.moveToFirst();
-            returnString = c.getString(c.getColumnIndex(KEY_NAME));
-            c.close();
-        }
-        return returnString;
-    }
-
-    /**
-     * Helper functin to sanitize a string, SQL queries, replace and "Ae" characters,
-     * and trim whitespace
-     *
-     * @param input A string to sanitize
-     * @return The sanitized String
-     */
-    private static String sanitizeString(String input) {
-        return DatabaseUtils.sqlEscapeString(input
-                .replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0])
-                .trim());
-    }
-
-    /**
-     * Given a Cursor pointed at a card, return the full type line (sub - super) for that card
-     *
-     * @param cCardById The cursor pointing to a card
-     * @return A String with the full type line
-     */
-    public static String getTypeLine(Cursor cCardById) {
-        StringBuilder typeLine = new StringBuilder();
-        String supertype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUPERTYPE));
-        String subtype = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SUBTYPE));
-
-        typeLine.append(supertype);
-        if (subtype.length() > 0) {
-            typeLine.append(" - ");
-            typeLine.append(subtype);
-        }
-        return typeLine.toString();
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
-     * Return a String array of all the unique values in a given column in DATABASE_TABLE_CARDS
-     *
-     * @param colKey      The column to return unique values from
-     * @param shouldSplit Whether or not each individual word from the column should be considered
-     *                    unique, or whether the full String should be considered unique
-     * @param database    The database to query
-     * @return A String array of unique values from the given column
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String[] getUniqueColumnArray(String colKey, boolean shouldSplit,
-                                                SQLiteDatabase database) throws FamiliarDbException {
-        Cursor cursor = null;
-        try {
-            String query =
-                    "SELECT " + KEY_ID + ", " + colKey +
-                            " FROM " + DATABASE_TABLE_CARDS +
-                            " GROUP BY " + colKey +
-                            " ORDER BY " + colKey;
-            cursor = database.rawQuery(query, null);
-
-            /* Skip over any empty entries in the column */
-            int colIndex = cursor.getColumnIndex(colKey);
-            cursor.moveToFirst();
-            while (cursor.getString(colIndex).equals("")) {
-                cursor.moveToNext();
-            }
-
-            /* HashSets contain unique values. Put each individual word in it */
-            HashSet<String> words = new HashSet<>();
-            while (!cursor.isAfterLast()) {
-                if (shouldSplit) {
-                    Collections.addAll(words, cursor.getString(colIndex).split("\\s+"));
-                } else {
-                    words.add(cursor.getString(colIndex));
-                }
-                cursor.moveToNext();
-            }
-
-            /* Turn the HashSet into an array, and sort it */
-            String[] wordsArr = words.toArray(new String[words.size()]);
-            Arrays.sort(wordsArr);
-            cursor.close();
-            return wordsArr;
-
-        } catch (SQLiteException | IllegalStateException e) {
-            if (cursor != null) {
-                cursor.close();
-            }
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
-     * I messed up with Duel Deck Anthologies. Each deck should have had its own set code,
-     * rather than grouping them all together. This function fixes any saved cards when loaded
-     *
-     * @param name     The name of the card to get the correct set code for
-     * @param setCode  The incorrect set code (i.e. DD3)
-     * @param database A database to query
-     * @return The correct set code (i.e. DD3EVG)
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static String getCorrectSetCode(String name, String setCode, SQLiteDatabase database)
-            throws FamiliarDbException {
-
-        Cursor cursor = null;
-        try {
-            String sql =
-                    "SELECT " + KEY_SET +
-                            " FROM " + DATABASE_TABLE_CARDS +
-                            " WHERE (" + KEY_NAME + " = " + sanitizeString(name) +
-                            " AND " + KEY_SET + " LIKE " + sanitizeString(setCode + "%") + ")";
-
-            cursor = database.rawQuery(sql, null);
-            if (cursor != null && cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                String correctCode = cursor.getString(cursor.getColumnIndex(KEY_SET));
-                cursor.close();
-                return correctCode;
-            }
-        } catch (SQLiteException | IllegalStateException e) {
-            if (cursor != null) {
-                cursor.close();
-            }
-            throw new FamiliarDbException(e);
-        }
-        return setCode;
-    }
-
-    /**
-     * TABLE DATABASE_TABLE_CARDS
-     * <p/>
-     * Drop an expansion and all of its cards
-     *
-     * @param setCode  The expansion to drop
-     * @param database The database to drop from
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static void dropSetAndCards(String setCode, SQLiteDatabase database)
-            throws FamiliarDbException {
-
-        try {
-            database.delete(DATABASE_TABLE_CARDS, KEY_SET + " = " + sanitizeString(setCode), null);
-            database.delete(DATABASE_TABLE_SETS, KEY_CODE + " = " + sanitizeString(setCode), null);
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
     }
 }
