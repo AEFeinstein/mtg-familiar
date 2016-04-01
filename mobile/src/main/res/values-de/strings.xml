@@ -79,7 +79,9 @@
     <string name="main_import_fail">Importieren fehlgeschlagen. Bitte speichern sie die Datei MTGFamiliar.Backup.zip im Stammverzeichnis Ihrer SD-Karte ab.</string>
     <string name="main_import_success">Importieren erfolgreich</string>
     <string name="main_whats_new_in_title">Was ist neu in Version</string>
-    <string name="main_whats_new_text">- Fehler im Updater behoebn</string>
+    <string name="main_whats_new_text">
+        - Fehler im Updater behoebn
+    </string>
     <string name="main_whats_new_title">Was ist neu</string>
     <string name="main_wishlist">Wunschliste</string>
     <string name="mojhosto_random_creature">Zufällige Kreatur</string>

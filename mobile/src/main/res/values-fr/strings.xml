@@ -99,11 +99,57 @@
     <string name="life_counter_spoken_poison">%1$s a %2$d marqueurs poison.</string>
     <string name="life_counter_spoken_poison_singular">%1$s a %2$d marqueur poison.</string>
     <string name="main_about">A propos</string>
-    <string name="main_about_text">Cette appli est mon cadeau à la communauté MTG.&lt;br&gt;&lt;br&gt; Envoyez vos questions, commentaires, problèmes et souhaits à &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;&lt;br&gt; Rejoignez la &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt;communauté beta&lt;/a&gt; sur Google+.&lt;br&gt;&lt;br&gt; Rejoignez le &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;projet open source&lt;/a&gt; sur GitHub.&lt;br&gt;&lt;br&gt; Merci à tous les contributeurs incluant, mais de manière non exhaustive, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, et bcGiR.&lt;br&gt;&lt;br&gt; Merci à tous les traducteurs incluant, mais de manière non exhaustive, Ghislain, Piotr, Víctor, Emilio, Alan, et Sebastian.&lt;br&gt;&lt;br&gt; Merci à tous ceux qui gèrent les sources de données incluant, mais de manière non exhaustive, Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) et Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;&lt;br&gt; Merci à reddit\'s &lt;a href=\"http://www.reddit.com/r/magicTCG/\"&gt;/r/magictcg&lt;/a&gt; pour les tests et retours.&lt;br&gt;&lt;br&gt; Merci spécial à Richard Garfield et le reste des gens chez &lt;a href=\"http://www.wizards.com/magic\"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;&lt;br&gt; -gelakinetic&lt;br&gt;&lt;br&gt; Magic the Gathering et les cartes Magic the Gathering sont ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;&lt;br&gt; &lt;a href=\"https://github.com/octo-online/robospice\"&gt;Robospice&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt; &lt;a href=\"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; utilisé sous Licence MIT&lt;/a&gt;.&lt;br&gt;&lt;br&gt; &lt;a href=\"https://github.com/derekbrameyer/android-betterpickers\"&gt;BetterPickers&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt; &lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt;PagerSlidingTabStrip&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;&lt;br&gt; Programme sous licence &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;&lt;br&gt; Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.</string>
+    <string name="main_about_text">
+        Cette appli est mon cadeau à la communauté MTG.&lt;br&gt;
+        &lt;br&gt;
+        Envoyez vos questions, commentaires, problèmes et souhaits à &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        Rejoignez la &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt;communauté beta&lt;/a&gt; sur Google+.&lt;br&gt;
+        &lt;br&gt;
+        Rejoignez le &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;projet open source&lt;/a&gt; sur GitHub.&lt;br&gt;
+        &lt;br&gt;
+        Merci à tous les contributeurs incluant, mais de manière non exhaustive, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, et bcGiR.&lt;br&gt;
+        &lt;br&gt;
+        Merci à tous les traducteurs incluant, mais de manière non exhaustive, Ghislain, Piotr, Víctor, Emilio, Alan, et Sebastian.&lt;br&gt;
+        &lt;br&gt;
+        Merci à tous ceux qui gèrent les sources de données incluant, mais de manière non exhaustive, Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) et Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
+        &lt;br&gt;
+        Merci à reddit\'s &lt;a href=\"http://www.reddit.com/r/magicTCG/\"&gt;/r/magictcg&lt;/a&gt; pour les tests et retours.&lt;br&gt;
+        &lt;br&gt;
+        Merci spécial à Richard Garfield et le reste des gens chez &lt;a href=\"http://www.wizards.com/magic\"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        -gelakinetic&lt;br&gt;
+        &lt;br&gt;
+        Magic the Gathering et les cartes Magic the Gathering sont ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
+        &lt;br&gt;
+        &lt;a href=\"https://github.com/octo-online/robospice\"&gt;Robospice&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        &lt;a href=\"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; utilisé sous Licence MIT&lt;/a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        &lt;a href=\"https://github.com/derekbrameyer/android-betterpickers\"&gt;BetterPickers&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        &lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt;PagerSlidingTabStrip&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        Programme sous licence &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.
+    </string>
     <string name="main_card_search">Chercher Carte</string>
     <string name="main_dice">Dés</string>
     <string name="main_donate_dialog_title">Don aux créateurs</string>
-    <string name="main_donate_text">Pour une appli MTG premium comme celle-ci, combien paieriez-vous ? 1 000 €? 10 000 €?&lt;br&gt;&lt;br&gt; Bon, si vous lisez ceci, vous savez déjà qu\'on la distribue gratuitement!&lt;br&gt;&lt;br&gt; Coder est un travail difficile, et nous développeurs appréciont les euros bonus ici ou là.&lt;br&gt;&lt;br&gt; Nous avons une passion du draft à alimenter, ok?&lt;br&gt;&lt;br&gt; Vous pouvez cliquer sur le bouton ci-dessous pour faire un don via PayPal. 1€ c\'est cool, 5€ ça l\'est encore plus. A vous de choisir.&lt;br&gt;&lt;br&gt; Alors, à quel point vous sentez-vous généreux aujourd\'hui?</string>
+    <string name="main_donate_text">
+        Pour une appli MTG premium comme celle-ci, combien paieriez-vous ? 1 000 €? 10 000 €?&lt;br&gt;
+        &lt;br&gt;
+        Bon, si vous lisez ceci, vous savez déjà qu\'on la distribue gratuitement!&lt;br&gt;
+        &lt;br&gt;
+        Coder est un travail difficile, et nous développeurs appréciont les euros bonus ici ou là.&lt;br&gt;
+        &lt;br&gt;
+        Nous avons une passion du draft à alimenter, ok?&lt;br&gt;
+        &lt;br&gt;
+        Vous pouvez cliquer sur le bouton ci-dessous pour faire un don via PayPal. 1€ c\'est cool, 5€ ça l\'est encore plus. A vous de choisir.&lt;br&gt;
+        &lt;br&gt;
+        Alors, à quel point vous sentez-vous généreux aujourd\'hui?
+    </string>
     <string name="main_donate_title">Faire un don</string>
     <string name="main_drawer_close">Fermer la colonne de navigation</string>
     <string name="main_drawer_open">Ouvrir la colonne de navigation</string>
@@ -130,9 +176,9 @@
     <string name="main_tts_warning_text">Cette appli permet la synthèse vocale parmi ses fonctionnalités, mais il semble que vous ne l\'ayiez pas installée. Si vous voulez l\'installer, utiliser le lien \"Installer Text-to-Speech\" dans le menu des paramètres.</string>
     <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
     <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
-<string name="main_whats_new_text">
-- Correction d\'un bug dans l\'outil de mise à jour
-</string>
+    <string name="main_whats_new_text">
+        - Correction d\'un bug dans l\'outil de mise à jour
+    </string>
     <string name="main_whats_new_title">Nouveautés</string>
     <string name="main_wishlist">Liste de voeux</string>
     <string name="mana_pool_clear_all">Tout effacer</string>
@@ -143,7 +189,29 @@
     <string name="mojhosto_random_equipment">Equipement aléatoire</string>
     <string name="mojhosto_random_instants">3 éphémères aléatoires</string>
     <string name="mojhosto_random_sorceries">3 rituels aléatoires</string>
-    <string name="mojhosto_rules_text">MoJhoSto est un format avec Fun card de Magic Online.&lt;br&gt;&lt;br&gt; Pour jouer, chaque joueur doit avoir un deck constitué de 60 terrains basiques uniquement.&lt;br&gt;&lt;br&gt; Chaque joueur commence la partie avec trois Fun cards: Momir Vig, Jhoira, et Stonehewer Giant.&lt;br&gt;&lt;br&gt; Ces Fun cards modifient la taille initiale et max de la main à 9 et les points de vie de départ à 19 pour chaque joueur.&lt;br&gt;&lt;br&gt; Toute capacité indiquée sur une Fun card est jouée exactement comme celles d\'une carte Magic en jeu.&lt;br&gt;&lt;br&gt; Cependant, ces capacités n\'ont pas de couleur et les dégâts qu\'elles causent ne sont pas celles d\'un permanent de couleur ou d\'une source de couleur.&lt;br&gt;&lt;br&gt; Une Fun card n\'est pas une carte Magic, elle ne peut donc pas être affectée par des sorts ou capacités.&lt;br&gt;&lt;br&gt; Vous pouvez cliquer sur chaque carte pour voir la Fun card complète.&lt;br&gt;&lt;br&gt; Vous pouvez consulter les règles à tout moment depuis le menu.&lt;br&gt;&lt;br&gt; Papier et crayon peuvent être utiles pour suivre le jeu. Malheureusement, MTG Familiar ne peut pas reproduire les cartes réelles.&lt;br&gt;&lt;br&gt; Bonne chance, et bon jeu!</string>
+    <string name="mojhosto_rules_text">
+        MoJhoSto est un format avec Fun card de Magic Online.&lt;br&gt;
+        &lt;br&gt;
+        Pour jouer, chaque joueur doit avoir un deck constitué de 60 terrains basiques uniquement.&lt;br&gt;
+        &lt;br&gt;
+        Chaque joueur commence la partie avec trois Fun cards: Momir Vig, Jhoira, et Stonehewer Giant.&lt;br&gt;
+        &lt;br&gt;
+        Ces Fun cards modifient la taille initiale et max de la main à 9 et les points de vie de départ à 19 pour chaque joueur.&lt;br&gt;
+        &lt;br&gt;
+        Toute capacité indiquée sur une Fun card est jouée exactement comme celles d\'une carte Magic en jeu.&lt;br&gt;
+        &lt;br&gt;
+        Cependant, ces capacités n\'ont pas de couleur et les dégâts qu\'elles causent ne sont pas celles d\'un permanent de couleur ou d\'une source de couleur.&lt;br&gt;
+        &lt;br&gt;
+        Une Fun card n\'est pas une carte Magic, elle ne peut donc pas être affectée par des sorts ou capacités.&lt;br&gt;
+        &lt;br&gt;
+        Vous pouvez cliquer sur chaque carte pour voir la Fun card complète.&lt;br&gt;
+        &lt;br&gt;
+        Vous pouvez consulter les règles à tout moment depuis le menu.&lt;br&gt;
+        &lt;br&gt;
+        Papier et crayon peuvent être utiles pour suivre le jeu. Malheureusement, MTG Familiar ne peut pas reproduire les cartes réelles.&lt;br&gt;
+        &lt;br&gt;
+        Bonne chance, et bon jeu!
+    </string>
     <string name="mojhosto_rules_title">Règles MoJhoSto Basic</string>
     <string name="mojhosto_stonehewer_label">CMC ≤</string>
     <string name="name_search_hint">Chercher un nom</string>
