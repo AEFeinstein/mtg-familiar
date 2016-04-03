@@ -52,6 +52,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -252,8 +253,10 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
 
                 if (mUpdatingRoundTimer) {
-                    assert getSupportActionBar() != null;
-                    getSupportActionBar().setTitle(timeLeftStr);
+                    ActionBar actionBar = getSupportActionBar();
+                    if(actionBar != null) {
+                        actionBar.setTitle(timeLeftStr);
+                    }
                 }
                 mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1000);
             } else {
