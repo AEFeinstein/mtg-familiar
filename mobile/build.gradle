@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.0.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '23.0.3'
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 14
@@ -51,9 +51,9 @@ dependencies {
     compile 'cz.msebera.android:httpclient:4.4.1.1'
     compile 'com.octo.android.robospice:robospice:1.4.14'
     compile 'com.octo.android.robospice:robospice-cache:1.4.14'
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.android.support:support-v13:23.2.1'
-    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:support-v4:23.3.0'
+    compile 'com.android.support:support-v13:23.3.0'
+    compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.google.code.gson:gson:2.6.2'
     compile('com.github.afollestad.material-dialogs:core:0.8.5.5@aar') {
