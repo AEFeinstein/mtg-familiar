@@ -40,6 +40,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="not_deleted">not deleted</string>
     <string name="no_network">Network is not available</string>
     <string name="filter_title_view_card">View Card</string>
+    <string name="tutor_cards_notice">Powered by TutorCards</string>
+    <string name="tutor_cards_fail">TutorCards unreachable</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">PAGES</string>
@@ -70,7 +72,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="main_whats_new_title">What\'s New</string>
     <string name="main_whats_new_in_title">What\'s New in Version</string>
     <string name="main_whats_new_text">
-        - Fixed bug in updater
+        - Search by image using TutorCards&lt;br&gt;&lt;br&gt;
+        - German translation
     </string>
     <string name="main_tts_warning_title">Text-to-Speech</string>
     <string name="main_tts_warning_text">This application has text-to-speech capability for some of its features, but you don\'t seem to have it installed. If you want to install it, use the "Install Text-to-Speech" link in the settings menu.</string>
@@ -459,6 +462,4 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="judges_corner_error">An error occurred.</string>
     <string name="deck_counter_reset">Reset</string>
     <string name="deck_counter_undo">Undo</string>
-    <string name="tutor_cards_notice">Powered by TutorCards</string>
-    <string name="tutor_cards_fail">Tutor.cards unreachable</string>
 </resources>
