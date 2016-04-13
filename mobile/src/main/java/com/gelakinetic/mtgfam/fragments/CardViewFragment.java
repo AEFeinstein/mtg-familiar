@@ -181,7 +181,9 @@ public class CardViewFragment extends FamiliarFragment {
         /* Pass a non-null bundle to the ResultListFragment so it knows to exit if there was a list of 1 card
          * If this wasn't launched by a ResultListFragment, it'll get eaten */
         Bundle args = new Bundle();
-        mActivity.setFragmentResult(args);
+        if (mActivity != null) {
+            mActivity.setFragmentResult(args);
+        }
     }
 
     /**
@@ -190,7 +192,9 @@ public class CardViewFragment extends FamiliarFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mActivity.clearLoading();
+        if (mActivity != null) {
+            mActivity.clearLoading();
+        }
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
         }

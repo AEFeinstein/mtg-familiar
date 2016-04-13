@@ -26,7 +26,6 @@ public class CardViewPagerFragment extends FamiliarFragment {
     public static final String CARD_ID_ARRAY = "card_id_array";
     public static final String STARTING_CARD_POSITION = "starting_card_id";
     private ViewPager mViewPager;
-    private CardViewPagerAdapter mPagerAdapter;
 
     /**
      * Assume that every fragment has a menu
@@ -42,7 +41,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
     }
 
     /**
-     * Grab the array of card IDs and the current position, then create the view amd attach the pager adapter
+     * Grab the array of card IDs and the current position, then create the view and attach the pager adapter
      *
      * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
      * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
@@ -64,34 +63,17 @@ public class CardViewPagerFragment extends FamiliarFragment {
         if (getParentFragment() == null) {
             this.setRetainInstance(true);
         }
-        return v;
-    }
-
-    /**
-     * Called when the fragment's activity has been created and this
-     * fragment's view hierarchy instantiated.  It can be used to do final
-     * initialization once these pieces are in place, such as retrieving
-     * views or restoring state.  It is also useful for fragments that use
-     * {@link #setRetainInstance(boolean)} to retain their instance,
-     * as this callback tells the fragment when it is fully associated with
-     * the new activity instance.  This is called after {@link #onCreateView}
-     * and before {@link #onViewStateRestored(android.os.Bundle)}.
-     *
-     * @param savedInstanceState If the fragment is being re-created from
-     *                           a previous saved state, this is the state.
-     */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         Bundle args = getArguments();
         long cardIds[] = args.getLongArray(CARD_ID_ARRAY);
         int currentPosition = args.getInt(STARTING_CARD_POSITION);
 
-        mPagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
-        mViewPager.setAdapter(mPagerAdapter);
+        CardViewPagerAdapter pagerAdapter = new CardViewPagerAdapter(getChildFragmentManager(), cardIds);
+        mViewPager.setAdapter(pagerAdapter);
         mViewPager.setCurrentItem(currentPosition);
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
+
+        return v;
     }
 
     /**
@@ -112,7 +94,8 @@ public class CardViewPagerFragment extends FamiliarFragment {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     /* Permission granted */
-                    String retstr = mPagerAdapter.getCurrentFragment().saveImage();
+
+                    String retstr = ((CardViewPagerAdapter) mViewPager.getAdapter()).getCurrentFragment().saveImage();
                     if (retstr != null) {
                         Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
                     }
