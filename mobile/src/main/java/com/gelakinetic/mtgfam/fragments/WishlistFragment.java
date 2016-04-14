@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -89,13 +90,14 @@ public class WishlistFragment extends FamiliarFragment {
     private AutoCompleteTextView mNameField;
     private EditText mNumberField;
     private TextView mTotalPriceField;
-    private CheckBox mFoilCheckBox;
+    private CheckBox mCheckboxFoil;
     private int mPriceFetchRequests = 0;
 
     /* The wishlist and adapter */
     private ArrayList<CompressedWishlistInfo> mCompressedWishlist;
     private WishlistArrayAdapter mWishlistAdapter;
     private View mTotalPriceDivider;
+    private boolean mCheckboxFoilLocked = false;
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -136,7 +138,7 @@ public class WishlistFragment extends FamiliarFragment {
         /* Grab other elements */
         mTotalPriceField = (TextView) myFragmentView.findViewById(R.id.priceText);
         mTotalPriceDivider = myFragmentView.findViewById(R.id.divider_total_price);
-        mFoilCheckBox = (CheckBox) myFragmentView.findViewById(R.id.wishlistFoil);
+        mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.wishlistFoil);
         ListView listView = (ListView) myFragmentView.findViewById(R.id.wishlist);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
@@ -179,6 +181,26 @@ public class WishlistFragment extends FamiliarFragment {
             }
         });
 
+        mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                /* Lock the checkbox when the user long clicks it */
+                mCheckboxFoilLocked = true;
+                mCheckboxFoil.setChecked(true);
+                return true;
+            }
+        });
+
+        mCheckboxFoil.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    /* Unlock the checkbox when the user unchecks it */
+                    mCheckboxFoilLocked = false;
+                }
+            }
+        });
+
         return myFragmentView;
     }
 
@@ -202,7 +224,7 @@ public class WishlistFragment extends FamiliarFragment {
             /* Make the new card */
             MtgCard card = new MtgCard();
             card.name = name;
-            card.foil = mFoilCheckBox.isChecked();
+            card.foil = mCheckboxFoil.isChecked();
             card.numberOf = Integer.parseInt(numberOf);
             card.message = getString(R.string.wishlist_loading);
 
@@ -263,8 +285,10 @@ public class WishlistFragment extends FamiliarFragment {
             /* Clean up for the next add */
             mNumberField.setText("1");
             mNameField.setText("");
-            mFoilCheckBox.setChecked(false);
-
+            /* Only unselect the checkbox if it isn't locked */
+            if (!mCheckboxFoilLocked) {
+                mCheckboxFoil.setChecked(false);
+            }
             /* Redraw the new wishlist with the new card */
             mWishlistAdapter.notifyDataSetChanged();
 
@@ -503,7 +527,7 @@ public class WishlistFragment extends FamiliarFragment {
                                         /* Clear input too */
                                         mNameField.setText("");
                                         mNumberField.setText("1");
-                                        mFoilCheckBox.setChecked(false);
+                                        mCheckboxFoil.setChecked(false);
                                     }
                                 })
                                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {

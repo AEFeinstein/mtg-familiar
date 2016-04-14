@@ -109,6 +109,7 @@ public class TradeFragment extends FamiliarFragment {
     private String mCurrentTrade = "";
     private int mSortOrder;
     private int mSortType;
+    private boolean mCheckboxFoilLocked = false;
 
     /**
      * Initialize the view and set up the button actions
@@ -203,6 +204,26 @@ public class TradeFragment extends FamiliarFragment {
             }
         });
 
+        mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                /* Lock the checkbox when the user long clicks it */
+                mCheckboxFoilLocked = true;
+                mCheckboxFoil.setChecked(true);
+                return true;
+            }
+        });
+
+        mCheckboxFoil.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    /* Unlock the checkbox when the user unchecks it */
+                    mCheckboxFoilLocked = false;
+                }
+            }
+        });
+
         /* Return the view */
         return myFragmentView;
     }
@@ -286,7 +307,10 @@ public class TradeFragment extends FamiliarFragment {
             /* Return the input fields to defaults */
             mNameEditText.setText("");
             mNumberEditText.setText("1");
-            mCheckboxFoil.setChecked(false);
+            /* Only clear the checkbox if it is unlocked */
+            if (!mCheckboxFoilLocked) {
+                mCheckboxFoil.setChecked(false);
+            }
 
         } catch (FamiliarDbException e) {
             /* Something went wrong, but it's not worth quitting */
@@ -809,6 +833,7 @@ public class TradeFragment extends FamiliarFragment {
                                         mLeftList.clear();
                                         mRightAdapter.notifyDataSetChanged();
                                         mLeftAdapter.notifyDataSetChanged();
+                                        mCheckboxFoil.setChecked(false);
                                         UpdateTotalPrices(BOTH);
                                         dialog.dismiss();
                                     }
