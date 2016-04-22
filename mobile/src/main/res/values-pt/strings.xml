@@ -116,7 +116,9 @@
         &lt;a href = \"https://github.com/derekbrameyer/android -betterpickers \"&gt; BetterPickers &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;. &lt;br&gt;
         &lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt; PagerSlidingTabStrip &lt;/ a &gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;. &lt;br&gt;
         Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;. &lt;br&gt;
-        mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .
+        mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .&lt;br&gt;
+        &lt;br&gt;
+        Busca por imagem de carta desenvolvido por &lt;a href="https://tutor.cards"&gt;TutorCards&lt;/a&gt;
     </string>
     <string name="main_card_search">Procurar Carta</string>
     <string name="main_dice">Dados</string>
@@ -161,7 +163,8 @@
     <string name="main_tts_warning_title">TTS (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">O que há de Novo na Versão</string>
     <string name="main_whats_new_text">
-        - Corrigido bug no atualizador
+        - Buscar por imagem usando TutorCards&lt;br&gt;&lt;br&gt;
+        - Tradução alemã
     </string>
     <string name="main_whats_new_title">O que há de novo</string>
     <string name="main_wishlist">Lista de Desejos</string>
@@ -428,6 +431,6 @@
     <string name="trader_sort">Organizar</string>
     <string name="trade_share_title">Troca</string>
     <string name="trader_share">Compartilhar Troca</string>
-    <string name="tutor_cards_fail">TODO TRANSLATE</string>
-    <string name="tutor_cards_notice">TODO TRANSLATE</string>
+    <string name="tutor_cards_fail">TutorCards não localizado</string>
+    <string name="tutor_cards_notice">Desenvolvido por Tutor Cards</string>
 </resources>

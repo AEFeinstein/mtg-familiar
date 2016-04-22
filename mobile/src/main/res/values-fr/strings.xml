@@ -132,7 +132,9 @@
         &lt;br&gt;
         Programme sous licence &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
         &lt;br&gt;
-        Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.
+        Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        Recherche de carte par image optimisée par &lt;a href="https://tutor.cards"&gt;TutorCards&lt;/a&gt;.
     </string>
     <string name="main_card_search">Chercher Carte</string>
     <string name="main_dice">Dés</string>
@@ -177,7 +179,8 @@
     <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
     <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
     <string name="main_whats_new_text">
-        - Correction d\'un bug dans l\'outil de mise à jour
+        - Recherche par image utilisant TutorCards&lt;br&gt;&lt;br&gt;
+        - Traduction en Allemand
     </string>
     <string name="main_whats_new_title">Nouveautés</string>
     <string name="main_wishlist">Liste de voeux</string>
@@ -444,6 +447,6 @@
     <string name="trader_sort">Trier Echange</string>
     <string name="trade_share_title">Echange</string>
     <string name="trader_share">Partager l\'échange</string>
-    <string name="tutor_cards_fail">TODO TRANSLATE</string>
-    <string name="tutor_cards_notice">TODO TRANSLATE</string>
+    <string name="tutor_cards_fail">TutorCards inaccessible</string>
+    <string name="tutor_cards_notice">Optimisé par TutorCards</string>
 </resources>

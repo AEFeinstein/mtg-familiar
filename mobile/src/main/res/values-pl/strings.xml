@@ -133,7 +133,9 @@
         &lt;br&gt;
         Program licenced under the &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
         &lt;br&gt;
-        Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.
+        Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        Wyszukiwanie obrazu karty uzyskane przy pomocy &lt;a href="https://tutor.cards"&gt;TutorCards&lt;/a&gt;
     </string>
     <string name="main_card_search">Wyszukaj karty</string>
     <string name="main_dice">Kości</string>
@@ -178,7 +180,8 @@
     <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
     <string name="main_whats_new_text">
-        - Naprawiono błąd w aktualizatorze
+        - Wyszukiwanie przez obraz używając TutorCards&lt;br&gt;&lt;br&gt;
+        - Niemieckie tłumaczenie
     </string>
     <string name="main_whats_new_title">Nowości</string>
     <string name="main_wishlist">Lista Życzeń</string>
@@ -444,6 +447,6 @@
     <string name="trader_sort">Sortuj Wymianę</string>
     <string name="trade_share_title">Wymianą</string>
     <string name="trader_share">Podziel się Wymianą</string>
-    <string name="tutor_cards_fail">TODO TRANSLATE</string>
-    <string name="tutor_cards_notice">TODO TRANSLATE</string>
+    <string name="tutor_cards_fail">TutorCards są nieosiągalne</string>
+    <string name="tutor_cards_notice">Uzyskane przy pomocy TutorCards</string>
 </resources>

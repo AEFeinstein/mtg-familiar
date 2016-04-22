@@ -132,7 +132,9 @@
         &lt;br&gt;
         Programa licenciado bajo la &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
         &lt;br&gt;
-        Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.
+        Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        La búsqueda de cartas por imagen funciona con &lt;a href="https://tutor.cards"&gt;TutorCards&lt;/a&gt;.
     </string>
     <string name="main_card_search">Buscar carta</string>
     <string name="main_dice">Dados</string>
@@ -177,7 +179,8 @@
     <string name="main_tts_warning_title">Síntesis de voz (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">Novedades de la versión</string>
     <string name="main_whats_new_text">
-        - Arreglado un bug en el actualizador
+        - Búsqueda por imagen usando TutorCards.&lt;br&gt;&lt;br&gt;
+        - Traducción al alemán.
     </string>
     <string name="main_whats_new_title">Novedades</string>
     <string name="main_wishlist">Lista de deseos</string>
@@ -444,6 +447,6 @@
     <string name="trader_sort">Ordenar intercambios</string>
     <string name="trade_share_title">Intercambios</string>
     <string name="trader_share">Compartir intercambio</string>
-    <string name="tutor_cards_fail">TODO TRANSLATE</string>
-    <string name="tutor_cards_notice">TODO TRANSLATE</string>
+    <string name="tutor_cards_fail">No se puede conectar con TutorCards</string>
+    <string name="tutor_cards_notice">Funciona con TutorCards</string>
 </resources>

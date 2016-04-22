@@ -80,7 +80,8 @@
     <string name="main_import_success">Importieren erfolgreich</string>
     <string name="main_whats_new_in_title">Was ist neu in Version</string>
     <string name="main_whats_new_text">
-        - Fehler im Updater behoebn
+        - Bildersuche mit TutorCards&lt;br&gt;&lt;br&gt;
+        - Deutsche Übersetzung
     </string>
     <string name="main_whats_new_title">Was ist neu</string>
     <string name="main_wishlist">Wunschliste</string>
@@ -427,7 +428,9 @@
         &lt;br&gt;
         Program licenced under the &lt;a href="http://www.gnu.org/licenses/gpl.html"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
         &lt;br&gt;
-        Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3.0/"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.
+        Media licenced under the &lt;a href="http://creativecommons.org/licenses/by-sa/3.0/"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
+        &lt;br&gt;
+        Kartenbildsuche powered by &lt;a href="https://tutor.cards"&gt;TutorCards&lt;/a&gt;.
     </string>
     <string name="card_view_fuse">Fusion</string>
     <string name="card_view_copy">Auswahl in die Zwischenablage kopieren</string>
@@ -444,6 +447,6 @@
     <string name="trader_set_pricing">Preis Optionen festlegen</string>
     <string name="wishlist_set_pricing">Preis Optionen festlegen</string>
     <string name="pref_consolidate_title">Ergebnisse neu sortieren</string>
-    <string name="tutor_cards_fail">TODO TRANSLATE</string>
-    <string name="tutor_cards_notice">TODO TRANSLATE</string>
+    <string name="tutor_cards_fail">TutorCards ist nicht erreichbar</string>
+    <string name="tutor_cards_notice">Powered by TutorCards</string>
 </resources>
