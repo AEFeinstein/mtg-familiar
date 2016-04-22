@@ -100,25 +100,41 @@
     <string name="life_counter_spoken_poison_singular">%1$s tem %2$d contador de veneno.</string>
     <string name="main_about">Sobre o que</string>
     <string name="main_about_text">
-        Este aplicativo é o meu presente para a comunidade MTG. &lt;br&gt;
-        Por favor envie perguntas, comentários, preocupações e louvor a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt; mtg.familiar@gmail.com &lt;/a&gt;. &lt;br&gt;
-        Junte-se à &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt; comunidade beta &lt;/a&gt; no Google+. &lt;br&gt;
-        Junte-se à &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt; projeto open source &lt;/a&gt; no GitHub. &lt;br&gt;
-        Obrigado a todos os colaboradores, incluindo, mas não limitado a, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener e bcGiR. &lt;br&gt;
-        Obrigado a todos os tradutores, incluindo, mas não limitado a, Ghislain, Piotr, Víctor, Emilio, Alan, e Sebastian. &lt;br&gt;
-        Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt; Bluewizard.net &lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt; TCGPlayer.com &lt;/a&gt;). &lt;br&gt;
-        Graças a reddit  \'s &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt; / r / magictcg &lt;/a&gt; para testes e feedback. &lt;br&gt;
-        agradecimento especial a Richard Garfield eo resto das pessoas em &lt;a href =\" http://www.wizards.com/magic \" &gt; Wizards of the Coast. &lt;/a&gt; &lt;br&gt;
-        -gelakinetic &lt;br&gt;
-        Magic the Gathering e Magic the Gathering cartões são ™ &amp; © Wizards of the Coast LLC. &lt;br&gt;
-        &lt;a href = \"https://github.com/octo-online/robospice\"&gt; Robospice &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt; &lt;br&gt;
-        &lt;a href = \"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; usado sob a licença MIT&lt;/a&gt;. &lt;br&gt;
-        &lt;a href = \"https://github.com/derekbrameyer/android -betterpickers \"&gt; BetterPickers &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;. &lt;br&gt;
-        &lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt; PagerSlidingTabStrip &lt;/ a &gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;. &lt;br&gt;
-        Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;. &lt;br&gt;
-        mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .&lt;br&gt;
-        &lt;br&gt;
-        Busca por imagem de carta desenvolvido por &lt;a href="https://tutor.cards"&gt;TutorCards&lt;/a&gt;
+        Este aplicativo é o meu presente para a comunidade MTG.&lt;br&gt;
+		&lt;br&gt;
+		Por favor envie perguntas, comentários, preocupações e louvor a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt; mtg.familiar@gmail.com &lt;/a&gt;.&lt;br&gt;
+		&lt;br&gt;
+		Junte-se à &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt; comunidade beta &lt;/a&gt; no Google+.&lt;br&gt;
+		&lt;br&gt;
+		Junte-se à &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt; projeto open source &lt;/a&gt; no GitHub.&lt;br&gt;
+		&lt;br&gt;
+		Obrigado a todos os colaboradores, incluindo, mas não limitado a, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener e bcGiR.&lt;br&gt;
+		&lt;br&gt;
+		Obrigado a todos os tradutores, incluindo, mas não limitado a, Ghislain, Piotr, Víctor, Emilio, Alan, e Sebastian.&lt;br&gt;
+		&lt;br&gt;
+		Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt; Bluewizard.net &lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt; TCGPlayer.com &lt;/a&gt;).&lt;br&gt;
+		&lt;br&gt;
+		Graças a reddit  \'s &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt; / r / magictcg &lt;/a&gt; para testes e feedback.&lt;br&gt;
+		&lt;br&gt;
+		agradecimento especial a Richard Garfield eo resto das pessoas em &lt;a href =\" http://www.wizards.com/magic \" &gt; Wizards of the Coast. &lt;/a&gt;&lt;br&gt;
+		&lt;br&gt;
+		-gelakinetic&lt;br&gt;
+		&lt;br&gt;
+		Magic the Gathering e Magic the Gathering cartões são ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
+		&lt;br&gt;
+		&lt;a href = \"https://github.com/octo-online/robospice\"&gt; Robospice &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;&lt;br&gt;
+		&lt;br&gt;
+		&lt;a href = \"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; usado sob a licença MIT&lt;/a&gt;.&lt;br&gt;
+		&lt;br&gt;
+		&lt;a href = \"https://github.com/derekbrameyer/android -betterpickers \"&gt; BetterPickers &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;.&lt;br&gt;
+		&lt;br&gt;
+		&lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt; PagerSlidingTabStrip &lt;/ a &gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;.&lt;br&gt;
+		&lt;br&gt;
+		Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;.&lt;br&gt;
+		&lt;br&gt;
+		mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .&lt;br&gt;
+		&lt;br&gt;
+		Busca por imagem de carta desenvolvido por &lt;a href="https://tutor.cards"&gt;TutorCards&lt;/a&gt;
     </string>
     <string name="main_card_search">Procurar Carta</string>
     <string name="main_dice">Dados</string>
