@@ -19,8 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class DiceDialogFragment extends FamiliarDialogFragment {
 
     /**
-     * TODO
-     * @return
+     * @return The currently viewed DiceFragment
      */
     DiceFragment getParentDiceFragment(){
         return (DiceFragment) getFamiliarFragment();
