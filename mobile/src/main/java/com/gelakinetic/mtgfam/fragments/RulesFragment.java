@@ -1,10 +1,8 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
@@ -19,28 +17,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.RulesDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -50,10 +43,10 @@ import java.util.regex.Pattern;
 public class RulesFragment extends FamiliarFragment {
 
     /* Keys for information in the bundle */
-    private static final String CATEGORY_KEY = "category";
-    private static final String SUBCATEGORY_KEY = "subcategory";
+    public static final String CATEGORY_KEY = "category";
+    public static final String SUBCATEGORY_KEY = "subcategory";
     private static final String POSITION_KEY = "position";
-    private static final String KEYWORD_KEY = "keyword";
+    public static final String KEYWORD_KEY = "keyword";
     private static final String GLOSSARY_KEY = "glossary";
     private static final String BANNED_KEY = "banned";
     private static final String FORMAT_KEY = "format";
@@ -64,13 +57,10 @@ public class RulesFragment extends FamiliarFragment {
     private static final int NONE = -1;
     private static final int SETS = -2;
 
-    /* Dialog constant */
-    private static final int DIALOG_SEARCH = 1;
-
     /* Current rules information */
     private ArrayList<DisplayItem> mRules;
-    private int mCategory;
-    private int mSubcategory;
+    public int mCategory;
+    public int mSubcategory;
 
     /* Regular expression patterns */
     private Pattern mUnderscorePattern;
@@ -358,89 +348,7 @@ public class RulesFragment extends FamiliarFragment {
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-
-            private Bundle searchArgs = null;
-
-            @Override
-            public void onDestroy() {
-                super.onDestroy();
-                if (searchArgs != null) {
-                    RulesFragment frag = new RulesFragment();
-                    startNewFragment(frag, searchArgs);
-                }
-            }
-
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                searchArgs = null;
-                switch (RulesFragment.DIALOG_SEARCH) {
-                    case DIALOG_SEARCH: {
-                        /* Inflate a view to type in the player's name, and show it in an AlertDialog */
-                        View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
-                                null, false);
-                        assert textEntryView != null;
-                        final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
-                        textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                nameInput.setText("");
-                            }
-                        });
-
-                        String title;
-                        if (mCategory == -1) {
-                            title = getString(R.string.rules_search_all);
-                        } else {
-                            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                            try {
-                                title = String.format(getString(R.string.rules_search_cat),
-                                        CardDbAdapter.getCategoryName(mCategory, mSubcategory, database));
-                            } catch (FamiliarDbException e) {
-                                title = String.format(getString(R.string.rules_search_cat),
-                                        getString(R.string.rules_this_cat));
-                            }
-                            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                        }
-
-                        Dialog dialog = new AlertDialogWrapper.Builder(getActivity())
-                                .setTitle(title)
-                                .setView(textEntryView)
-                                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        if (nameInput.getText() == null) {
-                                            dialog.dismiss();
-                                            return;
-                                        }
-                                        String keyword = nameInput.getText().toString();
-                                        if (keyword.length() < 3) {
-                                            ToastWrapper.makeText(getActivity(),
-                                                    R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG).show();
-                                        } else {
-                                            searchArgs = new Bundle();
-                                            searchArgs.putString(KEYWORD_KEY, keyword);
-                                            searchArgs.putInt(CATEGORY_KEY, mCategory);
-                                            searchArgs.putInt(SUBCATEGORY_KEY, mSubcategory);
-                                        }
-                                    }
-                                })
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .create();
-                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                        return dialog;
-                    }
-                    default: {
-                        savedInstanceState.putInt("id", RulesFragment.DIALOG_SEARCH);
-                        return super.onCreateDialog(savedInstanceState);
-                    }
-                }
-            }
-        };
+        RulesDialogFragment newFragment = new RulesDialogFragment();
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
