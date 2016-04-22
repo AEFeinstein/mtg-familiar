@@ -1,10 +1,8 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -20,16 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.codetroopers.betterpickers.hmspicker.HmsPicker;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.RoundTimerDialogFragment;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
@@ -56,7 +50,6 @@ public class RoundTimerFragment extends FamiliarFragment {
     public static final int TIMER_15_MIN_WARNING = 4;
     public static final int TIMER_EASTER_EGG = 5;
     public static final int TIMER_NOTIFICATION_ID = 53;
-    private static final int DIALOG_SET_WARNINGS = 1;
     private static final int RINGTONE_REQUEST_CODE = 17;
     /* Variables */
     private Button mTimerButton;
@@ -305,52 +298,7 @@ public class RoundTimerFragment extends FamiliarFragment {
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                super.onCreateDialog(savedInstanceState);
-
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
-                setShowsDialog(true);
-
-                switch (RoundTimerFragment.DIALOG_SET_WARNINGS) {
-                    case DIALOG_SET_WARNINGS: {
-                        final View v = View.inflate(this.getActivity(), R.layout.round_timer_warning_dialog, null);
-                        final CheckBox chkFifteen = (CheckBox) v.findViewById(R.id.timer_pref_fifteen);
-                        final CheckBox chkTen = (CheckBox) v.findViewById(R.id.timer_pref_ten);
-                        final CheckBox chkFive = (CheckBox) v.findViewById(R.id.timer_pref_five);
-
-                        boolean fifteen =
-                                getFamiliarActivity().mPreferenceAdapter.getFifteenMinutePref();
-                        boolean ten = getFamiliarActivity().mPreferenceAdapter.getTenMinutePref();
-                        boolean five = getFamiliarActivity().mPreferenceAdapter.getFiveMinutePref();
-
-                        chkFifteen.setChecked(fifteen);
-                        chkTen.setChecked(ten);
-                        chkFive.setChecked(five);
-
-                        return new AlertDialogWrapper.Builder(getActivity())
-                                .setView(v).setTitle(R.string.timer_warning_dialog_title)
-                                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        getFamiliarActivity().mPreferenceAdapter
-                                                .setFifteenMinutePref(chkFifteen.isChecked());
-                                        getFamiliarActivity().mPreferenceAdapter
-                                                .setTenMinutePref(chkTen.isChecked());
-                                        getFamiliarActivity().mPreferenceAdapter
-                                                .setFiveMinutePref(chkFive.isChecked());
-                                    }
-                                })
-                                .create();
-                    }
-                    default: {
-                        return DontShowDialog();
-                    }
-                }
-            }
-        };
+        RoundTimerDialogFragment newFragment = new RoundTimerDialogFragment();
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 }
