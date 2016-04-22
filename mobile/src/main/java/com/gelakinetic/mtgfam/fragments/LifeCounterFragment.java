@@ -1,8 +1,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -21,19 +19,13 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.LifeCounterDialogFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.CommanderEntry;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
-import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
-import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,11 +46,6 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     /* Life total constants */
     public static final int DEFAULT_LIFE_COMMANDER = 40;
     public static final int DEFAULT_LIFE = 20;
-    /* Dialog Constants */
-    private static final int DIALOG_REMOVE_PLAYER = 0;
-    private static final int DIALOG_RESET_CONFIRM = 1;
-    private static final int DIALOG_CHANGE_DISPLAY = 2;
-    private static final int DIALOG_SET_GATHERING = 3;
     /* Constant for persisting data */
     private static final String DISPLAY_MODE = "display_mode";
     /* Constants for TTS */
@@ -66,20 +53,20 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private static final int IMPROBABLE_NUMBER = 531865548;
     private static final String OVER_9000_KEY = "@over_9000";
     /* Keeping track of players, display state */
-    private final ArrayList<LcPlayer> mPlayers = new ArrayList<>();
+    public final ArrayList<LcPlayer> mPlayers = new ArrayList<>();
     private final LinkedList<String> mVocalizations = new LinkedList<>();
-    private int mDisplayMode = DISPLAY_NORMAL;
+    public int mDisplayMode = DISPLAY_NORMAL;
     private int mStatDisplaying = STAT_LIFE;
     /* UI Elements, measurement */
-    private GridLayout mGridLayout;
-    private LinearLayout mCommanderPlayerView;
+    public GridLayout mGridLayout;
+    public LinearLayout mCommanderPlayerView;
     private ImageView mPoisonButton;
     private ImageView mLifeButton;
     private ImageView mCommanderButton;
     private View mScrollView;
     private int mListSizeWidth = -1;
     private int mListSizeHeight = -1;
-    private int mLargestPlayerNumber = 0;
+    public int mLargestPlayerNumber = 0;
     /* TTS variables */
     private TextToSpeech mTts;
     private boolean mTtsInit;
@@ -211,7 +198,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         myFragmentView.findViewById(R.id.reset_button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                showDialog(DIALOG_RESET_CONFIRM);
+                showDialog(LifeCounterDialogFragment.DIALOG_RESET_CONFIRM);
             }
         });
 
@@ -361,7 +348,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 return true;
             case R.id.remove_player:
                 /* Show a dialog of players to remove */
-                showDialog(DIALOG_REMOVE_PLAYER);
+                showDialog(LifeCounterDialogFragment.DIALOG_REMOVE_PLAYER);
                 return true;
             case R.id.announce_life:
                 /* Vocalize the current life totals */
@@ -374,11 +361,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 return true;
             case R.id.set_gathering:
                 /* Show a dialog of gatherings a user can set */
-                showDialog(DIALOG_SET_GATHERING);
+                showDialog(LifeCounterDialogFragment.DIALOG_SET_GATHERING);
                 return true;
             case R.id.display_mode:
                 /* Show a dialog to change the display mode (normal, compact, commander) */
-                showDialog(DIALOG_CHANGE_DISPLAY);
+                showDialog(LifeCounterDialogFragment.DIALOG_CHANGE_DISPLAY);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -402,163 +389,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
-                setShowsDialog(true);
-
-                AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
-                switch (id) {
-                    case DIALOG_REMOVE_PLAYER: {
-                        /* Get all the player names */
-                        String[] names = new String[mPlayers.size()];
-                        for (int i = 0; i < mPlayers.size(); i++) {
-                            names[i] = mPlayers.get(i).mName;
-                        }
-
-                        /* Build the dialog */
-                        builder.setTitle(getString(R.string.life_counter_remove_player));
-
-                        builder.setItems(names, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                /* Remove the view from the GridLayout based on display mode, then remove the player
-                                   from the ArrayList and redraw. Also notify other players to remove this player from
-                                   the commander list, and reset the main commander player view in case that player was
-                                   removed */
-                                if (mDisplayMode == DISPLAY_COMMANDER) {
-                                    mGridLayout.removeView(mPlayers.get(item).mCommanderRowView);
-                                } else {
-                                    mGridLayout.removeView(mPlayers.get(item).mView);
-                                }
-                                mPlayers.remove(item);
-                                mGridLayout.invalidate();
-
-                                setCommanderInfo(item);
-
-                                if (mDisplayMode == DISPLAY_COMMANDER) {
-                                    mCommanderPlayerView.removeAllViews();
-                                    if (mPlayers.size() > 0) {
-                                        mCommanderPlayerView.addView(mPlayers.get(0).mView);
-                                    }
-                                }
-                            }
-                        });
-
-                        return builder.create();
-                    }
-                    case DIALOG_RESET_CONFIRM: {
-                        builder.setMessage(getString(R.string.life_counter_clear_dialog_text))
-                                .setCancelable(true)
-                                .setPositiveButton(getString(R.string.dialog_both),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                /* Remove all players, then add defaults */
-                                                mPlayers.clear();
-                                                mLargestPlayerNumber = 0;
-                                                addPlayer();
-                                                addPlayer();
-
-                                                setCommanderInfo(-1);
-
-                                                /* Clear and then add the views */
-                                                changeDisplayMode(false);
-                                                dialog.dismiss();
-                                            }
-                                        }
-                                )
-                                .setNeutralButton(getString(R.string.dialog_life),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                /* Only reset life totals */
-                                                for (LcPlayer player : mPlayers) {
-                                                    player.resetStats();
-                                                }
-                                                mGridLayout.invalidate();
-                                                dialog.dismiss();
-                                            }
-                                        }
-                                )
-                                .setNegativeButton(getString(R.string.dialog_cancel),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.dismiss();
-                                            }
-                                        }
-                                );
-
-                        return builder.create();
-                    }
-                    case DIALOG_CHANGE_DISPLAY: {
-
-                        builder.setTitle(R.string.pref_display_mode_title);
-                        builder.setSingleChoiceItems(getResources().getStringArray(R.array.display_array_entries),
-                                mDisplayMode,
-                                new DialogInterface.OnClickListener() {
-                                    /* The dialog selection order matches the static integers DISPLAY_NORMAL, etc.
-                                       Convenient */
-                                    public void onClick(DialogInterface dialog, int selection) {
-                                        dialog.dismiss();
-
-                                        if (mDisplayMode != selection) {
-                                            mDisplayMode = selection;
-                                            changeDisplayMode(true);
-                                        }
-                                    }
-                                }
-                        );
-
-                        return builder.create();
-                    }
-                    case DIALOG_SET_GATHERING: {
-                        /* If there aren't any dialogs, don't show the dialog. Pop a toast instead */
-                        if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
-                            ToastWrapper.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist,
-                                    ToastWrapper.LENGTH_LONG).show();
-                            return DontShowDialog();
-                        }
-
-                        /* Get a list of Gatherings, and their names extracted from XML */
-                        final ArrayList<String> gatherings = GatheringsIO
-                                .getGatheringFileList(getActivity().getFilesDir());
-                        final String[] properNames = new String[gatherings.size()];
-                        for (int idx = 0; idx < gatherings.size(); idx++) {
-                            properNames[idx] = GatheringsIO
-                                    .ReadGatheringNameFromXML(gatherings.get(idx), getActivity().getFilesDir());
-                        }
-
-                        /* Set the AlertDialog title, items */
-                        builder.setTitle(R.string.life_counter_gathering_dialog_title);
-                        builder.setItems(properNames, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, final int item) {
-                                /* Read the gathering from XML, clear and set all the info! changeDisplayMode() adds
-                                   the player Views */
-                                Gathering gathering = GatheringsIO
-                                        .ReadGatheringXML(gatherings.get(item), getActivity().getFilesDir());
-
-                                mDisplayMode = gathering.mDisplayMode;
-
-                                mPlayers.clear();
-                                ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
-                                for (GatheringsPlayerData player : players) {
-                                    addPlayer(player.mName, player.mStartingLife);
-                                }
-
-                                setCommanderInfo(-1);
-                                changeDisplayMode(false);
-                            }
-                        });
-                        return builder.create();
-                    }
-                    default: {
-                        savedInstanceState.putInt("id", id);
-                        return super.onCreateDialog(savedInstanceState);
-                    }
-                }
-            }
-        };
+        LifeCounterDialogFragment newFragment = new LifeCounterDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        newFragment.setArguments(arguments);
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
@@ -600,7 +434,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * and draws the player's views in the fragment. It also shows and hides buttons and views relating to
      * commander mode.
      */
-    private void changeDisplayMode(boolean shouldDefaultLives) {
+    public void changeDisplayMode(boolean shouldDefaultLives) {
         /* update the preference */
         getFamiliarActivity().mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
 
@@ -763,7 +597,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * Add a default player to the ArrayList mPlayers. It is given an incremented number name i.e. Player N. The
      * starting life will be either 20 or 40, depending on display mode.
      */
-    private void addPlayer() {
+    public void addPlayer() {
         final LcPlayer player = new LcPlayer(this);
 
         /* Increment the largest player number */
@@ -781,7 +615,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param name         The player's name
      * @param startingLife The player's starting life total
      */
-    private void addPlayer(String name, int startingLife) {
+    public void addPlayer(String name, int startingLife) {
         LcPlayer player = new LcPlayer(this);
         player.mName = name;
         player.mDefaultLifeTotal = startingLife;
