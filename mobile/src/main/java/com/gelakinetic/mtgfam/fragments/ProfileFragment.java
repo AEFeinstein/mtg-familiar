@@ -19,13 +19,9 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.InputType;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,16 +29,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-
-import org.jetbrains.annotations.NotNull;
+import com.gelakinetic.mtgfam.fragments.dialogs.ProfileDialogFragment;
 
 /**
  * This fragment contains a players profile information such as their DCI number and anything else
@@ -50,16 +41,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ProfileFragment extends FamiliarFragment {
 
-    /* Dialog constants */
-    private static final int DIALOG_DCI_NUMBER = 1;
-
     /* UI Elements */
     private TextView mBarcodeTextView;
     private TextView mDCINumberTextView;
     private TextView mNoDCINumberTextView;
 
     /* String variables */
-    private String mDCINumber;
+    public String mDCINumber;
 
     /**
      * Initialize the view and set up the button actions
@@ -161,73 +149,11 @@ public class ProfileFragment extends FamiliarFragment {
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                /* We're setting this to false if we return null, so we should reset it every time to be safe */
-                setShowsDialog(true);
-                switch (ProfileFragment.DIALOG_DCI_NUMBER) {
-                    case DIALOG_DCI_NUMBER: {
-                        View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                                .inflate(R.layout.alert_dialog_text_entry, null, false);
-
-                        final EditText dciEditText = (EditText) view.findViewById(R.id.text_entry);
-                        dciEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-                        view.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dciEditText.setText("");
-                            }
-                        });
-
-                        final String strDCI = getFamiliarActivity().mPreferenceAdapter.getDCINumber();
-
-                        dciEditText.setText(strDCI);
-
-                        return new AlertDialogWrapper.Builder(getActivity())
-                                .setTitle(R.string.profile_update_dci_dialog_title)
-                                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        String strNumber = dciEditText.getText().toString();
-
-                                        if (strNumber.isEmpty()) {
-                                            ToastWrapper.makeText(getActivity(),
-                                                    getString(R.string.profile_invalid_dci),
-                                                    ToastWrapper.LENGTH_SHORT).show();
-
-                                            return;
-                                        }
-
-                                        getFamiliarActivity().mPreferenceAdapter.setDCINumber(strNumber);
-                                        mDCINumber = strNumber;
-                                        checkDCINumber();
-                                        dismiss();
-                                    }
-                                })
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        checkDCINumber();
-                                        dismiss();
-                                    }
-                                })
-                                .setView(view)
-                                .create();
-                    }
-                    default: {
-                        return DontShowDialog();
-                    }
-                }
-            }
-        };
+        ProfileDialogFragment newFragment = new ProfileDialogFragment();
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
-    private void checkDCINumber() {
+    public void checkDCINumber() {
         if (mDCINumber.isEmpty()) {
             hideDCINumber();
         } else {

@@ -184,7 +184,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        final MoJhoStoDialogFragment newFragment = new MoJhoStoDialogFragment();
+        MoJhoStoDialogFragment newFragment = new MoJhoStoDialogFragment();
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
