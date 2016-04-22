@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.CommanderEntry;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;

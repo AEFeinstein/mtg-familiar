@@ -1,8 +1,11 @@
-package com.gelakinetic.mtgfam.fragments;
+package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+
+import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 
 /**
  * This is a superclass for all dialog fragments. It fixes some bugs and handles rotations nicely
@@ -57,5 +60,13 @@ public class FamiliarDialogFragment extends DialogFragment {
     protected Dialog DontShowDialog() {
         setShowsDialog(false);
         return null;
+    }
+
+    /**
+     * @return The current fragment being displayed by the app
+     */
+    protected FamiliarFragment getFamiliarFragment() {
+        return (FamiliarFragment)
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
 }

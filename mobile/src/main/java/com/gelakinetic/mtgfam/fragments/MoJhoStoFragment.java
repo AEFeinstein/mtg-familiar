@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;

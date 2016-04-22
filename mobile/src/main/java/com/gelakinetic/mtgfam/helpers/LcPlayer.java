@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 
 import org.jetbrains.annotations.NotNull;

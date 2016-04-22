@@ -73,7 +73,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
-import com.gelakinetic.mtgfam.fragments.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;

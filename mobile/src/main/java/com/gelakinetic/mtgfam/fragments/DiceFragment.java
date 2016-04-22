@@ -1,7 +1,5 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -10,18 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-
-import org.jetbrains.annotations.NotNull;
+import com.gelakinetic.mtgfam.fragments.dialogs.DiceDialogFragment;
 
 import java.util.Random;
 
@@ -33,8 +27,8 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
     private Random mRandom;
     private TextSwitcher mDieOutput;
 
-    private FamiliarActivity mActivity;
-    private int mLastNumber = -1;
+    public FamiliarActivity mActivity;
+    public int mLastNumber = -1;
 
     /**
      * Set up the TextSwitcher animations, button handlers
@@ -165,60 +159,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 
         removeDialog(getFragmentManager());
 
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                super.onCreateDialog(savedInstanceState);
-
-                setShowsDialog(true);
-
-                View v = mActivity.getLayoutInflater().inflate(R.layout.number_picker_frag, null, false);
-
-                assert v != null;
-
-                final EditText txtNumber = (EditText) v.findViewById(R.id.numberInput);
-
-                if (mLastNumber > 0) {
-                    txtNumber.setText(String.valueOf(mLastNumber));
-                }
-
-                AlertDialogWrapper.Builder adb = new AlertDialogWrapper.Builder(mActivity);
-                adb.setView(v);
-                adb.setTitle(getResources().getString(R.string.dice_choose_sides));
-                adb.setPositiveButton(mActivity.getResources().getString(R.string.dialog_ok),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                if (txtNumber.getText() == null || txtNumber.getText().toString().isEmpty()) {
-                                    return;
-                                }
-
-                                int num;
-
-                                try {
-                                    num = Integer.parseInt(txtNumber.getText().toString());
-                                } catch (NumberFormatException e) {
-                                    ToastWrapper.makeText(mActivity, getResources().getString(R.string.dice_num_too_large),
-                                            ToastWrapper.LENGTH_SHORT).show();
-                                    return;
-                                }
-
-                                if (num < 1) {
-                                    ToastWrapper.makeText(mActivity, getResources().getString(R.string.dice_postive),
-                                            ToastWrapper.LENGTH_SHORT).show();
-                                } else {
-                                    mLastNumber = num;
-                                    rollDie(num);
-                                }
-
-                                dismiss();
-                            }
-                        }
-                );
-                return adb.create();
-            }
-        };
+        DiceDialogFragment newFragment = new DiceDialogFragment() ;
 
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
@@ -228,7 +169,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
      *
      * @param dieFaces the number of "die faces" for the die being "rolled"
      */
-    private void rollDie(int dieFaces) {
+    public void rollDie(int dieFaces) {
         if (mDieOutput != null) {
             mDieOutput.setText("" + (mRandom.nextInt(dieFaces) + 1));
         }
