@@ -25,7 +25,14 @@ public class CardViewPagerFragment extends FamiliarFragment {
     /* Bundle keys */
     public static final String CARD_ID_ARRAY = "card_id_array";
     public static final String STARTING_CARD_POSITION = "starting_card_id";
-    private ViewPager mViewPager;
+    public ViewPager mViewPager;
+
+    /**
+     * @return The currently viewed CardViewFragment in the CardViewPagerFragment
+     */
+    public CardViewFragment getCurrentFragment() {
+        return ((CardViewPagerAdapter)mViewPager.getAdapter()).getCurrentFragment();
+    }
 
     /**
      * Assume that every fragment has a menu

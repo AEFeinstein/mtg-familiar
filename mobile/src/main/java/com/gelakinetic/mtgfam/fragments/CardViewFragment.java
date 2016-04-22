@@ -20,12 +20,10 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -41,9 +39,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.text.Html.ImageGetter;
-import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -54,20 +50,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
@@ -75,7 +68,6 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -83,8 +75,6 @@ import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -95,9 +85,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -108,13 +96,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Bundle constant */
     public static final String CARD_ID = "card_id";
-    /* Dialogs */
-    private static final int GET_PRICE = 1;
-    private static final int GET_IMAGE = 2;
-    private static final int CHANGE_SET = 3;
-    private static final int CARD_RULINGS = 4;
-    private static final int WISH_LIST_COUNTS = 6;
-    private static final int GET_LEGALITY = 7;
+
     /* Where the card image is loaded to */
     private static final int MAIN_PAGE = 1;
     private static final int DIALOG = 2;
@@ -138,14 +120,14 @@ public class CardViewFragment extends FamiliarFragment {
     private LinearLayout mColorIndicatorLayout;
 
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
-    private AsyncTask<Void, Void, Void> mAsyncTask;
-    private RecyclingBitmapDrawable mCardBitmap;
-    private String[] mLegalities;
-    private String[] mFormats;
-    private ArrayList<Ruling> mRulingsArrayList;
+    public AsyncTask<Void, Void, Void> mAsyncTask;
+    public RecyclingBitmapDrawable mCardBitmap;
+    public String[] mLegalities;
+    public String[] mFormats;
+    public ArrayList<Ruling> mRulingsArrayList;
 
     /* Loaded in a Spice Service */
-    private PriceInfo mPriceInfo;
+    public PriceInfo mPriceInfo;
 
     /* Card info, used to build the URL to fetch the picture */
     private String mCardNumber;
@@ -160,8 +142,8 @@ public class CardViewFragment extends FamiliarFragment {
     private int mTransformId;
 
     /* To switch card between printings */
-    private LinkedHashSet<String> mPrintings;
-    private LinkedHashSet<Long> mCardIds;
+    public LinkedHashSet<String> mPrintings;
+    public LinkedHashSet<Long> mCardIds;
 
     /* Easier than calling getActivity() all the time, and handles being nested */
     private FamiliarActivity mActivity;
@@ -371,7 +353,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param id the ID of the the card to be displayed
      */
-    private void setInfoFromID(final long id) {
+    public void setInfoFromID(final long id) {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
@@ -683,177 +665,10 @@ public class CardViewFragment extends FamiliarFragment {
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-
-            @NotNull
-            @Override
-            @SuppressWarnings("SpellCheckingInspection")
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                super.onCreateDialog(savedInstanceState);
-
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
-                setShowsDialog(true);
-
-                switch (id) {
-                    case GET_IMAGE: {
-                        if (mCardBitmap == null) {
-                            return DontShowDialog();
-                        }
-
-                        Dialog dialog = new Dialog(mActivity);
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-                        dialog.setContentView(R.layout.card_view_image_dialog);
-
-                        ImageView dialogImageView = (ImageView) dialog.findViewById(R.id.cardimage);
-                        dialogImageView.setImageDrawable(mCardBitmap);
-
-                        dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View view) {
-                                if (mAsyncTask != null) {
-                                    mAsyncTask.cancel(true);
-                                }
-                                mAsyncTask = new saveCardImageTask();
-                                mAsyncTask.execute((Void[]) null);
-                                return true;
-                            }
-                        });
-
-                        return dialog;
-                    }
-                    case GET_LEGALITY: {
-                        if (mFormats == null || mLegalities == null) {
-                            /* exception handled in AsyncTask */
-                            return DontShowDialog();
-                        }
-
-                        /* create the item mapping */
-                        String[] from = new String[]{"format", "status"};
-                        int[] to = new int[]{R.id.format, R.id.status};
-
-                        /* prepare the list of all records */
-                        List<HashMap<String, String>> fillMaps = new ArrayList<>();
-                        for (int i = 0; i < mFormats.length; i++) {
-                            HashMap<String, String> map = new HashMap<>();
-                            map.put(from[0], mFormats[i]);
-                            map.put(from[1], mLegalities[i]);
-                            fillMaps.add(map);
-                        }
-
-                        SimpleAdapter adapter = new SimpleAdapter(mActivity, fillMaps, R.layout.card_view_legal_row,
-                                from, to);
-                        ListView lv = new ListView(mActivity);
-                        lv.setAdapter(adapter);
-
-                        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(mActivity);
-                        builder.setView(lv);
-                        builder.setTitle(R.string.card_view_legality);
-                        return builder.create();
-                    }
-                    case GET_PRICE: {
-                        if (mPriceInfo == null) {
-                            return DontShowDialog();
-                        }
-
-                        View v = mActivity.getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
-
-                        assert v != null; /* Because Android Studio */
-                        TextView l = (TextView) v.findViewById(R.id.low);
-                        TextView m = (TextView) v.findViewById(R.id.med);
-                        TextView h = (TextView) v.findViewById(R.id.high);
-                        TextView f = (TextView) v.findViewById(R.id.foil);
-                        TextView priceLink = (TextView) v.findViewById(R.id.pricelink);
-
-                        l.setText(String.format("$%1$,.2f", mPriceInfo.mLow));
-                        m.setText(String.format("$%1$,.2f", mPriceInfo.mAverage));
-                        h.setText(String.format("$%1$,.2f", mPriceInfo.mHigh));
-
-                        if (mPriceInfo.mFoilAverage != 0) {
-                            f.setText(String.format("$%1$,.2f", mPriceInfo.mFoilAverage));
-                        } else {
-                            f.setVisibility(View.GONE);
-                            v.findViewById(R.id.foil_label).setVisibility(View.GONE);
-                        }
-                        priceLink.setMovementMethod(LinkMovementMethod.getInstance());
-                        priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + mPriceInfo.mUrl + "\">" +
-                                getString(R.string.card_view_price_dialog_link) + "</a>"));
-
-                        AlertDialogWrapper.Builder adb = new AlertDialogWrapper.Builder(mActivity);
-                        adb.setView(v);
-                        adb.setTitle(R.string.card_view_price_dialog_title);
-                        return adb.create();
-                    }
-                    case CHANGE_SET: {
-                        final String[] aSets = mPrintings.toArray(new String[mPrintings.size()]);
-                        final Long[] aIds = mCardIds.toArray(new Long[mCardIds.size()]);
-
-                        /* Sanity check */
-                        for (String set : aSets) {
-                            if (set == null) {
-                                return DontShowDialog();
-                            }
-                        }
-                        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(mActivity);
-                        builder.setTitle(R.string.card_view_set_dialog_title);
-                        builder.setItems(aSets, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int item) {
-                                setInfoFromID(aIds[item]);
-                            }
-                        });
-                        return builder.create();
-                    }
-                    case CARD_RULINGS: {
-                        if (mRulingsArrayList == null) {
-                            return DontShowDialog();
-                        }
-                        ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
-
-                        View v = mActivity.getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null, false);
-                        assert v != null; /* Because Android Studio */
-
-                        TextView textViewRules = (TextView) v.findViewById(R.id.rules);
-                        TextView textViewUrl = (TextView) v.findViewById(R.id.url);
-
-                        String message = "";
-                        if (mRulingsArrayList.size() == 0) {
-                            message = getString(R.string.card_view_no_rulings);
-                        } else {
-                            for (Ruling r : mRulingsArrayList) {
-                                message += (r.toString() + "<br><br>");
-                            }
-
-                            message = message.replace("{Tap}", "{T}");
-                        }
-                        CharSequence messageGlyph = ImageGetterHelper.formatStringWithGlyphs(message, imgGetter);
-
-                        textViewRules.setText(messageGlyph);
-
-                        textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
-                        textViewUrl.setText(Html.fromHtml(
-                                "<a href=http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
-                                        mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
-                        ));
-
-                        AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(mActivity);
-                        builder.setTitle(R.string.card_view_rulings_dialog_title);
-                        builder.setView(v);
-                        return builder.create();
-                    }
-                    case WISH_LIST_COUNTS: {
-                        Dialog dialog = WishlistHelpers.getDialog(mCardName, CardViewFragment.this, false);
-                        if (dialog == null) {
-                            handleFamiliarDbException(false);
-                            return DontShowDialog();
-                        }
-                        return dialog;
-                    }
-                    default: {
-                        return DontShowDialog();
-                    }
-                }
-            }
-        };
+        CardViewDialogFragment newFragment = new CardViewDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        newFragment.setArguments(arguments);
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
@@ -979,7 +794,7 @@ public class CardViewFragment extends FamiliarFragment {
 
                                     if (result != null) {
                                         mPriceInfo = result;
-                                        showDialog(GET_PRICE);
+                                        showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
                                         ToastWrapper.makeText(mActivity, R.string.card_view_price_not_found,
                                                 ToastWrapper.LENGTH_SHORT).show();
@@ -992,7 +807,7 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.changeset: {
-                showDialog(CHANGE_SET);
+                showDialog(CardViewDialogFragment.CHANGE_SET);
                 return true;
             }
             case R.id.legality: {
@@ -1018,7 +833,7 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.addtowishlist: {
-                showDialog(WISH_LIST_COUNTS);
+                showDialog(CardViewDialogFragment.WISH_LIST_COUNTS);
                 return true;
             }
             default: {
@@ -1078,7 +893,7 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * This inner class encapsulates a ruling and the date it was made
      */
-    private static class Ruling {
+    public static class Ruling {
         public final String date;
         public final String ruling;
 
@@ -1092,7 +907,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
     }
 
-    class saveCardImageTask extends AsyncTask<Void, Void, Void> {
+    public class saveCardImageTask extends AsyncTask<Void, Void, Void> {
 
         String mToastString = null;
 
@@ -1194,7 +1009,7 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected void onPostExecute(Void result) {
             try {
-                showDialog(GET_LEGALITY);
+                showDialog(CardViewDialogFragment.GET_LEGALITY);
             } catch (IllegalStateException e) {
                 /* eat it */
             }
@@ -1414,7 +1229,7 @@ public class CardViewFragment extends FamiliarFragment {
             if (error == null) {
                 if (loadTo == DIALOG) {
                     try {
-                        showDialog(GET_IMAGE);
+                        showDialog(CardViewDialogFragment.GET_IMAGE);
                     } catch (IllegalStateException e) {
                         /* eat it */
                     }
@@ -1516,7 +1331,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             if (mErrorMessage == null) {
                 try {
-                    showDialog(CARD_RULINGS);
+                    showDialog(CardViewDialogFragment.CARD_RULINGS);
                 } catch (IllegalStateException e) {
                     /* eat it */
                 }
