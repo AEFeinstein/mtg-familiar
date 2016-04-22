@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
@@ -551,7 +552,7 @@ public class WishlistFragment extends FamiliarFragment {
                                 .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         mWishlistSortOrder = ASCENDING;
-                                        ListView lw = ((AlertDialog) dialog).getListView();
+                                        ListView lw = ((MaterialDialog) dialog).getListView();
                                         mWishlistSortType = lw.getCheckedItemPosition();
                                         sortWishlist();
                                     }
@@ -559,7 +560,7 @@ public class WishlistFragment extends FamiliarFragment {
                                 .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         mWishlistSortOrder = DESCENDING;
-                                        ListView lw = ((AlertDialog) dialog).getListView();
+                                        ListView lw = ((MaterialDialog) dialog).getListView();
                                         mWishlistSortType = lw.getCheckedItemPosition();
                                         sortWishlist();
                                     }

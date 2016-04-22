@@ -226,7 +226,7 @@ public abstract class FamiliarFragment extends Fragment {
     /**
      * This removes any currently open dialog
      */
-    void removeDialog(FragmentManager fm) {
+    public void removeDialog(FragmentManager fm) {
         try {
             getFamiliarActivity().removeDialogFragment(fm);
         } catch (NullPointerException e) {

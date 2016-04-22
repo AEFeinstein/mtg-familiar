@@ -1,9 +1,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -25,10 +21,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
@@ -41,10 +37,7 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,8 +45,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * This class manages trades between two users. Trades can be saved and loaded
@@ -61,29 +52,19 @@ import java.util.Set;
 public class TradeFragment extends FamiliarFragment {
 
     /* Price Constants */
-    private static final int LOW_PRICE = 0;
-    private static final int AVG_PRICE = 1;
-    private static final int HIGH_PRICE = 2;
-    private static final int FOIL_PRICE = 3;
+    public static final int LOW_PRICE = 0;
+    public static final int AVG_PRICE = 1;
+    public static final int HIGH_PRICE = 2;
+    public static final int FOIL_PRICE = 3;
 
     /* Side Constants */
-    private static final int LEFT = 0;
+    public static final int LEFT = 0;
     private static final int RIGHT = 1;
-    private static final int BOTH = 2;
-
-    /* Dialog Constants */
-    private static final int DIALOG_UPDATE_CARD = 1;
-    private static final int DIALOG_PRICE_SETTING = 2;
-    private static final int DIALOG_SAVE_TRADE = 3;
-    private static final int DIALOG_LOAD_TRADE = 4;
-    private static final int DIALOG_DELETE_TRADE = 5;
-    private static final int DIALOG_CONFIRMATION = 6;
-    private static final int DIALOG_CHANGE_SET = 7;
-    private static final int DIALOG_SORT = 8;
+    public static final int BOTH = 2;
 
     /* Save file constants */
     private static final String AUTOSAVE_NAME = "autosave";
-    private static final String TRADE_EXTENSION = ".trade";
+    public static final String TRADE_EXTENSION = ".trade";
     /* For sorting */
     private static final int SORT_TYPE_NONE = 0;
     private static final int SORT_TYPE_CMC = 1;
@@ -91,25 +72,25 @@ public class TradeFragment extends FamiliarFragment {
     private static final int SORT_TYPE_NAME = 3;
     private static final int SORT_TYPE_PRICE = 4;
     private static final int SORT_TYPE_SET = 5;
-    private static final int ASCENDING = 0;
-    private static final int DESCENDING = 1;
+    public static final int ASCENDING = 0;
+    public static final int DESCENDING = 1;
     /* Trade information */
     private TextView mTotalPriceLeft;
-    private TradeListAdapter mLeftAdapter;
-    private ArrayList<MtgCard> mLeftList;
+    public TradeListAdapter mLeftAdapter;
+    public ArrayList<MtgCard> mLeftList;
     private TextView mTotalPriceRight;
-    private TradeListAdapter mRightAdapter;
-    private ArrayList<MtgCard> mRightList;
+    public TradeListAdapter mRightAdapter;
+    public ArrayList<MtgCard> mRightList;
     /* UI Elements */
     private AutoCompleteTextView mNameEditText;
     private EditText mNumberEditText;
-    private CheckBox mCheckboxFoil;
+    public CheckBox mCheckboxFoil;
     private int mPriceFetchRequests = 0;
     /* Settings */
-    private int mPriceSetting;
-    private String mCurrentTrade = "";
-    private int mSortOrder;
-    private int mSortType;
+    public int mPriceSetting;
+    public String mCurrentTrade = "";
+    public int mSortOrder;
+    public int mSortType;
     private boolean mCheckboxFoilLocked = false;
 
     /**
@@ -147,7 +128,7 @@ public class TradeFragment extends FamiliarFragment {
         lvTradeLeft.setAdapter(mLeftAdapter);
         lvTradeLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                showDialog(DIALOG_UPDATE_CARD, LEFT, arg2);
+                showDialog(TradeDialogFragment.DIALOG_UPDATE_CARD, LEFT, arg2);
             }
         });
 
@@ -158,7 +139,7 @@ public class TradeFragment extends FamiliarFragment {
         lvTradeRight.setAdapter(mRightAdapter);
         lvTradeRight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                showDialog(DIALOG_UPDATE_CARD, RIGHT, arg2);
+                showDialog(TradeDialogFragment.DIALOG_UPDATE_CARD, RIGHT, arg2);
             }
         });
 
@@ -354,7 +335,7 @@ public class TradeFragment extends FamiliarFragment {
      * @param sideForDialog     If this is for a specific card, this is the side of the trade the card lives in.
      * @param positionForDialog If this is for a specific card, this is the position of the card in the list.
      */
-    private void showDialog(final int id, final int sideForDialog, final int positionForDialog) throws IllegalStateException {
+    public void showDialog(final int id, final int sideForDialog, final int positionForDialog) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -366,528 +347,19 @@ public class TradeFragment extends FamiliarFragment {
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                /* We're setting this to false if we return null, so we should reset it every time to be safe */
-                setShowsDialog(true);
-                switch (id) {
-                    case DIALOG_UPDATE_CARD: {
-                        /* Get some final references */
-                        final ArrayList<MtgCard> lSide = (sideForDialog == LEFT ? mLeftList : mRightList);
-                        final TradeListAdapter aaSide = (sideForDialog == LEFT ? mLeftAdapter : mRightAdapter);
-                        final boolean oldFoil = lSide.get(positionForDialog).foil;
-
-                        /* Inflate the view and pull out UI elements */
-                        View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
-                                null, false);
-                        assert view != null;
-                        final CheckBox foilCheckbox = (CheckBox) view.findViewById(R.id.traderDialogFoil);
-                        final EditText numberOf = (EditText) view.findViewById(R.id.traderDialogNumber);
-                        final EditText priceText = (EditText) view.findViewById(R.id.traderDialogPrice);
-
-                        /* Set initial values */
-                        String numberOfStr = String.valueOf(lSide.get(positionForDialog).numberOf);
-                        numberOf.setText(numberOfStr);
-                        numberOf.setSelection(numberOfStr.length());
-                        foilCheckbox.setChecked(oldFoil);
-                        String priceNumberStr = lSide.get(positionForDialog).hasPrice() ?
-                                lSide.get(positionForDialog).getPriceString().substring(1) : "";
-                        priceText.setText(priceNumberStr);
-                        priceText.setSelection(priceNumberStr.length());
-
-                        /* Only show the foil checkbox if the card can be foil */
-                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                        try {
-                            if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).setCode, database)) {
-                                view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
-                            } else {
-                                view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
-                            }
-                        } catch (FamiliarDbException e) {
-                            /* Err on the side of foil */
-                            foilCheckbox.setVisibility(View.VISIBLE);
-                        }
-                        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-
-                        /* when the user checks or un-checks the foil box, if the price isn't custom, set it */
-                        foilCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                                lSide.get(positionForDialog).foil = b;
-                                if (!lSide.get(positionForDialog).customPrice) {
-                                    loadPrice(lSide.get(positionForDialog), aaSide);
-                                    priceText.setText(lSide.get(positionForDialog).hasPrice() ?
-                                            lSide.get(positionForDialog).getPriceString().substring(1) : "");
-                                }
-                            }
-                        });
-
-                        /* Set up the button to remove this card from the trade */
-                        view.findViewById(R.id.traderDialogRemove).setOnClickListener(new OnClickListener() {
-                            public void onClick(View v) {
-                                lSide.remove(positionForDialog);
-                                aaSide.notifyDataSetChanged();
-                                UpdateTotalPrices(sideForDialog);
-                                removeDialog(getFragmentManager());
-                            }
-                        });
-
-                        /* If this has a custom price, show the button to default the price */
-                        view.findViewById(R.id.traderDialogResetPrice).setOnClickListener(new OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                lSide.get(positionForDialog).customPrice = false;
-                                /* This loads the price if necessary, or uses cached info */
-                                loadPrice(lSide.get(positionForDialog), aaSide);
-                                int price = lSide.get(positionForDialog).price;
-                                priceText.setText(String.format("%d.%02d", price / 100, price % 100));
-
-                                aaSide.notifyDataSetChanged();
-                                UpdateTotalPrices(sideForDialog);
-                            }
-                        });
-
-
-                        /* Set up the button to show info about this card */
-                        view.findViewById(R.id.traderDialogInfo).setOnClickListener(new OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                                try {
-                                    /* Get the card ID, and send it to a new CardViewPagerFragment */
-                                    Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
-                                            lSide.get(positionForDialog).setCode, new String[]{
-                                                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
-
-                                    Bundle args = new Bundle();
-                                    args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
-                                            cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                                    args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-
-                                    cursor.close();
-                                    CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
-                                    TradeFragment.this.startNewFragment(cvpFrag, args);
-                                } catch (FamiliarDbException e) {
-                                    TradeFragment.this.handleFamiliarDbException(false);
-                                }
-                                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                            }
-                        });
-
-                        /* Set up the button to change the set of this card */
-                        view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(new OnClickListener() {
-                            public void onClick(View v) {
-                                showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
-                            }
-                        });
-
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(lSide.get(positionForDialog).name)
-                                .setView(view)
-                                .setPositiveButton(R.string.dialog_done, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        /* Grab a reference to the card */
-                                        MtgCard data = lSide.get(positionForDialog);
-
-                                        /* Assume non-custom price */
-                                        data.customPrice = false;
-
-                                        /* Set this card's foil option */
-                                        data.foil = foilCheckbox.isChecked();
-
-                                        /* validate number of cards text */
-                                        if (numberOf.length() == 0) {
-                                            data.numberOf = 1;
-                                        } else {
-                                            /* Set the numberOf */
-                                            assert numberOf.getEditableText() != null;
-                                            try {
-                                                data.numberOf =
-                                                        (Integer.parseInt(numberOf.getEditableText().toString()));
-                                            } catch (NumberFormatException e) {
-                                                data.numberOf = 1;
-                                            }
-                                        }
-
-                                        /* validate the price text */
-                                        assert priceText.getText() != null;
-                                        String userInputPrice = priceText.getText().toString();
-
-                                        /* If the input price is blank, set it to zero */
-                                        if (userInputPrice.length() == 0) {
-                                            data.customPrice = true;
-                                            data.price = 0;
-                                        } else {
-                                            /* Attempt to parse the price */
-                                            try {
-                                                data.price = (int) (Double.parseDouble(userInputPrice) * 100);
-                                            } catch (NumberFormatException e) {
-                                                data.customPrice = true;
-                                                data.price = 0;
-                                            }
-                                        }
-
-                                        /* Check if the user hand-modified the price by comparing the current price
-                                         * to the cached price */
-                                        int oldPrice;
-                                        if (data.priceInfo != null) {
-                                            if (data.foil) {
-                                                oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
-                                            } else {
-                                                switch (mPriceSetting) {
-                                                    case LOW_PRICE: {
-                                                        oldPrice = (int) (data.priceInfo.mLow * 100);
-                                                        break;
-                                                    }
-                                                    default:
-                                                    case AVG_PRICE: {
-                                                        oldPrice = (int) (data.priceInfo.mAverage * 100);
-                                                        break;
-                                                    }
-                                                    case HIGH_PRICE: {
-                                                        oldPrice = (int) (data.priceInfo.mHigh * 100);
-                                                        break;
-                                                    }
-                                                    case FOIL_PRICE: {
-                                                        oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            if (oldPrice != data.price) {
-                                                data.customPrice = true;
-                                            }
-                                        } else {
-                                            data.customPrice = true;
-                                        }
-
-                                        /* Notify things to update */
-                                        aaSide.notifyDataSetChanged();
-                                        UpdateTotalPrices(sideForDialog);
-                                    }
-                                })
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                                .create();
-                    }
-                    case DIALOG_CHANGE_SET: {
-                        /* Get the card */
-                        MtgCard data = (sideForDialog == LEFT ?
-                                mLeftList.get(positionForDialog) : mRightList.get(positionForDialog));
-
-                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                        try {
-                            /* Query the database for all versions of this card */
-                            Cursor cards = CardDbAdapter.fetchCardByName(data.name, new String[]{
-                                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, database);
-                            /* Build set names and set codes */
-                            Set<String> sets = new LinkedHashSet<>();
-                            Set<String> setCodes = new LinkedHashSet<>();
-                            while (!cards.isAfterLast()) {
-                                if (sets.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME)))) {
-                                    setCodes.add(cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET)));
-                                }
-                                cards.moveToNext();
-                            }
-                            /* clean up */
-                            cards.close();
-                            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-
-                            /* Turn set names and set codes into arrays */
-                            final String[] aSets = sets.toArray(new String[sets.size()]);
-                            final String[] aSetCodes = setCodes.toArray(new String[setCodes.size()]);
-
-                            /* Build and return the dialog */
-                            return new AlertDialogWrapper.Builder(getActivity())
-                                    .setTitle(R.string.card_view_set_dialog_title)
-                                    .setItems(aSets, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialogInterface, int item) {
-                                            /* Figure out what we're updating */
-                                            MtgCard data;
-                                            TradeListAdapter adapter;
-                                            if (sideForDialog == LEFT) {
-                                                data = mLeftList.get(positionForDialog);
-                                                adapter = mLeftAdapter;
-                                            } else {
-                                                data = mRightList.get(positionForDialog);
-                                                adapter = mRightAdapter;
-                                            }
-
-                                            /* Change the card's information, and reload the price */
-                                            data.setCode = (aSetCodes[item]);
-                                            data.setName = (aSets[item]);
-                                            data.message = (getString(R.string.wishlist_loading));
-                                            data.priceInfo = null;
-
-                                            /* See if the new set can be foil */
-                                            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                                            try {
-                                                if (!CardDbAdapter.canBeFoil(data.setCode, database)) {
-                                                    data.foil = false;
-                                                }
-                                            } catch (FamiliarDbException e) {
-                                                data.foil = false;
-                                            }
-                                            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-
-                                            /* Reload and notify the adapter */
-                                            loadPrice(data, adapter);
-                                            adapter.notifyDataSetChanged();
-                                        }
-                                    })
-                                    .create();
-                        } catch (FamiliarDbException e) {
-                            /* Don't show the dialog, but pop a toast */
-                            handleFamiliarDbException(true);
-                            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                            return DontShowDialog();
-                        }
-                    }
-                    case DIALOG_PRICE_SETTING: {
-                        /* Build the dialog with some choices */
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(R.string.trader_pricing_dialog_title)
-                                .setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
-                                                getString(R.string.trader_Average),
-                                                getString(R.string.trader_High)}, mPriceSetting,
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                if (mPriceSetting != which) {
-                                                    mPriceSetting = which;
-
-                                                    /* Update ALL the prices! */
-                                                    for (MtgCard data : mLeftList) {
-                                                        if (!data.customPrice) {
-                                                            data.message = getString(R.string.wishlist_loading);
-                                                            loadPrice(data, mLeftAdapter);
-                                                        }
-                                                    }
-                                                    mLeftAdapter.notifyDataSetChanged();
-
-                                                    for (MtgCard data : mRightList) {
-                                                        if (!data.customPrice) {
-                                                            data.message = getString(R.string.wishlist_loading);
-                                                            loadPrice(data, mRightAdapter);
-                                                        }
-                                                    }
-                                                    mRightAdapter.notifyDataSetChanged();
-
-                                                    /* And also update the preference */
-                                                    getFamiliarActivity().mPreferenceAdapter.setTradePrice(
-                                                            String.valueOf(mPriceSetting));
-
-                                                    UpdateTotalPrices(BOTH);
-                                                }
-                                                dialog.dismiss();
-                                            }
-                                        }
-                                ).create();
-                    }
-                    case DIALOG_SAVE_TRADE: {
-                        /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
-                        View textEntryView = getActivity().getLayoutInflater()
-                                .inflate(R.layout.alert_dialog_text_entry,
-                                        null, false);
-                        assert textEntryView != null;
-                        final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
-                        nameInput.append(mCurrentTrade);
-                        /* Set the button to clear the text field */
-                        textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                nameInput.setText("");
-                            }
-                        });
-
-                        Dialog dialog = new AlertDialogWrapper.Builder(getActivity())
-                                .setTitle(R.string.trader_save_dialog_title)
-                                .setView(textEntryView)
-                                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        if (nameInput.getText() == null) {
-                                            return;
-                                        }
-                                        String tradeName = nameInput.getText().toString();
-
-                                        /* Don't bother saving if there is no name */
-                                        if (tradeName.length() == 0 || tradeName.equals("")) {
-                                            return;
-                                        }
-
-                                        SaveTrade(tradeName + TRADE_EXTENSION);
-                                        mCurrentTrade = tradeName;
-                                    }
-                                })
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .create();
-                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                        return dialog;
-                    }
-                    case DIALOG_LOAD_TRADE: {
-                        /* Find all the trade files */
-                        String[] files = this.getActivity().fileList();
-                        ArrayList<String> validFiles = new ArrayList<>();
-                        for (String fileName : files) {
-                            if (fileName.endsWith(TRADE_EXTENSION)) {
-                                validFiles.add(fileName.substring(0, fileName.indexOf(TRADE_EXTENSION)));
-                            }
-                        }
-
-                        /* If there are no files, don't show the dialog */
-                        if (validFiles.size() == 0) {
-                            ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
-                                    .show();
-                            return DontShowDialog();
-                        }
-
-                        /* Make an array of the trade file names */
-                        final String[] tradeNames = new String[validFiles.size()];
-                        validFiles.toArray(tradeNames);
-
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(R.string.trader_select_dialog_title)
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        /* Canceled. */
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setItems(tradeNames, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface di, int which) {
-                                        /* Load the trade, set the current trade name */
-                                        LoadTrade(tradeNames[which] + TRADE_EXTENSION);
-                                        mCurrentTrade = tradeNames[which];
-
-                                        /* Alert things to update */
-                                        mLeftAdapter.notifyDataSetChanged();
-                                        mRightAdapter.notifyDataSetChanged();
-                                        UpdateTotalPrices(BOTH);
-                                    }
-                                })
-                                .create();
-                    }
-                    case DIALOG_DELETE_TRADE: {
-                        /* Find all the trade files */
-                        String[] files = this.getActivity().fileList();
-                        ArrayList<String> validFiles = new ArrayList<>();
-                        for (String fileName : files) {
-                            if (fileName.endsWith(TRADE_EXTENSION)) {
-                                validFiles.add(fileName.substring(0, fileName.indexOf(TRADE_EXTENSION)));
-                            }
-                        }
-
-                        /* If there are no files, don't show the dialog */
-                        if (validFiles.size() == 0) {
-                            ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
-                                    .show();
-                            return DontShowDialog();
-                        }
-
-                        /* Make an array of the trade file names */
-                        final String[] tradeNames = new String[validFiles.size()];
-                        validFiles.toArray(tradeNames);
-
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(R.string.trader_delete_dialog_title)
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int whichButton) {
-                                        /* Canceled. */
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setItems(tradeNames, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface di, int which) {
-                                        File toDelete = new File(getActivity().getFilesDir(), tradeNames[which] +
-                                                TRADE_EXTENSION);
-                                        if (!toDelete.delete()) {
-                                            ToastWrapper.makeText(getActivity(), toDelete.getName() + " " +
-                                                    getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG).show();
-                                        }
-                                    }
-                                })
-                                .create();
-                    }
-                    case DIALOG_CONFIRMATION: {
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(R.string.trader_clear_dialog_title)
-                                .setMessage(R.string.trader_clear_dialog_text)
-                                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        /* Clear the arrays and tell everything to update */
-                                        mRightList.clear();
-                                        mLeftList.clear();
-                                        mRightAdapter.notifyDataSetChanged();
-                                        mLeftAdapter.notifyDataSetChanged();
-                                        mCheckboxFoil.setChecked(false);
-                                        UpdateTotalPrices(BOTH);
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        /* Canceled */
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setCancelable(true)
-                                .create();
-                    }
-                    case DIALOG_SORT: {
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(R.string.wishlist_sort_by)
-                                .setSingleChoiceItems(R.array.wishlist_sort_type, mSortType, null)
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mSortOrder = ASCENDING;
-                                        ListView lw = ((AlertDialog) dialog).getListView();
-                                        mSortType = lw.getCheckedItemPosition();
-                                        sortTrades(mSortType, mSortOrder);
-                                    }
-                                })
-                                .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mSortOrder = DESCENDING;
-                                        ListView lw = ((AlertDialog) dialog).getListView();
-                                        mSortType = lw.getCheckedItemPosition();
-                                        sortTrades(mSortType, mSortOrder);
-                                    }
-                                })
-                                .setCancelable(true).create();
-                    }
-                    default: {
-                        return DontShowDialog();
-                    }
-                }
-            }
-        };
+        TradeDialogFragment newFragment = new TradeDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        arguments.putInt(TradeDialogFragment.ID_SIDE, sideForDialog);
+        arguments.putInt(TradeDialogFragment.ID_POSITION, positionForDialog);
+        newFragment.setArguments(arguments);
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     /**
      * Sort the trades
      */
-    private void sortTrades(int sortType, int sortOrder) {
+    public void sortTrades(int sortType, int sortOrder) {
         /* If no sort type specified, return */
         if (sortType != SORT_TYPE_NONE) {
             if (sortOrder == ASCENDING) {
@@ -937,7 +409,7 @@ public class TradeFragment extends FamiliarFragment {
      *
      * @param tradeName The name of the trade, to be used as a file name
      */
-    private void SaveTrade(String tradeName) {
+    public void SaveTrade(String tradeName) {
         FileOutputStream fos;
 
         try {
@@ -964,7 +436,7 @@ public class TradeFragment extends FamiliarFragment {
      *
      * @param tradeName The name of the trade to load
      */
-    private void LoadTrade(String tradeName) {
+    public void LoadTrade(String tradeName) {
         try {
             /* Clear the current lists */
             mLeftList.clear();
@@ -1004,7 +476,7 @@ public class TradeFragment extends FamiliarFragment {
      *
      * @param side RIGHT, LEFT, or BOTH, depending on the side to update
      */
-    private void UpdateTotalPrices(int side) {
+    public void UpdateTotalPrices(int side) {
         if (this.isAdded()) {
             if (side == LEFT || side == BOTH) {
                 int totalPrice = 0;
@@ -1061,23 +533,23 @@ public class TradeFragment extends FamiliarFragment {
         /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.trader_menu_clear:
-                showDialog(DIALOG_CONFIRMATION, 0, 0);
+                showDialog(TradeDialogFragment.DIALOG_CONFIRMATION, 0, 0);
                 return true;
             case R.id.trader_menu_settings:
-                showDialog(DIALOG_PRICE_SETTING, 0, 0);
+                showDialog(TradeDialogFragment.DIALOG_PRICE_SETTING, 0, 0);
                 return true;
             case R.id.trader_menu_save:
-                showDialog(DIALOG_SAVE_TRADE, 0, 0);
+                showDialog(TradeDialogFragment.DIALOG_SAVE_TRADE, 0, 0);
                 return true;
             case R.id.trader_menu_load:
-                showDialog(DIALOG_LOAD_TRADE, 0, 0);
+                showDialog(TradeDialogFragment.DIALOG_LOAD_TRADE, 0, 0);
                 return true;
             case R.id.trader_menu_delete:
-                showDialog(DIALOG_DELETE_TRADE, 0, 0);
+                showDialog(TradeDialogFragment.DIALOG_DELETE_TRADE, 0, 0);
                 return true;
             case R.id.trader_menu_sort:
                 /* Show a dialog to change the sort criteria the list uses */
-                showDialog(DIALOG_SORT, 0, 0);
+                showDialog(TradeDialogFragment.DIALOG_SORT, 0, 0);
                 return true;
             case R.id.trader_menu_share:
                 shareTrade();
@@ -1142,7 +614,7 @@ public class TradeFragment extends FamiliarFragment {
      * @param data    The card to fetch a price for
      * @param adapter The adapter to notify when a price is downloaded
      */
-    private void loadPrice(final MtgCard data, final TradeListAdapter adapter) {
+    public void loadPrice(final MtgCard data, final TradeListAdapter adapter) {
         /* If the priceInfo is already loaded, don't bother performing a query */
         if (data.priceInfo != null) {
             if (data.foil) {
@@ -1386,7 +858,7 @@ public class TradeFragment extends FamiliarFragment {
     /**
      * This inner class helps to display card information from an ArrayList<> in a ListView
      */
-    private class TradeListAdapter extends ArrayAdapter<MtgCard> {
+    public class TradeListAdapter extends ArrayAdapter<MtgCard> {
 
         private final ArrayList<MtgCard> items;
 
