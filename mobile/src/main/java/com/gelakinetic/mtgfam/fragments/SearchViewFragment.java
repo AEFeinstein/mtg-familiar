@@ -2,7 +2,6 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
@@ -26,10 +25,10 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.SpaceTokenizer;
@@ -37,8 +36,6 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -57,11 +54,6 @@ public class SearchViewFragment extends FamiliarFragment {
     /* String keys */
     public static final String CRITERIA = "criteria";
 
-    /* Dialog IDs */
-    private static final int SET_LIST = 1;
-    private static final int FORMAT_LIST = 2;
-    private static final int RARITY_LIST = 3;
-
     /* Default search file */
     private static final String DEFAULT_CRITERIA_FILE = "defaultSearchCriteria.ser";
 
@@ -71,14 +63,14 @@ public class SearchViewFragment extends FamiliarFragment {
     private static final String SAVED_FORMAT_KEY = "SAVED_FORMAT_KEY";
 
     /* Spinner Data Structures */
-    private String[] mSetNames;
-    private boolean[] mSetChecked;
+    public String[] mSetNames;
+    public boolean[] mSetChecked;
     private String[] mSetSymbols;
-    private String[] mFormatNames;
+    public String[] mFormatNames;
     private char[] mRarityCodes;
-    private String[] mRarityNames;
-    private boolean[] mRarityChecked;
-    private int mSelectedFormat;
+    public String[] mRarityNames;
+    public boolean[] mRarityChecked;
+    public int mSelectedFormat;
 
     /* Autocomplete data structures */
     private String[] mSupertypes = null;
@@ -107,9 +99,9 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mTouChoice;
     private Spinner mCmcLogic;
     private Spinner mCmcChoice;
-    private Dialog mSetDialog;
-    private Dialog mFormatDialog;
-    private Dialog mRarityDialog;
+    public Dialog mSetDialog;
+    public Dialog mFormatDialog;
+    public Dialog mRarityDialog;
     private EditText mFlavorField;
     private AutoCompleteTextView mArtistField = null;
     private Spinner mTextSpinner;
@@ -209,17 +201,17 @@ public class SearchViewFragment extends FamiliarFragment {
         /* set the buttons to open the dialogs */
         mSetButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDialog(SET_LIST);
+                showDialog(SearchViewDialogFragment.SET_LIST);
             }
         });
         mFormatButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDialog(FORMAT_LIST);
+                showDialog(SearchViewDialogFragment.FORMAT_LIST);
             }
         });
         mRarityButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDialog(RARITY_LIST);
+                showDialog(SearchViewDialogFragment.RARITY_LIST);
             }
         });
 
@@ -829,7 +821,7 @@ public class SearchViewFragment extends FamiliarFragment {
     /**
      * This is a convenience function to set the colors for the buttons which pop dialogs
      */
-    private void checkDialogButtonColors() {
+    public void checkDialogButtonColors() {
 
         if (!isAdded()) {
             return;
@@ -871,74 +863,10 @@ public class SearchViewFragment extends FamiliarFragment {
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                super.onDismiss(dialog);
-                checkDialogButtonColors();
-            }
-
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                super.onCreateDialog(savedInstanceState);
-
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
-                setShowsDialog(true);
-
-                DialogInterface.OnMultiChoiceClickListener multiChoiceClickListener =
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-
-                            }
-                        };
-                DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                };
-                try {
-                    /* Build the dialogs to display format, rarity, and set choices. The arrays were already filled in
-                       onCreate() */
-                    switch (id) {
-                        case SET_LIST: {
-                            mSetDialog = new AlertDialogWrapper.Builder(this.getActivity()).setTitle(R.string.search_sets)
-                                    .setMultiChoiceItems(mSetNames, mSetChecked, multiChoiceClickListener)
-                                    .setPositiveButton(R.string.dialog_ok, clickListener).create();
-                            return mSetDialog;
-                        }
-                        case FORMAT_LIST: {
-                            mFormatDialog = new AlertDialogWrapper.Builder(this.getActivity()).
-                                    setTitle(R.string.search_formats).setSingleChoiceItems(mFormatNames,
-                                    mSelectedFormat, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            mSelectedFormat = which;
-                                        }
-                                    }
-                            ).setPositiveButton(R.string.dialog_ok, clickListener).create();
-                            return mFormatDialog;
-                        }
-                        case RARITY_LIST: {
-                            mRarityDialog = new AlertDialogWrapper.Builder(this.getActivity())
-                                    .setTitle(R.string.search_rarities).setMultiChoiceItems(mRarityNames,
-                                            mRarityChecked, multiChoiceClickListener)
-                                    .setPositiveButton(R.string.dialog_ok, clickListener).create();
-                            return mRarityDialog;
-                        }
-                        default: {
-                            return DontShowDialog();
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    /* if the db failed to open, these arrays will be null. */
-                    handleFamiliarDbException(false);
-                    return DontShowDialog();
-                }
-            }
-        };
+        SearchViewDialogFragment newFragment = new SearchViewDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        newFragment.setArguments(arguments);
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
