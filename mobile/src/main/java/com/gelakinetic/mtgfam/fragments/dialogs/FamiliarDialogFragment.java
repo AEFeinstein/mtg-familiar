@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 
@@ -14,6 +15,9 @@ import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
  * newFragment.show(getActivity().getSupportFragmentManager(), FamiliarActivity.DIALOG_TAG);
  */
 public class FamiliarDialogFragment extends DialogFragment {
+
+    public static final String ID_KEY = "DIALOG_ID";
+    protected int mDialogId;
 
     /**
      * All subclasses of Fragment must include a public empty constructor.
@@ -68,5 +72,12 @@ public class FamiliarDialogFragment extends DialogFragment {
     protected FamiliarFragment getFamiliarFragment() {
         return (FamiliarFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+    }
+
+    /**
+     * @return The current FamiliarActivity
+     */
+    protected FamiliarActivity getFamiliarActivity() {
+        return (FamiliarActivity) getActivity();
     }
 }

@@ -16,13 +16,10 @@
 
 package com.gelakinetic.mtgfam;
 
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -42,7 +39,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -56,9 +52,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,14 +60,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
-import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
@@ -87,8 +79,8 @@ import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
-import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -135,17 +127,13 @@ public class FamiliarActivity extends AppCompatActivity {
     public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
     public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 77;
-    /* Constants used for displaying dialogs */
-    private static final int DIALOG_ABOUT = 100;
-    private static final int DIALOG_CHANGE_LOG = 101;
-    private static final int DIALOG_DONATE = 102;
-    private static final int DIALOG_TTS = 103;
+
     /* Constants used for saving state */
     private static final String CURRENT_FRAG = "CURRENT_FRAG";
     private static final String IS_REFRESHING = "IS_REFRESHING";
     /* PayPal URL */
     @SuppressWarnings("SpellCheckingInspection")
-    private static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
+    public static final String PAYPAL_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations" +
             "&business=SZK4TAH2XBZNC&lc=US&item_name=MTG%20Familiar&currency_code=USD" +
             "&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
     /* Timer to determine user inactivity for screen dimming in the life counter */
@@ -608,17 +596,17 @@ public class FamiliarActivity extends AppCompatActivity {
                         break;
                     }
                     case R.string.main_donate_title: {
-                        showDialogFragment(DIALOG_DONATE);
+                        showDialogFragment(FamiliarActivityDialogFragment.DIALOG_DONATE);
                         shouldCloseDrawer = true;
                         break;
                     }
                     case R.string.main_about: {
-                        showDialogFragment(DIALOG_ABOUT);
+                        showDialogFragment(FamiliarActivityDialogFragment.DIALOG_ABOUT);
                         shouldCloseDrawer = true;
                         break;
                     }
                     case R.string.main_whats_new_title: {
-                        showDialogFragment(DIALOG_CHANGE_LOG);
+                        showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                         shouldCloseDrawer = true;
                         break;
                     }
@@ -720,7 +708,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         /* eat it. tasty */
                     }
                     if (lastVersion != 0) {
-                        showDialogFragment(DIALOG_CHANGE_LOG);
+                        showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }
                     mPreferenceAdapter.setLastVersion(pInfo.versionCode);
 
@@ -1230,7 +1218,7 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     public void showTtsDialog() {
         if (mPreferenceAdapter.getTtsShowDialog()) {
-            showDialogFragment(FamiliarActivity.DIALOG_TTS);
+            showDialogFragment(FamiliarActivityDialogFragment.DIALOG_TTS);
             mPreferenceAdapter.setTtsShowDialog();
         }
     }
@@ -1267,193 +1255,10 @@ public class FamiliarActivity extends AppCompatActivity {
         removeDialogFragment(getSupportFragmentManager());
 
         /* Create and show the dialog. */
-        FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-
-            /**
-             * Overridden to create the specific dialogs
-             * @param savedInstanceState The last saved instance state of the Fragment, or null if this is a freshly
-             *                           created Fragment.
-             *
-             * @return The new dialog instance to be displayed. All dialogs are created with the AlertDialog builder, so
-             * onCreateView() does not need to be implemented
-             */
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                super.onCreateDialog(savedInstanceState);
-
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
-                setShowsDialog(true);
-                AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(this.getActivity());
-
-                assert getPackageManager() != null;
-
-                switch (id) {
-                    case DIALOG_ABOUT: {
-
-                        /* Set the title with the package version if possible */
-                        try {
-                            builder.setTitle(getString(R.string.main_about) + " " + getString(R.string.app_name) + " " +
-                                    getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-                        } catch (PackageManager.NameNotFoundException e) {
-                            builder.setTitle(getString(R.string.main_about) + " " + getString(R.string.app_name));
-                        }
-
-                        /* Set the neutral button */
-                        builder.setNeutralButton(R.string.dialog_thanks, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                /* Just close the dialog */
-                            }
-                        });
-
-                        /* Set the custom view, with some images below the text */
-                        LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                        View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
-                        assert dialogLayout != null;
-                        TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
-                        text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
-                        text.setMovementMethod(LinkMovementMethod.getInstance());
-                        builder.setView(dialogLayout);
-
-                        return builder.create();
-                    }
-                    case DIALOG_CHANGE_LOG: {
-                        try {
-                            builder.setTitle(getString(R.string.main_whats_new_in_title) + " " +
-                                    getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-                        } catch (PackageManager.NameNotFoundException e) {
-                            builder.setTitle(R.string.main_whats_new_title);
-                        }
-
-                        builder.setNeutralButton(R.string.dialog_enjoy, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                /* Just close the dialog */
-                            }
-                        });
-
-                        /* Set the custom view, with some images below the text */
-                        LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                        View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
-                        assert dialogLayout != null;
-                        TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
-                        text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_whats_new_text)));
-                        text.setMovementMethod(LinkMovementMethod.getInstance());
-
-                        dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
-                        dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-                        dialogLayout.findViewById(R.id.imageview3).setVisibility(View.GONE);
-                        builder.setView(dialogLayout);
-
-                        return builder.create();
-                    }
-                    case DIALOG_DONATE: {
-                        /* Set the title */
-                        builder.setTitle(R.string.main_donate_dialog_title);
-                        /* Set the buttons button */
-                        builder.setNegativeButton(R.string.dialog_thanks_anyway, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                /* Just close the dialog */
-                            }
-                        });
-                        builder.setPositiveButton(R.string.main_donate_title, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(PAYPAL_URL));
-                                startActivity(myIntent);
-                            }
-                        });
-
-                        /* Set the custom view */
-                        LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                        View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
-
-                        /* Set the text */
-                        assert dialogLayout != null;
-                        TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
-                        text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_donate_text)));
-                        text.setMovementMethod(LinkMovementMethod.getInstance());
-
-                        /* Set the image view */
-                        ImageView payPal = (ImageView) dialogLayout.findViewById(R.id.imageview1);
-                        payPal.setImageResource(R.drawable.paypal_icon);
-                        payPal.setOnClickListener(new View.OnClickListener() {
-
-                            public void onClick(View v) {
-                                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri
-                                        .parse(PAYPAL_URL));
-
-                                startActivity(myIntent);
-                            }
-                        });
-                        dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-
-                        builder.setView(dialogLayout);
-                        return builder.create();
-                    }
-                    case DIALOG_TTS: {
-                        /* Then display a dialog informing them of TTS */
-
-                        builder.setTitle(R.string.main_tts_warning_title)
-                                .setMessage(R.string.main_tts_warning_text)
-                                .setPositiveButton(R.string.main_install_tts, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        /* TTS couldn't init, try installing TTS data */
-                                        try {
-                                            Intent installIntent = new Intent();
-                                            installIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                                            startActivity(installIntent);
-                                        } catch (ActivityNotFoundException e) {
-                                            /* TTS not even installed */
-                                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                                            intent.setData(Uri.parse("market://details?id=com.google.android.tts"));
-                                            startActivity(intent);
-                                        }
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-
-                        return builder.create();
-                    }
-                    default: {
-                        return DontShowDialog();
-                    }
-                }
-            }
-
-            /**
-             * When the change log dismisses, check to see if we should bounce the drawer. It will open in 100ms, then
-             * close in 1000ms
-             *
-             * @param dialog A DialogInterface for the dismissed dialog
-             */
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                super.onDismiss(dialog);
-                if (id == DIALOG_CHANGE_LOG) {
-                    if (mPreferenceAdapter.getBounceDrawer()) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mDrawerLayout.openDrawer(mDrawerList);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mDrawerLayout.closeDrawer(mDrawerList);
-                                        mPreferenceAdapter.setBounceDrawer();
-                                    }
-                                }, 2000);
-                            }
-                        }, 500);
-                    }
-                }
-            }
-        };
+        FamiliarActivityDialogFragment newFragment = new FamiliarActivityDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        newFragment.setArguments(arguments);
         newFragment.show(getSupportFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
