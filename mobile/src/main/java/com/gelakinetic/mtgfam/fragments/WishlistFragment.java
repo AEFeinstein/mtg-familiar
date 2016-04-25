@@ -1,8 +1,5 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -26,11 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -52,8 +48,6 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -66,11 +60,6 @@ public class WishlistFragment extends FamiliarFragment {
     public static final int LOW_PRICE = 0;
     public static final int AVG_PRICE = 1;
     public static final int HIGH_PRICE = 2;
-    /* Dialog constants */
-    private static final int DIALOG_UPDATE_CARD = 1;
-    private static final int DIALOG_PRICE_SETTING = 2;
-    private static final int DIALOG_CONFIRMATION = 3;
-    private static final int DIALOG_SORT = 4;
     /* Sort type constants */
     private static final int SORT_TYPE_NONE = 0;
     private static final int SORT_TYPE_CMC = 1;
@@ -78,26 +67,26 @@ public class WishlistFragment extends FamiliarFragment {
     private static final int SORT_TYPE_NAME = 3;
     private static final int SORT_TYPE_PRICE = 4;
     private static final int SORT_TYPE_SET = 5;
-    private static final int ASCENDING = 0;
-    private static final int DESCENDING = 1;
+    public static final int ASCENDING = 0;
+    public static final int DESCENDING = 1;
     /* Preferences */
-    private int mPriceSetting;
+    public int mPriceSetting;
     private boolean mShowCardInfo;
     private boolean mShowIndividualPrices;
     private boolean mShowTotalWishlistPrice;
-    private int mWishlistSortType = SORT_TYPE_NONE;  //Type to sort list by (e.g. Name)
-    private int mWishlistSortOrder;  //ASCENDING v DESCENDING
+    public int mWishlistSortType = SORT_TYPE_NONE;  //Type to sort list by (e.g. Name)
+    public int mWishlistSortOrder;  //ASCENDING v DESCENDING
 
     /* UI Elements */
-    private AutoCompleteTextView mNameField;
-    private EditText mNumberField;
+    public AutoCompleteTextView mNameField;
+    public EditText mNumberField;
     private TextView mTotalPriceField;
-    private CheckBox mCheckboxFoil;
+    public CheckBox mCheckboxFoil;
     private int mPriceFetchRequests = 0;
 
     /* The wishlist and adapter */
-    private ArrayList<CompressedWishlistInfo> mCompressedWishlist;
-    private WishlistArrayAdapter mWishlistAdapter;
+    public ArrayList<CompressedWishlistInfo> mCompressedWishlist;
+    public WishlistArrayAdapter mWishlistAdapter;
     private View mTotalPriceDivider;
     private boolean mCheckboxFoilLocked = false;
 
@@ -158,7 +147,7 @@ public class WishlistFragment extends FamiliarFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 /* Show the dialog for this particular card */
-                showDialog(DIALOG_UPDATE_CARD, mCompressedWishlist.get(position).mCard.name);
+                showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD, mCompressedWishlist.get(position).mCard.name);
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -430,15 +419,15 @@ public class WishlistFragment extends FamiliarFragment {
         switch (item.getItemId()) {
             case R.id.wishlist_menu_clear:
                 /* Show a dialog to confirm clearing the wishlist */
-                showDialog(DIALOG_CONFIRMATION, null);
+                showDialog(WishlistDialogFragment.DIALOG_CONFIRMATION, null);
                 return true;
             case R.id.wishlist_menu_settings:
                 /* Show a dialog to change which price (low/avg/high) is used */
-                showDialog(DIALOG_PRICE_SETTING, null);
+                showDialog(WishlistDialogFragment.DIALOG_PRICE_SETTING, null);
                 return true;
             case R.id.wishlist_menu_sort:
                 /* Show a dialog to change the sort criteria the list uses */
-                showDialog(DIALOG_SORT, null);
+                showDialog(WishlistDialogFragment.DIALOG_SORT, null);
                 return true;
             case R.id.wishlist_menu_share:
                 /* Share the plaintext wishlist */
@@ -479,106 +468,11 @@ public class WishlistFragment extends FamiliarFragment {
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
-        final FamiliarDialogFragment newFragment = new FamiliarDialogFragment() {
-
-            @NotNull
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                setShowsDialog(true);
-                switch (id) {
-                    case DIALOG_UPDATE_CARD: {
-                        Dialog dialog = WishlistHelpers.getDialog(cardName, WishlistFragment.this, true);
-                        if (dialog == null) {
-                            handleFamiliarDbException(false);
-                            return DontShowDialog();
-                        }
-                        return dialog;
-                    }
-                    case DIALOG_PRICE_SETTING: {
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(R.string.trader_pricing_dialog_title)
-                                .setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
-                                                getString(R.string.trader_Average), getString(R.string.trader_High)},
-                                        mPriceSetting,
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                if (mPriceSetting != which) {
-                                                    mPriceSetting = which;
-                                                    getFamiliarActivity().mPreferenceAdapter.setTradePrice(
-                                                            String.valueOf(mPriceSetting));
-                                                    mWishlistAdapter.notifyDataSetChanged();
-                                                    sumTotalPrice();
-                                                }
-                                                dialog.dismiss();
-                                            }
-                                        }
-                                )
-                                .create();
-                    }
-                    case DIALOG_CONFIRMATION: {
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(R.string.wishlist_empty_dialog_title)
-                                .setMessage(R.string.wishlist_empty_dialog_text)
-                                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        WishlistHelpers.ResetCards(WishlistFragment.this.getActivity());
-                                        mCompressedWishlist.clear();
-                                        mWishlistAdapter.notifyDataSetChanged();
-                                        sumTotalPrice();
-                                        dialog.dismiss();
-                                        /* Clear input too */
-                                        mNameField.setText("");
-                                        mNumberField.setText("1");
-                                        mCheckboxFoil.setChecked(false);
-                                    }
-                                })
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setCancelable(true).create();
-
-                    }
-                    case DIALOG_SORT: {
-                        return new AlertDialogWrapper.Builder(this.getActivity())
-                                .setTitle(R.string.wishlist_sort_by)
-                                .setSingleChoiceItems(R.array.wishlist_sort_type, mWishlistSortType, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        /* If this listener is null, the dialog crashes */
-                                    }
-                                })
-                                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mWishlistSortOrder = ASCENDING;
-                                        ListView lw = ((MaterialDialog) dialog).getListView();
-                                        mWishlistSortType = lw.getCheckedItemPosition();
-                                        sortWishlist();
-                                    }
-                                })
-                                .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mWishlistSortOrder = DESCENDING;
-                                        ListView lw = ((MaterialDialog) dialog).getListView();
-                                        mWishlistSortType = lw.getCheckedItemPosition();
-                                        sortWishlist();
-                                    }
-                                })
-                                .setCancelable(true).create();
-                    }
-                    default: {
-                        savedInstanceState.putInt("id", id);
-                        return super.onCreateDialog(savedInstanceState);
-                    }
-                }
-            }
-        };
+        WishlistDialogFragment newFragment = new WishlistDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        arguments.putString(WishlistDialogFragment.NAME_KEY, cardName);
+        newFragment.setArguments(arguments);
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
@@ -665,7 +559,7 @@ public class WishlistFragment extends FamiliarFragment {
     /**
      * Add together the price of all the cards in the wishlist and display it
      */
-    private void sumTotalPrice() {
+    public void sumTotalPrice() {
         if (mShowTotalWishlistPrice) {
             float totalPrice = 0;
 
@@ -697,7 +591,7 @@ public class WishlistFragment extends FamiliarFragment {
     /**
      * Sorts the wishlist based on mWishlistSortType and mWishlistSortOrder
      */
-    private void sortWishlist() {
+    public void sortWishlist() {
         /* If no sort type specified, return */
         if (mWishlistSortType != SORT_TYPE_NONE) {
             if (mWishlistSortOrder == ASCENDING) {
