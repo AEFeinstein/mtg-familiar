@@ -12,7 +12,7 @@ import com.gelakinetic.mtgfam.R;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Adam on 4/22/2016.
+ * Class that creates dialogs for RoundTimerFragment
  */
 public class RoundTimerDialogFragment extends FamiliarDialogFragment {
 

@@ -364,11 +364,6 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
-    /* Last update TODO delete this preference? */
-    public synchronized String getLastUpdate() {
-        return this.prefs.getString(context.getString(R.string.key_lastUpdate), "");
-    }
-
     public synchronized void setLastUpdate(String lastUpdate) {
         this.edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         this.edit.commit();
@@ -394,7 +389,7 @@ public class PreferenceAdapter {
         Long endTime = prefs.getLong(context.getString(R.string.key_currentRoundTimer), -1);
         /* If the timer has expired, set it as -1 */
         if (endTime < System.currentTimeMillis()) {
-            endTime = -1l;
+            endTime = -1L;
             setRoundTimerEnd(endTime);
         }
         return endTime;

@@ -125,7 +125,7 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
                 old.close();
             }
         } catch (NullPointerException e) {
-            ; /* eat it */
+            /* eat it */
         }
     }
 

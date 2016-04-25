@@ -18,7 +18,7 @@ import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Adam on 4/24/2016.
+ * Class that creates dialogs for LcPlayer
  */
 public class LcPlayerDialogFragment extends FamiliarDialogFragment {
 
@@ -32,7 +32,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed LifeCounterFragment
      */
-    LifeCounterFragment getParentLifeCounterFragment() {
+    private LifeCounterFragment getParentLifeCounterFragment() {
         return (LifeCounterFragment) getFamiliarFragment();
     }
 

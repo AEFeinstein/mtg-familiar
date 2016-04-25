@@ -27,10 +27,11 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
- * Created by Adam on 4/22/2016.
+ * Class that creates dialogs for TradeFragment
  */
 public class TradeDialogFragment extends FamiliarDialogFragment {
 
@@ -41,7 +42,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_LOAD_TRADE = 4;
     public static final int DIALOG_DELETE_TRADE = 5;
     public static final int DIALOG_CONFIRMATION = 6;
-    public static final int DIALOG_CHANGE_SET = 7;
+    private static final int DIALOG_CHANGE_SET = 7;
     public static final int DIALOG_SORT = 8;
 
     /* Extra argument keys */
@@ -51,7 +52,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed TradeFragment
      */
-    TradeFragment getParentTradeFragment() {
+    private TradeFragment getParentTradeFragment() {
         return (TradeFragment) getFamiliarFragment();
     }
 
@@ -134,7 +135,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 /* This loads the price if necessary, or uses cached info */
                         getParentTradeFragment().loadPrice(lSide.get(positionForDialog), aaSide);
                         int price = lSide.get(positionForDialog).price;
-                        priceText.setText(String.format("%d.%02d", price / 100, price % 100));
+                        priceText.setText(String.format(Locale.US, "%d.%02d", price / 100, price % 100));
 
                         aaSide.notifyDataSetChanged();
                         getParentTradeFragment().UpdateTotalPrices(sideForDialog);

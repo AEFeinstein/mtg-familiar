@@ -21,13 +21,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 /**
- * Created by Adam on 4/21/2016.
+ * Class that creates dialogs for GatheringsFragment
  */
 public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
     /* Dialog constants */
     public static final int DIALOG_SAVE_GATHERING = 1;
-    public static final int DIALOG_GATHERING_EXIST = 2;
+    private static final int DIALOG_GATHERING_EXIST = 2;
     public static final int DIALOG_DELETE_GATHERING = 3;
     public static final int DIALOG_REMOVE_PLAYER = 4;
     public static final int DIALOG_LOAD_GATHERING = 5;
@@ -35,7 +35,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed DiceFragment
      */
-    GatheringsFragment getParentGatheringsFragment() {
+    private GatheringsFragment getParentGatheringsFragment() {
         return (GatheringsFragment) getFamiliarFragment();
     }
 

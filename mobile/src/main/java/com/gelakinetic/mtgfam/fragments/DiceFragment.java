@@ -70,12 +70,16 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
         ImageView d100 = (ImageView) myFragmentView.findViewById(R.id.d100);
         ImageView dN = (ImageView) myFragmentView.findViewById(R.id.dN);
 
+        /* Color the die faces */
+        int color = getResources().getColor(R.color.colorPrimary_light);
+
         if (d2 != null) {
             d2.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     flipCoin();
                 }
             });
+            d2.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d4 != null) {
             d4.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +87,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     rollDie(4);
                 }
             });
+            d4.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d6 != null) {
             d6.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +95,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     rollDie(6);
                 }
             });
+            d6.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d8 != null) {
             d8.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +103,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     rollDie(8);
                 }
             });
+            d8.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d10 != null) {
             d10.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +111,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     rollDie(10);
                 }
             });
+            d10.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d12 != null) {
             d12.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +119,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     rollDie(12);
                 }
             });
+            d12.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d20 != null) {
             d20.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +127,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     rollDie(20);
                 }
             });
+            d20.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d100 != null) {
             d100.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +135,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     rollDie(100);
                 }
             });
+            d100.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (dN != null) {
             dN.setOnClickListener(new View.OnClickListener() {
@@ -133,19 +144,8 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     chooseDie();
                 }
             });
+            dN.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
-
-        /* Color the die faces */
-        int color = getResources().getColor(R.color.colorPrimary_light);
-        d2.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        d4.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        d6.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        d8.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        d10.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        d12.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        d20.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        d100.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        dN.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         return myFragmentView;
     }
 

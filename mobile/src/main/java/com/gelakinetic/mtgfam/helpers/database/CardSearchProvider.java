@@ -27,6 +27,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
 /**
  * Provides access to the card database. Used for the search widget
@@ -82,7 +83,7 @@ public class CardSearchProvider extends ContentProvider {
      * @return a Cursor pointing to the queried data
      */
     @Override
-    public synchronized Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public synchronized Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                                      String sortOrder) {
         String query;
         // Use the UriMatcher to see what kind of query we have and format the db query accordingly
@@ -120,7 +121,7 @@ public class CardSearchProvider extends ContentProvider {
      * @return a MIME type string, or null if there is no type.
      */
     @Override
-    public synchronized String getType(Uri uri) {
+    public synchronized String getType(@NonNull Uri uri) {
         switch (sURIMatcher.match(uri)) {
             case SEARCH_SUGGEST:
                 return SearchManager.SUGGEST_MIME_TYPE;
@@ -139,7 +140,7 @@ public class CardSearchProvider extends ContentProvider {
      * @return nothing
      */
     @Override
-    public synchronized Uri insert(Uri uri, ContentValues values) {
+    public synchronized Uri insert(@NonNull Uri uri, ContentValues values) {
         throw new UnsupportedOperationException();
     }
 
@@ -152,7 +153,7 @@ public class CardSearchProvider extends ContentProvider {
      * @return nothing
      */
     @Override
-    public synchronized int delete(Uri uri, String selection, String[] selectionArgs) {
+    public synchronized int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         throw new UnsupportedOperationException();
     }
 
@@ -167,7 +168,7 @@ public class CardSearchProvider extends ContentProvider {
      * @return nothing
      */
     @Override
-    public synchronized int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public synchronized int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         throw new UnsupportedOperationException();
     }
 }

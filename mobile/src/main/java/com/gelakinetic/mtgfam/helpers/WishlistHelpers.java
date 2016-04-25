@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -240,7 +241,7 @@ public class WishlistHelpers {
             potentialNumbers.add(number);
 
             /* If this card has a foil version, add that too */
-            View wishlistRowFoil = null;
+            View wishlistRowFoil;
             if (foilSets.contains(setCode)) {
                 wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
                         null, false);
@@ -396,7 +397,7 @@ public class WishlistHelpers {
                     if (price != 0) {
                         readableWishlist
                                 .append(", $")
-                                .append(String.format("%d.%02d", (int) price, (int) ((price - ((int) price)) * 100)));
+                                .append(String.format(Locale.US, "%d.%02d", (int) price, (int) ((price - ((int) price)) * 100)));
                     }
                 }
                 readableWishlist.append("\r\n");

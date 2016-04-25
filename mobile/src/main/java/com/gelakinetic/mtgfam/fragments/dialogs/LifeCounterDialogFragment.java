@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 /**
- * Created by Adam on 4/21/2016.
+ * Class that creates dialogs for LifeCounterFragment
  */
 public class LifeCounterDialogFragment extends FamiliarDialogFragment {
 
@@ -31,7 +31,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed LifeCounterFragment
      */
-    LifeCounterFragment getParentLifeCounterFragment() {
+    private LifeCounterFragment getParentLifeCounterFragment() {
         return (LifeCounterFragment) getFamiliarFragment();
     }
 

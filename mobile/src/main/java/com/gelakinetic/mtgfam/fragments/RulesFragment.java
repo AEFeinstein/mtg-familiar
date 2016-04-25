@@ -156,7 +156,7 @@ public class RulesFragment extends FamiliarFragment {
                 cursor = CardDbAdapter.getBannedCards(database, format);
                 setsCursor = CardDbAdapter.getLegalSets(database, format);
                 isClickable = false;
-            } else if (isBanned && format == null) {
+            } else if (isBanned) {
                 cursor = CardDbAdapter.fetchAllFormats(database);
                 isClickable = true;
             } else if (keyword == null) {
@@ -208,7 +208,7 @@ public class RulesFragment extends FamiliarFragment {
                                     format,
                                     cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LEGALITY)),
                                     cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_BANNED_LIST)), false));
-                        } else if (isBanned && format == null) {
+                        } else if (isBanned) {
                             mRules.add(new BannedItem(
                                     cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
                                     NONE, "", true));
@@ -249,7 +249,7 @@ public class RulesFragment extends FamiliarFragment {
                                     args.putBoolean(GLOSSARY_KEY, true);
                                 } else if (item instanceof BannedItem) {
                                     args.putBoolean(BANNED_KEY, true);
-                                    if (isBanned && format == null) {
+                                    if (isBanned) {
                                         args.putString(FORMAT_KEY, item.getHeader());
                                     }
                                 }

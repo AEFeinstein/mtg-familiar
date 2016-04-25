@@ -24,9 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * Created by Adam on 4/21/2016.
+ * Class that creates dialogs for CardViewFragment
  */
 public class CardViewDialogFragment extends FamiliarDialogFragment {
 
@@ -41,7 +42,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
     /**
      * @return the currently viewed CardViewFragment in the CardViewPagerFragment
      */
-    CardViewFragment getCardViewFragment() {
+    private CardViewFragment getCardViewFragment() {
         return ((CardViewPagerFragment) getFamiliarFragment()).getCurrentFragment();
     }
 
@@ -126,12 +127,12 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 TextView f = (TextView) v.findViewById(R.id.foil);
                 TextView priceLink = (TextView) v.findViewById(R.id.pricelink);
 
-                l.setText(String.format("$%1$,.2f", getCardViewFragment().mPriceInfo.mLow));
-                m.setText(String.format("$%1$,.2f", getCardViewFragment().mPriceInfo.mAverage));
-                h.setText(String.format("$%1$,.2f", getCardViewFragment().mPriceInfo.mHigh));
+                l.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mLow));
+                m.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mAverage));
+                h.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mHigh));
 
                 if (getCardViewFragment().mPriceInfo.mFoilAverage != 0) {
-                    f.setText(String.format("$%1$,.2f", getCardViewFragment().mPriceInfo.mFoilAverage));
+                    f.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mFoilAverage));
                 } else {
                     f.setVisibility(View.GONE);
                     v.findViewById(R.id.foil_label).setVisibility(View.GONE);

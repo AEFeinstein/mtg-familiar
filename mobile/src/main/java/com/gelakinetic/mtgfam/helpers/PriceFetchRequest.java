@@ -197,11 +197,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
             retry--;
         }
         DatabaseManager.getInstance(mContext, false).closeDatabase(false); /* database close if something failed */
-        if (exception != null) {
-            throw exception;
-        } else {
-            throw new SpiceException("CardNotFound");
-        }
+        throw exception;
     }
 
     /**

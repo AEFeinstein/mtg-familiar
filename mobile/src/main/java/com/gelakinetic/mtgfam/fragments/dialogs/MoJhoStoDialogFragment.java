@@ -16,7 +16,7 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Adam on 4/21/2016.
+ * Class that creates dialogs for MoJhoStoFragment
  */
 public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
 

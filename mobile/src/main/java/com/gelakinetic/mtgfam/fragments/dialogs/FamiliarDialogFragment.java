@@ -17,7 +17,7 @@ import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 public class FamiliarDialogFragment extends DialogFragment {
 
     public static final String ID_KEY = "DIALOG_ID";
-    protected int mDialogId;
+    int mDialogId;
 
     /**
      * All subclasses of Fragment must include a public empty constructor.
@@ -61,7 +61,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @return null, since the dialog won't be shown
      */
     @SuppressWarnings("SameReturnValue")
-    protected Dialog DontShowDialog() {
+    Dialog DontShowDialog() {
         setShowsDialog(false);
         return null;
     }
@@ -69,7 +69,7 @@ public class FamiliarDialogFragment extends DialogFragment {
     /**
      * @return The current fragment being displayed by the app
      */
-    protected FamiliarFragment getFamiliarFragment() {
+    FamiliarFragment getFamiliarFragment() {
         return (FamiliarFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
@@ -77,7 +77,7 @@ public class FamiliarDialogFragment extends DialogFragment {
     /**
      * @return The current FamiliarActivity
      */
-    protected FamiliarActivity getFamiliarActivity() {
+    FamiliarActivity getFamiliarActivity() {
         return (FamiliarActivity) getActivity();
     }
 }

@@ -29,6 +29,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.util.Locale;
+
 /**
  * Encapsulate all information about a magic card
  */
@@ -233,7 +235,7 @@ public class MtgCard {
     }
 
     public String getPriceString() {
-        return String.format("$%d.%02d", this.price / 100, this.price % 100);
+        return String.format(Locale.US, "$%d.%02d", this.price / 100, this.price % 100);
     }
 
     public boolean hasPrice() {
@@ -261,7 +263,7 @@ public class MtgCard {
             sb.append(") ");
         }
         if (this.hasPrice()) {
-            sb.append(String.format("$%d.%02d", this.price / 100, this.price % 100));
+            sb.append(String.format(Locale.US, "$%d.%02d", this.price / 100, this.price % 100));
             totalPrice = (this.price * this.numberOf);
         }
 

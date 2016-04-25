@@ -50,6 +50,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 /**
  * This class displays a wishlist of cards, details about the cards, their prices, and the sum of their prices
@@ -584,7 +585,7 @@ public class WishlistFragment extends FamiliarFragment {
                     }
                 }
             }
-            mTotalPriceField.setText(String.format("$%.02f", totalPrice));
+            mTotalPriceField.setText(String.format(Locale.US, "$%.02f", totalPrice));
         }
     }
 
@@ -866,11 +867,11 @@ public class WishlistFragment extends FamiliarFragment {
                 if (mShowIndividualPrices) {
                     if (isi.mIsFoil) {
                         if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
-                            priceText.setText(String.format("%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
+                            priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
                             priceText.setTextColor(getResources().getColor(
                                     getResourceIdFromAttr(R.attr.color_text)));
                         } else {
-                            priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
+                            priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
                             priceText.setTextColor(getResources().getColor(R.color.material_red_500));
                         }
                     } else {
@@ -879,7 +880,7 @@ public class WishlistFragment extends FamiliarFragment {
                             switch (mPriceSetting) {
                                 case LOW_PRICE:
                                     if (isi.mPrice.mLow != 0) {
-                                        priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
+                                        priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf,
                                                 isi.mPrice.mLow));
                                         priceFound = true;
                                     }
@@ -887,14 +888,14 @@ public class WishlistFragment extends FamiliarFragment {
                                 default:
                                 case AVG_PRICE:
                                     if (isi.mPrice.mAverage != 0) {
-                                        priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
+                                        priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf,
                                                 isi.mPrice.mAverage));
                                         priceFound = true;
                                     }
                                     break;
                                 case HIGH_PRICE:
                                     if (isi.mPrice.mHigh != 0) {
-                                        priceText.setText(String.format("%dx $%.02f", isi.mNumberOf,
+                                        priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf,
                                                 isi.mPrice.mHigh));
                                         priceFound = true;
                                     }
@@ -905,7 +906,7 @@ public class WishlistFragment extends FamiliarFragment {
                             ));
                         }
                         if (!priceFound) {
-                            priceText.setText(String.format("%dx %s", isi.mNumberOf, isi.mMessage));
+                            priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
                             priceText.setTextColor(getResources().getColor(R.color.material_red_500));
                         }
                     }

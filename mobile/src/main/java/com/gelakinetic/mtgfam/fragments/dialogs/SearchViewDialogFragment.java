@@ -11,7 +11,7 @@ import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Adam on 4/22/2016.
+ * Class that creates dialogs for SearchViewFragment
  */
 public class SearchViewDialogFragment extends FamiliarDialogFragment {
 
@@ -23,7 +23,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed SearchViewFragment
      */
-    SearchViewFragment getParentSearchViewFragment() {
+    private SearchViewFragment getParentSearchViewFragment() {
         return (SearchViewFragment) getFamiliarFragment();
     }
 

@@ -12,7 +12,7 @@ import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Adam on 4/24/2016.
+ * Class that creates dialogs for WishlistFragment
  */
 public class WishlistDialogFragment extends FamiliarDialogFragment {
 
@@ -27,7 +27,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed DiceFragment
      */
-    WishlistFragment getParentWishlistFragment() {
+    private WishlistFragment getParentWishlistFragment() {
         return (WishlistFragment) getFamiliarFragment();
     }
 

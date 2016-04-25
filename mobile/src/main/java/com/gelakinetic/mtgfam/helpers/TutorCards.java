@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,9 +107,8 @@ public class TutorCards {
      *
      * @return true if the service is up, false if it is down
      * @throws IOException
-     * @throws NoSuchAlgorithmException
      */
-    boolean getServiceStatus() throws IOException, NoSuchAlgorithmException {
+    private boolean getServiceStatus() throws IOException {
         /* Get an httpclient and create the GET */
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -143,10 +141,9 @@ public class TutorCards {
      *
      * @param bitmap The bitmap to send to tutor.cards to analyze
      * @return A TutorData with the id of the query. The actual result will be fetched later
-     * @throws NoSuchAlgorithmException
      * @throws IOException
      */
-    TutorData postSearchRequest(Bitmap bitmap) throws NoSuchAlgorithmException,
+    private TutorData postSearchRequest(Bitmap bitmap) throws
             IOException {
         TutorData result = null;
         /* Get an httpclient and create the POST */
@@ -211,9 +208,8 @@ public class TutorCards {
      * @param id The ID to send to tutor.cards to fetch a result
      * @return A TutorData containing the multiverseID from the analyzed image, or null
      * @throws IOException
-     * @throws NoSuchAlgorithmException
      */
-    TutorData getResult(String id) throws IOException, NoSuchAlgorithmException {
+    private TutorData getResult(String id) throws IOException {
         TutorData result = null;
 
         /* Get an httpclient and create the GET */
@@ -278,7 +274,7 @@ public class TutorCards {
             if (!mIsReady) {
                 try {
                     mIsReady = getServiceStatus();
-                } catch (IOException | NoSuchAlgorithmException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -384,7 +380,7 @@ public class TutorCards {
                         return null;
                     }
                 }
-            } catch (NoSuchAlgorithmException | IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             /* Shouldn't reach here, clear the loading animation and pop a toast */

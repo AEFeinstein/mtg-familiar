@@ -14,14 +14,14 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Adam on 4/21/2016.
+ * Class that creates dialogs for DiceFragment
  */
 public class DiceDialogFragment extends FamiliarDialogFragment {
 
     /**
      * @return The currently viewed DiceFragment
      */
-    DiceFragment getParentDiceFragment() {
+    private DiceFragment getParentDiceFragment() {
         return (DiceFragment) getFamiliarFragment();
     }
 

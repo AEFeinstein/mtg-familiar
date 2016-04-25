@@ -19,7 +19,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Adam on 4/22/2016.
+ * Class that creates dialogs for RulesFragment
  */
 public class RulesDialogFragment extends FamiliarDialogFragment {
 
@@ -31,7 +31,7 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed RulesFragment
      */
-    RulesFragment getParentRulesFragment() {
+    private RulesFragment getParentRulesFragment() {
         return (RulesFragment) getFamiliarFragment();
     }
 

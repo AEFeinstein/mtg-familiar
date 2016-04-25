@@ -106,6 +106,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 
 public class FamiliarActivity extends AppCompatActivity {
     /* Tags for fragments */
@@ -234,7 +235,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     /* This is a slight hack to handle the fact that it always rounds down. It will start the timer at
                        50:00 instead of 49:59, or whatever */
                     timeLeftSeconds++;
-                    timeLeftStr = String.format("%02d:%02d:%02d",
+                    timeLeftStr = String.format(Locale.US, "%02d:%02d:%02d",
                             timeLeftSeconds / 3600,
                             (timeLeftSeconds % 3600) / 60,
                             timeLeftSeconds % 60);
@@ -270,7 +271,7 @@ public class FamiliarActivity extends AppCompatActivity {
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
 
-    private TutorCards mTutorCards = new TutorCards(this);
+    private final TutorCards mTutorCards = new TutorCards(this);
 
     /**
      * Open an inputStream to the HTML content at the given URL
@@ -310,7 +311,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @return An InputStream to the content at the URL, or null
      * @throws IOException Thrown if something goes terribly wrong
      */
-    public static
+    private static
     @Nullable
     InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter,
                                    int recursionLevel) throws IOException {

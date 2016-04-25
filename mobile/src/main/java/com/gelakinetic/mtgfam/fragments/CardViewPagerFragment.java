@@ -25,7 +25,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
     /* Bundle keys */
     public static final String CARD_ID_ARRAY = "card_id_array";
     public static final String STARTING_CARD_POSITION = "starting_card_id";
-    public ViewPager mViewPager;
+    private ViewPager mViewPager;
 
     /**
      * @return The currently viewed CardViewFragment in the CardViewPagerFragment

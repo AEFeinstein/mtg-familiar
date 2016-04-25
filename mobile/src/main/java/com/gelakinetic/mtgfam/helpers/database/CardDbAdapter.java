@@ -99,13 +99,13 @@ public class CardDbAdapter {
     public static final String KEY_DEFINITION = "definition";
     public static final String KEY_BANNED_LIST = "banned_list";
     public static final String KEY_LEGAL_SETS = "legal_sets";
-    public static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
-    public static final String KEY_FORMAT = "format";
+    private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
+    private static final String KEY_FORMAT = "format";
     public static final String KEY_DIGEST = "digest";
-    public static final String KEY_RULINGS = "rulings";
-    public static final String KEY_CODE_MTGI = "code_mtgi";
-    public static final String KEY_DATE = "date";
-    public static final String KEY_POSITION = "position";
+    private static final String KEY_RULINGS = "rulings";
+    private static final String KEY_CODE_MTGI = "code_mtgi";
+    private static final String KEY_DATE = "date";
+    private static final String KEY_POSITION = "position";
 
     /* All the columns in DATABASE_TABLE_CARDS */
     public static final String[] allCardDataKeys = {

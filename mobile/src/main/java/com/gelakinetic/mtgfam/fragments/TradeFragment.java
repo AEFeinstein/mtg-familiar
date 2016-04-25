@@ -45,6 +45,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * This class manages trades between two users. Trades can be saved and loaded
@@ -495,7 +496,7 @@ public class TradeFragment extends FamiliarFragment {
                         this.getActivity().getResources().getColor(R.color.material_red_500) :
                         this.getActivity().getResources().getColor(
                                 getResourceIdFromAttr(R.attr.color_text));
-                mTotalPriceLeft.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
+                mTotalPriceLeft.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100));
                 mTotalPriceLeft.setTextColor(color);
             }
             if (side == RIGHT || side == BOTH) {
@@ -516,7 +517,7 @@ public class TradeFragment extends FamiliarFragment {
                         this.getActivity().getResources().getColor(
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
-                mTotalPriceRight.setText(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
+                mTotalPriceRight.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100));
                 mTotalPriceRight.setTextColor(color);
             }
         }
@@ -571,7 +572,7 @@ public class TradeFragment extends FamiliarFragment {
         for (MtgCard card : mLeftList) {
             totalPrice += card.toTradeShareString(sb, getString(R.string.wishlist_foil));
         }
-        sb.append(String.format("$%d.%02d\n", totalPrice / 100, totalPrice % 100));
+        sb.append(String.format(Locale.US, "$%d.%02d\n", totalPrice / 100, totalPrice % 100));
 
         /* Simple divider */
         sb.append("--------\n");
@@ -581,7 +582,7 @@ public class TradeFragment extends FamiliarFragment {
         for (MtgCard card : mRightList) {
             totalPrice += card.toTradeShareString(sb, getString(R.string.wishlist_foil));
         }
-        sb.append(String.format("$%d.%02d", totalPrice / 100, totalPrice % 100));
+        sb.append(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100));
 
         /* Send the Intent on it's merry way */
         Intent sendIntent = new Intent();

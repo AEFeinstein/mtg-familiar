@@ -17,7 +17,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Adam on 4/21/2016.
+ * Class that creates dialogs for ProfileFragment
  */
 public class ProfileDialogFragment extends FamiliarDialogFragment {
 
@@ -27,7 +27,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed ProfileFragment
      */
-    ProfileFragment getParentProfileFragment() {
+    private ProfileFragment getParentProfileFragment() {
         return (ProfileFragment) getFamiliarFragment();
     }
 

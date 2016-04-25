@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.widget.MultiAutoCompleteTextView;
 
 /**
- * Created by Adam on 7/4/2015.
+ * Tokenizer used for supertype & subtype autocomplete fields
  */
 public class SpaceTokenizer implements MultiAutoCompleteTextView.Tokenizer {
 

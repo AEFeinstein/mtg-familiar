@@ -14,6 +14,7 @@ import android.widget.Spinner;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.MoJhoStoDialogFragment;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -170,9 +171,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
     /**
      * Remove any showing dialogs, and show the requested one
      *
-     * @param id the ID of the dialog to show
      */
-    private void showDialog(final int id) throws IllegalStateException {
+    private void showDialog(int id) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -185,6 +185,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
         /* Create and show the dialog. */
         MoJhoStoDialogFragment newFragment = new MoJhoStoDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        newFragment.setArguments(arguments);
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
