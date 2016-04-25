@@ -31,7 +31,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
      * @return The currently viewed CardViewFragment in the CardViewPagerFragment
      */
     public CardViewFragment getCurrentFragment() {
-        return ((CardViewPagerAdapter)mViewPager.getAdapter()).getCurrentFragment();
+        return ((CardViewPagerAdapter) mViewPager.getAdapter()).getCurrentFragment();
     }
 
     /**

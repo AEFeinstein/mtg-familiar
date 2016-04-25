@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -57,7 +56,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     TradeFragment getParentTradeFragment() {
         return (TradeFragment) getFamiliarFragment();
     }
-    
+
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -547,18 +546,17 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .setSingleChoiceItems(R.array.wishlist_sort_type, getParentTradeFragment().mSortType, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                ((MaterialDialog) dialog).getListView().setItemChecked(which, true);
                                 /* If this listener is null, the dialog crashes */
                             }
                         })
                         .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.v("Diag", "Negative");
                                 dialog.dismiss();
                             }
                         })
                         .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.v("Diag", "Neutral");
                                 getParentTradeFragment().mSortOrder = TradeFragment.ASCENDING;
                                 ListView lw = ((MaterialDialog) dialog).getListView();
                                 getParentTradeFragment().mSortType = lw.getCheckedItemPosition();
@@ -567,7 +565,6 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         })
                         .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.v("Diag", "Positive");
                                 getParentTradeFragment().mSortOrder = TradeFragment.DESCENDING;
                                 ListView lw = ((MaterialDialog) dialog).getListView();
                                 getParentTradeFragment().mSortType = lw.getCheckedItemPosition();

@@ -226,8 +226,7 @@ public class ResultListFragment extends FamiliarFragment {
                     getFragmentManager().popBackStack();
                 }
             }
-        }
-        else if (this.isAdded()) {
+        } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
                 ToastWrapper.makeText(this.getActivity(), getString(R.string.search_toast_no_results), ToastWrapper.LENGTH_SHORT
                 ).show();

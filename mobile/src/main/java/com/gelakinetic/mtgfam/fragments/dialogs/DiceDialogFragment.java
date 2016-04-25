@@ -21,7 +21,7 @@ public class DiceDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed DiceFragment
      */
-    DiceFragment getParentDiceFragment(){
+    DiceFragment getParentDiceFragment() {
         return (DiceFragment) getFamiliarFragment();
     }
 

@@ -67,7 +67,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                     return getParentSearchViewFragment().mSetDialog;
                 }
                 case FORMAT_LIST: {
-                    getParentSearchViewFragment(). mFormatDialog = new AlertDialogWrapper.Builder(this.getActivity()).
+                    getParentSearchViewFragment().mFormatDialog = new AlertDialogWrapper.Builder(this.getActivity()).
                             setTitle(R.string.search_formats).setSingleChoiceItems(getParentSearchViewFragment().mFormatNames,
                             getParentSearchViewFragment().mSelectedFormat, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {

@@ -37,8 +37,9 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
     }
 
     /**
-     * TODO
-     * @param player
+     * Set the LcPlayer object associated with this dialog
+     *
+     * @param player The LcPlayer for this dialog
      */
     public void setLcPlayer(LcPlayer player) {
         mLcPlayer = player;

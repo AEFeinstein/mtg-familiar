@@ -159,7 +159,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 
         removeDialog(getFragmentManager());
 
-        DiceDialogFragment newFragment = new DiceDialogFragment() ;
+        DiceDialogFragment newFragment = new DiceDialogFragment();
 
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }

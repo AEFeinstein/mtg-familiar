@@ -23,7 +23,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_PRICE_SETTING = 2;
     public static final int DIALOG_CONFIRMATION = 3;
     public static final int DIALOG_SORT = 4;
-    
+
     public static final String NAME_KEY = "name";
 
     /**
@@ -32,7 +32,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
     WishlistFragment getParentWishlistFragment() {
         return (WishlistFragment) getFamiliarFragment();
     }
-    
+
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
