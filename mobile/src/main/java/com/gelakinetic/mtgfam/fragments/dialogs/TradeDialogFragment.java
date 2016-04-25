@@ -11,10 +11,8 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
@@ -546,8 +544,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .setSingleChoiceItems(R.array.wishlist_sort_type, getParentTradeFragment().mSortType, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ((MaterialDialog) dialog).getListView().setItemChecked(which, true);
-                                /* If this listener is null, the dialog crashes */
+                                /* Figure out the sort type, do the sort */
+                                getParentTradeFragment().mSortType = which;
                             }
                         })
                         .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
@@ -558,20 +556,18 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 getParentTradeFragment().mSortOrder = TradeFragment.ASCENDING;
-                                ListView lw = ((MaterialDialog) dialog).getListView();
-                                getParentTradeFragment().mSortType = lw.getCheckedItemPosition();
                                 getParentTradeFragment().sortTrades(getParentTradeFragment().mSortType, getParentTradeFragment().mSortOrder);
                             }
                         })
                         .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 getParentTradeFragment().mSortOrder = TradeFragment.DESCENDING;
-                                ListView lw = ((MaterialDialog) dialog).getListView();
-                                getParentTradeFragment().mSortType = lw.getCheckedItemPosition();
                                 getParentTradeFragment().sortTrades(getParentTradeFragment().mSortType, getParentTradeFragment().mSortOrder);
                             }
                         })
-                        .setCancelable(true).create();
+                        .alwaysCallSingleChoiceCallback()
+                        .setCancelable(true)
+                        .create();
             }
             default: {
                 return DontShowDialog();

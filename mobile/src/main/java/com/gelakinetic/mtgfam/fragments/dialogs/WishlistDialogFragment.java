@@ -3,10 +3,8 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.ListView;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
@@ -100,7 +98,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .setSingleChoiceItems(R.array.wishlist_sort_type, getParentWishlistFragment().mWishlistSortType, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                        /* If this listener is null, the dialog crashes */
+                                getParentWishlistFragment().mWishlistSortType = which;
                             }
                         })
                         .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
@@ -111,20 +109,18 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 getParentWishlistFragment().mWishlistSortOrder = WishlistFragment.ASCENDING;
-                                ListView lw = ((MaterialDialog) dialog).getListView();
-                                getParentWishlistFragment().mWishlistSortType = lw.getCheckedItemPosition();
                                 getParentWishlistFragment().sortWishlist();
                             }
                         })
                         .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 getParentWishlistFragment().mWishlistSortOrder = WishlistFragment.DESCENDING;
-                                ListView lw = ((MaterialDialog) dialog).getListView();
-                                getParentWishlistFragment().mWishlistSortType = lw.getCheckedItemPosition();
                                 getParentWishlistFragment().sortWishlist();
                             }
                         })
-                        .setCancelable(true).create();
+                        .alwaysCallSingleChoiceCallback()
+                        .setCancelable(true)
+                        .create();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);
