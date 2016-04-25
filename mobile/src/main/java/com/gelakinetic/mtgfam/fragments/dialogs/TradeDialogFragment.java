@@ -544,7 +544,12 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             case DIALOG_SORT: {
                 return new AlertDialogWrapper.Builder(getActivity())
                         .setTitle(R.string.wishlist_sort_by)
-                        .setSingleChoiceItems(R.array.wishlist_sort_type, getParentTradeFragment().mSortType, null)
+                        .setSingleChoiceItems(R.array.wishlist_sort_type, getParentTradeFragment().mSortType, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                /* If this listener is null, the dialog crashes */
+                            }
+                        })
                         .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.v("Diag", "Negative");

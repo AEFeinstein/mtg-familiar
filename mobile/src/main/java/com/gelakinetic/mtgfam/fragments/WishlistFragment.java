@@ -543,7 +543,12 @@ public class WishlistFragment extends FamiliarFragment {
                     case DIALOG_SORT: {
                         return new AlertDialogWrapper.Builder(this.getActivity())
                                 .setTitle(R.string.wishlist_sort_by)
-                                .setSingleChoiceItems(R.array.wishlist_sort_type, mWishlistSortType, null)
+                                .setSingleChoiceItems(R.array.wishlist_sort_type, mWishlistSortType, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        /* If this listener is null, the dialog crashes */
+                                    }
+                                })
                                 .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
