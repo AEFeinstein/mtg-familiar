@@ -860,6 +860,11 @@ public class SearchViewFragment extends FamiliarFragment {
      * @param id the id of the dialog to be shown
      */
     private void showDialog(final int id) throws IllegalStateException {
+        /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
+        if (!this.isVisible()) {
+            return;
+        }
+
         removeDialog(getFragmentManager());
 
         /* Create and show the dialog. */
