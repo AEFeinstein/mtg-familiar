@@ -109,10 +109,11 @@ public class TutorCards {
      * @throws IOException
      */
     private boolean getServiceStatus() throws IOException {
+
+        boolean retVal = false;
+
         /* Get an httpclient and create the GET */
-
         CloseableHttpClient httpclient = HttpClients.createDefault();
-
         HttpGet httpGet = new HttpGet("https://api.tutor.cards/v1/status");
 
         /* Execute the GET and get the response. */
@@ -126,12 +127,14 @@ public class TutorCards {
             try {
                 String stringResponse = br.readLine();
                 TutorData status = (new Gson()).fromJson(stringResponse, TutorData.class);
-                return status.isReady;
+                retVal = status.isReady;
+            } catch (Exception e) {
+                /* false will be returned later */
             } finally {
                 inStream.close();
             }
         }
-        return false;
+        return retVal;
     }
 
     /**
@@ -193,6 +196,8 @@ public class TutorCards {
             try {
                 String stringResponse = br.readLine();
                 result = (new Gson()).fromJson(stringResponse, TutorData.class);
+            } catch (Exception e) {
+                result = null;
             } finally {
                 inStream.close();
             }
@@ -228,6 +233,8 @@ public class TutorCards {
             try {
                 String stringResponse = br.readLine();
                 result = (new Gson()).fromJson(stringResponse, TutorData.class);
+            } catch (Exception e) {
+                result = null;
             } finally {
                 inStream.close();
             }
@@ -327,6 +334,13 @@ public class TutorCards {
                 //noinspection ResultOfMethodCallIgnored
                 getImageFile().delete();
 
+                if (searchPostResult == null) {
+                    /* Can't do much with a null result */
+                    mActivity.clearLoading();
+                    Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
+                    return null;
+                }
+
                 int tries = 0;
 
                 /* If this isn't the result already */
@@ -341,6 +355,13 @@ public class TutorCards {
 
                     /* Get the actual result from the API */
                     searchPostResult = getResult(searchPostResult.id);
+
+                    if (searchPostResult == null) {
+                        /* Can't do much with a null result */
+                        mActivity.clearLoading();
+                        Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
+                        return null;
+                    }
 
                     /* Send the result to the activity */
                     if (searchPostResult.isResult) {
