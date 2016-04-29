@@ -768,9 +768,18 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     public void onInit(final int status) {
         if (isAdded()) {
             if (status == TextToSpeech.SUCCESS) {
-                int result = mTts.setLanguage(getResources().getConfiguration().locale);
+                int result;
+                try {
+                    result = mTts.setLanguage(getResources().getConfiguration().locale);
+                } catch (IllegalArgumentException e) {
+                    /* This is a new exception on Samsung devices, setting the language isn't necessary */
+                    result = TextToSpeech.LANG_AVAILABLE;
+                }
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    getFamiliarActivity().showTtsDialog();
+                    FamiliarActivity activity = getFamiliarActivity();
+                    if (activity != null) {
+                        activity.showTtsDialog();
+                    }
                 } else {
                     mTtsInit = true;
                     if (mIsSearchViewOpen) {
@@ -787,7 +796,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     }
                 }
             } else if (status == TextToSpeech.ERROR) {
-                getFamiliarActivity().showTtsDialog();
+                FamiliarActivity activity = getFamiliarActivity();
+                if (activity != null) {
+                    activity.showTtsDialog();
+                }
             }
         }
     }
@@ -876,7 +888,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
                     ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
                     if (mTts.speak(getString(R.string.life_counter_over_9000), TextToSpeech.QUEUE_FLUSH, ttsParams) == TextToSpeech.ERROR) {
-                        getFamiliarActivity().showTtsDialog();
+                        FamiliarActivity activity = getFamiliarActivity();
+                        if (activity != null) {
+                            activity.showTtsDialog();
+                        }
                     }
                 }
             } else {
@@ -885,7 +900,10 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, LIFE_ANNOUNCE);
 
                 if (mTts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, ttsParams) == TextToSpeech.ERROR) {
-                    getFamiliarActivity().showTtsDialog();
+                    FamiliarActivity activity = getFamiliarActivity();
+                    if (activity != null) {
+                        activity.showTtsDialog();
+                    }
                 }
             }
         } else {
