@@ -60,12 +60,13 @@ public class TradeFragment extends FamiliarFragment {
 
     /* Side Constants */
     public static final int LEFT = 0;
-    private static final int RIGHT = 1;
     public static final int BOTH = 2;
-
+    public static final String TRADE_EXTENSION = ".trade";
+    public static final int ASCENDING = 0;
+    public static final int DESCENDING = 1;
+    private static final int RIGHT = 1;
     /* Save file constants */
     private static final String AUTOSAVE_NAME = "autosave";
-    public static final String TRADE_EXTENSION = ".trade";
     /* For sorting */
     private static final int SORT_TYPE_NONE = 0;
     private static final int SORT_TYPE_CMC = 1;
@@ -73,25 +74,23 @@ public class TradeFragment extends FamiliarFragment {
     private static final int SORT_TYPE_NAME = 3;
     private static final int SORT_TYPE_PRICE = 4;
     private static final int SORT_TYPE_SET = 5;
-    public static final int ASCENDING = 0;
-    public static final int DESCENDING = 1;
-    /* Trade information */
-    private TextView mTotalPriceLeft;
     public TradeListAdapter mLeftAdapter;
     public ArrayList<MtgCard> mLeftList;
-    private TextView mTotalPriceRight;
     public TradeListAdapter mRightAdapter;
     public ArrayList<MtgCard> mRightList;
-    /* UI Elements */
-    private AutoCompleteTextView mNameEditText;
-    private EditText mNumberEditText;
     public CheckBox mCheckboxFoil;
-    private int mPriceFetchRequests = 0;
     /* Settings */
     public int mPriceSetting;
     public String mCurrentTrade = "";
     public int mSortOrder;
     public int mSortType;
+    /* Trade information */
+    private TextView mTotalPriceLeft;
+    private TextView mTotalPriceRight;
+    /* UI Elements */
+    private AutoCompleteTextView mNameEditText;
+    private EditText mNumberEditText;
+    private int mPriceFetchRequests = 0;
     private boolean mCheckboxFoilLocked = false;
 
     /**
@@ -367,36 +366,46 @@ public class TradeFragment extends FamiliarFragment {
                 switch (sortType) {
                     case SORT_TYPE_CMC:
                         Collections.sort(mLeftList, new TradeComparatorCmc());
+                        Collections.sort(mRightList, new TradeComparatorCmc());
                         break;
                     case SORT_TYPE_COLOR:
                         Collections.sort(mLeftList, new TradeComparatorColor());
+                        Collections.sort(mRightList, new TradeComparatorColor());
                         break;
                     case SORT_TYPE_NAME:
                         Collections.sort(mLeftList, new TradeComparatorName());
+                        Collections.sort(mRightList, new TradeComparatorName());
                         break;
                     case SORT_TYPE_PRICE:
                         Collections.sort(mLeftList, new TradeComparatorPrice());
+                        Collections.sort(mRightList, new TradeComparatorPrice());
                         break;
                     case SORT_TYPE_SET:
                         Collections.sort(mLeftList, new TradeComparatorSet());
+                        Collections.sort(mRightList, new TradeComparatorSet());
                         break;
                 }
             } else {
                 switch (sortType) {
                     case SORT_TYPE_CMC:
                         Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorCmc()));
+                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorCmc()));
                         break;
                     case SORT_TYPE_COLOR:
                         Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorColor()));
+                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorColor()));
                         break;
                     case SORT_TYPE_NAME:
                         Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorName()));
+                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorName()));
                         break;
                     case SORT_TYPE_PRICE:
                         Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorPrice()));
+                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorPrice()));
                         break;
                     case SORT_TYPE_SET:
                         Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorSet()));
+                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorSet()));
                         break;
                 }
             }
