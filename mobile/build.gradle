@@ -36,7 +36,7 @@ android {
     productFlavors {
         standard {
             dependencies {
-                compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+                compile 'com.google.android.gms:play-services-appindexing:9.0.0'
             }
         }
         foss {
@@ -51,14 +51,12 @@ dependencies {
     compile 'cz.msebera.android:httpclient:4.4.1.1'
     compile 'com.octo.android.robospice:robospice:1.4.14'
     compile 'com.octo.android.robospice:robospice-cache:1.4.14'
-    compile 'com.android.support:support-v4:23.3.0'
-    compile 'com.android.support:support-v13:23.3.0'
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:support-v13:23.4.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.google.code.gson:gson:2.6.2'
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.8@aar') {
-        transitive = true
-    }
+    compile 'com.afollestad.material-dialogs:core:0.8.5.9'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
     compile 'com.code-troopers.betterpickers:library:2.5.2'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
