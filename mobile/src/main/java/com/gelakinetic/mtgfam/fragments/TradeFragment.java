@@ -456,7 +456,7 @@ public class TradeFragment extends FamiliarFragment {
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getActivity().openFileInput(tradeName)));
             String line;
             while ((line = br.readLine()) != null) {
-                MtgCard card = MtgCard.MtgCardFromTradeString(line, getActivity());
+                MtgCard card = MtgCard.fromTradeString(line, getActivity());
 
                 if (card.setName == null) {
                     handleFamiliarDbException(false);

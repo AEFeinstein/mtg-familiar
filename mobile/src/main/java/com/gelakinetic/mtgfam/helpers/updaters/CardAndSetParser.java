@@ -308,6 +308,11 @@ class CardAndSetParser {
         reader.endObject();
         reader.close();
 
+        /* Calculate the color identity for all cards just downloaded */
+        for (MtgCard card : tempCardsToAdd) {
+            card.calculateColorIdentity(tempCardsToAdd);
+        }
+
         /* Stage the sets and cards for database addition. Only gets here if no exception is thrown */
         setsToAdd.addAll(tempSetsToAdd);
         cardsToAdd.addAll(tempCardsToAdd);
@@ -328,7 +333,7 @@ class CardAndSetParser {
             String label2;
 
             InputStream stream = FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter);
-            if(stream == null) {
+            if (stream == null) {
                 throw new IOException("No Stream");
             }
             isr = new InputStreamReader(stream, "ISO-8859-1");
@@ -402,7 +407,7 @@ class CardAndSetParser {
 
         try {
             InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter);
-            if(stream == null) {
+            if (stream == null) {
                 throw new IOException("No Stream");
             }
             JsonReader reader = new JsonReader(new InputStreamReader(stream, "ISO-8859-1"));
@@ -487,7 +492,7 @@ class CardAndSetParser {
 
         try {
             InputStream stream = FamiliarActivity.getHttpInputStream(TCG_NAMES_URL, logWriter);
-            if(stream == null) {
+            if (stream == null) {
                 throw new IOException("No Stream");
             }
             InputStreamReader isr = new InputStreamReader(stream, "ISO-8859-1");
@@ -563,7 +568,7 @@ class CardAndSetParser {
 
         try {
             InputStream stream = FamiliarActivity.getHttpInputStream(DIGESTS_URL, logWriter);
-            if(stream == null) {
+            if (stream == null) {
                 throw new IOException("No Stream");
             }
             InputStreamReader isr = new InputStreamReader(stream, "ISO-8859-1");
