@@ -117,6 +117,16 @@
                 android:entries="@array/text_spinner"
                 android:imeOptions="actionSearch" />
 
+            <TextView
+                android:id="@+id/colorTitle"
+                style="@style/forty_eight"
+                android:textSize="18sp"
+                android:textColor="@android:color/primary_text_light"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:text="@string/search_color_title"/>
+
             <LinearLayout
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
@@ -219,6 +229,97 @@
                 android:layout_width="match_parent"
                 android:drawSelectorOnTop="true"
                 android:entries="@array/color_spinner" />
+
+            <TextView
+                android:id="@+id/colorIdentityTitle"
+                style="@style/forty_eight"
+                android:textSize="18sp"
+                android:textColor="@android:color/primary_text_light"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:text="@string/search_color_identity_title"/>
+            <LinearLayout
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout13"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxW_identity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="?attr/btn_check_w" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout14"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxU_identity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="?attr/btn_check_u" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout15"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxB_identity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="?attr/btn_check_b" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout16"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxR_identity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="?attr/btn_check_r" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout17"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxG_identity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="?attr/btn_check_g" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout2"

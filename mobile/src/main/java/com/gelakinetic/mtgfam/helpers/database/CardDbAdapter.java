@@ -1045,6 +1045,11 @@ public class CardDbAdapter {
         /** End of addition
          *************************************************************************************/
 
+        /* Color Identity Filter */
+        if(criteria.colorIdentity.length() > 0) {
+            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " = \"" + criteria.colorIdentity + "\")";
+        }
+
         if (criteria.set != null) {
             statement += " AND (";
 

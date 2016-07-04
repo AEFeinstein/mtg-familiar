@@ -180,6 +180,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="search_type">Type</string>
     <string name="search_mana_cost">Mana Cost</string>
     <string name="search_collectors_number">Collector\'s Number</string>
+    <string name="search_color_title">Color</string>
+    <string name="search_color_identity_title">Color Identity</string>
 
     <!-- Card view activity -->
     <string name="card_view_transform">Transform</string>
