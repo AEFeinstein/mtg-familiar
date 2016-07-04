@@ -244,9 +244,6 @@ public class CardDbAdapter {
     /* Use a hash map to increase performance for CardSearchProvider queries */
     private static final HashMap<String, String> mColumnMap = buildColumnMap();
 
-    /* A collection of sets which have foil cards which are not modern legal */
-    private static final Set<String> nonModernFoilSets = buildNonModernFoilSets();
-
     /**********************************************************************************************
      *                                                                                            *
      *                                  Functions for all tables                                  *
@@ -1689,7 +1686,7 @@ public class CardDbAdapter {
     /**
      * Add "can be foil" information to DATABASE_TABLE_SETS
      *
-     * @param name "true" or "false", whether or not this set has foil cards
+     * @param canBeFoil "true" or "false", whether or not this set has foil cards
      * @param code The set code to add the info to
      * @param mDb  The database to add the info to
      */
@@ -1860,28 +1857,6 @@ public class CardDbAdapter {
     }
 
     /**
-     * Check if a set is legal in the Modern format
-     *
-     * @param setName The set name
-     * @param mDb     The database to query
-     * @return true if the set is modern legal, false otherwise
-     * @throws FamiliarDbException If something goes wrong
-     */
-    private static boolean isModernLegalSet(String setName, SQLiteDatabase mDb) throws FamiliarDbException {
-        try {
-            String sql = "SELECT " + KEY_SET +
-                    " FROM " + DATABASE_TABLE_LEGAL_SETS +
-                    " WHERE " + KEY_SET + " = " + sanitizeString(setName) + ";";
-            Cursor c = mDb.rawQuery(sql, null);
-            boolean isModernLegal = (c.getCount() >= 1);
-            c.close();
-            return isModernLegal;
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
      * Helper function to determine if a set contains foil cards
      *
      * @param setCode The set code
@@ -1890,31 +1865,25 @@ public class CardDbAdapter {
      * @throws FamiliarDbException If something goes wrong
      */
     public static boolean canBeFoil(String setCode, SQLiteDatabase mDb) throws FamiliarDbException {
-        return nonModernFoilSets.contains(setCode) || isModernLegalSet(setCode, mDb);
-    }
-
-    /**
-     * @param mDb The database to query
-     * @return A Set of Strings of all the Modern legal sets
-     * @throws FamiliarDbException If something goes wrong
-     */
-    private static Set<String> getModernLegalSets(SQLiteDatabase mDb) throws FamiliarDbException {
-        Set<String> modernSets = new HashSet<>();
         try {
-            String sql = "SELECT " + KEY_SET +
-                    " FROM " + DATABASE_TABLE_LEGAL_SETS +
-                    " WHERE " + KEY_FORMAT + " = 'Modern';";
+            boolean canBeFoilReturn;
+            String sql =
+                    "SELECT " + KEY_CAN_BE_FOIL +
+                            " FROM " + DATABASE_TABLE_SETS +
+                            " WHERE " + KEY_CODE + " = \"" + setCode + "\"";
             Cursor c = mDb.rawQuery(sql, null);
-            c.moveToNext();
-            while (!c.isAfterLast()) {
-                modernSets.add(c.getString(0));
-                c.moveToNext();
+            c.moveToFirst();
+            if(0 == c.getInt(c.getColumnIndex(KEY_CAN_BE_FOIL))) {
+                canBeFoilReturn = false;
+            }
+            else {
+                canBeFoilReturn = true;
             }
             c.close();
+            return canBeFoilReturn;
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
-        return modernSets;
     }
 
     /**
@@ -1925,10 +1894,23 @@ public class CardDbAdapter {
      * @throws FamiliarDbException If something goes wrong
      */
     public static Set<String> getFoilSets(SQLiteDatabase mDb) throws FamiliarDbException {
-        Set<String> foilSets = new HashSet<>();
-        foilSets.addAll(nonModernFoilSets);
-        foilSets.addAll(getModernLegalSets(mDb));
-        return foilSets;
+        try {
+            Set<String> foilSets = new HashSet<>();
+            String sql =
+                    "SELECT " + KEY_CODE +
+                            " FROM " + DATABASE_TABLE_SETS +
+                            " WHERE " + KEY_CAN_BE_FOIL + " = 1";
+            Cursor c = mDb.rawQuery(sql, null);
+            c.moveToFirst();
+            while(!c.isAfterLast()) {
+                foilSets.add(c.getString(c.getColumnIndex(KEY_CODE)));
+                c.moveToNext();
+            }
+            c.close();
+            return foilSets;
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
     }
 
     /**
