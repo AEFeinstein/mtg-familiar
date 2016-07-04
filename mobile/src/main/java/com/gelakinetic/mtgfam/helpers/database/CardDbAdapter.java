@@ -57,7 +57,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 70;
+    public static final int DATABASE_VERSION = 71;
 
     /* The name of the database */
     public static final String DATABASE_NAME = "data";
@@ -106,6 +106,8 @@ public class CardDbAdapter {
     private static final String KEY_CODE_MTGI = "code_mtgi";
     private static final String KEY_DATE = "date";
     private static final String KEY_POSITION = "position";
+    private static final String KEY_COLOR_IDENTITY = "color_identity";
+    private static final String KEY_CAN_BE_FOIL = "can_be_foil";
 
     /* All the columns in DATABASE_TABLE_CARDS */
     public static final String[] allCardDataKeys = {
@@ -126,7 +128,8 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_SUBTYPE,
             DATABASE_TABLE_CARDS + "." + KEY_ARTIST,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID,
-            DATABASE_TABLE_CARDS + "." + KEY_RULINGS
+            DATABASE_TABLE_CARDS + "." + KEY_RULINGS,
+            DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY,
     };
 
     /* All the columns in DATABASE_CREATE_SETS */
@@ -137,7 +140,8 @@ public class CardDbAdapter {
             DATABASE_TABLE_SETS + "." + KEY_CODE_MTGI,
             DATABASE_TABLE_SETS + "." + KEY_NAME_TCGPLAYER,
             DATABASE_TABLE_SETS + "." + KEY_DIGEST,
-            DATABASE_TABLE_SETS + "." + KEY_DATE
+            DATABASE_TABLE_SETS + "." + KEY_DATE,
+            DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL
     };
 
     /* SQL Strings used to create the database tables */
@@ -184,6 +188,7 @@ public class CardDbAdapter {
                     KEY_NUMBER + " text, " +
                     KEY_MULTIVERSEID + " integer not null, " +
                     KEY_COLOR + " text not null, " +
+                    KEY_COLOR_IDENTITY + " text, " +
                     KEY_RULINGS + " text);";
 
     public static final String DATABASE_CREATE_SETS =
@@ -194,6 +199,7 @@ public class CardDbAdapter {
                     KEY_CODE_MTGI + " text not null, " +
                     KEY_NAME_TCGPLAYER + " text, " +
                     KEY_DIGEST + " text, " +
+                    KEY_CAN_BE_FOIL + " integer, " +
                     KEY_DATE + " integer);";
 
     private static final String DATABASE_CREATE_RULES =
@@ -1466,6 +1472,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_NUMBER, card.number);
         initialValues.put(KEY_COLOR, card.color);
         initialValues.put(KEY_MULTIVERSEID, card.multiverseId);
+        initialValues.put(KEY_COLOR_IDENTITY, card.colorIdentity);
 
         mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
     }
@@ -1659,6 +1666,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_CODE_MTGI, set.codeMagicCards);
         initialValues.put(KEY_DATE, set.date);
         initialValues.put(KEY_DIGEST, set.digest);
+        initialValues.put(KEY_CAN_BE_FOIL, set.canBeFoil);
 
         mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
     }
@@ -1674,6 +1682,21 @@ public class CardDbAdapter {
         ContentValues args = new ContentValues();
 
         args.put(KEY_NAME_TCGPLAYER, name);
+
+        mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
+    }
+
+    /**
+     * Add "can be foil" information to DATABASE_TABLE_SETS
+     *
+     * @param name "true" or "false", whether or not this set has foil cards
+     * @param code The set code to add the info to
+     * @param mDb  The database to add the info to
+     */
+    public static void addFoilInfo(boolean canBeFoil, String code, SQLiteDatabase mDb) {
+        ContentValues args = new ContentValues();
+
+        args.put(KEY_CAN_BE_FOIL, canBeFoil);
 
         mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
     }

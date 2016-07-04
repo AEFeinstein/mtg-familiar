@@ -42,6 +42,7 @@
     <string name="key_date" translatable="false">date</string>
     <string name="key_lastUpdate" translatable="false">lastUpdate</string>
     <string name="key_lastTCGNameUpdate" translatable="false">lastTCGNameUpdate</string>
+    <string name="key_lastFoilInfoUpdate" translatable="false">lastFoilInfoUpdate</string>
     <string name="key_lifeTimer" translatable="false">lifeTimer</string>
     <string name="key_currentRoundTimer" translatable="false">currentRoundTimer</string>
     <string name="key_bounceDrawer" translatable="false">bounceDrawer</string>

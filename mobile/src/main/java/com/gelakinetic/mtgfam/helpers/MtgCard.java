@@ -404,9 +404,9 @@ public class MtgCard {
         }
 
 		/* For typed lands, add color identity */
-        if (card.ability.toLowerCase().contains("land")) {
+        if (card.type.toLowerCase().contains("land")) {
             for (int i = 0; i < colors.length; i++) {
-                if (card.ability.contains(basicLandTypes[i])) {
+                if (card.type.contains(basicLandTypes[i])) {
                     colors[i] = true;
                 }
             }

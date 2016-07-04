@@ -138,6 +138,7 @@ public class DbUpdaterService extends IntentService {
                 ArrayList<MtgSet> setsToAdd = new ArrayList<>();
                 ArrayList<String> setsToDrop = new ArrayList<>();
                 ArrayList<CardAndSetParser.NameAndMetadata> tcgNames = new ArrayList<>();
+                ArrayList<CardAndSetParser.NameAndMetadata> canBeFoil = new ArrayList<>();
 
                 /* Look for updates with the banned / restricted lists and formats */
                 CardAndSetParser.LegalInfo legalInfo = parser.readLegalityJsonStream(mPrefAdapter, logWriter);
@@ -237,6 +238,13 @@ public class DbUpdaterService extends IntentService {
                         if (logWriter != null) {
                             logWriter.write("mCurrentTCGNamePatchDate: " + parser.mCurrentTCGNamePatchDate + '\n');
                         }
+
+                        parser.readCanBeFoilJsonStream(mPrefAdapter, canBeFoil, logWriter);
+
+                        /* Log the date */
+                        if (logWriter != null) {
+                            logWriter.write("mCurrentCanBeFoilDate: " + parser.mCurrentCanBeFoilDate + '\n');
+                        }
                     }
                 }
 
@@ -274,6 +282,7 @@ public class DbUpdaterService extends IntentService {
                     logWriter.write("setsToAdd: " + setsToAdd.size() + '\n');
                     logWriter.write("cardsToAdd: " + cardsToAdd.size() + '\n');
                     logWriter.write("tcgNames: " + tcgNames.size() + '\n');
+                    logWriter.write("canBeFoil: " + canBeFoil.size() + '\n');
                     logWriter.write("rulesToAdd: " + rulesToAdd.size() + '\n');
                     logWriter.write("glossaryItemsToAdd: " + glossaryItemsToAdd.size() + '\n');
                 }
@@ -317,6 +326,14 @@ public class DbUpdaterService extends IntentService {
                         for (CardAndSetParser.NameAndMetadata tcgName : tcgNames) {
                             if (tcgName.metadata.equalsIgnoreCase(set.code)) {
                                 CardDbAdapter.addTcgName(tcgName.name, tcgName.metadata, database);
+                                break;
+                            }
+                        }
+
+                        /* Add the corresponding foil information */
+                        for (CardAndSetParser.NameAndMetadata foilInfo : canBeFoil) {
+                            if (foilInfo.metadata.equalsIgnoreCase(set.code)) {
+                                CardDbAdapter.addFoilInfo(Boolean.parseBoolean(foilInfo.name), foilInfo.metadata, database);
                                 break;
                             }
                         }

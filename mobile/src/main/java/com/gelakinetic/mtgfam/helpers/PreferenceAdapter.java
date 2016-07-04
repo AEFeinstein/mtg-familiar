@@ -379,6 +379,16 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
+    /* Last foilInfo update */
+    public synchronized String getLastFoilInfoUpdate() {
+        return this.prefs.getString(context.getString(R.string.key_lastFoilInfoUpdate), "");
+    }
+
+    public synchronized void setLastFoilInfoUpdate(String lastFoilInfoUpdate) {
+        this.edit.putString(context.getString(R.string.key_lastFoilInfoUpdate), lastFoilInfoUpdate);
+        this.edit.commit();
+    }
+
     /* Life Counter Timer */
     public synchronized String getLifeTimer() {
         return this.prefs.getString(context.getString(R.string.key_lifeTimer), "1000");

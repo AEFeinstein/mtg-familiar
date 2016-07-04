@@ -49,6 +49,7 @@ class CardAndSetParser {
     private static final String LEGALITY_URL = "https://sites.google.com/site/mtgfamiliar/manifests/legality.json";
     private static final String TCG_NAMES_URL = "https://sites.google.com/site/mtgfamiliar/manifests/TCGnames.json";
     private static final String DIGESTS_URL = "https://sites.google.com/site/mtgfamiliar/manifests/digests.json";
+    private static final String FOIL_INFO_URL = "https://sites.google.com/site/mtgfamiliar/manifests/canBeFoil.json";
 
     /**
      * Used to store various dates before committing them
@@ -56,6 +57,7 @@ class CardAndSetParser {
     String mCurrentTCGNamePatchDate = null;
     String mCurrentPatchDate = null;
     String mCurrentRulesDate = null;
+    String mCurrentCanBeFoilDate = null;
 
     /**
      * If a set has a patch, and doesn't exist in the database, this is called to parse an InputStream of JSON and add
@@ -538,6 +540,65 @@ class CardAndSetParser {
     }
 
     /**
+     * This method parses the mapping between set codes and the names TCGPlayer.com uses
+     *
+     * @param prefAdapter The preference adapter is used to get the last update time
+     * @param logWriter   A writer to print debug statements when things go wrong
+     * @param foilInfo    A place to store foil info before adding to the database
+     */
+    public void readCanBeFoilJsonStream(PreferenceAdapter prefAdapter, ArrayList<NameAndMetadata> foilInfo, PrintWriter logWriter) {
+        String label;
+        String label2;
+        String name = null, code = null;
+
+        try {
+            InputStream stream = FamiliarActivity.getHttpInputStream(FOIL_INFO_URL, logWriter);
+            if (stream == null) {
+                throw new IOException("No Stream");
+            }
+            InputStreamReader isr = new InputStreamReader(stream, "ISO-8859-1");
+            JsonReader reader = new JsonReader(isr);
+
+            reader.beginObject();
+            while (reader.hasNext()) {
+                label = reader.nextName();
+
+                if (label.equals("Date")) {
+                    String lastUpdate = prefAdapter.getLastFoilInfoUpdate();
+                    mCurrentCanBeFoilDate = reader.nextString();
+                    if (lastUpdate.equals(mCurrentCanBeFoilDate)) {
+                        reader.close();
+                        return;
+                    }
+                } else if (label.equals("CanBeFoil")) {
+                    reader.beginArray();
+                    while (reader.hasNext()) {
+                        reader.beginObject();
+                        while (reader.hasNext()) {
+                            label2 = reader.nextName();
+                            if (label2.equals("Code")) {
+                                code = reader.nextString();
+                            } else if (label2.equals("canBeFoil")) {
+                                name = reader.nextBoolean() + "";
+                            }
+                        }
+                        foilInfo.add(new NameAndMetadata(name, code));
+                        reader.endObject();
+                    }
+                    reader.endArray();
+                }
+            }
+            reader.endObject();
+            reader.close();
+            isr.close();
+        } catch (IOException e) {
+            if (logWriter != null) {
+                e.printStackTrace(logWriter);
+            }
+        }
+    }
+
+    /**
      * When the service is done, this method is called to commit the update dates to the shared preferences
      *
      * @param prefAdapter The preferences to write to
@@ -546,10 +607,12 @@ class CardAndSetParser {
         prefAdapter.setLastUpdate(mCurrentTCGNamePatchDate);
         prefAdapter.setLastTCGNameUpdate(mCurrentPatchDate);
         prefAdapter.setLegalityDate(mCurrentRulesDate);
+        prefAdapter.setLastFoilInfoUpdate(mCurrentCanBeFoilDate);
 
         mCurrentTCGNamePatchDate = null;
         mCurrentPatchDate = null;
         mCurrentRulesDate = null;
+        mCurrentCanBeFoilDate = null;
     }
 
     /**
