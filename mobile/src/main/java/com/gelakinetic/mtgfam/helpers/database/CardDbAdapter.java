@@ -479,7 +479,7 @@ public class CardDbAdapter {
         }
         sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS +
                 " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name;
+                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name + " COLLATE NOCASE";
         if (shouldGroup) {
             sql += " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE;
         }
@@ -678,7 +678,7 @@ public class CardDbAdapter {
                 + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
                 + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
                 + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
-                + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name
+                + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name + " COLLATE NOCASE"
                 + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = "
                 + setCode + " ORDER BY " + DATABASE_TABLE_SETS + "."
                 + KEY_DATE + " DESC";
@@ -716,7 +716,7 @@ public class CardDbAdapter {
                 DATABASE_TABLE_CARDS + "." + KEY_SET + "=" +
                 DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
                 " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = "
-                + name + " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
+                + name + " COLLATE NOCASE ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
 
         Cursor cursor;
         try {
@@ -1410,7 +1410,7 @@ public class CardDbAdapter {
         Cursor c;
         String statement = "SELECT " + KEY_MULTIVERSEID + " from "
                 + DATABASE_TABLE_CARDS + " WHERE " + KEY_NAME + " = "
-                + sanitizeString(name) + " AND " + KEY_SET + " = '" + setCode + "'";
+                + sanitizeString(name) + " COLLATE NOCASE AND " + KEY_SET + " = '" + setCode + "'";
 
         try {
             c = mDb.rawQuery(statement, null);
