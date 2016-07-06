@@ -239,6 +239,7 @@
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:text="@string/search_color_identity_title"/>
+
             <LinearLayout
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
@@ -320,6 +321,13 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <Spinner
+                android:id="@+id/coloridentitylogic"
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
+                android:drawSelectorOnTop="true"
+                android:entries="@array/color_identity_spinner" />
 
             <LinearLayout
                 android:id="@+id/linearLayout2"

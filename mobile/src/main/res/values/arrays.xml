@@ -90,6 +90,10 @@
         <item>@string/search_No_other_colors</item>
         <item>@string/search_Exact_all_selected_and_no_others</item>
     </string-array>
+    <string-array name="color_identity_spinner">
+        <item>@string/search_May_include_any_colors</item>
+        <item>@string/search_Exact_all_selected_and_no_others</item>
+    </string-array>
     <string-array name="trade_option_entries">
         <item>@string/trader_Low</item>
         <item>@string/trader_Average</item>

@@ -95,6 +95,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private CheckBox mCheckboxBIdentity;
     private CheckBox mCheckboxRIdentity;
     private CheckBox mCheckboxGIdentity;
+    private Spinner mColorIdentitySpinner;
     private Button mSetButton;
     private Button mFormatButton;
     private Button mRarityButton;
@@ -194,6 +195,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxGIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxG_identity);
 
         mColorSpinner = (Spinner) myFragmentView.findViewById(R.id.colorlogic);
+        mColorIdentitySpinner = (Spinner) myFragmentView.findViewById(R.id.coloridentitylogic);
         mTextSpinner = (Spinner) myFragmentView.findViewById(R.id.textlogic);
         mTypeSpinner = (Spinner) myFragmentView.findViewById(R.id.typelogic);
         mSetSpinner = (Spinner) myFragmentView.findViewById(R.id.setlogic);
@@ -514,18 +516,34 @@ public class SearchViewFragment extends FamiliarFragment {
         if (mCheckboxWIdentity.isChecked()) {
             searchCriteria.colorIdentity += "W";
         }
+        else {
+            searchCriteria.colorIdentity += "w";
+        }
         if (mCheckboxUIdentity.isChecked()) {
             searchCriteria.colorIdentity += "U";
+        }
+        else {
+            searchCriteria.colorIdentity += "u";
         }
         if (mCheckboxBIdentity.isChecked()) {
             searchCriteria.colorIdentity += "B";
         }
+        else {
+            searchCriteria.colorIdentity += "b";
+        }
         if (mCheckboxRIdentity.isChecked()) {
             searchCriteria.colorIdentity += "R";
+        }
+        else {
+            searchCriteria.colorIdentity += "r";
         }
         if (mCheckboxGIdentity.isChecked()) {
             searchCriteria.colorIdentity += "G";
         }
+        else {
+            searchCriteria.colorIdentity += "g";
+        }
+        searchCriteria.colorIdentityLogic = mColorIdentitySpinner.getSelectedItemPosition();
 
         searchCriteria.set = null;
 
@@ -653,6 +671,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxBIdentity.setChecked(false);
         mCheckboxRIdentity.setChecked(false);
         mCheckboxGIdentity.setChecked(false);
+        mColorSpinner.setSelection(0);
 
         mTextSpinner.setSelection(0);
         mTypeSpinner.setSelection(0);
@@ -732,6 +751,7 @@ public class SearchViewFragment extends FamiliarFragment {
             mCheckboxBIdentity.setChecked(criteria.colorIdentity.contains("B"));
             mCheckboxRIdentity.setChecked(criteria.colorIdentity.contains("R"));
             mCheckboxGIdentity.setChecked(criteria.colorIdentity.contains("G"));
+            mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
 
             mTextSpinner.setSelection(criteria.textLogic);
             mTypeSpinner.setSelection(criteria.typeLogic);

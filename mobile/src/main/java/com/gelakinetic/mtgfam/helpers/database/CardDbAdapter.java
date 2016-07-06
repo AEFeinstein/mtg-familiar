@@ -1045,9 +1045,42 @@ public class CardDbAdapter {
         /** End of addition
          *************************************************************************************/
 
-        /* Color Identity Filter */
-        if(criteria.colorIdentity.length() > 0) {
-            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " = \"" + criteria.colorIdentity + "\")";
+        /*
+         * Color Identity Filter
+         * If a color is selected, it's upper case. Otherwise it's lower case
+         */
+        if(!(criteria.colorIdentity.equals("wubrg"))) {
+            switch(criteria.colorIdentityLogic) {
+                case 0: {
+                    /* search_May_include_any_colors */
+                    boolean first = true;
+                    statement += " AND (";
+                    for(int i = 0; i < criteria.colorIdentity.length(); i++) {
+                        if(Character.isLowerCase(criteria.colorIdentity.charAt(i))) {
+                            if(!first) {
+                                statement += " AND ";
+                            }
+                            statement += "(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
+                                    " NOT LIKE \"%" + criteria.colorIdentity.toUpperCase().charAt(i) + "%\")";
+                            first = false;
+                        }
+                    }
+                    statement += ")";
+                    break;
+                }
+                case 1: {
+                    /* search_Exact_all_selected_and_no_others */
+                    String colorIdentity = "";
+                    for(int i = 0; i < criteria.colorIdentity.length(); i++) {
+                        if(Character.isUpperCase(criteria.colorIdentity.charAt(i))) {
+                            colorIdentity += criteria.colorIdentity.charAt(i);
+                        }
+                    }
+                    statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
+                            " = \"" + colorIdentity + "\")";
+                    break;
+                }
+            }
         }
 
         if (criteria.set != null) {
@@ -1827,18 +1860,6 @@ public class CardDbAdapter {
             }
         }
         return MultiCardType.NOPE;
-    }
-
-    /**
-     * @return a Set of all set codes which are not Modern legal, but can still have foil cards
-     */
-    private static Set<String> buildNonModernFoilSets() {
-        Set<String> nonModernFoilSets = new HashSet<>();
-        String[] extraSets = {
-                "UNH", "UL", "UD", "MM", "NE", "PY", "IN", "PS", "7E", "AP", "OD", "TO", "JU", "ON",
-                "LE", "SC", "CNS", "CNSC"};
-        nonModernFoilSets.addAll(Arrays.asList(extraSets));
-        return nonModernFoilSets;
     }
 
     /**********************************************************************************************
