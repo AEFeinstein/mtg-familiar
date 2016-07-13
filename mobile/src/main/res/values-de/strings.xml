@@ -80,8 +80,8 @@
     <string name="main_import_success">Importieren erfolgreich</string>
     <string name="main_whats_new_in_title">Was ist neu in Version</string>
     <string name="main_whats_new_text">
-        - Bildersuche mit TutorCards&lt;br&gt;&lt;br&gt;
-        - Deutsche Übersetzung
+        - Suche mit Farbidentität&lt;br&gt;&lt;br&gt;
+        - Fehlerbehebungen
     </string>
     <string name="main_whats_new_title">Was ist neu</string>
     <string name="main_wishlist">Wunschliste</string>
@@ -394,7 +394,7 @@
     <string name="update_added_rules">Neue verständliche Regeln</string>
     <string name="pref_show_type_title">Typ/Subtyp anzeigen</string>
     <string name="search_subtype">Subtyp</string>
-    <string name="search_supertype">Supertyp</string>
+    <string name="search_supertype">(Super)Typ</string>
     <string name="main_about_text">
         Diese App ist mein Geschenk an die MTG community.&lt;br&gt;
         &lt;br&gt;
@@ -449,4 +449,6 @@
     <string name="pref_consolidate_title">Ergebnisse neu sortieren</string>
     <string name="tutor_cards_fail">TutorCards ist nicht erreichbar</string>
     <string name="tutor_cards_notice">Powered by TutorCards</string>
+    <string name="search_color_title">Farbe</string>
+    <string name="search_color_identity_title">Farbidentität</string>
 </resources>

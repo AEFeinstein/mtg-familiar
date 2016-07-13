@@ -179,8 +179,8 @@
     <string name="main_tts_warning_title">TTS (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">O que há de Novo na Versão</string>
     <string name="main_whats_new_text">
-        - Buscar por imagem usando TutorCards&lt;br&gt;&lt;br&gt;
-        - Tradução alemã
+        - Pesquisar Identidade de Cor&lt;br&gt;&lt;br&gt;
+        - Correções de bugs
     </string>
     <string name="main_whats_new_title">O que há de novo</string>
     <string name="main_wishlist">Lista de Desejos</string>
@@ -449,4 +449,6 @@
     <string name="trader_share">Compartilhar Troca</string>
     <string name="tutor_cards_fail">TutorCards não localizado</string>
     <string name="tutor_cards_notice">Desenvolvido por Tutor Cards</string>
+    <string name="search_color_title">Cor</string>
+    <string name="search_color_identity_title">Identidade de cor</string>
 </resources>

@@ -180,8 +180,8 @@
     <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
     <string name="main_whats_new_text">
-        - Wyszukiwanie przez obraz używając TutorCards&lt;br&gt;&lt;br&gt;
-        - Niemieckie tłumaczenie
+        - Wyszukiwanie ogółu kolorów&lt;br&gt;&lt;br&gt;
+        - Poprawki
     </string>
     <string name="main_whats_new_title">Nowości</string>
     <string name="main_wishlist">Lista Życzeń</string>
@@ -449,4 +449,6 @@
     <string name="trader_share">Podziel się Wymianą</string>
     <string name="tutor_cards_fail">TutorCards są nieosiągalne</string>
     <string name="tutor_cards_notice">Uzyskane przy pomocy TutorCards</string>
+    <string name="search_color_title">Kolor</string>
+    <string name="search_color_identity_title">Ogół kolorów</string>
 </resources>

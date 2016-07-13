@@ -179,8 +179,8 @@
     <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
     <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
     <string name="main_whats_new_text">
-        - Recherche par image utilisant TutorCards&lt;br&gt;&lt;br&gt;
-        - Traduction en Allemand
+        - Recherche par Identité Couleur&lt;br&gt;&lt;br&gt;
+        - Corrections de bugs
     </string>
     <string name="main_whats_new_title">Nouveautés</string>
     <string name="main_wishlist">Liste de voeux</string>
@@ -363,7 +363,7 @@
     <string name="search_set">Extension</string>
     <string name="search_sets">Extensions</string>
     <string name="search_subtype">Sous-type</string>
-    <string name="search_supertype">Type</string>
+    <string name="search_supertype">(Sur)Type</string>
     <string name="search_text">Texte</string>
     <string name="search_Timeshifted">Timeshifted</string>
     <string name="search_toast_cannot_load">Chargement impossible des options de recherche.</string>
@@ -449,4 +449,6 @@
     <string name="trader_share">Partager l\'échange</string>
     <string name="tutor_cards_fail">TutorCards inaccessible</string>
     <string name="tutor_cards_notice">Optimisé par TutorCards</string>
+    <string name="search_color_title">Couleur</string>
+    <string name="search_color_identity_title">Identité Couleur</string>
 </resources>

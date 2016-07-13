@@ -133,7 +133,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Search activity -->
     <string name="search_name">Name</string>
-    <string name="search_supertype">Supertype</string>
+    <string name="search_supertype">(Super)Type</string>
     <string name="search_subtype">Subtype</string>
     <string name="search_text">Text</string>
     <string name="search_power">Power</string>
