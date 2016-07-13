@@ -846,6 +846,10 @@ public class FamiliarActivity extends AppCompatActivity {
                             shouldSelectItem = false;
                         } else {
                             try {
+                                /* Don't clear the fragment stack for internal links (thanks Meld cards) */
+                                if(data.getPathSegments().contains("internal")) {
+                                    shouldClearFragmentStack = false;
+                                }
                                 cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),
                                         new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
                             } catch (NumberFormatException e) {
