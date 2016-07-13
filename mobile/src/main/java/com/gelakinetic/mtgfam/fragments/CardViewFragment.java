@@ -40,6 +40,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Html.ImageGetter;
+import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -428,6 +429,7 @@ public class CardViewFragment extends FamiliarFragment {
         addToDescription(getString(R.string.search_text), sAbility);
         CharSequence csAbility = ImageGetterHelper.formatStringWithGlyphs(sAbility, imgGetter);
         mAbilityTextView.setText(csAbility);
+        mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         String sFlavor = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
         addToDescription(getString(R.string.search_flavor_text), sFlavor);
