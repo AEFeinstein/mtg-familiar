@@ -128,6 +128,9 @@
         <item name="button">@style/button_light</item>
 
         <item name="camera_button">@drawable/camera_button_light</item>
+
+        <!-- Use light theme for dialogs -->
+        <item name="md_dark_theme">false</item>
     </style>
 
     <style name="Theme.base.dark" parent="Theme.AppCompat.NoActionBar">
@@ -253,6 +256,9 @@
         <item name="button">@style/button_dark</item>
 
         <item name="camera_button">@drawable/camera_button_dark</item>
+
+        <!-- Use dark theme for dialogs -->
+        <item name="md_dark_theme">true</item>
     </style>
 
     <style name="Theme.light" parent="Theme.base.light">
