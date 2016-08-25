@@ -166,10 +166,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="search_Original_printing">Original printing</string>
     <string name="search_All_printings">All printings</string>
     <string name="search_Reprints_only">Reprints only</string>
-    <string name="search_May_include_any_colors">May include any color(s)</string>
-    <string name="search_Must_include_all_colors">Must include all colors</string>
-    <string name="search_No_other_colors">No other colors</string>
-    <string name="search_Exact_all_selected_and_no_others">Exact (all selected and no others)</string>
     <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
     See arrays.xml and onCreate method in SearchViewFragment -->
     <string name="search_Common">Common</string>

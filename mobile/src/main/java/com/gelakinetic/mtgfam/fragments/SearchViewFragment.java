@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html.ImageGetter;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.SpaceTokenizer;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -83,19 +85,30 @@ public class SearchViewFragment extends FamiliarFragment {
     private MultiAutoCompleteTextView mSupertypeField = null;
     private MultiAutoCompleteTextView mSubtypeField = null;
     private EditText mCollectorsNumberField;
-    private CheckBox mCheckboxW;
-    private CheckBox mCheckboxU;
-    private CheckBox mCheckboxB;
-    private CheckBox mCheckboxR;
-    private CheckBox mCheckboxG;
-    private CheckBox mCheckboxL;
-    private Spinner mColorSpinner;
-    private CheckBox mCheckboxWIdentity;
-    private CheckBox mCheckboxUIdentity;
-    private CheckBox mCheckboxBIdentity;
-    private CheckBox mCheckboxRIdentity;
-    private CheckBox mCheckboxGIdentity;
-    private Spinner mColorIdentitySpinner;
+    private TextView mColorW;
+    private TextView mColorU;
+    private TextView mColorB;
+    private TextView mColorR;
+    private TextView mColorG;
+    private TextView mColorC;
+    private Spinner mColorTypeW;
+    private Spinner mColorTypeU;
+    private Spinner mColorTypeB;
+    private Spinner mColorTypeR;
+    private Spinner mColorTypeG;
+    private Spinner mColorTypeC;
+    private CheckBox mColorYesW;
+    private CheckBox mColorYesU;
+    private CheckBox mColorYesB;
+    private CheckBox mColorYesR;
+    private CheckBox mColorYesG;
+    private CheckBox mColorYesC;
+    private CheckBox mColorNoW;
+    private CheckBox mColorNoU;
+    private CheckBox mColorNoB;
+    private CheckBox mColorNoR;
+    private CheckBox mColorNoG;
+    private CheckBox mColorNoC;
     private Button mSetButton;
     private Button mFormatButton;
     private Button mRarityButton;
@@ -181,21 +194,41 @@ public class SearchViewFragment extends FamiliarFragment {
 
         Button searchButton = (Button) myFragmentView.findViewById(R.id.searchbutton);
 
-        mCheckboxW = (CheckBox) myFragmentView.findViewById(R.id.checkBoxW);
-        mCheckboxU = (CheckBox) myFragmentView.findViewById(R.id.checkBoxU);
-        mCheckboxB = (CheckBox) myFragmentView.findViewById(R.id.checkBoxB);
-        mCheckboxR = (CheckBox) myFragmentView.findViewById(R.id.checkBoxR);
-        mCheckboxG = (CheckBox) myFragmentView.findViewById(R.id.checkBoxG);
-        mCheckboxL = (CheckBox) myFragmentView.findViewById(R.id.checkBoxL);
+        ImageGetter mImgGetter = ImageGetterHelper.GlyphGetter(getActivity());
+        mColorW = (TextView) myFragmentView.findViewById(R.id.colorW);
+        mColorW.setText(ImageGetterHelper.formatStringWithGlyphs("{w}", mImgGetter));
+        mColorU = (TextView) myFragmentView.findViewById(R.id.colorU);
+        mColorU.setText(ImageGetterHelper.formatStringWithGlyphs("{u}", mImgGetter));
+        mColorB = (TextView) myFragmentView.findViewById(R.id.colorB);
+        mColorB.setText(ImageGetterHelper.formatStringWithGlyphs("{b}", mImgGetter));
+        mColorR = (TextView) myFragmentView.findViewById(R.id.colorR);
+        mColorR.setText(ImageGetterHelper.formatStringWithGlyphs("{r}", mImgGetter));
+        mColorG = (TextView) myFragmentView.findViewById(R.id.colorG);
+        mColorG.setText(ImageGetterHelper.formatStringWithGlyphs("{g}", mImgGetter));
+        mColorC = (TextView) myFragmentView.findViewById(R.id.colorC);
+        mColorC.setText(ImageGetterHelper.formatStringWithGlyphs("{c}", mImgGetter));
 
-        mCheckboxWIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxW_identity);
-        mCheckboxUIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxU_identity);
-        mCheckboxBIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxB_identity);
-        mCheckboxRIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxR_identity);
-        mCheckboxGIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxG_identity);
+        mColorTypeW = (Spinner) myFragmentView.findViewById(R.id.colorTypeW);
+        mColorTypeU = (Spinner) myFragmentView.findViewById(R.id.colorTypeU);
+        mColorTypeB = (Spinner) myFragmentView.findViewById(R.id.colorTypeB);
+        mColorTypeR = (Spinner) myFragmentView.findViewById(R.id.colorTypeR);
+        mColorTypeG = (Spinner) myFragmentView.findViewById(R.id.colorTypeG);
+        mColorTypeC = (Spinner) myFragmentView.findViewById(R.id.colorTypeC);
 
-        mColorSpinner = (Spinner) myFragmentView.findViewById(R.id.colorlogic);
-        mColorIdentitySpinner = (Spinner) myFragmentView.findViewById(R.id.coloridentitylogic);
+        mColorYesW = (CheckBox) myFragmentView.findViewById(R.id.colorYesW);
+        mColorYesU = (CheckBox) myFragmentView.findViewById(R.id.colorYesU);
+        mColorYesB = (CheckBox) myFragmentView.findViewById(R.id.colorYesB);
+        mColorYesR = (CheckBox) myFragmentView.findViewById(R.id.colorYesR);
+        mColorYesG = (CheckBox) myFragmentView.findViewById(R.id.colorYesG);
+        mColorYesC = (CheckBox) myFragmentView.findViewById(R.id.colorYesC);
+
+        mColorNoW = (CheckBox) myFragmentView.findViewById(R.id.colorNoW);
+        mColorNoU = (CheckBox) myFragmentView.findViewById(R.id.colorNoU);
+        mColorNoB = (CheckBox) myFragmentView.findViewById(R.id.colorNoB);
+        mColorNoR = (CheckBox) myFragmentView.findViewById(R.id.colorNoR);
+        mColorNoG = (CheckBox) myFragmentView.findViewById(R.id.colorNoG);
+        mColorNoC = (CheckBox) myFragmentView.findViewById(R.id.colorNoC);
+
         mTextSpinner = (Spinner) myFragmentView.findViewById(R.id.textlogic);
         mTypeSpinner = (Spinner) myFragmentView.findViewById(R.id.typelogic);
         mSetSpinner = (Spinner) myFragmentView.findViewById(R.id.setlogic);
@@ -227,9 +260,6 @@ public class SearchViewFragment extends FamiliarFragment {
                 showDialog(SearchViewDialogFragment.RARITY_LIST);
             }
         });
-
-        /* This is a better default, might want to reorder the array */
-        mColorSpinner.setSelection(2);
 
         /* The button colors change whether an option is selected or not */
         checkDialogButtonColors();
@@ -417,6 +447,54 @@ public class SearchViewFragment extends FamiliarFragment {
         }
     }
 
+    /** Handle checkbox clicks */
+    @Override
+    public void onClicked(View view) {
+        boolean c = ((CheckBox) view).isChecked();
+        if (c) {
+            // Unfortunately, RadioGroup doesn't work within a TableLayout,
+            // so we have to do this the hard way.
+            switch (view.getId()) {
+                case R.id.colorYesW:
+                    mColorNoW.setChecked(false);
+                    break;
+                case R.id.colorNoW:
+                    mColorYesW.setChecked(false);
+                    break;
+                case R.id.colorYesU:
+                    mColorNoU.setChecked(false);
+                    break;
+                case R.id.colorNoU:
+                    mColorYesU.setChecked(false);
+                    break;
+                case R.id.colorYesB:
+                    mColorNoB.setChecked(false);
+                    break;
+                case R.id.colorNoB:
+                    mColorYesB.setChecked(false);
+                    break;
+                case R.id.colorYesR:
+                    mColorNoR.setChecked(false);
+                    break;
+                case R.id.colorNoR:
+                    mColorYesR.setChecked(false);
+                    break;
+                case R.id.colorYesG:
+                    mColorNoG.setChecked(false);
+                    break;
+                case R.id.colorNoG:
+                    mColorYesG.setChecked(false);
+                    break;
+                case R.id.colorYesC:
+                    mColorNoC.setChecked(false);
+                    break;
+                case R.id.colorNoC:
+                    mColorYesC.setChecked(false);
+                    break;
+            }
+        }
+    }
+
     /**
      * This function creates a results fragment, sends it the search criteria, and starts it
      */
@@ -474,76 +552,102 @@ public class SearchViewFragment extends FamiliarFragment {
             searchCriteria.collectorsNumber = null;
         }
 
-        /* Build a color string. capital letters means the user is search for that color */
-        searchCriteria.color = null;
+        int colorTypeW = mColorTypeW.getSelectedItemPosition();
+        int colorTypeU = mColorTypeU.getSelectedItemPosition();
+        int colorTypeB = mColorTypeB.getSelectedItemPosition();
+        int colorTypeR = mColorTypeR.getSelectedItemPosition();
+        int colorTypeG = mColorTypeG.getSelectedItemPosition();
+        int colorTypeC = mColorTypeC.getSelectedItemPosition();
 
-        if (mCheckboxW.isChecked()) {
-            searchCriteria.color = "W";
-        } else {
-            searchCriteria.color = "w";
-        }
+        /* Build colorYes string */
+        searchCriteria.colorYes = "";
+        if (colorTypeW == 0 && mColorYesW.isChecked())
+            searchCriteria.colorYes = "W";
+        if (colorTypeU == 0 && mColorYesU.isChecked())
+            searchCriteria.colorYes += "U";
+        if (colorTypeB == 0 && mColorYesB.isChecked())
+            searchCriteria.colorYes += "B";
+        if (colorTypeR == 0 && mColorYesR.isChecked())
+            searchCriteria.colorYes += "R";
+        if (colorTypeG == 0 && mColorYesG.isChecked())
+            searchCriteria.colorYes += "G";
+        if (colorTypeC == 0 && mColorYesC.isChecked())
+            searchCriteria.colorYes += "C";
 
-        if (mCheckboxU.isChecked()) {
-            searchCriteria.color += "U";
-        } else {
-            searchCriteria.color += "u";
-        }
-        if (mCheckboxB.isChecked()) {
-            searchCriteria.color += "B";
-        } else {
-            searchCriteria.color += "b";
-        }
-        if (mCheckboxR.isChecked()) {
-            searchCriteria.color += "R";
-        } else {
-            searchCriteria.color += "r";
-        }
-        if (mCheckboxG.isChecked()) {
-            searchCriteria.color += "G";
-        } else {
-            searchCriteria.color += "g";
-        }
-        if (mCheckboxL.isChecked()) {
-            searchCriteria.color += "L";
-        } else {
-            searchCriteria.color += "l";
-        }
-        searchCriteria.colorLogic = mColorSpinner.getSelectedItemPosition();
+        /* Build colorNo string */
+        searchCriteria.colorNo = "";
+        if (colorTypeW == 0 && mColorNoW.isChecked())
+            searchCriteria.colorNo = "W";
+        if (colorTypeU == 0 && mColorNoU.isChecked())
+            searchCriteria.colorNo += "U";
+        if (colorTypeB == 0 && mColorNoB.isChecked())
+            searchCriteria.colorNo += "B";
+        if (colorTypeR == 0 && mColorNoR.isChecked())
+            searchCriteria.colorNo += "R";
+        if (colorTypeG == 0 && mColorNoG.isChecked())
+            searchCriteria.colorNo += "G";
+        if (colorTypeC == 0 && mColorNoC.isChecked())
+            searchCriteria.colorNo += "C";
 
-        /* Build a color identity string */
-        searchCriteria.colorIdentity = "";
+        /* Build colorIdentityYes string */
+        searchCriteria.colorIdentityYes = "";
+        if (colorTypeW == 1 && mColorYesW.isChecked())
+            searchCriteria.colorIdentityYes = "W";
+        if (colorTypeU == 1 && mColorYesU.isChecked())
+            searchCriteria.colorIdentityYes += "U";
+        if (colorTypeB == 1 && mColorYesB.isChecked())
+            searchCriteria.colorIdentityYes += "B";
+        if (colorTypeR == 1 && mColorYesR.isChecked())
+            searchCriteria.colorIdentityYes += "R";
+        if (colorTypeG == 1 && mColorYesG.isChecked())
+            searchCriteria.colorIdentityYes += "G";
+        if (colorTypeC == 1 && mColorYesC.isChecked())
+            searchCriteria.colorIdentityYes += "C";
 
-        if (mCheckboxWIdentity.isChecked()) {
-            searchCriteria.colorIdentity += "W";
-        }
-        else {
-            searchCriteria.colorIdentity += "w";
-        }
-        if (mCheckboxUIdentity.isChecked()) {
-            searchCriteria.colorIdentity += "U";
-        }
-        else {
-            searchCriteria.colorIdentity += "u";
-        }
-        if (mCheckboxBIdentity.isChecked()) {
-            searchCriteria.colorIdentity += "B";
-        }
-        else {
-            searchCriteria.colorIdentity += "b";
-        }
-        if (mCheckboxRIdentity.isChecked()) {
-            searchCriteria.colorIdentity += "R";
-        }
-        else {
-            searchCriteria.colorIdentity += "r";
-        }
-        if (mCheckboxGIdentity.isChecked()) {
-            searchCriteria.colorIdentity += "G";
-        }
-        else {
-            searchCriteria.colorIdentity += "g";
-        }
-        searchCriteria.colorIdentityLogic = mColorIdentitySpinner.getSelectedItemPosition();
+        /* Build colorIdentityNo string */
+        searchCriteria.colorIdentityNo = "";
+        if (colorTypeW == 1 && mColorNoW.isChecked())
+            searchCriteria.colorIdentityNo = "W";
+        if (colorTypeU == 1 && mColorNoU.isChecked())
+            searchCriteria.colorIdentityNo += "U";
+        if (colorTypeB == 1 && mColorNoB.isChecked())
+            searchCriteria.colorIdentityNo += "B";
+        if (colorTypeR == 1 && mColorNoR.isChecked())
+            searchCriteria.colorIdentityNo += "R";
+        if (colorTypeG == 1 && mColorNoG.isChecked())
+            searchCriteria.colorIdentityNo += "G";
+        if (colorTypeC == 1 && mColorNoC.isChecked())
+            searchCriteria.colorIdentityNo += "C";
+
+        /* Build manaCostYes string */
+        searchCriteria.manaCostYes = "";
+        if (colorTypeW == 2 && mColorYesW.isChecked())
+            searchCriteria.manaCostYes = "W";
+        if (colorTypeU == 2 && mColorYesU.isChecked())
+            searchCriteria.manaCostYes += "U";
+        if (colorTypeB == 2 && mColorYesB.isChecked())
+            searchCriteria.manaCostYes += "B";
+        if (colorTypeR == 2 && mColorYesR.isChecked())
+            searchCriteria.manaCostYes += "R";
+        if (colorTypeG == 2 && mColorYesG.isChecked())
+            searchCriteria.manaCostYes += "G";
+        if (colorTypeC == 2 && mColorYesC.isChecked())
+            searchCriteria.manaCostYes += "C";
+
+        /* Build manaCostNo string */
+        searchCriteria.manaCostNo = "";
+        if (colorTypeW == 2 && mColorNoW.isChecked())
+            searchCriteria.manaCostNo = "W";
+        if (colorTypeU == 2 && mColorNoU.isChecked())
+            searchCriteria.manaCostNo += "U";
+        if (colorTypeB == 2 && mColorNoB.isChecked())
+            searchCriteria.manaCostNo += "B";
+        if (colorTypeR == 2 && mColorNoR.isChecked())
+            searchCriteria.manaCostNo += "R";
+        if (colorTypeG == 2 && mColorNoG.isChecked())
+            searchCriteria.manaCostNo += "G";
+        if (colorTypeC == 2 && mColorNoC.isChecked())
+            searchCriteria.manaCostNo += "C";
 
         searchCriteria.set = null;
 
@@ -658,24 +762,23 @@ public class SearchViewFragment extends FamiliarFragment {
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
 
-        mCheckboxW.setChecked(false);
-        mCheckboxU.setChecked(false);
-        mCheckboxB.setChecked(false);
-        mCheckboxR.setChecked(false);
-        mCheckboxG.setChecked(false);
-        mCheckboxL.setChecked(false);
-        mColorSpinner.setSelection(2);
-
-        mCheckboxWIdentity.setChecked(false);
-        mCheckboxUIdentity.setChecked(false);
-        mCheckboxBIdentity.setChecked(false);
-        mCheckboxRIdentity.setChecked(false);
-        mCheckboxGIdentity.setChecked(false);
-        mColorSpinner.setSelection(0);
-
         mTextSpinner.setSelection(0);
         mTypeSpinner.setSelection(0);
         mSetSpinner.setSelection(0);
+
+        mColorYesW.setChecked(false);
+        mColorYesU.setChecked(false);
+        mColorYesB.setChecked(false);
+        mColorYesR.setChecked(false);
+        mColorYesG.setChecked(false);
+        mColorYesC.setChecked(false);
+
+        mColorNoW.setChecked(false);
+        mColorNoU.setChecked(false);
+        mColorNoB.setChecked(false);
+        mColorNoR.setChecked(false);
+        mColorNoG.setChecked(false);
+        mColorNoC.setChecked(false);
 
         mPowLogic.setSelection(0);
         mPowChoice.setSelection(0);
@@ -737,21 +840,6 @@ public class SearchViewFragment extends FamiliarFragment {
             mArtistField.setText(criteria.artist);
             mFlavorField.setText(criteria.flavor);
             mCollectorsNumberField.setText(criteria.collectorsNumber);
-
-            mCheckboxW.setChecked(criteria.color.contains("W"));
-            mCheckboxU.setChecked(criteria.color.contains("U"));
-            mCheckboxB.setChecked(criteria.color.contains("B"));
-            mCheckboxR.setChecked(criteria.color.contains("R"));
-            mCheckboxG.setChecked(criteria.color.contains("G"));
-            mCheckboxL.setChecked(criteria.color.contains("L"));
-            mColorSpinner.setSelection(criteria.colorLogic);
-
-            mCheckboxWIdentity.setChecked(criteria.colorIdentity.contains("W"));
-            mCheckboxUIdentity.setChecked(criteria.colorIdentity.contains("U"));
-            mCheckboxBIdentity.setChecked(criteria.colorIdentity.contains("B"));
-            mCheckboxRIdentity.setChecked(criteria.colorIdentity.contains("R"));
-            mCheckboxGIdentity.setChecked(criteria.colorIdentity.contains("G"));
-            mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
 
             mTextSpinner.setSelection(criteria.textLogic);
             mTypeSpinner.setSelection(criteria.typeLogic);

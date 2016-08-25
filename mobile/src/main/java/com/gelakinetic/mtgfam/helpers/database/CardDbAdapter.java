@@ -973,115 +973,15 @@ public class CardDbAdapter {
                     + " = " + sanitizeString(criteria.collectorsNumber) + ")";
         }
 
-        /************************************************************************************
-         **
-         * Code below added/modified by Reuben. Differences: Original version
-         * only had 'Any' and 'All' options and lacked 'Exclusive' and 'Exact'
-         * matching. In addition, original programming only provided exclusive
-         * results.
-         */
-        if (!(criteria.color.equals("wubrgl") || (criteria.color.equals("WUBRGL") && criteria.colorLogic == 0))) {
-            boolean firstPrint = true;
-
-            /* Can't contain these colors
-             **
-             * ...if the chosen color logic was exactly (2) or none (3) of the
-             * selected colors
-             */
-            if (criteria.colorLogic > 1) {
-                statement += " AND ((";
-                for (byte b : criteria.color.getBytes()) {
-                    char ch = (char) b;
-
-                    if (ch > 'a') {
-                        if (firstPrint)
-                            firstPrint = false;
-                        else
-                            statement += " AND ";
-
-                        if (ch == 'l' || ch == 'L')
-                            statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-                                    + " NOT GLOB '[CLA]'";
-                        else
-                            statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-                                    + " NOT LIKE '%" + Character.toUpperCase(ch)
-                                    + "%'";
-                    }
-                }
-                statement += ") AND (";
-            }
-
-            firstPrint = true;
-
-            /* Might contain these colors */
-            if (criteria.colorLogic < 2)
-                statement += " AND (";
-
-            for (byte b : criteria.color.getBytes()) {
-                char ch = (char) b;
-                if (ch < 'a') {
-                    if (firstPrint)
-                        firstPrint = false;
-                    else {
-                        if (criteria.colorLogic == 1 || criteria.colorLogic == 3)
-                            statement += " AND ";
-                        else
-                            statement += " OR ";
-                    }
-
-                    if (ch == 'l' || ch == 'L')
-                        statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-                                + " GLOB '[CLA]'";
-                    else
-                        statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-                                + " LIKE '%" + ch + "%'";
-                }
-            }
-            if (criteria.colorLogic > 1)
-                statement += "))";
-            else
-                statement += ")";
-        }
-        /** End of addition
-         *************************************************************************************/
-
-        /*
-         * Color Identity Filter
-         * If a color is selected, it's upper case. Otherwise it's lower case
-         */
-        if(!(criteria.colorIdentity.equals("wubrg"))) {
-            switch(criteria.colorIdentityLogic) {
-                case 0: {
-                    /* search_May_include_any_colors */
-                    boolean first = true;
-                    statement += " AND (";
-                    for(int i = 0; i < criteria.colorIdentity.length(); i++) {
-                        if(Character.isLowerCase(criteria.colorIdentity.charAt(i))) {
-                            if(!first) {
-                                statement += " AND ";
-                            }
-                            statement += "(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
-                                    " NOT LIKE \"%" + criteria.colorIdentity.toUpperCase().charAt(i) + "%\")";
-                            first = false;
-                        }
-                    }
-                    statement += ")";
-                    break;
-                }
-                case 1: {
-                    /* search_Exact_all_selected_and_no_others */
-                    String colorIdentity = "";
-                    for(int i = 0; i < criteria.colorIdentity.length(); i++) {
-                        if(Character.isUpperCase(criteria.colorIdentity.charAt(i))) {
-                            colorIdentity += criteria.colorIdentity.charAt(i);
-                        }
-                    }
-                    statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
-                            " = \"" + colorIdentity + "\")";
-                    break;
-                }
-            }
-        }
+        if (criteria.colorYes.length() > 0)
+            statement += buildColorClause(criteria.colorYes, "", KEY_COLOR);
+        else
+            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR + " GLOB '[WUBRGCLA]')";
+        statement += buildColorClause(criteria.colorNo, "NOT", KEY_COLOR);
+        statement += buildColorClause(criteria.colorIdentityYes, "", KEY_COLOR_IDENTITY);
+        statement += buildColorClause(criteria.colorIdentityNo, "NOT", KEY_COLOR_IDENTITY);
+        statement += buildColorClause(criteria.manaCostYes, "", KEY_MANACOST);
+        statement += buildColorClause(criteria.manaCostNo, "NOT", KEY_MANACOST);
 
         if (criteria.set != null) {
             statement += " AND (";
@@ -1256,6 +1156,28 @@ public class CardDbAdapter {
             cursor.moveToFirst();
         }
         return cursor;
+    }
+
+    /* Build a color statement clause */
+    private static String buildColorClause(String clr, String not, String key) {
+        StringBuilder sb = new StringBuilder();
+        if (clr.length() > 0) {
+            boolean first = true;
+            sb.append(" AND (");
+            for (byte b : clr.getBytes()) {
+                char ch = (char) b;
+                if (!first)
+                    sb.append(" AND ");
+                sb.append(DATABASE_TABLE_CARDS).append('.').append(key).append(' ');
+                if (ch == 'C')
+                    sb.append(not).append(" GLOB '[CLA]'");
+                else
+                    sb.append(not).append(" LIKE '%").append(ch).append("%'");
+                first = false;
+            }
+            sb.append(")");
+        }
+        return sb.toString();
     }
 
     /**

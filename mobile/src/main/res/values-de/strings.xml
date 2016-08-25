@@ -262,7 +262,6 @@
     <string name="wishlist_type_cmc">Umgewandelte Manakosten</string>
     <string name="rules_legal_sets">Erlaubte Sets</string>
     <string name="mojhosto_dialog_play">Spielen!</string>
-    <string name="search_No_other_colors">Keine anderen Farben</string>
     <string name="wishlist_type_none">Keine</string>
     <string name="main_pages">SEITEN</string>
     <string name="search_Reprints_only">Nur Reprints</string>
@@ -304,7 +303,6 @@
     <string name="pref_ringtone_title">Timer Ton</string>
     <string name="pref_screen_search">Suche und Ergebnisse</string>
     <string name="rules_glossary">Gloassar</string>
-    <string name="search_Must_include_all_colors">Muss alle Farben beinhalten</string>
     <string name="search_clear_fields">Felder löschen</string>
     <string name="timer_easter_egg">Nacht des letzten Tages, zwölf Stunden verbleiben</string>
     <string name="timer_warning_dialog_title">Gesprochene Warnungen</string>
@@ -439,8 +437,6 @@
     <string name="pref_wake_lock_title">Bildschirmsperre verhindern</string>
     <string name="search_Any_types">Irgendein Typ</string>
     <string name="search_Any_words">Irgendein Wort</string>
-    <string name="search_Exact_all_selected_and_no_others">Genau (Alle ausgewählten und keine anderen)</string>
-    <string name="search_May_include_any_colors">Kann jede Farbe beinhalten</string>
     <string name="search_NOT_any_selected_types">Keiner der gewählten Typen</string>
     <string name="search_Original_printing">Original Edition</string>
     <string name="search_collectors_number">Collector\'s Number</string>

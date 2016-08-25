@@ -118,226 +118,219 @@
                 android:entries="@array/text_spinner"
                 android:imeOptions="actionSearch" />
 
-            <LinearLayout
+            <TableLayout
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
 
-                <TextView
-                    android:id="@+id/colorTitle"
-                    style="@style/text.medium"
+                <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/search_color_title" />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/forty_eight"
-                android:layout_width="match_parent"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/linearLayout5"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:gravity="center">
 
-                    <CheckBox
-                        android:id="@+id/checkBoxW"
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_w" />
-                </LinearLayout>
+                        android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout6"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/checkBoxU"
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_u" />
+                        android:layout_height="wrap_content" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout7"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/checkBoxB"
+                    <TextView
+                        style="@style/text.medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_b" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:text="@string/dialog_yes" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout8"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/checkBoxR"
+                    <TextView
+                        style="@style/text.medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_r" />
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_no" />
+                </TableRow>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout9"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/checkBoxG"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_g" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout10"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/checkBoxL"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_l" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <Spinner
-                android:id="@+id/colorlogic"
-                style="@style/forty_eight"
-                android:layout_width="match_parent"
-                android:drawSelectorOnTop="true"
-                android:entries="@array/color_spinner" />
-
-            <LinearLayout
-                style="@style/forty_eight"
-                android:layout_width="match_parent"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/text.medium"
+                <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/search_color_identity_title" />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/forty_eight"
-                android:layout_width="match_parent"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/linearLayout13"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:gravity="center">
 
-                    <CheckBox
-                        android:id="@+id/checkBoxW_identity"
+                    <TextView
+                        android:id="@+id/colorW"
+                        style="@style/text.medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_w" />
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:gravity="right" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout14"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    <Spinner
+                        android:id="@+id/colorTypeW"
+                        android:layout_width="wrap_content"
+                        android:padding="4dp"
+                        android:drawSelectorOnTop="true"
+                        android:entries="@array/color_type_spinner" />
+
+                    <CheckBox
+                        android:id="@+id/colorYesW"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+
+                    <CheckBox
+                        android:id="@+id/colorNoW"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center">
 
-                    <CheckBox
-                        android:id="@+id/checkBoxU_identity"
+                    <TextView
+                        android:id="@+id/colorU"
+                        style="@style/text.medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_u" />
+                        android:layout_height="wrap_content"
+                        android:gravity="right" />
 
-                </LinearLayout>
+                    <Spinner
+                        android:id="@+id/colorTypeU"
+                        android:layout_width="wrap_content"
+                        android:padding="4dp"
+                        android:drawSelectorOnTop="true"
+                        android:entries="@array/color_type_spinner" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout15"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    <CheckBox
+                        android:id="@+id/colorYesU"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+
+                    <CheckBox
+                        android:id="@+id/colorNoU"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center">
 
-                    <CheckBox
-                        android:id="@+id/checkBoxB_identity"
+                    <TextView
+                        android:id="@+id/colorB"
+                        style="@style/text.medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_b" />
+                        android:layout_height="wrap_content"
+                        android:gravity="right" />
 
-                </LinearLayout>
+                    <Spinner
+                        android:id="@+id/colorTypeB"
+                        android:layout_width="wrap_content"
+                        android:padding="4dp"
+                        android:drawSelectorOnTop="true"
+                        android:entries="@array/color_type_spinner" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout16"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    <CheckBox
+                        android:id="@+id/colorYesB"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+
+                    <CheckBox
+                        android:id="@+id/colorNoB"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center">
 
-                    <CheckBox
-                        android:id="@+id/checkBoxR_identity"
+                    <TextView
+                        android:id="@+id/colorR"
+                        style="@style/text.medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_r" />
+                        android:layout_height="wrap_content"
+                        android:gravity="right" />
 
-                </LinearLayout>
+                    <Spinner
+                        android:id="@+id/colorTypeR"
+                        android:layout_width="wrap_content"
+                        android:padding="4dp"
+                        android:drawSelectorOnTop="true"
+                        android:entries="@array/color_type_spinner" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout17"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    <CheckBox
+                        android:id="@+id/colorYesR"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+
+                    <CheckBox
+                        android:id="@+id/colorNoR"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center">
 
-                    <CheckBox
-                        android:id="@+id/checkBoxG_identity"
+                    <TextView
+                        android:id="@+id/colorG"
+                        style="@style/text.medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:button="?attr/btn_check_g" />
+                        android:layout_height="wrap_content"
+                        android:gravity="right" />
 
-                </LinearLayout>
+                    <Spinner
+                        android:id="@+id/colorTypeG"
+                        android:layout_width="wrap_content"
+                        android:padding="4dp"
+                        android:drawSelectorOnTop="true"
+                        android:entries="@array/color_type_spinner" />
 
-            </LinearLayout>
+                    <CheckBox
+                        android:id="@+id/colorYesG"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
 
-            <Spinner
-                android:id="@+id/coloridentitylogic"
-                style="@style/forty_eight"
-                android:layout_width="match_parent"
-                android:drawSelectorOnTop="true"
-                android:entries="@array/color_identity_spinner" />
+                    <CheckBox
+                        android:id="@+id/colorNoG"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/colorC"
+                        style="@style/text.medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right" />
+
+                    <Spinner
+                        android:id="@+id/colorTypeC"
+                        android:layout_width="wrap_content"
+                        android:padding="4dp"
+                        android:drawSelectorOnTop="true"
+                        android:entries="@array/color_type_spinner" />
+
+                    <CheckBox
+                        android:id="@+id/colorYesC"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+
+                    <CheckBox
+                        android:id="@+id/colorNoC"
+                        android:layout_width="wrap_content"
+                        android:onClick="onClicked" />
+                </TableRow>
+            </TableLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout2"

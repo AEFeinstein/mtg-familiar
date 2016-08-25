@@ -314,4 +314,11 @@ public abstract class FamiliarFragment extends Fragment {
     public void receiveTutorCardsResult(long multiverseId) {
 
     }
+
+    /**
+     * Override this to handle checkbox clicks
+     */
+    public void onClicked(View view) {
+
+    }
 }
