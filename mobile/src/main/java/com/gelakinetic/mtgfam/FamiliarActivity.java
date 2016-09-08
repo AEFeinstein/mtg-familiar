@@ -1637,4 +1637,11 @@ public class FamiliarActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    /** Handle checkbox clicks */
+    public void onClicked(View view) {
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            if (fragment instanceof FamiliarFragment)
+                ((FamiliarFragment) fragment).onClicked(view);
+    }
 }

@@ -12,8 +12,12 @@ public class SearchCriteria implements Serializable {
     public String name = null;
     public String text = null;
     public String type = null;
-    public String color = "wubrgl";
-    public int colorLogic = 0;
+    public String colorYes = "";
+    public String colorNo = "";
+    public String colorIdentityYes = "";
+    public String colorIdentityNo = "";
+    public String manaCostYes = "";
+    public String manaCostNo = "";
     public String set = null;
     public Float powChoice = (float) CardDbAdapter.NO_ONE_CARES;
     public String powLogic = null;
@@ -29,6 +33,4 @@ public class SearchCriteria implements Serializable {
     public int textLogic = 0;
     public int setLogic = CardDbAdapter.MOST_RECENT_PRINTING;
     public String collectorsNumber = null;
-    public String colorIdentity = "wubrg";
-    public int colorIdentityLogic = 0;
 }
