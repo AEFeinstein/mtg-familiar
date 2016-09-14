@@ -1,20 +1,17 @@
 language: android
 android:
   components:
-
-    # The BuildTools version used by your project
-    - tools
-	# update to latest, cannot control version
-    - tools 
-
-    # Latest platform Tools
-    - platform-tools
+    - tools # to get the new `repository-11.xml`
+    - tools # to install Android SDK tools 25.1.x (x = 6 right now)
 
     - build-tools-24.0.2
 
     # The SDK version used to compile your project
     - android-24
-
+	
+    # Latest platform Tools
+    - platform-tools
+	
     # Additional components
     - extra-google-google_play_services
     - extra-google-m2repository
