@@ -178,6 +178,8 @@ public class ImageGetterHelper {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_half);
                 } else if (source.equalsIgnoreCase("pwk")) {
                     d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_pwk));
+                } else if (source.equalsIgnoreCase("e")) {
+                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_e));
                 } else {
                     for (int i = 0; i < drawableNumbers.length; i++) {
                         if (source.equals(Integer.valueOf(i).toString())) {
