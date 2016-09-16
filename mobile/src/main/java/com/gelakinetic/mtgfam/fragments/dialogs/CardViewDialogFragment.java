@@ -108,7 +108,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 lv.setAdapter(adapter);
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
-                builder.customView(lv, true);
+                builder.customView(lv, false);
                 builder.title(R.string.card_view_legality);
                 return builder.build();
             }
