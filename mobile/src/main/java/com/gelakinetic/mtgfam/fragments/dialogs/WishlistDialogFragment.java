@@ -1,10 +1,12 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.View;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
@@ -47,80 +49,81 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                 return dialog;
             }
             case DIALOG_PRICE_SETTING: {
-                return new AlertDialogWrapper.Builder(this.getActivity())
-                        .setTitle(R.string.trader_pricing_dialog_title)
-                        .setSingleChoiceItems(new String[]{getString(R.string.trader_Low),
-                                        getString(R.string.trader_Average), getString(R.string.trader_High)},
-                                getParentWishlistFragment().mPriceSetting,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (getParentWishlistFragment().mPriceSetting != which) {
-                                            getParentWishlistFragment().mPriceSetting = which;
-                                            getFamiliarActivity().mPreferenceAdapter.setTradePrice(
-                                                    String.valueOf(getParentWishlistFragment().mPriceSetting));
-                                            getParentWishlistFragment().mWishlistAdapter.notifyDataSetChanged();
-                                            getParentWishlistFragment().sumTotalPrice();
-                                        }
-                                        dialog.dismiss();
-                                    }
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.trader_pricing_dialog_title)
+                        .items(new String[]{getString(R.string.trader_Low),
+                                getString(R.string.trader_Average), getString(R.string.trader_High)})
+                        .itemsCallbackSingleChoice(getParentWishlistFragment().mPriceSetting, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                                if (getParentWishlistFragment().mPriceSetting != which) {
+                                    getParentWishlistFragment().mPriceSetting = which;
+                                    getFamiliarActivity().mPreferenceAdapter.setTradePrice(
+                                            String.valueOf(getParentWishlistFragment().mPriceSetting));
+                                    getParentWishlistFragment().mWishlistAdapter.notifyDataSetChanged();
+                                    getParentWishlistFragment().sumTotalPrice();
                                 }
-                        )
-                        .create();
+                                dialog.dismiss();
+                                return true;
+                            }
+                        })
+                        .build();
             }
             case DIALOG_CONFIRMATION: {
-                return new AlertDialogWrapper.Builder(this.getActivity())
-                        .setTitle(R.string.wishlist_empty_dialog_title)
-                        .setMessage(R.string.wishlist_empty_dialog_text)
-                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.wishlist_empty_dialog_title)
+                        .content(R.string.wishlist_empty_dialog_text)
+                        .positiveText(R.string.dialog_ok)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 WishlistHelpers.ResetCards(getActivity());
                                 getParentWishlistFragment().mCompressedWishlist.clear();
                                 getParentWishlistFragment().mWishlistAdapter.notifyDataSetChanged();
                                 getParentWishlistFragment().sumTotalPrice();
-                                dialog.dismiss();
-                                        /* Clear input too */
+                                /* Clear input too */
                                 getParentWishlistFragment().mNameField.setText("");
                                 getParentWishlistFragment().mNumberField.setText("1");
                                 getParentWishlistFragment().mCheckboxFoil.setChecked(false);
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         })
-                        .setCancelable(true).create();
+                        .negativeText(R.string.dialog_cancel)
+                        .cancelable(true)
+                        .build();
 
             }
             case DIALOG_SORT: {
-                return new AlertDialogWrapper.Builder(this.getActivity())
-                        .setTitle(R.string.wishlist_sort_by)
-                        .setSingleChoiceItems(R.array.wishlist_sort_type, getParentWishlistFragment().mWishlistSortType, new DialogInterface.OnClickListener() {
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.wishlist_sort_by)
+                        .items(R.array.wishlist_sort_type)
+                        .itemsCallbackSingleChoice(getParentWishlistFragment().mWishlistSortType, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                                 getParentWishlistFragment().mWishlistSortType = which;
+                                return true;
                             }
                         })
-                        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNeutralButton(R.string.wishlist_ascending, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                        .negativeText(R.string.dialog_cancel)
+                        .neutralText(R.string.wishlist_ascending)
+                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 getParentWishlistFragment().mWishlistSortOrder = WishlistFragment.ASCENDING;
                                 getParentWishlistFragment().sortWishlist();
                             }
                         })
-                        .setPositiveButton(R.string.wishlist_descending, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                        .positiveText(R.string.wishlist_descending)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 getParentWishlistFragment().mWishlistSortOrder = WishlistFragment.DESCENDING;
                                 getParentWishlistFragment().sortWishlist();
                             }
                         })
                         .alwaysCallSingleChoiceCallback()
-                        .setCancelable(true)
-                        .create();
+                        .cancelable(true)
+                        .build();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

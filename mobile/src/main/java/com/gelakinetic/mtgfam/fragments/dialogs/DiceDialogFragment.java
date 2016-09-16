@@ -1,12 +1,13 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -42,39 +43,39 @@ public class DiceDialogFragment extends FamiliarDialogFragment {
             txtNumber.setText(String.valueOf(getParentDiceFragment().mLastNumber));
         }
 
-        AlertDialogWrapper.Builder adb = new AlertDialogWrapper.Builder(getParentDiceFragment().mActivity);
-        adb.setView(v);
-        adb.setTitle(getResources().getString(R.string.dice_choose_sides));
-        adb.setPositiveButton(getParentDiceFragment().mActivity.getResources().getString(R.string.dialog_ok),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (txtNumber.getText() == null || txtNumber.getText().toString().isEmpty()) {
-                            return;
-                        }
-
-                        int num;
-
-                        try {
-                            num = Integer.parseInt(txtNumber.getText().toString());
-                        } catch (NumberFormatException e) {
-                            ToastWrapper.makeText(getParentDiceFragment().mActivity, getResources().getString(R.string.dice_num_too_large),
-                                    ToastWrapper.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        if (num < 1) {
-                            ToastWrapper.makeText(getParentDiceFragment().mActivity, getResources().getString(R.string.dice_postive),
-                                    ToastWrapper.LENGTH_SHORT).show();
-                        } else {
-                            getParentDiceFragment().mLastNumber = num;
-                            getParentDiceFragment().rollDie(num);
-                        }
-
-                        dismiss();
-                    }
+        MaterialDialog.Builder adb = new MaterialDialog.Builder(getParentDiceFragment().mActivity);
+        adb.customView(v, false);
+        adb.title(getResources().getString(R.string.dice_choose_sides));
+        adb.positiveText(getParentDiceFragment().mActivity.getResources().getString(R.string.dialog_ok));
+        adb.onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if (txtNumber.getText() == null || txtNumber.getText().toString().isEmpty()) {
+                    return;
                 }
-        );
-        return adb.create();
+
+                int num;
+
+                try {
+                    num = Integer.parseInt(txtNumber.getText().toString());
+                } catch (NumberFormatException e) {
+                    ToastWrapper.makeText(getParentDiceFragment().mActivity, getResources().getString(R.string.dice_num_too_large),
+                            ToastWrapper.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (num < 1) {
+                    ToastWrapper.makeText(getParentDiceFragment().mActivity, getResources().getString(R.string.dice_postive),
+                            ToastWrapper.LENGTH_SHORT).show();
+                } else {
+                    getParentDiceFragment().mLastNumber = num;
+                    getParentDiceFragment().rollDie(num);
+                }
+
+                dismiss();
+            }
+        });
+
+        return adb.build();
     }
 }

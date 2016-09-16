@@ -58,7 +58,7 @@ class RulesParser {
 
         try {
             this.mInputStream = FamiliarActivity.getHttpInputStream(SOURCE, logWriter);
-            if(this.mInputStream == null) {
+            if (this.mInputStream == null) {
                 throw new IOException("No Stream");
             }
             this.mBufferedReader = new BufferedReader(new InputStreamReader(mInputStream));

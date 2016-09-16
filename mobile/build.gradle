@@ -40,7 +40,7 @@ android {
             }
         }
         foss {
-            versionName "3.3.1-foss"
+            versionName "3.3.3-foss"
         }
     }
 }
@@ -51,13 +51,13 @@ dependencies {
     compile 'cz.msebera.android:httpclient:4.4.1.2'
     compile 'com.octo.android.robospice:robospice:1.4.14'
     compile 'com.octo.android.robospice:robospice-cache:1.4.14'
-    compile 'com.android.support:support-v4:24.2.0'
-    compile 'com.android.support:support-v13:24.2.0'
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:support-v13:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
-    compile 'com.jpardogo.materialtabstrip:library:1.1.0'
-    compile 'com.code-troopers.betterpickers:library:3.0.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.1'
+    compile 'com.jpardogo.materialtabstrip:library:1.1.1'
+    compile 'com.code-troopers.betterpickers:library:3.0.1'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
 }

@@ -2,16 +2,17 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
@@ -265,12 +266,13 @@ public class WishlistHelpers {
         DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
 
         /* make and return the actual dialog */
-        return new AlertDialogWrapper.Builder(ctx)
-                .setTitle(mCardName + " " + fragment.getString(R.string.wishlist_edit_dialog_title_end))
-                .setView(customView)
-                .setPositiveButton(fragment.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+        return new MaterialDialog.Builder(ctx)
+                .title(mCardName + " " + fragment.getString(R.string.wishlist_edit_dialog_title_end))
+                .customView(customView, false)
+                .positiveText(fragment.getString(R.string.dialog_ok))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                         /* Read the wishlist */
                         ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
@@ -323,14 +325,8 @@ public class WishlistHelpers {
                         fragment.onWishlistChanged(mCardName);
                     }
                 })
-                .setNegativeButton(fragment.getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        /* Abort! */
-                        dialogInterface.dismiss();
-                    }
-                })
-                .create();
+                .negativeText(fragment.getString(R.string.dialog_cancel))
+                .build();
     }
 
     /**

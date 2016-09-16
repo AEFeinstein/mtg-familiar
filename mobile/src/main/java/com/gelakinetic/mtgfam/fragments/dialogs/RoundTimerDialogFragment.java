@@ -1,12 +1,13 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,11 +43,13 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                 chkTen.setChecked(ten);
                 chkFive.setChecked(five);
 
-                return new AlertDialogWrapper.Builder(getActivity())
-                        .setView(v).setTitle(R.string.timer_warning_dialog_title)
-                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-
-                            public void onClick(DialogInterface dialog, int which) {
+                return new MaterialDialog.Builder(getActivity())
+                        .customView(v, false)
+                        .title(R.string.timer_warning_dialog_title)
+                        .positiveText(R.string.dialog_ok)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 getFamiliarActivity().mPreferenceAdapter
                                         .setFifteenMinutePref(chkFifteen.isChecked());
                                 getFamiliarActivity().mPreferenceAdapter
@@ -55,7 +58,7 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                                         .setFiveMinutePref(chkFive.isChecked());
                             }
                         })
-                        .create();
+                        .build();
             }
             default: {
                 return DontShowDialog();

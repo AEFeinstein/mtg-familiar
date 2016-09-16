@@ -65,7 +65,6 @@ import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
-import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
@@ -79,6 +78,7 @@ import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.fragments.SearchViewFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
@@ -243,7 +243,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
                 if (mUpdatingRoundTimer) {
                     ActionBar actionBar = getSupportActionBar();
-                    if(actionBar != null) {
+                    if (actionBar != null) {
                         actionBar.setTitle(timeLeftStr);
                     }
                 }
@@ -847,7 +847,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         } else {
                             try {
                                 /* Don't clear the fragment stack for internal links (thanks Meld cards) */
-                                if(data.getPathSegments().contains("internal")) {
+                                if (data.getPathSegments().contains("internal")) {
                                     shouldClearFragmentStack = false;
                                 }
                                 cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(data.getLastPathSegment()),

@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -12,7 +11,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
@@ -108,10 +107,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 ListView lv = new ListView(getActivity());
                 lv.setAdapter(adapter);
 
-                AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
-                builder.setView(lv);
-                builder.setTitle(R.string.card_view_legality);
-                return builder.create();
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+                builder.customView(lv, true);
+                builder.title(R.string.card_view_legality);
+                return builder.build();
             }
             case GET_PRICE: {
                 if (getCardViewFragment().mPriceInfo == null) {
@@ -141,10 +140,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getCardViewFragment().mPriceInfo.mUrl + "\">" +
                         getString(R.string.card_view_price_dialog_link) + "</a>"));
 
-                AlertDialogWrapper.Builder adb = new AlertDialogWrapper.Builder(getActivity());
-                adb.setView(v);
-                adb.setTitle(R.string.card_view_price_dialog_title);
-                return adb.create();
+                MaterialDialog.Builder adb = new MaterialDialog.Builder(getActivity());
+                adb.customView(v, false);
+                adb.title(R.string.card_view_price_dialog_title);
+                return adb.build();
             }
             case CHANGE_SET: {
                 final String[] aSets = getCardViewFragment().mPrintings.toArray(new String[getCardViewFragment().mPrintings.size()]);
@@ -156,14 +155,16 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         return DontShowDialog();
                     }
                 }
-                AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
-                builder.setTitle(R.string.card_view_set_dialog_title);
-                builder.setItems(aSets, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int item) {
-                        getCardViewFragment().setInfoFromID(aIds[item]);
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+                builder.title(R.string.card_view_set_dialog_title);
+                builder.items(aSets);
+                builder.itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                        getCardViewFragment().setInfoFromID(aIds[position]);
                     }
                 });
-                return builder.create();
+                return builder.build();
             }
             case CARD_RULINGS: {
                 if (getCardViewFragment().mRulingsArrayList == null) {
@@ -197,10 +198,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 getCardViewFragment().mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
                 ));
 
-                AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
-                builder.setTitle(R.string.card_view_rulings_dialog_title);
-                builder.setView(v);
-                return builder.create();
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+                builder.title(R.string.card_view_rulings_dialog_title);
+                builder.customView(v, false);
+                return builder.build();
             }
             case WISH_LIST_COUNTS: {
                 Dialog dialog = WishlistHelpers.getDialog(getCardViewFragment().mCardName, getCardViewFragment(), false);

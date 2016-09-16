@@ -2,14 +2,15 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.ProfileFragment;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -55,11 +56,12 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
 
                 dciEditText.setText(strDCI);
 
-                return new AlertDialogWrapper.Builder(getActivity())
-                        .setTitle(R.string.profile_update_dci_dialog_title)
-                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                return new MaterialDialog.Builder(getActivity())
+                        .title(R.string.profile_update_dci_dialog_title)
+                        .positiveText(R.string.dialog_ok)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 String strNumber = dciEditText.getText().toString();
 
                                 if (strNumber.isEmpty()) {
@@ -76,15 +78,16 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                                 dismiss();
                             }
                         })
-                        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                        .negativeText(R.string.dialog_cancel)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 getParentProfileFragment().checkDCINumber();
                                 dismiss();
                             }
                         })
-                        .setView(view)
-                        .create();
+                        .customView(view, false)
+                        .build();
             }
             default: {
                 return DontShowDialog();

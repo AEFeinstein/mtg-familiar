@@ -170,7 +170,6 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
     /**
      * Remove any showing dialogs, and show the requested one
-     *
      */
     private void showDialog(int id) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any

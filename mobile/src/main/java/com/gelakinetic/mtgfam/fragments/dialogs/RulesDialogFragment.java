@@ -1,14 +1,15 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.RulesFragment;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -77,11 +78,13 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                     DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 }
 
-                Dialog dialog = new AlertDialogWrapper.Builder(getActivity())
-                        .setTitle(title)
-                        .setView(textEntryView)
-                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
+                Dialog dialog = new MaterialDialog.Builder(getActivity())
+                        .title(title)
+                        .customView(textEntryView, false)
+                        .positiveText(R.string.dialog_ok)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 if (nameInput.getText() == null) {
                                     dialog.dismiss();
                                     return;
@@ -98,12 +101,8 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                                 }
                             }
                         })
-                        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .create();
+                        .negativeText(R.string.dialog_cancel)
+                        .build();
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }

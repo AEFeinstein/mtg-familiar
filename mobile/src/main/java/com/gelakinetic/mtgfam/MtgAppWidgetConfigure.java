@@ -7,11 +7,14 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +25,7 @@ public class MtgAppWidgetConfigure extends Activity {
 
     private PreferenceAdapter mPrefAdapter;
     private String[] mLaunchers;
-    private boolean[] mSelected;
+    private Integer[] mSelectedIndices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,29 +37,37 @@ public class MtgAppWidgetConfigure extends Activity {
 
         /* Figure out which ones are already selected */
         Set<String> defaults = mPrefAdapter.getWidgetButtons();
-        mSelected = new boolean[mLaunchers.length];
+        ArrayList<Integer> selectedIndicesTmp = new ArrayList<>();
         for (int i = 0; i < mLaunchers.length; i++) {
-            mSelected[i] = defaults.contains(mLaunchers[i]);
+            if (defaults.contains(mLaunchers[i])) {
+                selectedIndicesTmp.add(i);
+            }
         }
+        mSelectedIndices = new Integer[selectedIndicesTmp.size()];
+        selectedIndicesTmp.toArray(mSelectedIndices);
 
         /* Build the dialog */
-        AlertDialogWrapper.Builder adb = new AlertDialogWrapper.Builder(this);
+        MaterialDialog.Builder adb = new MaterialDialog.Builder(this);
         adb
-                .setMultiChoiceItems(mLaunchers, mSelected, new DialogInterface.OnMultiChoiceClickListener() {
+                .items(mLaunchers)
+                .alwaysCallMultiChoiceCallback()
+                .itemsCallbackMultiChoice(mSelectedIndices, new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                        mSelected[i] = b;
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        mSelectedIndices = which;
+                        return true;
                     }
                 })
-                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                .positiveText(R.string.dialog_ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         finishAndUpdateWidget();
                     }
                 })
-                .setTitle(R.string.pref_widget_mode_title);
+                .title(R.string.pref_widget_mode_title);
 
-        Dialog d = adb.create();
+        Dialog d = adb.build();
         /* Set the onDismissListener to finish the activity and refresh the widget */
         d.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -73,10 +84,8 @@ public class MtgAppWidgetConfigure extends Activity {
     private void finishAndUpdateWidget() {
         /* Set the preferences from the dialog */
         HashSet<String> selectedButtons = new HashSet<>();
-        for (int i = 0; i < mSelected.length; i++) {
-            if (mSelected[i]) {
-                selectedButtons.add(mLaunchers[i]);
-            }
+        for (Integer mSelectedIndex : mSelectedIndices) {
+            selectedButtons.add(mLaunchers[mSelectedIndex]);
         }
         mPrefAdapter.setWidgetButtons(selectedButtons);
 

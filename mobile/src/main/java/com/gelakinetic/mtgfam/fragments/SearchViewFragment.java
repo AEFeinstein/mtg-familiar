@@ -42,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,12 +65,12 @@ public class SearchViewFragment extends FamiliarFragment {
 
     /* Spinner Data Structures */
     public String[] mSetNames;
-    public boolean[] mSetChecked;
+    public int[] mSetCheckedIndices;
     private String[] mSetSymbols;
     public String[] mFormatNames;
     private char[] mRarityCodes;
     public String[] mRarityNames;
-    public boolean[] mRarityChecked;
+    public int[] mRarityCheckedIndices;
     public int mSelectedFormat;
 
     /* Autocomplete data structures */
@@ -133,10 +134,10 @@ public class SearchViewFragment extends FamiliarFragment {
 
         if (savedInstanceState != null) {
             mSelectedFormat = savedInstanceState.getInt(SAVED_FORMAT_KEY);
-            mRarityChecked = savedInstanceState.getBooleanArray(SAVED_RARITY_KEY);
-            mSetChecked = savedInstanceState.getBooleanArray(SAVED_SET_KEY);
+            mRarityCheckedIndices = savedInstanceState.getIntArray(SAVED_RARITY_KEY);
+            mSetCheckedIndices = savedInstanceState.getIntArray(SAVED_SET_KEY);
         } else {
-            mRarityChecked = new boolean[i];
+            mRarityCheckedIndices = new int[0];
             mSelectedFormat = -1;
         }
 
@@ -273,11 +274,8 @@ public class SearchViewFragment extends FamiliarFragment {
                         mSetSymbols = new String[setCursor.getCount()];
 
                         /* If this wasn't persisted, create it new */
-                        if (mSetChecked == null) {
-                            mSetChecked = new boolean[setCursor.getCount()];
-                            for (int i = 0; i < mSetChecked.length; i++) {
-                                mSetChecked[i] = false;
-                            }
+                        if (mSetCheckedIndices == null) {
+                            mSetCheckedIndices = new int[0];
                         }
 
                         for (int i = 0; i < setCursor.getCount(); i++) {
@@ -412,8 +410,8 @@ public class SearchViewFragment extends FamiliarFragment {
         super.onSaveInstanceState(outState);
         if (outState != null) {
             outState.putInt(SAVED_FORMAT_KEY, mSelectedFormat);
-            outState.putBooleanArray(SAVED_RARITY_KEY, mRarityChecked);
-            outState.putBooleanArray(SAVED_SET_KEY, mSetChecked);
+            outState.putIntArray(SAVED_RARITY_KEY, mRarityCheckedIndices);
+            outState.putIntArray(SAVED_SET_KEY, mSetCheckedIndices);
         }
     }
 
@@ -515,46 +513,39 @@ public class SearchViewFragment extends FamiliarFragment {
 
         if (mCheckboxWIdentity.isChecked()) {
             searchCriteria.colorIdentity += "W";
-        }
-        else {
+        } else {
             searchCriteria.colorIdentity += "w";
         }
         if (mCheckboxUIdentity.isChecked()) {
             searchCriteria.colorIdentity += "U";
-        }
-        else {
+        } else {
             searchCriteria.colorIdentity += "u";
         }
         if (mCheckboxBIdentity.isChecked()) {
             searchCriteria.colorIdentity += "B";
-        }
-        else {
+        } else {
             searchCriteria.colorIdentity += "b";
         }
         if (mCheckboxRIdentity.isChecked()) {
             searchCriteria.colorIdentity += "R";
-        }
-        else {
+        } else {
             searchCriteria.colorIdentity += "r";
         }
         if (mCheckboxGIdentity.isChecked()) {
             searchCriteria.colorIdentity += "G";
-        }
-        else {
+        } else {
             searchCriteria.colorIdentity += "g";
         }
         searchCriteria.colorIdentityLogic = mColorIdentitySpinner.getSelectedItemPosition();
 
         searchCriteria.set = null;
 
-        if (mSetChecked != null) {
-            for (int i = 0; i < mSetChecked.length; i++) {
-                if (mSetChecked[i]) {
-                    if (searchCriteria.set == null) {
-                        searchCriteria.set = mSetSymbols[i];
-                    } else {
-                        searchCriteria.set += "-" + mSetSymbols[i];
-                    }
+        if (mSetCheckedIndices != null) {
+            for (int index : mSetCheckedIndices) {
+                if (searchCriteria.set == null) {
+                    searchCriteria.set = mSetSymbols[index];
+                } else {
+                    searchCriteria.set += "-" + mSetSymbols[index];
                 }
             }
         }
@@ -565,13 +556,11 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         searchCriteria.rarity = null;
-        for (int i = 0; i < mRarityChecked.length; i++) {
-            if (mRarityChecked[i]) {
-                if (searchCriteria.rarity == null) {
-                    searchCriteria.rarity = mRarityCodes[i] + "";
-                } else {
-                    searchCriteria.rarity += mRarityCodes[i];
-                }
+        for (int index : mRarityCheckedIndices) {
+            if (searchCriteria.rarity == null) {
+                searchCriteria.rarity = mRarityCodes[index] + "";
+            } else {
+                searchCriteria.rarity += mRarityCodes[index];
             }
         }
 
@@ -685,15 +674,11 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
 
-        if (mSetChecked != null) {
-            for (int i = 0; i < mSetChecked.length; i++) {
-                mSetChecked[i] = false;
-            }
+        if (mSetCheckedIndices != null) {
+            mSetCheckedIndices = new int[0];
         }
         mSelectedFormat = -1;
-        for (int i = 0; i < mRarityChecked.length; i++) {
-            mRarityChecked[i] = false;
-        }
+        mRarityCheckedIndices = new int[0];
         this.removeDialog(getFragmentManager());
 
         checkDialogButtonColors();
@@ -738,19 +723,23 @@ public class SearchViewFragment extends FamiliarFragment {
             mFlavorField.setText(criteria.flavor);
             mCollectorsNumberField.setText(criteria.collectorsNumber);
 
-            mCheckboxW.setChecked(criteria.color.contains("W"));
-            mCheckboxU.setChecked(criteria.color.contains("U"));
-            mCheckboxB.setChecked(criteria.color.contains("B"));
-            mCheckboxR.setChecked(criteria.color.contains("R"));
-            mCheckboxG.setChecked(criteria.color.contains("G"));
-            mCheckboxL.setChecked(criteria.color.contains("L"));
+            if (criteria.color != null) {
+                mCheckboxW.setChecked(criteria.color.contains("W"));
+                mCheckboxU.setChecked(criteria.color.contains("U"));
+                mCheckboxB.setChecked(criteria.color.contains("B"));
+                mCheckboxR.setChecked(criteria.color.contains("R"));
+                mCheckboxG.setChecked(criteria.color.contains("G"));
+                mCheckboxL.setChecked(criteria.color.contains("L"));
+            }
             mColorSpinner.setSelection(criteria.colorLogic);
 
-            mCheckboxWIdentity.setChecked(criteria.colorIdentity.contains("W"));
-            mCheckboxUIdentity.setChecked(criteria.colorIdentity.contains("U"));
-            mCheckboxBIdentity.setChecked(criteria.colorIdentity.contains("B"));
-            mCheckboxRIdentity.setChecked(criteria.colorIdentity.contains("R"));
-            mCheckboxGIdentity.setChecked(criteria.colorIdentity.contains("G"));
+            if (criteria.colorIdentity != null) {
+                mCheckboxWIdentity.setChecked(criteria.colorIdentity.contains("W"));
+                mCheckboxUIdentity.setChecked(criteria.colorIdentity.contains("U"));
+                mCheckboxBIdentity.setChecked(criteria.colorIdentity.contains("B"));
+                mCheckboxRIdentity.setChecked(criteria.colorIdentity.contains("R"));
+                mCheckboxGIdentity.setChecked(criteria.colorIdentity.contains("G"));
+            }
             mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
 
             mTextSpinner.setSelection(criteria.textLogic);
@@ -805,25 +794,48 @@ public class SearchViewFragment extends FamiliarFragment {
             mCmcChoice.setSelection(Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
                     .indexOf(String.valueOf(criteria.cmc)));
 
-            if (mSetChecked != null) {
-                if (criteria.set != null) {
-                    List<String> sets = Arrays.asList(criteria.set.split("-"));
-                    for (int i = 0; i < mSetChecked.length; i++)
-                        mSetChecked[i] = sets.contains(mSetSymbols[i]);
-                } else {
-                    for (int i = 0; i < mSetChecked.length; i++) {
-                        mSetChecked[i] = false;
+            if (criteria.set != null) {
+                /* Get a list of the persisted sets */
+                List<String> sets = Arrays.asList(criteria.set.split("-"));
+                ArrayList<Integer> setCheckedIndicesTmp = new ArrayList<>();
+                /* For each set */
+                for (String set : sets) {
+                    for (int i = 0; i < mSetSymbols.length; i++) {
+                        /* Find the index of that set */
+                        if (mSetSymbols[i].equals(set)) {
+                            /* And add it to the selected indices */
+                            setCheckedIndicesTmp.add(i);
+                            break;
+                        }
                     }
                 }
+                /* Copy over the indices */
+                mSetCheckedIndices = new int[sets.size()];
+                for (int i = 0; i < setCheckedIndicesTmp.size(); i++) {
+                    mSetCheckedIndices[i] = setCheckedIndicesTmp.get(i);
+                }
+            } else {
+                mSetCheckedIndices = new int[0];
             }
 
             if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
             }
 
-            for (int i = 0; i < mRarityChecked.length; i++) {
-                mRarityChecked[i] = (criteria.rarity != null && criteria.rarity
-                        .contains(mRarityNames[i].charAt(0) + ""));
+            if (criteria.rarity != null) {
+                ArrayList<Integer> rarityCheckedIndicesTmp = new ArrayList<>();
+                /* For each rarity */
+                for (int i = 0; i < mRarityNames.length; i++) {
+                    /* If the persisted options contain that rarity */
+                    if (criteria.rarity.contains(mRarityNames[i].charAt(0) + "")) {
+                        /* Save that index */
+                        rarityCheckedIndicesTmp.add(i);
+                    }
+                }
+                mRarityCheckedIndices = new int[rarityCheckedIndicesTmp.size()];
+                for (int i = 0; i < mRarityCheckedIndices.length; i++) {
+                    mRarityCheckedIndices[i] = rarityCheckedIndicesTmp.get(i);
+                }
             }
 
             this.removeDialog(getFragmentManager());
@@ -894,23 +906,19 @@ public class SearchViewFragment extends FamiliarFragment {
         mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
         mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
 
-        if (mSetChecked == null || mRarityChecked == null) {
+        if (mSetCheckedIndices == null || mRarityCheckedIndices == null) {
             return;
         }
 
         /* Set the selected color, if necessary */
-        for (boolean aSetChecked : mSetChecked) {
-            if (aSetChecked) {
-                mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
-            }
+        if (mSetCheckedIndices.length > 0) {
+            mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
         if (mSelectedFormat != -1) {
             mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
-        for (boolean aRarityChecked : mRarityChecked) {
-            if (aRarityChecked) {
-                mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
-            }
+        if (mRarityCheckedIndices.length > 0) {
+            mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
     }
 

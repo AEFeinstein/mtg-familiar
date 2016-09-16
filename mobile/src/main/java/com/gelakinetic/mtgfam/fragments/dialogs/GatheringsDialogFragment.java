@@ -1,14 +1,15 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.GatheringsFragment;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -75,11 +76,13 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                     }
                 });
 
-                Dialog dialog = new AlertDialogWrapper.Builder(this.getActivity())
-                        .setTitle(R.string.gathering_enter_name)
-                        .setView(textEntryView)
-                        .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
+                Dialog dialog = new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.gathering_enter_name)
+                        .customView(textEntryView, false)
+                        .positiveText(R.string.dialog_ok)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 assert nameInput.getText() != null;
                                 String gatheringName = nameInput.getText().toString().trim();
                                 if (gatheringName.length() <= 0) {
@@ -110,31 +113,27 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                                 }
                             }
                         })
-                        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        })
-                        .create();
+                        .negativeText(R.string.dialog_cancel)
+                        .build();
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }
             case DIALOG_GATHERING_EXIST: {
                         /* The user tried to save, and the gathering already exists. Prompt to overwrite */
-                return new AlertDialogWrapper.Builder(this.getActivity())
-                        .setTitle(R.string.gathering_dialog_overwrite_title)
-                        .setMessage(R.string.gathering_dialog_overwrite_text)
-                        .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.gathering_dialog_overwrite_title)
+                        .content(R.string.gathering_dialog_overwrite_text)
+                        .positiveText(R.string.dialog_yes)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 GatheringsIO.DeleteGatheringByName(getParentGatheringsFragment().mProposedGathering,
                                         getActivity().getFilesDir(), getActivity());
                                 getParentGatheringsFragment().SaveGathering(getParentGatheringsFragment().mProposedGathering);
                             }
                         })
-                        .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        })
-                        .create();
+                        .negativeText(R.string.dialog_cancel)
+                        .build();
             }
             case DIALOG_DELETE_GATHERING: {
                         /* Show all gatherings, and delete the selected one */
@@ -152,15 +151,18 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             getActivity().getFilesDir());
                 }
 
-                return new AlertDialogWrapper.Builder(getActivity())
-                        .setTitle(R.string.gathering_delete)
-                        .setItems(dProperNames, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int item) {
-                                GatheringsIO.DeleteGathering(dfGatherings[item], getActivity().getFilesDir(),
+                return new MaterialDialog.Builder(getActivity())
+                        .title(R.string.gathering_delete)
+                        .items(dProperNames)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                                GatheringsIO.DeleteGathering(dfGatherings[position], getActivity().getFilesDir(),
                                         getActivity());
                                 getActivity().supportInvalidateOptionsMenu();
                             }
-                        }).create();
+                        })
+                        .build();
             }
             case DIALOG_REMOVE_PLAYER: {
                         /* Remove a player from the Gathering and linear layout */
@@ -178,15 +180,17 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                return new AlertDialogWrapper.Builder(getActivity())
-                        .setTitle(R.string.gathering_remove_player)
-                        .setItems(aNames, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int item) {
-                                getParentGatheringsFragment().mLinearLayout.removeViewAt(item);
+                return new MaterialDialog.Builder(getActivity())
+                        .title(R.string.gathering_remove_player)
+                        .items(aNames)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                                getParentGatheringsFragment().mLinearLayout.removeViewAt(position);
                                 getActivity().supportInvalidateOptionsMenu();
                             }
                         })
-                        .create();
+                        .build();
             }
             case DIALOG_LOAD_GATHERING: {
                         /* Load a gathering, if there is a gathering to load */
@@ -204,16 +208,18 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             getActivity().getFilesDir());
                 }
 
-                return new AlertDialogWrapper.Builder(getActivity())
-                        .setTitle(R.string.gathering_load)
-                        .setItems(properNames, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int item) {
+                return new MaterialDialog.Builder(getActivity())
+                        .title(R.string.gathering_load)
+                        .items(properNames)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                                 getParentGatheringsFragment().mLinearLayout.removeAllViews();
                                 getParentGatheringsFragment().mLargestPlayerNumber = 0;
-                                Gathering gathering = GatheringsIO.ReadGatheringXML(fGatherings[item],
+                                Gathering gathering = GatheringsIO.ReadGatheringXML(fGatherings[position],
                                         getActivity().getFilesDir());
 
-                                getParentGatheringsFragment().mCurrentGatheringName = GatheringsIO.ReadGatheringNameFromXML(fGatherings[item],
+                                getParentGatheringsFragment().mCurrentGatheringName = GatheringsIO.ReadGatheringNameFromXML(fGatherings[position],
                                         getActivity().getFilesDir());
                                 getParentGatheringsFragment().mDisplayModeSpinner.setSelection(gathering.mDisplayMode);
                                 ArrayList<GatheringsPlayerData> players = gathering.mPlayerList;
@@ -222,7 +228,8 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                                 }
                                 getActivity().supportInvalidateOptionsMenu();
                             }
-                        }).create();
+                        })
+                        .build();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

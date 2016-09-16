@@ -1049,15 +1049,15 @@ public class CardDbAdapter {
          * Color Identity Filter
          * If a color is selected, it's upper case. Otherwise it's lower case
          */
-        if(!(criteria.colorIdentity.equals("wubrg"))) {
-            switch(criteria.colorIdentityLogic) {
+        if (!(criteria.colorIdentity.equals("wubrg"))) {
+            switch (criteria.colorIdentityLogic) {
                 case 0: {
                     /* search_May_include_any_colors */
                     boolean first = true;
                     statement += " AND (";
-                    for(int i = 0; i < criteria.colorIdentity.length(); i++) {
-                        if(Character.isLowerCase(criteria.colorIdentity.charAt(i))) {
-                            if(!first) {
+                    for (int i = 0; i < criteria.colorIdentity.length(); i++) {
+                        if (Character.isLowerCase(criteria.colorIdentity.charAt(i))) {
+                            if (!first) {
                                 statement += " AND ";
                             }
                             statement += "(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
@@ -1071,8 +1071,8 @@ public class CardDbAdapter {
                 case 1: {
                     /* search_Exact_all_selected_and_no_others */
                     String colorIdentity = "";
-                    for(int i = 0; i < criteria.colorIdentity.length(); i++) {
-                        if(Character.isUpperCase(criteria.colorIdentity.charAt(i))) {
+                    for (int i = 0; i < criteria.colorIdentity.length(); i++) {
+                        if (Character.isUpperCase(criteria.colorIdentity.charAt(i))) {
                             colorIdentity += criteria.colorIdentity.charAt(i);
                         }
                     }
@@ -1173,7 +1173,7 @@ public class CardDbAdapter {
                         + " ON " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + (DATABASE_TABLE_CARDS + "_B") + "." + KEY_NAME
                         + " JOIN " + DATABASE_TABLE_LEGAL_SETS
                         + " ON " + (DATABASE_TABLE_CARDS + "_B") + "." + KEY_SET + " = " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET
-                        + " AND " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT +  "='" + criteria.format + "')";
+                        + " AND " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='" + criteria.format + "')";
             } else {
                 /* Otherwise filter silver bordered cards, giant cards */
                 statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UNH'" +
@@ -1727,8 +1727,8 @@ public class CardDbAdapter {
      * Add "can be foil" information to DATABASE_TABLE_SETS
      *
      * @param canBeFoil "true" or "false", whether or not this set has foil cards
-     * @param code The set code to add the info to
-     * @param mDb  The database to add the info to
+     * @param code      The set code to add the info to
+     * @param mDb       The database to add the info to
      */
     public static void addFoilInfo(boolean canBeFoil, String code, SQLiteDatabase mDb) {
         ContentValues args = new ContentValues();
@@ -1901,10 +1901,9 @@ public class CardDbAdapter {
                             " WHERE " + KEY_CODE + " = \"" + setCode + "\"";
             Cursor c = mDb.rawQuery(sql, null);
             c.moveToFirst();
-            if(0 == c.getInt(c.getColumnIndex(KEY_CAN_BE_FOIL))) {
+            if (0 == c.getInt(c.getColumnIndex(KEY_CAN_BE_FOIL))) {
                 canBeFoilReturn = false;
-            }
-            else {
+            } else {
                 canBeFoilReturn = true;
             }
             c.close();
@@ -1930,7 +1929,7 @@ public class CardDbAdapter {
                             " WHERE " + KEY_CAN_BE_FOIL + " = 1";
             Cursor c = mDb.rawQuery(sql, null);
             c.moveToFirst();
-            while(!c.isAfterLast()) {
+            while (!c.isAfterLast()) {
                 foilSets.add(c.getString(c.getColumnIndex(KEY_CODE)));
                 c.moveToNext();
             }

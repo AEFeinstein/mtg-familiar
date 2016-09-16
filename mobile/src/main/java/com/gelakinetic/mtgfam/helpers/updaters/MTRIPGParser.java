@@ -109,7 +109,7 @@ class MTRIPGParser {
                     throw new FileNotFoundException("Invalid switch"); /* handled below */
             }
             InputStream stream = FamiliarActivity.getHttpInputStream(urlString, logWriter);
-            if(stream != null) {
+            if (stream != null) {
                 updated = parseDocument(mode, stream);
             }
         } catch (IOException e) {
