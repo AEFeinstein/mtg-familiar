@@ -96,6 +96,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private CheckBox mCheckboxBIdentity;
     private CheckBox mCheckboxRIdentity;
     private CheckBox mCheckboxGIdentity;
+    private CheckBox mCheckboxLIdentity;
     private Spinner mColorIdentitySpinner;
     private Button mSetButton;
     private Button mFormatButton;
@@ -194,6 +195,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxBIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxB_identity);
         mCheckboxRIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxR_identity);
         mCheckboxGIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxG_identity);
+        mCheckboxLIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxL_identity);
 
         mColorSpinner = (Spinner) myFragmentView.findViewById(R.id.colorlogic);
         mColorIdentitySpinner = (Spinner) myFragmentView.findViewById(R.id.coloridentitylogic);
@@ -536,6 +538,11 @@ public class SearchViewFragment extends FamiliarFragment {
         } else {
             searchCriteria.colorIdentity += "g";
         }
+        if (mCheckboxLIdentity.isChecked()) {
+            searchCriteria.colorIdentity += "L";
+        } else {
+            searchCriteria.colorIdentity += "l";
+        }
         searchCriteria.colorIdentityLogic = mColorIdentitySpinner.getSelectedItemPosition();
 
         searchCriteria.set = null;
@@ -660,6 +667,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxBIdentity.setChecked(false);
         mCheckboxRIdentity.setChecked(false);
         mCheckboxGIdentity.setChecked(false);
+        mCheckboxLIdentity.setChecked(false);
         mColorSpinner.setSelection(0);
 
         mTextSpinner.setSelection(0);
@@ -739,6 +747,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 mCheckboxBIdentity.setChecked(criteria.colorIdentity.contains("B"));
                 mCheckboxRIdentity.setChecked(criteria.colorIdentity.contains("R"));
                 mCheckboxGIdentity.setChecked(criteria.colorIdentity.contains("G"));
+                mCheckboxLIdentity.setChecked(criteria.colorIdentity.contains("L"));
             }
             mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
 

@@ -1049,7 +1049,7 @@ public class CardDbAdapter {
          * Color Identity Filter
          * If a color is selected, it's upper case. Otherwise it's lower case
          */
-        if (!(criteria.colorIdentity.equals("wubrg"))) {
+        if (!(criteria.colorIdentity.equals("wubrgl"))) {
             switch (criteria.colorIdentityLogic) {
                 case 0: {
                     /* search_May_include_any_colors */
@@ -1060,8 +1060,14 @@ public class CardDbAdapter {
                             if (!first) {
                                 statement += " AND ";
                             }
-                            statement += "(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
-                                    " NOT LIKE \"%" + criteria.colorIdentity.toUpperCase().charAt(i) + "%\")";
+                            if (criteria.colorIdentity.charAt(i) == 'l') {
+                                /* If colorless isn't selected, don't allow empty identities */
+                                statement += "(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
+                                        " NOT LIKE \"\")";
+                            } else {
+                                statement += "(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
+                                        " NOT LIKE \"%" + criteria.colorIdentity.toUpperCase().charAt(i) + "%\")";
+                            }
                             first = false;
                         }
                     }
@@ -1073,7 +1079,12 @@ public class CardDbAdapter {
                     String colorIdentity = "";
                     for (int i = 0; i < criteria.colorIdentity.length(); i++) {
                         if (Character.isUpperCase(criteria.colorIdentity.charAt(i))) {
-                            colorIdentity += criteria.colorIdentity.charAt(i);
+                            if (criteria.colorIdentity.charAt(i) == 'L') {
+                                /* Colorless identity is the empty string */
+                                statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " = \"\")";
+                            } else {
+                                colorIdentity += criteria.colorIdentity.charAt(i);
+                            }
                         }
                     }
                     statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +

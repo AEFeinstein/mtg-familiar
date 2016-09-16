@@ -330,6 +330,21 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linearLayout18"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxL_identity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:button="?attr/btn_check_l" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <Spinner

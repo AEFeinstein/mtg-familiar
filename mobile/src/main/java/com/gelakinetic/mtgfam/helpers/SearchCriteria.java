@@ -29,6 +29,6 @@ public class SearchCriteria implements Serializable {
     public int textLogic = 0;
     public int setLogic = CardDbAdapter.MOST_RECENT_PRINTING;
     public String collectorsNumber = null;
-    public String colorIdentity = "wubrg";
+    public String colorIdentity = "wubrgl";
     public int colorIdentityLogic = 0;
 }
