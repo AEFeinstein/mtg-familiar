@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,7 +118,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
     /**
      * A simple pager adapter that holds CardViewFragments
      */
-    private class CardViewPagerAdapter extends FragmentStatePagerAdapter {
+    private class CardViewPagerAdapter extends FragmentPagerAdapter {
         final long[] mCardIds;
         private CardViewFragment mCurrentFragment;
 
