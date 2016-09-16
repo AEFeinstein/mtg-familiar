@@ -817,6 +817,8 @@ public class WishlistFragment extends FamiliarFragment {
                 convertView.findViewById(R.id.cardslash).setVisibility(View.GONE);
                 convertView.findViewById(R.id.cardt).setVisibility(View.GONE);
             }
+            /* Rarity is displayed on the expansion lines */
+            convertView.findViewById(R.id.rarity).setVisibility(View.GONE);
 
             /* List all the sets and wishlist values for this card */
             for (IndividualSetInfo isi : info.mInfo) {
@@ -851,7 +853,8 @@ public class WishlistFragment extends FamiliarFragment {
                         color = R.attr.color_text;
                         break;
                 }
-                ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(isi.mSet);
+                String setAndRarity = isi.mSet + " (" + isi.mRarity + ")";
+                ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(setAndRarity);
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(getResources()
                         .getColor(getResourceIdFromAttr(color)));
 

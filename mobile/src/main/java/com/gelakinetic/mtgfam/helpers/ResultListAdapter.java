@@ -107,6 +107,7 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
         boolean hideAbility = true;
         boolean hidePT = true;
         boolean hideLoyalty = true;
+        boolean hideRarity = true;
 
         /* make sure these elements are showing (views get recycled) */
         view.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
@@ -132,27 +133,38 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
                     break;
                 }
                 case CardDbAdapter.KEY_SET: {
+                    char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
                     String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
                     hideSet = false;
                     textField.setText(name);
-                    char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
                     switch (rarity) {
+                        case 'c':
                         case 'C':
                             textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_common)));
                             break;
+                        case 'u':
                         case 'U':
                             textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
                             break;
+                        case 'r':
                         case 'R':
                             textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_rare)));
                             break;
+                        case 'm':
                         case 'M':
                             textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_mythic)));
                             break;
+                        case 't':
                         case 'T':
                             textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
                             break;
                     }
+                    break;
+                }
+                case CardDbAdapter.KEY_RARITY: {
+                    char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
+                    textField.setText("(" + rarity + ")");
+                    hideRarity = false;
                     break;
                 }
                 case CardDbAdapter.KEY_SUPERTYPE: {
@@ -252,6 +264,9 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
             view.findViewById(R.id.cardp).setVisibility(View.GONE);
             view.findViewById(R.id.cardslash).setVisibility(View.GONE);
             view.findViewById(R.id.cardt).setVisibility(View.GONE);
+        }
+        if(hideRarity) {
+            view.findViewById(R.id.rarity).setVisibility(View.GONE);
         }
     }
 

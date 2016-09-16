@@ -87,27 +87,34 @@
             android:layout_height="wrap_content"
             android:text="Ability" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_alignParentLeft="true"
+                android:id="@+id/rarity"
+                style="@style/text.medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(R)" />
 
             <TextView
                 android:id="@+id/cardp"
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="P" />
+                android:text="P"
+                android:layout_toLeftOf="@+id/cardslash" />
 
             <TextView
                 android:id="@+id/cardslash"
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="/" />
+                android:text="/"
+                android:layout_toLeftOf="@+@id/cardt" />
 
             <TextView
                 android:id="@+id/cardt"
@@ -115,9 +122,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
-                android:text="T" />
+                android:text="T"
+                android:layout_alignParentRight="true" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

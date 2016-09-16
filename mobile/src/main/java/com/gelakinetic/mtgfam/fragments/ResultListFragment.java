@@ -287,6 +287,8 @@ public class ResultListFragment extends FamiliarFragment {
             if (getFamiliarActivity().mPreferenceAdapter.getSetPref()) {
                 fromList.add(CardDbAdapter.KEY_SET);
                 toList.add(R.id.cardset);
+                fromList.add(CardDbAdapter.KEY_RARITY);
+                toList.add(R.id.rarity);
             }
             if (getFamiliarActivity().mPreferenceAdapter.getManaCostPref()) {
                 fromList.add(CardDbAdapter.KEY_MANACOST);

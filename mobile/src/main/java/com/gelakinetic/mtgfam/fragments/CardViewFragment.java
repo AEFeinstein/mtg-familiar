@@ -113,6 +113,7 @@ public class CardViewFragment extends FamiliarFragment {
     private TextView mPowTouTextView;
     private TextView mFlavorTextView;
     private TextView mArtistTextView;
+    private TextView mNumberTextView;
     private Button mTransformButton;
     private View mTransformButtonDivider;
     private ImageView mCardImageView;
@@ -283,6 +284,7 @@ public class CardViewFragment extends FamiliarFragment {
         mAbilityTextView = (TextView) myFragmentView.findViewById(R.id.ability);
         mFlavorTextView = (TextView) myFragmentView.findViewById(R.id.flavor);
         mArtistTextView = (TextView) myFragmentView.findViewById(R.id.artist);
+        mNumberTextView = (TextView) myFragmentView.findViewById(R.id.number);
         mPowTouTextView = (TextView) myFragmentView.findViewById(R.id.pt);
         mTransformButtonDivider = myFragmentView.findViewById(R.id.transform_button_divider);
         mTransformButton = (Button) myFragmentView.findViewById(R.id.transformbutton);
@@ -299,6 +301,7 @@ public class CardViewFragment extends FamiliarFragment {
         registerForContextMenu(mPowTouTextView);
         registerForContextMenu(mFlavorTextView);
         registerForContextMenu(mArtistTextView);
+        registerForContextMenu(mNumberTextView);
 
         mCardImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -337,6 +340,7 @@ public class CardViewFragment extends FamiliarFragment {
             mAbilityTextView.setText("");
             mFlavorTextView.setText("");
             mArtistTextView.setText("");
+            mNumberTextView.setText("");
             mPowTouTextView.setText("");
             mTransformButton.setVisibility(View.GONE);
             mTransformButtonDivider.setVisibility(View.GONE);
@@ -441,9 +445,13 @@ public class CardViewFragment extends FamiliarFragment {
         mTypeTextView.setText(mCardType);
         mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
         mArtistTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
+        String numberAndRarity = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)) +
+                " (" + (char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY)) + ")";
+        mNumberTextView.setText(numberAndRarity);
 
         addToDescription(getString(R.string.search_type), CardDbAdapter.getTypeLine(cCardById));
         addToDescription(getString(R.string.search_artist), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
+        addToDescription(getString(R.string.search_collectors_number), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)));
 
         int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
         float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
@@ -721,11 +729,13 @@ public class CardViewFragment extends FamiliarFragment {
                     assert mFlavorTextView.getText() != null;
                     assert mPowTouTextView.getText() != null;
                     assert mArtistTextView.getText() != null;
+                    assert mNumberTextView.getText() != null;
 
                     copyText = mNameTextView.getText().toString() + '\n' + mCostTextView.getText().toString() + '\n' +
                             mTypeTextView.getText().toString() + '\n' + mSetTextView.getText().toString() + '\n' +
                             mAbilityTextView.getText().toString() + '\n' + mFlavorTextView.getText().toString() + '\n' +
-                            mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString();
+                            mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString() + '\n' +
+                            mNumberTextView.getText().toString();
                     break;
                 }
                 default: {
