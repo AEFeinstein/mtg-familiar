@@ -719,12 +719,25 @@ public class SearchViewFragment extends FamiliarFragment {
             oInputStream.close();
 
             mNameField.setText(criteria.name);
-            String[] type = criteria.type.split(" - ");
+            String delimiter = " - ";
+            String[] type = criteria.type.split(delimiter);
             if (type.length > 0 && type[0] != null) {
                 mSupertypeField.setText(type[0]);
             }
             if (type.length > 1 && type[1] != null) {
-                mSubtypeField.setText(type[1]);
+                /* Concatenate all strings after the first delimiter
+                 * in case there's a hyphen in the subtype
+                 */
+                String subtype = "";
+                boolean first = true;
+                for (int i = 1; i < type.length; i++) {
+                    if (!first) {
+                        subtype += delimiter;
+                    }
+                    subtype += type[i];
+                    first = false;
+                }
+                mSubtypeField.setText(subtype);
             }
             mTextField.setText(criteria.text);
             mArtistField.setText(criteria.artist);

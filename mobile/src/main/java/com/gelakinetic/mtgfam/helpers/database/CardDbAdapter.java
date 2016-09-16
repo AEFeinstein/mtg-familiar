@@ -847,10 +847,23 @@ public class CardDbAdapter {
             if (criteria.type.substring(0, 2).equals("- ")) {
                 containsSupertype = false;
             }
-            String[] split = criteria.type.split(" - ");
+            String delimiter = " - ";
+            String[] split = criteria.type.split(delimiter);
             if (split.length >= 2) {
-                supertypes = split[0].replace(" -", "");
-                subtypes = split[1].replace(" -", "");
+                supertypes = split[0];
+
+                /* Concatenate all strings after the first delimiter
+                 * in case there's a hyphen in the subtype
+                 */
+                subtypes = "";
+                boolean first = true;
+                for (int i = 1; i < split.length; i++) {
+                    if (!first) {
+                        subtypes += delimiter;
+                    }
+                    subtypes += split[i];
+                    first = false;
+                }
             } else if (containsSupertype) {
                 supertypes = criteria.type.replace(" -", "");
             } else {
@@ -1495,16 +1508,29 @@ public class CardDbAdapter {
     public static void createCard(MtgCard card, SQLiteDatabase mDb) {
         ContentValues initialValues = new ContentValues();
 
+        String delimiter = " - ";
         initialValues.put(KEY_NAME, card.name);
         initialValues.put(KEY_SET, card.set);
-        String types[] = card.type.split("\\s*-\\s*");
+        String types[] = card.type.split(delimiter);
         if (types.length > 0) {
             initialValues.put(KEY_SUPERTYPE, types[0]);
         } else {
             initialValues.put(KEY_SUPERTYPE, "");
         }
         if (types.length > 1) {
-            initialValues.put(KEY_SUBTYPE, types[1]);
+            /* Concatenate all strings after the first delimiter
+             * in case there's a hyphen in the subtype
+             */
+            String subtype = "";
+            boolean first = true;
+            for (int i = 1; i < types.length; i++) {
+                if (!first) {
+                    subtype += delimiter;
+                }
+                subtype += types[i];
+                first = false;
+            }
+            initialValues.put(KEY_SUBTYPE, subtype);
         } else {
             initialValues.put(KEY_SUBTYPE, "");
         }
