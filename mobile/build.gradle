@@ -19,7 +19,7 @@ android {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 43
+        versionCode 44
         versionName "3.3.4"
     }
     packagingOptions {
