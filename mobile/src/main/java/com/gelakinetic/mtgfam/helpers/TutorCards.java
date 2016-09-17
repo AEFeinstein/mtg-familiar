@@ -317,6 +317,8 @@ public class TutorCards {
 
     private class TutorCardsTask extends AsyncTask<Bitmap, Void, Void> {
 
+        private boolean mError = false;
+
         /**
          * This function sends a bitmap to tutor.cards for analysis using postSearchRequest().
          * It then uses the query ID, after waiting, to fetch the result using getResult()
@@ -336,8 +338,7 @@ public class TutorCards {
 
                 if (searchPostResult == null) {
                     /* Can't do much with a null result */
-                    mActivity.clearLoading();
-                    Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
+                    mError = true;
                     return null;
                 }
 
@@ -358,8 +359,7 @@ public class TutorCards {
 
                     if (searchPostResult == null) {
                         /* Can't do much with a null result */
-                        mActivity.clearLoading();
-                        Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
+                        mError = true;
                         return null;
                     }
 
@@ -397,17 +397,25 @@ public class TutorCards {
                         }
                     } else {
                         mActivity.receiveTutorCardsResult(searchPostResult.info.multiverseid);
-                            /* Return, we're done here */
+                        /* Return, we're done here */
                         return null;
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            /* Shouldn't reach here, clear the loading animation and pop a toast */
-            mActivity.clearLoading();
-            Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
+            /* Shouldn't reach here, flag the error */
+            mError = true;
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mError) {
+                mActivity.clearLoading();
+                Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
