@@ -93,6 +93,16 @@
             android:authorities="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
             android:exported="true" />
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.gelakinetic.mtgfam.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <!-- For the homescreen widget -->
         <receiver android:name=".helpers.MTGFamiliarAppWidgetProviderDark">
             <intent-filter>

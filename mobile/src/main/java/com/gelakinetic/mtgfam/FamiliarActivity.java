@@ -1513,8 +1513,12 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param multiverseId The multiverse ID returned by the TutorCards query
      */
     public void receiveTutorCardsResult(long multiverseId) {
-        ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
-                .receiveTutorCardsResult(multiverseId);
+        try {
+            ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
+                    .receiveTutorCardsResult(multiverseId);
+        } catch (NullPointerException e) {
+            /* Ignore it */
+        }
         clearLoading();
     }
 

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.widget.Toast;
 
@@ -302,8 +303,9 @@ public class TutorCards {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 /* Tell the camera to use the temporary image file */
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getImageFile()));
-
+                Uri uri = FileProvider.getUriForFile(mActivity, "com.gelakinetic.mtgfam.FileProvider", getImageFile());
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
                     mActivity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
