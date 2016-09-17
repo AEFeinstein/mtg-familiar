@@ -68,7 +68,7 @@
     <string name="gathering_load">Carica una modalità di gioco</string>
     <string name="gathering_remove_player">Rimuovi un giocatore</string>
     <string name="gathering_save">Salva la modalità di gioco</string>
-    <string name="gathering_starting_life">Vita iniziale:</string>
+    <string name="gathering_starting_life">Punti vita iniziali:</string>
     <string name="gathering_toast_no_gatherings">Non ci sono modalità di gioco.</string>
     <string name="gathering_toast_no_name">Per favore inserisci un nome per la modalità di gioco.</string>
     <string name="judges_corner_IPG">IPG</string>
@@ -342,10 +342,10 @@
     <string name="search_Exact_all_selected_and_no_others">Esatto (tutti i selezionati e nessun altro)</string>
     <string name="search_Exact_phrase">Frase esatta</string>
     <string name="search_May_include_any_colors">Può includere qualsiasi colore</string>
-    <string name="search_Most_recent_printing">Stampe più recenti</string>
+    <string name="search_Most_recent_printing">Stampa più recente</string>
     <string name="search_Must_include_all_colors">Deve includere tutti i colori</string>
     <string name="search_Mythic">Mitica</string>
-    <string name="search_NOT_any_selected_types">NON qualsiasi tipo selezionato</string>
+    <string name="search_NOT_any_selected_types">NESSUN tipo selezionato</string>
     <string name="search_No_other_colors">Nessun altro colore</string>
     <string name="search_Original_printing">Stampa originale</string>
     <string name="search_Rare">Rara</string>
@@ -358,7 +358,7 @@
     <string name="search_collectors_number">Numero del collezionista</string>
     <string name="search_color_identity_title">Identità di colore</string>
     <string name="search_color_title">Colore</string>
-    <string name="search_flavor_text">Testo esplicativo</string>
+    <string name="search_flavor_text">Testo della carta</string>
     <string name="search_format">Formato</string>
     <string name="search_formats">Formati</string>
     <string name="search_load_defaults">Carica valori predefiniti</string>
@@ -427,10 +427,10 @@
     <string name="update_added_jar">Nuova JAR</string>
     <string name="update_added_mtr">Nuova Regola Torneo Magic</string>
     <string name="update_added_rules">nuova regola globale</string>
-    <string name="update_notification">Sto controllando per aggiornamenti del database</string>
+    <string name="update_notification">Sto controllando gli aggiornamenti del database</string>
     <string name="update_updating_rules">Sto aggiornando il regolamento</string>
     <string name="update_updating_set">Sto aggiungendo %s</string>
-    <string name="wishlist_add_card">Aggiungi</string>
+    <string name="wishlist_add_card">Aggiungi Carta</string>
     <string name="wishlist_ascending">Crescente</string>
     <string name="wishlist_clear_fields">Azzera Campi</string>
     <string name="wishlist_descending">Decrescente</string>
