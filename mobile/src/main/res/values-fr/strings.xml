@@ -110,7 +110,7 @@
         &lt;br&gt;
         Merci à tous les contributeurs incluant, mais de manière non exhaustive, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, et bcGiR.&lt;br&gt;
         &lt;br&gt;
-        Merci à tous les traducteurs incluant, mais de manière non exhaustive, Ghislain, Piotr, Víctor, Emilio, Alan, et Sebastian.&lt;br&gt;
+        Merci à tous les traducteurs incluant, mais de manière non exhaustive, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, et Sebastian.&lt;br&gt;
         &lt;br&gt;
         Merci à tous ceux qui gèrent les sources de données incluant, mais de manière non exhaustive, Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) et Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
         &lt;br&gt;
@@ -179,6 +179,8 @@
     <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
     <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
     <string name="main_whats_new_text">
+        - Traduction Italienne&lt;br&gt;
+        &lt;br&gt;
         - Corrections de bugs
     </string>
     <string name="main_whats_new_title">Nouveautés</string>

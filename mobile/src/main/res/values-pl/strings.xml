@@ -110,7 +110,7 @@
         &lt;br&gt;
         Podziękowania dla wszystkich współpracowników, włączając, ale nie ograniczając się do: jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, and bcGiR.&lt;br&gt;
         &lt;br&gt;
-        Podziękowania dla wszystkich tłumaczy, włączając, ale nie ograniczając się do: Ghislain, Piotr, Víctor, Emilio, Alan, and Sebastian.&lt;br&gt;
+        Podziękowania dla wszystkich tłumaczy, włączając, ale nie ograniczając się do: Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, i Sebastian.&lt;br&gt;
         &lt;br&gt;
         Podziękowania dla wszystkich, którzy odpowiadają za źródła danych, włączając, ale nie ograniczając się do: Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) and Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
         &lt;br&gt;
@@ -180,6 +180,8 @@
     <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
     <string name="main_whats_new_text">
+        - Tłumaczenie Włoskie&lt;br&gt;
+        &lt;br&gt;
         - Poprawki
     </string>
     <string name="main_whats_new_title">Nowości</string>
