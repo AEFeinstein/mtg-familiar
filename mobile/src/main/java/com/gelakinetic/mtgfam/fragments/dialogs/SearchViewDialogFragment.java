@@ -31,7 +31,11 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        getParentSearchViewFragment().checkDialogButtonColors();
+        try {
+            getParentSearchViewFragment().checkDialogButtonColors();
+        } catch (NullPointerException e) {
+            /* Ignore it if there's no activity */
+        }
     }
 
     @NotNull

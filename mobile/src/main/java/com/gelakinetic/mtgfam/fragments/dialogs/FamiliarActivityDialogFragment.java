@@ -189,23 +189,27 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        final FamiliarActivity activity = getFamiliarActivity();
-        if (mDialogId == DIALOG_CHANGE_LOG) {
-            if (activity.mPreferenceAdapter.getBounceDrawer()) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        activity.mDrawerLayout.openDrawer(activity.mDrawerList);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-                                activity.mPreferenceAdapter.setBounceDrawer();
-                            }
-                        }, 2000);
-                    }
-                }, 500);
+        try {
+            final FamiliarActivity activity = getFamiliarActivity();
+            if (mDialogId == DIALOG_CHANGE_LOG) {
+                if (activity.mPreferenceAdapter.getBounceDrawer()) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.mDrawerLayout.openDrawer(activity.mDrawerList);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
+                                    activity.mPreferenceAdapter.setBounceDrawer();
+                                }
+                            }, 2000);
+                        }
+                    }, 500);
+                }
             }
+        } catch (NullPointerException e) {
+            /* If there's no activity, ignore it */
         }
     }
 }
