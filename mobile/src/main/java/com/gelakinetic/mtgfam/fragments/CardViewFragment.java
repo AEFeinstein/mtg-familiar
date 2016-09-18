@@ -32,6 +32,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -327,6 +329,42 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
+     * When the view is destroyed, release any memory used to display card images
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        releaseImageResources();
+    }
+
+    /**
+     * Release all image resources and invoke the garbage collector
+     */
+    private void releaseImageResources() {
+
+        if (mCardImageView != null) {
+
+            /* Release the drawable from the ImageView */
+            Drawable drawable = mCardImageView.getDrawable();
+            if (drawable != null) {
+                drawable.setCallback(null);
+                ((BitmapDrawable) drawable).getBitmap().recycle();
+            }
+
+            /* Release the ImageView */
+            mCardImageView.setImageDrawable(null);
+            mCardImageView.setImageBitmap(null);
+        }
+        if (mCardBitmap != null) {
+            /* Release the drawable */
+            mCardBitmap.getBitmap().recycle();
+            mCardBitmap = null;
+        }
+        /* Invoke the garbage collector */
+        java.lang.System.gc();
+    }
+
+    /**
      * This will fill the UI elements with database information about the card specified in the given bundle
      *
      * @param extras The bundle passed to this fragment
@@ -554,7 +592,7 @@ public class CardViewFragment extends FamiliarFragment {
             } else {
                 mTransformButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        mCardBitmap = null;
+                        releaseImageResources();
                         mCardNumber = mTransformCardNumber;
                         setInfoFromID(mTransformId);
                     }
@@ -1114,10 +1152,10 @@ public class CardViewFragment extends FamiliarFragment {
                             }
                         }
 
-                        mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null)));
-                        bitmap = mCardBitmap.getBitmap();
-                        getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, mCardBitmap);
-
+                        /* Download the bitmap */
+                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null)); /* TODO This allocates a 1/6th */
+                        /* Cache it */
+                        getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
                     } catch (Exception e) {
                         /* Something went wrong */
                         try {
@@ -1169,12 +1207,15 @@ public class CardViewFragment extends FamiliarFragment {
                 int newWidth = Math.round(bitmap.getWidth() * scale);
                 int newHeight = Math.round(bitmap.getHeight() * scale);
 
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true); /* todo this is leaky? */
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
                 mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
-                bitmap.recycle();
             } catch (Exception e) {
                 /* Some error resizing. Out of memory? */
             }
+
+            /* Recycle the non-scaled bitmap to avoid memory leaks */
+            bitmap.recycle();
+            java.lang.System.gc();
             return null;
         }
 
@@ -1440,7 +1481,7 @@ public class CardViewFragment extends FamiliarFragment {
                 bmpImage = null;
             }
 
-                        /* Check if this is an english only image */
+            /* Check if this is an english only image */
             if (bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
                 imageKey = Integer.toString(mMultiverseId) + "en";
                 try {
@@ -1450,7 +1491,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
 
-                        /* nope, not here */
+            /* nope, not here */
             if (bmpImage == null) {
                 return getString(R.string.card_view_no_image);
             }

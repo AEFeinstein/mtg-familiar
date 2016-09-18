@@ -51,7 +51,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
 
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
+        /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
         mDialogId = getArguments().getInt(ID_KEY);
@@ -85,15 +85,15 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
             }
             case GET_LEGALITY: {
                 if (getCardViewFragment().mFormats == null || getCardViewFragment().mLegalities == null) {
-                            /* exception handled in AsyncTask */
+                    /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
 
-                        /* create the item mapping */
+                /* create the item mapping */
                 String[] from = new String[]{"format", "status"};
                 int[] to = new int[]{R.id.format, R.id.status};
 
-                        /* prepare the list of all records */
+                /* prepare the list of all records */
                 List<HashMap<String, String>> fillMaps = new ArrayList<>();
                 for (int i = 0; i < getCardViewFragment().mFormats.length; i++) {
                     HashMap<String, String> map = new HashMap<>();
@@ -149,7 +149,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 final String[] aSets = getCardViewFragment().mPrintings.toArray(new String[getCardViewFragment().mPrintings.size()]);
                 final Long[] aIds = getCardViewFragment().mCardIds.toArray(new Long[getCardViewFragment().mCardIds.size()]);
 
-                        /* Sanity check */
+                /* Sanity check */
                 for (String set : aSets) {
                     if (set == null) {
                         return DontShowDialog();
