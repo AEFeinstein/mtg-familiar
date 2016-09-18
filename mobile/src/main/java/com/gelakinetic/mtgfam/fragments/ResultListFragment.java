@@ -179,7 +179,6 @@ public class ResultListFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
         if (savedInstanceState != null) {
             mCursorPosition = savedInstanceState.getInt(CURSOR_POSITION);
@@ -273,6 +272,7 @@ public class ResultListFragment extends FamiliarFragment {
         if (mCursor != null) {
             mCursor.close();
         }
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**

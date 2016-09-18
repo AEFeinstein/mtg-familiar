@@ -27,8 +27,6 @@ import android.text.Html.ImageGetter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AlphabetIndexer;
-import android.widget.SectionIndexer;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -40,12 +38,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This list adapter is used to display a list of search results. It implements SectionIndexer to enable fast scrolling.
  */
-public class ResultListAdapter extends SimpleCursorAdapter implements SectionIndexer {
+public class ResultListAdapter extends SimpleCursorAdapter {
 
     private final String[] mFrom;
     private final int[] mTo;
     private final ImageGetter mImgGetter;
-    private final AlphabetIndexer mAlphaIndexer;
     private final Resources.Theme mTheme;
     private final Resources mResources;
 
@@ -67,8 +64,6 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
         this.mResources = context.getResources();
         this.mTheme = context.getTheme();
         this.mImgGetter = ImageGetterHelper.GlyphGetter(context);
-        this.mAlphaIndexer = new AlphabetIndexer(cursor, cursor.getColumnIndex(CardDbAdapter.KEY_NAME),
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }
 
     /**
@@ -268,49 +263,6 @@ public class ResultListAdapter extends SimpleCursorAdapter implements SectionInd
         if(hideRarity) {
             view.findViewById(R.id.rarity).setVisibility(View.GONE);
         }
-    }
-
-    /**
-     * Given the index of a section within the array of section objects, returns the starting position of that section
-     * within the adapter. If the section's starting position is outside of the adapter bounds, the position must be
-     * clipped to fall within the size of the adapter.
-     *
-     * @param section the index of the section within the array of section objects
-     * @return the starting position of that section within the adapter, constrained to fall within the adapter bounds
-     */
-    public int getPositionForSection(int section) {
-        try {
-            return mAlphaIndexer.getPositionForSection(section); /* use the indexer */
-        } catch (IllegalStateException e) {
-            return 0;
-        }
-    }
-
-    /**
-     * Given a position within the adapter, returns the index of the corresponding section within the array of section
-     * objects. If the section index is outside of the section array bounds, the index must be clipped to fall within
-     * the size of the section array. For example, consider an indexer where the section at array index 0 starts at
-     * adapter position 100. Calling this method with position 10, which is before the first section, must return index
-     * 0.
-     *
-     * @param position the position within the adapter for which to return the corresponding section index
-     * @return the index of the corresponding section within the array of section objects, constrained to fall within
-     * the array bounds
-     */
-    public int getSectionForPosition(int position) {
-        return mAlphaIndexer.getSectionForPosition(position); /* use the indexer */
-    }
-
-    /**
-     * Returns an array of objects representing sections of the list. The returned array and its contents should be
-     * non-null. The list view will call toString() on the objects to get the preview text to display while scrolling.
-     * For example, an adapter may return an array of Strings representing letters of the alphabet. Or, it may return an
-     * array of objects whose toString() methods return their section titles.
-     *
-     * @return the array of section objects
-     */
-    public Object[] getSections() {
-        return mAlphaIndexer.getSections(); /* use the indexer */
     }
 
     /**
