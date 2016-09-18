@@ -348,7 +348,10 @@ public class CardViewFragment extends FamiliarFragment {
             Drawable drawable = mCardImageView.getDrawable();
             if (drawable != null) {
                 drawable.setCallback(null);
-                ((BitmapDrawable) drawable).getBitmap().recycle();
+                Bitmap drawableBitmap = ((BitmapDrawable) drawable).getBitmap();
+                if (drawableBitmap != null) {
+                    drawableBitmap.recycle();
+                }
             }
 
             /* Release the ImageView */
