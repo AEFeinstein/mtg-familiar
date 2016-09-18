@@ -1190,14 +1190,15 @@ public class CardDbAdapter {
 
             /* If the format is not eternal, filter by set */
             if (numLegalSetCursor.getCount() > 0) {
-                //two joins are needed to check legality as per rules.
-                //note that every** Acidic Slime is legal in a format if one Acidic Slime is legal in that format.
-                //(** back/white bordered, correctly sized,etc)
-                tbl = "(" + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_CARDS + " " + (DATABASE_TABLE_CARDS + "_B")
-                        + " ON " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + (DATABASE_TABLE_CARDS + "_B") + "." + KEY_NAME
-                        + " JOIN " + DATABASE_TABLE_LEGAL_SETS
-                        + " ON " + (DATABASE_TABLE_CARDS + "_B") + "." + KEY_SET + " = " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET
-                        + " AND " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='" + criteria.format + "')";
+                statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " IN ("
+                        + "  SELECT " + DATABASE_TABLE_CARDS + "_B."+ KEY_NAME
+                        + "  FROM " + DATABASE_TABLE_CARDS + " " + DATABASE_TABLE_CARDS + "_B "
+                        + "  WHERE " + DATABASE_TABLE_CARDS + "_B." + KEY_SET + " IN ("
+                        + "    SELECT " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET
+                        + "    FROM " + DATABASE_TABLE_LEGAL_SETS
+                        + "    WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='" + criteria.format + "'"
+                        + "  )"
+                        + " )";
             } else {
                 /* Otherwise filter silver bordered cards, giant cards */
                 statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UNH'" +
@@ -1210,13 +1211,11 @@ public class CardDbAdapter {
 
             numLegalSetCursor.close();
 
-            statement += " AND NOT EXISTS (SELECT * FROM "
-                    + DATABASE_TABLE_BANNED_CARDS + " WHERE "
-                    + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = "
-                    + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " AND "
-                    + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '"
-                    + criteria.format + "' AND " + DATABASE_TABLE_BANNED_CARDS + "."
-                    + KEY_LEGALITY + " = " + BANNED + ")";
+            statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME+" NOT IN (SELECT "
+                    + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME
+                    + " FROM " + DATABASE_TABLE_BANNED_CARDS
+                    + " WHERE  " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '" + criteria.format +"'"
+                    + " AND " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_LEGALITY + " = " + BANNED + ")";
         }
 
         if (!backface) {
