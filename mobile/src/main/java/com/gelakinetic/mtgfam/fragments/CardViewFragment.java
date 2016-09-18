@@ -1153,7 +1153,7 @@ public class CardViewFragment extends FamiliarFragment {
                         }
 
                         /* Download the bitmap */
-                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null)); /* TODO This allocates a 1/6th */
+                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null));
                         /* Cache it */
                         getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
                     } catch (Exception e) {
