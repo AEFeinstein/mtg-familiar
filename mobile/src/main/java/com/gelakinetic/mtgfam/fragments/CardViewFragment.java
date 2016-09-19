@@ -357,12 +357,32 @@ public class CardViewFragment extends FamiliarFragment {
             /* Release the ImageView */
             mCardImageView.setImageDrawable(null);
             mCardImageView.setImageBitmap(null);
+
+            mCardImageView = null;
         }
         if (mCardBitmap != null) {
             /* Release the drawable */
             mCardBitmap.getBitmap().recycle();
             mCardBitmap = null;
         }
+
+        mActivity = null;
+        mNameTextView = null;
+        mCostTextView = null;
+        mTypeTextView = null;
+        mSetTextView = null;
+        mAbilityTextView = null;
+        mFlavorTextView = null;
+        mArtistTextView = null;
+        mNumberTextView = null;
+        mPowTouTextView = null;
+        mTransformButtonDivider = null;
+        mTransformButton = null;
+        mTextScrollView = null;
+        mImageScrollView = null;
+        mCardImageView = null;
+        mColorIndicatorLayout = null;
+
         /* Invoke the garbage collector */
         java.lang.System.gc();
     }
