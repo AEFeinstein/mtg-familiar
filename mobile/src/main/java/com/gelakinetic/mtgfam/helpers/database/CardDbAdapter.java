@@ -1181,7 +1181,6 @@ public class CardDbAdapter {
             statement += ")";
         }
 
-        String tbl = DATABASE_TABLE_CARDS;
         if (criteria.format != null) {
 
             /* Check if the format is eternal or not, by the number of legal sets */
@@ -1258,7 +1257,7 @@ public class CardDbAdapter {
             }
             sel += ", " + DATABASE_TABLE_SETS + "." + KEY_DATE;
 
-            String sql = "SELECT * FROM (SELECT " + sel + " FROM " + tbl
+            String sql = "SELECT * FROM (SELECT " + sel + " FROM " + DATABASE_TABLE_CARDS
                     + " JOIN " + DATABASE_TABLE_SETS + " ON "
                     + DATABASE_TABLE_CARDS + "." + KEY_SET + " = "
                     + DATABASE_TABLE_SETS + "." + KEY_CODE + statement;
