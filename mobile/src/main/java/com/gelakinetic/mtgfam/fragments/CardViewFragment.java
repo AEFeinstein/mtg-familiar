@@ -392,7 +392,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @param extras The bundle passed to this fragment
      */
     private void setInfoFromBundle(Bundle extras) {
-        if (extras == null) {
+        if (extras == null && mNameTextView != null) {
             mNameTextView.setText("");
             mCostTextView.setText("");
             mTypeTextView.setText("");
@@ -417,8 +417,14 @@ public class CardViewFragment extends FamiliarFragment {
      * It also saves information for AsyncTasks to use later and manages the transform/flip button
      *
      * @param id the ID of the the card to be displayed
+     * @return true if the UI was filled in, false otherwise
      */
-    public void setInfoFromID(final long id) {
+    public boolean setInfoFromID(final long id) {
+
+        /* If the views are null, don't attempt to fill them in */
+        if (mSetTextView == null) {
+            return false;
+        }
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
@@ -429,7 +435,7 @@ public class CardViewFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return;
+            return false;
         }
 
         /* http://magiccards.info/scans/en/mt/55.jpg */
@@ -452,7 +458,7 @@ public class CardViewFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return;
+            return false;
         }
         mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
@@ -606,7 +612,7 @@ public class CardViewFragment extends FamiliarFragment {
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return;
+                return false;
             }
             if (mTransformId == -1) {
                 mTransformButton.setVisibility(View.GONE);
@@ -669,7 +675,7 @@ public class CardViewFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return;
+            return false;
         }
         mPrintings = new LinkedHashSet<>();
         mCardIds = new LinkedHashSet<>();
@@ -688,7 +694,7 @@ public class CardViewFragment extends FamiliarFragment {
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return;
+                return false;
             }
             cCardByName.moveToNext();
         }
@@ -702,6 +708,7 @@ public class CardViewFragment extends FamiliarFragment {
         if (mShouldReportView) {
             reportAppIndexViewIfAble();
         }
+        return true;
     }
 
     /**
@@ -774,28 +781,32 @@ public class CardViewFragment extends FamiliarFragment {
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
         if (getUserVisibleHint()) {
-            String copyText;
+            String copyText = null;
             switch (item.getItemId()) {
                 case R.id.copy: {
                     copyText = mCopyString;
                     break;
                 }
                 case R.id.copyall: {
-                    assert mNameTextView.getText() != null; /* Because Android Studio */
-                    assert mCostTextView.getText() != null;
-                    assert mTypeTextView.getText() != null;
-                    assert mSetTextView.getText() != null;
-                    assert mAbilityTextView.getText() != null;
-                    assert mFlavorTextView.getText() != null;
-                    assert mPowTouTextView.getText() != null;
-                    assert mArtistTextView.getText() != null;
-                    assert mNumberTextView.getText() != null;
-
-                    copyText = mNameTextView.getText().toString() + '\n' + mCostTextView.getText().toString() + '\n' +
-                            mTypeTextView.getText().toString() + '\n' + mSetTextView.getText().toString() + '\n' +
-                            mAbilityTextView.getText().toString() + '\n' + mFlavorTextView.getText().toString() + '\n' +
-                            mPowTouTextView.getText().toString() + '\n' + mArtistTextView.getText().toString() + '\n' +
-                            mNumberTextView.getText().toString();
+                    if (mNameTextView.getText() != null &&
+                            mCostTextView.getText() != null &&
+                            mTypeTextView.getText() != null &&
+                            mSetTextView.getText() != null &&
+                            mAbilityTextView.getText() != null &&
+                            mFlavorTextView.getText() != null &&
+                            mPowTouTextView.getText() != null &&
+                            mArtistTextView.getText() != null &&
+                            mNumberTextView.getText() != null) {
+                        copyText = mNameTextView.getText().toString() + '\n' +
+                                mCostTextView.getText().toString() + '\n' +
+                                mTypeTextView.getText().toString() + '\n' +
+                                mSetTextView.getText().toString() + '\n' +
+                                mAbilityTextView.getText().toString() + '\n' +
+                                mFlavorTextView.getText().toString() + '\n' +
+                                mPowTouTextView.getText().toString() + '\n' +
+                                mArtistTextView.getText().toString() + '\n' +
+                                mNumberTextView.getText().toString();
+                    }
                     break;
                 }
                 default: {
@@ -803,12 +814,14 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
 
-            ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
-                    getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-            String label = getResources().getString(R.string.app_name);
-            String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-            ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
-            clipboard.setPrimaryClip(cd);
+            if (copyText != null) {
+                ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
+                        getSystemService(android.content.Context.CLIPBOARD_SERVICE));
+                String label = getResources().getString(R.string.app_name);
+                String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+                ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
+                clipboard.setPrimaryClip(cd);
+            }
             return true;
         }
         return false;
@@ -1310,13 +1323,15 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                 } else if (loadTo == MAIN_PAGE) {
                     removeDialog(getFragmentManager());
-                    mCardImageView.setImageDrawable(mCardBitmap);
+                    if (mCardImageView != null) {
+                        mCardImageView.setImageDrawable(mCardBitmap);
+                    }
                     /* remove the image load button if it is the main page */
                     mActivity.supportInvalidateOptionsMenu();
                 }
             } else {
                 removeDialog(getFragmentManager());
-                if (loadTo == MAIN_PAGE) {
+                if (loadTo == MAIN_PAGE && mImageScrollView != null) {
                     mImageScrollView.setVisibility(View.GONE);
                     mTextScrollView.setVisibility(View.VISIBLE);
                 }
@@ -1330,7 +1345,7 @@ public class CardViewFragment extends FamiliarFragment {
          */
         @Override
         protected void onCancelled() {
-            if (loadTo == MAIN_PAGE) {
+            if (loadTo == MAIN_PAGE && mImageScrollView != null) {
                 mImageScrollView.setVisibility(View.GONE);
                 mTextScrollView.setVisibility(View.VISIBLE);
             }
