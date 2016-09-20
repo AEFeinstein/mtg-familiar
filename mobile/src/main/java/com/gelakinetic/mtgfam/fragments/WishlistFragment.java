@@ -119,7 +119,7 @@ public class WishlistFragment extends FamiliarFragment {
 
         /* set the autocomplete for card names */
         mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
-        mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
+        mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, false));
         mNameField.setOnEditorActionListener(addCardListener);
 
         /* Default the number of cards field */

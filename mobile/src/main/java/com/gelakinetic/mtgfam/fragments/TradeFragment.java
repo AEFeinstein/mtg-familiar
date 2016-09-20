@@ -118,7 +118,7 @@ public class TradeFragment extends FamiliarFragment {
 
         /* Set the autocomplete adapter, default number */
         mNameEditText.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME},
-                new int[]{R.id.text1}, mNameEditText));
+                new int[]{R.id.text1}, mNameEditText, false));
         mNumberEditText.setText("1");
 
         /* Initialize the left list */

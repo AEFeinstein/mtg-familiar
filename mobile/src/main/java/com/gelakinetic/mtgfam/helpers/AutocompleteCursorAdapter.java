@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.SimpleCursorAdapter;
 
+import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardSearchProvider;
@@ -65,8 +66,8 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
      *                 Can be null if the cursor is not available yet.
      * @param textView The text view which we are watching for changes
      */
-    public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, AutoCompleteTextView textView) {
-        super(context.getActivity(), com.gelakinetic.mtgfam.R.layout.list_item_1, null, from, to, 0);
+    public AutocompleteCursorAdapter(FamiliarFragment context, String[] from, int[] to, AutoCompleteTextView textView, boolean showArrowhead) {
+        super(context.getActivity(), showArrowhead ? R.layout.list_item_1_arrowhead : R.layout.list_item_1, null, from, to, 0);
         mFragment = context;
         mFragment.getLoaderManager().initLoader(0, null, this);
         textView.addTextChangedListener(new TextWatcher() {

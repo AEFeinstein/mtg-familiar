@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -256,7 +257,18 @@ public class SearchViewFragment extends FamiliarFragment {
         mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
 
         /* set the autocomplete for card names */
-        mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField));
+        mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, true));
+        mNameField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                SearchCriteria searchCriteria = new SearchCriteria();
+                searchCriteria.name = ((TextView)view.findViewById(R.id.text1)).getText().toString();
+                Bundle args = new Bundle();
+                args.putSerializable(CRITERIA, searchCriteria);
+                ResultListFragment rlFrag = new ResultListFragment();
+                startNewFragment(rlFrag, args);
+            }
+        });
 
         /* Get a bunch of database info in a background task */
         new AsyncTask<Void, Void, Void>() {
@@ -668,7 +680,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCheckboxRIdentity.setChecked(false);
         mCheckboxGIdentity.setChecked(false);
         mCheckboxLIdentity.setChecked(false);
-        mColorSpinner.setSelection(0);
+        mColorIdentitySpinner.setSelection(0);
 
         mTextSpinner.setSelection(0);
         mTypeSpinner.setSelection(0);

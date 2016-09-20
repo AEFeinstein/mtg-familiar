@@ -366,7 +366,6 @@ public class CardViewFragment extends FamiliarFragment {
             mCardBitmap = null;
         }
 
-        mActivity = null;
         mNameTextView = null;
         mCostTextView = null;
         mTypeTextView = null;
