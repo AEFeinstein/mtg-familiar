@@ -334,13 +334,13 @@ public class CardViewFragment extends FamiliarFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        releaseImageResources();
+        releaseImageResources(false);
     }
 
     /**
      * Release all image resources and invoke the garbage collector
      */
-    private void releaseImageResources() {
+    private void releaseImageResources(boolean isSplit) {
 
         if (mCardImageView != null) {
 
@@ -358,7 +358,9 @@ public class CardViewFragment extends FamiliarFragment {
             mCardImageView.setImageDrawable(null);
             mCardImageView.setImageBitmap(null);
 
-            mCardImageView = null;
+            if(!isSplit) {
+                mCardImageView = null;
+            }
         }
         if (mCardBitmap != null) {
             /* Release the drawable */
@@ -366,21 +368,23 @@ public class CardViewFragment extends FamiliarFragment {
             mCardBitmap = null;
         }
 
-        mNameTextView = null;
-        mCostTextView = null;
-        mTypeTextView = null;
-        mSetTextView = null;
-        mAbilityTextView = null;
-        mFlavorTextView = null;
-        mArtistTextView = null;
-        mNumberTextView = null;
-        mPowTouTextView = null;
-        mTransformButtonDivider = null;
-        mTransformButton = null;
-        mTextScrollView = null;
-        mImageScrollView = null;
-        mCardImageView = null;
-        mColorIndicatorLayout = null;
+        if(!isSplit) {
+            mNameTextView = null;
+            mCostTextView = null;
+            mTypeTextView = null;
+            mSetTextView = null;
+            mAbilityTextView = null;
+            mFlavorTextView = null;
+            mArtistTextView = null;
+            mNumberTextView = null;
+            mPowTouTextView = null;
+            mTransformButtonDivider = null;
+            mTransformButton = null;
+            mTextScrollView = null;
+            mImageScrollView = null;
+            mCardImageView = null;
+            mColorIndicatorLayout = null;
+        }
 
         /* Invoke the garbage collector */
         java.lang.System.gc();
@@ -620,7 +624,7 @@ public class CardViewFragment extends FamiliarFragment {
             } else {
                 mTransformButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        releaseImageResources();
+                        releaseImageResources(true);
                         mCardNumber = mTransformCardNumber;
                         setInfoFromID(mTransformId);
                     }
