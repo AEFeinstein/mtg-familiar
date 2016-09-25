@@ -191,19 +191,21 @@
     </string-array>
     <string-array name="pref_language">
         <item>@string/pref_English</item>
-        <item>@string/pref_French</item>
-        <item>@string/pref_Spanish</item>
-        <item>@string/pref_Polish</item>
-        <item>@string/pref_Portuguese</item>
         <item>@string/pref_German</item>
+        <item>@string/pref_French</item>
+        <item>@string/pref_Italian</item>
+        <item>@string/pref_Spanish</item>
+        <item>@string/pref_Portuguese</item>
+        <item>@string/pref_Polish</item>
     </string-array>
     <string-array name="pref_language_values">
         <item>en</item>
-        <item>fr</item>
-        <item>es</item>
-        <item>pl</item>
-        <item>pt</item>
         <item>de</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>es</item>
+        <item>pt</item>
+        <item>pl</item>
     </string-array>
 
     <string-array name="life_timer_array_entries">
