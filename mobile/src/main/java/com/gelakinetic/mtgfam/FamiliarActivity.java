@@ -1223,7 +1223,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * If TTS couldn't init, show this dialog. It will only display once as to not annoy people
      */
     public void showTtsDialog() {
-        if (mPreferenceAdapter.getTtsShowDialog()) {
+        if (mPreferenceAdapter != null && mPreferenceAdapter.getTtsShowDialog()) {
             showDialogFragment(FamiliarActivityDialogFragment.DIALOG_TTS);
             mPreferenceAdapter.setTtsShowDialog();
         }
