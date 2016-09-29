@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Base64;
-import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -74,7 +73,7 @@ public class TutorCards {
         if (numSearches < 3) {
             numSearches++;
             mActivity.mPreferenceAdapter.setNumTutorCardsSearches(numSearches);
-            Toast.makeText(mActivity, R.string.tutor_cards_notice, Toast.LENGTH_LONG).show();
+            ToastWrapper.makeText(mActivity, R.string.tutor_cards_notice, ToastWrapper.LENGTH_LONG).show();
         }
 
         /* Start the process */
@@ -312,7 +311,7 @@ public class TutorCards {
             } else {
                 /* Service isn't ready, clear the loading animation and pop a toast */
                 mActivity.clearLoading();
-                Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(mActivity, R.string.tutor_cards_fail, ToastWrapper.LENGTH_SHORT).show();
             }
         }
     }
@@ -416,7 +415,7 @@ public class TutorCards {
             super.onPostExecute(aVoid);
             if (mError) {
                 mActivity.clearLoading();
-                Toast.makeText(mActivity, R.string.tutor_cards_fail, Toast.LENGTH_SHORT).show();
+                ToastWrapper.makeText(mActivity, R.string.tutor_cards_fail, ToastWrapper.LENGTH_SHORT).show();
             }
         }
     }

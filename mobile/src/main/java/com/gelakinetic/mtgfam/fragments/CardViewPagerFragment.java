@@ -12,10 +12,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 /**
  * This class will nest the CardViewFragments found by a search in a ViewPager
@@ -104,12 +104,12 @@ public class CardViewPagerFragment extends FamiliarFragment {
 
                     String retstr = ((CardViewPagerAdapter) mViewPager.getAdapter()).getCurrentFragment().saveImage();
                     if (retstr != null) {
-                        Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(this.getContext(), retstr, ToastWrapper.LENGTH_LONG).show();
                     }
                 } else {
                     /* Permission denied */
-                    Toast.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
-                            Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
+                            ToastWrapper.LENGTH_LONG).show();
                 }
             }
         }
