@@ -41,8 +41,11 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.text.Html.ImageGetter;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ImageSpan;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -358,7 +361,7 @@ public class CardViewFragment extends FamiliarFragment {
             mCardImageView.setImageDrawable(null);
             mCardImageView.setImageBitmap(null);
 
-            if(!isSplit) {
+            if (!isSplit) {
                 mCardImageView = null;
             }
         }
@@ -368,7 +371,7 @@ public class CardViewFragment extends FamiliarFragment {
             mCardBitmap = null;
         }
 
-        if(!isSplit) {
+        if (!isSplit) {
             mNameTextView = null;
             mCostTextView = null;
             mTypeTextView = null;
@@ -1394,9 +1397,29 @@ public class CardViewFragment extends FamiliarFragment {
                                 .split(">")[1].split("<")[0];
                     }
                     if (line.contains("rulingText") && line.contains("<td")) {
-                        ruling = (line.replace("<autocard>", "").replace("</autocard>", ""))
-                                .split(">")[1].split("<")[0];
-                        Ruling r = new Ruling(date, ruling);
+                        /* Parse the HTML to properly display glyphs */
+                        Spanned spanned = Html.fromHtml(line);
+                        Object spans[] = spanned.getSpans(0, spanned.toString().length(), Object.class);
+                        String text = spanned.toString();
+                        int offset = 0;
+                        /* For each span (i.e. glyph) */
+                        for (Object obj : spans) {
+                            /* If it is an ImageSpan */
+                            if (obj instanceof ImageSpan) {
+                                /* Build the glyph with {, the text between "name=" and "&", and } */
+                                String symbol = "{" + (((ImageSpan) obj).getSource().split("name=")[1])
+                                        .split("&")[0] + "}";
+                                /* Substitute the glyph text for the spanned image */
+                                text = text.substring(0, offset + spanned.getSpanStart(obj)) +
+                                        symbol +
+                                        text.substring(offset + spanned.getSpanEnd(obj), text.length());
+                                /* Keep track of an offset, because the string glyph is longer than
+                                 * the spanned one */
+                                offset += (symbol.length() - 1);
+                            }
+                        }
+                        /* Add the ruling */
+                        Ruling r = new Ruling(date, text);
                         mRulingsArrayList.add(r);
                     }
                 }
