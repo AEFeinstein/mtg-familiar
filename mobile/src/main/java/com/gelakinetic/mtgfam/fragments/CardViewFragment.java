@@ -62,7 +62,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -1480,12 +1479,12 @@ public class CardViewFragment extends FamiliarFragment {
                     /* Permission granted */
                     String retstr = saveImage();
                     if (retstr != null) {
-                        Toast.makeText(this.getContext(), retstr, Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeText(this.getContext(), retstr, ToastWrapper.LENGTH_LONG).show();
                     }
                 } else {
                     /* Permission denied */
-                    Toast.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
-                            Toast.LENGTH_LONG).show();
+                    ToastWrapper.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
+                            ToastWrapper.LENGTH_LONG).show();
                 }
             }
         }
