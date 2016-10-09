@@ -181,8 +181,6 @@
     <string name="main_tts_warning_title">Sintetizzatore vocale (TTS)</string>
     <string name="main_whats_new_in_title">Novità di questa versione</string>
     <string name="main_whats_new_text">
-        - Traduzione Italiana&lt;br&gt;
-        &lt;br&gt;
         - Correzione di bug
     </string>
     <string name="main_whats_new_title">Novità</string>

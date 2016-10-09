@@ -179,8 +179,6 @@
     <string name="main_tts_warning_title">Síntesis de voz (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">Novedades de la versión</string>
     <string name="main_whats_new_text">
-        - Traducción Italiana&lt;br&gt;
-        &lt;br&gt;
         - Corrección de errores
     </string>
     <string name="main_whats_new_title">Novedades</string>
