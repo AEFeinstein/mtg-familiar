@@ -55,5 +55,5 @@
     <string name="key_trade_sort_type" translatable="false">trade_sort_type</string>
     <string name="key_num_tutor_cards_searches" translatable="false">num_tc_searches</string>
     <string name="key_database_version" translatable="false">databaseVersion</string>
-
+    <string name="key_widgetNumButtons" translatable="false">widget_num_buttons_</string>
 </resources>

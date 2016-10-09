@@ -425,7 +425,7 @@ public class PreferenceAdapter {
                 Arrays.asList(context.getResources().getStringArray(R.array.default_widget_buttons_array_entries))));
     }
 
-    public void setWidgetButtons(Set<String> widgetButtons) {
+    public synchronized void setWidgetButtons(Set<String> widgetButtons) {
         this.edit.putStringSet(context.getString(R.string.key_widgetButtons), widgetButtons);
         this.edit.commit();
     }
@@ -433,7 +433,7 @@ public class PreferenceAdapter {
     /* This is slightly different because we want to make sure to commit a theme if one doesn't
      * exist, not just return the default. asd is a nice tag, no?
      */
-    public String getTheme() {
+    public synchronized String getTheme() {
         String theme = this.prefs.getString(context.getString(R.string.key_theme), "asd");
         if (theme.equals("asd")) {
             theme = context.getResources().getString(R.string.pref_theme_light);
@@ -442,7 +442,7 @@ public class PreferenceAdapter {
         return theme;
     }
 
-    private void setTheme(String theme) {
+    private synchronized void setTheme(String theme) {
         this.edit.putString(context.getString(R.string.key_theme), theme);
         this.edit.commit();
     }
@@ -451,55 +451,65 @@ public class PreferenceAdapter {
         return this.prefs.getString(context.getString(R.string.key_dci_number), "");
     }
 
-    public void setDCINumber(String dciNumber) {
+    public synchronized void setDCINumber(String dciNumber) {
         this.edit.putString(context.getString(R.string.key_dci_number), dciNumber);
         this.edit.commit();
     }
 
-    public int getImageCacheSize() {
+    public synchronized int getImageCacheSize() {
         return this.prefs.getInt(context.getString(R.string.key_imageCacheSize), 12);
     }
 
-    public int getTradeSortOrder() {
+    public synchronized int getTradeSortOrder() {
         return this.prefs.getInt(context.getString(R.string.key_trade_sort_order), 0);
     }
 
-    public void setTradeSortOrder(int tradeSortOrder) {
+    public synchronized void setTradeSortOrder(int tradeSortOrder) {
         this.edit.putInt(context.getString(R.string.key_trade_sort_order), tradeSortOrder);
         this.edit.commit();
     }
 
-    public int getTradeSortType() {
+    public synchronized int getTradeSortType() {
         return this.prefs.getInt(context.getString(R.string.key_trade_sort_type), 0);
     }
 
-    public void setTradeSortType(int tradeSortType) {
+    public synchronized void setTradeSortType(int tradeSortType) {
         this.edit.putInt(context.getString(R.string.key_trade_sort_type), tradeSortType);
         this.edit.commit();
     }
 
-    public int getNumTutorCardsSearches() {
+    synchronized int getNumTutorCardsSearches() {
         return this.prefs.getInt(context.getString(R.string.key_num_tutor_cards_searches), 0);
     }
 
-    public void setNumTutorCardsSearches(int NumTutorCardsSearches) {
+    synchronized void setNumTutorCardsSearches(int NumTutorCardsSearches) {
         this.edit.putInt(context.getString(R.string.key_num_tutor_cards_searches),
                 NumTutorCardsSearches);
         this.edit.commit();
     }
 
-    public int getDatabaseVersion() {
+    public synchronized int getDatabaseVersion() {
         return this.prefs.getInt(context.getString(R.string.key_database_version), -1);
     }
 
-    public void setDatabaseVersion(int databaseVersion) {
+    public synchronized void setDatabaseVersion(int databaseVersion) {
         this.edit.putInt(context.getString(R.string.key_database_version),
                 databaseVersion);
         this.edit.commit();
     }
 
-    public String getLanguage() {
+    public synchronized String getLanguage() {
         return this.prefs.getString(context.getString(R.string.key_language),
                 context.getResources().getConfiguration().locale.getLanguage());
+    }
+
+    public synchronized void setNumWidgetButtons(int widgetID, int numButtons) {
+        this.edit.putInt(context.getString(R.string.key_widgetNumButtons) + widgetID,
+                numButtons);
+        this.edit.commit();
+    }
+
+    public synchronized int getNumWidgetButtons(int widgetID) {
+        return this.prefs.getInt(context.getString(R.string.key_widgetNumButtons) + widgetID, 100);
     }
 }
