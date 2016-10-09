@@ -1566,8 +1566,9 @@ public class FamiliarActivity extends AppCompatActivity {
          * @param parent      The parent this view will eventually be attached to
          * @return The view for the data at this position
          */
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             int layout;
             if (values[position].mIsDivider) {
                 layout = R.layout.drawer_list_divider;

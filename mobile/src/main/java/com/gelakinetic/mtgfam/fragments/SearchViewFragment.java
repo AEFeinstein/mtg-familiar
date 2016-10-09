@@ -262,7 +262,7 @@ public class SearchViewFragment extends FamiliarFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 SearchCriteria searchCriteria = new SearchCriteria();
-                searchCriteria.name = ((TextView)view.findViewById(R.id.text1)).getText().toString();
+                searchCriteria.name = ((TextView) view.findViewById(R.id.text1)).getText().toString();
                 Bundle args = new Bundle();
                 args.putSerializable(CRITERIA, searchCriteria);
                 ResultListFragment rlFrag = new ResultListFragment();

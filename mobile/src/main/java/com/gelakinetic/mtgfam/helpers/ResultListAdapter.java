@@ -260,7 +260,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
             view.findViewById(R.id.cardslash).setVisibility(View.GONE);
             view.findViewById(R.id.cardt).setVisibility(View.GONE);
         }
-        if(hideRarity) {
+        if (hideRarity) {
             view.findViewById(R.id.rarity).setVisibility(View.GONE);
         }
     }

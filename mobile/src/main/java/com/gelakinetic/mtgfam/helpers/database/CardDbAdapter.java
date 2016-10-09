@@ -1190,7 +1190,7 @@ public class CardDbAdapter {
             /* If the format is not eternal, filter by set */
             if (numLegalSetCursor.getCount() > 0) {
                 statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " IN ("
-                        + "  SELECT " + DATABASE_TABLE_CARDS + "_B."+ KEY_NAME
+                        + "  SELECT " + DATABASE_TABLE_CARDS + "_B." + KEY_NAME
                         + "  FROM " + DATABASE_TABLE_CARDS + " " + DATABASE_TABLE_CARDS + "_B "
                         + "  WHERE " + DATABASE_TABLE_CARDS + "_B." + KEY_SET + " IN ("
                         + "    SELECT " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET
@@ -1210,10 +1210,10 @@ public class CardDbAdapter {
 
             numLegalSetCursor.close();
 
-            statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME+" NOT IN (SELECT "
+            statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT "
                     + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME
                     + " FROM " + DATABASE_TABLE_BANNED_CARDS
-                    + " WHERE  " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '" + criteria.format +"'"
+                    + " WHERE  " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '" + criteria.format + "'"
                     + " AND " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_LEGALITY + " = " + BANNED + ")";
         }
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -690,8 +691,9 @@ public class WishlistFragment extends FamiliarFragment {
          * @param parent      The parent this view will eventually be attached to
          * @return The view for the data at this position
          */
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
             /* Recycle the view if it isn't null, otherwise inflate it */
             LinearLayout wishlistSets;

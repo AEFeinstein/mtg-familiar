@@ -3,6 +3,7 @@ package com.gelakinetic.mtgfam.helpers;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -597,8 +598,9 @@ public class LcPlayer {
          * @param parent      The parent this view will eventually be attached to
          * @return The view for the data at this position
          */
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View view;
             if (convertView != null) {
                 view = convertView;
@@ -678,8 +680,9 @@ public class LcPlayer {
          * @param parent      The parent this view will eventually be attached to
          * @return The view for the data at this position
          */
+        @NonNull
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
             View view;
             if (convertView != null) {
                 view = convertView;

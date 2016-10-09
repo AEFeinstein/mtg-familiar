@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -891,8 +892,9 @@ public class TradeFragment extends FamiliarFragment {
          * @param parent      The parent ViewGroup
          * @return The view to display for this row
          */
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             /* if the supplied view is null, inflate a new one */
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.trader_row, null, false);

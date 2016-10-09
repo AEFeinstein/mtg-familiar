@@ -373,7 +373,7 @@ public class MtgCard {
      * @param card The card to find a color identity for, excluding multicard
      * @return A color identity string for the given card consisting of "WUBRG"
      */
-    static String getColorIdentity(MtgCard card) {
+    private static String getColorIdentity(MtgCard card) {
         boolean colors[] = {false, false, false, false, false};
         String colorLetters[] = {"W", "U", "B", "R", "G"};
         String basicLandTypes[] = {"Plains", "Island", "Swamp", "Mountain",

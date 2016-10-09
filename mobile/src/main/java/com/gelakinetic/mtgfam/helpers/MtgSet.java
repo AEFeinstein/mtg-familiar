@@ -28,7 +28,7 @@ public class MtgSet {
     public String name;
     public long date;
     public String digest;
-    public boolean canBeFoil;
+    public final boolean canBeFoil;
 
     /**
      * Default constructor, doesn't leave null fields

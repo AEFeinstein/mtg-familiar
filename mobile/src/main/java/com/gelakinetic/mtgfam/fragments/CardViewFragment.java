@@ -410,12 +410,12 @@ public class CardViewFragment extends FamiliarFragment {
             mPowTouTextView.setText("");
             mTransformButton.setVisibility(View.GONE);
             mTransformButtonDivider.setVisibility(View.GONE);
-            return;
-        }
-        long cardID = extras.getLong(CARD_ID);
+        } else if (extras != null) {
+            long cardID = extras.getLong(CARD_ID);
 
-        /* from onCreateView */
-        setInfoFromID(cardID);
+            /* from onCreateView */
+            setInfoFromID(cardID);
+        }
     }
 
     /**
@@ -1389,7 +1389,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
                 br = new BufferedReader(new InputStreamReader(new BufferedInputStream(is)));
 
-                String date = null, ruling;
+                String date = null;
                 while ((line = br.readLine()) != null) {
                     if (line.contains("rulingDate") && line.contains("<td")) {
                         date = (line.replace("<autocard>", "").replace("</autocard>", ""))

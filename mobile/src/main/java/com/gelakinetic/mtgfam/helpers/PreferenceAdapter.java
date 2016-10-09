@@ -503,13 +503,13 @@ public class PreferenceAdapter {
                 context.getResources().getConfiguration().locale.getLanguage());
     }
 
-    public synchronized void setNumWidgetButtons(int widgetID, int numButtons) {
+    synchronized void setNumWidgetButtons(int widgetID, int numButtons) {
         this.edit.putInt(context.getString(R.string.key_widgetNumButtons) + widgetID,
                 numButtons);
         this.edit.commit();
     }
 
-    public synchronized int getNumWidgetButtons(int widgetID) {
+    synchronized int getNumWidgetButtons(int widgetID) {
         return this.prefs.getInt(context.getString(R.string.key_widgetNumButtons) + widgetID, 100);
     }
 }
