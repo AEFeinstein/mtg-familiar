@@ -1086,6 +1086,15 @@ public class FamiliarActivity extends AppCompatActivity {
                 ft.addToBackStack(null);
             }
             ft.commit();
+
+            /* Color the icon when the fragment changes */
+            View drawerListItemView = mDrawerList.getChildAt(position);
+            if (drawerListItemView != null) {
+                TextView textView = (TextView) drawerListItemView.findViewById(R.id.drawer_entry_name);
+                if (textView != null) {
+                    mPagesAdapter.colorDrawerEntry(textView);
+                }
+            }
         }
     }
 
