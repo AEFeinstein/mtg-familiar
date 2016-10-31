@@ -191,7 +191,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                 if (retry == MAX_NUM_RETRIES && multiCardType == CardDbAdapter.MultiCardType.NOPE) {
                     retry = 2;
                 }
-            } catch (FamiliarDbException | IOException | ParserConfigurationException | SAXException e) {
+            } catch (Exception e) {
                 exception = new SpiceException(e.getLocalizedMessage());
             }
             retry--;
