@@ -41,11 +41,8 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.text.Html.ImageGetter;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ImageSpan;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -81,13 +78,17 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.io.BufferedInputStream;
+import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -1387,42 +1388,28 @@ public class CardViewFragment extends FamiliarFragment {
                 if (is == null) {
                     throw new IOException("null stream");
                 }
-                br = new BufferedReader(new InputStreamReader(new BufferedInputStream(is)));
 
+                String gathererPage = IOUtils.toString(is);
                 String date = null;
-                while ((line = br.readLine()) != null) {
-                    if (line.contains("rulingDate") && line.contains("<td")) {
-                        date = (line.replace("<autocard>", "").replace("</autocard>", ""))
-                                .split(">")[1].split("<")[0];
+
+                Document document = Jsoup.parse(gathererPage);
+                Elements rulingTable = document.select("table.rulingsTable > tbody > tr");
+
+                for (Element ruling : rulingTable) {
+                    date = ruling.children().get(0).text();
+                    Element rulingText = ruling.children().get(1);
+                    Elements imageTags = rulingText.getElementsByTag("img");
+                    /* For each symbol in the rulings text */
+                    for(Element symbol : imageTags) {
+                        /* Build the glyph with {, the text between "name=" and "&" and } */
+                        String symbolString = "{" + symbol.attr("src").split("name=")[1].split("&")[0] + "}";
+                        /* The new "HTML" for the symbols will be {n}, instead of the img tags they were before */
+                        symbol.html(symbolString);
                     }
-                    if (line.contains("rulingText") && line.contains("<td")) {
-                        /* Parse the HTML to properly display glyphs */
-                        Spanned spanned = Html.fromHtml(line);
-                        Object spans[] = spanned.getSpans(0, spanned.toString().length(), Object.class);
-                        String text = spanned.toString();
-                        int offset = 0;
-                        /* For each span (i.e. glyph) */
-                        for (Object obj : spans) {
-                            /* If it is an ImageSpan */
-                            if (obj instanceof ImageSpan) {
-                                /* Build the glyph with {, the text between "name=" and "&", and } */
-                                String symbol = "{" + (((ImageSpan) obj).getSource().split("name=")[1])
-                                        .split("&")[0] + "}";
-                                /* Substitute the glyph text for the spanned image */
-                                text = text.substring(0, offset + spanned.getSpanStart(obj)) +
-                                        symbol +
-                                        text.substring(offset + spanned.getSpanEnd(obj), text.length());
-                                /* Keep track of an offset, because the string glyph is longer than
-                                 * the spanned one */
-                                offset += (symbol.length() - 1);
-                            }
-                        }
-                        /* Add the ruling */
-                        Ruling r = new Ruling(date, text);
-                        mRulingsArrayList.add(r);
-                    }
+                    Ruling r = new Ruling(date, rulingText.text());
+                    mRulingsArrayList.add(r);
                 }
-            } catch (IOException ioe) {
+            } catch (Exception ioe) {
                 mErrorMessage = ioe.getLocalizedMessage();
             } finally {
                 try {
