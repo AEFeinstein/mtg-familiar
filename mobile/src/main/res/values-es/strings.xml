@@ -450,4 +450,7 @@
     <string name="tutor_cards_notice">Funciona con TutorCards</string>
     <string name="search_color_title">Color</string>
     <string name="search_color_identity_title">​Identidad de ​color</string>
+    <string name="card_view_share_card">Compartir la carta</string>
+    <string name="card_view_share_image">La imagen</string>
+    <string name="card_view_share_text">El texto</string>
 </resources>

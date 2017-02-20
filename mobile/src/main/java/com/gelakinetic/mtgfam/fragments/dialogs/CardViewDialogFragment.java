@@ -1,7 +1,9 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
@@ -37,6 +40,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
     public static final int CARD_RULINGS = 4;
     public static final int WISH_LIST_COUNTS = 6;
     public static final int GET_LEGALITY = 7;
+    public static final int SHARE_CARD = 8;
 
     /**
      * @return the currently viewed CardViewFragment in the CardViewPagerFragment
@@ -210,6 +214,34 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
                 return dialog;
+            }
+            case SHARE_CARD: {
+                MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
+                        .title(R.string.card_view_share_card)
+                        .positiveText(R.string.card_view_share_text)
+                        //.negativeText(R.string.card_view_share_image) // haven't gotten this to work yet
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                View view = getCardViewFragment().getView();
+                                // todo: Glyph->Text for cost and ability texts
+                                String copyText = ((TextView) view.findViewById(R.id.name)).getText().toString() + '\n' +
+                                        ((TextView) view.findViewById(R.id.cost)).getText().toString() + '\n' +
+                                        ((TextView) view.findViewById(R.id.type)).getText().toString() + '\n' +
+                                        ((TextView) view.findViewById(R.id.set)).getText().toString() + '\n' +
+                                        ((TextView) view.findViewById(R.id.ability)).getText().toString() + '\n' +
+                                        ((TextView) view.findViewById(R.id.flavor)).getText().toString() + '\n' +
+                                        ((TextView) view.findViewById(R.id.pt)).getText().toString() + '\n' +
+                                        ((TextView) view.findViewById(R.id.artist)).getText().toString() + '\n' +
+                                        ((TextView) view.findViewById(R.id.number)).getText().toString();
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, copyText);
+                                sendIntent.setType("text/plain");
+                                startActivity(sendIntent);
+                            }
+                        });
+                return builder.build();
             }
             default: {
                 return DontShowDialog();

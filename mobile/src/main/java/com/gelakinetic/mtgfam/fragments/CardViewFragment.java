@@ -789,6 +789,7 @@ public class CardViewFragment extends FamiliarFragment {
     public boolean onContextItemSelected(android.view.MenuItem item) {
         if (getUserVisibleHint()) {
             String copyText = null;
+            // todo: Glyph->Text for cost and ability text
             switch (item.getItemId()) {
                 case R.id.copy: {
                     copyText = mCopyString;
@@ -926,6 +927,10 @@ public class CardViewFragment extends FamiliarFragment {
             }
             case R.id.addtowishlist: {
                 showDialog(CardViewDialogFragment.WISH_LIST_COUNTS);
+                return true;
+            }
+            case R.id.sharecard: {
+                showDialog(CardViewDialogFragment.SHARE_CARD);
                 return true;
             }
             default: {
