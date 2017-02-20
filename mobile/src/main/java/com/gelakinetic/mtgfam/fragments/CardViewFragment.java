@@ -41,7 +41,9 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.text.Html.ImageGetter;
+import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -789,7 +791,6 @@ public class CardViewFragment extends FamiliarFragment {
     public boolean onContextItemSelected(android.view.MenuItem item) {
         if (getUserVisibleHint()) {
             String copyText = null;
-            // todo: Glyph->Text for cost and ability text
             switch (item.getItemId()) {
                 case R.id.copy: {
                     copyText = mCopyString;
@@ -805,11 +806,14 @@ public class CardViewFragment extends FamiliarFragment {
                             mPowTouTextView.getText() != null &&
                             mArtistTextView.getText() != null &&
                             mNumberTextView.getText() != null) {
+                        // Hacky, but it works
+                        String costText = convertHtmlToPlainText(Html.toHtml(new SpannableString(mCostTextView.getText())));
+                        String abilityText = convertHtmlToPlainText(Html.toHtml(new SpannableString(mAbilityTextView.getText())));
                         copyText = mNameTextView.getText().toString() + '\n' +
-                                mCostTextView.getText().toString() + '\n' +
+                                costText + '\n' +
                                 mTypeTextView.getText().toString() + '\n' +
                                 mSetTextView.getText().toString() + '\n' +
-                                mAbilityTextView.getText().toString() + '\n' +
+                                abilityText + '\n' +
                                 mFlavorTextView.getText().toString() + '\n' +
                                 mPowTouTextView.getText().toString() + '\n' +
                                 mArtistTextView.getText().toString() + '\n' +
@@ -833,6 +837,21 @@ public class CardViewFragment extends FamiliarFragment {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Converts some html to plain text, replacing images with their textual counterparts
+     *
+     * @param html html to be converted
+     * @return plain text representation of the input
+     */
+    public String convertHtmlToPlainText(String html) {
+        Document document = Jsoup.parse(html);
+        Elements images = document.select("img");
+        for (Element image : images) {
+            image.html("{" + image.attr("src") + "}");
+        }
+        return document.text();
     }
 
     /**

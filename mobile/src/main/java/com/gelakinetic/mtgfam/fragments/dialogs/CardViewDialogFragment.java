@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.Window;
@@ -224,12 +225,15 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 View view = getCardViewFragment().getView();
-                                // todo: Glyph->Text for cost and ability texts
+                                SpannableString costSpannable = new SpannableString(((TextView) view.findViewById(R.id.cost)).getText());
+                                SpannableString abilitySpannable = new SpannableString(((TextView) view.findViewById(R.id.ability)).getText());
+                                String costText = getCardViewFragment().convertHtmlToPlainText(Html.toHtml(costSpannable));
+                                String abilityText = getCardViewFragment().convertHtmlToPlainText(Html.toHtml(abilitySpannable));
                                 String copyText = ((TextView) view.findViewById(R.id.name)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.cost)).getText().toString() + '\n' +
+                                        costText + '\n' +
                                         ((TextView) view.findViewById(R.id.type)).getText().toString() + '\n' +
                                         ((TextView) view.findViewById(R.id.set)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.ability)).getText().toString() + '\n' +
+                                        abilityText + '\n' +
                                         ((TextView) view.findViewById(R.id.flavor)).getText().toString() + '\n' +
                                         ((TextView) view.findViewById(R.id.pt)).getText().toString() + '\n' +
                                         ((TextView) view.findViewById(R.id.artist)).getText().toString() + '\n' +
