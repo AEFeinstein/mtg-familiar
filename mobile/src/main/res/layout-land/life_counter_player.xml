@@ -44,8 +44,9 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:id="@+id/player_name"
             style="@style/text.large"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="center"
+            android:gravity="center_vertical"
             android:text="@string/life_counter_default_name" />
 
         <LinearLayout
