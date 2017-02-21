@@ -84,7 +84,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
     @SuppressWarnings("SpellCheckingInspection")
     @Override
     public PriceInfo loadDataFromNetwork() throws SpiceException {
-        if (((FamiliarActivity) mContext).getNetworkState(true) == -1) { // our context contains the activity that spawned the request
+        if (FamiliarActivity.getNetworkState(mContext, true) == -1) { // our context contains the activity that spawned the request
             return null;
         }
         int retry = MAX_NUM_RETRIES; /* try the fetch up to eight times, for different accent mark & split card combos*/

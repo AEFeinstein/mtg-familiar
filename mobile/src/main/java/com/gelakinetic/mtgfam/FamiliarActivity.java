@@ -519,7 +519,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 boolean shouldCloseDrawer = false;
                 switch (mPageEntries[i].mNameResource) {
                     case R.string.main_force_update_title: {
-                        if (getNetworkState(true) != -1) {
+                        if (getNetworkState(FamiliarActivity.this, true) != -1) {
                             SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this, true).openDatabase(true);
                             try {
                                 CardDbAdapter.dropCreateDB(database);
@@ -590,7 +590,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         break;
                     }
                     case R.string.main_force_update_title: {
-                        if (getNetworkState(true) != -1) {
+                        if (getNetworkState(FamiliarActivity.this, true) != -1) {
                             mPreferenceAdapter.setLastLegalityUpdate(0);
                             startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
                         }
@@ -742,7 +742,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         /* Run the updater service if there is a network connection */
-        if (getNetworkState(false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
+        if (getNetworkState(FamiliarActivity.this, false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
             /* Only update the banning list if it hasn't been updated recently */
             long curTime = System.currentTimeMillis();
             int updateFrequency = Integer.valueOf(mPreferenceAdapter.getUpdateFrequency());
@@ -1431,24 +1431,26 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * Checks the networks state
      *
+     *
+     * @param context the context where this is being called
      * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
      * @return -1 if there is no network connection, or the type of network, like ConnectivityManager.TYPE_WIFI
      */
-    public int getNetworkState(boolean shouldShowToast) {
+    public static int getNetworkState(Context context, boolean shouldShowToast) {
         try {
-            ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             for (NetworkInfo ni : conMan.getAllNetworkInfo()) {
                 if (ni.isConnected()) {
                     return ni.getType();
                 }
             }
             if (shouldShowToast) {
-                ToastWrapper.makeText(FamiliarActivity.this, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
             }
             return -1;
         } catch (NullPointerException e) {
             if (shouldShowToast) {
-                ToastWrapper.makeText(FamiliarActivity.this, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
             }
             return -1;
         }
@@ -1510,7 +1512,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * search process
      */
     public void startTutorCardsSearch() {
-        if (getNetworkState(true) != -1) {
+        if (getNetworkState(FamiliarActivity.this, true) != -1) {
             mTutorCards.startTutorCardsSearch();
         }
     }

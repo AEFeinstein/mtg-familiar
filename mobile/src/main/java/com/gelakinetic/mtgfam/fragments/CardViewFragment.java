@@ -869,7 +869,7 @@ public class CardViewFragment extends FamiliarFragment {
         /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.image: {
-                if (getFamiliarActivity().getNetworkState(true) == -1) {
+                if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
                     return true;
                 }
 
@@ -932,7 +932,7 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.cardrulings: {
-                if (getFamiliarActivity().getNetworkState(true) == -1) {
+                if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
                     return true;
                 }
 
