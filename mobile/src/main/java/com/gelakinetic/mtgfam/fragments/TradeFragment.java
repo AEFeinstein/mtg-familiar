@@ -491,10 +491,12 @@ public class TradeFragment extends FamiliarFragment {
         if (this.isAdded()) {
             if (side == LEFT || side == BOTH) {
                 int totalPrice = 0;
+                int totalCards = 0;
                 boolean hasBadValues = false;
                 /* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
                 for (MtgCard data : mLeftList) {
                     if (data.hasPrice()) {
+                        totalCards += data.numberOf;
                         totalPrice += data.numberOf * data.price;
                     } else {
                         hasBadValues = true;
@@ -506,15 +508,18 @@ public class TradeFragment extends FamiliarFragment {
                         this.getActivity().getResources().getColor(R.color.material_red_500) :
                         this.getActivity().getResources().getColor(
                                 getResourceIdFromAttr(R.attr.color_text));
-                mTotalPriceLeft.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100));
+                mTotalPriceLeft.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100)
+                        + " (" + totalCards + ")");
                 mTotalPriceLeft.setTextColor(color);
             }
             if (side == RIGHT || side == BOTH) {
                 int totalPrice = 0;
+                int totalCards = 0;
                 boolean hasBadValues = false;
                 /* Iterate through the list and either sum the price or mark it as "bad," (incomplete) */
                 for (MtgCard data : mRightList) {
                     if (data.hasPrice()) {
+                        totalCards += data.numberOf;
                         totalPrice += data.numberOf * data.price;
                     } else {
                         hasBadValues = true;
@@ -527,7 +532,8 @@ public class TradeFragment extends FamiliarFragment {
                         this.getActivity().getResources().getColor(
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
-                mTotalPriceRight.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100));
+                mTotalPriceRight.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100)
+                        + " (" + totalCards + ")");
                 mTotalPriceRight.setTextColor(color);
             }
         }
