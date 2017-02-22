@@ -1402,8 +1402,6 @@ public class CardViewFragment extends FamiliarFragment {
 
             URL url;
             InputStream is = null;
-            BufferedReader br;
-            String line;
 
             mRulingsArrayList = new ArrayList<>();
             try {
@@ -1414,7 +1412,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
 
                 String gathererPage = IOUtils.toString(is);
-                String date = null;
+                String date;
 
                 Document document = Jsoup.parse(gathererPage);
                 Elements rulingTable = document.select("table.rulingsTable > tbody > tr");
