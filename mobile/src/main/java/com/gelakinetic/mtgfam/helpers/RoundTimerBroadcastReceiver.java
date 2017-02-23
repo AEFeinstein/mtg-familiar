@@ -101,7 +101,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
     /**
      * This nested service is responsible for initializing the TTS engine and speaking warnings
      */
-    public class TtsService extends Service implements TextToSpeech.OnInitListener,
+    public static class TtsService extends Service implements TextToSpeech.OnInitListener,
             TextToSpeech.OnUtteranceCompletedListener, AudioManager.OnAudioFocusChangeListener {
 
         private static final String WARNING_SPEECH = "warning_speech";
@@ -236,7 +236,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
      *
      * @param ringtone The Ringtone to set to use Alarms volume
      */
-    void setRingtoneAlarmStream(Ringtone ringtone) {
+    static void setRingtoneAlarmStream(Ringtone ringtone) {
         if (Build.VERSION.SDK_INT >= 21) {
             AudioAttributes aa = ringtone.getAudioAttributes();
             //noinspection WrongConstant
