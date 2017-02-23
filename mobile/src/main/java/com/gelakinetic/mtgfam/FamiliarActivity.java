@@ -1072,8 +1072,8 @@ public class FamiliarActivity extends AppCompatActivity {
         if (fm != null) {
             if (shouldClearFragmentStack) {
                 /* Remove any current fragments on the back stack */
-                for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
-                    fm.popBackStack();
+                while (fm.getBackStackEntryCount() > 0) {
+                    fm.popBackStackImmediate();
                 }
             }
 
@@ -1431,8 +1431,7 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * Checks the networks state
      *
-     *
-     * @param context the context where this is being called
+     * @param context         the context where this is being called
      * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
      * @return -1 if there is no network connection, or the type of network, like ConnectivityManager.TYPE_WIFI
      */

@@ -85,7 +85,11 @@ public class IndeterminateRefreshLayout extends ViewGroup {
      */
     public void setRefreshing(boolean refreshing) {
         if (mRefreshing != refreshing) {
-            ensureTarget();
+            try {
+                ensureTarget();
+            } catch (IllegalStateException e) {
+                return;
+            }
             mRefreshing = refreshing;
             if (mRefreshing) {
                 mProgressBar.start();

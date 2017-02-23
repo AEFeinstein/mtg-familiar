@@ -117,7 +117,9 @@ public abstract class FamiliarFragment extends Fragment {
         super.onPause();
         removeDialog(getFragmentManager());
         try {
-            getFamiliarActivity().mSpiceManager.cancelAllRequests();
+            if(getFamiliarActivity().mSpiceManager.getPendingRequestCount() > 0) {
+                getFamiliarActivity().mSpiceManager.cancelAllRequests();
+            }
         } catch (RejectedExecutionException e) {
             /* eat it */
         }
