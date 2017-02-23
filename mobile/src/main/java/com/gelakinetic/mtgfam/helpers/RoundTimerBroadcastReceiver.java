@@ -6,10 +6,12 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
@@ -50,6 +52,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 /* Play the notification sound */
                 Uri ringURI = Uri.parse(preferenceAdapter.getTimerSound());
                 Ringtone r = RingtoneManager.getRingtone(context, ringURI);
+                setRingtoneAlarmStream(r);
                 r.play();
 
                 /* Change the notification to show that the round ended */
@@ -98,7 +101,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
     /**
      * This nested service is responsible for initializing the TTS engine and speaking warnings
      */
-    public static class TtsService extends Service implements TextToSpeech.OnInitListener,
+    public class TtsService extends Service implements TextToSpeech.OnInitListener,
             TextToSpeech.OnUtteranceCompletedListener, AudioManager.OnAudioFocusChangeListener {
 
         private static final String WARNING_SPEECH = "warning_speech";
@@ -172,6 +175,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                     /* Fall back to ringtone */
                     Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
                     Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
+                    setRingtoneAlarmStream(r);
                     r.play();
                 } else {
                     /* Request audio focus for playback on the alarm stream */
@@ -189,6 +193,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                         /* Fall back to ringtone */
                         Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
                         Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
+                        setRingtoneAlarmStream(r);
                         r.play();
                     }
                 }
@@ -196,6 +201,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 /* Fall back to ringtone */
                 Uri ringURI = Uri.parse(new PreferenceAdapter(getApplicationContext()).getTimerSound());
                 Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ringURI);
+                setRingtoneAlarmStream(r);
                 r.play();
             }
             /* The ringtone has played, so stop the service */
@@ -222,6 +228,26 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onAudioFocusChange(int focusChange) {
             /* don't really care */
+        }
+    }
+
+    /**
+     * Set a given Ringtone to use the Alarms volume
+     *
+     * @param ringtone The Ringtone to set to use Alarms volume
+     */
+    void setRingtoneAlarmStream(Ringtone ringtone) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            AudioAttributes aa = ringtone.getAudioAttributes();
+            //noinspection WrongConstant
+            new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(aa.getContentType())
+                    .setFlags(aa.getFlags())
+                    .build();
+            ringtone.setAudioAttributes(aa);
+        } else {
+            ringtone.setStreamType(AudioManager.STREAM_ALARM);
         }
     }
 }
