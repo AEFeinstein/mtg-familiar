@@ -86,7 +86,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -1160,11 +1159,13 @@ public class CardViewFragment extends FamiliarFragment {
         private String error;
 
         /**
-         * First check www.MagicCards.info for the card image in the user's preferred language
+         * If the preferred langauge is English, get the card image from Scryfall
+         * If that fails, check www.MagicCards.info for the card image in the user's preferred language
+         * If that fails, try Scryfall again in English
          * If that fails, check www.MagicCards.info for the card image in English
          * If that fails, check www.gatherer.wizards.com for the card image
-         * If that fails, give up
-         * There is non-standard URL building for planes and schemes
+         * If that fials, give up
+         * There is a non-standard URL building for planes and schemes for www.MagicCards.info
          * It also re-sizes the image
          *
          * @param params unused
@@ -1195,6 +1196,7 @@ public class CardViewFragment extends FamiliarFragment {
 
                 boolean triedMtgi = false;
                 boolean triedGatherer = false;
+                boolean triedScryfall = false;
 
                 while (bRetry) {
 
@@ -1202,19 +1204,23 @@ public class CardViewFragment extends FamiliarFragment {
                     error = null;
 
                     try {
-
                         URL u;
-                        if (!cardLanguage.equalsIgnoreCase("en")) {
-                            u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
-                            cardLanguage = "en";
+                        if (cardLanguage.equalsIgnoreCase("en") && !triedScryfall) {
+                            u = new URL(getScryfallImageUri(mMultiverseId));
+                            triedScryfall = true;
                         } else {
-                            if (!triedMtgi) {
+                            if (!cardLanguage.equalsIgnoreCase("en")) {
                                 u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
-                                triedMtgi = true;
+                                cardLanguage = "en";
                             } else {
-                                u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
-                                        + mMultiverseId + "&type=card");
-                                triedGatherer = true;
+                                if (!triedMtgi) {
+                                    u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
+                                    triedMtgi = true;
+                                } else {
+                                    u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
+                                            + mMultiverseId + "&type=card");
+                                    triedGatherer = true;
+                                }
                             }
                         }
 
@@ -1335,6 +1341,16 @@ public class CardViewFragment extends FamiliarFragment {
                         cardNumber + ".jpg";
             }
             return picURL.toLowerCase(Locale.ENGLISH);
+        }
+
+        /**
+         * Easily gets the uri for the image for a card by multiverseid
+         *
+         * @param multiverseId the multiverse id of the card
+         * @return uri of the card image
+         */
+        private String getScryfallImageUri(int multiverseId) {
+            return "https://api.scryfall.com/cards/multiverse/" + multiverseId + "?format=image";
         }
 
         /**
