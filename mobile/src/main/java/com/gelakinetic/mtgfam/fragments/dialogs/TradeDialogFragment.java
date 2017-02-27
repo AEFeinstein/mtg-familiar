@@ -515,6 +515,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 /* Clear the arrays and tell everything to update */
+                                getParentTradeFragment().mCurrentTrade = "";
                                 getParentTradeFragment().mRightList.clear();
                                 getParentTradeFragment().mLeftList.clear();
                                 getParentTradeFragment().mRightAdapter.notifyDataSetChanged();
