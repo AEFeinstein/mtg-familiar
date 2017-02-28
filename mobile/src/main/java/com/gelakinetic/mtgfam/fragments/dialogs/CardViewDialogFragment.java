@@ -81,7 +81,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             getCardViewFragment().mAsyncTask.cancel(true);
                         }
                         getCardViewFragment().mAsyncTask = getCardViewFragment().new saveCardImageTask();
-                        getCardViewFragment().mAsyncTask.execute((Void[]) null);
+                        ((CardViewFragment.saveCardImageTask)getCardViewFragment().mAsyncTask).execute(CardViewFragment.MAIN_PAGE);
                         return true;
                     }
                 });
@@ -243,6 +243,13 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 sendIntent.putExtra(Intent.EXTRA_TEXT, copyText);
                                 sendIntent.setType("text/plain");
                                 startActivity(sendIntent);
+                            }
+                        })
+                        .negativeText(R.string.card_view_image)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                getCardViewFragment().runShareImageTask();
                             }
                         });
                 return builder.build();

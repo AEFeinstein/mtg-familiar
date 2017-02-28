@@ -1,7 +1,5 @@
 package com.gelakinetic.mtgfam.fragments;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -13,9 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 /**
  * This class will nest the CardViewFragments found by a search in a ViewPager
@@ -94,25 +90,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case FamiliarActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    /* Permission granted */
-
-                    String retstr = ((CardViewPagerAdapter) mViewPager.getAdapter()).getCurrentFragment().saveImage();
-                    if (retstr != null) {
-                        ToastWrapper.makeText(this.getContext(), retstr, ToastWrapper.LENGTH_LONG).show();
-                    }
-                } else {
-                    /* Permission denied */
-                    ToastWrapper.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
-                            ToastWrapper.LENGTH_LONG).show();
-                }
-            }
-        }
+        ((CardViewPagerAdapter) mViewPager.getAdapter()).getCurrentFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**

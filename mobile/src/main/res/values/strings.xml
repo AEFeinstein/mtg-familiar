@@ -498,4 +498,5 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="card_view_share_card">Share Card</string>
     <string name="card_view_share_text">Text</string>
     <string name="card_view_share_image">Image</string>
+    <string name="send_to">Share image using</string>
 </resources>

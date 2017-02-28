@@ -41,6 +41,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.SpannableString;
@@ -105,9 +106,9 @@ public class CardViewFragment extends FamiliarFragment {
     public static final String CARD_ID = "card_id";
 
     /* Where the card image is loaded to */
-    private static final int MAIN_PAGE = 1;
+    public static final int MAIN_PAGE = 1;
     private static final int DIALOG = 2;
-    private int loadTo = DIALOG; /* where to load the image */
+    private static final int SHARE = 3;
     /* Used to store the String when copying to clipboard */
     private String mCopyString;
     /* UI elements, to be filled in */
@@ -128,7 +129,7 @@ public class CardViewFragment extends FamiliarFragment {
     private LinearLayout mColorIndicatorLayout;
 
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
-    public AsyncTask<Void, Void, Void> mAsyncTask;
+    public AsyncTask mAsyncTask;
     public RecyclingBitmapDrawable mCardBitmap;
     public String[] mLegalities;
     public String[] mFormats;
@@ -316,16 +317,10 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new saveCardImageTask();
-                mAsyncTask.execute((Void[]) null);
+                ((saveCardImageTask) mAsyncTask).execute(MAIN_PAGE);
                 return true;
             }
         });
-
-        if (mActivity.mPreferenceAdapter.getPicFirst()) {
-            loadTo = MAIN_PAGE;
-        } else {
-            loadTo = DIALOG;
-        }
 
         setInfoFromBundle(this.getArguments());
 
@@ -639,7 +634,7 @@ public class CardViewFragment extends FamiliarFragment {
         mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
 
         /* Do we load the image immediately to the main page, or do it in a dialog later? */
-        if (loadTo == MAIN_PAGE) {
+        if (mActivity.mPreferenceAdapter.getPicFirst()) {
             mImageScrollView.setVisibility(View.VISIBLE);
             mTextScrollView.setVisibility(View.GONE);
 
@@ -648,7 +643,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mAsyncTask.cancel(true);
             }
             mAsyncTask = new FetchPictureTask();
-            mAsyncTask.execute((Void[]) null);
+            ((FetchPictureTask) mAsyncTask).execute(MAIN_PAGE);
         } else {
             mImageScrollView.setVisibility(View.GONE);
             mTextScrollView.setVisibility(View.VISIBLE);
@@ -877,7 +872,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchPictureTask();
-                mAsyncTask.execute((Void[]) null);
+                ((FetchPictureTask) mAsyncTask).execute(DIALOG);
                 return true;
             }
             case R.id.price: {
@@ -927,7 +922,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchLegalityTask();
-                mAsyncTask.execute((Void[]) null);
+                ((FetchLegalityTask)mAsyncTask).execute((Void[]) null);
                 return true;
             }
             case R.id.cardrulings: {
@@ -940,7 +935,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchRulingsTask();
-                mAsyncTask.execute((Void[]) null);
+                ((FetchRulingsTask)mAsyncTask).execute((Void[]) null);
                 return true;
             }
             case R.id.addtowishlist: {
@@ -986,7 +981,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         MenuItem mi;
         /* If the image has been loaded to the main page, remove the menu option for image */
-        if (loadTo == MAIN_PAGE && mCardBitmap != null) {
+        if (mActivity.mPreferenceAdapter.getPicFirst() && mCardBitmap != null) {
             mi = menu.findItem(R.id.image);
             if (mi != null) {
                 menu.removeItem(mi.getItemId());
@@ -1006,6 +1001,18 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
+     * Called from the share dialog to load and share this card's image
+     */
+    public void runShareImageTask() {
+        mActivity.setLoading();
+        if (mAsyncTask != null) {
+            mAsyncTask.cancel(true);
+        }
+        mAsyncTask = new FetchPictureTask();
+        ((FetchPictureTask) mAsyncTask).execute(SHARE);
+    }
+
+    /**
      * This inner class encapsulates a ruling and the date it was made
      */
     public static class Ruling {
@@ -1022,12 +1029,19 @@ public class CardViewFragment extends FamiliarFragment {
         }
     }
 
-    public class saveCardImageTask extends AsyncTask<Void, Void, Void> {
+    public class saveCardImageTask extends AsyncTask<Integer, Void, Void> {
 
         String mToastString = null;
+        private Integer mWhereTo;
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(Integer... params) {
+
+            if (params != null && params.length > 0) {
+                mWhereTo = params[0];
+            } else {
+                mWhereTo = MAIN_PAGE;
+            }
 
             if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 mToastString = getString(R.string.card_view_no_external_storage);
@@ -1051,7 +1065,22 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (mToastString != null) {
+            if (mWhereTo == SHARE) {
+                try {
+
+                    /* Start the intent to share the image */
+                    Uri uri = FileProvider.getUriForFile(mActivity, "com.gelakinetic.mtgfam.FileProvider", getSavedImageFile(false));
+                    Intent shareIntent = new Intent();
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                    shareIntent.setType("image/jpeg");
+                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+
+                } catch (Exception e) {
+                    ToastWrapper.makeText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG).show();
+                }
+            } else if (mToastString != null) {
                 ToastWrapper.makeText(mActivity, mToastString, ToastWrapper.LENGTH_LONG).show();
             }
         }
@@ -1135,11 +1164,16 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * This private class retrieves a picture of the card from the internet
      */
-    private class FetchPictureTask extends AsyncTask<Void, Void, Void> {
+    private class FetchPictureTask extends AsyncTask<Integer, Void, Void> {
 
         int mHeight;
         int mWidth;
         int mBorder;
+
+        private String mError;
+        private int mLoadTo;
+        private String mImageKey;
+
         /* Get the size of the window on the UI thread, not the worker thread */
         final Runnable getWindowSize = new Runnable() {
             @Override
@@ -1156,7 +1190,6 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
         };
-        private String error;
 
         /**
          * If the preferred langauge is English, get the card image from Scryfall
@@ -1173,19 +1206,26 @@ public class CardViewFragment extends FamiliarFragment {
          */
         @SuppressWarnings("SpellCheckingInspection")
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(Integer... params) {
+
+            if(params != null && params.length > 0) {
+                mLoadTo = params[0];
+            }
+            else {
+                mLoadTo = MAIN_PAGE;
+            }
 
             String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
             if (cardLanguage == null) {
                 cardLanguage = "en";
             }
 
-            final String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
+            mImageKey = Integer.toString(mMultiverseId) + cardLanguage;
 
             /* Check disk cache in background thread */
             Bitmap bitmap;
             try {
-                bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+                bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(mImageKey);
             } catch (NullPointerException e) {
                 bitmap = null;
             }
@@ -1201,7 +1241,7 @@ public class CardViewFragment extends FamiliarFragment {
                 while (bRetry) {
 
                     bRetry = false;
-                    error = null;
+                    mError = null;
 
                     try {
                         URL u;
@@ -1230,14 +1270,14 @@ public class CardViewFragment extends FamiliarFragment {
                         /* Download the bitmap */
                         bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null));
                         /* Cache it */
-                        getFamiliarActivity().mImageCache.addBitmapToCache(imageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
+                        getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
                     } catch (Exception e) {
                         /* Something went wrong */
                         try {
-                            error = getString(R.string.card_view_image_not_found);
+                            mError = getString(R.string.card_view_image_not_found);
                         } catch (RuntimeException re) {
                             /* in case the fragment isn't attached to an activity */
-                            error = e.toString();
+                            mError = e.toString();
                         }
 
                         /* Gatherer is always tried last. If that fails, give up */
@@ -1257,19 +1297,23 @@ public class CardViewFragment extends FamiliarFragment {
                 /* 16dp */
                 mBorder = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-                if (loadTo == MAIN_PAGE) {
+                if (mLoadTo == MAIN_PAGE) {
                     /* Block the worker thread until the size is figured out */
                     synchronized (getWindowSize) {
                         getActivity().runOnUiThread(getWindowSize);
                         getWindowSize.wait();
                     }
-                } else if (loadTo == DIALOG) {
+                } else if (mLoadTo == DIALOG) {
                     Display display = ((WindowManager) mActivity
                             .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
                     Point p = new Point();
                     display.getSize(p);
                     mHeight = p.y - mBorder;
                     mWidth = p.x - mBorder;
+                } else if (mLoadTo == SHARE) {
+                    /* Don't scale shared images */
+                    mWidth = bitmap.getWidth();
+                    mHeight = bitmap.getHeight();
                 }
 
                 float screenAspectRatio = (float) mHeight / (float) (mWidth);
@@ -1367,28 +1411,36 @@ public class CardViewFragment extends FamiliarFragment {
          */
         @Override
         protected void onPostExecute(Void result) {
-            if (error == null) {
-                if (loadTo == DIALOG) {
+            if (mError == null) {
+                if (mLoadTo == DIALOG) {
                     try {
                         showDialog(CardViewDialogFragment.GET_IMAGE);
                     } catch (IllegalStateException e) {
                         /* eat it */
                     }
-                } else if (loadTo == MAIN_PAGE) {
+                } else if (mLoadTo == MAIN_PAGE) {
                     removeDialog(getFragmentManager());
                     if (mCardImageView != null) {
                         mCardImageView.setImageDrawable(mCardBitmap);
                     }
                     /* remove the image load button if it is the main page */
                     mActivity.supportInvalidateOptionsMenu();
+                } else if (mLoadTo == SHARE) {
+
+                    /* Images must be saved before sharing */
+                    if (mAsyncTask != null) {
+                        mAsyncTask.cancel(true);
+                    }
+                    mAsyncTask = new saveCardImageTask();
+                    ((saveCardImageTask) mAsyncTask).execute(SHARE);
                 }
             } else {
                 removeDialog(getFragmentManager());
-                if (loadTo == MAIN_PAGE && mImageScrollView != null) {
+                if (mLoadTo == MAIN_PAGE && mImageScrollView != null) {
                     mImageScrollView.setVisibility(View.GONE);
                     mTextScrollView.setVisibility(View.VISIBLE);
                 }
-                ToastWrapper.makeText(mActivity, error, ToastWrapper.LENGTH_LONG).show();
+                ToastWrapper.makeText(mActivity, mError, ToastWrapper.LENGTH_LONG).show();
             }
             mActivity.clearLoading();
         }
@@ -1398,7 +1450,7 @@ public class CardViewFragment extends FamiliarFragment {
          */
         @Override
         protected void onCancelled() {
-            if (loadTo == MAIN_PAGE && mImageScrollView != null) {
+            if (mLoadTo == MAIN_PAGE && mImageScrollView != null) {
                 mImageScrollView.setVisibility(View.GONE);
                 mTextScrollView.setVisibility(View.VISIBLE);
             }
@@ -1507,10 +1559,12 @@ public class CardViewFragment extends FamiliarFragment {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    /* Permission granted */
-                    String retstr = saveImage();
-                    if (retstr != null) {
-                        ToastWrapper.makeText(this.getContext(), retstr, ToastWrapper.LENGTH_LONG).show();
+                    /* Permission granted, run the task again */
+                    if (mAsyncTask instanceof saveCardImageTask) {
+                        int whereTo = ((saveCardImageTask) mAsyncTask).mWhereTo;
+                        mAsyncTask.cancel(true);
+                        mAsyncTask = new saveCardImageTask();
+                        ((saveCardImageTask) mAsyncTask).execute(whereTo);
                     }
                 } else {
                     /* Permission denied */
@@ -1522,39 +1576,66 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Saves the current card image to external storage
+     * Returns the File used to save this card's image
      *
-     * @return A status string, to be displayed in a toast on the UI thread
+     * @param shouldDelete true if the file should be deleted before returned, false otherwise
+     * @return A File, either with the image already or blank
+     * @throws Exception If something goes wrong
      */
-    String saveImage() {
+    File getSavedImageFile(boolean shouldDelete) throws Exception {
+
         String strPath;
         try {
             strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
                     .getCanonicalPath() + "/MTGFamiliar";
         } catch (IOException ex) {
-            return getString(R.string.card_view_no_pictures_folder);
+            throw new Exception(getString(R.string.card_view_no_pictures_folder));
         }
 
         File fPath = new File(strPath);
 
         if (!fPath.exists()) {
             if (!fPath.mkdir()) {
-                return getString(R.string.card_view_unable_to_create_dir);
+                throw new Exception(getString(R.string.card_view_unable_to_create_dir));
             }
 
             if (!fPath.isDirectory()) {
-                return getString(R.string.card_view_unable_to_create_dir);
+                throw new Exception(getString(R.string.card_view_unable_to_create_dir));
             }
         }
 
         fPath = new File(strPath, mCardName + "_" + mSetCode + ".jpg");
 
-        if (fPath.exists()) {
-            if (!fPath.delete()) {
-                return getString(R.string.card_view_unable_to_create_file);
+        if (shouldDelete) {
+            if (fPath.exists()) {
+                if (!fPath.delete()) {
+                    throw new Exception(getString(R.string.card_view_unable_to_create_file));
+                }
             }
         }
 
+        return fPath;
+    }
+
+    /**
+     * Saves the current card image to external storage
+     *
+     * @return A status string, to be displayed in a toast on the UI thread
+     */
+    String saveImage() {
+        File fPath;
+
+        try {
+            fPath = getSavedImageFile(true);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+
+        String strPath = fPath.getAbsolutePath();
+
+        if (fPath.exists()) {
+            return getString(R.string.card_view_image_saved) + strPath;
+        }
         try {
             if (!fPath.createNewFile()) {
                 return getString(R.string.card_view_unable_to_create_file);
@@ -1591,12 +1672,13 @@ public class CardViewFragment extends FamiliarFragment {
             }
 
             boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 90, fStream);
+            fStream.flush();
+            fStream.close();
 
             if (!bCompressed) {
                 return getString(R.string.card_view_unable_to_save_image);
             }
 
-            strPath = fPath.getCanonicalPath();
         } catch (IOException ex) {
             return getString(R.string.card_view_save_failure);
         }
