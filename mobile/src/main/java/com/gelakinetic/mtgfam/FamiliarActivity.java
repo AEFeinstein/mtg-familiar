@@ -64,6 +64,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
+import com.gelakinetic.mtgfam.fragments.DeckBuilderFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
@@ -127,6 +128,7 @@ public class FamiliarActivity extends AppCompatActivity {
     public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
     public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
     public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
+    public static final String ACTION_DECKLIST = "android.intent.action.DECKLIST";
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 77;
 
     /* Constants used for saving state */
@@ -159,6 +161,7 @@ public class FamiliarActivity extends AppCompatActivity {
             new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
             new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
             new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false),
+            new DrawerEntry(R.string.main_deckbuilder, R.attr.ic_drawer_profile, false),
             new DrawerEntry(0, 0, true),
             new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
             new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
@@ -577,7 +580,8 @@ public class FamiliarActivity extends AppCompatActivity {
                     case R.string.main_mojhosto:
                     case R.string.main_card_search:
                     case R.string.main_life_counter:
-                    case R.string.main_profile: {
+                    case R.string.main_profile:
+                    case R.string.main_deckbuilder: {
                         selectItem(mPageEntries[i].mNameResource, null, true, false);
                         break;
                     }
@@ -906,6 +910,8 @@ public class FamiliarActivity extends AppCompatActivity {
             selectItem(R.string.main_mojhosto, null, true, false);
         } else if (ACTION_PROFILE.equals(intent.getAction())) {
             selectItem(R.string.main_profile, null, true, false);
+        } else if (ACTION_DECKLIST.equals(intent.getAction())) {
+            selectItem(R.string.main_deckbuilder, null, true, false);
         } else if (Intent.ACTION_MAIN.equals(intent.getAction())) {
             /* App launched as regular, show the default fragment if there isn't one already */
             if (getSupportFragmentManager().getFragments() == null) {
@@ -1047,6 +1053,10 @@ public class FamiliarActivity extends AppCompatActivity {
             }
             case R.string.main_profile: {
                 newFrag = new ProfileFragment();
+                break;
+            }
+            case R.string.main_deckbuilder: {
+                newFrag = new DeckBuilderFragment();
                 break;
             }
             default:
