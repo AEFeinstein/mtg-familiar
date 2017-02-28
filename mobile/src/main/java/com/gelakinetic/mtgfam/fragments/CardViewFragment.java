@@ -1205,23 +1205,26 @@ public class CardViewFragment extends FamiliarFragment {
 
                     try {
                         URL u;
-                        if (cardLanguage.equalsIgnoreCase("en") && !triedScryfall) {
+                        if (!cardLanguage.equalsIgnoreCase("en")) {
+                            /* Non-English have to come from magiccards.info. Try there first */
+                            u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
+                            /* If this fails, try next time with the English version */
+                            cardLanguage = "en";
+                        } else if (!triedScryfall) {
+                            /* Try downloading the image from Scryfall next */
                             u = new URL(getScryfallImageUri(mMultiverseId));
+                            /* If this fails, try next time with the Magiccards.info version */
                             triedScryfall = true;
+                        } else if (!triedMtgi) {
+                            /* Try downloading the image from magiccards.info next */
+                            u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
+                            /* If this fails, try next time with the gatherer version */
+                            triedMtgi = true;
                         } else {
-                            if (!cardLanguage.equalsIgnoreCase("en")) {
-                                u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
-                                cardLanguage = "en";
-                            } else {
-                                if (!triedMtgi) {
-                                    u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
-                                    triedMtgi = true;
-                                } else {
-                                    u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="
-                                            + mMultiverseId + "&type=card");
-                                    triedGatherer = true;
-                                }
-                            }
+                            /* Try downloading the image from gatherer */
+                            u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
+                            /* If this fails, give up */
+                            triedGatherer = true;
                         }
 
                         /* Download the bitmap */
@@ -1236,6 +1239,8 @@ public class CardViewFragment extends FamiliarFragment {
                             /* in case the fragment isn't attached to an activity */
                             error = e.toString();
                         }
+
+                        /* Gatherer is always tried last. If that fails, give up */
                         if (!triedGatherer) {
                             bRetry = true;
                         }
@@ -1243,6 +1248,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
 
+            /* Image download failed, just return null */
             if (bitmap == null) {
                 return null;
             }
@@ -1438,7 +1444,7 @@ public class CardViewFragment extends FamiliarFragment {
                     Element rulingText = ruling.children().get(1);
                     Elements imageTags = rulingText.getElementsByTag("img");
                     /* For each symbol in the rulings text */
-                    for(Element symbol : imageTags) {
+                    for (Element symbol : imageTags) {
                         /* Build the glyph with {, the text between "name=" and "&" and } */
                         String symbolString = "{" + symbol.attr("src").split("name=")[1].split("&")[0] + "}";
                         /* The new "HTML" for the symbols will be {n}, instead of the img tags they were before */
