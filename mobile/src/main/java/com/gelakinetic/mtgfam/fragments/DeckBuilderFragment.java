@@ -194,10 +194,26 @@ public class DeckBuilderFragment extends FamiliarFragment {
             assert convertView != null;
             Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
             CompressedDecklistInfo info = values.get(position);
+            CompressedDecklistInfo previousInfo = null;
+            try {
+                previousInfo = values.get(position - 1);
+            } catch (ArrayIndexOutOfBoundsException aie) {}
             TextView separator = (TextView) convertView.findViewById(R.id.decklistSeparator);
-            if (info.mIsSideboard && !values.get(position - 1).mIsSideboard) {
+            separator.setVisibility(View.VISIBLE);
+            if (info.mIsSideboard && !(previousInfo != null && previousInfo.mIsSideboard)) {
                 separator.setText(R.string.decklist_sideboard);
-                separator.setVisibility(View.VISIBLE);
+            } else if (info.mCard.type.contains("Creature") && !(previousInfo != null && previousInfo.mCard.type.contains("Creature"))) {
+                separator.setText(R.string.decklist_creatures);
+            } else if (info.mCard.type.contains("Planeswalker") && !(previousInfo != null && previousInfo.mCard.type.contains("Planeswalker"))) {
+                separator.setText(R.string.decklist_planeswalker);
+            } else if ((info.mCard.type.contains("Instant") || info.mCard.type.contains("Sorcery")) && !(previousInfo != null && (previousInfo.mCard.type.contains("Instant") || previousInfo.mCard.type.contains("Sorcery")))) {
+                separator.setText(R.string.decklist_spells);
+            } else if (info.mCard.type.contains("Artifact") && !(previousInfo != null && previousInfo.mCard.type.contains("Artifact"))) {
+                separator.setText(R.string.decklist_artifacts);
+            } else if (info.mCard.type.contains("Enchantment") && !(previousInfo != null && previousInfo.mCard.type.contains("Enchantment"))) {
+                separator.setText(R.string.decklist_enchantments);
+            } else if (info.mCard.type.contains("Land") && !(previousInfo != null && previousInfo.mCard.type.contains("Land"))) {
+                separator.setText(R.string.decklist_lands);
             } else {
                 separator.setVisibility(View.GONE);
             }

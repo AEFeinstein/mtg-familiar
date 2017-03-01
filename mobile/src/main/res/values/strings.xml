@@ -501,4 +501,10 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="send_to">Share image using</string>
     <string name="main_deckbuilder">Deck Builder</string>
     <string name="decklist_sideboard">Sideboard</string>
+    <string name="decklist_creatures">Creatures</string>
+    <string name="decklist_spells">Spells</string>
+    <string name="decklist_planeswalker">Planeswalker</string>
+    <string name="decklist_enchantments">Enchantments</string>
+    <string name="decklist_artifacts">Artifacts</string>
+    <string name="decklist_lands">Lands</string>
 </resources>
