@@ -1,5 +1,13 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import android.content.Context;
+import android.util.Pair;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
@@ -8,14 +16,116 @@ import java.util.Comparator;
 
 public class DecklistHelpers {
 
-    public static class CompressedDecklistInfo extends WishlistHelpers.CompressedWishlistInfo {
+    private static final String DECKLIST_NAME = "card.deck";
 
-        public boolean mIsSideboard;
+    public static void WriteCompressedDecklist(Context mCtx, ArrayList<CompressedDecklistInfo> mCompressedDecklist) {
+        try {
+            FileOutputStream fos = mCtx.openFileOutput(DECKLIST_NAME, Context.MODE_PRIVATE);
+            for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+                MtgCard card = cdi.mCard;
+                for (IndividualSetInfo isi : cdi.mInfo) {
+                    card.set = isi.mSet;
+                    card.setCode = isi.mSetCode;
+                    card.number = isi.mNumber;
+                    card.foil = isi.mIsFoil;
+                    card.numberOf = isi.mNumberOf;
+                    String cardString = card.toWishlistString();
+                    if (cdi.mIsSideboard) {
+                        cardString += " sb";
+                    }
+                    fos.write(cardString.getBytes());
+                }
+            }
+            fos.close();
+        } catch (IOException ioe) {
+            ToastWrapper.makeText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+        }
+    }
+
+    public static ArrayList<Pair<MtgCard, Boolean>> ReadDecklist(Context mCtx) {
+        ArrayList<Pair<MtgCard, Boolean>> lDecklist = new ArrayList<>();
+        try {
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(DECKLIST_NAME)));
+            boolean isSideboard;
+            while ((line = br.readLine()) != null) {
+                isSideboard = false;
+                String sideboard = line.substring(Math.max(line.length() - 3, 0));
+                if (sideboard.equals(" sb")) {
+                    isSideboard = true;
+                }
+                line = line.substring(0, Math.max(line.length() - 4, 0));
+                lDecklist.add(new Pair<MtgCard, Boolean>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
+            }
+        } catch (NumberFormatException nfe) {
+            ToastWrapper.makeText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+        } catch (IOException ioe) {
+            /* Catches file not found exception when decklist doesn't exist */
+        }
+        return lDecklist;
+    }
+
+    public static ArrayList<CompressedDecklistInfo> ReadDecklist2(Context mCtx) {
+        ArrayList<CompressedDecklistInfo> lDecklist = new ArrayList<>();
+        try {
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(DECKLIST_NAME)));
+            boolean isSideboard;
+            while ((line = br.readLine()) != null) {
+                isSideboard = false;
+                String sideboard = line.substring(Math.max(line.length() - 3, 0));
+                if (sideboard.equals(" sb")) {
+                    isSideboard = true;
+                }
+                line = line.substring(0, Math.max(line.length() - 4, 0));
+                lDecklist.add(new CompressedDecklistInfo(MtgCard.fromWishlistString(line, mCtx), isSideboard));
+            }
+        } catch (NumberFormatException nfe) {
+            ToastWrapper.makeText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+        } catch (IOException ioe) {
+            /* Catches file not found exception when decklist doesn't exist */
+        }
+        return lDecklist;
+    }
+
+    public static class CompressedDecklistInfo implements CompressedCardInfo {
+
+        public final MtgCard mCard;
+        public final ArrayList<IndividualSetInfo> mInfo;
+        public final boolean mIsSideboard;
 
         public CompressedDecklistInfo(MtgCard card, boolean isSideboard) {
-            super(card);
-            this.mIsSideboard = isSideboard;
-            add(card);
+            mInfo = new ArrayList<>();
+            mCard = card;
+            mIsSideboard = isSideboard;
+            add(mCard);
+        }
+
+        public void add(MtgCard card) {
+            IndividualSetInfo isi = new IndividualSetInfo();
+
+            isi.mSet = card.setName;
+            isi.mSetCode = card.setCode;
+            isi.mNumber = card.number;
+            isi.mIsFoil = card.foil;
+            isi.mPrice = null;
+            isi.mMessage = card.message;
+            isi.mNumberOf = card.numberOf;
+            isi.mRarity = card.rarity;
+
+            mInfo.add(isi);
+        }
+
+        public void clearCompressedInfo() {
+            mInfo.clear();
+        }
+
+        public MtgCard getCard() {
+            return mCard;
+        }
+
+        public ArrayList<IndividualSetInfo> getSetInfo() {
+            return mInfo;
         }
 
     }

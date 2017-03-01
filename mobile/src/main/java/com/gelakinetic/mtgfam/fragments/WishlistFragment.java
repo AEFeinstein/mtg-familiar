@@ -36,7 +36,7 @@ import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers.IndividualSetInfo;
+import com.gelakinetic.mtgfam.helpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorCmc;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorColor;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.WishlistComparatorName;

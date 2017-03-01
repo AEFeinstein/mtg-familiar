@@ -404,25 +404,11 @@ public class WishlistHelpers {
     }
 
     /**
-     * This class encapsulates all non-duplicated information for two cards in different sets
-     */
-    public static class IndividualSetInfo {
-        public String mSet;
-        public String mSetCode;
-        public String mNumber;
-
-        public Boolean mIsFoil;
-        public PriceInfo mPrice;
-        public String mMessage;
-        public Integer mNumberOf;
-        public Character mRarity;
-    }
-
-    /**
      * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for different printings
      * of that card
      */
-    public static class CompressedWishlistInfo {
+    public static class CompressedWishlistInfo implements CompressedCardInfo {
+
         public final MtgCard mCard;
         public final ArrayList<IndividualSetInfo> mInfo;
 
@@ -480,6 +466,15 @@ public class WishlistHelpers {
         public void clearCompressedInfo() {
             mInfo.clear();
         }
+
+        public MtgCard getCard() {
+            return mCard;
+        }
+
+        public ArrayList<IndividualSetInfo> getSetInfo() {
+            return mInfo;
+        }
+
     }
 
     /* Comparator based on converted mana cost */

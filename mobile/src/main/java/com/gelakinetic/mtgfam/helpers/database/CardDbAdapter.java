@@ -32,6 +32,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.CompressedCardInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -548,7 +549,7 @@ public class CardDbAdapter {
      * @param mDb                 The database to query
      * @throws FamiliarDbException If something goes wrong
      */
-    public static void fillExtraWishlistData(ArrayList<CompressedWishlistInfo> mCompressedWishlist,
+    public static void fillExtraWishlistData(ArrayList<? extends CompressedCardInfo> mCompressedWishlist,
                                              SQLiteDatabase mDb) throws FamiliarDbException {
         String sql = "SELECT ";
 
@@ -569,22 +570,22 @@ public class CardDbAdapter {
 
         first = true;
         boolean doSql = false;
-        for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-            if (cwi.mCard.type == null || cwi.mCard.type.equals("")) {
+        for (CompressedCardInfo cwi : mCompressedWishlist) {
+            if (cwi.getCard().type == null || cwi.getCard().type.equals("")) {
                 doSql = true;
                 if (first) {
                     first = false;
                 } else {
                     sql += " OR ";
                 }
-                if (cwi.mCard.setCode != null && !cwi.mCard.setCode.equals("")) {
+                if (cwi.getCard().setCode != null && !cwi.getCard().setCode.equals("")) {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mCard.name) +
+                            sanitizeString(cwi.getCard().name) +
                             " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" +
-                            cwi.mCard.setCode + "')";
+                            cwi.getCard().setCode + "')";
                 } else {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mCard.name) + ")";
+                            sanitizeString(cwi.getCard().name) + ")";
                 }
             }
         }
@@ -612,29 +613,29 @@ public class CardDbAdapter {
         while (!cursor.isAfterLast()) {
             /* Do stuff */
             String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                if (name != null && name.equals(cwi.mCard.name)) {
-                    cwi.mCard.type =
+            for (CompressedCardInfo cwi : mCompressedWishlist) {
+                if (name != null && name.equals(cwi.getCard().name)) {
+                    cwi.getCard().type =
                             getTypeLine(cursor);
-                    cwi.mCard.rarity =
+                    cwi.getCard().rarity =
                             (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                    cwi.mCard.manaCost =
+                    cwi.getCard().manaCost =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-                    cwi.mCard.power =
+                    cwi.getCard().power =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-                    cwi.mCard.toughness =
+                    cwi.getCard().toughness =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-                    cwi.mCard.loyalty =
+                    cwi.getCard().loyalty =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-                    cwi.mCard.ability =
+                    cwi.getCard().ability =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-                    cwi.mCard.flavor =
+                    cwi.getCard().flavor =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-                    cwi.mCard.number =
+                    cwi.getCard().number =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-                    cwi.mCard.cmc =
+                    cwi.getCard().cmc =
                             cursor.getInt((cursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
-                    cwi.mCard.color =
+                    cwi.getCard().color =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
                 }
             }

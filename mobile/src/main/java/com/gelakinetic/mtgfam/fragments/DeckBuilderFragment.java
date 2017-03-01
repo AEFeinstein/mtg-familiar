@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Html;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -148,12 +150,21 @@ public class DeckBuilderFragment extends FamiliarFragment {
 
             /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
             if (mCompressedDecklist.contains(card)) {
+                boolean added = false;
                 int firstIndex = mCompressedDecklist.indexOf(card);
                 int lastIndex = mCompressedDecklist.lastIndexOf(card);
                 if (firstIndex == lastIndex) {
                     CompressedDecklistInfo existingCard = mCompressedDecklist.get(firstIndex);
                     if (existingCard.mIsSideboard == isSideboard) {
-                        existingCard.mCard.numberOf++;
+                        for (IndividualSetInfo isi : existingCard.mInfo) {
+                            if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
+                                added = true;
+                                isi.mNumberOf++;
+                            }
+                        }
+                        if (!added) {
+                            existingCard.add(card);
+                        }
                     } else {
                         mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
                     }
@@ -161,21 +172,36 @@ public class DeckBuilderFragment extends FamiliarFragment {
                     CompressedDecklistInfo firstCard = mCompressedDecklist.get(firstIndex);
                     CompressedDecklistInfo secondCard = mCompressedDecklist.get(lastIndex);
                     if (firstCard.mIsSideboard == isSideboard) {
-                        firstCard.mCard.numberOf++;
+                        for (IndividualSetInfo isi : firstCard.mInfo) {
+                            if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
+                                added = true;
+                                isi.mNumberOf++;
+                            }
+                        }
+                        if (!added) {
+                            firstCard.add(card);
+                        }
                     } else {
-                        secondCard.mCard.numberOf++;
+                        for (IndividualSetInfo isi : firstCard.mInfo) {
+                            if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
+                                added = true;
+                                isi.mNumberOf++;
+                            }
+                        }
+                        if (!added) {
+                            secondCard.add(card);
+                        }
                     }
                 }
             } else {
                 mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
             }
 
-            /* Sort the wishlist */
-            //sortWishlist();
+            /* Sort the wishlist */;
             Collections.sort(mCompressedDecklist, new DecklistHelpers.DecklistComparator());
 
             /* Save the wishlist */
-            //WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
 
             /* Clean up for the next add */
             mNumberField.setText("1");
@@ -189,6 +215,60 @@ public class DeckBuilderFragment extends FamiliarFragment {
         } catch (NumberFormatException e) {
             /* eat it */
         }
+    }
+
+    private void readAndCompressDecklist(String changedCardName) {
+        ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getActivity());
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+        try {
+            for (Pair<MtgCard, Boolean> card : decklist) {
+                card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
+            }
+            if (changedCardName == null) {
+                mCompressedDecklist.clear();
+            } else {
+                for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+                    if (cdi.mCard.name.equals(changedCardName)) {
+                        cdi.clearCompressedInfo();
+                    }
+                }
+            }
+            for (Pair<MtgCard, Boolean> card : decklist) {
+                if (changedCardName == null || changedCardName.equals(card.first.name)) {
+                    if (!mCompressedDecklist.contains(card.first)) {
+                        mCompressedDecklist.add(new CompressedDecklistInfo(card.first, card.second));
+                    } else {
+                        mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first)).add(card.first);
+                    }
+                }
+            }
+            if (changedCardName != null) {
+                for (int i = 0; i < mCompressedDecklist.size(); i++) {
+                    if (mCompressedDecklist.get(i).mInfo.size() == 0) {
+                        mCompressedDecklist.remove(i);
+                        i--;
+                    }
+                }
+            }
+            CardDbAdapter.fillExtraWishlistData(mCompressedDecklist, database);
+        } catch (FamiliarDbException fde) {
+            handleFamiliarDbException(false);
+        }
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCompressedDecklist.clear();
+        readAndCompressDecklist(null);
+        mDecklistAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onWishlistChanged(String cardName) {
+        // todo: might need to rework this?
+        mDecklistAdapter.notifyDataSetChanged();
     }
 
     public class DecklistArrayAdapter extends ArrayAdapter<CompressedDecklistInfo> {
