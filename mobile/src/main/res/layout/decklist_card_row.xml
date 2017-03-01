@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:text="0x"
-        android:layout_width="wrap_content"
+    <TextView android:id="@+id/decklistSeparator"
         android:layout_height="wrap_content"
-        android:id="@+id/decklistRowNumber" />
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent" />
 
-    <TextView
-        android:text="Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/decklistRowName" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48sp"
+        android:orientation="horizontal">
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/decklistRowCost"
-        android:gravity="right" />
+        <TextView
+            android:text="0x"
+            style="@style/text.medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/decklistRowNumber"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp" />
+
+        <TextView
+            android:text="Name"
+            style="@style/text.medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/decklistRowName"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/decklistRowCost"
+            android:gravity="right|center_vertical"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"/>
+        </LinearLayout>
 </LinearLayout>

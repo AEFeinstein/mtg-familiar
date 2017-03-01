@@ -18,16 +18,17 @@ import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class DeckBuilderFragment extends FamiliarFragment {
 
@@ -148,15 +149,10 @@ public class DeckBuilderFragment extends FamiliarFragment {
             /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
             if (mCompressedDecklist.contains(card)) {
                 CompressedDecklistInfo cwi = mCompressedDecklist.get(mCompressedDecklist.indexOf(card));
-                boolean added = false;
-                for (WishlistHelpers.IndividualSetInfo isi : cwi.mInfo) {
-                    if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-                        added = true;
-                        isi.mNumberOf++;
-                    }
-                }
-                if (!added) {
-                    cwi.add(card);
+                if (cwi.mIsSideboard && isSideboard) {
+                    cwi.mCard.numberOf++;
+                } else if (cwi.mIsSideboard && !isSideboard) {
+
                 }
             } else {
                 mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
@@ -164,6 +160,7 @@ public class DeckBuilderFragment extends FamiliarFragment {
 
             /* Sort the wishlist */
             //sortWishlist();
+            Collections.sort(mCompressedDecklist, new DecklistHelpers.DecklistComparator());
 
             /* Save the wishlist */
             //WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
@@ -197,11 +194,17 @@ public class DeckBuilderFragment extends FamiliarFragment {
             assert convertView != null;
             Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
             CompressedDecklistInfo info = values.get(position);
+            TextView separator = (TextView) convertView.findViewById(R.id.decklistSeparator);
+            if (info.mIsSideboard && !values.get(position - 1).mIsSideboard) {
+                separator.setText(R.string.decklist_sideboard);
+                separator.setVisibility(View.VISIBLE);
+            } else {
+                separator.setVisibility(View.GONE);
+            }
             ((TextView) convertView.findViewById(R.id.decklistRowNumber)).setText(String.valueOf(info.mCard.numberOf));
             ((TextView) convertView.findViewById(R.id.decklistRowName)).setText(info.mCard.name);
             ((TextView) convertView.findViewById(R.id.decklistRowCost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imgGetter));
             return convertView;
         }
-
     }
 }
