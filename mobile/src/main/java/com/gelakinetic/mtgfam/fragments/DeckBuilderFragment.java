@@ -148,11 +148,23 @@ public class DeckBuilderFragment extends FamiliarFragment {
 
             /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
             if (mCompressedDecklist.contains(card)) {
-                CompressedDecklistInfo cwi = mCompressedDecklist.get(mCompressedDecklist.indexOf(card));
-                if (cwi.mIsSideboard && isSideboard) {
-                    cwi.mCard.numberOf++;
-                } else if (cwi.mIsSideboard && !isSideboard) {
-
+                int firstIndex = mCompressedDecklist.indexOf(card);
+                int lastIndex = mCompressedDecklist.lastIndexOf(card);
+                if (firstIndex == lastIndex) {
+                    CompressedDecklistInfo existingCard = mCompressedDecklist.get(firstIndex);
+                    if (existingCard.mIsSideboard == isSideboard) {
+                        existingCard.mCard.numberOf++;
+                    } else {
+                        mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
+                    }
+                } else {
+                    CompressedDecklistInfo firstCard = mCompressedDecklist.get(firstIndex);
+                    CompressedDecklistInfo secondCard = mCompressedDecklist.get(lastIndex);
+                    if (firstCard.mIsSideboard == isSideboard) {
+                        firstCard.mCard.numberOf++;
+                    } else {
+                        secondCard.mCard.numberOf++;
+                    }
                 }
             } else {
                 mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
