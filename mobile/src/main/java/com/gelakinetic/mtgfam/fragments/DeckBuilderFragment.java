@@ -22,6 +22,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers.DecklistComparator;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -209,7 +210,7 @@ public class DeckBuilderFragment extends FamiliarFragment {
             }
 
             /* Sort the wishlist */;
-            Collections.sort(mCompressedDecklist, new DecklistHelpers.DecklistComparator());
+            Collections.sort(mCompressedDecklist, new DecklistComparator());
 
             /* Save the wishlist */
             DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
@@ -246,10 +247,16 @@ public class DeckBuilderFragment extends FamiliarFragment {
             }
             for (Pair<MtgCard, Boolean> card : decklist) {
                 if (changedCardName == null || changedCardName.equals(card.first.name)) {
+
                     if (!mCompressedDecklist.contains(card.first)) {
                         mCompressedDecklist.add(new CompressedDecklistInfo(card.first, card.second));
                     } else {
-                        mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first)).add(card.first);
+                        CompressedDecklistInfo existingCard = mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first));
+                        if (existingCard.mIsSideboard == card.second) {
+                            mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first)).add(card.first);
+                        } else {
+                            mCompressedDecklist.add(new CompressedDecklistInfo(card.first, card.second));
+                        }
                     }
                 }
             }
@@ -273,6 +280,7 @@ public class DeckBuilderFragment extends FamiliarFragment {
         super.onResume();
         mCompressedDecklist.clear();
         readAndCompressDecklist(null);
+        Collections.sort(mCompressedDecklist, new DecklistComparator());
         mDecklistAdapter.notifyDataSetChanged();
     }
 

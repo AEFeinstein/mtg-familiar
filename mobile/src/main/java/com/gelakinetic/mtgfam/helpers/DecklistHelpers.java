@@ -31,7 +31,8 @@ public class DecklistHelpers {
                     card.numberOf = isi.mNumberOf;
                     String cardString = card.toWishlistString();
                     if (cdi.mIsSideboard) {
-                        cardString += " sb";
+                        cardString = cardString.replaceAll("(\\n)", "");
+                        cardString += " sb\n";
                     }
                     fos.write(cardString.getBytes());
                 }
@@ -54,8 +55,8 @@ public class DecklistHelpers {
                 if (sideboard.equals(" sb")) {
                     isSideboard = true;
                 }
-                line = line.substring(0, Math.max(line.length() - 4, 0));
-                lDecklist.add(new Pair<MtgCard, Boolean>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
+                line = line.substring(0, Math.max(line.length() - 3, 0));
+                lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
             }
         } catch (NumberFormatException nfe) {
             ToastWrapper.makeText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
@@ -146,9 +147,11 @@ public class DecklistHelpers {
                 return 1;
             } else if (!o1.mIsSideboard && o2.mIsSideboard) {
                 return -1;
-            } else {
+            } else if (!o1.mIsSideboard && !o2.mIsSideboard) {
                 if (o1.mCard.type.contains("Creature") && !o2.mCard.type.contains("Creature")) {
                     return -1;
+                } else if (!o1.mCard.type.contains("Creature") && o2.mCard.type.contains("Creature")) {
+                    return 1;
                 } else if (o1.mCard.type.contains("Creature") && o2.mCard.type.contains("Creature")) {
                     cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
                     if (cmcCompare == 0) {
@@ -156,15 +159,19 @@ public class DecklistHelpers {
                     }
                     return cmcCompare;
                 } else if (o1.mCard.type.contains("Planeswalker") && !o2.mCard.type.contains("Planeswalker")) {
-                    if (o2.mCard.type.contains("Creature")) {
-                        return 1;
-                    }
                     return -1;
-                } else if ((o1.mCard.type.contains("Instant") || o1.mCard.type.contains("Sorcery")) && !(o2.mCard.type.contains("Instant") && o2.mCard.type.contains("Sorcery"))) {
-                    if (o2.mCard.type.contains("Creature") || o2.mCard.type.contains("Planeswalker")) {
-                        return 1;
+                } else if (!o1.mCard.type.contains("Planeswalker") && o2.mCard.type.contains("Planeswalker")) {
+                    return 1;
+                } else if (o1.mCard.type.contains("Planeswalker") && o2.mCard.type.contains("Planeswalker")) {
+                    cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
+                    if (cmcCompare == 0) {
+                        return compareName(o1.mCard.name.compareTo(o2.mCard.name));
                     }
+                    return cmcCompare;
+                } else if ((o1.mCard.type.contains("Instant") || o1.mCard.type.contains("Sorcery")) && !(o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery"))) {
                     return -1;
+                } else if (!(o1.mCard.type.contains("Instant") || o1.mCard.type.contains("Sorcery")) && (o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery"))) {
+                    return 1;
                 } else if ((o1.mCard.type.contains("Instant") || o1.mCard.type.contains("Sorcery")) && (o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery"))) {
                     cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
                     if (cmcCompare == 0) {
@@ -172,20 +179,19 @@ public class DecklistHelpers {
                     }
                     return cmcCompare;
                 } else if (o1.mCard.type.contains("Artifact") && !o2.mCard.type.contains("Artifact")) {
-                    if (o2.mCard.type.contains("Creature") || o2.mCard.type.contains("Planeswalker") || o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery")) {
-                        return 1;
-                    }
                     return -1;
+                } else if (!o1.mCard.type.contains("Artifact") && o2.mCard.type.contains("Artifact")) {
+                    return 1;
                 } else if (o1.mCard.type.contains("Artifact") && o2.mCard.type.contains("Artifact")) {
                     cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
                     if (cmcCompare == 0) {
                         return compareName(o1.mCard.name.compareTo(o2.mCard.name));
                     }
+                    return cmcCompare;
                 } else if (o1.mCard.type.contains("Enchantment") && !o2.mCard.type.contains("Enchantment")) {
-                    if (o2.mCard.type.contains("Creature") || o2.mCard.type.contains("Planeswalker") || o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery") || o2.mCard.type.contains("Artifact")) {
-                        return 1;
-                    }
                     return -1;
+                } else if (!o1.mCard.type.contains("Enchantment") && o2.mCard.type.contains("Enchantment")) {
+                    return 1;
                 } else if (o1.mCard.type.contains("Enchantment") && o2.mCard.type.contains("Enchantment")) {
                     cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
                     if (cmcCompare == 0) {
@@ -193,13 +199,15 @@ public class DecklistHelpers {
                     }
                     return cmcCompare;
                 } else {
-                    if (o2.mCard.type.contains("Creature") || o2.mCard.type.contains("Planeswalker") || o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery") || o2.mCard.type.contains("Artifact") || o2.mCard.type.contains("Enchantment")) {
-                        return 1;
-                    }
                     return compareName(o1.mCard.name.compareTo(o2.mCard.name));
                 }
+            } else {
+                cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
+                if (cmcCompare == 0) {
+                    return compareName(o1.mCard.name.compareTo(o2.mCard.name));
+                }
+                return cmcCompare;
             }
-            return 0;
         }
 
         private int compareCMC(int cmcValue1, int cmcValue2) {
