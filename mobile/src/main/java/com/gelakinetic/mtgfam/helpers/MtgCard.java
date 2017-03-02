@@ -317,8 +317,8 @@ public class MtgCard {
     public boolean equals(Object o) {
         if (o instanceof MtgCard) {
             return this.name.equals(((MtgCard) o).name);
-        } else if (o instanceof CompressedWishlistInfo) {
-            return this.name.equals(((CompressedWishlistInfo) o).mCard.name);
+        } else if (o instanceof CompressedCardInfo) {
+            return this.name.equals(((CompressedCardInfo) o).getCard().name);
         }
         return false;
     }

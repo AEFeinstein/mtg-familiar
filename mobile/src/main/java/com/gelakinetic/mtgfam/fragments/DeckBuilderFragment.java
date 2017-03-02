@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -98,6 +99,16 @@ public class DeckBuilderFragment extends FamiliarFragment {
         mCompressedDecklist = new ArrayList<>();
         mDecklistAdapter = new DecklistArrayAdapter(mCompressedDecklist);
         listView.setAdapter(mDecklistAdapter);
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                mCompressedDecklist.remove(position);
+                DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
+                mDecklistAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
 
         return myFragmentView;
     }
@@ -309,7 +320,7 @@ public class DeckBuilderFragment extends FamiliarFragment {
             } else {
                 separator.setVisibility(View.GONE);
             }
-            ((TextView) convertView.findViewById(R.id.decklistRowNumber)).setText(String.valueOf(info.mCard.numberOf));
+            ((TextView) convertView.findViewById(R.id.decklistRowNumber)).setText(String.valueOf(info.getTotalNumber()));
             ((TextView) convertView.findViewById(R.id.decklistRowName)).setText(info.mCard.name);
             ((TextView) convertView.findViewById(R.id.decklistRowCost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imgGetter));
             return convertView;

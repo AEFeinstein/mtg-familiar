@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -8,15 +7,18 @@
     <TextView android:id="@+id/decklistSeparator"
         android:layout_height="wrap_content"
         style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"
+        android:focusable="false"
+        android:clickable="false" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48sp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground">
 
         <TextView
-            android:text="0x"
+            android:text="0"
             style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +36,7 @@
             android:layout_gravity="center_vertical" />
 
         <TextView
-            android:text="TextView"
+            android:text="ManaCost"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -128,6 +128,14 @@ public class DecklistHelpers {
             return mInfo;
         }
 
+        public int getTotalNumber() {
+            int totalCopies = 0;
+            for (IndividualSetInfo isi : mInfo) {
+                totalCopies += isi.mNumberOf;
+            }
+            return totalCopies;
+        }
+
     }
 
     public static class DecklistComparator implements Comparator<CompressedDecklistInfo> {
