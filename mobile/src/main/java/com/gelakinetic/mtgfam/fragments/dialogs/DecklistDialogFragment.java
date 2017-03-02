@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,24 +19,30 @@ import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by brian on 3/1/2017.
+ * Class that creates dialogs for DecklistFragment
  */
 public class DecklistDialogFragment extends FamiliarDialogFragment {
 
     /* Dialog constants */
     public static final int DIALOG_UPDATE_CARD = 1;
+    public static final int DIALOG_SAVE_DECK = 2;
+    public static final int DIALOG_LOAD_DECK = 3;
+    public static final int DIALOG_DELETE_DECK = 4;
+    public static final int DIALOG_CONFIRMATION = 5;
 
     public static final String NAME_KEY = "name";
     public static final String SIDE_KEY = "side";
@@ -80,7 +87,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 });
 
                 /* Read the decklist */
-                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getParentDecklistFragment().getActivity());
+                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getParentDecklistFragment().getActivity(), getParentDecklistFragment().mCurrentDeck + getParentDecklistFragment().DECK_EXTENSION);
 
                 /* Find any counts currently in the decklist */
                 final Map<String, String> targetCardNumberOfs = new HashMap<>();
@@ -178,7 +185,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 /* read the decklist */
-                                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getParentDecklistFragment().getActivity());
+                                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getParentDecklistFragment().getActivity(), getParentDecklistFragment().mCurrentDeck + DecklistFragment.DECK_EXTENSION);
 
                                 /* Add the cards listed in the dialog to the wishlist */
                                 for (int i = 0; i < linearLayout.getChildCount(); i++) {
@@ -226,6 +233,131 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                             }
                         })
                         .negativeText(R.string.dialog_cancel)
+                        .build();
+            }
+            case DIALOG_SAVE_DECK: {
+                /* Inflate a view to type in the deck's name and show it in an AlertDialog */
+                View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry, null, false);
+                assert textEntryView != null;
+                final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+                nameInput.append(getParentDecklistFragment().mCurrentDeck);
+                /* Set the button to clear the text field */
+                textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        nameInput.setText("");
+                    }
+                });
+                Dialog dialog = new MaterialDialog.Builder(getActivity())
+                        .title(R.string.deck_save_dialog_title)
+                        .customView(textEntryView, false)
+                        .positiveText(R.string.dialog_ok)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                if (nameInput.getText() == null) {
+                                    return;
+                                }
+                                String deckName = nameInput.getText().toString();
+                                /* Don't save if there is not a name */
+                                if (deckName.length() == 0 || deckName.equals("")) {
+                                    return;
+                                }
+                                DecklistHelpers.WriteCompressedDecklist(getActivity(), getParentDecklistFragment().mCompressedDecklist, deckName + DecklistFragment.DECK_EXTENSION);
+                                getParentDecklistFragment().mCurrentDeck = deckName;
+                            }
+                        })
+                        .negativeText(R.string.dialog_cancel)
+                        .build();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                return dialog;
+            }
+            case DIALOG_LOAD_DECK: {
+                /* Find all the decklist files */
+                String[] files = this.getActivity().fileList();
+                ArrayList<String> validFiles = new ArrayList<>();
+                for (String fileName : files) {
+                    if (fileName.endsWith(DecklistFragment.DECK_EXTENSION)) {
+                        validFiles.add(fileName.substring(0, fileName.indexOf(DecklistFragment.DECK_EXTENSION)));
+                    }
+                }
+                /* If there are no files, don't show the dialog */
+                if (validFiles.size() == 0) {
+                    ToastWrapper.makeText(this.getActivity(), R.string.decklist_toast_no_decks,
+                            ToastWrapper.LENGTH_LONG).show();
+                    return DontShowDialog();
+                }
+                /* Make an array of the trade file names */
+                final String[] deckNames = new String[validFiles.size()];
+                validFiles.toArray(deckNames);
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.decklist_select_dialog_title)
+                        .negativeText(R.string.dialog_cancel)
+                        .items(deckNames)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                                getParentDecklistFragment().readAndCompressDecklist(null, deckNames[position] + DecklistFragment.DECK_EXTENSION);
+                                getParentDecklistFragment().mCurrentDeck = deckNames[position];
+                                /* Alert things to update */
+                                getParentDecklistFragment().mDecklistAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .build();
+            }
+            case DIALOG_DELETE_DECK: {
+                /* Find all the trade files */
+                String[] files = this.getActivity().fileList();
+                ArrayList<String> validFiles = new ArrayList<>();
+                for (String fileName : files) {
+                    if (fileName.endsWith(DecklistFragment.DECK_EXTENSION)) {
+                        validFiles.add(fileName.substring(0, fileName.indexOf(DecklistFragment.DECK_EXTENSION)));
+                    }
+                }
+                /* if there are no files, don't show the dialog */
+                if (validFiles.size() == 0) {
+                    ToastWrapper.makeText(this.getActivity(), R.string.decklist_toast_no_decks,
+                            ToastWrapper.LENGTH_LONG).show();
+                    return DontShowDialog();
+                }
+                /* make an array of the file names */
+                final String[] deckNames = new String[validFiles.size()];
+                validFiles.toArray(deckNames);
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.decklist_delete_dialog_title)
+                        .negativeText(R.string.dialog_cancel)
+                        .items(deckNames)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                                File toDelete = new File(getActivity().getFilesDir(),
+                                        deckNames[position] + DecklistFragment.DECK_EXTENSION);
+                                if (!toDelete.delete()) {
+                                    ToastWrapper.makeText(getActivity(), toDelete.getName() + " " +
+                                            getString(R.string.not_deleted),
+                                            ToastWrapper.LENGTH_LONG).show();
+                                }
+                            }
+                        })
+                        .build();
+            }
+            case DIALOG_CONFIRMATION: {
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.decklist_clear)
+                        .content(R.string.decklist_clear_dialog_text)
+                        .positiveText(R.string.dialog_ok)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                /* do some cleaning up */
+                                getParentDecklistFragment().mCurrentDeck = "autosave";
+                                getParentDecklistFragment().mCompressedDecklist.clear();
+                                getParentDecklistFragment().mDecklistAdapter.notifyDataSetChanged();
+                                dialog.dismiss();
+                            }
+                        })
+                        .negativeText(R.string.dialog_cancel)
+                        .cancelable(true)
                         .build();
             }
             default: {

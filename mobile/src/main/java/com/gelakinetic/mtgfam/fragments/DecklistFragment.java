@@ -8,6 +8,9 @@ import android.text.Html;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -39,6 +42,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.gelakinetic.mtgfam.R.id.decklist;
+
 public class DecklistFragment extends FamiliarFragment {
 
     /* UI Elements */
@@ -48,6 +53,9 @@ public class DecklistFragment extends FamiliarFragment {
     /* Decklist and adapters */
     public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
     public DecklistArrayAdapter mDecklistAdapter;
+
+    public String mCurrentDeck = "autosave";
+    public static final String DECK_EXTENSION = ".deck";
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -86,7 +94,7 @@ public class DecklistFragment extends FamiliarFragment {
         mNumberField.setText("1");
         mNumberField.setOnEditorActionListener(addCardListener);
 
-        ListView listView = (ListView) myFragmentView.findViewById(R.id.decklist);
+        ListView listView = (ListView) myFragmentView.findViewById(decklist);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,7 +268,7 @@ public class DecklistFragment extends FamiliarFragment {
     public void onResume() {
         super.onResume();
         mCompressedDecklist.clear();
-        readAndCompressDecklist(null);
+        readAndCompressDecklist(null, mCurrentDeck + DECK_EXTENSION);
         mDecklistAdapter.notifyDataSetChanged();
     }
 
@@ -270,9 +278,12 @@ public class DecklistFragment extends FamiliarFragment {
      * of set-specific attributes like the set name and rarity.
      * @param changedCardName
      */
-    private void readAndCompressDecklist(String changedCardName) {
+    public void readAndCompressDecklist(String changedCardName, String deckName) {
+        if (deckName == null) {
+            deckName = DecklistHelpers.DECKLIST_NAME;
+        }
         /* Read the decklist */
-        ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getActivity());
+        ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getActivity(), deckName);
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
             /* Translate the set code to TCG name of course it's not saved */
@@ -328,7 +339,7 @@ public class DecklistFragment extends FamiliarFragment {
      */
     @Override
     public void onWishlistChanged(String cardName) {
-        readAndCompressDecklist(cardName);
+        readAndCompressDecklist(cardName, mCurrentDeck + DECK_EXTENSION);
         mDecklistAdapter.notifyDataSetChanged();
     }
 
@@ -351,6 +362,46 @@ public class DecklistFragment extends FamiliarFragment {
         arguments.putBoolean(DecklistDialogFragment.SIDE_KEY, isSideboard);
         newFragment.setArguments(arguments);
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+    }
+
+    /**
+     * Handle an ActionBar item click
+     * @param item the item clicked
+     * @return     true if the click was acted on
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /* handle item selection */
+        switch (item.getItemId()) {
+            case R.id.deck_menu_save: {
+                showDialog(DecklistDialogFragment.DIALOG_SAVE_DECK, null, false);
+                return true;
+            }
+            case R.id.deck_menu_load: {
+                showDialog(DecklistDialogFragment.DIALOG_LOAD_DECK, null, false);
+                return true;
+            }
+            case R.id.deck_menu_delete: {
+                showDialog(DecklistDialogFragment.DIALOG_DELETE_DECK, null, false);
+                return true;
+            }
+            case R.id.deck_menu_clear: {
+                showDialog(DecklistDialogFragment.DIALOG_CONFIRMATION, null, false);
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
+    }
+
+    /**
+     * @param menu     The options menu in which you place your items.
+     * @param inflater The inflater to use to inflate the menu
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.decklist_menu, menu);
     }
 
     /**
@@ -400,18 +451,37 @@ public class DecklistFragment extends FamiliarFragment {
             separator.setVisibility(View.VISIBLE);
             if (info.mIsSideboard && !(previousInfo != null && previousInfo.mIsSideboard)) {
                 separator.setText(R.string.decklist_sideboard);
-            } else if (info.mCard.type.contains("Creature") && !(previousInfo != null && previousInfo.mCard.type.contains("Creature"))) {
-                separator.setText(R.string.decklist_creatures);
-            } else if (info.mCard.type.contains("Planeswalker") && !(previousInfo != null && previousInfo.mCard.type.contains("Planeswalker"))) {
-                separator.setText(R.string.decklist_planeswalker);
-            } else if ((info.mCard.type.contains("Instant") || info.mCard.type.contains("Sorcery")) && !(previousInfo != null && (previousInfo.mCard.type.contains("Instant") || previousInfo.mCard.type.contains("Sorcery")))) {
-                separator.setText(R.string.decklist_spells);
-            } else if (info.mCard.type.contains("Artifact") && !(previousInfo != null && previousInfo.mCard.type.contains("Artifact"))) {
-                separator.setText(R.string.decklist_artifacts);
-            } else if (info.mCard.type.contains("Enchantment") && !(previousInfo != null && previousInfo.mCard.type.contains("Enchantment"))) {
-                separator.setText(R.string.decklist_enchantments);
-            } else if (info.mCard.type.contains("Land") && !(previousInfo != null && previousInfo.mCard.type.contains("Land"))) {
-                separator.setText(R.string.decklist_lands);
+            } else if (!info.mIsSideboard) {
+                if (info.mCard.type.contains("Creature") && !(previousInfo != null && previousInfo.mCard.type.contains("Creature"))) {
+                    separator.setText(R.string.decklist_creatures);
+                } else if (info.mCard.type.contains("Planeswalker") && !(previousInfo != null && previousInfo.mCard.type.contains("Planeswalker"))) {
+                    separator.setText(R.string.decklist_planeswalker);
+                } else if ((info.mCard.type.contains("Instant") || info.mCard.type.contains("Sorcery")) && !(previousInfo != null && (previousInfo.mCard.type.contains("Instant") || previousInfo.mCard.type.contains("Sorcery")))) {
+                    separator.setText(R.string.decklist_spells);
+                } else if (info.mCard.type.contains("Artifact") && !(previousInfo != null && previousInfo.mCard.type.contains("Artifact"))) {
+                    /* Exclude Artifact Creatures and Artifact Enchantments */
+                    if (!info.mCard.type.contains("Creature") && !info.mCard.type.contains("Enchantment")) {
+                        separator.setText(R.string.decklist_artifacts);
+                    } else {
+                        separator.setVisibility(View.GONE);
+                    }
+                } else if (info.mCard.type.contains("Enchantment") && !(previousInfo != null && previousInfo.mCard.type.contains("Enchantment"))) {
+                    /* Exclude Enchantment Creatures and Artifact Enchantments */
+                    if (!info.mCard.type.contains("Creature") && !info.mCard.type.contains("Artifact")) {
+                        separator.setText(R.string.decklist_enchantments);
+                    } else {
+                        separator.setVisibility(View.GONE);
+                    }
+                } else if (info.mCard.type.contains("Land") && !(previousInfo != null && previousInfo.mCard.type.contains("Land"))) {
+                    /* Exclude land creatures */
+                    if (!info.mCard.type.contains("Creature")) {
+                        separator.setText(R.string.decklist_lands);
+                    } else {
+                        separator.setVisibility(View.GONE);
+                    }
+                } else {
+                    separator.setVisibility(View.GONE);
+                }
             } else {
                 separator.setVisibility(View.GONE);
             }

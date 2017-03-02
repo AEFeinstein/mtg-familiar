@@ -508,4 +508,13 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="decklist_artifacts">Artifacts</string>
     <string name="decklist_lands">Lands</string>
     <string name="decklist_edit_dialog_title_end">in the deck</string>
+    <string name="deck_save_dialog_title">Save Deck</string>
+    <string name="decklist_delete">Delete Deck</string>
+    <string name="decklist_save">Save Deck</string>
+    <string name="decklist_load">Load Deck</string>
+    <string name="decklist_clear">Clear Deck</string>
+    <string name="decklist_toast_no_decks">You have no saved decks.</string>
+    <string name="decklist_select_dialog_title">Select a Deck</string>
+    <string name="decklist_delete_dialog_title">Delete a Deck</string>
+    <string name="decklist_clear_dialog_text">Are you sure you want to clear the current deck?</string>
 </resources>

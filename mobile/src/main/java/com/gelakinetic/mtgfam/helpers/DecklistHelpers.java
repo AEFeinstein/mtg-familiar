@@ -15,7 +15,7 @@ import java.util.Comparator;
  */
 public class DecklistHelpers {
 
-    private static final String DECKLIST_NAME = "card.deck";
+    public static final String DECKLIST_NAME = "autosave.deck";
 
     /**
      * Write the decklist passed as a parameter to the decklist file
@@ -40,13 +40,15 @@ public class DecklistHelpers {
     }
 
     /**
-     * Write the decklist passed as a parameter to the decklist file
+     * Write the decklist passed as a parameter to the given filename
      * @param mCtx                A context to open the file and pop toasts with
      * @param mCompressedDecklist The decklist to write to the file
+     * @param fileName the filename for the decklist
      */
-    public static void WriteCompressedDecklist(Context mCtx, ArrayList<CompressedDecklistInfo> mCompressedDecklist) {
+    public static void WriteCompressedDecklist(Context mCtx, ArrayList<CompressedDecklistInfo> mCompressedDecklist, String fileName) {
         try {
-            FileOutputStream fos = mCtx.openFileOutput(DECKLIST_NAME, Context.MODE_PRIVATE);
+            fileName = fileName.replaceAll("(\\s)", "_"); // Unix doesn't like spaces in the file name
+            FileOutputStream fos = mCtx.openFileOutput(fileName, Context.MODE_PRIVATE);
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                 MtgCard card = cdi.mCard;
@@ -71,15 +73,24 @@ public class DecklistHelpers {
     }
 
     /**
+     * Write the decklist passed as a parameter to the autosave file
+     * @param mCtx
+     * @param mCompressedDecklist
+     */
+    public static void WriteCompressedDecklist(Context mCtx, ArrayList<CompressedDecklistInfo> mCompressedDecklist) {
+        WriteCompressedDecklist(mCtx, mCompressedDecklist, DECKLIST_NAME);
+    }
+
+    /**
      * Read the decklist from a file and return it as an ArrayList<Pair<MtgCard, Boolean>>
      * @param mCtx A context to open the file and pop toasts with
      * @return     The decklist in ArrayList<Pair> form
      */
-    public static ArrayList<Pair<MtgCard, Boolean>> ReadDecklist(Context mCtx) {
+    public static ArrayList<Pair<MtgCard, Boolean>> ReadDecklist(Context mCtx, String deckName) {
         ArrayList<Pair<MtgCard, Boolean>> lDecklist = new ArrayList<>();
         try {
             String line;
-            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(DECKLIST_NAME)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)));
             boolean isSideboard;
             /* Read each line as a card, and add them to the ArrayList */
             while ((line = br.readLine()) != null) {
