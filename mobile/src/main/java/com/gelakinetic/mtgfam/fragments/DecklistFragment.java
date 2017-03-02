@@ -150,6 +150,7 @@ public class DecklistFragment extends FamiliarFragment {
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
             }
+            card.name = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.type = CardDbAdapter.getTypeLine(cardCursor);
             card.rarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
             card.manaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));

@@ -407,10 +407,7 @@ public class WishlistHelpers {
      * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for different printings
      * of that card
      */
-    public static class CompressedWishlistInfo implements CompressedCardInfo {
-
-        public final MtgCard mCard;
-        public final ArrayList<IndividualSetInfo> mInfo;
+    public static class CompressedWishlistInfo extends CompressedCardInfo {
 
         /**
          * Constructor
@@ -418,29 +415,7 @@ public class WishlistHelpers {
          * @param card The MtgCard which will be the base for this object
          */
         public CompressedWishlistInfo(MtgCard card) {
-            mInfo = new ArrayList<>();
-            mCard = card;
-            add(mCard);
-        }
-
-        /**
-         * Add a new printing of a MtgCard to this object
-         *
-         * @param card The new printing to add to this object
-         */
-        public void add(MtgCard card) {
-            IndividualSetInfo isi = new IndividualSetInfo();
-
-            isi.mSet = card.setName;
-            isi.mSetCode = card.setCode;
-            isi.mNumber = card.number;
-            isi.mIsFoil = card.foil;
-            isi.mPrice = null;
-            isi.mMessage = card.message;
-            isi.mNumberOf = card.numberOf;
-            isi.mRarity = card.rarity;
-
-            mInfo.add(isi);
+            super(card);
         }
 
         /**
@@ -458,21 +433,6 @@ public class WishlistHelpers {
                 return mCard.name.equals(((MtgCard) o).name);
             }
             return false;
-        }
-
-        /**
-         * Clear all the different printings for this object
-         */
-        public void clearCompressedInfo() {
-            mInfo.clear();
-        }
-
-        public MtgCard getCard() {
-            return mCard;
-        }
-
-        public ArrayList<IndividualSetInfo> getSetInfo() {
-            return mInfo;
         }
 
     }

@@ -106,52 +106,18 @@ public class DecklistHelpers {
         }
     }
 
-    public static class CompressedDecklistInfo implements CompressedCardInfo {
+    public static class CompressedDecklistInfo extends CompressedCardInfo {
 
-        public final MtgCard mCard;
-        public final ArrayList<IndividualSetInfo> mInfo;
         public final boolean mIsSideboard;
 
+        /**
+         * Constructor
+         * @param card The MtgCard which will be the base for this object
+         * @param isSideboard If the card is part of the sideboard or not
+         */
         public CompressedDecklistInfo(MtgCard card, boolean isSideboard) {
-            mInfo = new ArrayList<>();
-            mCard = card;
+            super(card);
             mIsSideboard = isSideboard;
-            add(mCard);
-        }
-
-        public void add(MtgCard card) {
-            IndividualSetInfo isi = new IndividualSetInfo();
-
-            isi.mSet = card.setName;
-            isi.mSetCode = card.setCode;
-            isi.mNumber = card.number;
-            isi.mIsFoil = card.foil;
-            isi.mPrice = null;
-            isi.mMessage = card.message;
-            isi.mNumberOf = card.numberOf;
-            isi.mRarity = card.rarity;
-
-            mInfo.add(isi);
-        }
-
-        public void clearCompressedInfo() {
-            mInfo.clear();
-        }
-
-        public MtgCard getCard() {
-            return mCard;
-        }
-
-        public ArrayList<IndividualSetInfo> getSetInfo() {
-            return mInfo;
-        }
-
-        public int getTotalNumber() {
-            int totalCopies = 0;
-            for (IndividualSetInfo isi : mInfo) {
-                totalCopies += isi.mNumberOf;
-            }
-            return totalCopies;
         }
 
     }

@@ -24,7 +24,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -318,7 +317,7 @@ public class MtgCard {
         if (o instanceof MtgCard) {
             return this.name.equals(((MtgCard) o).name);
         } else if (o instanceof CompressedCardInfo) {
-            return this.name.equals(((CompressedCardInfo) o).getCard().name);
+            return this.name.equals(((CompressedCardInfo) o).mCard.name);
         }
         return false;
     }
