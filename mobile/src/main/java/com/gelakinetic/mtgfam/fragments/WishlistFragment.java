@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -229,6 +230,8 @@ public class WishlistFragment extends FamiliarFragment {
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
             }
+            /* Don't rely on the user's name, get it from the DB just to be sure */
+            card.name = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.type = CardDbAdapter.getTypeLine(cardCursor);
             card.rarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
             card.manaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
@@ -287,6 +290,7 @@ public class WishlistFragment extends FamiliarFragment {
 
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
+            Log.e("fde", e.getLocalizedMessage());
         } catch (NumberFormatException e) {
             /* eat it */
         }
