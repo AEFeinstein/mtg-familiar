@@ -31,8 +31,7 @@ public class DecklistHelpers {
                     card.numberOf = isi.mNumberOf;
                     String cardString = card.toWishlistString();
                     if (cdi.mIsSideboard) {
-                        cardString = cardString.replaceAll("(\\n)", "");
-                        cardString += " sb\n";
+                        cardString = "SB:" + cardString;
                     }
                     fos.write(cardString.getBytes());
                 }
@@ -51,35 +50,12 @@ public class DecklistHelpers {
             boolean isSideboard;
             while ((line = br.readLine()) != null) {
                 isSideboard = false;
-                String sideboard = line.substring(Math.max(line.length() - 3, 0));
-                if (sideboard.equals(" sb")) {
+                String sideboard = line.substring(0, 3);
+                if (sideboard.equals("SB:")) {
                     isSideboard = true;
+                    line = line.substring(3);
                 }
-                line = line.substring(0, Math.max(line.length() - 3, 0));
                 lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
-            }
-        } catch (NumberFormatException nfe) {
-            ToastWrapper.makeText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
-        } catch (IOException ioe) {
-            /* Catches file not found exception when decklist doesn't exist */
-        }
-        return lDecklist;
-    }
-
-    public static ArrayList<CompressedDecklistInfo> ReadDecklist2(Context mCtx) {
-        ArrayList<CompressedDecklistInfo> lDecklist = new ArrayList<>();
-        try {
-            String line;
-            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(DECKLIST_NAME)));
-            boolean isSideboard;
-            while ((line = br.readLine()) != null) {
-                isSideboard = false;
-                String sideboard = line.substring(Math.max(line.length() - 3, 0));
-                if (sideboard.equals(" sb")) {
-                    isSideboard = true;
-                }
-                line = line.substring(0, Math.max(line.length() - 4, 0));
-                lDecklist.add(new CompressedDecklistInfo(MtgCard.fromWishlistString(line, mCtx), isSideboard));
             }
         } catch (NumberFormatException nfe) {
             ToastWrapper.makeText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
@@ -95,8 +71,7 @@ public class DecklistHelpers {
             for (Pair<MtgCard, Boolean> m : lDecklist) {
                 String cardString = m.first.toWishlistString();
                 if (m.second) {
-                    cardString = cardString.replace("(\\n)", "");
-                    cardString += " sb\n";
+                    cardString = "SB:" + cardString;
                 }
                 fos.write(cardString.getBytes());
             }
