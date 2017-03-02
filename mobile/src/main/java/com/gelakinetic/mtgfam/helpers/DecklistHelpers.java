@@ -21,10 +21,11 @@ public class DecklistHelpers {
      * Write the decklist passed as a parameter to the decklist file
      * @param mCtx                A context to open the file and pop toasts with
      * @param lDecklist The decklist to write to the file
+     * @param fileName
      */
-    public static void WriteDecklist(Context mCtx, ArrayList<Pair<MtgCard, Boolean>> lDecklist) {
+    public static void WriteDecklist(Context mCtx, ArrayList<Pair<MtgCard, Boolean>> lDecklist, String fileName) {
         try {
-            FileOutputStream fos = mCtx.openFileOutput(DECKLIST_NAME, Context.MODE_PRIVATE);
+            FileOutputStream fos = mCtx.openFileOutput(fileName, Context.MODE_PRIVATE);
             for (Pair<MtgCard, Boolean> m : lDecklist) {
                 String cardString = m.first.toWishlistString();
                 /* If the card is a sideboard card, add the marking */

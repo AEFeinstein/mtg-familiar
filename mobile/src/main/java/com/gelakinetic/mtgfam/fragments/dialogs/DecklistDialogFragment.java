@@ -228,7 +228,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                         decklist.add(new Pair<>(card, isSideboard));
                                     }
                                 }
-                                DecklistHelpers.WriteDecklist(getParentDecklistFragment().getActivity(), decklist);
+                                DecklistHelpers.WriteDecklist(getParentDecklistFragment().getActivity(), decklist, getParentDecklistFragment().mCurrentDeck + DecklistFragment.DECK_EXTENSION);
                                 getParentDecklistFragment().onWishlistChanged(cardName);
                             }
                         })

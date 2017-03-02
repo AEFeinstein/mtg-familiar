@@ -55,7 +55,7 @@ public class DecklistFragment extends FamiliarFragment {
     public DecklistArrayAdapter mDecklistAdapter;
 
     public String mCurrentDeck = "autosave";
-    public static final String DECK_EXTENSION = ".deck";
+    public static final String DECK_EXTENSION = ".fDeck";
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -340,6 +340,7 @@ public class DecklistFragment extends FamiliarFragment {
     @Override
     public void onWishlistChanged(String cardName) {
         readAndCompressDecklist(cardName, mCurrentDeck + DECK_EXTENSION);
+        Collections.sort(mCompressedDecklist, new DecklistComparator());
         mDecklistAdapter.notifyDataSetChanged();
     }
 
