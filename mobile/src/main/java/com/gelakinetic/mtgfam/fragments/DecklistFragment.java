@@ -34,6 +34,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -100,6 +102,7 @@ public class DecklistFragment extends FamiliarFragment {
             }
         });
 
+        /* Set up the decklist and adapter, it will be read in onResume() */
         mCompressedDecklist = new ArrayList<>();
         mDecklistAdapter = new DecklistArrayAdapter(mCompressedDecklist);
         listView.setAdapter(mDecklistAdapter);
@@ -108,14 +111,18 @@ public class DecklistFragment extends FamiliarFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CompressedDecklistInfo item = mCompressedDecklist.get(position);
+                /* Show the dialog for this particular card */
                 showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.name, item.mIsSideboard);
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                /* Remove the card */
                 mCompressedDecklist.remove(position);
+                /* Save the decklist */
                 DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
+                /* Redraw the new decklist */
                 mDecklistAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -124,9 +131,15 @@ public class DecklistFragment extends FamiliarFragment {
         return myFragmentView;
     }
 
+    /**
+     * This function takes care of adding a card to the decklist from this fragment. It makes sure
+     * that fields are not null or have bad information.
+     * @param isSideboard if the card is in the sideboard
+     */
     private void addCardToDeck(boolean isSideboard) {
         String name = String.valueOf(mNameField.getText());
         String numberOf = String.valueOf(mNumberField.getText());
+        /* Don't allow the fields to be empty */
         if (name == null || name.equals("")) {
             return;
         }
@@ -135,7 +148,7 @@ public class DecklistFragment extends FamiliarFragment {
         }
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
-                    /* Make the new card */
+            /* Make the new card */
             MtgCard card = new MtgCard();
             card.name = name;
             card.foil = false;
@@ -220,17 +233,17 @@ public class DecklistFragment extends FamiliarFragment {
                 mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
             }
 
-            /* Sort the wishlist */;
+            /* Sort the decklist */;
             Collections.sort(mCompressedDecklist, new DecklistComparator());
 
-            /* Save the wishlist */
+            /* Save the decklist */
             DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
 
             /* Clean up for the next add */
             mNumberField.setText("1");
             mNameField.setText("");
 
-            /* Redraw the new wishlist with the new card */
+            /* Redraw the new decklist with the new card */
             mDecklistAdapter.notifyDataSetChanged();
 
         } catch (FamiliarDbException e) {
@@ -240,13 +253,33 @@ public class DecklistFragment extends FamiliarFragment {
         }
     }
 
+    /**
+     * read and compress the wishlist
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCompressedDecklist.clear();
+        readAndCompressDecklist(null);
+        mDecklistAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Read in the decklist from the file, and pack it into an ArrayList of CompressedDecklistInfo
+     * for display in a ListView. This data structure stores one copy of the card itself, and a list
+     * of set-specific attributes like the set name and rarity.
+     * @param changedCardName
+     */
     private void readAndCompressDecklist(String changedCardName) {
+        /* Read the decklist */
         ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getActivity());
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
+            /* Translate the set code to TCG name of course it's not saved */
             for (Pair<MtgCard, Boolean> card : decklist) {
                 card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
             }
+            /* Clear the decklist, or just the card that changed */
             if (changedCardName == null) {
                 mCompressedDecklist.clear();
             } else {
@@ -256,9 +289,9 @@ public class DecklistFragment extends FamiliarFragment {
                     }
                 }
             }
+            /* Compress the whole decklist, or just the card that changed */
             for (Pair<MtgCard, Boolean> card : decklist) {
                 if (changedCardName == null || changedCardName.equals(card.first.name)) {
-
                     if (!mCompressedDecklist.contains(card.first)) {
                         mCompressedDecklist.add(new CompressedDecklistInfo(card.first, card.second));
                     } else {
@@ -271,6 +304,7 @@ public class DecklistFragment extends FamiliarFragment {
                     }
                 }
             }
+            /* check for wholly removed cards if one card was modified */
             if (changedCardName != null) {
                 for (int i = 0; i < mCompressedDecklist.size(); i++) {
                     if (mCompressedDecklist.get(i).mInfo.size() == 0) {
@@ -279,6 +313,8 @@ public class DecklistFragment extends FamiliarFragment {
                     }
                 }
             }
+            /* Fill extra card data from the database, for displaying full card info */
+            // todo: is this needed HERE? Answer, probably not.
             CardDbAdapter.fillExtraWishlistData(mCompressedDecklist, database);
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
@@ -286,21 +322,23 @@ public class DecklistFragment extends FamiliarFragment {
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mCompressedDecklist.clear();
-        readAndCompressDecklist(null);
-        Collections.sort(mCompressedDecklist, new DecklistComparator());
-        mDecklistAdapter.notifyDataSetChanged();
-    }
-
+    /**
+     * This notifies the fragment when a change has been made from a card's dialog
+     * @param cardName the card that was changed
+     */
     @Override
     public void onWishlistChanged(String cardName) {
         readAndCompressDecklist(cardName);
         mDecklistAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Remove any showing dialogs, and show the requested one
+     * @param id the ID of the dialog to show
+     * @param cardName the name of the card to use if this is a dialog to change decklist counts
+     * @param isSideboard if the card is in the sideboard
+     * @throws IllegalStateException
+     */
     private void showDialog(final int id, final String cardName, final boolean isSideboard) throws IllegalStateException {
         if (!this.isVisible()) {
             return;
@@ -315,25 +353,49 @@ public class DecklistFragment extends FamiliarFragment {
         newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
+    /**
+     * This nested class is the adapter which populates the ListView in the drawer menu. It handles
+     * both entries and headers.
+     */
     public class DecklistArrayAdapter extends ArrayAdapter<CompressedDecklistInfo> {
 
         private final ArrayList<CompressedDecklistInfo> values;
 
+        /**
+         * Constructor. The context will be used to inflate views later. The array of values will be
+         * used to populate the views
+         * @param values an array of DrawerEntries which will populate the list.
+         */
         public DecklistArrayAdapter(ArrayList<CompressedDecklistInfo> values) {
             super(getActivity(), R.layout.drawer_list_item, values);
             this.values = values;
         }
 
+        /**
+         * Called to get a view for an entry in the ListView
+         * @param position The position of the ListView to populate
+         * @param convertView The old view to reuse if possible. Since the layouts for enteries and
+         *                    headers are different, this will be ignored
+         * @param parent The parent this view will eventually be attached to
+         * @return The view for the data at this position
+         */
+        @NotNull
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            convertView = getActivity().getLayoutInflater().inflate(R.layout.decklist_card_row, parent, false);
-            assert convertView != null;
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.decklist_card_row, parent, false);
+                assert convertView != null;
+            }
             Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
+            /* Get all the decklist information for this entry */
             CompressedDecklistInfo info = values.get(position);
             CompressedDecklistInfo previousInfo = null;
+            /* Try to get the info above this one, if not we are good with it being null */
             try {
                 previousInfo = values.get(position - 1);
             } catch (ArrayIndexOutOfBoundsException aie) {}
+            /* Card type seperators. These check if the card is the first of that type in the view,
+             * and if it is, show the seperator with the correct type text */
             TextView separator = (TextView) convertView.findViewById(R.id.decklistSeparator);
             separator.setVisibility(View.VISIBLE);
             if (info.mIsSideboard && !(previousInfo != null && previousInfo.mIsSideboard)) {
@@ -353,9 +415,11 @@ public class DecklistFragment extends FamiliarFragment {
             } else {
                 separator.setVisibility(View.GONE);
             }
+            /* Get the numberOf of the card, the name, and the mana cost to display */
             ((TextView) convertView.findViewById(R.id.decklistRowNumber)).setText(String.valueOf(info.getTotalNumber()));
             ((TextView) convertView.findViewById(R.id.decklistRowName)).setText(info.mCard.name);
             ((TextView) convertView.findViewById(R.id.decklistRowCost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imgGetter));
+
             return convertView;
         }
     }
