@@ -40,6 +40,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
     public static final String NAME_KEY = "name";
     public static final String SIDE_KEY = "side";
 
+    /**
+     * @return The currently viewed DecklistFragment
+     */
     private DecklistFragment getParentDecklistFragment() {
         return (DecklistFragment) getFamiliarFragment();
     }
@@ -53,8 +56,10 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
         final boolean isSideboard = getArguments().getBoolean(SIDE_KEY);
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
+                /* Create the custom view */
                 View customView = getParentDecklistFragment().getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog, null, false);
                 assert customView != null;
+                /* Grab the linear layout. Make it final to be accessible from the button layer */
                 final LinearLayout linearLayout = (LinearLayout) customView.findViewById(R.id.linear_layout);
                 customView.findViewById(R.id.show_card_button).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -127,7 +132,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
                     String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
-            /* Inflate a row and fill it with stuff */
+                    /* Inflate a row and fill it with stuff */
                     View wishlistRow = getParentDecklistFragment().getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null, false);
                     assert wishlistRow != null;
                     ((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
@@ -140,7 +145,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     potentialRarities.add(rarity);
                     potentialNumbers.add(number);
 
-            /* If this card has a foil version, add that too */
+                    /* If this card has a foil version, add that too */
                     View wishlistRowFoil;
                     if (foilSets.contains(setCode)) {
                         wishlistRowFoil = getParentDecklistFragment().getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
