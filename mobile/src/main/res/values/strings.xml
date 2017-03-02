@@ -507,4 +507,5 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="decklist_enchantments">Enchantments</string>
     <string name="decklist_artifacts">Artifacts</string>
     <string name="decklist_lands">Lands</string>
+    <string name="decklist_edit_dialog_title_end">in the deck</string>
 </resources>

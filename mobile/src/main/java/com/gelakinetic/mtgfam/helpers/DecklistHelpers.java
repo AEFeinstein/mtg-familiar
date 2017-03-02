@@ -89,6 +89,23 @@ public class DecklistHelpers {
         return lDecklist;
     }
 
+    public static void WriteDecklist(Context mCtx, ArrayList<Pair<MtgCard, Boolean>> lDecklist) {
+        try {
+            FileOutputStream fos = mCtx.openFileOutput(DECKLIST_NAME, Context.MODE_PRIVATE);
+            for (Pair<MtgCard, Boolean> m : lDecklist) {
+                String cardString = m.first.toWishlistString();
+                if (m.second) {
+                    cardString = cardString.replace("(\\n)", "");
+                    cardString += " sb\n";
+                }
+                fos.write(cardString.getBytes());
+            }
+            fos.close();
+        } catch (IOException ioe) {
+            ToastWrapper.makeText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+        }
+    }
+
     public static class CompressedDecklistInfo implements CompressedCardInfo {
 
         public final MtgCard mCard;

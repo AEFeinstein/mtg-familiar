@@ -18,7 +18,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
@@ -34,7 +37,7 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class DeckBuilderFragment extends FamiliarFragment {
+public class DecklistFragment extends FamiliarFragment {
 
     /* UI Elements */
     public AutoCompleteTextView mNameField;
@@ -101,6 +104,13 @@ public class DeckBuilderFragment extends FamiliarFragment {
         mDecklistAdapter = new DecklistArrayAdapter(mCompressedDecklist);
         listView.setAdapter(mDecklistAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CompressedDecklistInfo item = mCompressedDecklist.get(position);
+                showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.name, item.mIsSideboard);
+            }
+        });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -135,7 +145,7 @@ public class DeckBuilderFragment extends FamiliarFragment {
             /* Get some extra information from the database */
             Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, CardDbAdapter.allCardDataKeys, true, database);
             if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeText(DeckBuilderFragment.this.getActivity(), getString(R.string.toast_no_card),
+                ToastWrapper.makeText(DecklistFragment.this.getActivity(), getString(R.string.toast_no_card),
                         ToastWrapper.LENGTH_LONG).show();
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
@@ -286,8 +296,22 @@ public class DeckBuilderFragment extends FamiliarFragment {
 
     @Override
     public void onWishlistChanged(String cardName) {
-        // todo: might need to rework this?
+        readAndCompressDecklist(cardName);
         mDecklistAdapter.notifyDataSetChanged();
+    }
+
+    private void showDialog(final int id, final String cardName, final boolean isSideboard) throws IllegalStateException {
+        if (!this.isVisible()) {
+            return;
+        }
+        removeDialog(getFragmentManager());
+        DecklistDialogFragment newFragment = new DecklistDialogFragment();
+        Bundle arguments = new Bundle();
+        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+        arguments.putString(DecklistDialogFragment.NAME_KEY, cardName);
+        arguments.putBoolean(DecklistDialogFragment.SIDE_KEY, isSideboard);
+        newFragment.setArguments(arguments);
+        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
     }
 
     public class DecklistArrayAdapter extends ArrayAdapter<CompressedDecklistInfo> {

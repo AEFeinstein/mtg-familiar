@@ -64,7 +64,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
-import com.gelakinetic.mtgfam.fragments.DeckBuilderFragment;
+import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
@@ -1056,7 +1056,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 break;
             }
             case R.string.main_deckbuilder: {
-                newFrag = new DeckBuilderFragment();
+                newFrag = new DecklistFragment();
                 break;
             }
             default:
