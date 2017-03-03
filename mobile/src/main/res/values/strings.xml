@@ -517,4 +517,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="decklist_select_dialog_title">Select a Deck</string>
     <string name="decklist_delete_dialog_title">Delete a Deck</string>
     <string name="decklist_clear_dialog_text">Are you sure you want to clear the current deck?</string>
+    <string name="decklist_share">Share Deck</string>
+    <string name="decklist_share_title">MTG Familiar Decklist</string>
 </resources>

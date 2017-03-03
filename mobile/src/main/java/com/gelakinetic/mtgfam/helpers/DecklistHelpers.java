@@ -3,6 +3,8 @@ package com.gelakinetic.mtgfam.helpers;
 import android.content.Context;
 import android.util.Pair;
 
+import com.gelakinetic.mtgfam.R;
+
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,7 +17,7 @@ import java.util.Comparator;
  */
 public class DecklistHelpers {
 
-    public static final String DECKLIST_NAME = "autosave.deck";
+    public static final String DECKLIST_NAME = "autosave.fDeck";
 
     /**
      * Write the decklist passed as a parameter to the decklist file
@@ -110,6 +112,30 @@ public class DecklistHelpers {
             /* Catches file not found exception when decklist doesn't exist */
         }
         return lDecklist;
+    }
+
+    public static String GetSharableDecklist(ArrayList<CompressedDecklistInfo> mCompressedDecklist,
+                                             Context ctx) {
+        StringBuilder readableDecklist = new StringBuilder();
+        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+            for (IndividualSetInfo isi : cdi.mInfo) {
+                if (cdi.mIsSideboard) {
+                    readableDecklist.append("SB: ");
+                }
+                readableDecklist
+                        .append(isi.mNumberOf)
+                        .append(' ')
+                        .append(cdi.mCard.name);
+                if (isi.mIsFoil) {
+                    readableDecklist
+                            .append(" (")
+                            .append(ctx.getString(R.string.wishlist_foil))
+                            .append(")");
+                }
+                readableDecklist.append(" ").append(isi.mSetCode).append("\r\n");
+            }
+        }
+        return readableDecklist.toString();
     }
 
     /**

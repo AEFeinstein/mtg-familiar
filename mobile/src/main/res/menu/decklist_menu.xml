@@ -13,4 +13,7 @@
     <item android:title="@string/decklist_delete"
         android:id="@+id/deck_menu_delete"
         android:icon="?attr/ic_menu_delete" />
+    <item android:title="@string/decklist_share"
+        android:icon="?attr/ic_menu_share"
+        android:id="@+id/deck_menu_share" />
 </menu>

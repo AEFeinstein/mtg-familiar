@@ -1,5 +1,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -388,6 +390,20 @@ public class DecklistFragment extends FamiliarFragment {
             }
             case R.id.deck_menu_clear: {
                 showDialog(DecklistDialogFragment.DIALOG_CONFIRMATION, null, false);
+            }
+            case R.id.deck_menu_share: {
+                /* Share plaintext decklist */
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.decklist_share_title);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, DecklistHelpers.GetSharableDecklist(mCompressedDecklist, getActivity()));
+                sendIntent.setType("text/plain");
+                try {
+                    startActivity(Intent.createChooser(sendIntent, getString(R.string.decklist_share)));
+                } catch (ActivityNotFoundException anfe) {
+                    ToastWrapper.makeText(getActivity(), R.string.error_no_email_client, ToastWrapper.LENGTH_LONG).show();
+                }
+                return true;
             }
             default: {
                 return super.onOptionsItemSelected(item);
