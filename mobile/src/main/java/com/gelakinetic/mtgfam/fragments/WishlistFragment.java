@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Html;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -290,7 +289,6 @@ public class WishlistFragment extends FamiliarFragment {
 
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
-            Log.e("fde", e.getLocalizedMessage());
         } catch (NumberFormatException e) {
             /* eat it */
         }
