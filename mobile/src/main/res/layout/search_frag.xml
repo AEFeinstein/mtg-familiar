@@ -365,14 +365,16 @@
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="@string/search_power" />
+                    android:text="@string/search_power"
+                    android:gravity="center_vertical"/>
 
                 <Spinner
                     android:id="@+id/powLogic"
-                    android:layout_width="80dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/logic_spinner" />
+                    android:entries="@array/logic_spinner"
+                    android:layout_weight="1"/>
 
                 <Spinner
                     android:id="@+id/powChoice"
@@ -394,14 +396,16 @@
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="@string/search_toughness" />
+                    android:text="@string/search_toughness"
+                    android:gravity="center_vertical" />
 
                 <Spinner
                     android:id="@+id/touLogic"
-                    android:layout_width="80dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/logic_spinner" />
+                    android:entries="@array/logic_spinner"
+                    android:layout_weight="1"/>
 
                 <Spinner
                     android:id="@+id/touChoice"
@@ -423,14 +427,16 @@
                     android:layout_width="125dip"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="@string/search_cmc" />
+                    android:text="@string/search_cmc"
+                    android:gravity="center_vertical" />
 
                 <Spinner
                     android:id="@+id/cmcLogic"
-                    android:layout_width="80dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:drawSelectorOnTop="true"
-                    android:entries="@array/logic_spinner" />
+                    android:entries="@array/logic_spinner"
+                    android:layout_weight="1"/>
 
                 <Spinner
                     android:id="@+id/cmcChoice"

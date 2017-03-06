@@ -239,6 +239,7 @@ public class TradeFragment extends FamiliarFragment {
 
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
+            String CARDNAME = "cardnameColumn";
             /* Get the rest of the relevant card info from the database */
             Cursor cardCursor = CardDbAdapter.fetchCardByName(cardName, new String[]{
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
@@ -246,6 +247,7 @@ public class TradeFragment extends FamiliarFragment {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC, /* For sorting */
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR, /* For sorting */
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME + " as " + CARDNAME, /* Don't trust the user */
                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, database);
 
             /* Make sure there was a database hit */
@@ -257,6 +259,7 @@ public class TradeFragment extends FamiliarFragment {
             }
 
             /* Read the information from the cursor, check if the card can be foil */
+            cardName = cardCursor.getString(cardCursor.getColumnIndex(CARDNAME)); /* The set name and card name keys overlap each other, so just get the second to last column */
             setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
             setName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             cardNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));

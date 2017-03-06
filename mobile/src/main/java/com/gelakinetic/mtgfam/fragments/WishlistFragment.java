@@ -229,6 +229,8 @@ public class WishlistFragment extends FamiliarFragment {
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
             }
+            /* Don't rely on the user's name, get it from the DB just to be sure */
+            card.name = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.type = CardDbAdapter.getTypeLine(cardCursor);
             card.rarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
             card.manaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
