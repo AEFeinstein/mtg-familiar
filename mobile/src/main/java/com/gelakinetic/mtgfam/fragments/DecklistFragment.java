@@ -58,7 +58,8 @@ public class DecklistFragment extends FamiliarFragment {
     public DecklistArrayAdapter mDecklistAdapter;
     public ComparatorChain mDecklistChain;
 
-    public String mCurrentDeck = "autosave";
+    public static final String AUTOSAVE_NAME = "autosave";
+    public String mCurrentDeck = "";
     public static final String DECK_EXTENSION = ".fDeck";
 
     /**
@@ -280,8 +281,14 @@ public class DecklistFragment extends FamiliarFragment {
     public void onResume() {
         super.onResume();
         mCompressedDecklist.clear();
-        readAndCompressDecklist(null, mCurrentDeck + DECK_EXTENSION);
+        readAndCompressDecklist(null, mCurrentDeck);
         mDecklistAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
     }
 
     /**
@@ -291,9 +298,10 @@ public class DecklistFragment extends FamiliarFragment {
      * @param changedCardName
      */
     public void readAndCompressDecklist(String changedCardName, String deckName) {
-        if (deckName == null) {
-            deckName = DecklistHelpers.DECKLIST_NAME;
+        if (deckName == null || deckName.equals("")) {
+            deckName = AUTOSAVE_NAME;
         }
+        deckName += DECK_EXTENSION;
         /* Read the decklist */
         ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getActivity(), deckName);
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
@@ -351,7 +359,7 @@ public class DecklistFragment extends FamiliarFragment {
      */
     @Override
     public void onWishlistChanged(String cardName) {
-        readAndCompressDecklist(cardName, mCurrentDeck + DECK_EXTENSION);
+        readAndCompressDecklist(cardName, mCurrentDeck);
         Collections.sort(mCompressedDecklist, mDecklistChain);
         mDecklistAdapter.notifyDataSetChanged();
     }

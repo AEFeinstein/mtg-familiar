@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 
 import java.io.BufferedReader;
@@ -16,8 +17,6 @@ import java.util.ArrayList;
  * This class has helpers for reading, writing, and modifying the decklist from different fragments
  */
 public class DecklistHelpers {
-
-    public static final String DECKLIST_NAME = "autosave.fDeck";
 
     /**
      * Write the decklist passed as a parameter to the decklist file
@@ -81,7 +80,7 @@ public class DecklistHelpers {
      * @param mCompressedDecklist
      */
     public static void WriteCompressedDecklist(Context mCtx, ArrayList<CompressedDecklistInfo> mCompressedDecklist) {
-        WriteCompressedDecklist(mCtx, mCompressedDecklist, DECKLIST_NAME);
+        WriteCompressedDecklist(mCtx, mCompressedDecklist, DecklistFragment.AUTOSAVE_NAME + DecklistFragment.DECK_EXTENSION);
     }
 
     /**

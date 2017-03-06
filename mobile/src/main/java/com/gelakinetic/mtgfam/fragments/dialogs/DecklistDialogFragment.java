@@ -297,7 +297,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
-                                getParentDecklistFragment().readAndCompressDecklist(null, deckNames[position] + DecklistFragment.DECK_EXTENSION);
+                                getParentDecklistFragment().readAndCompressDecklist(null, deckNames[position]);
                                 getParentDecklistFragment().mCurrentDeck = deckNames[position];
                                 /* Alert things to update */
                                 getParentDecklistFragment().mDecklistAdapter.notifyDataSetChanged();
