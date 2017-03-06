@@ -499,7 +499,9 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="card_view_share_text">Text</string>
     <string name="card_view_share_image">Image</string>
     <string name="send_to">Share image using</string>
-    <string name="main_deckbuilder">Deck Builder</string>
+    <string name="main_decklist">Deck Builder</string>
+
+    <!-- Deck Builder -->
     <string name="decklist_sideboard">Sideboard</string>
     <string name="decklist_creatures">Creatures</string>
     <string name="decklist_spells">Spells</string>

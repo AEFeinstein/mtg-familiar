@@ -156,7 +156,7 @@ public class FamiliarActivity extends AppCompatActivity {
             new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false),
             new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false),
             new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false),
-            new DrawerEntry(R.string.main_deckbuilder, R.attr.ic_drawer_about, false),
+            new DrawerEntry(R.string.main_decklist, R.attr.ic_drawer_about, false),
             new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false),
             new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
             new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
@@ -574,7 +574,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     case R.string.main_dice:
                     case R.string.main_trade:
                     case R.string.main_wishlist:
-                    case R.string.main_deckbuilder:
+                    case R.string.main_decklist:
                     case R.string.main_timer:
                     case R.string.main_rules:
                     case R.string.main_judges_corner:
@@ -911,7 +911,7 @@ public class FamiliarActivity extends AppCompatActivity {
         } else if (ACTION_PROFILE.equals(intent.getAction())) {
             selectItem(R.string.main_profile, null, true, false);
         } else if (ACTION_DECKLIST.equals(intent.getAction())) {
-            selectItem(R.string.main_deckbuilder, null, true, false);
+            selectItem(R.string.main_decklist, null, true, false);
         } else if (Intent.ACTION_MAIN.equals(intent.getAction())) {
             /* App launched as regular, show the default fragment if there isn't one already */
             if (getSupportFragmentManager().getFragments() == null) {
@@ -954,8 +954,8 @@ public class FamiliarActivity extends AppCompatActivity {
             selectItem(R.string.main_mojhosto, null, true, false);
         } else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
             selectItem(R.string.main_profile, null, true, false);
-        } else if (defaultFragment.equals(this.getString(R.string.main_deckbuilder))) {
-            selectItem(R.string.main_deckbuilder, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_decklist))) {
+            selectItem(R.string.main_decklist, null, true, false);
         } else {
             selectItem(R.string.main_card_search, null, true, false);
         }
@@ -1037,7 +1037,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 newFrag = new WishlistFragment();
                 break;
             }
-            case R.string.main_deckbuilder: {
+            case R.string.main_decklist: {
                 newFrag = new DecklistFragment();
                 break;
             }

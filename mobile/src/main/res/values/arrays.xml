@@ -154,6 +154,7 @@
         <item>@string/main_dice</item>
         <item>@string/main_trade</item>
         <item>@string/main_wishlist</item>
+        <item>@string/main_decklist</item>
         <item>@string/main_timer</item>
         <item>@string/main_rules</item>
         <item>@string/main_mojhosto</item>
