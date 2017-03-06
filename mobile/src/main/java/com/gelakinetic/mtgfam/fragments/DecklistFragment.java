@@ -28,17 +28,18 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers.DecklistComparator;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
-import com.gelakinetic.mtgfam.helpers.IndividualSetInfo;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import org.apache.commons.collections4.comparators.ComparatorChain;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class DecklistFragment extends FamiliarFragment {
     /* Decklist and adapters */
     public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
     public DecklistArrayAdapter mDecklistAdapter;
+    public ComparatorChain mDecklistChain;
 
     public String mCurrentDeck = "autosave";
     public static final String DECK_EXTENSION = ".fDeck";
@@ -116,6 +118,13 @@ public class DecklistFragment extends FamiliarFragment {
         mCompressedDecklist = new ArrayList<>();
         mDecklistAdapter = new DecklistArrayAdapter(mCompressedDecklist);
         listView.setAdapter(mDecklistAdapter);
+
+        mDecklistChain = new ComparatorChain();
+        mDecklistChain.addComparator(new CardHelpers.CardComparatorSideboard());
+        mDecklistChain.addComparator(new CardHelpers.CardComparatorSupertype(false));
+        mDecklistChain.addComparator(new CardHelpers.CardComparatorCMC());
+        mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
+        mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -244,7 +253,8 @@ public class DecklistFragment extends FamiliarFragment {
             }
 
             /* Sort the decklist */;
-            Collections.sort(mCompressedDecklist, new DecklistComparator());
+            Collections.sort(mCompressedDecklist, mDecklistChain);
+
 
             /* Save the decklist */
             DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
@@ -342,7 +352,7 @@ public class DecklistFragment extends FamiliarFragment {
     @Override
     public void onWishlistChanged(String cardName) {
         readAndCompressDecklist(cardName, mCurrentDeck + DECK_EXTENSION);
-        Collections.sort(mCompressedDecklist, new DecklistComparator());
+        Collections.sort(mCompressedDecklist, mDecklistChain);
         mDecklistAdapter.notifyDataSetChanged();
     }
 
@@ -390,6 +400,7 @@ public class DecklistFragment extends FamiliarFragment {
             }
             case R.id.deck_menu_clear: {
                 showDialog(DecklistDialogFragment.DIALOG_CONFIRMATION, null, false);
+                return true;
             }
             case R.id.deck_menu_share: {
                 /* Share plaintext decklist */

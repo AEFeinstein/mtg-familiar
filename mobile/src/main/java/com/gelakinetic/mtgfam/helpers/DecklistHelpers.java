@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * This class has helpers for reading, writing, and modifying the decklist from different fragments
@@ -55,7 +55,7 @@ public class DecklistHelpers {
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                 MtgCard card = cdi.mCard;
-                for (IndividualSetInfo isi : cdi.mInfo) {
+                for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     card.set = isi.mSet;
                     card.setCode = isi.mSetCode;
                     card.number = isi.mNumber;
@@ -142,7 +142,7 @@ public class DecklistHelpers {
      * This class encapsulates a single MtgCard, an ArrayList of non-duplicated information for
      * different printings of that card, and if the card is part of the sideboard
      */
-    public static class CompressedDecklistInfo extends CompressedCardInfo {
+    public static class CompressedDecklistInfo extends CardHelpers.CompressedCardInfo {
 
         public final boolean mIsSideboard;
 
@@ -174,106 +174,5 @@ public class DecklistHelpers {
         }
 
     }
-
-    /**
-     * Comparator based on all factors. First it checks if the card is in the sideboard, if so it is
-     * it is greater. If it isn't, it checks the type of the card in the following order: Creature,
-     * Planeswalker, Instant or Sorcery, Artifact, Enchantment, and finally land. If both objects
-     * have the same type, it then compares the CMC. If the CMC is the same, finally it compares the
-     * card name. If both cards are in the sideboard, it simply compares the CMC, then the names.
-     */
-    public static class DecklistComparator implements Comparator<CompressedDecklistInfo> {
-        @Override
-        public int compare(CompressedDecklistInfo o1, CompressedDecklistInfo o2) {
-            int cmcCompare;
-            if (o1.mIsSideboard && !o2.mIsSideboard) {
-                return 1;
-            } else if (!o1.mIsSideboard && o2.mIsSideboard) {
-                return -1;
-            } else if (!o1.mIsSideboard && !o2.mIsSideboard) { // I'm keeping the second value for clarity's sake
-                // Are we creatures?
-                if (o1.mCard.type.contains("Creature") && !o2.mCard.type.contains("Creature")) {
-                    return -1;
-                } else if (!o1.mCard.type.contains("Creature") && o2.mCard.type.contains("Creature")) {
-                    return 1;
-                } else if (o1.mCard.type.contains("Creature") && o2.mCard.type.contains("Creature")) {
-                    cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
-                    if (cmcCompare == 0) {
-                        return o1.mCard.name.compareTo(o2.mCard.name);
-                    }
-                    return cmcCompare;
-                // Are we Planeswalkers?
-                } else if (o1.mCard.type.contains("Planeswalker") && !o2.mCard.type.contains("Planeswalker")) {
-                    return -1;
-                } else if (!o1.mCard.type.contains("Planeswalker") && o2.mCard.type.contains("Planeswalker")) {
-                    return 1;
-                } else if (o1.mCard.type.contains("Planeswalker") && o2.mCard.type.contains("Planeswalker")) {
-                    cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
-                    if (cmcCompare == 0) {
-                        return o1.mCard.name.compareTo(o2.mCard.name);
-                    }
-                    return cmcCompare;
-                // Are we an instant or a sorcery?
-                } else if ((o1.mCard.type.contains("Instant") || o1.mCard.type.contains("Sorcery")) && !(o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery"))) {
-                    return -1;
-                } else if (!(o1.mCard.type.contains("Instant") || o1.mCard.type.contains("Sorcery")) && (o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery"))) {
-                    return 1;
-                } else if ((o1.mCard.type.contains("Instant") || o1.mCard.type.contains("Sorcery")) && (o2.mCard.type.contains("Instant") || o2.mCard.type.contains("Sorcery"))) {
-                    cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
-                    if (cmcCompare == 0) {
-                        return o1.mCard.name.compareTo(o2.mCard.name);
-                    }
-                    return cmcCompare;
-                // Are we an artifact?
-                } else if (o1.mCard.type.contains("Artifact") && !o2.mCard.type.contains("Artifact")) {
-                    return -1;
-                } else if (!o1.mCard.type.contains("Artifact") && o2.mCard.type.contains("Artifact")) {
-                    return 1;
-                } else if (o1.mCard.type.contains("Artifact") && o2.mCard.type.contains("Artifact")) {
-                    cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
-                    if (cmcCompare == 0) {
-                        return o1.mCard.name.compareTo(o2.mCard.name);
-                    }
-                    return cmcCompare;
-                // Are we an enchantment?
-                } else if (o1.mCard.type.contains("Enchantment") && !o2.mCard.type.contains("Enchantment")) {
-                    return -1;
-                } else if (!o1.mCard.type.contains("Enchantment") && o2.mCard.type.contains("Enchantment")) {
-                    return 1;
-                } else if (o1.mCard.type.contains("Enchantment") && o2.mCard.type.contains("Enchantment")) {
-                    cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
-                    if (cmcCompare == 0) {
-                        return o1.mCard.name.compareTo(o2.mCard.name);
-                    }
-                    return cmcCompare;
-                // If not, we must be a land, and lands are all CMC 0.
-                } else {
-                    return o1.mCard.name.compareTo(o2.mCard.name);
-                }
-            } else {
-                cmcCompare = compareCMC(o1.mCard.cmc, o2.mCard.cmc);
-                if (cmcCompare == 0) {
-                    return o1.mCard.name.compareTo(o2.mCard.name);
-                }
-                return cmcCompare;
-            }
-        }
-
-        /**
-         * Compare the CMC of two cards
-         * @param cmcValue1 the CMC of the first card
-         * @param cmcValue2 the CMC of the second card
-         * @return -1 if cmcValue2 is greater, 1 if cmcValue1 is greater, otherwise 0
-         */
-        private int compareCMC(int cmcValue1, int cmcValue2) {
-            if (cmcValue1 < cmcValue2) {
-                return -1;
-            } else if (cmcValue1 > cmcValue2) {
-                return 1;
-            }
-            return 0;
-        }
-
-    };
 
 }
