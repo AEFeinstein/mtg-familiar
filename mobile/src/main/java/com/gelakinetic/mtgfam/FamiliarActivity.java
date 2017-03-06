@@ -156,12 +156,12 @@ public class FamiliarActivity extends AppCompatActivity {
             new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false),
             new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false),
             new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false),
+            new DrawerEntry(R.string.main_deckbuilder, R.attr.ic_drawer_about, false),
             new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false),
             new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
             new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
             new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
             new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false),
-            new DrawerEntry(R.string.main_deckbuilder, R.attr.ic_drawer_profile, false),
             new DrawerEntry(0, 0, true),
             new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
             new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
@@ -574,14 +574,14 @@ public class FamiliarActivity extends AppCompatActivity {
                     case R.string.main_dice:
                     case R.string.main_trade:
                     case R.string.main_wishlist:
+                    case R.string.main_deckbuilder:
                     case R.string.main_timer:
                     case R.string.main_rules:
                     case R.string.main_judges_corner:
                     case R.string.main_mojhosto:
                     case R.string.main_card_search:
                     case R.string.main_life_counter:
-                    case R.string.main_profile:
-                    case R.string.main_deckbuilder: {
+                    case R.string.main_profile: {
                         selectItem(mPageEntries[i].mNameResource, null, true, false);
                         break;
                     }
@@ -954,6 +954,8 @@ public class FamiliarActivity extends AppCompatActivity {
             selectItem(R.string.main_mojhosto, null, true, false);
         } else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
             selectItem(R.string.main_profile, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_deckbuilder))) {
+            selectItem(R.string.main_deckbuilder, null, true, false);
         } else {
             selectItem(R.string.main_card_search, null, true, false);
         }
@@ -1035,6 +1037,10 @@ public class FamiliarActivity extends AppCompatActivity {
                 newFrag = new WishlistFragment();
                 break;
             }
+            case R.string.main_deckbuilder: {
+                newFrag = new DecklistFragment();
+                break;
+            }
             case R.string.main_timer: {
                 newFrag = new RoundTimerFragment();
                 break;
@@ -1053,10 +1059,6 @@ public class FamiliarActivity extends AppCompatActivity {
             }
             case R.string.main_profile: {
                 newFrag = new ProfileFragment();
-                break;
-            }
-            case R.string.main_deckbuilder: {
-                newFrag = new DecklistFragment();
                 break;
             }
             default:
