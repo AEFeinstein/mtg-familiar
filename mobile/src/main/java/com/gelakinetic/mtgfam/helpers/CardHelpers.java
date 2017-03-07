@@ -2,6 +2,8 @@ package com.gelakinetic.mtgfam.helpers;
 
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 
+import org.apache.commons.collections4.comparators.ComparatorChain;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -85,6 +87,13 @@ public class CardHelpers {
             return totalCopies;
         }
 
+    }
+
+    public static ComparatorChain<CompressedCardInfo> getComparatorWithName(Comparator<CompressedCardInfo> comparator) {
+        ComparatorChain<CompressedCardInfo> chain = new ComparatorChain<>();
+        chain.addComparator(comparator);
+        chain.addComparator(new CardComparatorName());
+        return chain;
     }
 
     /* Comparator based on name */

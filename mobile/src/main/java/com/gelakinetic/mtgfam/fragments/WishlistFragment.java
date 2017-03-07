@@ -30,8 +30,13 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.CardComparatorColor;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.CardComparatorName;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.CardComparatorPrice;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.CardComparatorSet;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.CardComparatorCMC;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
@@ -597,37 +602,46 @@ public class WishlistFragment extends FamiliarFragment {
             if (mWishlistSortOrder == ASCENDING) {
                 switch (mWishlistSortType) {
                     case SORT_TYPE_CMC:
-                        Collections.sort(mCompressedWishlist, new CardHelpers.CardComparatorCMC());
+                        Collections.sort(mCompressedWishlist,
+                                CardHelpers.getComparatorWithName(new CardComparatorCMC()));
                         break;
                     case SORT_TYPE_COLOR:
-                        Collections.sort(mCompressedWishlist, new CardHelpers.CardComparatorColor());
+                        Collections.sort(mCompressedWishlist,
+                                CardHelpers.getComparatorWithName(new CardComparatorColor()));
                         break;
                     case SORT_TYPE_NAME:
-                        Collections.sort(mCompressedWishlist, new CardHelpers.CardComparatorName());
+                        Collections.sort(mCompressedWishlist, new CardComparatorName());
                         break;
                     case SORT_TYPE_PRICE:
-                        Collections.sort(mCompressedWishlist, new CardHelpers.CardComparatorPrice(mPriceSetting));
+                        Collections.sort(mCompressedWishlist,
+                                CardHelpers.getComparatorWithName(new CardComparatorPrice(mPriceSetting)));
                         break;
                     case SORT_TYPE_SET:
-                        Collections.sort(mCompressedWishlist, new CardHelpers.CardComparatorSet());
+                        Collections.sort(mCompressedWishlist,
+                                CardHelpers.getComparatorWithName(new CardComparatorSet()));
                         break;
                 }
             } else {
                 switch (mWishlistSortType) {
                     case SORT_TYPE_CMC:
-                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new CardHelpers.CardComparatorCMC()));
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(CardHelpers
+                                .getComparatorWithName(new CardComparatorCMC())));
                         break;
                     case SORT_TYPE_COLOR:
-                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new CardHelpers.CardComparatorColor()));
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(CardHelpers
+                                .getComparatorWithName(new CardComparatorColor())));
                         break;
                     case SORT_TYPE_NAME:
-                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new CardHelpers.CardComparatorName()));
+                        Collections.sort(mCompressedWishlist,
+                                Collections.reverseOrder(new CardComparatorName()));
                         break;
                     case SORT_TYPE_PRICE:
-                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new CardHelpers.CardComparatorPrice(mPriceSetting)));
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(CardHelpers
+                                .getComparatorWithName(new CardComparatorPrice(mPriceSetting))));
                         break;
                     case SORT_TYPE_SET:
-                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(new CardHelpers.CardComparatorSet()));
+                        Collections.sort(mCompressedWishlist, Collections.reverseOrder(CardHelpers
+                                .getComparatorWithName(new CardComparatorSet())));
                         break;
                 }
             }

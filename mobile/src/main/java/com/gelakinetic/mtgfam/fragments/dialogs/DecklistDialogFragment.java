@@ -87,13 +87,17 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 });
 
                 /* Read the decklist */
-                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getParentDecklistFragment().getActivity(), getParentDecklistFragment().mCurrentDeck + getParentDecklistFragment().DECK_EXTENSION);
+                String deckName = getParentDecklistFragment().mCurrentDeck;
+                if (deckName.equals("")) {
+                    deckName = DecklistFragment.AUTOSAVE_NAME;
+                }
+                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getParentDecklistFragment().getActivity(), deckName + DecklistFragment.DECK_EXTENSION);
 
                 /* Find any counts currently in the decklist */
                 final Map<String, String> targetCardNumberOfs = new HashMap<>();
                 final Map<String, String> targetFoilCardNumberOfs = new HashMap<>();
                 for (Pair<MtgCard, Boolean> card : decklist) {
-                    if (card.first.name.equals(cardName) && card.second.equals(isSideboard)) {
+                    if (card.first.name.equals(cardName)) { //&& card.second.equals(isSideboard)) {
                         if (card.first.foil) {
                             targetFoilCardNumberOfs.put(card.first.setCode, card.first.numberOf + "");
                         } else {
