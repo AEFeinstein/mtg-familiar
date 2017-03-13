@@ -39,4 +39,19 @@
     <string name="search_Phenomenon" translatable="false">Phenomenon</string>
     <string name="search_Scheme" translatable="false">Scheme</string>
 
+    <!-- Card Types -->
+    <!-- todo: Eventually translatable? -->
+    <string name="card_type_creature" translatable="false">Creature</string>
+    <string name="card_type_planeswalker" translatable="false">Planeswalker</string>
+    <string name="card_type_instant" translatable="false">Instant</string>
+    <string name="card_type_sorcery" translatable="false">Sorcery</string>
+    <string name="card_type_artifact" translatable="false">Artifact</string>
+    <string name="card_type_enchantment" translatable="false">Enchantment</string>
+    <string name="card_type_land" translatable="false">Land</string>
+    <string name="card_type_conspiracy" translatable="false">Conspiracy</string>
+    <string name="card_type_phenomenon" translatable="false">Phenomenon</string>
+    <string name="card_type_plane" translatable="false">Plane</string>
+    <string name="card_type_scheme" translatable="false">Scheme</string>
+    <string name="card_type_vanguard" translatable="false">Vanguard</string>
+
 </resources>

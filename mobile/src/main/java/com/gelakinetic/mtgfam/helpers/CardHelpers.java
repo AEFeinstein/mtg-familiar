@@ -194,21 +194,17 @@ public class CardHelpers {
         }
     }
 
-    /* Comparator based on card supertype */
+    /* Comparator based on card supertype
+     * must pass an array of types in the order you wish to sort */
     public static class CardComparatorSupertype implements Comparator<CompressedCardInfo> {
-        String[] mTypes = new String[]{"Creature", "Planeswalker", "Instant", "Sorcery", "Artifact", "Enchantment", "Land"};
-        boolean mSeparateSpells;
-        public CardComparatorSupertype(boolean separateSpells) {
-            mSeparateSpells = separateSpells;
+        final String[] mTypes;
+        public CardComparatorSupertype(String[] superTypes) {
+            mTypes = superTypes;
         }
         @Override
         public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
             String card1Type = card1.mCard.type;
             String card2Type = card2.mCard.type;
-            if (!mSeparateSpells && ((card1Type.contains(mTypes[2]) || card1Type.contains(mTypes[3]))
-                    && (card2Type.contains(mTypes[2]) || card2Type.contains(mTypes[3])))) {
-                return 0;
-            }
             for (String type : mTypes) {
                 if (card1Type.contains(type) && card2Type.contains(type)) {
                     return 0;

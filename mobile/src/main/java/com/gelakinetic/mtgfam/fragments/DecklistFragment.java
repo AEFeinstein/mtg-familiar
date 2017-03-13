@@ -29,10 +29,10 @@ import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
-import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -54,13 +54,14 @@ public class DecklistFragment extends FamiliarFragment {
     public EditText mNumberField;
 
     /* Decklist and adapters */
+    public ListView decklistView;
     public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
     public DecklistArrayAdapter mDecklistAdapter;
     public ComparatorChain mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
     public String mCurrentDeck = "";
-    public static final String DECK_EXTENSION = ".fDeck";
+    public static final String DECK_EXTENSION = ".deck";
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -75,7 +76,7 @@ public class DecklistFragment extends FamiliarFragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View myFragmentView = inflater.inflate(R.layout.deck_view_frag, container, false);
+        View myFragmentView = inflater.inflate(R.layout.decklist_frag, container, false);
         assert myFragmentView != null;
 
         final TextView.OnEditorActionListener addCardListener = new TextView.OnEditorActionListener() {
@@ -99,7 +100,7 @@ public class DecklistFragment extends FamiliarFragment {
         mNumberField.setText("1");
         mNumberField.setOnEditorActionListener(addCardListener);
 
-        ListView listView = (ListView) myFragmentView.findViewById(decklist);
+        decklistView = (ListView) myFragmentView.findViewById(decklist);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,16 +119,16 @@ public class DecklistFragment extends FamiliarFragment {
         /* Set up the decklist and adapter, it will be read in onResume() */
         mCompressedDecklist = new ArrayList<>();
         mDecklistAdapter = new DecklistArrayAdapter(mCompressedDecklist);
-        listView.setAdapter(mDecklistAdapter);
+        decklistView.setAdapter(mDecklistAdapter);
 
-        mDecklistChain = new ComparatorChain();
+        mDecklistChain = new ComparatorChain<>();
         mDecklistChain.addComparator(new CardHelpers.CardComparatorSideboard());
-        mDecklistChain.addComparator(new CardHelpers.CardComparatorSupertype(false));
+        mDecklistChain.addComparator(new CardHelpers.CardComparatorSupertype(getResources().getStringArray(R.array.card_types_extra)));
         mDecklistChain.addComparator(new CardHelpers.CardComparatorCMC());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        decklistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CompressedDecklistInfo item = mCompressedDecklist.get(position);
@@ -135,7 +136,7 @@ public class DecklistFragment extends FamiliarFragment {
                 showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.name, item.mIsSideboard);
             }
         });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        decklistView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 /* Remove the card */
@@ -473,60 +474,59 @@ public class DecklistFragment extends FamiliarFragment {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.decklist_card_row, parent, false);
                 assert convertView != null;
             }
-            Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
-            /* Get all the decklist information for this entry */
+            /* Get the decklist information for this entry */
             CompressedDecklistInfo info = values.get(position);
+            /* Get the information for the previous, if it exists */
             CompressedDecklistInfo previousInfo = null;
-            /* Try to get the info above this one, if not we are good with it being null */
             try {
                 previousInfo = values.get(position - 1);
-            } catch (ArrayIndexOutOfBoundsException aie) {}
-            /* Card type seperators. These check if the card is the first of that type in the view,
-             * and if it is, show the seperator with the correct type text */
+            } catch (ArrayIndexOutOfBoundsException aie) { /* this is fine, we check for a null value later */ }
+            String[] cardTypes = getResources().getStringArray(R.array.card_types);
+            /* Note "Creature" is index 1 */
+            String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
             TextView separator = (TextView) convertView.findViewById(R.id.decklistSeparator);
             separator.setVisibility(View.VISIBLE);
-            if (info.mIsSideboard && !(previousInfo != null && previousInfo.mIsSideboard)) {
-                separator.setText(R.string.decklist_sideboard);
-            } else if (!info.mIsSideboard) {
-                if (info.mCard.type.contains("Creature") && !(previousInfo != null && previousInfo.mCard.type.contains("Creature"))) {
-                    separator.setText(R.string.decklist_creatures);
-                } else if (info.mCard.type.contains("Planeswalker") && !(previousInfo != null && previousInfo.mCard.type.contains("Planeswalker"))) {
-                    separator.setText(R.string.decklist_planeswalker);
-                } else if ((info.mCard.type.contains("Instant") || info.mCard.type.contains("Sorcery")) && !(previousInfo != null && (previousInfo.mCard.type.contains("Instant") || previousInfo.mCard.type.contains("Sorcery")))) {
-                    separator.setText(R.string.decklist_spells);
-                } else if (info.mCard.type.contains("Artifact") && !(previousInfo != null && previousInfo.mCard.type.contains("Artifact"))) {
-                    /* Exclude Artifact Creatures and Artifact Enchantments */
-                    if (!info.mCard.type.contains("Creature") && !info.mCard.type.contains("Enchantment")) {
-                        separator.setText(R.string.decklist_artifacts);
-                    } else {
-                        separator.setVisibility(View.GONE);
-                    }
-                } else if (info.mCard.type.contains("Enchantment") && !(previousInfo != null && previousInfo.mCard.type.contains("Enchantment"))) {
-                    /* Exclude Enchantment Creatures and Artifact Enchantments */
-                    if (!info.mCard.type.contains("Creature") && !info.mCard.type.contains("Artifact")) {
-                        separator.setText(R.string.decklist_enchantments);
-                    } else {
-                        separator.setVisibility(View.GONE);
-                    }
-                } else if (info.mCard.type.contains("Land") && !(previousInfo != null && previousInfo.mCard.type.contains("Land"))) {
-                    /* Exclude land creatures */
-                    if (!info.mCard.type.contains("Creature")) {
-                        separator.setText(R.string.decklist_lands);
-                    } else {
-                        separator.setVisibility(View.GONE);
-                    }
+            if (info.mIsSideboard) { // Card is in the sideboard
+                if (previousInfo == null || !previousInfo.mIsSideboard) { // The card before either does not exist, or is not in the sideboard
+                    separator.setText(cardHeaders[0]);
                 } else {
                     separator.setVisibility(View.GONE);
                 }
-            } else {
-                separator.setVisibility(View.GONE);
+            } else { // Card is in the mainboard
+                for (int i = 0; i < cardTypes.length + 1; i++) {
+                    if (i == cardTypes.length || info.mCard.type.contains(cardTypes[i])) { // if the card is of type cardTypes[i]
+                        if (previousInfo != null && getLastHeaderText(position).equals(cardHeaders[i + 1])) { // if the last header equals the current possible header
+                            separator.setVisibility(View.GONE);
+                        } else {
+                            separator.setText(cardHeaders[i + 1]);
+                        }
+                        break;
+                    }
+                }
             }
+            Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
             /* Get the numberOf of the card, the name, and the mana cost to display */
             ((TextView) convertView.findViewById(R.id.decklistRowNumber)).setText(String.valueOf(info.getTotalNumber()));
             ((TextView) convertView.findViewById(R.id.decklistRowName)).setText(info.mCard.name);
-            ((TextView) convertView.findViewById(R.id.decklistRowCost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imgGetter));
-
+            ((TextView) convertView.findViewById(R.id.decklistRowCost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imageGetter));
             return convertView;
         }
+
+        /**
+         * Moving backwards, find the last section header
+         * @param currentPosition the position to start searching at
+         * @return the text of the header, if no header is found, an empty string
+         */
+        private String getLastHeaderText(final int currentPosition) {
+            TextView temp;
+            for (int i = currentPosition - 1; i >= 0; i--) {
+                temp = (TextView) decklistView.getChildAt(i).findViewById(R.id.decklistSeparator);
+                if (temp.getVisibility() == View.VISIBLE) {
+                    return temp.getText().toString();
+                }
+            }
+            return ""; // The last header is empty, returning an empty string prevents NullPointerExceptions
+        }
+
     }
 }

@@ -504,8 +504,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <!-- Deck Builder -->
     <string name="decklist_sideboard">Sideboard</string>
     <string name="decklist_creatures">Creatures</string>
-    <string name="decklist_spells">Spells</string>
-    <string name="decklist_planeswalker">Planeswalker</string>
+    <string name="decklist_planeswalkers">Planeswalker</string>
     <string name="decklist_enchantments">Enchantments</string>
     <string name="decklist_artifacts">Artifacts</string>
     <string name="decklist_lands">Lands</string>
@@ -521,4 +520,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="decklist_clear_dialog_text">Are you sure you want to clear the current deck?</string>
     <string name="decklist_share">Share Deck</string>
     <string name="decklist_share_title">MTG Familiar Decklist</string>
+    <string name="decklist_instants">Instants</string>
+    <string name="decklist_sorceries">Sorceries</string>
+    <string name="decklist_others">Others</string>
 </resources>

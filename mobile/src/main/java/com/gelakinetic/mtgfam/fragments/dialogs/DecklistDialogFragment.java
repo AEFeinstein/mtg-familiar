@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
@@ -63,8 +64,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
         final boolean isSideboard = getArguments().getBoolean(SIDE_KEY);
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
+                final FragmentActivity activity = getParentDecklistFragment().getActivity();
                 /* Create the custom view */
-                View customView = getParentDecklistFragment().getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog, null, false);
+                View customView = activity.getLayoutInflater().inflate(R.layout.wishlist_dialog, null, false);
                 assert customView != null;
                 /* Grab the linear layout. Make it final to be accessible from the button layer */
                 final LinearLayout linearLayout = (LinearLayout) customView.findViewById(R.id.linear_layout);
@@ -72,7 +74,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     @Override
                     public void onClick(View v) {
                         Bundle args = new Bundle();
-                        SQLiteDatabase db = DatabaseManager.getInstance(getParentDecklistFragment().getActivity(), false).openDatabase(false);
+                        SQLiteDatabase db = DatabaseManager.getInstance(activity, false).openDatabase(false);
                         try {
                             /* Get the card ID, and send it to a new CardViewFragment */
                             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.fetchIdByName(cardName, db)});
@@ -82,7 +84,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         } catch (FamiliarDbException fde) {
                             getParentDecklistFragment().handleFamiliarDbException(false);
                         }
-                        DatabaseManager.getInstance(getParentDecklistFragment().getActivity(), false).closeDatabase(false);
+                        DatabaseManager.getInstance(activity, false).closeDatabase(false);
                     }
                 });
 
@@ -91,7 +93,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 if (deckName.equals("")) {
                     deckName = DecklistFragment.AUTOSAVE_NAME;
                 }
-                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getParentDecklistFragment().getActivity(), deckName + DecklistFragment.DECK_EXTENSION);
+                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION);
 
                 /* Find any counts currently in the decklist */
                 final Map<String, String> targetCardNumberOfs = new HashMap<>();
@@ -112,7 +114,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 final ArrayList<String> potentialNumbers = new ArrayList<>();
 
                 /* Open the database! */
-                SQLiteDatabase db = DatabaseManager.getInstance(getParentDecklistFragment().getActivity(), false).openDatabase(false);
+                SQLiteDatabase db = DatabaseManager.getInstance(activity, false).openDatabase(false);
 
                 /* Get all the cards with relevant info from the database */
                 Cursor cards;
@@ -124,7 +126,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                             CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, db);
                 } catch (FamiliarDbException e) {
-                    DatabaseManager.getInstance(getParentDecklistFragment().getActivity(), false).closeDatabase(false);
+                    DatabaseManager.getInstance(activity, false).closeDatabase(false);
                     return null;
                 }
 
@@ -132,7 +134,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 try {
                     foilSets = CardDbAdapter.getFoilSets(db);
                 } catch (FamiliarDbException fde) {
-                    DatabaseManager.getInstance(getParentDecklistFragment().getActivity(), false).closeDatabase(false);
+                    DatabaseManager.getInstance(activity, false).closeDatabase(false);
                     return null;
                 }
 
@@ -144,7 +146,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
                     /* Inflate a row and fill it with stuff */
-                    View wishlistRow = getParentDecklistFragment().getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null, false);
+                    View wishlistRow = activity.getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null, false);
                     assert wishlistRow != null;
                     ((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
                     String numberOf = targetCardNumberOfs.get(setCode);
@@ -159,7 +161,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     /* If this card has a foil version, add that too */
                     View wishlistRowFoil;
                     if (foilSets.contains(setCode)) {
-                        wishlistRowFoil = getParentDecklistFragment().getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
+                        wishlistRowFoil = activity.getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
                                 null, false);
                         assert wishlistRowFoil != null;
                         ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
@@ -178,18 +180,22 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                 /* Clean up */
                 cards.close();
-                DatabaseManager.getInstance(getParentDecklistFragment().getActivity(), false).closeDatabase(false);
+                DatabaseManager.getInstance(activity, false).closeDatabase(false);
 
                 /* make and return the actual dialog */
-                return new MaterialDialog.Builder(getParentDecklistFragment().getActivity())
+                return new MaterialDialog.Builder(activity)
                         .title(cardName + " " + getParentDecklistFragment().getString(R.string.decklist_edit_dialog_title_end))
                         .customView(customView, false)
                         .positiveText(getParentDecklistFragment().getString(R.string.dialog_ok))
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                String deckName = getParentDecklistFragment().mCurrentDeck;
+                                if (deckName.equals("")) {
+                                    deckName = DecklistFragment.AUTOSAVE_NAME;
+                                }
                                 /* read the decklist */
-                                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(getParentDecklistFragment().getActivity(), getParentDecklistFragment().mCurrentDeck + DecklistFragment.DECK_EXTENSION);
+                                ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION);
 
                                 /* Add the cards listed in the dialog to the wishlist */
                                 for (int i = 0; i < linearLayout.getChildCount(); i++) {
@@ -232,7 +238,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                         decklist.add(new Pair<>(card, isSideboard));
                                     }
                                 }
-                                DecklistHelpers.WriteDecklist(getParentDecklistFragment().getActivity(), decklist, getParentDecklistFragment().mCurrentDeck + DecklistFragment.DECK_EXTENSION);
+                                DecklistHelpers.WriteDecklist(activity, decklist, deckName + DecklistFragment.DECK_EXTENSION);
                                 getParentDecklistFragment().onWishlistChanged(cardName);
                             }
                         })
