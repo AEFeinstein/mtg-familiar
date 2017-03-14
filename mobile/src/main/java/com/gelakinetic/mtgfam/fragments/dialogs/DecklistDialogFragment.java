@@ -99,7 +99,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 final Map<String, String> targetCardNumberOfs = new HashMap<>();
                 final Map<String, String> targetFoilCardNumberOfs = new HashMap<>();
                 for (Pair<MtgCard, Boolean> card : decklist) {
-                    if (card.first.name.equals(cardName)) { //&& card.second.equals(isSideboard)) {
+                    if (card.first.name.equals(cardName)) {
                         if (card.first.foil) {
                             targetFoilCardNumberOfs.put(card.first.setCode, card.first.numberOf + "");
                         } else {

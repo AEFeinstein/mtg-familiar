@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -265,6 +266,9 @@ public class DecklistFragment extends FamiliarFragment {
             mNumberField.setText("1");
             mNameField.setText("");
 
+            /* Update the headers */
+            setHeaderValues();
+
             /* Redraw the new decklist with the new card */
             mDecklistAdapter.notifyDataSetChanged();
 
@@ -346,8 +350,8 @@ public class DecklistFragment extends FamiliarFragment {
                 }
             }
             /* Fill extra card data from the database, for displaying full card info */
-            // todo: is this needed HERE? Answer, probably not.
             CardDbAdapter.fillExtraWishlistData(mCompressedDecklist, database);
+            setHeaderValues();
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
         }
@@ -432,6 +436,24 @@ public class DecklistFragment extends FamiliarFragment {
     }
 
     /**
+     * Sets the header values for all the cards in the list
+     */
+    private void setHeaderValues() {
+        final String[] cardTypes = getResources().getStringArray(R.array.card_types_extra);
+        final String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
+            /* We need to tell each card what it should be classified as, that is the order as
+             * defined by R.array.card_types_extra */
+        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+            for (int i = 0; i < cardTypes.length; i++) {
+                if (cdi.mCard.type.contains(cardTypes[i])) {
+                    cdi.header = cardHeaders[i + 1];
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
      * @param menu     The options menu in which you place your items.
      * @param inflater The inflater to use to inflate the menu
      */
@@ -484,23 +506,27 @@ public class DecklistFragment extends FamiliarFragment {
             String[] cardTypes = getResources().getStringArray(R.array.card_types);
             /* Note "Creature" is index 1 */
             String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
-            TextView separator = (TextView) convertView.findViewById(R.id.decklistSeparator);
-            separator.setVisibility(View.VISIBLE);
+            View separator = convertView.findViewById(R.id.decklistSeparator);
+            TextView separatorText = (TextView) separator.findViewById(R.id.decklistHeaderType);
+            TextView separatorNumber = (TextView) separator.findViewById(R.id.decklistHeaderNumber);
+            separator.setVisibility(View.GONE);
             if (info.mIsSideboard) { // Card is in the sideboard
                 if (previousInfo == null || !previousInfo.mIsSideboard) { // The card before either does not exist, or is not in the sideboard
-                    separator.setText(cardHeaders[0]);
-                } else {
-                    separator.setVisibility(View.GONE);
+                    separator.setVisibility(View.VISIBLE);
+                    separatorText.setText(cardHeaders[0]);
+                    String number = "(" + String.valueOf(getTotalNumberOfType(getString(R.string.decklist_sideboard))) + ")";
+                    separatorNumber.setText(number);
                 }
             } else { // Card is in the mainboard
                 for (int i = 0; i < cardTypes.length + 1; i++) {
                     if (i == cardTypes.length || info.mCard.type.contains(cardTypes[i])) { // if the card is of type cardTypes[i]
-                        if (previousInfo != null && getLastHeaderText(position).equals(cardHeaders[i + 1])) { // if the last header equals the current possible header
-                            separator.setVisibility(View.GONE);
-                        } else {
-                            separator.setText(cardHeaders[i + 1]);
+                        if (previousInfo == null || !previousInfo.header.equals(info.header)) { // if the previous card is null, or the previous header is not equal to the current header
+                            separator.setVisibility(View.VISIBLE);
+                            separatorText.setText(cardHeaders[i + 1]);
+                            String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
+                            separatorNumber.setText(number);
                         }
-                        break;
+                        break; // We don't need to continue checking, since we found the header
                     }
                 }
             }
@@ -513,19 +539,22 @@ public class DecklistFragment extends FamiliarFragment {
         }
 
         /**
-         * Moving backwards, find the last section header
-         * @param currentPosition the position to start searching at
-         * @return the text of the header, if no header is found, an empty string
+         * Get the number of cards of the type to display in the header
+         * @param headerValue the card type we are counting
+         * @return the number of cards of the given type
          */
-        private String getLastHeaderText(final int currentPosition) {
-            TextView temp;
-            for (int i = currentPosition - 1; i >= 0; i--) {
-                temp = (TextView) decklistView.getChildAt(i).findViewById(R.id.decklistSeparator);
-                if (temp.getVisibility() == View.VISIBLE) {
-                    return temp.getText().toString();
+        private int getTotalNumberOfType(final String headerValue) {
+            int totalCards = 0;
+            for (CompressedDecklistInfo cdi : values) {
+                /* check if one of two things is correct
+                 * 1. the card is a sideboard card
+                 * 2. the card's header is the headerValue, and isn't in the sideboard */
+                if ((headerValue.equals(getString(R.string.decklist_sideboard)) && cdi.mIsSideboard)
+                        || (cdi.header.equals(headerValue) && !cdi.mIsSideboard)) {
+                    totalCards += cdi.getTotalNumber();
                 }
             }
-            return ""; // The last header is empty, returning an empty string prevents NullPointerExceptions
+            return totalCards;
         }
 
     }

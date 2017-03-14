@@ -144,6 +144,7 @@ public class DecklistHelpers {
     public static class CompressedDecklistInfo extends CardHelpers.CompressedCardInfo {
 
         public final boolean mIsSideboard;
+        public String header;
 
         /**
          * Constructor
