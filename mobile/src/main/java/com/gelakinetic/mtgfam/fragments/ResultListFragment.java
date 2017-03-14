@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -402,6 +404,11 @@ public class ResultListFragment extends FamiliarFragment {
                     handleFamiliarDbException(true);
                 }
                 return true;
+            case R.id.search_menu_sort: {
+                ResultListDialogFragment newFragment = new ResultListDialogFragment();
+                newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

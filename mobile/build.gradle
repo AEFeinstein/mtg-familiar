@@ -53,4 +53,5 @@ dependencies {
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
     compile 'org.jsoup:jsoup:1.10.2'
+    compile 'com.github.woxthebox:draglistview:1.4'
 }
