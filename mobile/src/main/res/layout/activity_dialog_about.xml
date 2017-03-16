@@ -10,6 +10,7 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dialog_layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -35,19 +36,19 @@
             android:padding="8dp"
             android:src="@drawable/tutor_cards_logo" />
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/imageview1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@drawable/gpl_logo" />
+            app:srcCompat="@drawable/gpl_logo" />
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/imageview2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@drawable/cc_logo" />
+            app:srcCompat="@drawable/cc_logo" />
     </LinearLayout>
 
 </ScrollView>

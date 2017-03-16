@@ -51,6 +51,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -217,6 +218,14 @@ public class FamiliarActivity extends AppCompatActivity {
     private boolean mUpdatingRoundTimer;
     private long mRoundEndTime;
     private Handler mRoundTimerUpdateHandler;
+
+    /*
+     * We need this to allow TextView drawables for any API under 21.
+     */
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     /**
      * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
      * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment

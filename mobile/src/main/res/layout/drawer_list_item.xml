@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/drawer_background_indicator"
     android:orientation="vertical">
 
