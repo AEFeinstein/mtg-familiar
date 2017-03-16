@@ -48,7 +48,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.afollestad.material-dialogs:core:0.9.3.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.1'
     compile 'com.jpardogo.materialtabstrip:library:1.1.1'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
