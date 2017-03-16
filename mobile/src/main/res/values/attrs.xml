@@ -13,6 +13,7 @@
         <attr name="glyph_pwk" format="reference" />
         <attr name="glyph_chaos" format="reference" />
         <attr name="glyph_e" format="reference" />
+        <attr name="glyph_p" format="reference" />
         <attr name="button" format="reference" />
 
         <!-- Rarity Colors -->

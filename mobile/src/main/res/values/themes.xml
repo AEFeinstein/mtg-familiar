@@ -101,6 +101,7 @@
         <item name="glyph_pwk">@drawable/glyph_pwk_light</item>
         <item name="glyph_chaos">@drawable/glyph_chaos_light</item>
         <item name="glyph_e">@drawable/glyph_e_light</item>
+        <item name="glyph_p">@drawable/glyph_p_light</item>
 
         <item name="ic_menu_search">@drawable/ic_menu_search_light</item>
         <item name="ic_menu_card_image">@drawable/ic_menu_card_image_light</item>
@@ -232,6 +233,7 @@
         <item name="glyph_pwk">@drawable/glyph_pwk_dark</item>
         <item name="glyph_chaos">@drawable/glyph_chaos_dark</item>
         <item name="glyph_e">@drawable/glyph_e_dark</item>
+        <item name="glyph_p">@drawable/glyph_p_dark</item>
 
         <item name="ic_menu_search">@drawable/ic_menu_search_dark</item>
         <item name="ic_menu_card_image">@drawable/ic_menu_card_image_dark</item>
