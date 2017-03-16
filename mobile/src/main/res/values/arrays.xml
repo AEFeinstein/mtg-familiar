@@ -235,4 +235,9 @@
         <item>@string/wishlist_type_price</item>
         <item>@string/wishlist_type_set</item>
     </string-array>
+
+    <string-array name="asc_desc">
+        <item>@string/wishlist_ascending</item>
+        <item>@string/wishlist_descending</item>
+    </string-array>
 </resources>

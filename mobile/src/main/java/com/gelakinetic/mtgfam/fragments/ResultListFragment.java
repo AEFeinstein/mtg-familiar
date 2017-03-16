@@ -48,6 +48,8 @@ public class ResultListFragment extends FamiliarFragment {
     /* The cursor with the data and the list view to display it */
     private Cursor mCursor;
     private ListView mListView;
+    private SQLiteDatabase mDatabase;
+    private String mOrderByStr = null;
 
     /**
      * When the fragment is created, open the database and search for whatever.
@@ -124,60 +126,12 @@ public class ResultListFragment extends FamiliarFragment {
             return null;
         }
 
-        /* All the things we may want to display */
-        String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_SET,
-                CardDbAdapter.KEY_RARITY, CardDbAdapter.KEY_MANACOST, CardDbAdapter.KEY_SUPERTYPE, CardDbAdapter.KEY_SUBTYPE,
-                CardDbAdapter.KEY_ABILITY, CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS, CardDbAdapter.KEY_LOYALTY,
-                CardDbAdapter.KEY_NUMBER};
-
         Bundle args = this.getArguments();
 
         /* Open up the database, search for stuff */
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+        mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
-            long id;
-
-            /* This is just the multiverse ID, from a TutorCards search */
-            if ((id = args.getLong(CARD_ID)) != 0L) {
-                mCursor = CardDbAdapter.fetchCardByMultiverseId(id, new String[]{
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SUPERTYPE,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SUBTYPE,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MANACOST,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_POWER,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_TOUGHNESS,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_LOYALTY,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ABILITY,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_FLAVOR,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ARTIST,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MULTIVERSEID
-                }, database);
-            }
-            /* If "id0" exists, then it's three cards and they should be merged
-             * Otherwise, do a search with the given criteria
-             */
-            else if ((id = args.getLong(CARD_ID_0)) != 0L) {
-                long id1 = args.getLong(CARD_ID_1);
-                long id2 = args.getLong(CARD_ID_2);
-                Cursor cs[] = new Cursor[3];
-                cs[0] = CardDbAdapter.fetchCard(id, database);
-                cs[1] = CardDbAdapter.fetchCard(id1, database);
-                cs[2] = CardDbAdapter.fetchCard(id2, database);
-                mCursor = new MergeCursor(cs);
-            } else {
-                SearchCriteria criteria = (SearchCriteria) args.getSerializable(SearchViewFragment.CRITERIA);
-                assert criteria != null; /* Because Android Studio */
-                boolean consolidate = (criteria.setLogic == CardDbAdapter.MOST_RECENT_PRINTING ||
-                        criteria.setLogic == CardDbAdapter.FIRST_PRINTING);
-
-                mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate, database);
-            }
+            doSearch(this.getArguments(), mDatabase);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
@@ -263,6 +217,58 @@ public class ResultListFragment extends FamiliarFragment {
         });
 
         return myFragmentView;
+    }
+
+    private void doSearch(Bundle args, SQLiteDatabase database) throws FamiliarDbException {
+        long id;
+        /* This is just the multiverse ID, from a TutorCards search */
+        if ((id = args.getLong(CARD_ID)) != 0L) {
+            mCursor = CardDbAdapter.fetchCardByMultiverseId(id, new String[]{
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SUPERTYPE,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SUBTYPE,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MANACOST,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_POWER,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_TOUGHNESS,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_LOYALTY,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ABILITY,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_FLAVOR,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ARTIST,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR,
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MULTIVERSEID
+            }, database);
+        }
+            /* If "id0" exists, then it's three cards and they should be merged
+             * Otherwise, do a search with the given criteria
+             */
+        else if ((id = args.getLong(CARD_ID_0)) != 0L) {
+            long id1 = args.getLong(CARD_ID_1);
+            long id2 = args.getLong(CARD_ID_2);
+            Cursor cs[] = new Cursor[3];
+            cs[0] = CardDbAdapter.fetchCard(id, database);
+            cs[1] = CardDbAdapter.fetchCard(id1, database);
+            cs[2] = CardDbAdapter.fetchCard(id2, database);
+            mCursor = new MergeCursor(cs);
+        } else {
+
+            /* All the things we may want to display */
+            String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME, CardDbAdapter.KEY_SET,
+                    CardDbAdapter.KEY_RARITY, CardDbAdapter.KEY_MANACOST, CardDbAdapter.KEY_SUPERTYPE, CardDbAdapter.KEY_SUBTYPE,
+                    CardDbAdapter.KEY_ABILITY, CardDbAdapter.KEY_POWER, CardDbAdapter.KEY_TOUGHNESS, CardDbAdapter.KEY_LOYALTY,
+                    CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CMC, CardDbAdapter.KEY_COLOR};
+
+            SearchCriteria criteria = (SearchCriteria) args.getSerializable(SearchViewFragment.CRITERIA);
+            assert criteria != null; /* Because Android Studio */
+            boolean consolidate = (criteria.setLogic == CardDbAdapter.MOST_RECENT_PRINTING ||
+                    criteria.setLogic == CardDbAdapter.FIRST_PRINTING);
+
+            mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate, mOrderByStr, database);
+        }
     }
 
     /**
@@ -412,5 +418,20 @@ public class ResultListFragment extends FamiliarFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void setOrderByStr(String orderByStr) {
+
+        mOrderByStr = orderByStr;
+
+        try {
+            mCursor.close();
+            doSearch(getArguments(), mDatabase);
+        } catch (FamiliarDbException e) {
+            e.printStackTrace();
+        }
+
+        // Do thi
+        fillData();
     }
 }

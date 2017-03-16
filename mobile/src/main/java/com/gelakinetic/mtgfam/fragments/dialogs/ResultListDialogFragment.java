@@ -4,10 +4,11 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -49,12 +50,12 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         /* Create an arraylist of all the sorting options */
         final ArrayList<SortOption> options = new ArrayList<>(6);
         int idx = 0;
-        options.add(new SortOption(getResources().getString(R.string.search_name), false, CardDbAdapter.KEY_NAME, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_color_title), false, CardDbAdapter.KEY_COLOR, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_supertype), false, CardDbAdapter.KEY_SUPERTYPE, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_cmc), false, CardDbAdapter.KEY_CMC, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_power), false, CardDbAdapter.KEY_POWER, idx));
-        options.add(new SortOption(getResources().getString(R.string.search_toughness), false, CardDbAdapter.KEY_TOUGHNESS, idx));
+        options.add(new SortOption(getResources().getString(R.string.search_name), true, CardDbAdapter.KEY_NAME, idx++));
+        options.add(new SortOption(getResources().getString(R.string.search_color_title), true, CardDbAdapter.KEY_COLOR, idx++));
+        options.add(new SortOption(getResources().getString(R.string.search_supertype), true, CardDbAdapter.KEY_SUPERTYPE, idx++));
+        options.add(new SortOption(getResources().getString(R.string.search_cmc), true, CardDbAdapter.KEY_CMC, idx++));
+        options.add(new SortOption(getResources().getString(R.string.search_power), true, CardDbAdapter.KEY_POWER, idx++));
+        options.add(new SortOption(getResources().getString(R.string.search_toughness), true, CardDbAdapter.KEY_TOUGHNESS, idx));
 
         /* Get the sort view and set it up */
         DragListView sortView = (DragListView) view.findViewById(R.id.sort_list_view);
@@ -72,10 +73,21 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 /* Reordering the entries reorders the pairs */
+                String orderByStr = "ORDER BY";
+                boolean first = true;
                 for (SortOption p : options) {
-                    Log.v("Pair", p.mName);
+                    if (!first) {
+                        orderByStr += ",";
+                    }
+                    orderByStr += (" " + p.mDatabaseKey);
+                    if (p.mAscending) {
+                        orderByStr += " asc";
+                    } else {
+                        orderByStr += " desc";
+                    }
+                    first = false;
                 }
-                /* TODO pass the data back to the result list view and sort */
+                getParentResultListFragment().setOrderByStr(orderByStr);
                 dismiss();
             }
         });
@@ -99,12 +111,17 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         }
 
         @Override
-        public void onBindViewHolder(sortItemViewHolder holder, int position) {
+        public void onBindViewHolder(final sortItemViewHolder holder, int position) {
             /* This is where the views get filled with data */
-            /* TODO set up asc/desc spinner? */
             super.onBindViewHolder(holder, position);
-            String text = mItemList.get(position).mName;
-            holder.mText.setText(text);
+            holder.mText.setText(mItemList.get(position).mName);
+            holder.mCheckbox.setChecked(mItemList.get(position).mAscending);
+            holder.mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    mItemList.get(holder.getAdapterPosition()).mAscending = b;
+                }
+            });
             holder.itemView.setTag(mItemList.get(position));
         }
 
@@ -119,12 +136,13 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
          */
         class sortItemViewHolder extends DragItemAdapter.ViewHolder {
 
+            CheckBox mCheckbox;
             TextView mText;
 
             sortItemViewHolder(final View itemView) {
-                /* TODO prettify the handle */
                 super(itemView, R.id.sort_list_handle, false);
                 mText = (TextView) itemView.findViewById(R.id.sort_list_text);
+                mCheckbox = (CheckBox) itemView.findViewById(R.id.asc_desc_checkbox);
             }
 
         }
@@ -132,7 +150,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
     class SortOption {
         String mName;
-        boolean mAscending;
+        boolean mAscending = true;
         String mDatabaseKey;
         int mId;
 

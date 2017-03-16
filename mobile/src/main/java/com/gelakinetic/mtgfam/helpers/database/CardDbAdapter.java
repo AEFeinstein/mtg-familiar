@@ -742,12 +742,12 @@ public class CardDbAdapter {
      * @param backface    Whether or not the results should include the 'b' side of multicards
      * @param returnTypes The columns which should be returned in the cursor
      * @param consolidate true to not include multiple printings of the same card, false otherwise
-     * @param mDb         The database to query
-     * @return A cursor with the requested information about the queried cards
+     * @param orderByStr  A string used to order the results
+     *@param mDb         The database to query  @return A cursor with the requested information about the queried cards
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
-                                boolean consolidate, SQLiteDatabase mDb)
+                                boolean consolidate, String orderByStr, SQLiteDatabase mDb)
             throws FamiliarDbException {
         Cursor cursor;
 
@@ -1262,11 +1262,15 @@ public class CardDbAdapter {
                     + DATABASE_TABLE_CARDS + "." + KEY_SET + " = "
                     + DATABASE_TABLE_SETS + "." + KEY_CODE + statement;
 
+            if(null == orderByStr) {
+                orderByStr = "ORDER BY " + KEY_NAME + " COLLATE UNICODE";
+            }
+
             if (consolidate) {
                 sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
-                        + ") GROUP BY " + KEY_NAME + " ORDER BY " + KEY_NAME + " COLLATE UNICODE";
+                        + ") GROUP BY " + KEY_NAME + " " + orderByStr;
             } else {
-                sql += " ORDER BY " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " COLLATE UNICODE"
+                sql += " " + orderByStr
                         + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE
                         + " DESC)";
             }

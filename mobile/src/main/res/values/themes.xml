@@ -130,6 +130,8 @@
 
         <item name="camera_button">@drawable/camera_button_light</item>
 
+        <item name="sort_handle">@drawable/sort_handle_light</item>
+
         <!-- Use light theme for dialogs -->
         <item name="md_dark_theme">false</item>
     </style>
@@ -258,6 +260,8 @@
         <item name="button">@style/button_dark</item>
 
         <item name="camera_button">@drawable/camera_button_dark</item>
+
+        <item name="sort_handle">@drawable/sort_handle_dark</item>
 
         <!-- Use dark theme for dialogs -->
         <item name="md_dark_theme">true</item>
