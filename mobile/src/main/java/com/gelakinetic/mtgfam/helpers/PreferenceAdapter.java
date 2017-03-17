@@ -523,4 +523,13 @@ public class PreferenceAdapter {
         return this.prefs.getInt(context.getString(R.string.key_widgetNumButtons) + widgetID, 100);
     }
 
+    public synchronized void setSearchSortOrder(String searchSortOrder) {
+        this.edit.putString(context.getString(R.string.key_searchSortOrder), searchSortOrder);
+        this.edit.commit();
+    }
+
+    public synchronized String getSearchSortOrder() {
+        return this.prefs.getString(context.getString(R.string.key_searchSortOrder), null);
+    }
+
 }

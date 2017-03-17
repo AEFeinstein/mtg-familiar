@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.woxthebox.draglistview.DragItemAdapter;
 import com.woxthebox.draglistview.DragListView;
@@ -28,6 +29,9 @@ import java.util.List;
  * Class that creates dialogs for ResultListFragment
  */
 public class ResultListDialogFragment extends FamiliarDialogFragment {
+
+    private static final String SQL_ASC = "asc";
+    private static final String SQL_DESC = "desc";
 
     /**
      * @return The currently viewed ResultListFragment
@@ -49,13 +53,51 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
         /* Create an arraylist of all the sorting options */
         final ArrayList<SortOption> options = new ArrayList<>(6);
+        String searchSortOrder = (new PreferenceAdapter(getContext())).getSearchSortOrder();
         int idx = 0;
-        options.add(new SortOption(getResources().getString(R.string.search_name), true, CardDbAdapter.KEY_NAME, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_color_title), true, CardDbAdapter.KEY_COLOR, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_supertype), true, CardDbAdapter.KEY_SUPERTYPE, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_cmc), true, CardDbAdapter.KEY_CMC, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_power), true, CardDbAdapter.KEY_POWER, idx++));
-        options.add(new SortOption(getResources().getString(R.string.search_toughness), true, CardDbAdapter.KEY_TOUGHNESS, idx));
+
+        if (searchSortOrder != null) {
+            for (String option : searchSortOrder.split(",")) {
+                String key = option.split(" ")[0];
+                boolean ascending = option.split(" ")[1].equalsIgnoreCase(SQL_ASC);
+                String name = null;
+
+                switch (key) {
+                    case CardDbAdapter.KEY_NAME: {
+                        name = getResources().getString(R.string.search_name);
+                        break;
+                    }
+                    case CardDbAdapter.KEY_COLOR: {
+                        name = getResources().getString(R.string.search_color_title);
+                        break;
+                    }
+                    case CardDbAdapter.KEY_SUPERTYPE: {
+                        name = getResources().getString(R.string.search_supertype);
+                        break;
+                    }
+                    case CardDbAdapter.KEY_CMC: {
+                        name = getResources().getString(R.string.search_cmc);
+                        break;
+                    }
+                    case CardDbAdapter.KEY_POWER: {
+                        name = getResources().getString(R.string.search_power);
+                        break;
+                    }
+                    case CardDbAdapter.KEY_TOUGHNESS: {
+                        name = getResources().getString(R.string.search_toughness);
+                        break;
+                    }
+                }
+                options.add(new SortOption(name, ascending, key, idx++));
+            }
+        } else {
+            options.add(new SortOption(getResources().getString(R.string.search_name), true, CardDbAdapter.KEY_NAME, idx++));
+            options.add(new SortOption(getResources().getString(R.string.search_color_title), true, CardDbAdapter.KEY_COLOR, idx++));
+            options.add(new SortOption(getResources().getString(R.string.search_supertype), true, CardDbAdapter.KEY_SUPERTYPE, idx++));
+            options.add(new SortOption(getResources().getString(R.string.search_cmc), true, CardDbAdapter.KEY_CMC, idx++));
+            options.add(new SortOption(getResources().getString(R.string.search_power), true, CardDbAdapter.KEY_POWER, idx++));
+            options.add(new SortOption(getResources().getString(R.string.search_toughness), true, CardDbAdapter.KEY_TOUGHNESS, idx));
+        }
 
         /* Get the sort view and set it up */
         DragListView sortView = (DragListView) view.findViewById(R.id.sort_list_view);
@@ -73,20 +115,21 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 /* Reordering the entries reorders the pairs */
-                String orderByStr = "ORDER BY";
+                String orderByStr = "";
                 boolean first = true;
                 for (SortOption p : options) {
                     if (!first) {
                         orderByStr += ",";
                     }
-                    orderByStr += (" " + p.mDatabaseKey);
+                    orderByStr += (p.mDatabaseKey);
                     if (p.mAscending) {
-                        orderByStr += " asc";
+                        orderByStr += " " + SQL_ASC;
                     } else {
-                        orderByStr += " desc";
+                        orderByStr += " " + SQL_DESC;
                     }
                     first = false;
                 }
+                new PreferenceAdapter(getContext()).setSearchSortOrder(orderByStr);
                 getParentResultListFragment().setOrderByStr(orderByStr);
                 dismiss();
             }

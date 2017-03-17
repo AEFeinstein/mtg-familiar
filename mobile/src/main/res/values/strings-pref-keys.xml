@@ -57,4 +57,5 @@
     <string name="key_num_tutor_cards_searches" translatable="false">num_tc_searches</string>
     <string name="key_database_version" translatable="false">databaseVersion</string>
     <string name="key_widgetNumButtons" translatable="false">widget_num_buttons_</string>
+    <string name="key_searchSortOrder" translatable="false">search_sort_order</string>
 </resources>

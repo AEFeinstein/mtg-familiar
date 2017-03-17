@@ -1263,14 +1263,14 @@ public class CardDbAdapter {
                     + DATABASE_TABLE_SETS + "." + KEY_CODE + statement;
 
             if(null == orderByStr) {
-                orderByStr = "ORDER BY " + KEY_NAME + " COLLATE UNICODE";
+                orderByStr = KEY_NAME + " COLLATE UNICODE";
             }
 
             if (consolidate) {
                 sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
-                        + ") GROUP BY " + KEY_NAME + " " + orderByStr;
+                        + ") GROUP BY " + KEY_NAME + " ORDER BY " + orderByStr;
             } else {
-                sql += " " + orderByStr
+                sql += " ORDER BY " + orderByStr
                         + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE
                         + " DESC)";
             }

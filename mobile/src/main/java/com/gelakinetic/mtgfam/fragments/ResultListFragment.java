@@ -19,6 +19,7 @@ import android.widget.ListView;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -126,7 +127,8 @@ public class ResultListFragment extends FamiliarFragment {
             return null;
         }
 
-        Bundle args = this.getArguments();
+        /* Get the saved order by string */
+        mOrderByStr = (new PreferenceAdapter(getContext()).getSearchSortOrder());
 
         /* Open up the database, search for stuff */
         mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
