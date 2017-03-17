@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 26.458328 26.458332"
+   height="26.458332mm"
+   width="26.458332mm">
+  <defs
+     id="defs2">
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       xlink:href="#a"
+       gradientTransform="matrix(1.4733394,0,0,1.5793349,-1202.8083,-227.62597)"
+       y2="-43.950001"
+       y1="-43.950001"
+       x2="701.51001"
+       x1="633.63"
+       id="b" />
+    <linearGradient
+       id="a">
+      <stop
+         id="stop4"
+         stop-color="red"
+         offset="0" />
+      <stop
+         id="stop6"
+         stop-color="#ff0"
+         offset=".2" />
+      <stop
+         id="stop8"
+         stop-color="#0f0"
+         offset=".4" />
+      <stop
+         id="stop10"
+         stop-color="#0ff"
+         offset=".6" />
+      <stop
+         id="stop12"
+         stop-color="#00f"
+         offset=".8" />
+      <stop
+         id="stop14"
+         stop-color="#f0f"
+         offset="1" />
+    </linearGradient>
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-102.39418,-107.41528)"
+     id="layer1">
+    <g
+       id="g54"
+       transform="matrix(0.26458333,0,0,0.26458333,213.51918,162.97778)">
+      <circle
+         style="fill:#cac5c0"
+         id="circle50"
+         r="50"
+         cy="-160"
+         cx="-370" />
+      <path
+         style="fill:#0d0f0f"
+         id="path52"
+         d="m -385.04,-198.65 h 28.94 c 3.75,0 6,-0.45 6.7,-1.35 h 4.16 l -2.43,10.93 h -35.3 l -3.42,15.78 c 5.2,-2 9.7,-3.1 13.7,-3.1 7.8,0 14.3,2.6 19.6,7.8 5.3,5.2 8,11.6 8,19.4 0,9 -3.4,16.3 -10.4,21.8 -6.4,5.1 -14.1,7.6 -23.3,7.6 -5.4,0 -10.6,-0.8 -15.8,-2.4 l 1.7,-4 c 4.3,1.2 8.1,1.8 11.5,1.8 6.7,0 12.5,-2.2 17.5,-6.5 5,-4.3 7.5,-9.8 7.5,-16.4 0,-5.6 -1.8,-10.3 -5.5,-13.9 -3.7,-3.6 -8.3,-5.5 -14,-5.5 -5.2,0 -10.1,1.8 -14.6,5.4 l -2.7,-0.5 z" />
+    </g>
+  </g>
+</svg>

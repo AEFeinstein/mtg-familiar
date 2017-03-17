@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 26.459749 26.459749"
+   height="26.459749mm"
+   width="26.459749mm">
+  <defs
+     id="defs2">
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       xlink:href="#a"
+       gradientTransform="matrix(1.4733394,0,0,1.5793349,-1202.8083,-227.62597)"
+       y2="-43.950001"
+       y1="-43.950001"
+       x2="701.51001"
+       x1="633.63"
+       id="b" />
+    <linearGradient
+       id="a">
+      <stop
+         id="stop4"
+         stop-color="red"
+         offset="0" />
+      <stop
+         id="stop6"
+         stop-color="#ff0"
+         offset=".2" />
+      <stop
+         id="stop8"
+         stop-color="#0f0"
+         offset=".4" />
+      <stop
+         id="stop10"
+         stop-color="#0ff"
+         offset=".6" />
+      <stop
+         id="stop12"
+         stop-color="#00f"
+         offset=".8" />
+      <stop
+         id="stop14"
+         stop-color="#f0f"
+         offset="1" />
+    </linearGradient>
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-130.07602,-77.733409)"
+     id="layer1">
+    <g
+       id="g518"
+       transform="matrix(0.26458333,0,0,0.26458333,185.63696,-5.6316915)">
+      <g
+         id="g516"
+         transform="matrix(1.9407127,0,0,1.9407127,-431.00687,107.77535)">
+        <circle
+           style="fill:#d28a5a;stroke:#4d4d4d;stroke-width:0.51999998"
+           id="circle504"
+           transform="matrix(1.5777778,0,0,1.5777778,-105.47619,-59.920377)"
+           r="16.07"
+           cy="122.01"
+           cx="155.36" />
+        <circle
+           style="fill:#e4ecc5"
+           id="circle506"
+           transform="matrix(1.1347993,0,0,1.1347993,30.901172,-91.743473)"
+           r="6.0100002"
+           cy="185.10001"
+           cx="95.809998" />
+        <circle
+           style="fill:#1a6ab3"
+           id="circle508"
+           transform="matrix(1.1347993,0,0,1.1347993,45.315632,-81.298527)"
+           r="6.0100002"
+           cy="185.10001"
+           cx="95.809998" />
+        <circle
+           style="fill:#282828"
+           id="circle510"
+           transform="matrix(1.1347993,0,0,1.1347993,39.836212,-64.361897)"
+           r="6.0100002"
+           cy="185.10001"
+           cx="95.809998" />
+        <circle
+           style="fill:#ef342f"
+           id="circle512"
+           transform="matrix(1.1347993,0,0,1.1347993,22.035292,-64.339428)"
+           r="6.0100002"
+           cy="185.10001"
+           cx="95.809998" />
+        <circle
+           style="fill:#39b253"
+           id="circle514"
+           transform="matrix(1.1347993,0,0,1.1347993,16.513132,-81.262172)"
+           r="6.0100002"
+           cy="185.10001"
+           cx="95.809998" />
+      </g>
+    </g>
+  </g>
+</svg>

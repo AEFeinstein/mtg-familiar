@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 26.458328 26.458332"
+   height="26.458332mm"
+   width="26.458332mm">
+  <defs
+     id="defs2">
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       xlink:href="#a"
+       gradientTransform="matrix(1.4733394,0,0,1.5793349,-1202.8083,-227.62597)"
+       y2="-43.950001"
+       y1="-43.950001"
+       x2="701.51001"
+       x1="633.63"
+       id="b" />
+    <linearGradient
+       id="a">
+      <stop
+         id="stop4"
+         stop-color="red"
+         offset="0" />
+      <stop
+         id="stop6"
+         stop-color="#ff0"
+         offset=".2" />
+      <stop
+         id="stop8"
+         stop-color="#0f0"
+         offset=".4" />
+      <stop
+         id="stop10"
+         stop-color="#0ff"
+         offset=".6" />
+      <stop
+         id="stop12"
+         stop-color="#00f"
+         offset=".8" />
+      <stop
+         id="stop14"
+         stop-color="#f0f"
+         offset="1" />
+    </linearGradient>
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-98.91562,-108.82249)"
+     id="layer1">
+    <g
+       id="g90"
+       transform="matrix(0.26458333,0,0,0.26458333,126.69687,136.60374)">
+      <circle
+         style="fill:#cac5c0"
+         id="circle86"
+         r="50"
+         cy="-55"
+         cx="-55" />
+      <path
+         style="fill:#0d0f0f"
+         id="path88"
+         d="m -69.03,-85.8 v 49.45 c 0,5.88 2.43,8.8 7.3,8.8 h 1.26 v 3.34 h -26.3 v -3.4 h 1.65 c 5.02,0 7.54,-3 7.54,-8.8 v -32.4 c 0,-6 -2.13,-9 -6.4,-9 h -2.55 v -3.4 h 1.03 c 5.1,0 9.7,-1.6 13.8,-4.7 h 2.68 z m 22.6,30.4 -1.26,-1 c -4,-2.73 -6.6,-4.9 -7.9,-6.52 -1.5,-2.13 -2.3,-4.6 -2.3,-7.4 0,-4.7 2,-8.52 6,-11.5 3.6,-2.8 7.9,-4.22 12.8,-4.22 4.6,0 8.7,1.2 12.3,3.57 3.9,2.73 5.9,6.35 5.9,10.87 0,5.44 -3.7,9.83 -11.2,13.15 8.6,4.18 12.9,10 12.9,17.5 0,5.37 -2.1,9.62 -6.2,12.77 -3.5,2.82 -8.1,4.22 -13.6,4.22 -5.3,0 -9.8,-1.32 -13.5,-3.96 -4.3,-2.98 -6.5,-6.94 -6.5,-11.88 0,-5.02 2.4,-9.1 7,-12.27 1.2,-0.84 3.2,-1.95 5.9,-3.32 z m 3.6,1.42 c -6.23,2.9 -9.33,7.4 -9.33,13.54 0,3.92 1.27,7.1 3.83,9.52 2.55,2.43 5.75,3.64 9.58,3.64 3.58,0 6.6,-0.96 9.07,-2.87 2.47,-1.92 3.7,-4.58 3.7,-8 0,-5.18 -3.32,-9.35 -9.96,-12.5 z m 7.02,-6.13 c 5.5,-2.5 8.3,-6.2 8.3,-11 0,-3.3 -1.2,-6 -3.6,-8.1 -2.4,-2.1 -5.2,-3.1 -8.6,-3.1 -2.8,0 -5.4,0.8 -7.6,2.4 -2.2,1.6 -3.3,3.8 -3.3,6.6 0,3.4 1.5,6.1 4.7,8.2 0.7,0.4 3.5,1.8 8.4,4.1 z" />
+    </g>
+  </g>
+</svg>
