@@ -434,7 +434,7 @@ public class CardViewFragment extends FamiliarFragment {
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         Cursor cCardById;
         try {
-            cCardById = CardDbAdapter.fetchCard(id, database);
+            cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);

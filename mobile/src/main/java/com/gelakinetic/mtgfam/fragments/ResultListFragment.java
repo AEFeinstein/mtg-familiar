@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
-import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
@@ -251,11 +250,7 @@ public class ResultListFragment extends FamiliarFragment {
         else if ((id = args.getLong(CARD_ID_0)) != 0L) {
             long id1 = args.getLong(CARD_ID_1);
             long id2 = args.getLong(CARD_ID_2);
-            Cursor cs[] = new Cursor[3];
-            cs[0] = CardDbAdapter.fetchCard(id, database);
-            cs[1] = CardDbAdapter.fetchCard(id1, database);
-            cs[2] = CardDbAdapter.fetchCard(id2, database);
-            mCursor = new MergeCursor(cs);
+            mCursor = CardDbAdapter.fetchCards(new long[]{id, id1, id2}, mOrderByStr, database);
         } else {
 
             /* All the things we may want to display */
