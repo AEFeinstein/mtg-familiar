@@ -7,6 +7,8 @@ import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -529,7 +531,14 @@ public class PreferenceAdapter {
     }
 
     public synchronized String getSearchSortOrder() {
-        return this.prefs.getString(context.getString(R.string.key_searchSortOrder), null);
+        return this.prefs.getString(context.getString(R.string.key_searchSortOrder),
+                CardDbAdapter.KEY_NAME + " " + ResultListDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_COLOR + " " + ResultListDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SUPERTYPE + " " + ResultListDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_CMC + " " + ResultListDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_POWER + " " + ResultListDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_TOUGHNESS + " " + ResultListDialogFragment.SQL_ASC
+        );
     }
 
 }

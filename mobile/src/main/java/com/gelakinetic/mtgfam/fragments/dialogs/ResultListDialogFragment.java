@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class ResultListDialogFragment extends FamiliarDialogFragment {
 
-    private static final String SQL_ASC = "asc";
+    public static final String SQL_ASC = "asc";
     private static final String SQL_DESC = "desc";
 
     /**
@@ -90,13 +90,6 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                 }
                 options.add(new SortOption(name, ascending, key, idx++));
             }
-        } else {
-            options.add(new SortOption(getResources().getString(R.string.search_name), true, CardDbAdapter.KEY_NAME, idx++));
-            options.add(new SortOption(getResources().getString(R.string.search_color_title), true, CardDbAdapter.KEY_COLOR, idx++));
-            options.add(new SortOption(getResources().getString(R.string.search_supertype), true, CardDbAdapter.KEY_SUPERTYPE, idx++));
-            options.add(new SortOption(getResources().getString(R.string.search_cmc), true, CardDbAdapter.KEY_CMC, idx++));
-            options.add(new SortOption(getResources().getString(R.string.search_power), true, CardDbAdapter.KEY_POWER, idx++));
-            options.add(new SortOption(getResources().getString(R.string.search_toughness), true, CardDbAdapter.KEY_TOUGHNESS, idx));
         }
 
         /* Get the sort view and set it up */
