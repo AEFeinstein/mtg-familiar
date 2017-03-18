@@ -31,6 +31,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.MtgSet;
@@ -304,7 +305,7 @@ public class CardDbAdapter {
                     /* Couldn't delete the old database, so exit */
                     return;
                 }
-                adapter.setLastUpdate("");
+                adapter.setLastUpdateTimestamp(0);
                 adapter.setDatabaseVersion(-1);
             }
             if (!dbFile.exists()) {
@@ -1730,15 +1731,15 @@ public class CardDbAdapter {
      * @param set The set to add to DATABASE_TABLE_SETS
      * @param mDb The database to add the set to
      */
-    public static void createSet(MtgSet set, SQLiteDatabase mDb) {
+    public static void createSet(Expansion set, SQLiteDatabase mDb) {
         ContentValues initialValues = new ContentValues();
 
-        initialValues.put(KEY_CODE, set.code);
-        initialValues.put(KEY_NAME, set.name);
-        initialValues.put(KEY_CODE_MTGI, set.codeMagicCards);
-        initialValues.put(KEY_DATE, set.date);
-        initialValues.put(KEY_DIGEST, set.digest);
-        initialValues.put(KEY_CAN_BE_FOIL, set.canBeFoil);
+        initialValues.put(KEY_CODE, set.mCode_gatherer);
+        initialValues.put(KEY_NAME, set.mName_gatherer);
+        initialValues.put(KEY_CODE_MTGI, set.mCode_mtgi);
+        initialValues.put(KEY_DATE, set.mReleaseTimestamp);
+        initialValues.put(KEY_DIGEST, set.mDigest);
+        initialValues.put(KEY_CAN_BE_FOIL, set.mCanBeFoil);
 
         mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
     }

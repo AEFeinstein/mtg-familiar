@@ -28,6 +28,9 @@ import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
+import com.gelakinetic.GathererScraper.JsonTypes.LegalityData;
+import com.gelakinetic.GathererScraper.JsonTypes.Manifest;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -135,34 +138,26 @@ public class DbUpdaterService extends IntentService {
 
             try {
                 ArrayList<MtgCard> cardsToAdd = new ArrayList<>();
-                ArrayList<MtgSet> setsToAdd = new ArrayList<>();
+                ArrayList<Expansion> setsToAdd = new ArrayList<>();
                 ArrayList<String> setsToDrop = new ArrayList<>();
-                ArrayList<CardAndSetParser.NameAndMetadata> tcgNames = new ArrayList<>();
-                ArrayList<CardAndSetParser.NameAndMetadata> canBeFoil = new ArrayList<>();
 
                 /* Look for updates with the banned / restricted lists and formats */
-                CardAndSetParser.LegalInfo legalInfo = parser.readLegalityJsonStream(mPrefAdapter, logWriter);
+                LegalityData legalityDatas = parser.readLegalityJsonStream(mPrefAdapter, logWriter);
 
                 /* Log the date */
                 if (logWriter != null) {
-                    logWriter.write("mCurrentRulesDate: " + parser.mCurrentRulesDate + '\n');
-                }
-
-                /* Get the MD5 digests for the patches */
-                HashMap<String, String> patchDigests = parser.readDigestStream(logWriter);
-                if (logWriter != null && patchDigests != null) {
-                    logWriter.write("patchDigests: " + patchDigests.size() + '\n');
+                    logWriter.write("mCurrentRulesDate: " + parser.mCurrentRulesTimestamp + '\n');
                 }
 
                 /* Look for new cards */
-                ArrayList<String[]> patchInfo = parser.readUpdateJsonStream(logWriter);
+                Manifest manifest = parser.readUpdateJsonStream(logWriter);
 
                 /* Log the date */
                 if (logWriter != null) {
-                    logWriter.write("mCurrentPatchDate: " + parser.mCurrentPatchDate + '\n');
+                    logWriter.write("mCurrentPatchDate: " + parser.mCurrentPatchTimestamp + '\n');
                 }
 
-                if (patchInfo != null) {
+                if (manifest != null) {
                     /* Make an arraylist of all the current set codes */
                     ArrayList<String> currentSetCodes = new ArrayList<>();
                     HashMap<String, String> storedDigests = new HashMap<>();
@@ -184,35 +179,33 @@ public class DbUpdaterService extends IntentService {
                     DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false);
 
                     /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
-                    for (String[] set : patchInfo) {
-                        if (!set[CardAndSetParser.SET_CODE].equals("DD3")) { /* Never download the old Duel Deck Anthologies patch */
+                    for (Manifest.ManifestEntry set : manifest.mPatches) {
+                        if (set.mCode != "DD3") { /* Never download the old Duel Deck Anthologies patch */
                             try {
                                 /* If the digest doesn't match, mark the set for dropping
                                  * and remove it from currentSetCodes so it redownloads
                                  */
-                                if (patchDigests != null &&
-                                        !storedDigests.get(set[CardAndSetParser.SET_CODE])
-                                                .equals(patchDigests.get(set[CardAndSetParser.SET_CODE]))) {
-                                    currentSetCodes.remove(set[CardAndSetParser.SET_CODE]);
-                                    setsToDrop.add(set[CardAndSetParser.SET_CODE]);
+                                if (set.mDigest != null && !storedDigests.get(set.mCode).equals(set.mDigest)) {
+                                    currentSetCodes.remove(set.mCode);
+                                    setsToDrop.add(set.mCode);
                                 }
                             } catch (NullPointerException e) {
                                 /* eat it */
                             }
-                            if (!currentSetCodes.contains(set[CardAndSetParser.SET_CODE])) { /* check to see if the patch is known already */
+
+                            if (!currentSetCodes.contains(set.mCode)) { /* check to see if the patch is known already */
                                 int retries = 5;
                                 while (retries > 0) {
                                     try {
                                         /* Change the notification to the specific set */
-                                        switchToUpdating(String.format(getString(R.string.update_updating_set),
-                                                set[CardAndSetParser.SET_NAME]));
-                                        InputStream streamToRead = FamiliarActivity.getHttpInputStream(set[CardAndSetParser.SET_URL], logWriter);
+                                        switchToUpdating(String.format(getString(R.string.update_updating_set), set.mName));
+                                        InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter);
                                         if (streamToRead != null) {
                                             GZIPInputStream gis = new GZIPInputStream(streamToRead);
                                             JsonReader reader = new JsonReader(new InputStreamReader(gis, "ISO-8859-1"));
-                                            parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd, patchDigests);
+                                            parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd);
                                             streamToRead.close();
-                                            updatedStuff.add(set[CardAndSetParser.SET_NAME]);
+                                            updatedStuff.add(set.mName);
                                             /* Everything was successful, retries = 0 breaks the while loop */
                                             retries = 0;
                                         }
@@ -225,25 +218,6 @@ public class DbUpdaterService extends IntentService {
                                     retries--;
                                 }
                             }
-                        }
-                    }
-
-                    /* Look for new TCGPlayer.com versions of set names, only if patchInfo exists
-                     * and there is a new set to add
-                     */
-                    if (setsToAdd.size() > 0) {
-                        parser.readTCGNameJsonStream(mPrefAdapter, tcgNames, logWriter);
-
-                        /* Log the date */
-                        if (logWriter != null) {
-                            logWriter.write("mCurrentTCGNamePatchDate: " + parser.mCurrentTCGNamePatchDate + '\n');
-                        }
-
-                        parser.readCanBeFoilJsonStream(mPrefAdapter, canBeFoil, logWriter);
-
-                        /* Log the date */
-                        if (logWriter != null) {
-                            logWriter.write("mCurrentCanBeFoilDate: " + parser.mCurrentCanBeFoilDate + '\n');
                         }
                     }
                 }
@@ -278,17 +252,15 @@ public class DbUpdaterService extends IntentService {
                 }
 
                 if (logWriter != null) {
-                    logWriter.write("legalInfo: " + ((legalInfo == null) ? "null" : "not null") + '\n');
+                    logWriter.write("legalityDatas: " + ((legalityDatas == null) ? "null" : "not null") + '\n');
                     logWriter.write("setsToAdd: " + setsToAdd.size() + '\n');
                     logWriter.write("cardsToAdd: " + cardsToAdd.size() + '\n');
-                    logWriter.write("tcgNames: " + tcgNames.size() + '\n');
-                    logWriter.write("canBeFoil: " + canBeFoil.size() + '\n');
                     logWriter.write("rulesToAdd: " + rulesToAdd.size() + '\n');
                     logWriter.write("glossaryItemsToAdd: " + glossaryItemsToAdd.size() + '\n');
                 }
 
                 /* Open a writable database, as briefly as possible */
-                if (legalInfo != null ||
+                if (legalityDatas != null ||
                         setsToDrop.size() > 0 ||
                         setsToAdd.size() > 0 ||
                         cardsToAdd.size() > 0 ||
@@ -296,20 +268,24 @@ public class DbUpdaterService extends IntentService {
                         glossaryItemsToAdd.size() > 0) {
                     SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
                     /* Add all the data we've downloaded */
-                    if (legalInfo != null) {
+                    if (legalityDatas != null) {
                         CardDbAdapter.dropLegalTables(database);
                         CardDbAdapter.createLegalTables(database);
-                        for (String format : legalInfo.formats) {
-                            CardDbAdapter.createFormat(format, database);
-                        }
-                        for (CardAndSetParser.NameAndMetadata legalSet : legalInfo.legalSets) {
-                            CardDbAdapter.addLegalSet(legalSet.name, legalSet.metadata, database);
-                        }
-                        for (CardAndSetParser.NameAndMetadata bannedCard : legalInfo.bannedCards) {
-                            CardDbAdapter.addLegalCard(bannedCard.name, bannedCard.metadata, CardDbAdapter.BANNED, database);
-                        }
-                        for (CardAndSetParser.NameAndMetadata restrictedCard : legalInfo.restrictedCards) {
-                            CardDbAdapter.addLegalCard(restrictedCard.name, restrictedCard.metadata, CardDbAdapter.RESTRICTED, database);
+
+                        for(LegalityData.Format format : legalityDatas.mFormats) {
+                            CardDbAdapter.createFormat(format.mName, database);
+
+                            for (String legalSet : format.mSets) {
+                                CardDbAdapter.addLegalSet(legalSet, format.mName, database);
+                            }
+
+                            for (String bannedCard : format.mBanlist) {
+                                CardDbAdapter.addLegalCard(bannedCard, format.mName, CardDbAdapter.BANNED, database);
+                            }
+
+                            for (String restrictedCard : format.mRestrictedlist) {
+                                CardDbAdapter.addLegalCard(restrictedCard, format.mName, CardDbAdapter.RESTRICTED, database);
+                            }
                         }
                     }
 
@@ -319,24 +295,14 @@ public class DbUpdaterService extends IntentService {
                     }
 
                     /* Add set data */
-                    for (MtgSet set : setsToAdd) {
+                    for (Expansion set : setsToAdd) {
                         CardDbAdapter.createSet(set, database);
 
                         /* Add the corresponding TCG name */
-                        for (CardAndSetParser.NameAndMetadata tcgName : tcgNames) {
-                            if (tcgName.metadata.equalsIgnoreCase(set.code)) {
-                                CardDbAdapter.addTcgName(tcgName.name, tcgName.metadata, database);
-                                break;
-                            }
-                        }
+                        CardDbAdapter.addTcgName(set.mName_tcgp, set.mCode_gatherer, database);
 
                         /* Add the corresponding foil information */
-                        for (CardAndSetParser.NameAndMetadata foilInfo : canBeFoil) {
-                            if (foilInfo.metadata.equalsIgnoreCase(set.code)) {
-                                CardDbAdapter.addFoilInfo(Boolean.parseBoolean(foilInfo.name), foilInfo.metadata, database);
-                                break;
-                            }
-                        }
+                        CardDbAdapter.addFoilInfo(set.mCanBeFoil, set.mCode_gatherer, database);
                     }
 
                     /* Add cards */
