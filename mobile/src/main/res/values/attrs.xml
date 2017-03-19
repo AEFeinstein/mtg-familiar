@@ -102,9 +102,6 @@
         <!-- Camera button -->
         <attr name="camera_button" format="reference" />
 
-        <!-- Sort handle -->
-        <attr name="sort_handle" format="reference" />
-
     </declare-styleable>
 
 </resources>

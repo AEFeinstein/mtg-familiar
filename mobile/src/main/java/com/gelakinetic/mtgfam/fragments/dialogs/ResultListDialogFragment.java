@@ -103,6 +103,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         MaterialDialog.Builder adb = new MaterialDialog.Builder(getParentResultListFragment().getActivity());
         adb.customView(view, false);
         adb.title(getResources().getString(R.string.wishlist_sort_by));
+        adb.negativeText(R.string.dialog_cancel);
         adb.positiveText(getParentResultListFragment().getActivity().getResources().getString(R.string.dialog_ok));
         adb.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
