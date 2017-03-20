@@ -131,14 +131,27 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         return adb.build();
     }
 
-
     private class sortItemAdapter extends DragItemAdapter<SortOption, sortItemAdapter.sortItemViewHolder> {
 
+        /**
+         * Constructor. It sets the item list
+         *
+         * @param options A list of SortOptions to display
+         */
         sortItemAdapter(List<SortOption> options) {
             setHasStableIds(true);
             setItemList(options);
         }
 
+        /**
+         * Called when RecyclerView needs a new RecyclerView.ViewHolder of the given type to
+         * represent an item. This new ViewHolder is constructed with a new View that can represent
+         * the items of the given type from R.layout.sort_list_item.
+         *
+         * @param parent   The parent ViewGroup
+         * @param viewType Unused
+         * @return The newly inflated sortItemViewHolder
+         */
         @Override
         public sortItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             /* This is where the individual views get inflated */
@@ -146,9 +159,16 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             return new sortItemViewHolder(view);
         }
 
+        /**
+         * Called by RecyclerView to display the data at the specified position. This method updates
+         * the contents of the itemView to reflect the item at the given position.
+         *
+         * @param holder   The itemView to update
+         * @param position The item's position
+         */
         @Override
         public void onBindViewHolder(final sortItemViewHolder holder, int position) {
-            /* This is where the views get filled with data */
+            /* Fill the view with data */
             super.onBindViewHolder(holder, position);
             holder.mText.setText(mItemList.get(position).mName);
             holder.mCheckbox.setChecked(mItemList.get(position).mAscending);
@@ -161,9 +181,15 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             holder.itemView.setTag(mItemList.get(position));
         }
 
+        /**
+         * Given a position, get that item's stable ID.
+         * This is needed for reordering
+         *
+         * @param position The position to get an ID for
+         * @return This position's ID
+         */
         @Override
         public long getItemId(int position) {
-            /* This is needed for reordering */
             return mItemList.get(position).mId;
         }
 
@@ -175,6 +201,11 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             final CheckBox mCheckbox;
             final TextView mText;
 
+            /**
+             * This constructor pulls out UI elements from the given View
+             *
+             * @param itemView The View for this holder
+             */
             sortItemViewHolder(final View itemView) {
                 super(itemView, R.id.sort_list_handle, false);
                 mText = (TextView) itemView.findViewById(R.id.sort_list_text);

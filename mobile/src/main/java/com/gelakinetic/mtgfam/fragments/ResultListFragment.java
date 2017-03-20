@@ -48,7 +48,6 @@ public class ResultListFragment extends FamiliarFragment {
     private Cursor mCursor;
     private ListView mListView;
     private SQLiteDatabase mDatabase;
-    private String mOrderByStr = null;
 
     /**
      * When the fragment is created, open the database and search for whatever.
@@ -124,9 +123,6 @@ public class ResultListFragment extends FamiliarFragment {
             /* Something is happening when the fragment is on the back stack */
             return null;
         }
-
-        /* Get the saved order by string */
-        mOrderByStr = getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder();
 
         /* Open up the database, search for stuff */
         mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
@@ -249,7 +245,8 @@ public class ResultListFragment extends FamiliarFragment {
         else if ((id = args.getLong(CARD_ID_0)) != 0L) {
             long id1 = args.getLong(CARD_ID_1);
             long id2 = args.getLong(CARD_ID_2);
-            mCursor = CardDbAdapter.fetchCards(new long[]{id, id1, id2}, mOrderByStr, database);
+            mCursor = CardDbAdapter.fetchCards(new long[]{id, id1, id2},
+                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder(), database);
         } else {
 
             /* All the things we may want to display */
@@ -263,7 +260,8 @@ public class ResultListFragment extends FamiliarFragment {
             boolean consolidate = (criteria.setLogic == CardDbAdapter.MOST_RECENT_PRINTING ||
                     criteria.setLogic == CardDbAdapter.FIRST_PRINTING);
 
-            mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate, mOrderByStr, database);
+            mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
+                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder(), database);
         }
     }
 
@@ -439,23 +437,23 @@ public class ResultListFragment extends FamiliarFragment {
     }
 
     /**
-     * TODO document
+     * Called when the sort dialog closes. Sort the cards according to the new options.
      *
      * @param orderByStr The sort order string
      */
     public void receiveSortOrder(String orderByStr) {
 
-        mOrderByStr = orderByStr;
         getFamiliarActivity().mPreferenceAdapter.setSearchSortOrder(orderByStr);
 
         try {
+            /* Close the old cursor */
             mCursor.close();
+            /* Do the search again with the new "order by" options */
             doSearch(getArguments(), mDatabase);
+            /* Display the newly sorted data */
+            fillData();
         } catch (FamiliarDbException e) {
-            e.printStackTrace();
+            handleFamiliarDbException(true);
         }
-
-        // Do the search again
-        fillData();
     }
 }

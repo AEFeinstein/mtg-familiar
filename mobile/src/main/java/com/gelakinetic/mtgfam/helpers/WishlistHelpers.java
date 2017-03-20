@@ -525,6 +525,13 @@ public class WishlistHelpers {
         final ArrayList<SortOption> options = new ArrayList<>();
         int mPriceSetting = 0;
 
+        /**
+         * Constructor. It parses an "order by" string into search options. The first options have
+         * higher priority
+         *
+         * @param orderByStr   The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
+         * @param priceSetting The current price setting (LO/AVG/HIGH) used to sort by prices
+         */
         public WishlistComparator(String orderByStr, int priceSetting) {
             int idx = 0;
             for (String option : orderByStr.split(",")) {
@@ -535,6 +542,13 @@ public class WishlistHelpers {
             mPriceSetting = priceSetting;
         }
 
+        /**
+         * Compare two CompressedWishlistInfo objects based on all the search options in descending priority
+         *
+         * @param wish1 One card to compare
+         * @param wish2 The other card to compare
+         * @return an integer < 0 if wish1 is less than wish2, 0 if they are equal, and > 0 if wish1 is greater than wish2.
+         */
         @Override
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
 
