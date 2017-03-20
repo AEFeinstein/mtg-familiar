@@ -71,6 +71,11 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 notificationManager.cancel(RoundTimerFragment.TIMER_NOTIFICATION_ID);
                 notificationManager.notify(RoundTimerFragment.TIMER_NOTIFICATION_ID, notification);
                 break;
+            case RoundTimerFragment.TIMER_2_MIN_WARNING:
+                if (preferenceAdapter.getTwoMinutePref()) {
+                    context.startService(new Intent(context, TtsService.class)
+                            .putExtra(TEXT_TO_SPEAK, R.string.timer_two_minutes_left));
+                }
             case RoundTimerFragment.TIMER_5_MIN_WARNING:
                 if (preferenceAdapter.getFiveMinutePref()) {
                     context.startService(new Intent(context, TtsService.class)

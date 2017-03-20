@@ -56,6 +56,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="main_rules">Rules</string>
     <string name="main_judges_corner">Judge\'s Corner</string>
     <string name="main_mojhosto">MoJhoSto Basic</string>
+    <string name="main_decklist">Deck Builder</string>
     <string name="main_force_update_title">Force Update</string>
     <string name="main_settings_title">Settings</string>
     <string name="main_donate_title">Donate</string>
@@ -218,6 +219,10 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="card_view_unable_to_save_image">Unable to save image, please try again.</string>
     <string name="card_view_save_failure">Failed to save image, please try again</string>
     <string name="card_view_image_saved">Image saved to </string>
+    <string name="card_view_share_card">Share Card</string>
+    <string name="card_view_share_text">Text</string>
+    <string name="card_view_share_image">Image</string>
+    <string name="send_to">Share image using</string>
 
     <!-- Life counter activity -->
     <string name="life_counter_announce_life">Announce Life Totals</string>
@@ -331,6 +336,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="timer_warning_dialog_title">Spoken Warnings</string>
     <string name="timer_tone_dialog_title">Select Alert Tone</string>
     <string name="timer_notification_ongoing">The round will end at %1$tl:%1$tM %1$Tp.</string>
+    <string name="timer_two_minutes_left">The round will end in two minutes</string>
     <string name="timer_five_minutes_left">The round will end in five minutes</string>
     <string name="timer_ten_minutes_left">The round will end in ten minutes</string>
     <string name="timer_fifteen_minutes_left">The round will end in fifteen minutes</string>
@@ -431,6 +437,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_fifteen_minutes_title">15-Minute Warning</string>
     <string name="pref_ten_minutes_title">10-Minute Warning</string>
     <string name="pref_five_minutes_title">5-Minute Warning</string>
+    <string name="pref_two_minutes_title">2-Minute Warning</string>
     <string name="pref_cat_trade_window">Trade Window</string>
     <string name="pref_trade_price_title">Price Setting</string>
     <string name="pref_trade_price_summary">TCGplayer price to use when trading cards</string>
@@ -495,11 +502,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="judges_corner_error">An error occurred.</string>
     <string name="deck_counter_reset">Reset</string>
     <string name="deck_counter_undo">Undo</string>
-    <string name="card_view_share_card">Share Card</string>
-    <string name="card_view_share_text">Text</string>
-    <string name="card_view_share_image">Image</string>
-    <string name="send_to">Share image using</string>
-    <string name="main_decklist">Deck Builder</string>
 
     <!-- Deck Builder -->
     <string name="decklist_sideboard">Sideboard</string>

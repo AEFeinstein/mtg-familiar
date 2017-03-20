@@ -272,6 +272,16 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
+    /* 2-minute warning pref */
+    public synchronized boolean getTwoMinutePref() {
+        return this.prefs.getBoolean(context.getString(R.string.key_twoMinutePref), false);
+    }
+
+    public synchronized void setTwoMinutePref(boolean twoMinutePref) {
+        this.edit.putBoolean(context.getString(R.string.key_twoMinutePref), twoMinutePref);
+        this.edit.commit();
+    }
+
     /* Show total wishlist price */
     public synchronized boolean getShowTotalWishlistPrice() {
         return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceWishlistPref), false);
@@ -512,4 +522,5 @@ public class PreferenceAdapter {
     synchronized int getNumWidgetButtons(int widgetID) {
         return this.prefs.getInt(context.getString(R.string.key_widgetNumButtons) + widgetID, 100);
     }
+
 }

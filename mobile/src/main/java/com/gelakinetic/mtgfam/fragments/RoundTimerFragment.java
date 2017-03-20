@@ -45,10 +45,11 @@ public class RoundTimerFragment extends FamiliarFragment {
     /* Constants */
     public static final String ROUND_TIMER_INTENT = "rt_intent";
     public static final int TIMER_RING_ALARM = 1;
-    public static final int TIMER_5_MIN_WARNING = 2;
-    public static final int TIMER_10_MIN_WARNING = 3;
-    public static final int TIMER_15_MIN_WARNING = 4;
-    public static final int TIMER_EASTER_EGG = 5;
+    public static final int TIMER_2_MIN_WARNING = 2;
+    public static final int TIMER_5_MIN_WARNING = 3;
+    public static final int TIMER_10_MIN_WARNING = 4;
+    public static final int TIMER_15_MIN_WARNING = 5;
+    public static final int TIMER_EASTER_EGG = 6;
     public static final int TIMER_NOTIFICATION_ID = 53;
     private static final int RINGTONE_REQUEST_CODE = 17;
     /* Variables */
@@ -71,6 +72,10 @@ public class RoundTimerFragment extends FamiliarFragment {
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_RING_ALARM),
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
+        PendingIntent twoMinPI = PendingIntent.getBroadcast(context, TIMER_2_MIN_WARNING, new Intent(context,
+                        RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_2_MIN_WARNING),
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
         PendingIntent fiveMinPI = PendingIntent.getBroadcast(context, TIMER_5_MIN_WARNING, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_5_MIN_WARNING),
                 PendingIntent.FLAG_UPDATE_CURRENT
@@ -90,6 +95,7 @@ public class RoundTimerFragment extends FamiliarFragment {
 
         /* Cancel any pending alarms */
         am.cancel(AlarmPendingIntent);
+        am.cancel(tenMinPI);
         am.cancel(fiveMinPI);
         am.cancel(tenMinPI);
         am.cancel(fifteenMinPI);
@@ -100,6 +106,9 @@ public class RoundTimerFragment extends FamiliarFragment {
                 /* Set all applicable alarms */
                 am.setExact(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
 
+                if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
+                    am.setExact(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
+                }
                 if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
                     am.setExact(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
                 }
@@ -116,6 +125,9 @@ public class RoundTimerFragment extends FamiliarFragment {
                 /* Set all applicable alarms */
                 am.set(AlarmManager.RTC_WAKEUP, endTime, AlarmPendingIntent);
 
+                if (endTime - System.currentTimeMillis() > 2 * 60 * 1000) {
+                    am.set(AlarmManager.RTC_WAKEUP, endTime - 2 * 60 * 1000, twoMinPI);
+                }
                 if (endTime - System.currentTimeMillis() > 5 * 60 * 1000) {
                     am.set(AlarmManager.RTC_WAKEUP, endTime - 5 * 60 * 1000, fiveMinPI);
                 }
