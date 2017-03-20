@@ -154,6 +154,7 @@
         <item>@string/main_dice</item>
         <item>@string/main_trade</item>
         <item>@string/main_wishlist</item>
+        <item>@string/main_decklist</item>
         <item>@string/main_timer</item>
         <item>@string/main_rules</item>
         <item>@string/main_mojhosto</item>
@@ -235,4 +236,42 @@
         <item>@string/wishlist_type_price</item>
         <item>@string/wishlist_type_set</item>
     </string-array>
+
+    <string-array name="decklist_card_headers">
+        <item>@string/decklist_sideboard</item>
+        <item>@string/decklist_creatures</item>
+        <item>@string/decklist_planeswalkers</item>
+        <item>@string/decklist_instants</item>
+        <item>@string/decklist_sorceries</item>
+        <item>@string/decklist_artifacts</item>
+        <item>@string/decklist_enchantments</item>
+        <item>@string/decklist_lands</item>
+        <item>@string/decklist_others</item>
+    </string-array>
+
+    <string-array name="card_types">
+        <item>@string/card_type_creature</item>
+        <item>@string/card_type_planeswalker</item>
+        <item>@string/card_type_instant</item>
+        <item>@string/card_type_sorcery</item>
+        <item>@string/card_type_artifact</item>
+        <item>@string/card_type_enchantment</item>
+        <item>@string/card_type_land</item>
+    </string-array>
+
+    <string-array name="card_types_extra">
+        <item>@string/card_type_creature</item>
+        <item>@string/card_type_planeswalker</item>
+        <item>@string/card_type_instant</item>
+        <item>@string/card_type_sorcery</item>
+        <item>@string/card_type_artifact</item>
+        <item>@string/card_type_enchantment</item>
+        <item>@string/card_type_land</item>
+        <item>@string/card_type_conspiracy</item>
+        <item>@string/card_type_phenomenon</item>
+        <item>@string/card_type_plane</item>
+        <item>@string/card_type_scheme</item>
+        <item>@string/card_type_vanguard</item>
+    </string-array>
+
 </resources>

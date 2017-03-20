@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="top"
+    android:baselineAligned="false"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/forty_eight"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/number_input"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:gravity="center"
+            android:imeOptions="actionSearch"
+            android:inputType="number"
+            android:maxLength="2"
+            android:selectAllOnFocus="true"
+            android:singleLine="true" />
+
+        <AutoCompleteTextView
+            android:id="@+id/name_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/wishlist_name"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:singleLine="true">
+
+            <requestFocus />
+        </AutoCompleteTextView>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorPrimary_attr" />
+
+    <Button
+        android:id="@+id/add_card"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/wishlist_add_card"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorPrimary_attr" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        style="@style/forty_eight" >
+
+        <TextView
+            android:id="@+id/decklistName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/text.medium"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="10dp"
+            tools:text="Deck Name" />
+
+        <TextView
+            android:id="@+id/decklistCards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            tools:text="75 " />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/decklist_cards" />
+
+        <TextView
+            android:id="@+id/decklistPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/text.medium"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical"
+            android:layout_gravity="center_vertical"
+            tools:text="$1000.67" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/color_drawer_divider_item" />
+
+    <ListView
+        android:id="@+id/decklist"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+</LinearLayout>
