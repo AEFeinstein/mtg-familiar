@@ -14,8 +14,6 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.ResultListFragment;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.woxthebox.draglistview.DragItemAdapter;
 import com.woxthebox.draglistview.DragListView;
@@ -28,17 +26,12 @@ import java.util.List;
 /**
  * Class that creates dialogs for ResultListFragment
  */
-public class ResultListDialogFragment extends FamiliarDialogFragment {
+public class SortOrderDialogFragment extends FamiliarDialogFragment {
 
     public static final String SQL_ASC = "asc";
     private static final String SQL_DESC = "desc";
-
-    /**
-     * @return The currently viewed ResultListFragment
-     */
-    private ResultListFragment getParentResultListFragment() {
-        return (ResultListFragment) getFamiliarFragment();
-    }
+    public static final String SAVED_SORT_ORDER = "saved_sort_order";
+    public static final String KEY_PRICE = "key_price";
 
     @NotNull
     @Override
@@ -48,12 +41,12 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         setShowsDialog(true);
 
         /* Inflate the view */
-        View view = getParentResultListFragment().getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
+        View view = getFamiliarFragment().getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
         assert view != null;
 
         /* Create an arraylist of all the sorting options */
         final ArrayList<SortOption> options = new ArrayList<>(6);
-        String searchSortOrder = (new PreferenceAdapter(getContext())).getSearchSortOrder();
+        String searchSortOrder = getArguments().getString(SAVED_SORT_ORDER);
         int idx = 0;
 
         if (searchSortOrder != null) {
@@ -87,6 +80,13 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         name = getResources().getString(R.string.search_toughness);
                         break;
                     }
+                    case CardDbAdapter.KEY_SET: {
+                        name = getResources().getString(R.string.search_set);
+                        break;
+                    }
+                    case KEY_PRICE: {
+                        name = getResources().getString(R.string.wishlist_type_price);
+                    }
                 }
                 options.add(new SortOption(name, ascending, key, idx++));
             }
@@ -94,17 +94,17 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
         /* Get the sort view and set it up */
         DragListView sortView = (DragListView) view.findViewById(R.id.sort_list_view);
-        sortView.setLayoutManager(new LinearLayoutManager(getParentResultListFragment().getActivity()));
+        sortView.setLayoutManager(new LinearLayoutManager(getFamiliarFragment().getActivity()));
         sortItemAdapter adapter = new sortItemAdapter(options);
         sortView.setAdapter(adapter, true);
         sortView.setCanDragHorizontally(false);
 
         /* Create the dialog */
-        MaterialDialog.Builder adb = new MaterialDialog.Builder(getParentResultListFragment().getActivity());
+        MaterialDialog.Builder adb = new MaterialDialog.Builder(getFamiliarFragment().getActivity());
         adb.customView(view, false);
         adb.title(getResources().getString(R.string.wishlist_sort_by));
         adb.negativeText(R.string.dialog_cancel);
-        adb.positiveText(getParentResultListFragment().getActivity().getResources().getString(R.string.dialog_ok));
+        adb.positiveText(getFamiliarFragment().getActivity().getResources().getString(R.string.dialog_ok));
         adb.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -123,8 +123,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                     }
                     first = false;
                 }
-                new PreferenceAdapter(getContext()).setSearchSortOrder(orderByStr);
-                getParentResultListFragment().setOrderByStr(orderByStr);
+                getFamiliarFragment().receiveSortOrder(orderByStr);
                 dismiss();
             }
         });
@@ -173,8 +172,8 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
          */
         class sortItemViewHolder extends DragItemAdapter.ViewHolder {
 
-            CheckBox mCheckbox;
-            TextView mText;
+            final CheckBox mCheckbox;
+            final TextView mText;
 
             sortItemViewHolder(final View itemView) {
                 super(itemView, R.id.sort_list_handle, false);
@@ -185,17 +184,39 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         }
     }
 
-    class SortOption {
-        String mName;
+    public static class SortOption {
+        final String mName;
         boolean mAscending = true;
-        String mDatabaseKey;
-        int mId;
+        final String mDatabaseKey;
+        final int mId;
 
-        SortOption(String name, boolean ascending, String databaseKey, int id) {
+        /**
+         * Constructs a SortOption
+         *
+         * @param name        The name to display in the dialog
+         * @param ascending   Whether or not this sorts in ascending or descending order by default
+         * @param databaseKey The SQL key used to sort the data
+         * @param id          A unique ID to enable drag sorting
+         */
+        public SortOption(String name, boolean ascending, String databaseKey, int id) {
             mName = name;
             mAscending = ascending;
             mDatabaseKey = databaseKey;
             mId = id;
+        }
+
+        /**
+         * @return the SQL key used to sort the data
+         */
+        public String getKey() {
+            return mDatabaseKey;
+        }
+
+        /**
+         * @return true if the data should be sorted in ascending order, false otherwise
+         */
+        public boolean getAscending() {
+            return mAscending;
         }
     }
 }

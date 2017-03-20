@@ -17,8 +17,7 @@ import android.widget.ListView;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -127,7 +126,7 @@ public class ResultListFragment extends FamiliarFragment {
         }
 
         /* Get the saved order by string */
-        mOrderByStr = (new PreferenceAdapter(getContext()).getSearchSortOrder());
+        mOrderByStr = getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder();
 
         /* Open up the database, search for stuff */
         mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
@@ -408,8 +407,7 @@ public class ResultListFragment extends FamiliarFragment {
                 }
                 return true;
             case R.id.search_menu_sort: {
-                ResultListDialogFragment newFragment = new ResultListDialogFragment();
-                newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+                showDialog();
                 return true;
             }
             default:
@@ -417,9 +415,38 @@ public class ResultListFragment extends FamiliarFragment {
         }
     }
 
-    public void setOrderByStr(String orderByStr) {
+    /**
+     * Remove any showing dialogs, and show the requested one
+     */
+    private void showDialog() throws IllegalStateException {
+        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
+        currently showing dialog, so make our own transaction and take care of that here. */
+
+        /* If the fragment isn't visible (if desired being loaded by the pager), don't show dialogs */
+        if (!this.isVisible()) {
+            return;
+        }
+
+        removeDialog(getFragmentManager());
+
+        /* Create and show the dialog. */
+        SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
+        Bundle args = new Bundle();
+        args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
+                getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder());
+        newFragment.setArguments(args);
+        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+    }
+
+    /**
+     * TODO document
+     *
+     * @param orderByStr The sort order string
+     */
+    public void receiveSortOrder(String orderByStr) {
 
         mOrderByStr = orderByStr;
+        getFamiliarActivity().mPreferenceAdapter.setSearchSortOrder(orderByStr);
 
         try {
             mCursor.close();
@@ -428,7 +455,7 @@ public class ResultListFragment extends FamiliarFragment {
             e.printStackTrace();
         }
 
-        // Do thi
+        // Do the search again
         fillData();
     }
 }

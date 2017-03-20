@@ -7,7 +7,7 @@ import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import java.util.Arrays;
@@ -472,24 +472,6 @@ public class PreferenceAdapter {
         return this.prefs.getInt(context.getString(R.string.key_imageCacheSize), 12);
     }
 
-    public synchronized int getTradeSortOrder() {
-        return this.prefs.getInt(context.getString(R.string.key_trade_sort_order), 0);
-    }
-
-    public synchronized void setTradeSortOrder(int tradeSortOrder) {
-        this.edit.putInt(context.getString(R.string.key_trade_sort_order), tradeSortOrder);
-        this.edit.commit();
-    }
-
-    public synchronized int getTradeSortType() {
-        return this.prefs.getInt(context.getString(R.string.key_trade_sort_type), 0);
-    }
-
-    public synchronized void setTradeSortType(int tradeSortType) {
-        this.edit.putInt(context.getString(R.string.key_trade_sort_type), tradeSortType);
-        this.edit.commit();
-    }
-
     synchronized int getNumTutorCardsSearches() {
         return this.prefs.getInt(context.getString(R.string.key_num_tutor_cards_searches), 0);
     }
@@ -532,13 +514,47 @@ public class PreferenceAdapter {
 
     public synchronized String getSearchSortOrder() {
         return this.prefs.getString(context.getString(R.string.key_searchSortOrder),
-                CardDbAdapter.KEY_NAME + " " + ResultListDialogFragment.SQL_ASC + "," +
-                        CardDbAdapter.KEY_COLOR + " " + ResultListDialogFragment.SQL_ASC + "," +
-                        CardDbAdapter.KEY_SUPERTYPE + " " + ResultListDialogFragment.SQL_ASC + "," +
-                        CardDbAdapter.KEY_CMC + " " + ResultListDialogFragment.SQL_ASC + "," +
-                        CardDbAdapter.KEY_POWER + " " + ResultListDialogFragment.SQL_ASC + "," +
-                        CardDbAdapter.KEY_TOUGHNESS + " " + ResultListDialogFragment.SQL_ASC
+                CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SUPERTYPE + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_CMC + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC
         );
     }
 
+    public synchronized void setWishlistSortOrder(String searchSortOrder) {
+        this.edit.putString(context.getString(R.string.key_wishlist_sort_order_2), searchSortOrder);
+        this.edit.commit();
+    }
+
+    public synchronized String getWishlistSortOrder() {
+        return this.prefs.getString(context.getString(R.string.key_wishlist_sort_order_2),
+                CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SUPERTYPE + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_CMC + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
+        );
+    }
+
+    public synchronized void setTradeSortOrder(String searchSortOrder) {
+        this.edit.putString(context.getString(R.string.key_trade_sort_order_2), searchSortOrder);
+        this.edit.commit();
+    }
+
+    public synchronized String getTradeSortOrder() {
+        return this.prefs.getString(context.getString(R.string.key_trade_sort_order_2),
+                CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SET + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SUPERTYPE + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_CMC + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
+        );
+    }
 }

@@ -16,7 +16,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
-import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -31,6 +32,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import static com.gelakinetic.mtgfam.fragments.WishlistFragment.AVG_PRICE;
+import static com.gelakinetic.mtgfam.fragments.WishlistFragment.HIGH_PRICE;
+import static com.gelakinetic.mtgfam.fragments.WishlistFragment.LOW_PRICE;
 
 /**
  * This class has helpers used for reading, writing, and modifying the wishlist from different fragments
@@ -376,15 +381,15 @@ public class WishlistHelpers {
                         price = isi.mPrice.mFoilAverage;
                     } else {
                         switch (priceOption) {
-                            case WishlistFragment.LOW_PRICE: {
+                            case LOW_PRICE: {
                                 price = isi.mPrice.mLow;
                                 break;
                             }
-                            case WishlistFragment.AVG_PRICE: {
+                            case AVG_PRICE: {
                                 price = isi.mPrice.mAverage;
                                 break;
                             }
-                            case WishlistFragment.HIGH_PRICE: {
+                            case HIGH_PRICE: {
                                 price = isi.mPrice.mHigh;
                                 break;
                             }
@@ -480,129 +485,30 @@ public class WishlistHelpers {
         public void clearCompressedInfo() {
             mInfo.clear();
         }
-    }
 
-    /* Comparator based on converted mana cost */
-    public static class WishlistComparatorCmc implements Comparator<CompressedWishlistInfo> {
-        @Override
-        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            if (wish1.mCard.cmc == wish2.mCard.cmc) {
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
-            } else if (wish1.mCard.cmc > wish2.mCard.cmc) {
-                return 1;
-            }
-            return -1;
-        }
-    }
+        /**
+         * Return the total price of all cards in this object
+         *
+         * @param priceSetting LOW_PRICE, AVG_PRICE, or HIGH_PRICE
+         * @return The sum price of all cards in this object
+         */
+        public double getTotalPrice(int priceSetting) {
+            double sumWish = 0;
 
-    /* Comparator based on color */
-    public static class WishlistComparatorColor implements Comparator<CompressedWishlistInfo> {
-        private static final String colors = "WUBRG";
-        private static final String nonColors = "LAC";
-
-        /* Filters a color string to only include chars representing colors (e.g. "LG" (Dryad Arbor) will return "G"). */
-        public String getColors(String c) {
-            String validColors = "";
-            //1. Catch null/empty string
-            if (c == null || c.isEmpty()) {
-                return "";
-            }
-            //2. For each char, if a valid color, add to return String
-            for (int i = 0; i < c.length(); i++) {
-                if (colors.indexOf(c.charAt(i)) > -1) {
-                    validColors += c.charAt(i);
-                }
-            }
-            return validColors;
-        }
-
-        @Override
-        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            String colors1 = getColors(wish1.mCard.color);
-            String colors2 = getColors(wish2.mCard.color);
-            int priority1;
-            int priority2;
-            //1. If colorless, perform colorless comparison
-            if (colors1.length() + colors2.length() == 0) {
-                colors1 = wish1.mCard.color;
-                colors2 = wish2.mCard.color;
-                for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
-                    priority1 = nonColors.indexOf(colors1.charAt(i));
-                    priority2 = nonColors.indexOf(colors2.charAt(i));
-                    if (priority1 != priority2) {
-                        return priority1 < priority2 ? -1 : 1;
-                    }
-                }
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
-            }
-            //2. Else compare based on number of colors
-            if (colors1.length() < colors2.length()) {
-                return -1;
-            } else if (colors1.length() > colors2.length()) {
-                return 1;
-            }
-            //3. Else if same number of colors exist, compare based on WUBRG-ness
-            else {
-                for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
-                    priority1 = colors.indexOf(colors1.charAt(i));
-                    priority2 = colors.indexOf(colors2.charAt(i));
-                    if (priority1 != priority2) {
-                        return priority1 < priority2 ? -1 : 1;
-                    }
-                }
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
-            }
-        }
-    }
-
-    /* Comparator based on name */
-    public static class WishlistComparatorName implements Comparator<CompressedWishlistInfo> {
-        @Override
-        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            return wish1.mCard.name.compareTo(wish2.mCard.name);
-        }
-    }
-
-    /* Comparator based on first set of a card */
-    public static class WishlistComparatorSet implements Comparator<CompressedWishlistInfo> {
-        @Override
-        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            return wish1.mInfo.get(0).mSet.compareTo(wish2.mInfo.get(0).mSet);
-        }
-    }
-
-    /* Comparator based on price */
-    public static class WishlistComparatorPrice implements Comparator<CompressedWishlistInfo> {
-        /* Price setting constants */
-        private static final int LOW_PRICE = 0;
-        private static final int AVG_PRICE = 1;
-        private static final int HIGH_PRICE = 2;
-
-        private final int mPriceSetting;
-
-        public WishlistComparatorPrice(int mPriceSetting) {
-            this.mPriceSetting = mPriceSetting;
-        }
-
-        @Override
-        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            double sumWish1 = 0;
-            double sumWish2 = 0;
-
-            for (IndividualSetInfo isi : wish1.mInfo) {
+            for (IndividualSetInfo isi : mInfo) {
                 try {
                     if (isi.mIsFoil) {
-                        sumWish1 += (isi.mPrice.mFoilAverage * isi.mNumberOf);
+                        sumWish += (isi.mPrice.mFoilAverage * isi.mNumberOf);
                     } else {
-                        switch (mPriceSetting) {
+                        switch (priceSetting) {
                             case LOW_PRICE:
-                                sumWish1 += (isi.mPrice.mLow * isi.mNumberOf);
+                                sumWish += (isi.mPrice.mLow * isi.mNumberOf);
                                 break;
                             case AVG_PRICE:
-                                sumWish1 += (isi.mPrice.mAverage * isi.mNumberOf);
+                                sumWish += (isi.mPrice.mAverage * isi.mNumberOf);
                                 break;
                             case HIGH_PRICE:
-                                sumWish1 += (isi.mPrice.mHigh * isi.mNumberOf);
+                                sumWish += (isi.mPrice.mHigh * isi.mNumberOf);
                                 break;
                         }
                     }
@@ -610,35 +516,87 @@ public class WishlistHelpers {
                     /* eat it, no price is loaded */
                 }
             }
+            return sumWish;
+        }
+    }
 
-            for (IndividualSetInfo isi : wish2.mInfo) {
+    public static class WishlistComparator implements Comparator<CompressedWishlistInfo> {
+
+        final ArrayList<SortOption> options = new ArrayList<>();
+        int mPriceSetting = 0;
+
+        public WishlistComparator(String orderByStr, int priceSetting) {
+            int idx = 0;
+            for (String option : orderByStr.split(",")) {
+                String key = option.split(" ")[0];
+                boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
+                options.add(new SortOption(null, ascending, key, idx++));
+            }
+            mPriceSetting = priceSetting;
+        }
+
+        @Override
+        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
+
+            int retVal = 0;
+            /* Iterate over all the sort options, starting with the high priority ones */
+            for (SortOption option : options) {
+                /* Compare the entries based on the key */
                 try {
-                    if (isi.mIsFoil) {
-                        sumWish2 += (isi.mPrice.mFoilAverage * isi.mNumberOf);
-                    } else {
-                        switch (mPriceSetting) {
-                            case LOW_PRICE:
-                                sumWish2 += (isi.mPrice.mLow * isi.mNumberOf);
-                                break;
-                            case AVG_PRICE:
-                                sumWish2 += (isi.mPrice.mAverage * isi.mNumberOf);
-                                break;
-                            case HIGH_PRICE:
-                                sumWish2 += (isi.mPrice.mHigh * isi.mNumberOf);
-                                break;
+                    switch (option.getKey()) {
+                        case CardDbAdapter.KEY_NAME: {
+                            retVal = wish1.mCard.name.compareTo(wish2.mCard.name);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_COLOR: {
+                            retVal = wish1.mCard.color.compareTo(wish2.mCard.color);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_SUPERTYPE: {
+                            retVal = wish1.mCard.type.compareTo(wish2.mCard.type);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_CMC: {
+                            retVal = wish1.mCard.cmc - wish2.mCard.cmc;
+                            break;
+                        }
+                        case CardDbAdapter.KEY_POWER: {
+                            retVal = Float.compare(wish1.mCard.power, wish2.mCard.power);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_TOUGHNESS: {
+                            retVal = Float.compare(wish1.mCard.toughness, wish2.mCard.toughness);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_SET: {
+                            retVal = wish1.mCard.set.compareTo(wish2.mCard.set);
+                            break;
+                        }
+                        case SortOrderDialogFragment.KEY_PRICE: {
+                            retVal = Double.compare(wish1.getTotalPrice(mPriceSetting), wish2.getTotalPrice(mPriceSetting));
+                            break;
                         }
                     }
                 } catch (NullPointerException e) {
-                    /* eat it, no price is loaded */
+                    retVal = 0;
+                }
+
+                /* Adjust for ascending / descending */
+                if (!option.getAscending()) {
+                    retVal = -retVal;
+                }
+
+                /* If these two entries aren't equal, return. Otherwise continue and compare the
+                 * next value
+                 */
+                if (retVal != 0) {
+                    return retVal;
                 }
             }
 
-            if (sumWish1 == sumWish2) {
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
-            } else if (sumWish1 > sumWish2) {
-                return 1;
-            }
-            return -1;
+            /* Guess they're totally equal */
+            return retVal;
         }
     }
+
 }
