@@ -431,7 +431,7 @@ public class CardDbAdapter {
      *
      * @param ids        A list of ids for cards to fetch
      * @param orderByStr A string of keys and directions to order this query by
-     * @param mDb        The database to query
+     * @param database   The database to query
      * @return A cursor with all of the cards' information
      * @throws FamiliarDbException If something goes wrong
      */

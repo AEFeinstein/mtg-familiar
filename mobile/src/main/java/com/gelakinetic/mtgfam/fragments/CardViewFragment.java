@@ -422,11 +422,11 @@ public class CardViewFragment extends FamiliarFragment {
      * @param id the ID of the the card to be displayed
      * @return true if the UI was filled in, false otherwise
      */
-    public boolean setInfoFromID(final long id) {
+    public void setInfoFromID(final long id) {
 
         /* If the views are null, don't attempt to fill them in */
         if (mSetTextView == null) {
-            return false;
+            return;
         }
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
@@ -438,7 +438,7 @@ public class CardViewFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return false;
+            return;
         }
 
         /* http://magiccards.info/scans/en/mt/55.jpg */
@@ -461,7 +461,7 @@ public class CardViewFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return false;
+            return;
         }
         mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
@@ -615,7 +615,7 @@ public class CardViewFragment extends FamiliarFragment {
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return false;
+                return;
             }
             if (mTransformId == -1) {
                 mTransformButton.setVisibility(View.GONE);
@@ -678,7 +678,7 @@ public class CardViewFragment extends FamiliarFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return false;
+            return;
         }
         mPrintings = new LinkedHashSet<>();
         mCardIds = new LinkedHashSet<>();
@@ -697,7 +697,7 @@ public class CardViewFragment extends FamiliarFragment {
             } catch (FamiliarDbException e) {
                 handleFamiliarDbException(true);
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return false;
+                return;
             }
             cCardByName.moveToNext();
         }
@@ -711,7 +711,6 @@ public class CardViewFragment extends FamiliarFragment {
         if (mShouldReportView) {
             reportAppIndexViewIfAble();
         }
-        return true;
     }
 
     /**
@@ -1582,7 +1581,7 @@ public class CardViewFragment extends FamiliarFragment {
      * @return A File, either with the image already or blank
      * @throws Exception If something goes wrong
      */
-    File getSavedImageFile(boolean shouldDelete) throws Exception {
+    private File getSavedImageFile(boolean shouldDelete) throws Exception {
 
         String strPath;
         try {
@@ -1622,7 +1621,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @return A status string, to be displayed in a toast on the UI thread
      */
-    String saveImage() {
+    private String saveImage() {
         File fPath;
 
         try {
