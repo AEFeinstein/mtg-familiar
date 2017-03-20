@@ -523,4 +523,6 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="decklist_instants">Instants</string>
     <string name="decklist_sorceries">Sorceries</string>
     <string name="decklist_others">Others</string>
+    <string name="decklist_unnamed_deck">Unnamed Deck</string>
+    <string name="decklist_cards">cards</string>
 </resources>

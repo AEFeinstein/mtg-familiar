@@ -20,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,6 +52,9 @@ public class DecklistFragment extends FamiliarFragment {
     /* UI Elements */
     public AutoCompleteTextView mNameField;
     public EditText mNumberField;
+    public TextView mDeckName;
+    public TextView mDeckCards;
+    public TextView mDeckPrice;
 
     /* Decklist and adapters */
     public ListView decklistView;
@@ -121,6 +123,14 @@ public class DecklistFragment extends FamiliarFragment {
         mCompressedDecklist = new ArrayList<>();
         mDecklistAdapter = new DecklistArrayAdapter(mCompressedDecklist);
         decklistView.setAdapter(mDecklistAdapter);
+
+        /* Decklist information */
+        mDeckName = (TextView) myFragmentView.findViewById(R.id.decklistName);
+        mDeckName.setText(R.string.decklist_unnamed_deck);
+        mDeckCards = (TextView) myFragmentView.findViewById(R.id.decklistCards);
+        mDeckCards.setText("0 ");
+        mDeckPrice = (TextView) myFragmentView.findViewById(R.id.decklistPrice);
+        mDeckPrice.setVisibility(View.GONE);
 
         mDecklistChain = new ComparatorChain<>();
         mDecklistChain.addComparator(new CardHelpers.CardComparatorSideboard());
@@ -303,8 +313,11 @@ public class DecklistFragment extends FamiliarFragment {
      * @param changedCardName
      */
     public void readAndCompressDecklist(String changedCardName, String deckName) {
-        if (deckName == null || deckName.equals("")) {
+        if (deckName == null || deckName.equals("") || deckName.equals(AUTOSAVE_NAME)) {
             deckName = AUTOSAVE_NAME;
+            mDeckName.setText(R.string.decklist_unnamed_deck);
+        } else {
+            mDeckName.setText(deckName);
         }
         deckName += DECK_EXTENSION;
         /* Read the decklist */
@@ -445,9 +458,11 @@ public class DecklistFragment extends FamiliarFragment {
              * defined by R.array.card_types_extra */
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             for (int i = 0; i < cardTypes.length; i++) {
-                if (cdi.mCard.type.contains(cardTypes[i])) {
+                if (i < cardHeaders.length - 1 && cdi.mCard.type.contains(cardTypes[i])) {
                     cdi.header = cardHeaders[i + 1];
                     break;
+                } else if (i >= cardHeaders.length - 1) {
+                    cdi.header = cardHeaders[cardHeaders.length - 1];
                 }
             }
         }
@@ -555,6 +570,25 @@ public class DecklistFragment extends FamiliarFragment {
                 }
             }
             return totalCards;
+        }
+
+        /**
+         * Get the total number of cards in this adapter
+         * @return the total number of cards
+         */
+        public int getTotalCards() {
+            int totalCards = 0;
+            for (CompressedDecklistInfo cdi : values) {
+                totalCards += cdi.getTotalNumber();
+            }
+            return totalCards;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            String totalCards = String.valueOf(getTotalCards()) + " ";
+            mDeckCards.setText(totalCards);
         }
 
     }

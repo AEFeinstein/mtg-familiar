@@ -37,8 +37,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/decklistRowNumber"
             android:layout_gravity="center_vertical"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp" />
+            android:paddingStart="16dp" />
 
         <TextView
             tools:text="Name"
@@ -46,7 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/decklistRowName"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:paddingStart="10dp"/>
 
         <TextView
             tools:text="{2}{R}"
@@ -56,7 +56,7 @@
             android:id="@+id/decklistRowCost"
             android:gravity="right|center_vertical"
             android:layout_gravity="center_vertical"
-            android:paddingEnd="10dp"
-            android:paddingRight="10dp"/>
+            android:paddingEnd="16dp"
+            android:paddingRight="16dp"/>
         </LinearLayout>
 </LinearLayout>

@@ -259,14 +259,6 @@
         <item>@string/card_type_land</item>
     </string-array>
 
-    <string-array name="card_types_special">
-        <item>@string/card_type_conspiracy</item>
-        <item>@string/card_type_phenomenon</item>
-        <item>@string/card_type_plane</item>
-        <item>@string/card_type_scheme</item>
-        <item>@string/card_type_vanguard</item>
-    </string-array>
-
     <string-array name="card_types_extra">
         <item>@string/card_type_creature</item>
         <item>@string/card_type_planeswalker</item>
