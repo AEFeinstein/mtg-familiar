@@ -275,6 +275,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 }
                                 DecklistHelpers.WriteCompressedDecklist(getActivity(), getParentDecklistFragment().mCompressedDecklist, deckName + DecklistFragment.DECK_EXTENSION);
                                 getParentDecklistFragment().mCurrentDeck = deckName;
+                                getParentDecklistFragment().mDeckName.setText(deckName);
                             }
                         })
                         .negativeText(R.string.dialog_cancel)
