@@ -16,7 +16,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
-import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -31,6 +32,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import static com.gelakinetic.mtgfam.fragments.WishlistFragment.AVG_PRICE;
+import static com.gelakinetic.mtgfam.fragments.WishlistFragment.HIGH_PRICE;
+import static com.gelakinetic.mtgfam.fragments.WishlistFragment.LOW_PRICE;
 
 /**
  * This class has helpers used for reading, writing, and modifying the wishlist from different fragments
@@ -376,15 +381,15 @@ public class WishlistHelpers {
                         price = isi.mPrice.mFoilAverage;
                     } else {
                         switch (priceOption) {
-                            case WishlistFragment.LOW_PRICE: {
+                            case LOW_PRICE: {
                                 price = isi.mPrice.mLow;
                                 break;
                             }
-                            case WishlistFragment.AVG_PRICE: {
+                            case AVG_PRICE: {
                                 price = isi.mPrice.mAverage;
                                 break;
                             }
-                            case WishlistFragment.HIGH_PRICE: {
+                            case HIGH_PRICE: {
                                 price = isi.mPrice.mHigh;
                                 break;
                             }
@@ -435,6 +440,138 @@ public class WishlistHelpers {
             return false;
         }
 
+        /**
+         * Clear all the different printings for this object
+         */
+        public void clearCompressedInfo() {
+            mInfo.clear();
+        }
+
+        /**
+         * Return the total price of all cards in this object
+         *
+         * @param priceSetting LOW_PRICE, AVG_PRICE, or HIGH_PRICE
+         * @return The sum price of all cards in this object
+         */
+        public double getTotalPrice(int priceSetting) {
+            double sumWish = 0;
+
+            for (IndividualSetInfo isi : mInfo) {
+                try {
+                    if (isi.mIsFoil) {
+                        sumWish += (isi.mPrice.mFoilAverage * isi.mNumberOf);
+                    } else {
+                        switch (priceSetting) {
+                            case LOW_PRICE:
+                                sumWish += (isi.mPrice.mLow * isi.mNumberOf);
+                                break;
+                            case AVG_PRICE:
+                                sumWish += (isi.mPrice.mAverage * isi.mNumberOf);
+                                break;
+                            case HIGH_PRICE:
+                                sumWish += (isi.mPrice.mHigh * isi.mNumberOf);
+                                break;
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    /* eat it, no price is loaded */
+                }
+            }
+            return sumWish;
+        }
+    }
+
+    public static class WishlistComparator implements Comparator<CompressedWishlistInfo> {
+
+        final ArrayList<SortOption> options = new ArrayList<>();
+        int mPriceSetting = 0;
+
+        /**
+         * Constructor. It parses an "order by" string into search options. The first options have
+         * higher priority
+         *
+         * @param orderByStr   The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
+         * @param priceSetting The current price setting (LO/AVG/HIGH) used to sort by prices
+         */
+        public WishlistComparator(String orderByStr, int priceSetting) {
+            int idx = 0;
+            for (String option : orderByStr.split(",")) {
+                String key = option.split(" ")[0];
+                boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
+                options.add(new SortOption(null, ascending, key, idx++));
+            }
+            mPriceSetting = priceSetting;
+        }
+
+        /**
+         * Compare two CompressedWishlistInfo objects based on all the search options in descending priority
+         *
+         * @param wish1 One card to compare
+         * @param wish2 The other card to compare
+         * @return an integer < 0 if wish1 is less than wish2, 0 if they are equal, and > 0 if wish1 is greater than wish2.
+         */
+        @Override
+        public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
+
+            int retVal = 0;
+            /* Iterate over all the sort options, starting with the high priority ones */
+            for (SortOption option : options) {
+                /* Compare the entries based on the key */
+                try {
+                    switch (option.getKey()) {
+                        case CardDbAdapter.KEY_NAME: {
+                            retVal = wish1.mCard.name.compareTo(wish2.mCard.name);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_COLOR: {
+                            retVal = wish1.mCard.color.compareTo(wish2.mCard.color);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_SUPERTYPE: {
+                            retVal = wish1.mCard.type.compareTo(wish2.mCard.type);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_CMC: {
+                            retVal = wish1.mCard.cmc - wish2.mCard.cmc;
+                            break;
+                        }
+                        case CardDbAdapter.KEY_POWER: {
+                            retVal = Float.compare(wish1.mCard.power, wish2.mCard.power);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_TOUGHNESS: {
+                            retVal = Float.compare(wish1.mCard.toughness, wish2.mCard.toughness);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_SET: {
+                            retVal = wish1.mCard.set.compareTo(wish2.mCard.set);
+                            break;
+                        }
+                        case SortOrderDialogFragment.KEY_PRICE: {
+                            retVal = Double.compare(wish1.getTotalPrice(mPriceSetting), wish2.getTotalPrice(mPriceSetting));
+                            break;
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    retVal = 0;
+                }
+
+                /* Adjust for ascending / descending */
+                if (!option.getAscending()) {
+                    retVal = -retVal;
+                }
+
+                /* If these two entries aren't equal, return. Otherwise continue and compare the
+                 * next value
+                 */
+                if (retVal != 0) {
+                    return retVal;
+                }
+            }
+
+            /* Guess they're totally equal */
+            return retVal;
+        }
     }
 
 }

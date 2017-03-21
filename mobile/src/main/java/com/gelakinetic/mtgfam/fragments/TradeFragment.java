@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -63,18 +64,11 @@ public class TradeFragment extends FamiliarFragment {
     public static final int LEFT = 0;
     public static final int BOTH = 2;
     public static final String TRADE_EXTENSION = ".trade";
-    public static final int ASCENDING = 0;
-    public static final int DESCENDING = 1;
     private static final int RIGHT = 1;
     /* Save file constants */
     private static final String AUTOSAVE_NAME = "autosave";
-    /* For sorting */
-    private static final int SORT_TYPE_NONE = 0;
-    private static final int SORT_TYPE_CMC = 1;
-    private static final int SORT_TYPE_COLOR = 2;
-    private static final int SORT_TYPE_NAME = 3;
-    private static final int SORT_TYPE_PRICE = 4;
-    private static final int SORT_TYPE_SET = 5;
+
+    /* Lists and adapters */
     public TradeListAdapter mLeftAdapter;
     public ArrayList<MtgCard> mLeftList;
     public TradeListAdapter mRightAdapter;
@@ -83,8 +77,6 @@ public class TradeFragment extends FamiliarFragment {
     /* Settings */
     public int mPriceSetting;
     public String mCurrentTrade = "";
-    public int mSortOrder;
-    public int mSortType;
     /* Trade information */
     private TextView mTotalPriceLeft;
     private TextView mTotalPriceRight;
@@ -305,7 +297,7 @@ public class TradeFragment extends FamiliarFragment {
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
         /* Sort the newly added card */
-        sortTrades(mSortType, mSortOrder);
+        sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
     }
 
     /**
@@ -315,8 +307,6 @@ public class TradeFragment extends FamiliarFragment {
     public void onResume() {
         super.onResume();
         mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
-        mSortOrder = getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder();
-        mSortType = getFamiliarActivity().mPreferenceAdapter.getTradeSortType();
         /* Try to load the autosave trade, the function will handle FileNotFoundException */
         LoadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
     }
@@ -327,8 +317,6 @@ public class TradeFragment extends FamiliarFragment {
     @Override
     public void onPause() {
         super.onPause();
-        getFamiliarActivity().mPreferenceAdapter.setTradeSortOrder(mSortOrder);
-        getFamiliarActivity().mPreferenceAdapter.setTradeSortType(mSortType);
         SaveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
     }
 
@@ -350,72 +338,35 @@ public class TradeFragment extends FamiliarFragment {
 
         removeDialog(getFragmentManager());
 
-        /* Create and show the dialog. */
-        TradeDialogFragment newFragment = new TradeDialogFragment();
-        Bundle arguments = new Bundle();
-        arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
-        arguments.putInt(TradeDialogFragment.ID_SIDE, sideForDialog);
-        arguments.putInt(TradeDialogFragment.ID_POSITION, positionForDialog);
-        newFragment.setArguments(arguments);
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        if (id == TradeDialogFragment.DIALOG_SORT) {
+            SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
+            Bundle args = new Bundle();
+            args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
+                    getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
+            newFragment.setArguments(args);
+            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        } else {
+            /* Create and show the dialog. */
+            TradeDialogFragment newFragment = new TradeDialogFragment();
+            Bundle arguments = new Bundle();
+            arguments.putInt(FamiliarDialogFragment.ID_KEY, id);
+            arguments.putInt(TradeDialogFragment.ID_SIDE, sideForDialog);
+            arguments.putInt(TradeDialogFragment.ID_POSITION, positionForDialog);
+            newFragment.setArguments(arguments);
+            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        }
     }
 
     /**
      * Sort the trades
      */
-    public void sortTrades(int sortType, int sortOrder) {
+    private void sortTrades(String sortOrder) {
         /* If no sort type specified, return */
-        if (sortType != SORT_TYPE_NONE) {
-            if (sortOrder == ASCENDING) {
-                switch (sortType) {
-                    case SORT_TYPE_CMC:
-                        Collections.sort(mLeftList, new TradeComparatorCmc());
-                        Collections.sort(mRightList, new TradeComparatorCmc());
-                        break;
-                    case SORT_TYPE_COLOR:
-                        Collections.sort(mLeftList, new TradeComparatorColor());
-                        Collections.sort(mRightList, new TradeComparatorColor());
-                        break;
-                    case SORT_TYPE_NAME:
-                        Collections.sort(mLeftList, new TradeComparatorName());
-                        Collections.sort(mRightList, new TradeComparatorName());
-                        break;
-                    case SORT_TYPE_PRICE:
-                        Collections.sort(mLeftList, new TradeComparatorPrice());
-                        Collections.sort(mRightList, new TradeComparatorPrice());
-                        break;
-                    case SORT_TYPE_SET:
-                        Collections.sort(mLeftList, new TradeComparatorSet());
-                        Collections.sort(mRightList, new TradeComparatorSet());
-                        break;
-                }
-            } else {
-                switch (sortType) {
-                    case SORT_TYPE_CMC:
-                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorCmc()));
-                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorCmc()));
-                        break;
-                    case SORT_TYPE_COLOR:
-                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorColor()));
-                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorColor()));
-                        break;
-                    case SORT_TYPE_NAME:
-                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorName()));
-                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorName()));
-                        break;
-                    case SORT_TYPE_PRICE:
-                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorPrice()));
-                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorPrice()));
-                        break;
-                    case SORT_TYPE_SET:
-                        Collections.sort(mLeftList, Collections.reverseOrder(new TradeComparatorSet()));
-                        Collections.sort(mRightList, Collections.reverseOrder(new TradeComparatorSet()));
-                        break;
-                }
-            }
-            mLeftAdapter.notifyDataSetChanged();
-            mRightAdapter.notifyDataSetChanged();
-        }
+        TradeComparator tradeComparator = new TradeComparator(sortOrder);
+        Collections.sort(mLeftList, tradeComparator);
+        Collections.sort(mRightList, tradeComparator);
+        mLeftAdapter.notifyDataSetChanged();
+        mRightAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -735,13 +686,22 @@ public class TradeFragment extends FamiliarFragment {
                             if (mPriceFetchRequests == 0 && TradeFragment.this.isAdded()) {
                                 getFamiliarActivity().clearLoading();
                             }
-                            if (mSortType == SORT_TYPE_PRICE) {
-                                sortTrades(mSortType, mSortOrder);
-                            }
+                            sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
                         }
                     }
             );
         }
+    }
+
+    /**
+     * Called when the sorting dialog closes. Sort the trades with the new order
+     *
+     * @param orderByStr The sort order string
+     */
+    @Override
+    public void receiveSortOrder(String orderByStr) {
+        getFamiliarActivity().mPreferenceAdapter.setTradeSortOrder(orderByStr);
+        sortTrades(orderByStr);
     }
 
     /**
@@ -769,110 +729,6 @@ public class TradeFragment extends FamiliarFragment {
             e.printStackTrace();
         }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-    }
-    
-    /* Comparators for sorting */
-
-    /* Comparator based on converted mana cost */
-    private static class TradeComparatorCmc implements Comparator<MtgCard> {
-        @Override
-        public int compare(MtgCard wish1, MtgCard wish2) {
-            if (wish1.cmc == wish2.cmc) {
-                return wish1.name.compareTo(wish2.name);
-            } else if (wish1.cmc > wish2.cmc) {
-                return 1;
-            }
-            return -1;
-        }
-    }
-
-    /* Comparator based on color */
-    public static class TradeComparatorColor implements Comparator<MtgCard> {
-        private static final String colors = "WUBRG";
-        private static final String nonColors = "LAC";
-
-        /* Filters a color string to only include chars representing colors (e.g. "LG" (Dryad Arbor) will return "G"). */
-        public String getColors(String c) {
-            String validColors = "";
-            //1. Catch null/empty string
-            if (c == null || c.isEmpty()) {
-                return "";
-            }
-            //2. For each char, if a valid color, add to return String
-            for (int i = 0; i < c.length(); i++) {
-                if (colors.indexOf(c.charAt(i)) > -1) {
-                    validColors += c.charAt(i);
-                }
-            }
-            return validColors;
-        }
-
-        @Override
-        public int compare(MtgCard wish1, MtgCard wish2) {
-            String colors1 = getColors(wish1.color);
-            String colors2 = getColors(wish2.color);
-            int priority1;
-            int priority2;
-            //1. If colorless, perform colorless comparison
-            if (colors1.length() + colors2.length() == 0) {
-                colors1 = wish1.color;
-                colors2 = wish2.color;
-                for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
-                    priority1 = nonColors.indexOf(colors1.charAt(i));
-                    priority2 = nonColors.indexOf(colors2.charAt(i));
-                    if (priority1 != priority2) {
-                        return priority1 < priority2 ? -1 : 1;
-                    }
-                }
-                return wish1.name.compareTo(wish2.name);
-            }
-            //2. Else compare based on number of colors
-            if (colors1.length() < colors2.length()) {
-                return -1;
-            } else if (colors1.length() > colors2.length()) {
-                return 1;
-            }
-            //3. Else if same number of colors exist, compare based on WUBRG-ness
-            else {
-                for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
-                    priority1 = colors.indexOf(colors1.charAt(i));
-                    priority2 = colors.indexOf(colors2.charAt(i));
-                    if (priority1 != priority2) {
-                        return priority1 < priority2 ? -1 : 1;
-                    }
-                }
-                return wish1.name.compareTo(wish2.name);
-            }
-        }
-    }
-
-    /* Comparator based on name */
-    private static class TradeComparatorName implements Comparator<MtgCard> {
-        @Override
-        public int compare(MtgCard wish1, MtgCard wish2) {
-            return wish1.name.compareTo(wish2.name);
-        }
-    }
-
-    /* Comparator based on first set of a card */
-    private static class TradeComparatorSet implements Comparator<MtgCard> {
-        @Override
-        public int compare(MtgCard wish1, MtgCard wish2) {
-            return wish1.setName.compareTo(wish2.setName);
-        }
-    }
-
-    /* Comparator based on price */
-    private static class TradeComparatorPrice implements Comparator<MtgCard> {
-        @Override
-        public int compare(MtgCard wish1, MtgCard wish2) {
-            if (wish1.price == wish2.price) {
-                return wish1.name.compareTo(wish2.name);
-            } else if (wish1.price > wish2.price) {
-                return 1;
-            }
-            return -1;
-        }
     }
 
     /**
@@ -936,6 +792,96 @@ public class TradeFragment extends FamiliarFragment {
                 }
             }
             return convertView;
+        }
+    }
+
+    private static class TradeComparator implements Comparator<MtgCard> {
+
+        final ArrayList<SortOrderDialogFragment.SortOption> options = new ArrayList<>();
+
+        /**
+         * Constructor. It parses an "order by" string into search options. The first options have
+         * higher priority
+         *
+         * @param orderByStr The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
+         */
+        TradeComparator(String orderByStr) {
+            int idx = 0;
+            for (String option : orderByStr.split(",")) {
+                String key = option.split(" ")[0];
+                boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
+                options.add(new SortOrderDialogFragment.SortOption(null, ascending, key, idx++));
+            }
+        }
+
+        /**
+         * Compare two MtgCard objects based on all the search options in descending priority
+         *
+         * @param card1 One card to compare
+         * @param card2 The other card to compare
+         * @return an integer < 0 if card1 is less than card2, 0 if they are equal, and > 0 if card1 is greater than card2.
+         */
+        @Override
+        public int compare(MtgCard card1, MtgCard card2) {
+
+            int retVal = 0;
+            /* Iterate over all the sort options, starting with the high priority ones */
+            for (SortOrderDialogFragment.SortOption option : options) {
+                try {
+                /* Compare the entries based on the key */
+                    switch (option.getKey()) {
+                        case CardDbAdapter.KEY_NAME: {
+                            retVal = card1.name.compareTo(card2.name);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_COLOR: {
+                            retVal = card1.color.compareTo(card2.color);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_SUPERTYPE: {
+                            retVal = card1.type.compareTo(card2.type);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_CMC: {
+                            retVal = card1.cmc - card2.cmc;
+                            break;
+                        }
+                        case CardDbAdapter.KEY_POWER: {
+                            retVal = Float.compare(card1.power, card2.power);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_TOUGHNESS: {
+                            retVal = Float.compare(card1.toughness, card2.toughness);
+                            break;
+                        }
+                        case CardDbAdapter.KEY_SET: {
+                            retVal = card1.set.compareTo(card2.set);
+                            break;
+                        }
+                        case SortOrderDialogFragment.KEY_PRICE: {
+                            retVal = Double.compare(card1.price, card2.price);
+                            break;
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    retVal = 0;
+                }
+
+                /* Adjust for ascending / descending */
+                if (!option.getAscending()) {
+                    retVal = -retVal;
+                }
+
+                /* If these two entries aren't equal, return. Otherwise continue and compare the
+                 * next value
+                 */
+                if (retVal != 0) {
+                    return retVal;
+                }
+            }
+
+            /* Guess they're totally equal */
+            return retVal;
         }
     }
 }

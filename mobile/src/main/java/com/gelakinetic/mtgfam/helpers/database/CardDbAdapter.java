@@ -427,20 +427,30 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a KEY_ID value, return a cursor with all of a card's information
+     * Given a list of KEY_ID values, return a cursor with all of a cards' information
      *
-     * @param id  The KEY_ID value
-     * @param mDb The database to query
-     * @return A cursor with all of the card's information
+     * @param ids        A list of ids for cards to fetch
+     * @param orderByStr A string of keys and directions to order this query by
+     * @param database   The database to query
+     * @return A cursor with all of the cards' information
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchCard(long id, SQLiteDatabase mDb)
+    public static Cursor fetchCards(long[] ids, String orderByStr, SQLiteDatabase database)
             throws FamiliarDbException {
-
         Cursor cursor;
         try {
-            cursor = mDb.query(true, DATABASE_TABLE_CARDS, allCardDataKeys, KEY_ID
-                    + "=" + id, null, null, null, KEY_NAME, null);
+            boolean first = true;
+            String selectionStr = "";
+            for (long id : ids) {
+                if (!first) {
+                    selectionStr += " OR ";
+                } else {
+                    first = false;
+                }
+                selectionStr += KEY_ID + "=" + id;
+            }
+            cursor = database.query(true, DATABASE_TABLE_CARDS, allCardDataKeys, selectionStr, null,
+                    null, null, orderByStr, null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -742,12 +752,12 @@ public class CardDbAdapter {
      * @param backface    Whether or not the results should include the 'b' side of multicards
      * @param returnTypes The columns which should be returned in the cursor
      * @param consolidate true to not include multiple printings of the same card, false otherwise
-     * @param mDb         The database to query
-     * @return A cursor with the requested information about the queried cards
+     * @param orderByStr  A string used to order the results
+     * @param mDb         The database to query  @return A cursor with the requested information about the queried cards
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
-                                boolean consolidate, SQLiteDatabase mDb)
+                                boolean consolidate, String orderByStr, SQLiteDatabase mDb)
             throws FamiliarDbException {
         Cursor cursor;
 
@@ -1262,11 +1272,15 @@ public class CardDbAdapter {
                     + DATABASE_TABLE_CARDS + "." + KEY_SET + " = "
                     + DATABASE_TABLE_SETS + "." + KEY_CODE + statement;
 
+            if (null == orderByStr) {
+                orderByStr = KEY_NAME + " COLLATE UNICODE";
+            }
+
             if (consolidate) {
                 sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
-                        + ") GROUP BY " + KEY_NAME + " ORDER BY " + KEY_NAME + " COLLATE UNICODE";
+                        + ") GROUP BY " + KEY_NAME + " ORDER BY " + orderByStr;
             } else {
-                sql += " ORDER BY " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " COLLATE UNICODE"
+                sql += " ORDER BY " + orderByStr
                         + ", " + DATABASE_TABLE_SETS + "." + KEY_DATE
                         + " DESC)";
             }

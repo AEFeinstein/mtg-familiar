@@ -237,6 +237,11 @@
         <item>@string/wishlist_type_set</item>
     </string-array>
 
+    <string-array name="asc_desc">
+        <item>@string/wishlist_ascending</item>
+        <item>@string/wishlist_descending</item>
+    </string-array>
+
     <string-array name="decklist_card_headers">
         <item>@string/decklist_sideboard</item>
         <item>@string/decklist_creatures</item>
