@@ -24,10 +24,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -317,8 +317,8 @@ public class MtgCard {
     public boolean equals(Object o) {
         if (o instanceof MtgCard) {
             return this.name.equals(((MtgCard) o).name);
-        } else if (o instanceof CompressedWishlistInfo) {
-            return this.name.equals(((CompressedWishlistInfo) o).mCard.name);
+        } else if (o instanceof CompressedCardInfo) {
+            return this.name.equals(((CompressedCardInfo) o).mCard.name);
         }
         return false;
     }

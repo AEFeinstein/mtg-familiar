@@ -32,11 +32,11 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -554,11 +554,11 @@ public class CardDbAdapter {
      * Given an ArrayList of CompressedWishlistInfo, fill in all the missing information by querying
      * the database
      *
-     * @param mCompressedWishlist An ArrayList of CompressedWishlistInfo to fill in
+     * @param mCompressedCard An ArrayList of CompressedWishlistInfo to fill in
      * @param mDb                 The database to query
      * @throws FamiliarDbException If something goes wrong
      */
-    public static void fillExtraWishlistData(ArrayList<CompressedWishlistInfo> mCompressedWishlist,
+    public static void fillExtraWishlistData(ArrayList<? extends CompressedCardInfo> mCompressedCard,
                                              SQLiteDatabase mDb) throws FamiliarDbException {
         String sql = "SELECT ";
 
@@ -579,7 +579,7 @@ public class CardDbAdapter {
 
         first = true;
         boolean doSql = false;
-        for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+        for (CompressedCardInfo cwi : mCompressedCard) {
             if (cwi.mCard.type == null || cwi.mCard.type.equals("")) {
                 doSql = true;
                 if (first) {
@@ -622,7 +622,7 @@ public class CardDbAdapter {
         while (!cursor.isAfterLast()) {
             /* Do stuff */
             String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+            for (CompressedCardInfo cwi : mCompressedCard) {
                 if (name != null && name.equals(cwi.mCard.name)) {
                     cwi.mCard.type =
                             getTypeLine(cursor);

@@ -21,13 +21,13 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOpti
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -409,27 +409,10 @@ public class WishlistHelpers {
     }
 
     /**
-     * This class encapsulates all non-duplicated information for two cards in different sets
-     */
-    public static class IndividualSetInfo {
-        public String mSet;
-        public String mSetCode;
-        public String mNumber;
-
-        public Boolean mIsFoil;
-        public PriceInfo mPrice;
-        public String mMessage;
-        public Integer mNumberOf;
-        public Character mRarity;
-    }
-
-    /**
      * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for different printings
      * of that card
      */
-    public static class CompressedWishlistInfo {
-        public final MtgCard mCard;
-        public final ArrayList<IndividualSetInfo> mInfo;
+    public static class CompressedWishlistInfo extends CardHelpers.CompressedCardInfo {
 
         /**
          * Constructor
@@ -437,29 +420,7 @@ public class WishlistHelpers {
          * @param card The MtgCard which will be the base for this object
          */
         public CompressedWishlistInfo(MtgCard card) {
-            mInfo = new ArrayList<>();
-            mCard = card;
-            add(mCard);
-        }
-
-        /**
-         * Add a new printing of a MtgCard to this object
-         *
-         * @param card The new printing to add to this object
-         */
-        public void add(MtgCard card) {
-            IndividualSetInfo isi = new IndividualSetInfo();
-
-            isi.mSet = card.setName;
-            isi.mSetCode = card.setCode;
-            isi.mNumber = card.number;
-            isi.mIsFoil = card.foil;
-            isi.mPrice = null;
-            isi.mMessage = card.message;
-            isi.mNumberOf = card.numberOf;
-            isi.mRarity = card.rarity;
-
-            mInfo.add(isi);
+            super(card);
         }
 
         /**
