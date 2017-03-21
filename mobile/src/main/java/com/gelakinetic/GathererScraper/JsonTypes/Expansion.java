@@ -1,66 +1,34 @@
 package com.gelakinetic.GathererScraper.JsonTypes;
 
-/**
+/*
  * This class contains all information about an expansion to be parsed
  *
  * @author AEFeinstein
  *
  */
-public class Expansion implements Comparable<Expansion>{
-	/** Name used by Gatherer */
-	public String				mName_gatherer	= "";
-	/** expansion code used by Gatherer */
-	public String				mCode_gatherer	= "";
-	/** expansion code used by magiccards.info */
-	public String				mCode_mtgi		= "";
-	/** expansion name used by TCGPlayer.com */
-	public String				mName_tcgp		= "";
-	/** expansion name used by MagicCardMarket.eu */
-	public String				mName_mkm		= "";
-	/** Date the expansion was released */
-	public long				mReleaseTimestamp	= 0;
-	/** Whether or not this expansion has foil cards */
-	public boolean				mCanBeFoil		= false;
+public class Expansion {
 
-	/** To scrape, or not to scrape ? */
-	public transient Boolean	mChecked		= false;
+    // Name used by Gatherer
+    public String mName_gatherer = "";
 
-	/** MD5 digest for scraped cards, to see when things change */
-//	public byte[]				mDigest 		= new byte[16];
-	public String				mDigest 		= "";
-	
-	/**
-	 * The most basic constructor for an expansion. Only sets the gatherer name
-	 *
-	 * @param name_gatherer
-	 *            The name of this expansion on Gatherer
-	 */
-	public Expansion(String name_gatherer) {
-		mName_gatherer = name_gatherer;
-	}
+    // expansion code used by Gatherer
+    public String mCode_gatherer = "";
 
-	
-	@Override
-	public int compareTo(Expansion o) {
-		return this.mName_gatherer.compareTo(o.mName_gatherer);
-	}
+    // expansion code used by magiccards.info
+    public String mCode_mtgi = "";
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Expansion) {
-			return this.mName_gatherer.equals(((Expansion)obj).mName_gatherer);
-		}
-		return false;
-	}
+    // expansion mName used by TCGPlayer.com
+    public String mName_tcgp = "";
 
-	/**
-	 * Use the Gatherer code as a proxy if this expansion was scraped or not
-	 * 
-	 * @return true if the gatherer code exists, false if it does not
-	 */
-	public boolean isScraped() {
-		return mCode_gatherer != null && !mCode_gatherer.isEmpty();
-	}
+    // expansion name used by MagicCardMarket.eu
+    public String mName_mkm = "";
 
+    // Date the expansion was released
+    public long mReleaseTimestamp = 0;
 
+    // Whether or not this expansion has foil cards
+    public boolean mCanBeFoil = false;
+
+    // MD5 digest for scraped cards, to see when things change
+    public String mDigest = "";
 }

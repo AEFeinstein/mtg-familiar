@@ -21,7 +21,6 @@ package com.gelakinetic.mtgfam.helpers.updaters;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
@@ -39,15 +38,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This class is used to parse various JSON update files and populate the database
  */
 class CardAndSetParser {
     /* Hardcoded URLs */
-    private static final String PATCHES_URL = "https://raw.githubusercontent.com/Haerezis/GathererScraper/master/patches.json";
-    private static final String LEGALITY_URL = "https://raw.githubusercontent.com/Haerezis/GathererScraper/master/legality.json";
+    private static final String PATCHES_URL = "https://raw.githubusercontent.com/aefeinstein/GathererScraper/master/patches.json";
+    private static final String LEGALITY_URL = "https://raw.githubusercontent.com/aefeinstein/GathererScraper/master/legality.json";
 
     /**
      * Used to store various dates before committing them
@@ -94,25 +92,7 @@ class CardAndSetParser {
             int elementsParsed = 0;
             for(Card card : patch.mCards)
             {
-                MtgCard cardToAdd = new MtgCard();
-
-                cardToAdd.name = card.mName;
-                cardToAdd.set = card.mExpansion;
-                cardToAdd.type = card.mType;
-                cardToAdd.rarity = card.mRarity.charAt(0);;
-                cardToAdd.manaCost = card.mManaCost;
-                cardToAdd.cmc = card.mCmc;
-                cardToAdd.power = parsePowerToughness(card.mPower);
-                cardToAdd.toughness = parsePowerToughness(card.mToughness);
-                cardToAdd.loyalty = card.mLoyalty.isEmpty() ? 0 : Integer.parseInt(card.mLoyalty);
-                cardToAdd.ability = card.mText;
-                cardToAdd.flavor = card.mFlavor;
-                cardToAdd.artist = card.mArtist;
-                cardToAdd.number = card.mNumber;
-                cardToAdd.color = card.mColor;
-                cardToAdd.multiverseId = card.mMultiverseId;
-
-                tempCardsToAdd.add(cardToAdd);
+                tempCardsToAdd.add(new MtgCard(card));
                 elementsParsed++;
                 progressReporter.reportJsonCardProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
             }

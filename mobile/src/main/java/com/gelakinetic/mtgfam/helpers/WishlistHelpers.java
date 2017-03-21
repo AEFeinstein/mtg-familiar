@@ -74,9 +74,9 @@ public class WishlistHelpers {
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                 MtgCard card = cwi.mCard;
                 for (IndividualSetInfo isi : cwi.mInfo) {
-                    card.set = isi.mSet;
+                    card.mExpansion = isi.mSet;
                     card.setCode = isi.mSetCode;
-                    card.number = isi.mNumber;
+                    card.mNumber = isi.mNumber;
                     card.foil = isi.mIsFoil;
                     card.numberOf = isi.mNumberOf;
                     fos.write(card.toWishlistString().getBytes());
@@ -182,7 +182,7 @@ public class WishlistHelpers {
         final Map<String, String> targetCardNumberOfs = new HashMap<>();
         final Map<String, String> targetFoilCardNumberOfs = new HashMap<>();
         for (MtgCard card : wishlist) {
-            if (card.name.equals(mCardName)) {
+            if (card.mName.equals(mCardName)) {
                 if (card.foil) {
                     targetFoilCardNumberOfs.put(card.setCode, card.numberOf + "");
                 } else {
@@ -284,7 +284,7 @@ public class WishlistHelpers {
 
                             /* build the card object */
                             MtgCard card = new MtgCard();
-                            card.name = mCardName;
+                            card.mName = mCardName;
                             card.setCode = potentialSetCodes.get(i);
                             try {
                                 EditText numberInput = ((EditText) view.findViewById(R.id.numberInput));
@@ -294,14 +294,14 @@ public class WishlistHelpers {
                                 card.numberOf = 0;
                             }
                             card.foil = (view.findViewById(R.id.wishlistDialogFoil).getVisibility() == View.VISIBLE);
-                            card.rarity = potentialRarities.get(i);
-                            card.number = potentialNumbers.get(i);
+                            card.mRarity = potentialRarities.get(i);
+                            card.mNumber = potentialNumbers.get(i);
 
                             /* Look through the wishlist for each card, set the numberOf or remove it if it exists, or
                              * add the card if it doesn't */
                             boolean added = false;
                             for (int j = 0; j < wishlist.size(); j++) {
-                                if (card.name.equals(wishlist.get(j).name)
+                                if (card.mName.equals(wishlist.get(j).mName)
                                         && card.setCode.equals(wishlist.get(j).setCode)
                                         && card.foil == wishlist.get(j).foil) {
                                     if (card.numberOf == 0) {
@@ -347,7 +347,7 @@ public class WishlistHelpers {
         /* For each wishlist entry */
         for (CompressedWishlistInfo cwi : mCompressedWishlist) {
             /* Append the card name, always */
-            readableWishlist.append(cwi.mCard.name);
+            readableWishlist.append(cwi.mCard.mName);
             readableWishlist.append("\r\n");
 
             /* Append the full text, if the user wants it */
@@ -447,12 +447,12 @@ public class WishlistHelpers {
 
             isi.mSet = card.setName;
             isi.mSetCode = card.setCode;
-            isi.mNumber = card.number;
+            isi.mNumber = card.mNumber;
             isi.mIsFoil = card.foil;
             isi.mPrice = null;
             isi.mMessage = card.message;
             isi.mNumberOf = card.numberOf;
-            isi.mRarity = card.rarity;
+            isi.mRarity = card.mRarity;
 
             mInfo.add(isi);
         }
@@ -467,9 +467,9 @@ public class WishlistHelpers {
         @Override
         public boolean equals(Object o) {
             if (o instanceof CompressedWishlistInfo) {
-                return mCard.name.equals(((CompressedWishlistInfo) o).mCard.name);
+                return mCard.mName.equals(((CompressedWishlistInfo) o).mCard.mName);
             } else if (o instanceof MtgCard) {
-                return mCard.name.equals(((MtgCard) o).name);
+                return mCard.mName.equals(((MtgCard) o).mName);
             }
             return false;
         }
@@ -486,9 +486,9 @@ public class WishlistHelpers {
     public static class WishlistComparatorCmc implements Comparator<CompressedWishlistInfo> {
         @Override
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            if (wish1.mCard.cmc == wish2.mCard.cmc) {
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
-            } else if (wish1.mCard.cmc > wish2.mCard.cmc) {
+            if (wish1.mCard.mCmc == wish2.mCard.mCmc) {
+                return wish1.mCard.mName.compareTo(wish2.mCard.mName);
+            } else if (wish1.mCard.mCmc > wish2.mCard.mCmc) {
                 return 1;
             }
             return -1;
@@ -518,14 +518,14 @@ public class WishlistHelpers {
 
         @Override
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            String colors1 = getColors(wish1.mCard.color);
-            String colors2 = getColors(wish2.mCard.color);
+            String colors1 = getColors(wish1.mCard.mColor);
+            String colors2 = getColors(wish2.mCard.mColor);
             int priority1;
             int priority2;
             //1. If colorless, perform colorless comparison
             if (colors1.length() + colors2.length() == 0) {
-                colors1 = wish1.mCard.color;
-                colors2 = wish2.mCard.color;
+                colors1 = wish1.mCard.mColor;
+                colors2 = wish2.mCard.mColor;
                 for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
                     priority1 = nonColors.indexOf(colors1.charAt(i));
                     priority2 = nonColors.indexOf(colors2.charAt(i));
@@ -533,7 +533,7 @@ public class WishlistHelpers {
                         return priority1 < priority2 ? -1 : 1;
                     }
                 }
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
+                return wish1.mCard.mName.compareTo(wish2.mCard.mName);
             }
             //2. Else compare based on number of colors
             if (colors1.length() < colors2.length()) {
@@ -550,20 +550,20 @@ public class WishlistHelpers {
                         return priority1 < priority2 ? -1 : 1;
                     }
                 }
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
+                return wish1.mCard.mName.compareTo(wish2.mCard.mName);
             }
         }
     }
 
-    /* Comparator based on name */
+    /* Comparator based on mName */
     public static class WishlistComparatorName implements Comparator<CompressedWishlistInfo> {
         @Override
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
-            return wish1.mCard.name.compareTo(wish2.mCard.name);
+            return wish1.mCard.mName.compareTo(wish2.mCard.mName);
         }
     }
 
-    /* Comparator based on first set of a card */
+    /* Comparator based on first mExpansion of a card */
     public static class WishlistComparatorSet implements Comparator<CompressedWishlistInfo> {
         @Override
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
@@ -634,7 +634,7 @@ public class WishlistHelpers {
             }
 
             if (sumWish1 == sumWish2) {
-                return wish1.mCard.name.compareTo(wish2.mCard.name);
+                return wish1.mCard.mName.compareTo(wish2.mCard.mName);
             } else if (sumWish1 > sumWish2) {
                 return 1;
             }

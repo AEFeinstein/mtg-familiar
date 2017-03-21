@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -37,24 +38,11 @@ import java.util.regex.Pattern;
 /**
  * Encapsulate all information about a magic card
  */
-public class MtgCard {
+public class MtgCard extends Card {
     private static final String DELIMITER = "%";
-    public String name;
-    public String set;
-    public String type;
-    public char rarity;
-    public String manaCost;
-    public int cmc;
-    public float power;
-    public float toughness;
-    public int loyalty;
-    public String ability;
-    public String flavor;
-    public String artist;
-    public String number;
-    public String color;
-    public int multiverseId;
+
     public String colorIdentity;
+
     /* Wish and trade list fields */
     public String setName;
     public String setCode;
@@ -71,22 +59,40 @@ public class MtgCard {
      */
     public MtgCard() {
         /* Database fields */
-        name = "";
-        set = "";
-        type = "";
-        rarity = '\0';
-        manaCost = "";
-        cmc = 0;
-        power = CardDbAdapter.NO_ONE_CARES;
-        toughness = CardDbAdapter.NO_ONE_CARES;
-        loyalty = CardDbAdapter.NO_ONE_CARES;
-        ability = "";
-        flavor = "";
-        artist = "";
-        number = "";
-        color = "";
-        multiverseId = 0;
+        mName = "";
+        mExpansion = "";
+        mType = "";
+        mRarity = '\0';
+        mManaCost = "";
+        mCmc = 0;
+        mPower = CardDbAdapter.NO_ONE_CARES;
+        mToughness = CardDbAdapter.NO_ONE_CARES;
+        mLoyalty = CardDbAdapter.NO_ONE_CARES;
+        mText = "";
+        mFlavor = "";
+        mArtist = "";
+        mNumber = "";
+        mColor = "";
+        mMultiverseId = 0;
         colorIdentity = "";
+    }
+
+    public MtgCard(Card card) {
+        this.mName = card.mName;
+        this.mExpansion = card.mExpansion;
+        this.mType = card.mType;
+        this.mRarity = card.mRarity;
+        this.mManaCost = card.mManaCost;
+        this.mCmc = card.mCmc;
+        this.mPower = card.mPower;
+        this.mToughness = card.mToughness;
+        this.mLoyalty = card.mLoyalty;
+        this.mText = card.mText;
+        this.mFlavor = card.mFlavor;
+        this.mArtist = card.mArtist;
+        this.mNumber = card.mNumber;
+        this.mColor = card.mColor;
+        this.mMultiverseId = card.mMultiverseId;
     }
 
     /**
@@ -110,29 +116,29 @@ public class MtgCard {
     /**
      * Constructor used when creating a new card for the trade list. Only populates relevant information
      *
-     * @param name     This card's name
-     * @param tcgName  The tcgplayer.com set name
-     * @param setCode  The set code
-     * @param numberOf The number of these cards being traded
+     * @param name     This card's mName
+     * @param tcgName  The tcgplayer.com mExpansion mName
+     * @param setCode  The mExpansion code
+     * @param numberOf The mNumber of these cards being traded
      * @param message  A message associated with this card
-     * @param number   This card's number within the set
+     * @param number   This card's mNumber within the mExpansion
      * @param foil     Whether or not this card is foil
-     * @param color    This card's color
+     * @param color    This card's mColor
      * @param cmc      This card's converted mana cost
      */
     public MtgCard(String name, String tcgName, String setCode, int numberOf, String message, String number, boolean foil, String color, int cmc) {
-        this.name = name;
-        this.number = number;
+        this.mName = name;
+        this.mNumber = number;
         this.setCode = setCode;
         this.setName = tcgName;
         this.numberOf = numberOf;
         this.price = 0;
         this.message = message;
-        this.rarity = (char) (int) '-';
+        this.mRarity = (char) (int) '-';
         this.customPrice = false;
         this.foil = foil;
-        this.color = color;
-        this.cmc = cmc;
+        this.mColor = color;
+        this.mCmc = cmc;
     }
 
     /**
@@ -143,14 +149,14 @@ public class MtgCard {
      */
     public String toTradeString(int side) {
         return side + DELIMITER +
-                this.name + DELIMITER +
+                this.mName + DELIMITER +
                 this.setCode + DELIMITER +
                 this.numberOf + DELIMITER +
                 this.customPrice + DELIMITER +
                 this.price + DELIMITER +
                 this.foil + DELIMITER +
-                this.cmc + DELIMITER +
-                this.color + '\n';
+                this.mCmc + DELIMITER +
+                this.mColor + '\n';
     }
 
     /**
@@ -169,15 +175,15 @@ public class MtgCard {
 
         /* Parse these parts out of the string */
         card.mSide = Integer.parseInt(parts[0]);
-        card.name = parts[1];
+        card.mName = parts[1];
         card.setCode = parts[2];
 
-        /* Correct the set code for Duel Deck Anthologies */
+        /* Correct the mExpansion code for Duel Deck Anthologies */
         if (card.setCode.equals("DD3")) {
             try {
-                card.setCode = CardDbAdapter.getCorrectSetCode(card.name, card.setCode, database);
+                card.setCode = CardDbAdapter.getCorrectSetCode(card.mName, card.setCode, database);
             } catch (FamiliarDbException e) {
-                /* Eat it and use the old set code. */
+                /* Eat it and use the old mExpansion code. */
             }
         }
         card.numberOf = Integer.parseInt(parts[3]);
@@ -192,19 +198,19 @@ public class MtgCard {
         card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
 
         if (parts.length > 7) {
-            card.cmc = Integer.parseInt(parts[7]);
-            card.color = parts[8];
+            card.mCmc = Integer.parseInt(parts[7]);
+            card.mColor = parts[8];
         } else {
             /* Pull from db */
             try {
-                Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, new String[]{
+                Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, new String[]{
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR}, true, database);
-                card.cmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
-                card.color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
+                card.mCmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
+                card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
             } catch (FamiliarDbException e) {
-                card.cmc = 0;
-                card.color = "";
+                card.mCmc = 0;
+                card.mColor = "";
             }
         }
 
@@ -230,7 +236,7 @@ public class MtgCard {
         int totalPrice = 0;
         sb.append(this.numberOf);
         sb.append(" ");
-        sb.append(this.name);
+        sb.append(this.mName);
         sb.append(" [");
         sb.append(this.setName);
         sb.append("] ");
@@ -258,8 +264,8 @@ public class MtgCard {
      * @return A String representing this card
      */
     public String toWishlistString() {
-        return this.name + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.number + DELIMITER +
-                ((int) this.rarity) + DELIMITER + this.foil + '\n';
+        return this.mName + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.mNumber + DELIMITER +
+                ((int) this.mRarity) + DELIMITER + this.foil + '\n';
     }
 
 
@@ -274,16 +280,16 @@ public class MtgCard {
         MtgCard newCard = new MtgCard();
         String[] parts = line.split(MtgCard.DELIMITER);
 
-        newCard.name = parts[0];
+        newCard.mName = parts[0];
         newCard.setCode = parts[1];
 
-        /* Correct the set code for Duel Deck Anthologies */
+        /* Correct the mExpansion code for Duel Deck Anthologies */
         if (newCard.setCode.equals("DD3")) {
             SQLiteDatabase database = DatabaseManager.getInstance(mCtx, false).openDatabase(false);
             try {
-                newCard.setCode = CardDbAdapter.getCorrectSetCode(newCard.name, newCard.setCode, database);
+                newCard.setCode = CardDbAdapter.getCorrectSetCode(newCard.mName, newCard.setCode, database);
             } catch (FamiliarDbException e) {
-                /* Eat it and use the old set code. */
+                /* Eat it and use the old mExpansion code. */
             }
             DatabaseManager.getInstance(mCtx, false).closeDatabase(false);
         }
@@ -291,10 +297,10 @@ public class MtgCard {
 
         /* "foil" didn't exist in earlier versions, so it may not be part of the string */
         if (parts.length > 3) {
-            newCard.number = parts[3];
+            newCard.mNumber = parts[3];
         }
         if (parts.length > 4) {
-            newCard.rarity = (char) Integer.parseInt(parts[4]);
+            newCard.mRarity = (char) Integer.parseInt(parts[4]);
         }
         boolean foil = false;
         if (parts.length > 5) {
@@ -308,7 +314,7 @@ public class MtgCard {
 
     /**
      * Check to see if two MtgCard objects are equivalent, or if this is equivalent to a CompressedWishlistInfo
-     * object. The comparison is done on the MtgCard's name
+     * object. The comparison is done on the MtgCard's mName
      *
      * @param o The object to compare to this one
      * @return true if the specified object is equal to this string, false otherwise.
@@ -316,9 +322,9 @@ public class MtgCard {
     @Override
     public boolean equals(Object o) {
         if (o instanceof MtgCard) {
-            return this.name.equals(((MtgCard) o).name);
+            return this.mName.equals(((MtgCard) o).mName);
         } else if (o instanceof CompressedWishlistInfo) {
-            return this.name.equals(((CompressedWishlistInfo) o).mCard.name);
+            return this.mName.equals(((CompressedWishlistInfo) o).mCard.mName);
         }
         return false;
     }
@@ -330,33 +336,33 @@ public class MtgCard {
      * @param sb The StringBuilder to append data to
      */
     public void appendCardText(StringBuilder sb) {
-        if (!manaCost.isEmpty()) {
-            sb.append(manaCost);
+        if (!mManaCost.isEmpty()) {
+            sb.append(mManaCost);
             sb.append("\r\n");
         }
-        if (!type.isEmpty()) {
-            sb.append(type);
+        if (!mType.isEmpty()) {
+            sb.append(mType);
             sb.append("\r\n");
         }
-        if (!ability.isEmpty()) {
-            sb.append(ability.replace("<br>", "\r\n"));
+        if (!mText.isEmpty()) {
+            sb.append(mText.replace("<br>", "\r\n"));
             sb.append("\r\n");
         }
 
-        if (loyalty != CardDbAdapter.NO_ONE_CARES) {
-            sb.append(loyalty);
+        if (mLoyalty != CardDbAdapter.NO_ONE_CARES) {
+            sb.append(mLoyalty);
             sb.append("\r\n");
-        } else if (power != CardDbAdapter.NO_ONE_CARES && toughness != CardDbAdapter.NO_ONE_CARES) {
-            if (power == (int) power) {
-                sb.append((int) power);
+        } else if (mPower != CardDbAdapter.NO_ONE_CARES && mToughness != CardDbAdapter.NO_ONE_CARES) {
+            if (mPower == (int) mPower) {
+                sb.append((int) mPower);
             } else {
-                sb.append(power);
+                sb.append(mPower);
             }
             sb.append("/");
-            if (toughness == (int) toughness) {
-                sb.append((int) toughness);
+            if (mToughness == (int) mToughness) {
+                sb.append((int) mToughness);
             } else {
-                sb.append(toughness);
+                sb.append(mToughness);
             }
             sb.append("\r\n");
         }
@@ -367,11 +373,11 @@ public class MtgCard {
      ************************************************/
 
     /**
-     * Calculates the color identity for this card, not counting any parts of a
+     * Calculates the mColor identity for this card, not counting any parts of a
      * multicard
      *
-     * @param card The card to find a color identity for, excluding multicard
-     * @return A color identity string for the given card consisting of "WUBRG"
+     * @param card The card to find a mColor identity for, excluding multicard
+     * @return A mColor identity string for the given card consisting of "WUBRG"
      */
     private static String getColorIdentity(MtgCard card) {
         boolean colors[] = {false, false, false, false, false};
@@ -379,18 +385,18 @@ public class MtgCard {
         String basicLandTypes[] = {"Plains", "Island", "Swamp", "Mountain",
                 "Forest"};
 
-		/* Search for colors in the cost & color */
+		/* Search for colors in the cost & mColor */
         for (int i = 0; i < colors.length; i++) {
-            if (card.color.contains(colorLetters[i])) {
+            if (card.mColor.contains(colorLetters[i])) {
                 colors[i] = true;
             }
-            if (card.manaCost.contains(colorLetters[i])) {
+            if (card.mManaCost.contains(colorLetters[i])) {
                 colors[i] = true;
             }
         }
 
 		/* Remove reminder text */
-        String noReminderText = card.ability.replaceAll("\\([^\\(\\)]+\\)", "");
+        String noReminderText = card.mText.replaceAll("\\([^\\(\\)]+\\)", "");
         /* Find mana symbols in the rest of the text */
         Pattern manaPattern = Pattern.compile("\\{[^\\{\\}]+\\}");
         Matcher m = manaPattern.matcher(noReminderText);
@@ -403,16 +409,16 @@ public class MtgCard {
             }
         }
 
-		/* For typed lands, add color identity */
-        if (card.type.toLowerCase().contains("land")) {
+		/* For typed lands, add mColor identity */
+        if (card.mType.toLowerCase().contains("land")) {
             for (int i = 0; i < colors.length; i++) {
-                if (card.type.contains(basicLandTypes[i])) {
+                if (card.mType.contains(basicLandTypes[i])) {
                     colors[i] = true;
                 }
             }
         }
 
-		/* Write the color identity */
+		/* Write the mColor identity */
         String colorIdentity = "";
         for (int i = 0; i < colors.length; i++) {
             if (colors[i]) {
@@ -423,7 +429,7 @@ public class MtgCard {
     }
 
     /**
-     * Calculates the full color identity for this card, and stores it in
+     * Calculates the full mColor identity for this card, and stores it in
      * mColorIdentity
      *
      * @param otherCards A list of other cards, used to find the second part if this is
@@ -432,27 +438,27 @@ public class MtgCard {
     public void calculateColorIdentity(ArrayList<MtgCard> otherCards) {
         String colorLetters[] = {"W", "U", "B", "R", "G"};
 
-		/* Get the color identity for the first part of the card */
+		/* Get the mColor identity for the first part of the card */
         String firstPartIdentity = getColorIdentity(this);
 
-		/* Find the color identity for multicards */
+		/* Find the mColor identity for multicards */
         String secondPartIdentity = "";
         String newNumber = null;
-        if (number.contains("a")) {
-            newNumber = number.replace("a", "b");
-        } else if (number.contains("b")) {
-            newNumber = number.replace("b", "a");
+        if (mNumber.contains("a")) {
+            newNumber = mNumber.replace("a", "b");
+        } else if (mNumber.contains("b")) {
+            newNumber = mNumber.replace("b", "a");
         }
         if (newNumber != null) {
             for (MtgCard c : otherCards) {
-                if (c.number.equals(newNumber)) {
+                if (c.mNumber.equals(newNumber)) {
                     secondPartIdentity = getColorIdentity(c);
                     break;
                 }
             }
         }
 
-		/* Combine the two color identity parts into one */
+		/* Combine the two mColor identity parts into one */
         this.colorIdentity = "";
         for (String colorLetter : colorLetters) {
             if (firstPartIdentity.contains(colorLetter)

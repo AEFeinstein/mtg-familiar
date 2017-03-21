@@ -34,7 +34,6 @@ import android.provider.BaseColumns;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.MtgSet;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
@@ -571,7 +570,7 @@ public class CardDbAdapter {
         first = true;
         boolean doSql = false;
         for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-            if (cwi.mCard.type == null || cwi.mCard.type.equals("")) {
+            if (cwi.mCard.mType == null || cwi.mCard.mType.equals("")) {
                 doSql = true;
                 if (first) {
                     first = false;
@@ -580,12 +579,12 @@ public class CardDbAdapter {
                 }
                 if (cwi.mCard.setCode != null && !cwi.mCard.setCode.equals("")) {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mCard.name) +
+                            sanitizeString(cwi.mCard.mName) +
                             " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" +
                             cwi.mCard.setCode + "')";
                 } else {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mCard.name) + ")";
+                            sanitizeString(cwi.mCard.mName) + ")";
                 }
             }
         }
@@ -614,28 +613,28 @@ public class CardDbAdapter {
             /* Do stuff */
             String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                if (name != null && name.equals(cwi.mCard.name)) {
-                    cwi.mCard.type =
+                if (name != null && name.equals(cwi.mCard.mName)) {
+                    cwi.mCard.mType =
                             getTypeLine(cursor);
-                    cwi.mCard.rarity =
+                    cwi.mCard.mRarity =
                             (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                    cwi.mCard.manaCost =
+                    cwi.mCard.mManaCost =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-                    cwi.mCard.power =
+                    cwi.mCard.mPower =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-                    cwi.mCard.toughness =
+                    cwi.mCard.mToughness =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-                    cwi.mCard.loyalty =
+                    cwi.mCard.mLoyalty =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-                    cwi.mCard.ability =
+                    cwi.mCard.mText =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-                    cwi.mCard.flavor =
+                    cwi.mCard.mFlavor =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-                    cwi.mCard.number =
+                    cwi.mCard.mNumber =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-                    cwi.mCard.cmc =
+                    cwi.mCard.mCmc =
                             cursor.getInt((cursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
-                    cwi.mCard.color =
+                    cwi.mCard.mColor =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
                 }
             }
@@ -1508,9 +1507,9 @@ public class CardDbAdapter {
         ContentValues initialValues = new ContentValues();
 
         String delimiter = " - ";
-        initialValues.put(KEY_NAME, card.name);
-        initialValues.put(KEY_SET, card.set);
-        String types[] = card.type.split(delimiter);
+        initialValues.put(KEY_NAME, card.mName);
+        initialValues.put(KEY_SET, card.mExpansion);
+        String types[] = card.mType.split(delimiter);
         if (types.length > 0) {
             initialValues.put(KEY_SUPERTYPE, types[0]);
         } else {
@@ -1533,18 +1532,18 @@ public class CardDbAdapter {
         } else {
             initialValues.put(KEY_SUBTYPE, "");
         }
-        initialValues.put(KEY_RARITY, (int) card.rarity);
-        initialValues.put(KEY_MANACOST, card.manaCost);
-        initialValues.put(KEY_CMC, card.cmc);
-        initialValues.put(KEY_POWER, card.power);
-        initialValues.put(KEY_TOUGHNESS, card.toughness);
-        initialValues.put(KEY_LOYALTY, card.loyalty);
-        initialValues.put(KEY_ABILITY, card.ability);
-        initialValues.put(KEY_FLAVOR, card.flavor);
-        initialValues.put(KEY_ARTIST, card.artist);
-        initialValues.put(KEY_NUMBER, card.number);
-        initialValues.put(KEY_COLOR, card.color);
-        initialValues.put(KEY_MULTIVERSEID, card.multiverseId);
+        initialValues.put(KEY_RARITY, (int) card.mRarity);
+        initialValues.put(KEY_MANACOST, card.mManaCost);
+        initialValues.put(KEY_CMC, card.mCmc);
+        initialValues.put(KEY_POWER, card.mPower);
+        initialValues.put(KEY_TOUGHNESS, card.mToughness);
+        initialValues.put(KEY_LOYALTY, card.mLoyalty);
+        initialValues.put(KEY_ABILITY, card.mText);
+        initialValues.put(KEY_FLAVOR, card.mFlavor);
+        initialValues.put(KEY_ARTIST, card.mArtist);
+        initialValues.put(KEY_NUMBER, card.mNumber);
+        initialValues.put(KEY_COLOR, card.mColor);
+        initialValues.put(KEY_MULTIVERSEID, card.mMultiverseId);
         initialValues.put(KEY_COLOR_IDENTITY, card.colorIdentity);
 
         mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);

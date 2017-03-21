@@ -662,10 +662,10 @@ public class TradeFragment extends FamiliarFragment {
             }
         } else {
             /* priceInfo is null, perform a query */
-            PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
+            PriceFetchRequest priceRequest = new PriceFetchRequest(data.mName, data.setCode, data.mNumber, -1, getActivity());
             mPriceFetchRequests++;
             getFamiliarActivity().setLoading();
-            getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode,
+            getFamiliarActivity().mSpiceManager.execute(priceRequest, data.mName + "-" + data.setCode,
                     DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
                         /**
                          * This is called when the lookup fails. Set the error message and notify the adapter
@@ -777,9 +777,9 @@ public class TradeFragment extends FamiliarFragment {
     private static class TradeComparatorCmc implements Comparator<MtgCard> {
         @Override
         public int compare(MtgCard wish1, MtgCard wish2) {
-            if (wish1.cmc == wish2.cmc) {
-                return wish1.name.compareTo(wish2.name);
-            } else if (wish1.cmc > wish2.cmc) {
+            if (wish1.mCmc == wish2.mCmc) {
+                return wish1.mName.compareTo(wish2.mName);
+            } else if (wish1.mCmc > wish2.mCmc) {
                 return 1;
             }
             return -1;
@@ -809,14 +809,14 @@ public class TradeFragment extends FamiliarFragment {
 
         @Override
         public int compare(MtgCard wish1, MtgCard wish2) {
-            String colors1 = getColors(wish1.color);
-            String colors2 = getColors(wish2.color);
+            String colors1 = getColors(wish1.mColor);
+            String colors2 = getColors(wish2.mColor);
             int priority1;
             int priority2;
             //1. If colorless, perform colorless comparison
             if (colors1.length() + colors2.length() == 0) {
-                colors1 = wish1.color;
-                colors2 = wish2.color;
+                colors1 = wish1.mColor;
+                colors2 = wish2.mColor;
                 for (int i = 0; i < Math.min(colors1.length(), colors2.length()); i++) {
                     priority1 = nonColors.indexOf(colors1.charAt(i));
                     priority2 = nonColors.indexOf(colors2.charAt(i));
@@ -824,7 +824,7 @@ public class TradeFragment extends FamiliarFragment {
                         return priority1 < priority2 ? -1 : 1;
                     }
                 }
-                return wish1.name.compareTo(wish2.name);
+                return wish1.mName.compareTo(wish2.mName);
             }
             //2. Else compare based on number of colors
             if (colors1.length() < colors2.length()) {
@@ -841,7 +841,7 @@ public class TradeFragment extends FamiliarFragment {
                         return priority1 < priority2 ? -1 : 1;
                     }
                 }
-                return wish1.name.compareTo(wish2.name);
+                return wish1.mName.compareTo(wish2.mName);
             }
         }
     }
@@ -850,7 +850,7 @@ public class TradeFragment extends FamiliarFragment {
     private static class TradeComparatorName implements Comparator<MtgCard> {
         @Override
         public int compare(MtgCard wish1, MtgCard wish2) {
-            return wish1.name.compareTo(wish2.name);
+            return wish1.mName.compareTo(wish2.mName);
         }
     }
 
@@ -867,7 +867,7 @@ public class TradeFragment extends FamiliarFragment {
         @Override
         public int compare(MtgCard wish1, MtgCard wish2) {
             if (wish1.price == wish2.price) {
-                return wish1.name.compareTo(wish2.name);
+                return wish1.mName.compareTo(wish2.mName);
             } else if (wish1.price > wish2.price) {
                 return 1;
             }
@@ -914,7 +914,7 @@ public class TradeFragment extends FamiliarFragment {
                 assert convertView != null;
 
                 /* Set the name, set number, and foil indicators */
-                ((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.name);
+                ((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.mName);
                 ((TextView) convertView.findViewById(R.id.traderRowSet)).setText(data.setName);
                 ((TextView) convertView.findViewById(R.id.traderNumber)).setText(data.hasPrice() ?
                         data.numberOf + "x" : "");
