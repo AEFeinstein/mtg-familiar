@@ -56,6 +56,9 @@
         <item name="ic_drawer_profile">
             @drawable/ic_drawer_profile_light
         </item>
+        <item name="ic_drawer_deck">
+            @drawable/ic_drawer_deck_light
+        </item>
 
         <item name="ic_drawer_about">@drawable/ic_drawer_about_light</item>
         <item name="ic_drawer_download">@drawable/ic_drawer_download_light
@@ -188,6 +191,9 @@
         </item>
         <item name="ic_drawer_profile">
             @drawable/ic_drawer_profile_dark
+        </item>
+        <item name="ic_drawer_deck">
+            @drawable/ic_drawer_deck_dark
         </item>
 
         <item name="ic_drawer_about">@drawable/ic_drawer_about_dark</item>
