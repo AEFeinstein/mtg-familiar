@@ -367,39 +367,24 @@ public class PreferenceAdapter {
     }
 
     /* Date */
-    public synchronized String getLegalityDate() {
-        return this.prefs.getString(context.getString(R.string.key_date), null);
+    public synchronized long getLegalityTimestamp() {
+        return this.prefs.getLong(context.getString(R.string.key_date), 0);
     }
 
-    public synchronized void setLegalityDate(String date) {
-        this.edit.putString(context.getString(R.string.key_date), date);
+    public synchronized void setLegalityTimestamp(long timestamp) {
+        this.edit.putLong(context.getString(R.string.key_date), timestamp);
         this.edit.commit();
     }
 
-    public synchronized void setLastUpdate(String lastUpdate) {
-        this.edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
+    public synchronized long getLastUpdateTimestamp() {
+        return this.prefs.getLong(context.getString(R.string.key_lastUpdate), 0);
+    }
+
+    public synchronized void setLastUpdateTimestamp(long timestamp) {
+        this.edit.putLong(context.getString(R.string.key_lastUpdate), timestamp);
         this.edit.commit();
     }
 
-    /* Last TCG name update */
-    public synchronized String getLastTCGNameUpdate() {
-        return this.prefs.getString(context.getString(R.string.key_lastTCGNameUpdate), "");
-    }
-
-    public synchronized void setLastTCGNameUpdate(String lastTCGNameUpdate) {
-        this.edit.putString(context.getString(R.string.key_lastTCGNameUpdate), lastTCGNameUpdate);
-        this.edit.commit();
-    }
-
-    /* Last foilInfo update */
-    public synchronized String getLastFoilInfoUpdate() {
-        return this.prefs.getString(context.getString(R.string.key_lastFoilInfoUpdate), "");
-    }
-
-    public synchronized void setLastFoilInfoUpdate(String lastFoilInfoUpdate) {
-        this.edit.putString(context.getString(R.string.key_lastFoilInfoUpdate), lastFoilInfoUpdate);
-        this.edit.commit();
-    }
 
     /* Life Counter Timer */
     public synchronized String getLifeTimer() {

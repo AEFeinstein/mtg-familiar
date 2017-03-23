@@ -152,7 +152,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                         try {
                                     /* Get the card ID, and send it to a new CardViewPagerFragment */
-                            Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
+                            Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
                                     lSide.get(positionForDialog).setCode, new String[]{
                                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
 
@@ -179,7 +179,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 });
 
                 return new MaterialDialog.Builder(this.getActivity())
-                        .title(lSide.get(positionForDialog).name)
+                        .title(lSide.get(positionForDialog).mName)
                         .customView(view, false)
                         .positiveText(R.string.dialog_done)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -276,7 +276,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                 try {
                     /* Query the database for all versions of this card */
-                    Cursor cards = CardDbAdapter.fetchCardByName(data.name, new String[]{
+                    Cursor cards = CardDbAdapter.fetchCardByName(data.mName, new String[]{
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, database);

@@ -613,10 +613,10 @@ public class TradeFragment extends FamiliarFragment {
             }
         } else {
             /* priceInfo is null, perform a query */
-            PriceFetchRequest priceRequest = new PriceFetchRequest(data.name, data.setCode, data.number, -1, getActivity());
+            PriceFetchRequest priceRequest = new PriceFetchRequest(data.mName, data.setCode, data.mNumber, -1, getActivity());
             mPriceFetchRequests++;
             getFamiliarActivity().setLoading();
-            getFamiliarActivity().mSpiceManager.execute(priceRequest, data.name + "-" + data.setCode,
+            getFamiliarActivity().mSpiceManager.execute(priceRequest, data.mName + "-" + data.setCode,
                     DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
                         /**
                          * This is called when the lookup fails. Set the error message and notify the adapter
@@ -731,6 +731,10 @@ public class TradeFragment extends FamiliarFragment {
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
+            return wish1.setName.compareTo(wish2.setName);
+        }
+    }
+
     /**
      * This inner class helps to display card information from an ArrayList<> in a ListView
      */
@@ -770,7 +774,7 @@ public class TradeFragment extends FamiliarFragment {
                 assert convertView != null;
 
                 /* Set the name, set number, and foil indicators */
-                ((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.name);
+                ((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.mName);
                 ((TextView) convertView.findViewById(R.id.traderRowSet)).setText(data.setName);
                 ((TextView) convertView.findViewById(R.id.traderNumber)).setText(data.hasPrice() ?
                         data.numberOf + "x" : "");

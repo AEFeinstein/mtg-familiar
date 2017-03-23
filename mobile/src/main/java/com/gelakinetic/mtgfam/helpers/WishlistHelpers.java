@@ -80,9 +80,9 @@ public class WishlistHelpers {
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                 MtgCard card = cwi.mCard;
                 for (IndividualSetInfo isi : cwi.mInfo) {
-                    card.set = isi.mSet;
+                    card.mExpansion = isi.mSet;
                     card.setCode = isi.mSetCode;
-                    card.number = isi.mNumber;
+                    card.mNumber = isi.mNumber;
                     card.foil = isi.mIsFoil;
                     card.numberOf = isi.mNumberOf;
                     fos.write(card.toWishlistString().getBytes());
@@ -188,7 +188,7 @@ public class WishlistHelpers {
         final Map<String, String> targetCardNumberOfs = new HashMap<>();
         final Map<String, String> targetFoilCardNumberOfs = new HashMap<>();
         for (MtgCard card : wishlist) {
-            if (card.name.equals(mCardName)) {
+            if (card.mName.equals(mCardName)) {
                 if (card.foil) {
                     targetFoilCardNumberOfs.put(card.setCode, card.numberOf + "");
                 } else {
@@ -290,7 +290,7 @@ public class WishlistHelpers {
 
                             /* build the card object */
                             MtgCard card = new MtgCard();
-                            card.name = mCardName;
+                            card.mName = mCardName;
                             card.setCode = potentialSetCodes.get(i);
                             try {
                                 EditText numberInput = ((EditText) view.findViewById(R.id.numberInput));
@@ -300,14 +300,14 @@ public class WishlistHelpers {
                                 card.numberOf = 0;
                             }
                             card.foil = (view.findViewById(R.id.wishlistDialogFoil).getVisibility() == View.VISIBLE);
-                            card.rarity = potentialRarities.get(i);
-                            card.number = potentialNumbers.get(i);
+                            card.mRarity = potentialRarities.get(i);
+                            card.mNumber = potentialNumbers.get(i);
 
                             /* Look through the wishlist for each card, set the numberOf or remove it if it exists, or
                              * add the card if it doesn't */
                             boolean added = false;
                             for (int j = 0; j < wishlist.size(); j++) {
-                                if (card.name.equals(wishlist.get(j).name)
+                                if (card.mName.equals(wishlist.get(j).mName)
                                         && card.setCode.equals(wishlist.get(j).setCode)
                                         && card.foil == wishlist.get(j).foil) {
                                     if (card.numberOf == 0) {
@@ -353,7 +353,7 @@ public class WishlistHelpers {
         /* For each wishlist entry */
         for (CompressedWishlistInfo cwi : mCompressedWishlist) {
             /* Append the card name, always */
-            readableWishlist.append(cwi.mCard.name);
+            readableWishlist.append(cwi.mCard.mName);
             readableWishlist.append("\r\n");
 
             /* Append the full text, if the user wants it */
@@ -434,9 +434,9 @@ public class WishlistHelpers {
         @Override
         public boolean equals(Object o) {
             if (o instanceof CompressedWishlistInfo) {
-                return mCard.name.equals(((CompressedWishlistInfo) o).mCard.name);
+                return mCard.mName.equals(((CompressedWishlistInfo) o).mCard.mName);
             } else if (o instanceof MtgCard) {
-                return mCard.name.equals(((MtgCard) o).name);
+                return mCard.mName.equals(((MtgCard) o).mName);
             }
             return false;
         }
