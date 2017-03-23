@@ -366,22 +366,40 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
+    /* Date, deprecated
+    public synchronized String getLegalityDate() {
+        return this.prefs.getString(context.getString(R.string.key_date), null);
+    }
+
+    public synchronized void setLegalityDate(String date) {
+        this.edit.putString(context.getString(R.string.key_date), date);
+        this.edit.commit();
+    }
+    */
+
     /* Date */
     public synchronized long getLegalityTimestamp() {
-        return this.prefs.getLong(context.getString(R.string.key_date), 0);
+        return this.prefs.getLong(context.getString(R.string.key_legality_timestamp), 0);
     }
 
     public synchronized void setLegalityTimestamp(long timestamp) {
-        this.edit.putLong(context.getString(R.string.key_date), timestamp);
+        this.edit.putLong(context.getString(R.string.key_legality_timestamp), timestamp);
         this.edit.commit();
     }
 
+    /* Deprecated
+    public synchronized void setLastUpdate(String lastUpdate) {
+        this.edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
+        this.edit.commit();
+    }
+    */
+
     public synchronized long getLastUpdateTimestamp() {
-        return this.prefs.getLong(context.getString(R.string.key_lastUpdate), 0);
+        return this.prefs.getLong(context.getString(R.string.key_last_update_timestamp), 0);
     }
 
     public synchronized void setLastUpdateTimestamp(long timestamp) {
-        this.edit.putLong(context.getString(R.string.key_lastUpdate), timestamp);
+        this.edit.putLong(context.getString(R.string.key_last_update_timestamp), timestamp);
         this.edit.commit();
     }
 
