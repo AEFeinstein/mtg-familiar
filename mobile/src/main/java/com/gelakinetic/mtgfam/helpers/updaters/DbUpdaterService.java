@@ -179,7 +179,7 @@ public class DbUpdaterService extends IntentService {
 
                     /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
                     for (Manifest.ManifestEntry set : manifest.mPatches) {
-                        if (set.mCode != "DD3") { /* Never download the old Duel Deck Anthologies patch */
+                        if (!set.mCode.equals("DD3")) { /* Never download the old Duel Deck Anthologies patch */
                             try {
                                 /* If the digest doesn't match, mark the set for dropping
                                  * and remove it from currentSetCodes so it redownloads
@@ -464,7 +464,7 @@ public class DbUpdaterService extends IntentService {
     /**
      * This inner class is used by other parsers to pass progress percentages to the notification
      */
-    protected class ProgressReporter implements CardAndSetParser.CardProgressReporter,
+    private class ProgressReporter implements CardAndSetParser.CardProgressReporter,
             RulesParser.RulesProgressReporter {
         /**
          * This is used by CardAndSetParser to report the progress for adding a set
