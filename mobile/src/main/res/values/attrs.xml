@@ -7,6 +7,7 @@
         <attr name="colorPrimary_attr" format="color|reference" />
         <attr name="colorPrimaryDark_attr" format="color|reference" />
         <attr name="colorPrimaryTransparent_attr" format="color|reference" />
+        <attr name="colorAccent_attr" format="color|reference" />
         <attr name="grey_border" format="reference" />
         <attr name="color_text" format="color|reference" />
         <attr name="color_background" format="color|reference" />
