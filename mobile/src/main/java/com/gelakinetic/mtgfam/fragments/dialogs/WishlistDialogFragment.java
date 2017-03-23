@@ -93,38 +93,6 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .build();
 
             }
-            case DIALOG_SORT: {
-                return new MaterialDialog.Builder(this.getActivity())
-                        .title(R.string.wishlist_sort_by)
-                        .items(R.array.wishlist_sort_type)
-                        .itemsCallbackSingleChoice(getParentWishlistFragment().mWishlistSortType, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                getParentWishlistFragment().mWishlistSortType = which;
-                                return true;
-                            }
-                        })
-                        .negativeText(R.string.dialog_cancel)
-                        .neutralText(R.string.wishlist_ascending)
-                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentWishlistFragment().mWishlistSortOrder = WishlistFragment.ASCENDING;
-                                getParentWishlistFragment().sortWishlist();
-                            }
-                        })
-                        .positiveText(R.string.wishlist_descending)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentWishlistFragment().mWishlistSortOrder = WishlistFragment.DESCENDING;
-                                getParentWishlistFragment().sortWishlist();
-                            }
-                        })
-                        .alwaysCallSingleChoiceCallback()
-                        .cancelable(true)
-                        .build();
-            }
             default: {
                 savedInstanceState.putInt("id", mDialogId);
                 return super.onCreateDialog(savedInstanceState);

@@ -529,39 +529,6 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .cancelable(true)
                         .build();
             }
-            case DIALOG_SORT: {
-                return new MaterialDialog.Builder(getActivity())
-                        .title(R.string.wishlist_sort_by)
-                        .items(R.array.wishlist_sort_type)
-                        .itemsCallbackSingleChoice(getParentTradeFragment().mSortType, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                /* Figure out the sort type, do the sort */
-                                getParentTradeFragment().mSortType = which;
-                                return true;
-                            }
-                        })
-                        .negativeText(R.string.dialog_cancel)
-                        .neutralText(R.string.wishlist_ascending)
-                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentTradeFragment().mSortOrder = TradeFragment.ASCENDING;
-                                getParentTradeFragment().sortTrades(getParentTradeFragment().mSortType, getParentTradeFragment().mSortOrder);
-                            }
-                        })
-                        .positiveText(R.string.wishlist_descending)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentTradeFragment().mSortOrder = TradeFragment.DESCENDING;
-                                getParentTradeFragment().sortTrades(getParentTradeFragment().mSortType, getParentTradeFragment().mSortOrder);
-                            }
-                        })
-                        .alwaysCallSingleChoiceCallback()
-                        .cancelable(true)
-                        .build();
-            }
             default: {
                 return DontShowDialog();
             }

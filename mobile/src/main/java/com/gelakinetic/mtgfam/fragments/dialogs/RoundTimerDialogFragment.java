@@ -33,6 +33,7 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                 final CheckBox chkFifteen = (CheckBox) v.findViewById(R.id.timer_pref_fifteen);
                 final CheckBox chkTen = (CheckBox) v.findViewById(R.id.timer_pref_ten);
                 final CheckBox chkFive = (CheckBox) v.findViewById(R.id.timer_pref_five);
+                final CheckBox chkTwo = (CheckBox) v.findViewById(R.id.timer_pref_two);
 
                 boolean fifteen =
                         getFamiliarActivity().mPreferenceAdapter.getFifteenMinutePref();
@@ -56,6 +57,8 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                                         .setTenMinutePref(chkTen.isChecked());
                                 getFamiliarActivity().mPreferenceAdapter
                                         .setFiveMinutePref(chkFive.isChecked());
+                                getFamiliarActivity().mPreferenceAdapter
+                                        .setTwoMinutePref(chkTwo.isChecked());
                             }
                         })
                         .build();

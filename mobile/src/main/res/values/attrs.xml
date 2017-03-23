@@ -13,6 +13,7 @@
         <attr name="glyph_pwk" format="reference" />
         <attr name="glyph_chaos" format="reference" />
         <attr name="glyph_e" format="reference" />
+        <attr name="glyph_p" format="reference" />
         <attr name="button" format="reference" />
 
         <!-- Rarity Colors -->
@@ -48,6 +49,7 @@
         <attr name="ic_drawer_profile" format="reference" />
         <attr name="ic_drawer_save" format="reference" />
         <attr name="ic_drawer_load" format="reference" />
+        <attr name="ic_drawer_deck" format="reference" />
 
         <attr name="ic_menu_search" format="reference" />
         <attr name="ic_menu_card_image" format="reference" />

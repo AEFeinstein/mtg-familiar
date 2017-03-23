@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/deck_menu_clear"
+        android:icon="?attr/ic_menu_close"
+        android:title="@string/decklist_clear"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/deck_menu_save"
+        android:icon="?attr/ic_menu_save"
+        android:title="@string/decklist_save"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/deck_menu_load"
+        android:icon="?attr/ic_menu_folder_open"
+        android:title="@string/decklist_load"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/deck_menu_delete"
+        android:icon="?attr/ic_menu_delete"
+        android:title="@string/decklist_delete"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/deck_menu_share"
+        android:icon="?attr/ic_menu_share"
+        android:title="@string/decklist_share"
+        app:showAsAction="ifRoom" />
+</menu>

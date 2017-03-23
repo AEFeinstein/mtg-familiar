@@ -252,18 +252,18 @@ public class TutorCards {
     /*
      * Private classes which match the JSON returned by the tutor.cards service
      */
-    class TutorData {
-        boolean isReady;
-        boolean isResult;
-        long wait;
-        String id;
-        TutorDataInfo info;
+    private class TutorData {
+        final boolean isReady = false;
+        final boolean isResult = false;
+        final long wait = 0;
+        final String id = null;
+        final TutorDataInfo info = null;
     }
 
     private class TutorDataInfo {
-        long multiverseid;
-        long similar[];
-        long all[];
+        final long multiverseid = 0;
+        final long similar[] = null;
+        final long[] all = null;
     }
 
     private class TutorCardsStartTask extends AsyncTask<Void, Void, Void> {
