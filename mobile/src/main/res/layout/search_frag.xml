@@ -540,11 +540,12 @@
     <LinearLayout
         android:layout_height="48dp"
         android:layout_width="match_parent"
+        style="@android:style/Holo.ButtonBar"
         android:background="?attr/color_background">
 
         <Button
             android:id="@+id/searchbutton"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/search_search"
