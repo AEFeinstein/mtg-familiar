@@ -67,8 +67,8 @@
 
                     <TextView
                         android:id="@+id/name"
-                        style="@style/text.medium"
-                        android:layout_width="0dp"
+                        style="@style/text.large"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
@@ -80,8 +80,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
                         android:gravity="right"
-                        android:maxWidth="120sp"
                         android:text="6GG" />
                 </LinearLayout>
 
@@ -167,9 +167,9 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
@@ -192,8 +192,8 @@
                     style="@style/text.medium"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
                     android:layout_gravity="center_vertical|right"
+                    android:gravity="center_vertical"
                     android:text="*/1+*" />
 
             </LinearLayout>
