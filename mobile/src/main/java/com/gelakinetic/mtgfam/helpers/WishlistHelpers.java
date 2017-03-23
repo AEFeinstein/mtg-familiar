@@ -521,31 +521,31 @@ public class WishlistHelpers {
                 try {
                     switch (option.getKey()) {
                         case CardDbAdapter.KEY_NAME: {
-                            retVal = wish1.mCard.name.compareTo(wish2.mCard.name);
+                            retVal = wish1.mCard.mName.compareTo(wish2.mCard.mName);
                             break;
                         }
                         case CardDbAdapter.KEY_COLOR: {
-                            retVal = wish1.mCard.color.compareTo(wish2.mCard.color);
+                            retVal = wish1.mCard.mColor.compareTo(wish2.mCard.mColor);
                             break;
                         }
                         case CardDbAdapter.KEY_SUPERTYPE: {
-                            retVal = wish1.mCard.type.compareTo(wish2.mCard.type);
+                            retVal = wish1.mCard.mType.compareTo(wish2.mCard.mType);
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = wish1.mCard.cmc - wish2.mCard.cmc;
+                            retVal = wish1.mCard.mCmc - wish2.mCard.mCmc;
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
-                            retVal = Float.compare(wish1.mCard.power, wish2.mCard.power);
+                            retVal = Float.compare(wish1.mCard.mPower, wish2.mCard.mPower);
                             break;
                         }
                         case CardDbAdapter.KEY_TOUGHNESS: {
-                            retVal = Float.compare(wish1.mCard.toughness, wish2.mCard.toughness);
+                            retVal = Float.compare(wish1.mCard.mToughness, wish2.mCard.mToughness);
                             break;
                         }
                         case CardDbAdapter.KEY_SET: {
-                            retVal = wish1.mCard.set.compareTo(wish2.mCard.set);
+                            retVal = wish1.mCard.mExpansion.compareTo(wish2.mCard.mExpansion);
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {

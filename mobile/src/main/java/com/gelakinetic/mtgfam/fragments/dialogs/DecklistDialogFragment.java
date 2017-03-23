@@ -99,7 +99,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 final Map<String, String> targetCardNumberOfs = new HashMap<>();
                 final Map<String, String> targetFoilCardNumberOfs = new HashMap<>();
                 for (Pair<MtgCard, Boolean> card : decklist) {
-                    if (card.first.name.equals(cardName)) {
+                    if (card.first.mName.equals(cardName)) {
                         if (card.first.foil) {
                             targetFoilCardNumberOfs.put(card.first.setCode, card.first.numberOf + "");
                         } else {
@@ -204,7 +204,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                                     /* build the card object */
                                     MtgCard card = new MtgCard();
-                                    card.name = cardName;
+                                    card.mName = cardName;
                                     card.setCode = potentialSetCodes.get(i);
                                     try {
                                         EditText numberInput = ((EditText) view.findViewById(R.id.numberInput));
@@ -214,14 +214,14 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                         card.numberOf = 0;
                                     }
                                     card.foil = (view.findViewById(R.id.wishlistDialogFoil).getVisibility() == View.VISIBLE);
-                                    card.rarity = potentialRarities.get(i);
-                                    card.number = potentialNumbers.get(i);
+                                    card.mRarity = potentialRarities.get(i);
+                                    card.mNumber = potentialNumbers.get(i);
 
                                     /* Look through the decklist for each card, set the numberOf or
                                      * remove it if it exists, or add the card if it doesn't */
                                     boolean added = false;
                                     for (int j = 0; j < decklist.size(); j++) {
-                                        if (card.name.equals(decklist.get(j).first.name)
+                                        if (card.mName.equals(decklist.get(j).first.mName)
                                                 && isSideboard == decklist.get(j).second
                                                 && card.setCode.equals(decklist.get(j).first.setCode)
                                                 && card.foil == decklist.get(j).first.foil) {

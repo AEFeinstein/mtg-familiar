@@ -55,9 +55,9 @@ public class DecklistHelpers {
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                 MtgCard card = cdi.mCard;
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                    card.set = isi.mSet;
+                    card.mExpansion = isi.mSet;
                     card.setCode = isi.mSetCode;
-                    card.number = isi.mNumber;
+                    card.mNumber = isi.mNumber;
                     card.foil = isi.mIsFoil;
                     card.numberOf = isi.mNumberOf;
                     String cardString = card.toWishlistString();
@@ -124,7 +124,7 @@ public class DecklistHelpers {
                 readableDecklist
                         .append(isi.mNumberOf)
                         .append(' ')
-                        .append(cdi.mCard.name);
+                        .append(cdi.mCard.mName);
                 if (isi.mIsFoil) {
                     readableDecklist
                             .append(" (")
@@ -166,9 +166,9 @@ public class DecklistHelpers {
         public boolean equals(Object o) {
             if (o instanceof CompressedDecklistInfo) {
                 CompressedDecklistInfo cdi = (CompressedDecklistInfo) o;
-                return (mCard.name.equals(cdi.mCard.name) && mIsSideboard == cdi.mIsSideboard);
+                return (mCard.mName.equals(cdi.mCard.mName) && mIsSideboard == cdi.mIsSideboard);
             } else if (o instanceof MtgCard) {
-                return mCard.name.equals(((MtgCard) o).name);
+                return mCard.mName.equals(((MtgCard) o).mName);
             }
             return false;
         }

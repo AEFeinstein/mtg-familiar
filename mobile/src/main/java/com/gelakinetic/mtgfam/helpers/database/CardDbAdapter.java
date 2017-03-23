@@ -579,7 +579,7 @@ public class CardDbAdapter {
 
         first = true;
         boolean doSql = false;
-        for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+        for (CompressedCardInfo cwi : mCompressedCard) {
             if (cwi.mCard.mType == null || cwi.mCard.mType.equals("")) {
                 doSql = true;
                 if (first) {
@@ -622,7 +622,7 @@ public class CardDbAdapter {
         while (!cursor.isAfterLast()) {
             /* Do stuff */
             String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+            for (CompressedCardInfo cwi : mCompressedCard) {
                 if (name != null && name.equals(cwi.mCard.mName)) {
                     cwi.mCard.mType =
                             getTypeLine(cursor);

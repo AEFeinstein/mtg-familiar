@@ -731,10 +731,6 @@ public class TradeFragment extends FamiliarFragment {
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
-            return wish1.setName.compareTo(wish2.setName);
-        }
-    }
-
     /**
      * This inner class helps to display card information from an ArrayList<> in a ListView
      */
@@ -835,31 +831,31 @@ public class TradeFragment extends FamiliarFragment {
                 /* Compare the entries based on the key */
                     switch (option.getKey()) {
                         case CardDbAdapter.KEY_NAME: {
-                            retVal = card1.name.compareTo(card2.name);
+                            retVal = card1.mName.compareTo(card2.mName);
                             break;
                         }
                         case CardDbAdapter.KEY_COLOR: {
-                            retVal = card1.color.compareTo(card2.color);
+                            retVal = card1.mColor.compareTo(card2.mColor);
                             break;
                         }
                         case CardDbAdapter.KEY_SUPERTYPE: {
-                            retVal = card1.type.compareTo(card2.type);
+                            retVal = card1.mType.compareTo(card2.mType);
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = card1.cmc - card2.cmc;
+                            retVal = card1.mCmc - card2.mCmc;
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
-                            retVal = Float.compare(card1.power, card2.power);
+                            retVal = Float.compare(card1.mPower, card2.mPower);
                             break;
                         }
                         case CardDbAdapter.KEY_TOUGHNESS: {
-                            retVal = Float.compare(card1.toughness, card2.toughness);
+                            retVal = Float.compare(card1.mToughness, card2.mToughness);
                             break;
                         }
                         case CardDbAdapter.KEY_SET: {
-                            retVal = card1.set.compareTo(card2.set);
+                            retVal = card1.mExpansion.compareTo(card2.mExpansion);
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {

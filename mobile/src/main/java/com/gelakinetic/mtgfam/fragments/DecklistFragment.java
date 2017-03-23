@@ -144,7 +144,7 @@ public class DecklistFragment extends FamiliarFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CompressedDecklistInfo item = mCompressedDecklist.get(position);
                 /* Show the dialog for this particular card */
-                showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.name, item.mIsSideboard);
+                showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
             }
         });
         decklistView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -182,33 +182,33 @@ public class DecklistFragment extends FamiliarFragment {
         try {
             /* Make the new card */
             MtgCard card = new MtgCard();
-            card.name = name;
+            card.mName = name;
             card.foil = false;
             card.numberOf = Integer.parseInt(numberOf);
             card.message = getString(R.string.wishlist_loading);
 
             /* Get some extra information from the database */
-            Cursor cardCursor = CardDbAdapter.fetchCardByName(card.name, CardDbAdapter.allCardDataKeys, true, database);
+            Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, CardDbAdapter.allCardDataKeys, true, database);
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeText(DecklistFragment.this.getActivity(), getString(R.string.toast_no_card),
                         ToastWrapper.LENGTH_LONG).show();
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
             }
-            card.name = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            card.type = CardDbAdapter.getTypeLine(cardCursor);
-            card.rarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-            card.manaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-            card.power = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-            card.toughness = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-            card.loyalty = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-            card.ability = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-            card.flavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            card.number = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+            card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+            card.mType = CardDbAdapter.getTypeLine(cardCursor);
+            card.mRarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
+            card.mManaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+            card.mPower = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_POWER));
+            card.mToughness = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+            card.mLoyalty = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+            card.mText = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+            card.mFlavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+            card.mNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
             card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
             card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
-            card.cmc = cardCursor.getInt((cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
-            card.color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
+            card.mCmc = cardCursor.getInt((cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
+            card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
             /* Override choice if the card can't be foil */
             if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
                 card.foil = false;
@@ -333,14 +333,14 @@ public class DecklistFragment extends FamiliarFragment {
                 mCompressedDecklist.clear();
             } else {
                 for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                    if (cdi.mCard.name.equals(changedCardName)) {
+                    if (cdi.mCard.mName.equals(changedCardName)) {
                         cdi.clearCompressedInfo();
                     }
                 }
             }
             /* Compress the whole decklist, or just the card that changed */
             for (Pair<MtgCard, Boolean> card : decklist) {
-                if (changedCardName == null || changedCardName.equals(card.first.name)) {
+                if (changedCardName == null || changedCardName.equals(card.first.mName)) {
                     if (!mCompressedDecklist.contains(card.first)) {
                         mCompressedDecklist.add(new CompressedDecklistInfo(card.first, card.second));
                     } else {
@@ -458,7 +458,7 @@ public class DecklistFragment extends FamiliarFragment {
              * defined by R.array.card_types_extra */
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             for (int i = 0; i < cardTypes.length; i++) {
-                if (i < cardHeaders.length - 1 && cdi.mCard.type.contains(cardTypes[i])) {
+                if (i < cardHeaders.length - 1 && cdi.mCard.mType.contains(cardTypes[i])) {
                     cdi.header = cardHeaders[i + 1];
                     break;
                 } else if (i >= cardHeaders.length - 1) {
@@ -534,7 +534,7 @@ public class DecklistFragment extends FamiliarFragment {
                 }
             } else { // Card is in the mainboard
                 for (int i = 0; i < cardTypes.length + 1; i++) {
-                    if (i == cardTypes.length || info.mCard.type.contains(cardTypes[i])) { // if the card is of type cardTypes[i]
+                    if (i == cardTypes.length || info.mCard.mType.contains(cardTypes[i])) { // if the card is of type cardTypes[i]
                         if (previousInfo == null || !previousInfo.header.equals(info.header)) { // if the previous card is null, or the previous header is not equal to the current header
                             separator.setVisibility(View.VISIBLE);
                             separatorText.setText(cardHeaders[i + 1]);
@@ -548,8 +548,8 @@ public class DecklistFragment extends FamiliarFragment {
             Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
             /* Get the numberOf of the card, the name, and the mana cost to display */
             ((TextView) convertView.findViewById(R.id.decklistRowNumber)).setText(String.valueOf(info.getTotalNumber()));
-            ((TextView) convertView.findViewById(R.id.decklistRowName)).setText(info.mCard.name);
-            ((TextView) convertView.findViewById(R.id.decklistRowCost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.manaCost, imageGetter));
+            ((TextView) convertView.findViewById(R.id.decklistRowName)).setText(info.mCard.mName);
+            ((TextView) convertView.findViewById(R.id.decklistRowCost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
             return convertView;
         }
 

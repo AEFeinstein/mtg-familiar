@@ -58,12 +58,12 @@ public class CardHelpers {
 
             isi.mSet = card.setName;
             isi.mSetCode = card.setCode;
-            isi.mNumber = card.number;
+            isi.mNumber = card.mName;
             isi.mIsFoil = card.foil;
             isi.mPrice = null;
             isi.mMessage = card.message;
             isi.mNumberOf = card.numberOf;
-            isi.mRarity = card.rarity;
+            isi.mRarity = card.mRarity;
 
             mInfo.add(isi);
         }
@@ -100,7 +100,7 @@ public class CardHelpers {
     public static class CardComparatorName implements Comparator<CompressedCardInfo> {
         @Override
         public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
-            return card1.mCard.name.compareTo(card2.mCard.name);
+            return card1.mCard.mName.compareTo(card2.mCard.mName);
         }
     }
 
@@ -108,9 +108,9 @@ public class CardHelpers {
     public static class CardComparatorCMC implements Comparator<CompressedCardInfo> {
         @Override
         public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
-            if (card1.mCard.cmc == card2.mCard.cmc) {
+            if (card1.mCard.mCmc == card2.mCard.mCmc) {
                 return 0;
-            } else if (card1.mCard.cmc > card2.mCard.cmc) {
+            } else if (card1.mCard.mCmc > card2.mCard.mCmc) {
                 return 1;
             }
             return -1;
@@ -145,14 +145,14 @@ public class CardHelpers {
 
         @Override
         public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
-            String cardColors1 = getColors(card1.mCard.color);
-            String cardColors2 = getColors(card2.mCard.color);
+            String cardColors1 = getColors(card1.mCard.mColor);
+            String cardColors2 = getColors(card2.mCard.mColor);
             int priority1;
             int priority2;
             //1. If colorless, perform colorless comparison
             if (cardColors1.length() + cardColors2.length() == 0) {
-                cardColors1 = card1.mCard.color;
-                cardColors2 = card2.mCard.color;
+                cardColors1 = card1.mCard.mColor;
+                cardColors2 = card2.mCard.mColor;
                 for (int i = 0; i < Math.min(cardColors1.length(), cardColors2.length()); i++) {
                     priority1 = nonColors.indexOf(cardColors1.charAt(i));
                     priority2 = nonColors.indexOf(cardColors2.charAt(i));
@@ -203,8 +203,8 @@ public class CardHelpers {
         }
         @Override
         public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
-            String card1Type = card1.mCard.type;
-            String card2Type = card2.mCard.type;
+            String card1Type = card1.mCard.mType;
+            String card2Type = card2.mCard.mType;
             for (String type : mTypes) {
                 if (card1Type.contains(type) && card2Type.contains(type)) {
                     return 0;
@@ -281,7 +281,7 @@ public class CardHelpers {
             }
 
             if (sumWish1 == sumWish2) {
-                return card1.mCard.name.compareTo(card2.mCard.name);
+                return card1.mCard.mName.compareTo(card2.mCard.mName);
             } else if (sumWish1 > sumWish2) {
                 return 1;
             }

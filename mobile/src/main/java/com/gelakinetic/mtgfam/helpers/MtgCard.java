@@ -323,8 +323,8 @@ public class MtgCard extends Card {
     public boolean equals(Object o) {
         if (o instanceof MtgCard) {
             return this.mName.equals(((MtgCard) o).mName);
-        } else if (o instanceof CompressedWishlistInfo) {
-            return this.mName.equals(((CompressedWishlistInfo) o).mCard.mName);
+        } else if (o instanceof CompressedCardInfo) {
+            return this.mName.equals(((CompressedCardInfo) o).mCard.mName);
         }
         return false;
     }
