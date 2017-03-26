@@ -1360,7 +1360,7 @@ public class CardViewFragment extends FamiliarFragment {
                 switch (mSetCode) {
                     case "PC2":
                         picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                        picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;
                     case "PCH":
@@ -1372,12 +1372,12 @@ public class CardViewFragment extends FamiliarFragment {
                             cardName = "horizon-boughs-gateway-promo";
                         }
                         picURL = "http://magiccards.info/extras/plane/planechase/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                        picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;
                     case "ARC":
                         picURL = "http://magiccards.info/extras/scheme/archenemy/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                        picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;
                     default:

@@ -158,8 +158,8 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
 
                 /* Build the URL */
                 URL priceUrl = new URL("http://partner.tcgplayer.com/x3/phl.asmx/p?pk=MTGFAMILIA&s=" +
-                        URLEncoder.encode(tcgName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") + "&p=" +
-                        URLEncoder.encode(tcgCardName.replace(Character.toChars(0xC6)[0] + "", "Ae"), "UTF-8") +
+                        URLEncoder.encode(tcgName, "UTF-8") + "&p=" +
+                        URLEncoder.encode(tcgCardName, "UTF-8") +
                         URLEncoder.encode((mCardType.startsWith("Basic Land") ? " (" + mCardNumber + ")" : ""), "UTF-8")
                 );
 

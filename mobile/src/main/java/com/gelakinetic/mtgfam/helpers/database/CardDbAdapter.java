@@ -770,8 +770,7 @@ public class CardDbAdapter {
             String[] nameParts = criteria.name.split(" ");
             for (String s : nameParts) {
                 statement += " AND (" +
-                        DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + sanitizeString("%" + s + "%", true) + " OR " +
-                        DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + sanitizeString("%" + s.toLowerCase().replace("ae", String.valueOf(Character.toChars(0xC6)[0])) + "%", true) + ")";
+                        DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + sanitizeString("%" + s + "%", true) + ")";
             }
         }
 
@@ -1406,11 +1405,7 @@ public class CardDbAdapter {
      */
     public static Cursor getCardsByNamePrefix(String query, SQLiteDatabase mDb) throws FamiliarDbException {
         try {
-            String convert = query.toLowerCase().replace("ae", String.valueOf(Character.toChars(0xC6)[0]));
-
             query = sanitizeString(query + "%", true);
-
-            convert = sanitizeString(convert + "%", true);
 
             if (query.length() < 2) {
                 return null;
@@ -1426,8 +1421,7 @@ public class CardDbAdapter {
                             " JOIN " + DATABASE_TABLE_SETS +
                             " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
                             " WHERE " +
-                            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + query + " OR " +
-                            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + convert +
+                            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + query +
                             " ORDER BY " +
                             DATABASE_TABLE_CARDS + "." + KEY_NAME + " COLLATE UNICODE, " +
                             DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC" +
@@ -2359,8 +2353,7 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Helper functin to sanitize a string, SQL queries, replace and "Ae" characters,
-     * and trim whitespace
+     * Helper function to sanitize a string for SQL queries, remove accent marks, and trim whitespace
      *
      * @param input A string to sanitize
      * @return The sanitized String
