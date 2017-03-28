@@ -10,7 +10,6 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/master_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -94,7 +93,7 @@
                 android:id="@+id/typelogic"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:drawSelectorOnTop="false"
+                android:drawSelectorOnTop="true"
                 android:entries="@array/type_spinner"
                 android:imeOptions="actionSearch" />
 
@@ -115,7 +114,7 @@
                 android:id="@+id/textlogic"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:drawSelectorOnTop="false"
+                android:drawSelectorOnTop="true"
                 android:entries="@array/text_spinner"
                 android:imeOptions="actionSearch" />
 
@@ -234,7 +233,7 @@
                 android:id="@+id/colorlogic"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:drawSelectorOnTop="false"
+                android:drawSelectorOnTop="true"
                 android:entries="@array/color_spinner" />
 
             <LinearLayout
@@ -352,102 +351,115 @@
                 android:id="@+id/coloridentitylogic"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:drawSelectorOnTop="false"
+                android:drawSelectorOnTop="true"
                 android:entries="@array/color_identity_spinner" />
 
-            <android.support.v7.widget.GridLayout
+            <LinearLayout
+                android:id="@+id/linearLayout2"
                 style="@style/forty_eight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:columnCount="3"
-                app:rowCount="3">
+                android:layout_width="match_parent">
 
                 <TextView
                     android:id="@+id/textView1"
                     style="@style/text.medium"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/search_power"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_width="125dip"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="@string/search_power" />
 
                 <Spinner
                     android:id="@+id/powLogic"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:drawSelectorOnTop="false"
-                    android:entries="@array/logic_spinner"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/logic_spinner" />
 
                 <Spinner
                     android:id="@+id/powChoice"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:drawSelectorOnTop="false"
-                    android:entries="@array/pt_spinner"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/pt_spinner" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                style="@style/forty_eight"
+                android:layout_width="match_parent">
 
                 <TextView
                     android:id="@+id/textView2"
                     style="@style/text.medium"
-                    android:layout_width="0dp"
-
-                    android:layout_height="48dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/search_toughness"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_width="125dip"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="@string/search_toughness" />
 
                 <Spinner
                     android:id="@+id/touLogic"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:drawSelectorOnTop="false"
-                    android:entries="@array/logic_spinner"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/logic_spinner" />
 
                 <Spinner
                     android:id="@+id/touChoice"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:drawSelectorOnTop="false"
-                    android:entries="@array/pt_spinner"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/pt_spinner" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                style="@style/forty_eight"
+                android:layout_width="match_parent">
 
                 <TextView
                     android:id="@+id/textView3"
                     style="@style/text.medium"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/search_cmc"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_width="125dip"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:text="@string/search_cmc" />
 
                 <Spinner
                     android:id="@+id/cmcLogic"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:drawSelectorOnTop="false"
-                    android:entries="@array/logic_spinner"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/logic_spinner" />
 
                 <Spinner
                     android:id="@+id/cmcChoice"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:drawSelectorOnTop="false"
-                    android:entries="@array/cmc_spinner"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/cmc_spinner" />
+            </LinearLayout>
 
-            </android.support.v7.widget.GridLayout>
+            <LinearLayout
+                android:id="@+id/linearLayout19"
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.gelakinetic.mtgfam.helpers.autocomplete.CompletionView
+                    android:id="@+id/setsearch"
+                    style="@style/Widget.AppCompat.AutoCompleteTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:dropDownAnchor="@+id/linearLayout19"
+                    android:dropDownWidth="wrap_content"
+                    android:hint="@string/search_sets"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout11"
@@ -459,16 +471,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal"
-                android:weightSum="3">
-
-                <Button
-                    android:id="@+id/setsearch"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/search_set"
-                    android:textStyle="bold" />
+                android:weightSum="2">
 
                 <Button
                     android:id="@+id/formatsearch"
@@ -493,7 +496,7 @@
                 android:id="@+id/setlogic"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:drawSelectorOnTop="false"
+                android:drawSelectorOnTop="true"
                 android:entries="@array/set_spinner" />
 
 
@@ -537,19 +540,12 @@
         android:layout_height="1dp"
         android:background="?attr/colorPrimary_attr" />
 
-    <LinearLayout
-        android:layout_height="48dp"
+    <Button
+        android:id="@+id/searchbutton"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
-        style="@android:style/Holo.ButtonBar"
-        android:background="?attr/color_background">
-
-        <Button
-            android:id="@+id/searchbutton"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/search_search"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:layout_height="48dp"
+        android:text="@string/search_search"
+        android:textStyle="bold" />
 
 </LinearLayout>
