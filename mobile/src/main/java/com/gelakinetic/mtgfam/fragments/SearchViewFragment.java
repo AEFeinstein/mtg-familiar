@@ -24,7 +24,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -34,7 +33,6 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.SpaceTokenizer;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.autocomplete.CompletionView;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -87,8 +85,8 @@ public class SearchViewFragment extends FamiliarFragment {
     /* UI Elements */
     private AutoCompleteTextView mNameField;
     private EditText mTextField;
-    private MultiAutoCompleteTextView mSupertypeField = null;
-    private MultiAutoCompleteTextView mSubtypeField = null;
+    private CompletionView mSupertypeField = null;
+    private CompletionView mSubtypeField = null;
     private EditText mCollectorsNumberField;
     private CheckBox mCheckboxW;
     private CheckBox mCheckboxU;
@@ -180,8 +178,8 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Get references to UI elements. When a search is preformed, these values will be queried */
         mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
         mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
-        mSupertypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
-        mSubtypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.subtypesearch);
+        mSupertypeField = (CompletionView) myFragmentView.findViewById(R.id.supertypesearch);
+        mSubtypeField = (CompletionView) myFragmentView.findViewById(R.id.subtypesearch);
         mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
         mArtistField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.artistsearch);
         mCollectorsNumberField = (EditText) myFragmentView.findViewById(R.id.collectorsnumbersearch);
@@ -360,16 +358,12 @@ public class SearchViewFragment extends FamiliarFragment {
                             /* set the autocomplete for supertypes */
                             ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
-                            mSupertypeField.setThreshold(1);
                             mSupertypeField.setAdapter(supertypeAdapter);
-                            mSupertypeField.setTokenizer(new SpaceTokenizer());
 
                             /* set the autocomplete for subtypes */
                             ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
-                            mSubtypeField.setThreshold(1);
                             mSubtypeField.setAdapter(subtypeAdapter);
-                            mSubtypeField.setTokenizer(new SpaceTokenizer());
 
                             /* set the autocomplete for sets */
                             final SetAdapter setAdapter = new SetAdapter();
@@ -493,11 +487,25 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString().trim();
         searchCriteria.text = mTextField.getText().toString().trim();
-        String supertype = mSupertypeField.getText().toString().trim();
-        String subtype = mSubtypeField.getText().toString().trim();
-        String sets = "";
-        for(String set : mSetField.getObjects()) {
-            if (sets.isEmpty()) {
+        String supertype = "";
+        for (String type : mSupertypeField.getObjects()) {
+            if (supertype.isEmpty()) {
+                supertype = type;
+            } else {
+                supertype += " " + type;
+            }
+        }
+        String subtype = "";
+        for (String type : mSubtypeField.getObjects()) {
+            if (subtype.isEmpty()) {
+                subtype = type;
+            } else {
+                subtype += " " + type;
+            }
+        }
+        String sets = null;
+        for (String set : mSetField.getObjects()) {
+            if (sets == null) {
                 sets = set;
             } else {
                 sets += "-" + set;
@@ -689,8 +697,8 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void clear() {
         mNameField.setText("");
-        mSupertypeField.setText("");
-        mSubtypeField.setText("");
+        mSupertypeField.clear();
+        mSubtypeField.clear();
         mTextField.setText("");
         mArtistField.setText("");
         mFlavorField.setText("");
@@ -765,7 +773,7 @@ public class SearchViewFragment extends FamiliarFragment {
             String delimiter = " - ";
             String[] type = criteria.type.split(delimiter);
             if (type.length > 0 && type[0] != null) {
-                mSupertypeField.setText(type[0]);
+                mSupertypeField.addObject(type[0]);
             }
             if (type.length > 1 && type[1] != null) {
                 /* Concatenate all strings after the first delimiter
@@ -774,13 +782,8 @@ public class SearchViewFragment extends FamiliarFragment {
                 String subtype = "";
                 boolean first = true;
                 for (int i = 1; i < type.length; i++) {
-                    if (!first) {
-                        subtype += delimiter;
-                    }
-                    subtype += type[i];
-                    first = false;
+                    mSubtypeField.addObject(type[i]);
                 }
-                mSubtypeField.setText(subtype);
             }
             mTextField.setText(criteria.text);
             mArtistField.setText(criteria.artist);
