@@ -884,16 +884,15 @@ public class CardDbAdapter {
         if (supertypes != null) {
             /* Separate each individual */
             String[] supertypesParts = supertypes.split(" ");
+            String supertypeInDatabase = "' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' '";
 
             switch (criteria.typeLogic) {
                 case 0:
                     for (String s : supertypesParts) {
                         if (s.contains(EXCLUDE_TOKEN))
-                            statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%") + ")";
+                            statement += " AND (" + supertypeInDatabase + " NOT LIKE " + sanitizeString("% " + s.substring(1) + " %") + ")";
                         else
-                            statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                            statement += " AND (" + supertypeInDatabase + " LIKE " + sanitizeString("% " + s + " %") + ")";
                     }
                     break;
                 case 1:
@@ -903,26 +902,21 @@ public class CardDbAdapter {
                             firstRun = false;
 
                             if (s.contains(EXCLUDE_TOKEN))
-                                statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_SUPERTYPE + " NOT LIKE "
-                                        + sanitizeString("%" + s.substring(1) + "%") + ")";
+                                statement += " AND ((" + supertypeInDatabase + " NOT LIKE "
+                                        + sanitizeString("% " + s.substring(1) + " %") + ")";
                             else
-                                statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                statement += " AND ((" + supertypeInDatabase + " LIKE " + sanitizeString("% " + s + " %") + ")";
                         } else if (s.contains(EXCLUDE_TOKEN))
-                            statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
+                            statement += " AND (" + supertypeInDatabase + " NOT LIKE " + sanitizeString("% " + s.substring(1) + " %")
                                     + ")";
                         else
-                            statement += " OR (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                            statement += " OR (" + supertypeInDatabase + " LIKE " + sanitizeString("% " + s + " %") + ")";
                     }
                     statement += ")";
                     break;
                 case 2:
                     for (String s : supertypesParts) {
-                        statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s + "%") + ")";
+                        statement += " AND (" + supertypeInDatabase + " NOT LIKE " + sanitizeString("% " + s + " %") + ")";
                     }
                     break;
                 default:
@@ -933,17 +927,16 @@ public class CardDbAdapter {
         if (subtypes != null) {
             /* Separate each individual */
             String[] subtypesParts = subtypes.split(" ");
+            String subtypeInDatabase = "' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUBTYPE + " || ' '";
 
             switch (criteria.typeLogic) {
                 case 0:
                     for (String s : subtypesParts) {
                         if (s.contains(EXCLUDE_TOKEN))
-                            statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
-                                    + ")";
+                            statement += " AND (" + subtypeInDatabase + " NOT LIKE " +
+                                    sanitizeString("% " + s.substring(1) + " %") + ")";
                         else
-                            statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                            statement += " AND (" + subtypeInDatabase + " LIKE " + sanitizeString("% " + s + " %") + ")";
                     }
                     break;
                 case 1:
@@ -952,26 +945,21 @@ public class CardDbAdapter {
                         if (firstRun) {
                             firstRun = false;
                             if (s.contains(EXCLUDE_TOKEN))
-                                statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_SUBTYPE + " NOT LIKE "
-                                        + sanitizeString("%" + s.substring(1) + "%") + ")";
+                                statement += " AND ((" + subtypeInDatabase + " NOT LIKE "
+                                        + sanitizeString("% " + s.substring(1) + " %") + ")";
                             else
-                                statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                statement += " AND ((" + subtypeInDatabase + " LIKE " + sanitizeString("% " + s + " %") + ")";
                         } else if (s.contains(EXCLUDE_TOKEN))
-                            statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
+                            statement += " AND (" + subtypeInDatabase + " NOT LIKE " + sanitizeString("% " + s.substring(1) + " %")
                                     + ")";
                         else
-                            statement += " OR (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                            statement += " OR (" + subtypeInDatabase + " LIKE " + sanitizeString("% " + s + " %") + ")";
                     }
                     statement += ")";
                     break;
                 case 2:
                     for (String s : subtypesParts) {
-                        statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s + "%") + ")";
+                        statement += " AND (" + subtypeInDatabase + " NOT LIKE " + sanitizeString("% " + s + " %") + ")";
                     }
                     break;
                 default:
