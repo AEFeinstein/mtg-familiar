@@ -180,15 +180,12 @@
     <string name="main_tts_warning_text">Questa applicazione usa un sintetizzatore vocale per alcune delle sue funzionalità, ma sembra che tu non ne abbia uno installato. Se vuoi installarlo, usa il link "Install Text-to-Speech" nel menu delle impostazioni.</string>
     <string name="main_tts_warning_title">Sintetizzatore vocale (TTS)</string>
     <string name="main_whats_new_in_title">Novità di questa versione</string>
-    <string name="main_whats_new_text">
-        - Correzione di bug
-    </string>
     <string name="main_whats_new_title">Novità</string>
     <string name="main_wishlist">Carte desiderate</string>
     <string name="mana_pool_clear_all">Cancella tutto</string>
     <string name="mana_pool_error_toast">Il caricamento della riserva di mana è fallito!</string>
     <string name="mojhosto_dialog_play">Giochiamo!</string>
-    <string name="mojhosto_momir_label">CMC=</string>
+    <string name="mojhosto_momir_label">CMC =</string>
     <string name="mojhosto_random_creature">Creatura casuale</string>
     <string name="mojhosto_random_equipment">Equipaggiamento casuale</string>
     <string name="mojhosto_random_instants">Istantaneo casuale</string>
@@ -217,7 +214,7 @@
         Buona fortuna, e divertiti!
     </string>
     <string name="mojhosto_rules_title">Regole base del MoJhoSto</string>
-    <string name="mojhosto_stonehewer_label">CMC &lt;=</string>
+    <string name="mojhosto_stonehewer_label">CMC ≤</string>
     <string name="name_search_hint">Ricerca per nome</string>
     <string name="no_network">La rete non è disponibile</string>
     <string name="not_deleted">non eliminato</string>
@@ -232,14 +229,12 @@
     <string name="pref_4_seconds">4 secondi</string>
     <string name="pref_5_days">5 giorni</string>
     <string name="pref_5_seconds">5 secondi</string>
-    <string name="pref_Chinese">Cinese</string>
     <string name="pref_English">Inglese</string>
     <string name="pref_French">Francese</string>
     <string name="pref_German">Tedesco</string>
     <string name="pref_Italian">Italiano</string>
     <string name="pref_Japanese">Giapponese</string>
     <string name="pref_Polish">Polacco</string>
-    <string name="pref_Portuguese">Portoghese</string>
     <string name="pref_Russian">Russo</string>
     <string name="pref_Spanish">Spagnolo</string>
     <string name="pref_auto_updates_summary">Controlla per nuove espansioni e carte bannate quando l\'app viene aperta</string>

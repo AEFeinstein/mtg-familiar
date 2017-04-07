@@ -1074,7 +1074,7 @@ public class CardViewFragment extends FamiliarFragment {
                     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                     shareIntent.setType("image/jpeg");
-                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.card_view_send_to)));
 
                 } catch (Exception e) {
                     ToastWrapper.makeText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG).show();
