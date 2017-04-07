@@ -178,9 +178,6 @@
     <string name="main_tts_warning_text">Esta aplicação tem a capacidade de usar a síntese de voz (Text-to-Speech) para algumas funções, mas não parece estar instalado. Se você quer instalar, use o link \"Instalar Text-to-Speech \" no menu de configurações.</string>
     <string name="main_tts_warning_title">TTS (Text-to-Speech)</string>
     <string name="main_whats_new_in_title">O que há de Novo na Versão</string>
-    <string name="main_whats_new_text">
-        - Correções de bugs
-    </string>
     <string name="main_whats_new_title">O que há de novo</string>
     <string name="main_wishlist">Lista de Desejos</string>
     <string name="mana_pool_clear_all">Limpar Tudo</string>

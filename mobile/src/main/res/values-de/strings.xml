@@ -79,9 +79,6 @@
     <string name="main_import_fail">Importieren fehlgeschlagen. Bitte speichern sie die Datei MTGFamiliar.Backup.zip im Stammverzeichnis Ihrer SD-Karte ab.</string>
     <string name="main_import_success">Importieren erfolgreich</string>
     <string name="main_whats_new_in_title">Was ist neu in Version</string>
-    <string name="main_whats_new_text">
-        - Fehlerbehebungen
-    </string>
     <string name="main_whats_new_title">Was ist neu</string>
     <string name="main_wishlist">Wunschliste</string>
     <string name="mojhosto_random_creature">Zufällige Kreatur</string>
@@ -141,7 +138,7 @@
     <string name="main_profile">Profil</string>
     <string name="main_tts_warning_title">Sprachsynthese (Text-to-speech)</string>
     <string name="mojhosto_momir_label">CMC =</string>
-    <string name="mojhosto_stonehewer_label">CMC &lt;=</string>
+    <string name="mojhosto_stonehewer_label">CMC ≤</string>
     <string name="pref_cat_life_counter">Lebenspunktezähler</string>
     <string name="pref_language">Sprache</string>
     <string name="pref_screen_counter">Lebenspunktezähler</string>

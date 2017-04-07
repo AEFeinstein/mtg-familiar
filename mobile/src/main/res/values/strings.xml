@@ -78,7 +78,11 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="main_whats_new_title">What\'s New</string>
     <string name="main_whats_new_in_title">What\'s New in Version</string>
     <string name="main_whats_new_text">
-        - Bugfixes
+        - Added a deckbuilder&lt;br&gt;
+        - Added result list sorting&lt;br&gt;
+        - Added card names in other languages&lt;br&gt;
+        - Added share button for card text or image&lt;br&gt;
+        - Fixed card art for certain cards
     </string>
     <string name="main_tts_warning_title">Text-to-Speech</string>
     <string name="main_tts_warning_text">This application has text-to-speech capability for some of its features, but you don\'t seem to have it installed. If you want to install it, use the "Install Text-to-Speech" link in the settings menu.</string>
@@ -222,7 +226,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="card_view_share_card">Share Card</string>
     <string name="card_view_share_text">Text</string>
     <string name="card_view_share_image">Image</string>
-    <string name="send_to">Share image using</string>
+    <string name="card_view_send_to">Share image using</string>
+    <string name="card_view_translated_dialog_title">Translated Card Name</string>
 
     <!-- Life counter activity -->
     <string name="life_counter_announce_life">Announce Life Totals</string>
@@ -364,7 +369,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <!-- Profile activity -->
     <string name="profile_update_dci">Update DCI Number</string>
     <string name="profile_remove_dci">Remove DCI Number</string>
-    <string name="profile_update_dci_dialog_title">   Enter your DCI number</string>
+    <string name="profile_update_dci_dialog_title">Enter your DCI number</string>
     <string name="profile_invalid_dci">Invalid DCI number entered</string>
     <string name="profile_no_dci">You have not entered your DCI number</string>
     <string name="profile_planeswalker_points">Planeswalker Points</string>
@@ -394,9 +399,9 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 		&lt;br&gt;
 		Good luck, and have fun!
     </string>
-    <string name="mojhosto_momir_label">CMC == </string>
+    <string name="mojhosto_momir_label">CMC =</string>
     <string name="mojhosto_random_creature">Random Creature</string>
-    <string name="mojhosto_stonehewer_label">CMC &lt;= </string>
+    <string name="mojhosto_stonehewer_label">CMC ≤</string>
     <string name="mojhosto_random_equipment">Random Equipment</string>
     <string name="mojhosto_random_instants">Random Instants</string>
     <string name="mojhosto_random_sorceries">Random Sorceries</string>
@@ -463,9 +468,11 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_Japanese">Japanese</string>
     <string name="pref_Russian">Russian</string>
     <string name="pref_German">German</string>
-    <string name="pref_Polish">Polish</string>
     <string name="pref_Portuguese">Portuguese</string>
-    <string name="pref_Chinese">Chinese</string>
+    <string name="pref_Chinese">Chinese Simplified</string>
+    <string name="pref_Chinese_trad">Chinese Traditional</string>
+    <string name="pref_Korean">Korean</string>
+    <string name="pref_Polish">Polish</string> <!-- Only used for app translation, not card names-->
     <string name="pref_1_day">1 day</string>
     <string name="pref_2_days">2 days</string>
     <string name="pref_3_days">3 days</string>

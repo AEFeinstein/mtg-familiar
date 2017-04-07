@@ -179,15 +179,12 @@
     <string name="main_tts_warning_text">Ta aplikacja ma możliwość zastosowania syntezatora mowy, ale wydaje się, że nie masz go zainstalowanego. Jeśli chcesz go zainstalować, użyj przycisku \'Zainstaluj TTS (Text-To-Speech)\' z menu Ustawienia.</string>
     <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
-    <string name="main_whats_new_text">
-        - Poprawki
-    </string>
     <string name="main_whats_new_title">Nowości</string>
     <string name="main_wishlist">Lista Życzeń</string>
     <string name="mana_pool_clear_all">Wyczyść wszystko</string>
     <string name="mana_pool_error_toast">Nie udało się wczytać licznika many!</string>
     <string name="mojhosto_dialog_play">Zagrajmy!</string>
-    <string name="mojhosto_momir_label">CMC=</string>
+    <string name="mojhosto_momir_label">CMC =</string>
     <string name="mojhosto_random_creature">Losowa Kreatura</string>
     <string name="mojhosto_random_equipment">Losowe wyposażenie</string>
     <string name="mojhosto_random_instants">Trzy losowe Instanty</string>
