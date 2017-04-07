@@ -266,7 +266,6 @@
     <string name="pref_life_timer_summary">Ile czasu ma upłynąć przed rozpoczęciem nowego zapisu</string>
     <string name="pref_life_timer_title">Licznik</string>
     <string name="pref_Polish">Polski</string>
-    <string name="pref_Portuguese">Portugalski</string>
     <string name="pref_ringtone_summary">Wybierz powiadomienie dźwiękowe na zakończenie odliczania</string>
     <string name="pref_ringtone_title">Dźwięk licznika</string>
     <string name="pref_Russian">rosyjski</string>
@@ -439,7 +438,6 @@
     <string name="dialog_no">Nie</string>
     <string name="filter_title_view_card">Pokaż kartę</string>
     <string name="search_collectors_number">Collector\'s Number</string>
-    <string name="pref_Chinese">Chiński</string>
     <string name="trader_sort">Sortuj Wymianę</string>
     <string name="trade_share_title">Wymianą</string>
     <string name="trader_share">Podziel się Wymianą</string>

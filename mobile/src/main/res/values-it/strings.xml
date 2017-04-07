@@ -229,14 +229,12 @@
     <string name="pref_4_seconds">4 secondi</string>
     <string name="pref_5_days">5 giorni</string>
     <string name="pref_5_seconds">5 secondi</string>
-    <string name="pref_Chinese">Cinese</string>
     <string name="pref_English">Inglese</string>
     <string name="pref_French">Francese</string>
     <string name="pref_German">Tedesco</string>
     <string name="pref_Italian">Italiano</string>
     <string name="pref_Japanese">Giapponese</string>
     <string name="pref_Polish">Polacco</string>
-    <string name="pref_Portuguese">Portoghese</string>
     <string name="pref_Russian">Russo</string>
     <string name="pref_Spanish">Spagnolo</string>
     <string name="pref_auto_updates_summary">Controlla per nuove espansioni e carte bannate quando l\'app viene aperta</string>

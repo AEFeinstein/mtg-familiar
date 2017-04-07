@@ -266,7 +266,6 @@
     <string name="pref_life_timer_summary">Quanto tempo esperar antes de iniciar uma nova entrada</string>
     <string name="pref_life_timer_title">Cronômetro</string>
     <string name="pref_Polish">Polonês</string>
-    <string name="pref_Portuguese">Português</string>
     <string name="pref_ringtone_summary">Escolha um toque de notificação para soar quando terminar o tempo da rodada</string>
     <string name="pref_ringtone_title">Toque do cronômetro</string>
     <string name="pref_Russian">Russo</string>
@@ -439,7 +438,6 @@
     <string name="dialog_no">Não</string>
     <string name="filter_title_view_card">Vizualizar Carta</string>
     <string name="search_collectors_number">Número da Coleção</string>
-    <string name="pref_Chinese">Chinês</string>
     <string name="trader_sort">Organizar</string>
     <string name="trade_share_title">Troca</string>
     <string name="trader_share">Compartilhar Troca</string>

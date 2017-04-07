@@ -266,7 +266,6 @@
     <string name="pref_life_timer_summary">Tiempo de validación de los cambios de los puntos de vida</string>
     <string name="pref_life_timer_title">Temporizador</string>
     <string name="pref_Polish">Polaco</string>
-    <string name="pref_Portuguese">Portugués</string>
     <string name="pref_ringtone_summary">Selecciona un tono de notificación para que suene al terminar el temporizador de ronda</string>
     <string name="pref_ringtone_title">Tono de temporizador</string>
     <string name="pref_Russian">Ruso</string>
@@ -439,7 +438,6 @@
     <string name="dialog_no">No</string>
     <string name="filter_title_view_card">Ver carta</string>
     <string name="search_collectors_number">Número de coleccionista</string>
-    <string name="pref_Chinese">Chino</string>
     <string name="trader_sort">Ordenar intercambios</string>
     <string name="trade_share_title">Intercambios</string>
     <string name="trader_share">Compartir intercambio</string>
