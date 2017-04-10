@@ -179,15 +179,12 @@
     <string name="main_tts_warning_text">Ta aplikacja ma możliwość zastosowania syntezatora mowy, ale wydaje się, że nie masz go zainstalowanego. Jeśli chcesz go zainstalować, użyj przycisku \'Zainstaluj TTS (Text-To-Speech)\' z menu Ustawienia.</string>
     <string name="main_tts_warning_title">Synteza mowy (Text-To-Speech)</string>
     <string name="main_whats_new_in_title">Nowości w aktualnej wersji</string>
-    <string name="main_whats_new_text">
-        - Poprawki
-    </string>
     <string name="main_whats_new_title">Nowości</string>
     <string name="main_wishlist">Lista Życzeń</string>
     <string name="mana_pool_clear_all">Wyczyść wszystko</string>
     <string name="mana_pool_error_toast">Nie udało się wczytać licznika many!</string>
     <string name="mojhosto_dialog_play">Zagrajmy!</string>
-    <string name="mojhosto_momir_label">CMC=</string>
+    <string name="mojhosto_momir_label">CMC =</string>
     <string name="mojhosto_random_creature">Losowa Kreatura</string>
     <string name="mojhosto_random_equipment">Losowe wyposażenie</string>
     <string name="mojhosto_random_instants">Trzy losowe Instanty</string>
@@ -269,7 +266,6 @@
     <string name="pref_life_timer_summary">Ile czasu ma upłynąć przed rozpoczęciem nowego zapisu</string>
     <string name="pref_life_timer_title">Licznik</string>
     <string name="pref_Polish">Polski</string>
-    <string name="pref_Portuguese">Portugalski</string>
     <string name="pref_ringtone_summary">Wybierz powiadomienie dźwiękowe na zakończenie odliczania</string>
     <string name="pref_ringtone_title">Dźwięk licznika</string>
     <string name="pref_Russian">rosyjski</string>
@@ -442,7 +438,6 @@
     <string name="dialog_no">Nie</string>
     <string name="filter_title_view_card">Pokaż kartę</string>
     <string name="search_collectors_number">Collector\'s Number</string>
-    <string name="pref_Chinese">Chiński</string>
     <string name="trader_sort">Sortuj Wymianę</string>
     <string name="trade_share_title">Wymianą</string>
     <string name="trader_share">Podziel się Wymianą</string>

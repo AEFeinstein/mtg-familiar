@@ -178,9 +178,6 @@
     <string name="main_tts_warning_text">Cette appli permet la synthèse vocale parmi ses fonctionnalités, mais il semble que vous ne l\'ayiez pas installée. Si vous voulez l\'installer, utiliser le lien \"Installer Text-to-Speech\" dans le menu des paramètres.</string>
     <string name="main_tts_warning_title">Synthèse vocale (TTS)</string>
     <string name="main_whats_new_in_title">Nouveautés dans la Version</string>
-    <string name="main_whats_new_text">
-        - Corrections de bugs
-    </string>
     <string name="main_whats_new_title">Nouveautés</string>
     <string name="main_wishlist">Liste de voeux</string>
     <string name="mana_pool_clear_all">Tout effacer</string>
@@ -269,7 +266,6 @@
     <string name="pref_life_timer_summary">Délai avant validation du changement de points de vie</string>
     <string name="pref_life_timer_title">Minuteur</string>
     <string name="pref_Polish">Polonais</string>
-    <string name="pref_Portuguese">Portugais</string>
     <string name="pref_ringtone_summary">Choisir une notification à jouer quand le minuteur se termine</string>
     <string name="pref_ringtone_title">Sonnerie du Minuteur</string>
     <string name="pref_Russian">Russe</string>
@@ -443,7 +439,6 @@
     <string name="dialog_no">Non</string>
     <string name="filter_title_view_card">Vue Carte</string>
     <string name="search_collectors_number">Numéro de collection</string>
-    <string name="pref_Chinese">Chinois</string>
     <string name="trader_sort">Trier Echange</string>
     <string name="trade_share_title">Echange</string>
     <string name="trader_share">Partager l\'échange</string>
