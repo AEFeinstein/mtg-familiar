@@ -257,8 +257,8 @@
     <string name="pref_display_mode_summary">Choisissez comment afficher le Compteur de Vie</string>
     <string name="pref_display_mode_title">Mode Affichage</string>
     <string name="pref_English">Anglais</string>
-    <string name="pref_fifteen_minutes_title">Avertissement 15-Minute</string>
-    <string name="pref_five_minutes_title">Avertissement 5-Minute</string>
+    <string name="pref_fifteen_minutes_title">Avertissement 15-Minutes</string>
+    <string name="pref_five_minutes_title">Avertissement 5-Minutes</string>
     <string name="pref_French">Français</string>
     <string name="pref_German">Allemand</string>
     <string name="pref_image_cache_size_summary">Espace disque maximum pour la mise en cache des images</string>
@@ -287,13 +287,14 @@
     <string name="pref_show_set_title">Afficher Extension</string>
     <string name="pref_show_type_title">Afficher Type/Sous-type</string>
     <string name="pref_Spanish">Espagnol</string>
-    <string name="pref_ten_minutes_title">Avertissement 10-Minute</string>
+    <string name="pref_ten_minutes_title">Avertissement 10-Minutes</string>
     <string name="pref_theme_dark">Foncé</string>
     <string name="pref_theme_light">Clair</string>
     <string name="pref_theme_summary">Définir un thème clair ou foncé</string>
     <string name="pref_theme_title">Thème</string>
     <string name="pref_trade_price_summary">Prix TCGplayer à utiliser lors des échanges</string>
     <string name="pref_trade_price_title">Réglages Prix</string>
+    <string name="pref_two_minutes_title">Avertissement 2-Minutes</string>
     <string name="pref_update_frequency_summary">Nombre de jours entre 2 recherches de nouvelles extensions et exclusions</string>
     <string name="pref_update_frequency_title">Fréquence de mise à jour</string>
     <string name="pref_wake_lock_summary">Forcer l\'écran du Compteur de Vie à ne jamais passer en veille</string>
