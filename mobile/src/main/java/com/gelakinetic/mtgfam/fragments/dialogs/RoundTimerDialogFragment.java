@@ -39,10 +39,12 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                         getFamiliarActivity().mPreferenceAdapter.getFifteenMinutePref();
                 boolean ten = getFamiliarActivity().mPreferenceAdapter.getTenMinutePref();
                 boolean five = getFamiliarActivity().mPreferenceAdapter.getFiveMinutePref();
+                boolean two = getFamiliarActivity().mPreferenceAdapter.getTwoMinutePref();
 
                 chkFifteen.setChecked(fifteen);
                 chkTen.setChecked(ten);
                 chkFive.setChecked(five);
+                chkTwo.setChecked(two);
 
                 return new MaterialDialog.Builder(getActivity())
                         .customView(v, false)
