@@ -143,7 +143,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="search_power">Power</string>
     <string name="search_toughness">Toughness</string>
     <string name="search_cmc">CMC</string>
-    <string name="search_hasManaX">X symbol</string>
+    <string name="search_hasManaX">Cost Contains </string> <!-- this has an {X} after it in layout -->
     <string name="search_set">Set</string>
     <string name="search_sets">Sets</string>
     <string name="search_format">Format</string>
