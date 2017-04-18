@@ -67,7 +67,7 @@ public class Card {
     public String mWatermark = "";
 
     // Private class for encapsulating foreign printing information
-    public class ForeignPrinting {
+    public static class ForeignPrinting {
     	public int mMultiverseId;
     	public String mName;
     	public String mLanguageCode;

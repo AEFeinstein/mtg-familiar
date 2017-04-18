@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
@@ -42,6 +44,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
     public static final int WISH_LIST_COUNTS = 6;
     public static final int GET_LEGALITY = 7;
     public static final int SHARE_CARD = 8;
+    public static final int TRANSLATE_CARD = 9;
 
     /**
      * @return the currently viewed CardViewFragment in the CardViewPagerFragment
@@ -81,7 +84,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             getCardViewFragment().mAsyncTask.cancel(true);
                         }
                         getCardViewFragment().mAsyncTask = getCardViewFragment().new saveCardImageTask();
-                        ((CardViewFragment.saveCardImageTask)getCardViewFragment().mAsyncTask).execute(CardViewFragment.MAIN_PAGE);
+                        ((CardViewFragment.saveCardImageTask) getCardViewFragment().mAsyncTask).execute(CardViewFragment.MAIN_PAGE);
                         return true;
                     }
                 });
@@ -253,6 +256,13 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             }
                         });
                 return builder.build();
+            }
+            case TRANSLATE_CARD: {
+                for(Card.ForeignPrinting fp : getCardViewFragment().mTranslatedNames) {
+                    Log.v(fp.mLanguageCode, fp.mName);
+                }
+
+                return DontShowDialog();
             }
             default: {
                 return DontShowDialog();

@@ -111,26 +111,26 @@ public class CardDbAdapter {
     private static final String KEY_COLOR_IDENTITY = "color_identity";
     private static final String KEY_CAN_BE_FOIL = "can_be_foil";
     private static final String KEY_NAME_NO_ACCENT = "name_no_accent";
-    private static final String KEY_NAME_CHINESE_TRADITIONAL = "NAME_CHINESE_TRADITIONAL";
-    private static final String KEY_MULTIVERSEID_CHINESE_TRADITIONAL = "MULTIVERSEID_CHINESE_TRADITIONAL";
-    private static final String KEY_NAME_CHINESE_SIMPLIFIED = "NAME_CHINESE_SIMPLIFIED";
-    private static final String KEY_MULTIVERSEID_CHINESE_SIMPLIFIED = "MULTIVERSEID_CHINESE_SIMPLIFIED";
-    private static final String KEY_NAME_FRENCH = "NAME_FRENCH";
-    private static final String KEY_MULTIVERSEID_FRENCH = "MULTIVERSEID_FRENCH";
-    private static final String KEY_NAME_GERMAN = "NAME_GERMAN";
-    private static final String KEY_MULTIVERSEID_GERMAN = "MULTIVERSEID_GERMAN";
-    private static final String KEY_NAME_ITALIAN = "NAME_ITALIAN";
-    private static final String KEY_MULTIVERSEID_ITALIAN = "MULTIVERSEID_ITALIAN";
-    private static final String KEY_NAME_JAPANESE = "NAME_JAPANESE";
-    private static final String KEY_MULTIVERSEID_JAPANESE = "MULTIVERSEID_JAPANESE";
-    private static final String KEY_NAME_PORTUGUESE_BRAZIL = "NAME_PORTUGUESE_BRAZIL";
-    private static final String KEY_MULTIVERSEID_PORTUGUESE_BRAZIL = "MULTIVERSEID_PORTUGUESE_BRAZIL";
-    private static final String KEY_NAME_RUSSIAN = "NAME_RUSSIAN";
-    private static final String KEY_MULTIVERSEID_RUSSIAN = "MULTIVERSEID_RUSSIAN";
-    private static final String KEY_NAME_SPANISH = "NAME_SPANISH";
-    private static final String KEY_MULTIVERSEID_SPANISH = "MULTIVERSEID_SPANISH";
-    private static final String KEY_NAME_KOREAN = "NAME_KOREAN";
-    private static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
+    public static final String KEY_NAME_CHINESE_TRADITIONAL = "NAME_CHINESE_TRADITIONAL";
+    public static final String KEY_MULTIVERSEID_CHINESE_TRADITIONAL = "MULTIVERSEID_CHINESE_TRADITIONAL";
+    public static final String KEY_NAME_CHINESE_SIMPLIFIED = "NAME_CHINESE_SIMPLIFIED";
+    public static final String KEY_MULTIVERSEID_CHINESE_SIMPLIFIED = "MULTIVERSEID_CHINESE_SIMPLIFIED";
+    public static final String KEY_NAME_FRENCH = "NAME_FRENCH";
+    public static final String KEY_MULTIVERSEID_FRENCH = "MULTIVERSEID_FRENCH";
+    public static final String KEY_NAME_GERMAN = "NAME_GERMAN";
+    public static final String KEY_MULTIVERSEID_GERMAN = "MULTIVERSEID_GERMAN";
+    public static final String KEY_NAME_ITALIAN = "NAME_ITALIAN";
+    public static final String KEY_MULTIVERSEID_ITALIAN = "MULTIVERSEID_ITALIAN";
+    public static final String KEY_NAME_JAPANESE = "NAME_JAPANESE";
+    public static final String KEY_MULTIVERSEID_JAPANESE = "MULTIVERSEID_JAPANESE";
+    public static final String KEY_NAME_PORTUGUESE_BRAZIL = "NAME_PORTUGUESE_BRAZIL";
+    public static final String KEY_MULTIVERSEID_PORTUGUESE_BRAZIL = "MULTIVERSEID_PORTUGUESE_BRAZIL";
+    public static final String KEY_NAME_RUSSIAN = "NAME_RUSSIAN";
+    public static final String KEY_MULTIVERSEID_RUSSIAN = "MULTIVERSEID_RUSSIAN";
+    public static final String KEY_NAME_SPANISH = "NAME_SPANISH";
+    public static final String KEY_MULTIVERSEID_SPANISH = "MULTIVERSEID_SPANISH";
+    public static final String KEY_NAME_KOREAN = "NAME_KOREAN";
+    public static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
     private static final String KEY_WATERMARK = "WATERMARK";
 
     /* All the columns in DATABASE_TABLE_CARDS */
@@ -154,7 +154,28 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID,
             DATABASE_TABLE_CARDS + "." + KEY_RULINGS,
             DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY,
-            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_TRADITIONAL,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_CHINESE_TRADITIONAL,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_SIMPLIFIED,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_CHINESE_SIMPLIFIED,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_FRENCH,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_FRENCH,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_GERMAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_GERMAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_ITALIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_ITALIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_JAPANESE,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_JAPANESE,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_PORTUGUESE_BRAZIL,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_PORTUGUESE_BRAZIL,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_RUSSIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_RUSSIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_SPANISH,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_SPANISH,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
+            DATABASE_TABLE_CARDS + "." + KEY_WATERMARK
     };
 
     /* All the columns in DATABASE_CREATE_SETS */
