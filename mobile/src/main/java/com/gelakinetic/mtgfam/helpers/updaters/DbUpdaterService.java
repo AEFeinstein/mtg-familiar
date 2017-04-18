@@ -201,7 +201,7 @@ public class DbUpdaterService extends IntentService {
                                         InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter);
                                         if (streamToRead != null) {
                                             GZIPInputStream gis = new GZIPInputStream(streamToRead);
-                                            JsonReader reader = new JsonReader(new InputStreamReader(gis, "ISO-8859-1"));
+                                            JsonReader reader = new JsonReader(new InputStreamReader(gis, "UTF-8"));
                                             parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd);
                                             streamToRead.close();
                                             updatedStuff.add(set.mName);
