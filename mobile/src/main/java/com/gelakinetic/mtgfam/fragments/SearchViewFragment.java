@@ -108,6 +108,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mTouChoice;
     private Spinner mCmcLogic;
     private Spinner mCmcChoice;
+    private CheckBox mCheckboxHasManaX;
     public Dialog mSetDialog;
     public Dialog mFormatDialog;
     public Dialog mRarityDialog;
@@ -214,6 +215,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mTouChoice = (Spinner) myFragmentView.findViewById(R.id.touChoice);
         mCmcLogic = (Spinner) myFragmentView.findViewById(R.id.cmcLogic);
         mCmcChoice = (Spinner) myFragmentView.findViewById(R.id.cmcChoice);
+
+        mCheckboxHasManaX = (CheckBox) myFragmentView.findViewById(R.id.checkBoxHasManaX);
 
         /* Now we need to apply a different TextView to our Spinners to center the items */
         ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
@@ -661,6 +664,8 @@ public class SearchViewFragment extends FamiliarFragment {
         searchCriteria.cmc = cmc;
         searchCriteria.cmcLogic = logicChoices[mCmcLogic.getSelectedItemPosition()];
 
+        searchCriteria.hasManaX = mCheckboxHasManaX.isChecked();
+
         searchCriteria.typeLogic = mTypeSpinner.getSelectedItemPosition();
         searchCriteria.textLogic = mTextSpinner.getSelectedItemPosition();
         searchCriteria.setLogic = mSetSpinner.getSelectedItemPosition();
@@ -707,6 +712,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(0);
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
+        mCheckboxHasManaX.setChecked(false);
 
         if (mSetCheckedIndices != null) {
             mSetCheckedIndices = new int[0];
@@ -789,6 +795,8 @@ public class SearchViewFragment extends FamiliarFragment {
                 mCheckboxLIdentity.setChecked(criteria.colorIdentity.contains("L"));
             }
             mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
+
+            mCheckboxHasManaX.setChecked(criteria.hasManaX);
 
             mTextSpinner.setSelection(criteria.textLogic);
             mTypeSpinner.setSelection(criteria.typeLogic);
