@@ -97,11 +97,6 @@ class CardAndSetParser {
                 progressReporter.reportJsonCardProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
             }
 
-            /* Calculate the color identity for all cards just downloaded */
-            for (MtgCard card : tempCardsToAdd) {
-                card.calculateColorIdentity(tempCardsToAdd);
-            }
-
             /* Stage the sets and cards for database addition. */
             if(setsToAdd != null) {
                  setsToAdd.add(patch.mExpansion);
