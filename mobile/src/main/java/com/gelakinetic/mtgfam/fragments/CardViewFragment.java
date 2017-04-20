@@ -63,6 +63,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Card;
+import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
@@ -162,6 +164,9 @@ public class CardViewFragment extends FamiliarFragment {
     private boolean mShouldReportView = false;
     public String mDescription;
     public String mSetName;
+
+    /* Foreign name translations */
+    public ArrayList<Card.ForeignPrinting> mTranslatedNames = new ArrayList<>();
 
     /**
      * Kill any AsyncTask if it is still running
@@ -663,6 +668,28 @@ public class CardViewFragment extends FamiliarFragment {
             mColorIndicatorLayout.setVisibility(View.GONE);
         }
 
+        String allLanguageKeys[][] = {
+                {Language.Chinese_Traditional, CardDbAdapter.KEY_NAME_CHINESE_TRADITIONAL, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_TRADITIONAL},
+                {Language.Chinese_Simplified, CardDbAdapter.KEY_NAME_CHINESE_SIMPLIFIED, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_SIMPLIFIED},
+                {Language.French, CardDbAdapter.KEY_NAME_FRENCH, CardDbAdapter.KEY_MULTIVERSEID_FRENCH},
+                {Language.German, CardDbAdapter.KEY_NAME_GERMAN, CardDbAdapter.KEY_MULTIVERSEID_GERMAN},
+                {Language.Italian, CardDbAdapter.KEY_NAME_ITALIAN, CardDbAdapter.KEY_MULTIVERSEID_ITALIAN},
+                {Language.Japanese, CardDbAdapter.KEY_NAME_JAPANESE, CardDbAdapter.KEY_MULTIVERSEID_JAPANESE},
+                {Language.Portuguese_Brazil, CardDbAdapter.KEY_NAME_PORTUGUESE_BRAZIL, CardDbAdapter.KEY_MULTIVERSEID_PORTUGUESE_BRAZIL},
+                {Language.Russian, CardDbAdapter.KEY_NAME_RUSSIAN, CardDbAdapter.KEY_MULTIVERSEID_RUSSIAN},
+                {Language.Spanish, CardDbAdapter.KEY_NAME_SPANISH, CardDbAdapter.KEY_MULTIVERSEID_SPANISH},
+                {Language.Korean, CardDbAdapter.KEY_NAME_KOREAN, CardDbAdapter.KEY_MULTIVERSEID_KOREAN}};
+
+        for (String lang[] : allLanguageKeys) {
+            Card.ForeignPrinting fp = new Card.ForeignPrinting();
+            fp.mLanguageCode = lang[0];
+            fp.mName = cCardById.getString(cCardById.getColumnIndex(lang[1]));
+            fp.mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(lang[2]));
+            if (fp.mName != null && !fp.mName.isEmpty()) {
+                mTranslatedNames.add(fp);
+            }
+        }
+
         cCardById.close();
 
         /* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
@@ -921,7 +948,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchLegalityTask();
-                ((FetchLegalityTask)mAsyncTask).execute((Void[]) null);
+                ((FetchLegalityTask) mAsyncTask).execute((Void[]) null);
                 return true;
             }
             case R.id.cardrulings: {
@@ -934,7 +961,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchRulingsTask();
-                ((FetchRulingsTask)mAsyncTask).execute((Void[]) null);
+                ((FetchRulingsTask) mAsyncTask).execute((Void[]) null);
                 return true;
             }
             case R.id.addtowishlist: {
@@ -943,6 +970,10 @@ public class CardViewFragment extends FamiliarFragment {
             }
             case R.id.sharecard: {
                 showDialog(CardViewDialogFragment.SHARE_CARD);
+                return true;
+            }
+            case R.id.translatecard: {
+                showDialog(CardViewDialogFragment.TRANSLATE_CARD);
                 return true;
             }
             default: {
@@ -1207,10 +1238,9 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected Void doInBackground(Integer... params) {
 
-            if(params != null && params.length > 0) {
+            if (params != null && params.length > 0) {
                 mLoadTo = params[0];
-            }
-            else {
+            } else {
                 mLoadTo = MAIN_PAGE;
             }
 

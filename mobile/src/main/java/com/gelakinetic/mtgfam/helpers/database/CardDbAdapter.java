@@ -31,7 +31,9 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
+import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -57,7 +59,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 78;
+    public static final int DATABASE_VERSION = 79;
 
     /* The name of the database */
     public static final String DATABASE_NAME = "data";
@@ -109,6 +111,27 @@ public class CardDbAdapter {
     private static final String KEY_COLOR_IDENTITY = "color_identity";
     private static final String KEY_CAN_BE_FOIL = "can_be_foil";
     private static final String KEY_NAME_NO_ACCENT = "name_no_accent";
+    public static final String KEY_NAME_CHINESE_TRADITIONAL = "NAME_CHINESE_TRADITIONAL";
+    public static final String KEY_MULTIVERSEID_CHINESE_TRADITIONAL = "MULTIVERSEID_CHINESE_TRADITIONAL";
+    public static final String KEY_NAME_CHINESE_SIMPLIFIED = "NAME_CHINESE_SIMPLIFIED";
+    public static final String KEY_MULTIVERSEID_CHINESE_SIMPLIFIED = "MULTIVERSEID_CHINESE_SIMPLIFIED";
+    public static final String KEY_NAME_FRENCH = "NAME_FRENCH";
+    public static final String KEY_MULTIVERSEID_FRENCH = "MULTIVERSEID_FRENCH";
+    public static final String KEY_NAME_GERMAN = "NAME_GERMAN";
+    public static final String KEY_MULTIVERSEID_GERMAN = "MULTIVERSEID_GERMAN";
+    public static final String KEY_NAME_ITALIAN = "NAME_ITALIAN";
+    public static final String KEY_MULTIVERSEID_ITALIAN = "MULTIVERSEID_ITALIAN";
+    public static final String KEY_NAME_JAPANESE = "NAME_JAPANESE";
+    public static final String KEY_MULTIVERSEID_JAPANESE = "MULTIVERSEID_JAPANESE";
+    public static final String KEY_NAME_PORTUGUESE_BRAZIL = "NAME_PORTUGUESE_BRAZIL";
+    public static final String KEY_MULTIVERSEID_PORTUGUESE_BRAZIL = "MULTIVERSEID_PORTUGUESE_BRAZIL";
+    public static final String KEY_NAME_RUSSIAN = "NAME_RUSSIAN";
+    public static final String KEY_MULTIVERSEID_RUSSIAN = "MULTIVERSEID_RUSSIAN";
+    public static final String KEY_NAME_SPANISH = "NAME_SPANISH";
+    public static final String KEY_MULTIVERSEID_SPANISH = "MULTIVERSEID_SPANISH";
+    public static final String KEY_NAME_KOREAN = "NAME_KOREAN";
+    public static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
+    private static final String KEY_WATERMARK = "WATERMARK";
 
     /* All the columns in DATABASE_TABLE_CARDS */
     public static final String[] allCardDataKeys = {
@@ -131,7 +154,28 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID,
             DATABASE_TABLE_CARDS + "." + KEY_RULINGS,
             DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY,
-            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_TRADITIONAL,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_CHINESE_TRADITIONAL,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_SIMPLIFIED,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_CHINESE_SIMPLIFIED,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_FRENCH,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_FRENCH,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_GERMAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_GERMAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_ITALIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_ITALIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_JAPANESE,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_JAPANESE,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_PORTUGUESE_BRAZIL,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_PORTUGUESE_BRAZIL,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_RUSSIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_RUSSIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_SPANISH,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_SPANISH,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
+            DATABASE_TABLE_CARDS + "." + KEY_WATERMARK
     };
 
     /* All the columns in DATABASE_CREATE_SETS */
@@ -192,7 +236,28 @@ public class CardDbAdapter {
                     KEY_COLOR + " text not null, " +
                     KEY_COLOR_IDENTITY + " text, " +
                     KEY_RULINGS + " text, " +
-                    KEY_NAME_NO_ACCENT + " text not null);";
+                    KEY_NAME_NO_ACCENT + " text not null, " +
+                    KEY_WATERMARK + " text, " +
+                    KEY_NAME_CHINESE_TRADITIONAL + " text, " +
+                    KEY_MULTIVERSEID_CHINESE_TRADITIONAL + " integer, " +
+                    KEY_NAME_CHINESE_SIMPLIFIED + " text, " +
+                    KEY_MULTIVERSEID_CHINESE_SIMPLIFIED + " integer, " +
+                    KEY_NAME_FRENCH + " text, " +
+                    KEY_MULTIVERSEID_FRENCH + " integer, " +
+                    KEY_NAME_GERMAN + " text, " +
+                    KEY_MULTIVERSEID_GERMAN + " integer, " +
+                    KEY_NAME_ITALIAN + " text, " +
+                    KEY_MULTIVERSEID_ITALIAN + " integer, " +
+                    KEY_NAME_JAPANESE + " text, " +
+                    KEY_MULTIVERSEID_JAPANESE + " integer, " +
+                    KEY_NAME_PORTUGUESE_BRAZIL + " text, " +
+                    KEY_MULTIVERSEID_PORTUGUESE_BRAZIL + " integer, " +
+                    KEY_NAME_RUSSIAN + " text, " +
+                    KEY_MULTIVERSEID_RUSSIAN + " integer, " +
+                    KEY_NAME_SPANISH + " text, " +
+                    KEY_MULTIVERSEID_SPANISH + " integer, " +
+                    KEY_NAME_KOREAN + " text, " +
+                    KEY_MULTIVERSEID_KOREAN + " integer);";
 
     public static final String DATABASE_CREATE_SETS =
             "create table " + DATABASE_TABLE_SETS + "(" +
@@ -1561,8 +1626,64 @@ public class CardDbAdapter {
         initialValues.put(KEY_NUMBER, card.mNumber);
         initialValues.put(KEY_COLOR, card.mColor);
         initialValues.put(KEY_MULTIVERSEID, card.mMultiverseId);
-        initialValues.put(KEY_COLOR_IDENTITY, card.colorIdentity);
+        initialValues.put(KEY_COLOR_IDENTITY, card.mColorIdentity);
         initialValues.put(KEY_NAME_NO_ACCENT, removeAccentMarks(card.mName));
+        initialValues.put(KEY_WATERMARK, card.mWatermark);
+
+        for(Card.ForeignPrinting fp : card.mForeignPrintings) {
+            switch (fp.mLanguageCode) {
+                case Language.Chinese_Traditional: {
+                    initialValues.put(KEY_NAME_CHINESE_TRADITIONAL, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_CHINESE_TRADITIONAL, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Chinese_Simplified: {
+                    initialValues.put(KEY_NAME_CHINESE_SIMPLIFIED, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_CHINESE_SIMPLIFIED, fp.mMultiverseId);
+                    break;
+                }
+                case Language.French: {
+                    initialValues.put(KEY_NAME_FRENCH, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_FRENCH, fp.mMultiverseId);
+                    break;
+                }
+                case Language.German: {
+                    initialValues.put(KEY_NAME_GERMAN, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_GERMAN, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Italian: {
+                    initialValues.put(KEY_NAME_ITALIAN, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_ITALIAN, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Japanese: {
+                    initialValues.put(KEY_NAME_JAPANESE, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_JAPANESE, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Portuguese_Brazil: {
+                    initialValues.put(KEY_NAME_PORTUGUESE_BRAZIL, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_PORTUGUESE_BRAZIL, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Russian: {
+                    initialValues.put(KEY_NAME_RUSSIAN, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_RUSSIAN, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Spanish: {
+                    initialValues.put(KEY_NAME_SPANISH, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_SPANISH, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Korean: {
+                    initialValues.put(KEY_NAME_KOREAN, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_KOREAN, fp.mMultiverseId);
+                    break;
+                }
+            }
+        }
 
         mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
     }
