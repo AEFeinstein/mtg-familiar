@@ -449,34 +449,37 @@
 
             </android.support.v7.widget.GridLayout>
 
-        <LinearLayout
-            style="@style/forty_eight"
-            android:layout_width="match_parent"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
             <LinearLayout
-                android:id="@+id/linearLayoutHasManaX"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="left">
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <CheckBox
                     android:id="@+id/checkBoxHasManaX"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical" />
+
                 <TextView
                     android:id="@+id/textViewHasManaX"
                     style="@style/text.medium"
-                    android:layout_width="150dp"
-                    android:layout_height="48dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="4sp"
+                    android:layout_marginRight="4sp"
                     android:gravity="center_vertical"
-                    android:text="@string/search_hasManaX"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal" />
+                    android:text="@string/search_hasManaX" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/glyph_x" />
+
             </LinearLayout>
-        </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/linearLayout11"
                 style="@android:style/Holo.ButtonBar"
@@ -566,9 +569,9 @@
         android:background="?attr/colorPrimary_attr" />
 
     <LinearLayout
-        android:layout_height="48dp"
-        android:layout_width="match_parent"
         style="@android:style/Holo.ButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:background="?attr/color_background">
 
         <Button

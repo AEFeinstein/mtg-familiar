@@ -2,6 +2,8 @@ package com.gelakinetic.GathererScraper.JsonTypes;
 
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
+import java.util.ArrayList;
+
 /*
  * This class contains all information about a scraped card
  *
@@ -43,6 +45,9 @@ public class Card {
     // The card's colors
     public String mColor = "";
 
+    // The card's colors
+    public String mColorIdentity = "";
+
     // The card's multiverse id
     public int mMultiverseId = 0;
 
@@ -54,4 +59,17 @@ public class Card {
 
     // The card's loyalty. An integer in practice
     public int mLoyalty = CardDbAdapter.NO_ONE_CARES;
+    
+    // All the card's foreign printings
+    public ArrayList<ForeignPrinting> mForeignPrintings = new ArrayList<ForeignPrinting>();
+
+    // The card's loyalty. An integer in practice
+    public String mWatermark = "";
+
+    // Private class for encapsulating foreign printing information
+    public static class ForeignPrinting {
+    	public int mMultiverseId;
+    	public String mName;
+    	public String mLanguageCode;
+    }
 }
