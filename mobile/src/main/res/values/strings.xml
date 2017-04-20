@@ -444,6 +444,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_ten_minutes_title">10-Minute Warning</string>
     <string name="pref_five_minutes_title">5-Minute Warning</string>
     <string name="pref_two_minutes_title">2-Minute Warning</string>
+    <string name="pref_use_sound_instead_of_tts">Use sound instead of TTS</string>
     <string name="pref_cat_trade_window">Trade Window</string>
     <string name="pref_trade_price_title">Price Setting</string>
     <string name="pref_trade_price_summary">TCGplayer price to use when trading cards</string>
