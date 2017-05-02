@@ -531,7 +531,11 @@ public class CardViewFragment extends FamiliarFragment {
         float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
         float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
         if (loyalty != CardDbAdapter.NO_ONE_CARES) {
-            mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
+            if (loyalty == CardDbAdapter.X) {
+                mPowTouTextView.setText("X");
+            } else {
+                mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
+            }
         } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
             String powTouStr = "";
@@ -546,6 +550,8 @@ public class CardViewFragment extends FamiliarFragment {
                 powTouStr += "7-*";
             else if (p == CardDbAdapter.STAR_SQUARED)
                 powTouStr += "*^2";
+            else if (p == CardDbAdapter.X)
+                powTouStr += "X";
             else {
                 if (p == (int) p) {
                     powTouStr += (int) p;
@@ -566,6 +572,8 @@ public class CardViewFragment extends FamiliarFragment {
                 powTouStr += "7-*";
             else if (t == CardDbAdapter.STAR_SQUARED)
                 powTouStr += "*^2";
+            else if (t == CardDbAdapter.X)
+                powTouStr += "X";
             else {
                 if (t == (int) t) {
                     powTouStr += (int) t;
