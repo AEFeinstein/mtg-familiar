@@ -1236,6 +1236,12 @@ public class CardDbAdapter {
             statement += ")";
         }
 
+        if(criteria.hasManaX) {
+            statement += " AND (";
+
+            statement += DATABASE_TABLE_CARDS + "." + KEY_MANACOST + " LIKE '%{X}%')";
+        }
+
         if (criteria.cmc != -1) {
             statement += " AND (";
 
