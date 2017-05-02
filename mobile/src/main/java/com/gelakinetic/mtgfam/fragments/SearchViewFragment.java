@@ -621,6 +621,9 @@ public class SearchViewFragment extends FamiliarFragment {
                 case "*^2":
                     pow = CardDbAdapter.STAR_SQUARED;
                     break;
+                case "X":
+                    pow = CardDbAdapter.X;
+                    break;
             }
         }
         searchCriteria.powChoice = pow;
@@ -645,6 +648,9 @@ public class SearchViewFragment extends FamiliarFragment {
                     break;
                 case "*^2":
                     tou = CardDbAdapter.STAR_SQUARED;
+                    break;
+                case "X":
+                    tou = CardDbAdapter.X;
                     break;
             }
         }
@@ -809,6 +815,8 @@ public class SearchViewFragment extends FamiliarFragment {
                     mPowChoice.setSelection(ptList.indexOf("7-*"));
                 else if (p == CardDbAdapter.STAR_SQUARED)
                     mPowChoice.setSelection(ptList.indexOf("*^2"));
+                else if (p == CardDbAdapter.X)
+                    mPowChoice.setSelection(ptList.indexOf("X"));
                 else {
                     if (p == (int) p) {
                         mPowChoice.setSelection(ptList.indexOf(((int) p) + ""));
@@ -830,6 +838,8 @@ public class SearchViewFragment extends FamiliarFragment {
                     mTouChoice.setSelection(ptList.indexOf("7-*"));
                 else if (t == CardDbAdapter.STAR_SQUARED)
                     mTouChoice.setSelection(ptList.indexOf("*^2"));
+                else if (t == CardDbAdapter.X)
+                    mTouChoice.setSelection(ptList.indexOf("X"));
                 else {
                     if (t == (int) t) {
                         mTouChoice.setSelection(ptList.indexOf(((int) t) + ""));
