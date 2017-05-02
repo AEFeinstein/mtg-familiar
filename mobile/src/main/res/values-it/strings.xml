@@ -213,7 +213,6 @@
 <string name="card_view_share_card">"Condividi carta"</string>
 <string name="card_view_share_text">"Testo"</string>
 <string name="card_view_share_image">"Immagine"</string>
-<string name="send_to">"Condividi questa immagine con"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Ascolta i punti vita totali"</string>

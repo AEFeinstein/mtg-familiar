@@ -212,7 +212,6 @@
 <string name="card_view_share_card">"Udostępnij kartę"</string>
 <string name="card_view_share_text">"Tekst"</string>
 <string name="card_view_share_image">"Obrazek"</string>
-<string name="send_to">"Udostępnij obrazek przy użyciu"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Komunikat o ilości życia"</string>

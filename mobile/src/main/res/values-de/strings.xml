@@ -211,7 +211,6 @@
 <string name="card_view_share_card">"Karte teilen"</string>
 <string name="card_view_share_text">"Text"</string>
 <string name="card_view_share_image">"Bild"</string>
-<string name="send_to">"Bild teilen via"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Lebenspunkte "</string>
