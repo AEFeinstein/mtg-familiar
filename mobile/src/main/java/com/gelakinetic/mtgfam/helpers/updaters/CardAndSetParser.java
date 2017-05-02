@@ -52,7 +52,7 @@ class CardAndSetParser {
     long mCurrentPatchTimestamp = 0;
     long mCurrentRulesTimestamp = 0;
 
-    public static Gson getGson() {
+    private static Gson getGson() {
         GsonBuilder reader = new GsonBuilder();
         reader.setFieldNamingStrategy((new PrefixedFieldNamingStrategy("m")));
         reader.disableHtmlEscaping();
@@ -75,8 +75,7 @@ class CardAndSetParser {
      * @param setsToAdd        An array list to place sets before adding to the database
      * @throws IOException If something goes wrong with the InputStream, this will be thrown
      */
-    public void readCardJsonStream(JsonReader reader, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<Expansion> setsToAdd)
-            throws IOException {
+    public void readCardJsonStream(JsonReader reader, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<Expansion> setsToAdd) {
 
         ArrayList<MtgCard> tempCardsToAdd = new ArrayList<>();
 
@@ -193,7 +192,7 @@ class CardAndSetParser {
         void reportJsonCardProgress(int progress);
     }
 
-    class LegalInfo {
+    private class LegalInfo {
         final ArrayList<NameAndMetadata> legalSets = new ArrayList<>();
         final ArrayList<NameAndMetadata> bannedCards = new ArrayList<>();
         final ArrayList<NameAndMetadata> restrictedCards = new ArrayList<>();
