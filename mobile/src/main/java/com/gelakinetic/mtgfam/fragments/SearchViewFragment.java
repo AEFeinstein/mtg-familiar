@@ -111,6 +111,8 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mTouChoice;
     private Spinner mCmcLogic;
     private Spinner mCmcChoice;
+    private CheckBox mCheckboxHasManaX;
+
     public Dialog mFormatDialog;
     public Dialog mRarityDialog;
     private EditText mFlavorField;
@@ -216,6 +218,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mTouChoice = (Spinner) myFragmentView.findViewById(R.id.touChoice);
         mCmcLogic = (Spinner) myFragmentView.findViewById(R.id.cmcLogic);
         mCmcChoice = (Spinner) myFragmentView.findViewById(R.id.cmcChoice);
+
+        mCheckboxHasManaX = (CheckBox) myFragmentView.findViewById(R.id.checkBoxHasManaX);
 
         /* Now we need to apply a different TextView to our Spinners to center the items */
         ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
@@ -660,6 +664,9 @@ public class SearchViewFragment extends FamiliarFragment {
                 case "*^2":
                     pow = CardDbAdapter.STAR_SQUARED;
                     break;
+                case "X":
+                    pow = CardDbAdapter.X;
+                    break;
             }
         }
         searchCriteria.powChoice = pow;
@@ -685,6 +692,9 @@ public class SearchViewFragment extends FamiliarFragment {
                 case "*^2":
                     tou = CardDbAdapter.STAR_SQUARED;
                     break;
+                case "X":
+                    tou = CardDbAdapter.X;
+                    break;
             }
         }
         searchCriteria.touChoice = tou;
@@ -699,6 +709,8 @@ public class SearchViewFragment extends FamiliarFragment {
         }
         searchCriteria.cmc = cmc;
         searchCriteria.cmcLogic = logicChoices[mCmcLogic.getSelectedItemPosition()];
+
+        searchCriteria.hasManaX = mCheckboxHasManaX.isChecked();
 
         searchCriteria.typeLogic = mTypeSpinner.getSelectedItemPosition();
         searchCriteria.textLogic = mTextSpinner.getSelectedItemPosition();
@@ -747,6 +759,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(0);
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
+        mCheckboxHasManaX.setChecked(false);
 
         if (mSetCheckedIndices != null) {
             mSetCheckedIndices = new int[0];
@@ -825,6 +838,8 @@ public class SearchViewFragment extends FamiliarFragment {
             }
             mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
 
+            mCheckboxHasManaX.setChecked(criteria.hasManaX);
+
             mTextSpinner.setSelection(criteria.textLogic);
             mTypeSpinner.setSelection(criteria.typeLogic);
             mSetSpinner.setSelection(criteria.setLogic);
@@ -844,6 +859,8 @@ public class SearchViewFragment extends FamiliarFragment {
                     mPowChoice.setSelection(ptList.indexOf("7-*"));
                 else if (p == CardDbAdapter.STAR_SQUARED)
                     mPowChoice.setSelection(ptList.indexOf("*^2"));
+                else if (p == CardDbAdapter.X)
+                    mPowChoice.setSelection(ptList.indexOf("X"));
                 else {
                     if (p == (int) p) {
                         mPowChoice.setSelection(ptList.indexOf(((int) p) + ""));
@@ -865,6 +882,8 @@ public class SearchViewFragment extends FamiliarFragment {
                     mTouChoice.setSelection(ptList.indexOf("7-*"));
                 else if (t == CardDbAdapter.STAR_SQUARED)
                     mTouChoice.setSelection(ptList.indexOf("*^2"));
+                else if (t == CardDbAdapter.X)
+                    mTouChoice.setSelection(ptList.indexOf("X"));
                 else {
                     if (t == (int) t) {
                         mTouChoice.setSelection(ptList.indexOf(((int) t) + ""));

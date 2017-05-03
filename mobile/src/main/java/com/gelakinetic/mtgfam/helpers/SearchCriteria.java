@@ -20,6 +20,7 @@ public class SearchCriteria implements Serializable {
     public Float touChoice = (float) CardDbAdapter.NO_ONE_CARES;
     public String touLogic = null;
     public int cmc = -1;
+    public Boolean hasManaX = false;
     public String cmcLogic = null;
     public String format = null;
     public String rarity = null;

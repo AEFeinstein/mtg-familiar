@@ -63,6 +63,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Card;
+import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
@@ -162,6 +164,9 @@ public class CardViewFragment extends FamiliarFragment {
     private boolean mShouldReportView = false;
     public String mDescription;
     public String mSetName;
+
+    /* Foreign name translations */
+    public ArrayList<Card.ForeignPrinting> mTranslatedNames = new ArrayList<>();
 
     /**
      * Kill any AsyncTask if it is still running
@@ -526,7 +531,11 @@ public class CardViewFragment extends FamiliarFragment {
         float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
         float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
         if (loyalty != CardDbAdapter.NO_ONE_CARES) {
-            mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
+            if (loyalty == CardDbAdapter.X) {
+                mPowTouTextView.setText("X");
+            } else {
+                mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
+            }
         } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
             String powTouStr = "";
@@ -541,6 +550,8 @@ public class CardViewFragment extends FamiliarFragment {
                 powTouStr += "7-*";
             else if (p == CardDbAdapter.STAR_SQUARED)
                 powTouStr += "*^2";
+            else if (p == CardDbAdapter.X)
+                powTouStr += "X";
             else {
                 if (p == (int) p) {
                     powTouStr += (int) p;
@@ -561,6 +572,8 @@ public class CardViewFragment extends FamiliarFragment {
                 powTouStr += "7-*";
             else if (t == CardDbAdapter.STAR_SQUARED)
                 powTouStr += "*^2";
+            else if (t == CardDbAdapter.X)
+                powTouStr += "X";
             else {
                 if (t == (int) t) {
                     powTouStr += (int) t;
@@ -661,6 +674,28 @@ public class CardViewFragment extends FamiliarFragment {
             mColorIndicatorLayout.addView(civ);
         } else {
             mColorIndicatorLayout.setVisibility(View.GONE);
+        }
+
+        String allLanguageKeys[][] = {
+                {Language.Chinese_Traditional, CardDbAdapter.KEY_NAME_CHINESE_TRADITIONAL, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_TRADITIONAL},
+                {Language.Chinese_Simplified, CardDbAdapter.KEY_NAME_CHINESE_SIMPLIFIED, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_SIMPLIFIED},
+                {Language.French, CardDbAdapter.KEY_NAME_FRENCH, CardDbAdapter.KEY_MULTIVERSEID_FRENCH},
+                {Language.German, CardDbAdapter.KEY_NAME_GERMAN, CardDbAdapter.KEY_MULTIVERSEID_GERMAN},
+                {Language.Italian, CardDbAdapter.KEY_NAME_ITALIAN, CardDbAdapter.KEY_MULTIVERSEID_ITALIAN},
+                {Language.Japanese, CardDbAdapter.KEY_NAME_JAPANESE, CardDbAdapter.KEY_MULTIVERSEID_JAPANESE},
+                {Language.Portuguese_Brazil, CardDbAdapter.KEY_NAME_PORTUGUESE_BRAZIL, CardDbAdapter.KEY_MULTIVERSEID_PORTUGUESE_BRAZIL},
+                {Language.Russian, CardDbAdapter.KEY_NAME_RUSSIAN, CardDbAdapter.KEY_MULTIVERSEID_RUSSIAN},
+                {Language.Spanish, CardDbAdapter.KEY_NAME_SPANISH, CardDbAdapter.KEY_MULTIVERSEID_SPANISH},
+                {Language.Korean, CardDbAdapter.KEY_NAME_KOREAN, CardDbAdapter.KEY_MULTIVERSEID_KOREAN}};
+
+        for (String lang[] : allLanguageKeys) {
+            Card.ForeignPrinting fp = new Card.ForeignPrinting();
+            fp.mLanguageCode = lang[0];
+            fp.mName = cCardById.getString(cCardById.getColumnIndex(lang[1]));
+            fp.mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(lang[2]));
+            if (fp.mName != null && !fp.mName.isEmpty()) {
+                mTranslatedNames.add(fp);
+            }
         }
 
         cCardById.close();
@@ -921,7 +956,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchLegalityTask();
-                ((FetchLegalityTask)mAsyncTask).execute((Void[]) null);
+                ((FetchLegalityTask) mAsyncTask).execute((Void[]) null);
                 return true;
             }
             case R.id.cardrulings: {
@@ -934,7 +969,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mAsyncTask.cancel(true);
                 }
                 mAsyncTask = new FetchRulingsTask();
-                ((FetchRulingsTask)mAsyncTask).execute((Void[]) null);
+                ((FetchRulingsTask) mAsyncTask).execute((Void[]) null);
                 return true;
             }
             case R.id.addtowishlist: {
@@ -943,6 +978,10 @@ public class CardViewFragment extends FamiliarFragment {
             }
             case R.id.sharecard: {
                 showDialog(CardViewDialogFragment.SHARE_CARD);
+                return true;
+            }
+            case R.id.translatecard: {
+                showDialog(CardViewDialogFragment.TRANSLATE_CARD);
                 return true;
             }
             default: {
@@ -1074,7 +1113,7 @@ public class CardViewFragment extends FamiliarFragment {
                     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                     shareIntent.setType("image/jpeg");
-                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
+                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.card_view_send_to)));
 
                 } catch (Exception e) {
                     ToastWrapper.makeText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG).show();
@@ -1207,10 +1246,9 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected Void doInBackground(Integer... params) {
 
-            if(params != null && params.length > 0) {
+            if (params != null && params.length > 0) {
                 mLoadTo = params[0];
-            }
-            else {
+            } else {
                 mLoadTo = MAIN_PAGE;
             }
 
@@ -1360,7 +1398,7 @@ public class CardViewFragment extends FamiliarFragment {
                 switch (mSetCode) {
                     case "PC2":
                         picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                        picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;
                     case "PCH":
@@ -1372,12 +1410,12 @@ public class CardViewFragment extends FamiliarFragment {
                             cardName = "horizon-boughs-gateway-promo";
                         }
                         picURL = "http://magiccards.info/extras/plane/planechase/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                        picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;
                     case "ARC":
                         picURL = "http://magiccards.info/extras/scheme/archenemy/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-").replace(Character.toChars(0xC6)[0] + "", "Ae")
+                        picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;
                     default:

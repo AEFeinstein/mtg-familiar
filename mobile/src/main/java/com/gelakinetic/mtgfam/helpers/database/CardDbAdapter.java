@@ -31,7 +31,9 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.provider.BaseColumns;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
+import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -57,7 +59,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 77;
+    public static final int DATABASE_VERSION = 80;
 
     /* The name of the database */
     public static final String DATABASE_NAME = "data";
@@ -108,6 +110,28 @@ public class CardDbAdapter {
     private static final String KEY_POSITION = "position";
     private static final String KEY_COLOR_IDENTITY = "color_identity";
     private static final String KEY_CAN_BE_FOIL = "can_be_foil";
+    private static final String KEY_NAME_NO_ACCENT = "name_no_accent";
+    public static final String KEY_NAME_CHINESE_TRADITIONAL = "NAME_CHINESE_TRADITIONAL";
+    public static final String KEY_MULTIVERSEID_CHINESE_TRADITIONAL = "MULTIVERSEID_CHINESE_TRADITIONAL";
+    public static final String KEY_NAME_CHINESE_SIMPLIFIED = "NAME_CHINESE_SIMPLIFIED";
+    public static final String KEY_MULTIVERSEID_CHINESE_SIMPLIFIED = "MULTIVERSEID_CHINESE_SIMPLIFIED";
+    public static final String KEY_NAME_FRENCH = "NAME_FRENCH";
+    public static final String KEY_MULTIVERSEID_FRENCH = "MULTIVERSEID_FRENCH";
+    public static final String KEY_NAME_GERMAN = "NAME_GERMAN";
+    public static final String KEY_MULTIVERSEID_GERMAN = "MULTIVERSEID_GERMAN";
+    public static final String KEY_NAME_ITALIAN = "NAME_ITALIAN";
+    public static final String KEY_MULTIVERSEID_ITALIAN = "MULTIVERSEID_ITALIAN";
+    public static final String KEY_NAME_JAPANESE = "NAME_JAPANESE";
+    public static final String KEY_MULTIVERSEID_JAPANESE = "MULTIVERSEID_JAPANESE";
+    public static final String KEY_NAME_PORTUGUESE_BRAZIL = "NAME_PORTUGUESE_BRAZIL";
+    public static final String KEY_MULTIVERSEID_PORTUGUESE_BRAZIL = "MULTIVERSEID_PORTUGUESE_BRAZIL";
+    public static final String KEY_NAME_RUSSIAN = "NAME_RUSSIAN";
+    public static final String KEY_MULTIVERSEID_RUSSIAN = "MULTIVERSEID_RUSSIAN";
+    public static final String KEY_NAME_SPANISH = "NAME_SPANISH";
+    public static final String KEY_MULTIVERSEID_SPANISH = "MULTIVERSEID_SPANISH";
+    public static final String KEY_NAME_KOREAN = "NAME_KOREAN";
+    public static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
+    private static final String KEY_WATERMARK = "WATERMARK";
 
     /* All the columns in DATABASE_TABLE_CARDS */
     public static final String[] allCardDataKeys = {
@@ -130,6 +154,28 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID,
             DATABASE_TABLE_CARDS + "." + KEY_RULINGS,
             DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_TRADITIONAL,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_CHINESE_TRADITIONAL,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_CHINESE_SIMPLIFIED,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_CHINESE_SIMPLIFIED,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_FRENCH,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_FRENCH,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_GERMAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_GERMAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_ITALIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_ITALIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_JAPANESE,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_JAPANESE,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_PORTUGUESE_BRAZIL,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_PORTUGUESE_BRAZIL,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_RUSSIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_RUSSIAN,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_SPANISH,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_SPANISH,
+            DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN,
+            DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
+            DATABASE_TABLE_CARDS + "." + KEY_WATERMARK
     };
 
     /* All the columns in DATABASE_CREATE_SETS */
@@ -189,7 +235,29 @@ public class CardDbAdapter {
                     KEY_MULTIVERSEID + " integer not null, " +
                     KEY_COLOR + " text not null, " +
                     KEY_COLOR_IDENTITY + " text, " +
-                    KEY_RULINGS + " text);";
+                    KEY_RULINGS + " text, " +
+                    KEY_NAME_NO_ACCENT + " text not null, " +
+                    KEY_WATERMARK + " text, " +
+                    KEY_NAME_CHINESE_TRADITIONAL + " text, " +
+                    KEY_MULTIVERSEID_CHINESE_TRADITIONAL + " integer, " +
+                    KEY_NAME_CHINESE_SIMPLIFIED + " text, " +
+                    KEY_MULTIVERSEID_CHINESE_SIMPLIFIED + " integer, " +
+                    KEY_NAME_FRENCH + " text, " +
+                    KEY_MULTIVERSEID_FRENCH + " integer, " +
+                    KEY_NAME_GERMAN + " text, " +
+                    KEY_MULTIVERSEID_GERMAN + " integer, " +
+                    KEY_NAME_ITALIAN + " text, " +
+                    KEY_MULTIVERSEID_ITALIAN + " integer, " +
+                    KEY_NAME_JAPANESE + " text, " +
+                    KEY_MULTIVERSEID_JAPANESE + " integer, " +
+                    KEY_NAME_PORTUGUESE_BRAZIL + " text, " +
+                    KEY_MULTIVERSEID_PORTUGUESE_BRAZIL + " integer, " +
+                    KEY_NAME_RUSSIAN + " text, " +
+                    KEY_MULTIVERSEID_RUSSIAN + " integer, " +
+                    KEY_NAME_SPANISH + " text, " +
+                    KEY_MULTIVERSEID_SPANISH + " integer, " +
+                    KEY_NAME_KOREAN + " text, " +
+                    KEY_MULTIVERSEID_KOREAN + " integer);";
 
     public static final String DATABASE_CREATE_SETS =
             "create table " + DATABASE_TABLE_SETS + "(" +
@@ -218,6 +286,7 @@ public class CardDbAdapter {
     public static final int SEVEN_MINUS_STAR = -1003;
     public static final int STAR_SQUARED = -1004;
     public static final int NO_ONE_CARES = -1005;
+    public static final int X = -1006;
 
     /* The options for printings for a query */
     public static final int MOST_RECENT_PRINTING = 0;
@@ -475,8 +544,8 @@ public class CardDbAdapter {
     public static Cursor fetchCardByName(String name, String[] fields, boolean shouldGroup,
                                          SQLiteDatabase mDb)
             throws FamiliarDbException {
-        /* replace lowercase ae with Ae */
-        name = sanitizeString(name);
+        /* Sanitize the string and remove accent marks */
+        name = sanitizeString(name, true);
         String sql = "SELECT ";
         boolean first = true;
         for (String field : fields) {
@@ -489,7 +558,7 @@ public class CardDbAdapter {
         }
         sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS +
                 " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name + " COLLATE NOCASE";
+                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " + name + " COLLATE NOCASE";
         if (shouldGroup) {
             sql += " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE;
         }
@@ -589,12 +658,12 @@ public class CardDbAdapter {
                 }
                 if (cwi.mCard.setCode != null && !cwi.mCard.setCode.equals("")) {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mCard.mName) +
+                            sanitizeString(cwi.mCard.mName, false) +
                             " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" +
                             cwi.mCard.setCode + "')";
                 } else {
-                    sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mCard.mName) + ")";
+                    sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " +
+                            sanitizeString(cwi.mCard.mName, true) + ")";
                 }
             }
         }
@@ -669,9 +738,9 @@ public class CardDbAdapter {
     public static Cursor fetchCardByNameAndSet(String name, String setCode, String[] fields,
                                                SQLiteDatabase mDb)
             throws FamiliarDbException {
-        /* replace lowercase ae with Ae, sanitize single quotes */
-        name = sanitizeString(name);
-        setCode = sanitizeString(setCode);
+        /* Sanitize the string and remove accent marks */
+        name = sanitizeString(name, true);
+        setCode = sanitizeString(setCode, false);
 
         String sql = "SELECT ";
         boolean first = true;
@@ -688,7 +757,7 @@ public class CardDbAdapter {
                 + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
                 + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
                 + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
-                + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " + name + " COLLATE NOCASE"
+                + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " + name + " COLLATE NOCASE"
                 + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = "
                 + setCode + " ORDER BY " + DATABASE_TABLE_SETS + "."
                 + KEY_DATE + " DESC";
@@ -716,7 +785,7 @@ public class CardDbAdapter {
      */
     public static long fetchIdByName(String name, SQLiteDatabase mDb) throws FamiliarDbException {
         /* replace lowercase ae with Ae */
-        name = sanitizeString(name);
+        name = sanitizeString(name, true);
 
         String sql = "SELECT " +
                 DATABASE_TABLE_CARDS + "." + KEY_ID + ", " +
@@ -725,7 +794,7 @@ public class CardDbAdapter {
                 " FROM (" + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " +
                 DATABASE_TABLE_CARDS + "." + KEY_SET + "=" +
                 DATABASE_TABLE_SETS + "." + KEY_CODE + ")" +
-                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = "
+                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = "
                 + name + " COLLATE NOCASE ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
 
         Cursor cursor;
@@ -767,8 +836,7 @@ public class CardDbAdapter {
             String[] nameParts = criteria.name.split(" ");
             for (String s : nameParts) {
                 statement += " AND (" +
-                        DATABASE_TABLE_CARDS + "." + KEY_NAME + " LIKE " + sanitizeString("%" + s + "%") + " OR " +
-                        DATABASE_TABLE_CARDS + "." + KEY_NAME + " LIKE " + sanitizeString("%" + s.toLowerCase().replace("ae", String.valueOf(Character.toChars(0xC6)[0])) + "%") + ")";
+                        DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + sanitizeString("%" + s + "%", true) + ")";
             }
         }
 
@@ -803,10 +871,10 @@ public class CardDbAdapter {
                         if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
                                     + KEY_ABILITY + " NOT LIKE "
-                                    + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%") + ")";
+                                    + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false) + ")";
                         else
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                     }
                     break;
                 case 1:
@@ -817,25 +885,25 @@ public class CardDbAdapter {
                             if (s.contains(EXCLUDE_TOKEN))
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
                                         + KEY_ABILITY + " NOT LIKE "
-                                        + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%") + ")";
+                                        + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false) + ")";
                             else
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                        + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                         } else {
                             if (s.contains(EXCLUDE_TOKEN))
                                 statement += " AND (" + DATABASE_TABLE_CARDS + "."
                                         + KEY_ABILITY + " NOT LIKE "
-                                        + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%") + ")";
+                                        + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false) + ")";
                             else
                                 statement += " OR (" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                        + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                         }
                     }
                     statement += ")";
                     break;
                 case 2:
                     statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                            + KEY_ABILITY + " LIKE " + sanitizeString("%" + criteria.text + "%") + ")";
+                            + KEY_ABILITY + " LIKE " + sanitizeString("%" + criteria.text + "%", false) + ")";
                     break;
                 default:
                     break;
@@ -890,10 +958,10 @@ public class CardDbAdapter {
                     for (String s : supertypesParts) {
                         if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%") + ")";
+                                    + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%", false) + ")";
                         else
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                     }
                     break;
                 case 1:
@@ -905,24 +973,24 @@ public class CardDbAdapter {
                             if (s.contains(EXCLUDE_TOKEN))
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
                                         + KEY_SUPERTYPE + " NOT LIKE "
-                                        + sanitizeString("%" + s.substring(1) + "%") + ")";
+                                        + sanitizeString("%" + s.substring(1) + "%", false) + ")";
                             else
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                        + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                         } else if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
+                                    + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%", false)
                                     + ")";
                         else
                             statement += " OR (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_SUPERTYPE + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                     }
                     statement += ")";
                     break;
                 case 2:
                     for (String s : supertypesParts) {
                         statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s + "%") + ")";
+                                + KEY_SUPERTYPE + " NOT LIKE " + sanitizeString("%" + s + "%", false) + ")";
                     }
                     break;
                 default:
@@ -939,11 +1007,11 @@ public class CardDbAdapter {
                     for (String s : subtypesParts) {
                         if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
+                                    + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%", false)
                                     + ")";
                         else
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                     }
                     break;
                 case 1:
@@ -954,24 +1022,24 @@ public class CardDbAdapter {
                             if (s.contains(EXCLUDE_TOKEN))
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
                                         + KEY_SUBTYPE + " NOT LIKE "
-                                        + sanitizeString("%" + s.substring(1) + "%") + ")";
+                                        + sanitizeString("%" + s.substring(1) + "%", false) + ")";
                             else
                                 statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                        + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                         } else if (s.contains(EXCLUDE_TOKEN))
                             statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%")
+                                    + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s.substring(1) + "%", false)
                                     + ")";
                         else
                             statement += " OR (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%") + ")";
+                                    + KEY_SUBTYPE + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
                     }
                     statement += ")";
                     break;
                 case 2:
                     for (String s : subtypesParts) {
                         statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s + "%") + ")";
+                                + KEY_SUBTYPE + " NOT LIKE " + sanitizeString("%" + s + "%", false) + ")";
                     }
                     break;
                 default:
@@ -983,17 +1051,17 @@ public class CardDbAdapter {
 
         if (criteria.flavor != null) {
             statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_FLAVOR
-                    + " LIKE " + sanitizeString("%" + criteria.flavor + "%") + ")";
+                    + " LIKE " + sanitizeString("%" + criteria.flavor + "%", false) + ")";
         }
 
         if (criteria.artist != null) {
             statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_ARTIST
-                    + " LIKE " + sanitizeString("%" + criteria.artist + "%") + ")";
+                    + " LIKE " + sanitizeString("%" + criteria.artist + "%", false) + ")";
         }
 
         if (criteria.collectorsNumber != null) {
             statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER
-                    + " = " + sanitizeString(criteria.collectorsNumber) + ")";
+                    + " = " + sanitizeString(criteria.collectorsNumber, false) + ")";
         }
 
         /************************************************************************************
@@ -1166,6 +1234,12 @@ public class CardDbAdapter {
                         + criteria.touLogic + " " + criteria.touChoice;
             }
             statement += ")";
+        }
+
+        if(criteria.hasManaX) {
+            statement += " AND (";
+
+            statement += DATABASE_TABLE_CARDS + "." + KEY_MANACOST + " LIKE '%{X}%')";
         }
 
         if (criteria.cmc != -1) {
@@ -1403,11 +1477,7 @@ public class CardDbAdapter {
      */
     public static Cursor getCardsByNamePrefix(String query, SQLiteDatabase mDb) throws FamiliarDbException {
         try {
-            String convert = query.toLowerCase().replace("ae", String.valueOf(Character.toChars(0xC6)[0]));
-
-            query = sanitizeString(query + "%");
-
-            convert = sanitizeString(convert + "%");
+            query = sanitizeString(query + "%", true);
 
             if (query.length() < 2) {
                 return null;
@@ -1423,8 +1493,7 @@ public class CardDbAdapter {
                             " JOIN " + DATABASE_TABLE_SETS +
                             " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
                             " WHERE " +
-                            DATABASE_TABLE_CARDS + "." + KEY_NAME + " LIKE " + query + " OR " +
-                            DATABASE_TABLE_CARDS + "." + KEY_NAME + " LIKE " + convert +
+                            DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + query +
                             " ORDER BY " +
                             DATABASE_TABLE_CARDS + "." + KEY_NAME + " COLLATE UNICODE, " +
                             DATABASE_TABLE_SETS + "." + KEY_DATE + " ASC" +
@@ -1447,8 +1516,8 @@ public class CardDbAdapter {
             throws FamiliarDbException {
         Cursor c;
         String statement = "SELECT " + KEY_MULTIVERSEID + " from "
-                + DATABASE_TABLE_CARDS + " WHERE " + KEY_NAME + " = "
-                + sanitizeString(name) + " COLLATE NOCASE AND " + KEY_SET + " = '" + setCode + "'";
+                + DATABASE_TABLE_CARDS + " WHERE " + KEY_NAME_NO_ACCENT + " = "
+                + sanitizeString(name, true) + " COLLATE NOCASE AND " + KEY_SET + " = '" + setCode + "'";
 
         try {
             c = mDb.rawQuery(statement, null);
@@ -1558,7 +1627,64 @@ public class CardDbAdapter {
         initialValues.put(KEY_NUMBER, card.mNumber);
         initialValues.put(KEY_COLOR, card.mColor);
         initialValues.put(KEY_MULTIVERSEID, card.mMultiverseId);
-        initialValues.put(KEY_COLOR_IDENTITY, card.colorIdentity);
+        initialValues.put(KEY_COLOR_IDENTITY, card.mColorIdentity);
+        initialValues.put(KEY_NAME_NO_ACCENT, removeAccentMarks(card.mName));
+        initialValues.put(KEY_WATERMARK, card.mWatermark);
+
+        for(Card.ForeignPrinting fp : card.mForeignPrintings) {
+            switch (fp.mLanguageCode) {
+                case Language.Chinese_Traditional: {
+                    initialValues.put(KEY_NAME_CHINESE_TRADITIONAL, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_CHINESE_TRADITIONAL, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Chinese_Simplified: {
+                    initialValues.put(KEY_NAME_CHINESE_SIMPLIFIED, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_CHINESE_SIMPLIFIED, fp.mMultiverseId);
+                    break;
+                }
+                case Language.French: {
+                    initialValues.put(KEY_NAME_FRENCH, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_FRENCH, fp.mMultiverseId);
+                    break;
+                }
+                case Language.German: {
+                    initialValues.put(KEY_NAME_GERMAN, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_GERMAN, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Italian: {
+                    initialValues.put(KEY_NAME_ITALIAN, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_ITALIAN, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Japanese: {
+                    initialValues.put(KEY_NAME_JAPANESE, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_JAPANESE, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Portuguese_Brazil: {
+                    initialValues.put(KEY_NAME_PORTUGUESE_BRAZIL, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_PORTUGUESE_BRAZIL, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Russian: {
+                    initialValues.put(KEY_NAME_RUSSIAN, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_RUSSIAN, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Spanish: {
+                    initialValues.put(KEY_NAME_SPANISH, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_SPANISH, fp.mMultiverseId);
+                    break;
+                }
+                case Language.Korean: {
+                    initialValues.put(KEY_NAME_KOREAN, fp.mName);
+                    initialValues.put(KEY_MULTIVERSEID_KOREAN, fp.mMultiverseId);
+                    break;
+                }
+            }
+        }
 
         mDb.insert(DATABASE_TABLE_CARDS, null, initialValues);
     }
@@ -1581,8 +1707,8 @@ public class CardDbAdapter {
             String sql =
                     "SELECT " + KEY_SET +
                             " FROM " + DATABASE_TABLE_CARDS +
-                            " WHERE (" + KEY_NAME + " = " + sanitizeString(name) +
-                            " AND " + KEY_SET + " LIKE " + sanitizeString(setCode + "%") + ")";
+                            " WHERE (" + KEY_NAME + " = " + sanitizeString(name, false) +
+                            " AND " + KEY_SET + " LIKE " + sanitizeString(setCode + "%", false) + ")";
 
             cursor = database.rawQuery(sql, null);
             if (cursor != null && cursor.getCount() > 0) {
@@ -1611,8 +1737,8 @@ public class CardDbAdapter {
             throws FamiliarDbException {
 
         try {
-            database.delete(DATABASE_TABLE_CARDS, KEY_SET + " = " + sanitizeString(setCode), null);
-            database.delete(DATABASE_TABLE_SETS, KEY_CODE + " = " + sanitizeString(setCode), null);
+            database.delete(DATABASE_TABLE_CARDS, KEY_SET + " = " + sanitizeString(setCode, false), null);
+            database.delete(DATABASE_TABLE_SETS, KEY_CODE + " = " + sanitizeString(setCode, false), null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -1691,8 +1817,8 @@ public class CardDbAdapter {
      */
     public static int checkLegality(String mCardName, String format, SQLiteDatabase mDb)
             throws FamiliarDbException {
-        mCardName = sanitizeString(mCardName);
-        format = sanitizeString(format);
+        mCardName = sanitizeString(mCardName, false);
+        format = sanitizeString(format, false);
 
         try {
             /* The new way (single query per type, should be much faster) - Alex
@@ -1872,7 +1998,7 @@ public class CardDbAdapter {
         try {
             String sql = "SELECT " + KEY_NAME_TCGPLAYER +
                     " FROM " + DATABASE_TABLE_SETS +
-                    " WHERE " + KEY_CODE + " = " + sanitizeString(setCode) + ";";
+                    " WHERE " + KEY_CODE + " = " + sanitizeString(setCode, false) + ";";
             Cursor c = mDb.rawQuery(sql, null);
             c.moveToFirst();
 
@@ -2171,7 +2297,7 @@ public class CardDbAdapter {
         try {
             /* Don't let them pass in an empty string; it'll return ALL the rules */
             if (keyword != null && !keyword.trim().equals("")) {
-                keyword = sanitizeString("%" + keyword + "%");
+                keyword = sanitizeString("%" + keyword + "%", false);
 
                 if (category == -1) {
                     /* No category; we're searching from the main page, so no restrictions */
@@ -2222,7 +2348,7 @@ public class CardDbAdapter {
                         " FROM " + DATABASE_TABLE_RULES +
                         " WHERE " + KEY_CATEGORY + " = " + String.valueOf(category) +
                         " AND " + KEY_SUBCATEGORY + " = " + String.valueOf(subcategory) +
-                        " AND " + KEY_ENTRY + " = " + sanitizeString(entry);
+                        " AND " + KEY_ENTRY + " = " + sanitizeString(entry, false);
                 Cursor c = mDb.rawQuery(sql, null);
                 if (c != null) {
                     c.moveToFirst();
@@ -2283,9 +2409,9 @@ public class CardDbAdapter {
         if (entry == null) {
             entry = "NULL";
         } else {
-            entry = sanitizeString(entry);
+            entry = sanitizeString(entry, false);
         }
-        text = sanitizeString(text);
+        text = sanitizeString(text, false);
         String positionStr;
         if (position < 0) {
             positionStr = "NULL";
@@ -2320,8 +2446,8 @@ public class CardDbAdapter {
      */
     public static void insertGlossaryTerm(String term, String definition, SQLiteDatabase mDb)
             throws FamiliarDbException {
-        term = sanitizeString(term);
-        definition = sanitizeString(definition);
+        term = sanitizeString(term, false);
+        definition = sanitizeString(definition, false);
         String sql = "INSERT INTO " + DATABASE_TABLE_GLOSSARY + " (" + KEY_TERM
                 + ", " + KEY_DEFINITION + ") VALUES (" + term + ", "
                 + definition + ");";
@@ -2355,16 +2481,16 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Helper functin to sanitize a string, SQL queries, replace and "Ae" characters,
-     * and trim whitespace
+     * Helper function to sanitize a string for SQL queries, remove accent marks, and trim whitespace
      *
      * @param input A string to sanitize
      * @return The sanitized String
      */
-    private static String sanitizeString(String input) {
-        return DatabaseUtils.sqlEscapeString(input
-                .replace(Character.toChars(0xE6)[0], Character.toChars(0xC6)[0])
-                .trim());
+    private static String sanitizeString(String input, boolean removeAccentMarks) {
+        if(removeAccentMarks) {
+            return DatabaseUtils.sqlEscapeString(removeAccentMarks(input).trim());
+        }
+        return DatabaseUtils.sqlEscapeString(input.trim());
     }
 
     /**
