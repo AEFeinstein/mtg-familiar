@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('tokenautocomplete-2.0.8.jar'))

@@ -1,1 +1,1 @@
-include ':mobile', ':tokenautocomplete-2.0.8'
+include ':mobile'

@@ -217,6 +217,20 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic = (Spinner) myFragmentView.findViewById(R.id.cmcLogic);
         mCmcChoice = (Spinner) myFragmentView.findViewById(R.id.cmcChoice);
 
+        /* Now we need to apply a different TextView to our Spinners to center the items */
+        ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
+        logicAdapter.setDropDownViewResource(R.layout.centered_spinner_text);
+        mPowLogic.setAdapter(logicAdapter);
+        mTouLogic.setAdapter(logicAdapter);
+        mCmcLogic.setAdapter(logicAdapter);
+        ArrayAdapter<String> ptChoiceAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.pt_spinner));
+        ptChoiceAdapter.setDropDownViewResource(R.layout.centered_spinner_text);
+        mPowChoice.setAdapter(ptChoiceAdapter);
+        mTouChoice.setAdapter(ptChoiceAdapter);
+        ArrayAdapter<String> cmcChoiceAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.cmc_spinner));
+        cmcChoiceAdapter.setDropDownViewResource(R.layout.centered_spinner_text);
+        mCmcChoice.setAdapter(cmcChoiceAdapter);
+
         /* set the buttons to open the dialogs */
         mFormatButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -483,6 +497,7 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mFlavorField.getText() != null;
         assert mArtistField.getText() != null;
         assert mSetField.getText() != null;
+        assert mCollectorsNumberField.getText() != null;
 
         /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString().trim();
