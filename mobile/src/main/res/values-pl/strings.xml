@@ -221,7 +221,8 @@
 <string name="life_counter_remove_player">"Usuń Gracza"</string>
 <string name="life_counter_add_player">"Dodaj gracza"</string>
 <string name="life_counter_gathering_dialog_title">"Wczytaj Pojedynek"</string>
-<string name="life_counter_clear_dialog_text">"Wyzerować licznik życia i nazwy graczy? Licznik many także ulegnie wyczyszczeniu."</string>
+<string name="life_counter_clear_dialog_text">"Wyzerować licznik życia i nazwy graczy?\n
+        Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="life_counter_edit_name_dialog_title">"Wpisz imię"</string>
 <string name="life_counter_Commander">"Commander"</string>
 <string name="life_counter_Compact">"Kompaktowy"</string>

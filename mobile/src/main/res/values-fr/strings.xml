@@ -220,7 +220,8 @@
 <string name="life_counter_remove_player">"Enlever un joueur"</string>
 <string name="life_counter_add_player">"Ajouter un joueur"</string>
 <string name="life_counter_gathering_dialog_title">"Charger un Type de Match"</string>
-<string name="life_counter_clear_dialog_text">"Effacer les totaux de vie ou les joueurs?nLa réserve de mana sera aussi vidée."</string>
+<string name="life_counter_clear_dialog_text">"Effacer les totaux de vie ou les joueurs?\n
+    La réserve de mana sera aussi vidée."</string>
 <string name="life_counter_edit_name_dialog_title">"Saisir Nom"</string>
 <string name="life_counter_Commander">"Commander"</string>
 <string name="life_counter_Compact">"Compact"</string>
@@ -521,10 +522,10 @@
 <string name="decklist_others">"Autres"</string>
 <string name="decklist_unnamed_deck">"Deck Sans Nom"</string>
 <string name="decklist_cards">"cartes"</string>
-<string name="main_whats_new_text">"- Ajout d'un créateur de deck
-- Ajout de tri pour les résultats
-- Ajout du nom des cartes dans d'autres langues
-- Ajout d'un bouton de partage pour les textes de carte et les images
+<string name="main_whats_new_text">"- Ajout d'un créateur de deck&lt;br&gt;
+- Ajout de tri pour les résultats&lt;br&gt;
+- Ajout du nom des cartes dans d'autres langues&lt;br&gt;
+- Ajout d'un bouton de partage pour les textes de carte et les images&lt;br&gt;
 - Réparer les images de certaines cartes"</string>
 <string name="card_view_send_to">"Partager l'image avec"</string>
 <string name="card_view_translated_dialog_title">"Nom de carte traduit"</string>

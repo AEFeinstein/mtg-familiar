@@ -220,7 +220,8 @@
 <string name="life_counter_remove_player">"Eliminar un jugador"</string>
 <string name="life_counter_add_player">"Añadir un jugador"</string>
 <string name="life_counter_gathering_dialog_title">"Cargar un tipo de partida"</string>
-<string name="life_counter_clear_dialog_text">"¿Reiniciar el total de vida o los jugadores?nLa reserva de maná también será vaciada."</string>
+<string name="life_counter_clear_dialog_text">"¿Reiniciar el total de vida o los jugadores?\n
+    La reserva de maná también será vaciada."</string>
 <string name="life_counter_edit_name_dialog_title">"Introducir nombre"</string>
 <string name="life_counter_Commander">"Commander"</string>
 <string name="life_counter_Compact">"Compact"</string>

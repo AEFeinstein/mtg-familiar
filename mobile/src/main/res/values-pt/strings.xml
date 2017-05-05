@@ -220,7 +220,8 @@
 <string name="life_counter_remove_player">"Remover um jogador"</string>
 <string name="life_counter_add_player">"Adicionar um jogador"</string>
 <string name="life_counter_gathering_dialog_title">"Carregando um tipo de jogo"</string>
-<string name="life_counter_clear_dialog_text">"Limpar totais de vida ou jogadores? Reserva de mana também serão apagados."</string>
+<string name="life_counter_clear_dialog_text">"Limpar totais de vida ou jogadores?\n
+    Reserva de mana também serão apagados."</string>
 <string name="life_counter_edit_name_dialog_title">"Digite o nome"</string>
 <string name="life_counter_Commander">"Comandante"</string>
 <string name="life_counter_Compact">"Compacto"</string>

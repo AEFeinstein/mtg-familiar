@@ -236,7 +236,7 @@ See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="life_counter_remove_player">"Spieler entfernen"</string>
 <string name="life_counter_add_player">"Spieler hinzufügen"</string>
 <string name="life_counter_gathering_dialog_title">"Spiel wählen"</string>
-<string name="life_counter_clear_dialog_text">"Lebenspunkte oder Spieler zurücksetzen?
+<string name="life_counter_clear_dialog_text">"Lebenspunkte oder Spieler zurücksetzen?\n
 Der Manavorrat wird ebenfalls geleert"</string>
 <string name="life_counter_edit_name_dialog_title">"Namen eingeben"</string>
 <string name="life_counter_Commander">"Commander"</string>
