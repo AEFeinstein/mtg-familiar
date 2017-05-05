@@ -238,7 +238,8 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="life_counter_remove_player">Remove a Player</string>
     <string name="life_counter_add_player">Add a Player</string>
     <string name="life_counter_gathering_dialog_title">Select a Gathering</string>
-    <string name="life_counter_clear_dialog_text">Clear life totals or players?\nMana pool will also be cleared.</string>
+    <string name="life_counter_clear_dialog_text">Clear life totals or players?\n
+        Mana pool will also be cleared.</string>
     <string name="life_counter_edit_name_dialog_title">Enter Name</string>
     <string name="life_counter_Commander">Commander</string>
     <string name="life_counter_Compact">Compact</string>

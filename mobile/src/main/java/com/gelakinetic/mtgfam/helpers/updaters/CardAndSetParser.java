@@ -19,18 +19,17 @@
 
 package com.gelakinetic.mtgfam.helpers.updaters;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Card;
+import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
+import com.gelakinetic.GathererScraper.JsonTypes.LegalityData;
+import com.gelakinetic.GathererScraper.JsonTypes.Manifest;
+import com.gelakinetic.GathererScraper.JsonTypes.Patch;
+import com.gelakinetic.GathererScraper.PrefixedFieldNamingStrategy;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.GathererScraper.JsonTypes.Card;
-import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
-import com.gelakinetic.GathererScraper.JsonTypes.Patch;
-import com.gelakinetic.GathererScraper.JsonTypes.LegalityData;
-import com.gelakinetic.GathererScraper.JsonTypes.Manifest;
-import com.gelakinetic.GathererScraper.PrefixedFieldNamingStrategy;
-import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
@@ -53,7 +52,7 @@ class CardAndSetParser {
     long mCurrentPatchTimestamp = 0;
     long mCurrentRulesTimestamp = 0;
 
-    public static Gson getGson() {
+    private static Gson getGson() {
         GsonBuilder reader = new GsonBuilder();
         reader.setFieldNamingStrategy((new PrefixedFieldNamingStrategy("m")));
         reader.disableHtmlEscaping();
@@ -76,8 +75,7 @@ class CardAndSetParser {
      * @param setsToAdd        An array list to place sets before adding to the database
      * @throws IOException If something goes wrong with the InputStream, this will be thrown
      */
-    public void readCardJsonStream(JsonReader reader, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<Expansion> setsToAdd)
-            throws IOException {
+    public void readCardJsonStream(JsonReader reader, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<Expansion> setsToAdd) {
 
         ArrayList<MtgCard> tempCardsToAdd = new ArrayList<>();
 
@@ -187,56 +185,6 @@ class CardAndSetParser {
     }
 
     /**
-     * Parse a string containing a card Power or Toughness and transform it to a float value.
-     * @param powerToughness The Power or the Toughness of the card
-     * @return The Power/Toughness transformed into a float.
-     */
-    public float parsePowerToughness(String powerToughness)
-    {
-        float retval = 0.0f;
-
-        try {
-            retval = Integer.parseInt(powerToughness);
-        }
-        catch (NumberFormatException e) {
-            switch (powerToughness) {
-                case "*":
-                    retval = CardDbAdapter.STAR;
-                    break;
-                case "1+*":
-                    retval = CardDbAdapter.ONE_PLUS_STAR;
-                    break;
-                case "2+*":
-                    retval = CardDbAdapter.TWO_PLUS_STAR;
-                    break;
-                case "7-*":
-                    retval = CardDbAdapter.SEVEN_MINUS_STAR;
-                    break;
-                case "*{^2}":
-                    retval = CardDbAdapter.STAR_SQUARED;
-                    break;
-                case "{1/2}":
-                    retval = 0.5f;
-                    break;
-                case "1{1/2}":
-                    retval = 1.5f;
-                    break;
-                case "2{1/2}":
-                    retval = 2.5f;
-                    break;
-                case "3{1/2}":
-                    retval = 3.5f;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return retval;
-    }
-
-
-    /**
      * This interface is implemented by ProgressReporter in DbUpdaterService. It's used to report progress to the
      * notification
      */
@@ -244,7 +192,7 @@ class CardAndSetParser {
         void reportJsonCardProgress(int progress);
     }
 
-    class LegalInfo {
+    private class LegalInfo {
         final ArrayList<NameAndMetadata> legalSets = new ArrayList<>();
         final ArrayList<NameAndMetadata> bannedCards = new ArrayList<>();
         final ArrayList<NameAndMetadata> restrictedCards = new ArrayList<>();

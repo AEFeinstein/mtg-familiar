@@ -721,6 +721,8 @@ public class WishlistFragment extends FamiliarFragment {
                             pow = "7-*";
                         else if (p == CardDbAdapter.STAR_SQUARED)
                             pow = "*^2";
+                        else if (p == CardDbAdapter.X)
+                            pow = "X";
                         else {
                             if (p == (int) p) {
                                 pow = Integer.valueOf((int) p).toString();
@@ -752,6 +754,8 @@ public class WishlistFragment extends FamiliarFragment {
                             tou = "7-*";
                         else if (t == CardDbAdapter.STAR_SQUARED)
                             tou = "*^2";
+                        else if (t == CardDbAdapter.X)
+                            tou = "X";
                         else {
                             if (t == (int) t) {
                                 tou = Integer.valueOf((int) t).toString();
@@ -768,7 +772,10 @@ public class WishlistFragment extends FamiliarFragment {
                 /* Show the loyalty, if the card has any (traitor...) */
                 float loyalty = info.mCard.mLoyalty;
                 if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
-                    if (loyalty == (int) loyalty) {
+
+                    if (loyalty == CardDbAdapter.X) {
+                        ((TextView) convertView.findViewById(R.id.cardt)).setText("X");
+                    } else if (loyalty == (int) loyalty) {
                         ((TextView) convertView.findViewById(R.id.cardt)).setText(Integer.toString((int) loyalty));
                     } else {
                         ((TextView) convertView.findViewById(R.id.cardt)).setText(Float.toString(loyalty));

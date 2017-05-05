@@ -190,6 +190,8 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                             pow = "7-*";
                         else if (p == CardDbAdapter.STAR_SQUARED)
                             pow = "*^2";
+                        else if (p == CardDbAdapter.X)
+                            pow = "X";
                         else {
                             if (p == (int) p) {
                                 pow = Integer.valueOf((int) p).toString();
@@ -215,6 +217,8 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                             tou = "7-*";
                         else if (t == CardDbAdapter.STAR_SQUARED)
                             tou = "*^2";
+                        else if (t == CardDbAdapter.X)
+                            tou = "X";
                         else {
                             if (t == (int) t) {
                                 tou = Integer.valueOf((int) t).toString();
@@ -229,10 +233,12 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     float l = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
                     if (l != CardDbAdapter.NO_ONE_CARES) {
                         hideLoyalty = false;
-                        if (l == (int) l) {
-                            textField.setText(Integer.toString((int) l));
+                        if (l == CardDbAdapter.X) {
+                            ((TextView) textField.findViewById(R.id.cardt)).setText("X");
+                        } else if (l == (int) l) {
+                            ((TextView) textField.findViewById(R.id.cardt)).setText(Integer.toString((int) l));
                         } else {
-                            textField.setText(Float.toString(l));
+                            ((TextView) textField.findViewById(R.id.cardt)).setText(Float.toString(l));
                         }
                     }
                     break;
