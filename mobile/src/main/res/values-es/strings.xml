@@ -141,7 +141,10 @@
 <string name="search_save_defaults">"Guardar valores predeterm."</string>
 <string name="search_load_defaults">"Cargar valores predeterm."</string>
 <string name="search_toast_no_results">"No se encontraron resultados."</string>
-<string name="search_toast_results">"%1$d resultados encontrados."</string>
+<plurals name="search_toast_results">
+    <item quantity="one">"%1$d resultados encontrados."</item>
+    <item quantity="other">"%1$d resultados encontrados."</item>
+</plurals>
 <string name="search_toast_cannot_save">"No se pudieron guardar las opciones de búsqueda."</string>
 <string name="search_toast_cannot_load">"No se pudieron cargar las opciones de búsqueda."</string>
 <string name="search_All_types">"Todos los tipos"</string>

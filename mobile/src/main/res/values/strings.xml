@@ -158,7 +158,9 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="search_save_defaults">Save Defaults</string>
     <string name="search_load_defaults">Load Defaults</string>
     <string name="search_toast_no_results">No search results found.</string>
-    <string name="search_toast_results">%1$d search results found.</string>
+    <plurals name="search_toast_results">
+        <item quantity="other">%1$d search results found.</item>
+    </plurals>
     <string name="search_toast_cannot_save">Could not save search options.</string>
     <string name="search_toast_cannot_load">Could not load search options.</string>
     <string name="search_All_types">All types</string>
@@ -475,6 +477,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_Chinese_trad">Chinese Traditional</string>
     <string name="pref_Korean">Korean</string>
     <string name="pref_Polish">Polish</string> <!-- Only used for app translation, not card names-->
+    <string name="pref_Slovak">Slovak</string> <!-- Only used for app translation, not card names-->
     <string name="pref_1_day">1 day</string>
     <string name="pref_2_days">2 days</string>
     <string name="pref_3_days">3 days</string>

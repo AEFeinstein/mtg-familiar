@@ -142,7 +142,11 @@
 <string name="search_save_defaults">"Zapisz jako domyślne"</string>
 <string name="search_load_defaults">"Wczytaj domyślne"</string>
 <string name="search_toast_no_results">"Nie znaleziono wyników wyszukiwania."</string>
-<string name="search_toast_results">"Znaleziono %1$d wyników wyszukiwania."</string>
+<plurals name="search_toast_results">
+        <item quantity="one">"Znaleziono %1$d wyników wyszukiwania."</item>
+        <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
+        <item quantity="many">"Znaleziono %1$d wyników wyszukiwania."</item>
+</plurals>
 <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
 <string name="search_toast_cannot_load">"Nie można wczytać opcji wyszukiwania."</string>
 <string name="search_All_types">"Wszystkie typy"</string>
