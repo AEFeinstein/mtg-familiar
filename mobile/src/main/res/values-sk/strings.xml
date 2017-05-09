@@ -50,26 +50,25 @@
     <string name="main_timer">"Časomiera"</string>
     <string name="main_rules">"Pravidlá"</string>
     <string name="main_judges_corner">"Rozhodcovský kútik"</string>
-    <string name="main_mojhosto">"Základný MoJhoSto"</string>
+    <string name="main_mojhosto">"MoJhoSto"</string>
     <string name="main_decklist">"Deck builder"</string>
     <string name="main_force_update_title">"Aktualizovať"</string>
     <string name="main_settings_title">"Nastavenia"</string>
     <string name="main_donate_title">"Podporte nás"</string>
     <string name="main_donate_dialog_title">"Podporte vývojárov"</string>
     <string name="main_profile">"Profil"</string>
-    <string name="main_donate_text">"
-        For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
+    <string name="main_donate_text">"Koľko by ste zaplatili za prémiovú MTG aplikáciu, ako je táto? 1 000 €? 10 000 €?&lt;br&gt;
 		&lt;br&gt;
-		Well, if you're reading this, you already know we're giving it away for free!&lt;br&gt;
+		Ak toto čítate, už dávno viete, že ju dávame úplne zadarmo!&lt;br&gt;
 		&lt;br&gt;
-		Coding is hard work though, and we developers appreciate the extra dollar here or there.&lt;br&gt;
+		Kódovanie je však tvrdá práca a my vývojári sme vďační za každé extra euro raz za čas.&lt;br&gt;
 		&lt;br&gt;
-		We've got a drafting habit to fuel, OK?&lt;br&gt;
+		Máme draftovacie návyky, ktoré musíme živiť, OK?&lt;br&gt;
 		&lt;br&gt;
-		You can click the button below to donate via PayPal. $1 is cool. $5 is cooler. You get the drift.&lt;br&gt;
+		Kliknutím na tlačidlo nižšie nás môžete podporiť prostredníctvom služby PayPal. 1 € je super. 5 € je ešte viac super! Chápete ako to funguje.&lt;br&gt;
 		&lt;br&gt;
-		So, how generous are you feeling today?
-    "</string>
+		Takže, ako štedro sa dnes cítite?
+␣␣␣␣"</string>
     <string name="main_whats_new_title">"Čo je nové"</string>
     <string name="main_whats_new_in_title">"Čo je nové vo verzii"</string>
     <string name="main_tts_warning_title">"Prevod textu na reč"</string>
@@ -81,24 +80,23 @@
     <string name="main_import_success">"Načítanie bolo úspešné"</string>
     <string name="main_import_fail">"Načítanie zlyhalo. Prosím vložte MTGFamiliarBackup.zip do koreňového adresára SD karty"</string>
     <string name="main_about">"O aplikácii"</string>
-    <string name="main_about_text">"
-        This app is my gift to the MTG community.&lt;br&gt;
+    <string name="main_about_text">"Táto aplikácia je môj darček pre MTG komunitu.&lt;br&gt;
 		&lt;br&gt;
-		Please send questions, comments, concerns, and praise to &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
+		Otázky, pripomienky, výčitky a pochvaly nám prosím posielajte na &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
 		&lt;br&gt;
-		Join the &lt;a href=https://plus.google.com/communities/110783165129365768059&gt;beta community&lt;/a&gt; on Google+.&lt;br&gt;
+		Pridajte sa do &lt;a href=https://plus.google.com/communities/110783165129365768059&gt;beta komunity&lt;/a&gt; na Google+.&lt;br&gt;
 		&lt;br&gt;
-		Join the &lt;a href=https://github.com/AEFeinstein/mtg-familiar&gt;open source project&lt;/a&gt; on GitHub.&lt;br&gt;
+		Pridajte sa do &lt;a href=https://github.com/AEFeinstein/mtg-familiar&gt;open source projektu&lt;/a&gt; na GitHub.&lt;br&gt;
 		&lt;br&gt;
-		Thanks to all the contributors including, but not limited to, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, and bcGiR.&lt;br&gt;
+		Ďakujem všetkým prispievateľom (a teším sa na ďalších): jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, and bcGiR.&lt;br&gt;
 		&lt;br&gt;
-		Thanks to all the translators including, but not limited to, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, and Sebastian.&lt;br&gt;
+		Ďakujem všetkým prekladateľom (a teším sa na ďalších): Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, and Sebastian.&lt;br&gt;
 		&lt;br&gt;
-		Thanks to all those who manage data sources including, but not limited to, Ryan Stapleton (&lt;a href=http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html&gt;Bluewizard.net&lt;/a&gt;) and Chedy Hampson (&lt;a href=http://tcgplayer.com&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
+		Ďakujem všetkým správcom dát (a teším sa na ďalších): (&lt;a href=http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html&gt;Bluewizard.net&lt;/a&gt;) a Chedy Hampson (&lt;a href=http://tcgplayer.com&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
 		&lt;br&gt;
-		Thanks to reddit's &lt;a href=http://www.reddit.com/r/magicTCG/&gt;/r/magictcg&lt;/a&gt; for testing and feedback.&lt;br&gt;
+		Ďakujem reddit stránke &lt;a href=http://www.reddit.com/r/magicTCG/&gt;/r/magictcg&lt;/a&gt; za testovanie a spätnú väzbu.&lt;br&gt;
 		&lt;br&gt;
-		Special thanks to Richard Garfield and the rest of the folks at &lt;a href=http://www.wizards.com/magic&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
+		Špeciálne poďakovanie Richardovi Garfieldovi a ostatným ľuďom z &lt;a href=http://www.wizards.com/magic&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
 		&lt;br&gt;
 		-gelakinetic&lt;br&gt;
 		&lt;br&gt;
@@ -116,8 +114,8 @@
 		&lt;br&gt;
 		Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
 		&lt;br&gt;
-		Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.
-    "</string>
+		Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;."
+    </string>
     <string name="main_drawer_open">"Otvoriť navigačný panel"</string>
     <string name="main_drawer_close">"Zatvoriť navigačný panel"</string>
     <string name="main_install_tts">"Nainštalovať TTS"</string>
@@ -343,30 +341,30 @@ Manapool bude tiež vymazaný."</string>
     <string name="timer_warning_dialog_title">"Hlasové upozornenia"</string>
     <string name="timer_tone_dialog_title">"Vyberte tón upozornenia"</string>
     <string name="timer_notification_ongoing">"Kolo sa skončí o %1$tl:%1$tM %1$Tp."</string>
-    <string name="timer_two_minutes_left">"Kolo bude končiť o dve minúty"</string>
-    <string name="timer_five_minutes_left">"Kolo bude končiť o päť minút"</string>
-    <string name="timer_ten_minutes_left">"Kolo bude končiť o desať minút"</string>
-    <string name="timer_fifteen_minutes_left">"Kolo bude končiť o pätnásť minút"</string>
+    <string name="timer_two_minutes_left">"Kolo sa skončí o dve minúty"</string>
+    <string name="timer_five_minutes_left">"Kolo sa skončí o päť minút"</string>
+    <string name="timer_ten_minutes_left">"Kolo sa skončí o desať minút"</string>
+    <string name="timer_fifteen_minutes_left">"Kolo sa skončí o pätnásť minút"</string>
     <string name="timer_ended">"Kolo sa skončilo."</string>
     <string name="timer_easter_egg">"Večer posledného dňa, zostáva dvanásť hodín"</string>
 
     <!-- Rules activity -->
     <string name="rules_exit">"Opustiť pravidlá"</string>
     <string name="rules_glossary">"Slovník"</string>
-    <string name="rules_no_results_toast">"Nenašli sa žiadne výsledky."</string>
-    <string name="rules_short_key_toast">"Hľadaný výraz musí mať aspoň 3 znaky."</string>
-    <string name="rules_search_all">"Hľadať vo všetkých pravidlách"</string>
-    <string name="rules_search_cat">"Hľadať v"</string>
+    <string name="rules_no_results_toast">"Neboli nájdené žiadne výsledky."</string>
+    <string name="rules_short_key_toast">"Váš hľadaný výraz musí mať aspoň 3 znaky."</string>
+    <string name="rules_search_all">"Vyhľadať vo všetkých pravidlách"</string>
+    <string name="rules_search_cat">"Vyhľadať medzi %s"</string>
     <string name="rules_this_cat">"táto kategória:"</string>
-    <string name="rules_banned_and_restricted">"Formáty, bany a obmedzenia"</string>
-    <string name="rules_banned">"Zabanovaná"</string>
-    <string name="rules_banned_as_commander">"Zabanovaná ako generál"</string>
+    <string name="rules_banned_and_restricted">"Formáty, zákazy a obmedzenia"</string>
+    <string name="rules_banned">"Zakázaná"</string>
+    <string name="rules_banned_as_commander">"Zakázaná ako generál"</string>
     <string name="rules_restricted">"Obmedzená"</string>
     <string name="rules_no_cards">"Žiadne karty"</string>
     <string name="rules_legal_sets">"Legálne edície"</string>
     <string name="rules_bb_wb_sets">"Všetky edície s čiernym a bielym okrajom"</string>
     <string name="rules_coppied">"Pravidlo skopírované"</string>
-    <string name="rules_copy_tag">"MTG Pravidlo"</string>
+    <string name="rules_copy_tag">"Pravidlo MTG"</string>
 
     <!-- Profile activity -->
     <string name="profile_update_dci">"Aktualizovať DCI číslo"</string>
@@ -374,33 +372,34 @@ Manapool bude tiež vymazaný."</string>
     <string name="profile_update_dci_dialog_title">"Vložte vaše DCI číslo"</string>
     <string name="profile_invalid_dci">"Zadali ste neplatné DCI číslo"</string>
     <string name="profile_no_dci">"Nezadali ste vaše DCI číslo"</string>
-    <string name="profile_planeswalker_points">"Planeswalker body"</string>
+    <string name="profile_planeswalker_points">"PLANESWALKER BODY"</string>
 
     <!-- MoJhoSto activity -->
-    <string name="mojhosto_rules_title">"Základné pravidlá MoJhoSto "</string>
-    <string name="mojhosto_rules_text">"
-        MoJhoSto is a casual Vanguard format from Magic Online.&lt;br&gt;
+    <string name="mojhosto_rules_title">"Základné pravidlá MoJhoSto"</string>
+
+    <!-- POEditor says the Slovak translation is 100% done, but this is empty. Will it be translated? -->
+    <string name="mojhosto_rules_text">"MoJhoSto je neoficiálny Vanguard formát z Magic Online.&lt;br&gt;
 		&lt;br&gt;
-		To play, each player must have a deck which consists of only 60 basic lands.&lt;br&gt;
+		Každý hráč musí mať balík, ktorá pozostáva iba zo 60-tich základných zemí.&lt;br&gt;
 		&lt;br&gt;
-		Each player starts the game with three Vanguards: Momir Vig, Jhoira, and Stonehewer Giant.&lt;br&gt;
+		Každý hráč začína hru s tromi Vanguardmi: Momir Vig, Jhoira a Stonehewer Giant.&lt;br&gt;
 		&lt;br&gt;
-		These Vanguards adjust each player's starting and maximum hand size (9) and starting life total (19).&lt;br&gt;
+		Títo Vanguardi upravujú počiatočný a maximálny počet kariet na ruke (9) a počiatočný počet životov (19).&lt;br&gt;
 		&lt;br&gt;
-		Any abilities printed on a Vanguard card are played exactly like those of an in-play Magic card.&lt;br&gt;
+		Schopnosti vytlačené na Vanguard karte sa hrajú presne tak, ako schopnosti na akejkoľvek Magicovej karte v hre.&lt;br&gt;
 		&lt;br&gt;
-		However, these abilities have no color and damage from them isn't damage from a permanent of any type or a source of any color.&lt;br&gt;
+		Avšak tieto schopnosti nemajú žiadnu farbu a zranenie z nich nie je zranenie z permanentu akéhokoľvek typu alebo zdroja akejkoľvek farby.&lt;br&gt;
 		&lt;br&gt;
-		A Vanguard card isn't a Magic card, so it can't be affected by spells or abilities.&lt;br&gt;
+		Vanguard karta nie je Magicová karta, takže nemôže byť ovplyvnená kúzlami alebo schopnosťami.&lt;br&gt;
 		&lt;br&gt;
-		You can tap each picture to see the full Vanguard card.&lt;br&gt;
+		Klepnutím na každý obrázok môžete vidieť celú Vanguard kartu.&lt;br&gt;
 		&lt;br&gt;
-		You can read the rules at any time from the menu.&lt;br&gt;
+		Pravidlá si môžete kedykoľvek prečítať z menu.&lt;br&gt;
 		&lt;br&gt;
-		Pen and paper might be useful for tracking the game state. Sadly, MTG Familiar cannot spawn actual cards.&lt;br&gt;
+		Pero a papier môžu byť užitočné pre sledovanie stavu hry. Bohužiaľ, MTG Familiar nemôže vytvoriť skutočné karty.&lt;br&gt;
 		&lt;br&gt;
-		Good luck, and have fun!
-    "</string>
+		Veľa šťastia a zabavte sa!"
+    </string>
     <string name="mojhosto_momir_label">"CMC ="</string>
     <string name="mojhosto_random_creature">"Náhodná bytosť"</string>
     <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
@@ -411,45 +410,45 @@ Manapool bude tiež vymazaný."</string>
 
     <!-- Preferences -->
     <string name="pref_screen_general">"Všeobecné nastavenia"</string>
-    <string name="pref_screen_search">"Výsledky vyhľadávania"</string>
-    <string name="pref_screen_counter">"Počítadlo života"</string>
+    <string name="pref_screen_search">"Vyhľadávanie"</string>
+    <string name="pref_screen_counter">"Počítadlo životov"</string>
     <string name="pref_screen_timer">"Časomiera"</string>
-    <string name="pref_screen_trade_wishlist">"Výmeny a zoznam želaní"</string>
+    <string name="pref_screen_trade_wishlist">"Výmeny a Zoznam želaní"</string>
     <string name="pref_cat_default_fragment">"Predvolená stránka"</string>
     <string name="pref_default_fragment_mode_title">"Predvolená stránka"</string>
-    <string name="pref_default_fragment_mode_summary">"Prvá vec, ktorú uvidíte pri otvorení aplikácie"</string>
+    <string name="pref_default_fragment_mode_summary">"Prvá vec, ktorú uvidíte po otvorení aplikácie"</string>
     <string name="pref_cat_updates">"Aktualizácie databázy"</string>
     <string name="pref_auto_updates_title">"Automatické aktualizácie"</string>
-    <string name="pref_auto_updates_summary">"Skontrolovať nové edície a zákazy po otvorení aplikácie"</string>
+    <string name="pref_auto_updates_summary">"Po otvorení aplikácie skontrolovať nové edície a zákazy"</string>
     <string name="pref_update_frequency_title">"Frekvencia aktualizácií"</string>
     <string name="pref_update_frequency_summary">"Počet dní medzi kontrolou nových edícií a zákazov"</string>
     <string name="pref_cat_card_view">"Zobrazenie karty"</string>
     <string name="pref_show_art_title">"Vždy zobraziť obrázok"</string>
-    <string name="pref_show_art_summary">"Pri prezeraní karty načítať oficiálny obrázok karty namiesto textu pravidiel "</string>
+    <string name="pref_show_art_summary">"Pri prezeraní karty načítať oficiálny obrázok karty namiesto textu pravidiel"</string>
     <string name="pref_card_language_title">"Jazyk kariet"</string>
-    <string name="pref_card_language_summary">"Vyberte jazyk, v ktorom sa načíta obrázok karty"</string>
+    <string name="pref_card_language_summary">"Vyberte jazyk, v ktorom sa zobrazí obrázok karty"</string>
     <string name="pref_cat_life_counter">"Počítadlo života"</string>
     <string name="pref_cat_life_screen">"Nastavenia zobrazenia"</string>
     <string name="pref_wake_lock_title">"Zámok vypnutia obrazovky"</string>
-    <string name="pref_wake_lock_summary">"Nastaviť obrazovku počítadla životov, aby neprešla do režimu spánku"</string>
-    <string name="pref_dim_lock_summary">"Znížiť jasnosť obrazovky pri nečinnosti"</string>
+    <string name="pref_wake_lock_summary">"Nastaviť obrazovku počítadla životov, aby nikdy neprešla do režimu spánku"</string>
+    <string name="pref_dim_lock_summary">"Stlmiť obrazovku pri nečinnosti"</string>
     <string name="pref_dim_lock_title">"Povoliť stlmenie obrazovky"</string>
-    <string name="pref_dim_lock_level_summary">"Nastavte úroveň jasu po stmavnutí obrazovky"</string>
+    <string name="pref_dim_lock_level_summary">"Nastavte úroveň jasu po stlmení obrazovky"</string>
     <string name="pref_dim_lock_level_title">"Jasnosť obrazovky"</string>
     <string name="pref_display_mode_title">"Režim zobrazenia"</string>
-    <string name="pref_display_mode_summary">"Vyberte, ako sa má zobrazovať počítadlo života"</string>
+    <string name="pref_display_mode_summary">"Vyberte, ako sa má zobraziť počítadlo životov"</string>
     <string name="pref_cat_timer">"Časomiera"</string>
-    <string name="pref_ringtone_title">"Zvonenie časovača"</string>
-    <string name="pref_ringtone_summary">"Vyberte tón zvonenia, ktorý sa má prehrať, keď skončí časomiera"</string>
+    <string name="pref_ringtone_title">"Zvonenie časomiery"</string>
+    <string name="pref_ringtone_summary">"Vyberte tón upozornenia, ktorý sa prehrá, keď skončí časomiera"</string>
     <string name="pref_fifteen_minutes_title">"15-minútové upozornenie"</string>
     <string name="pref_ten_minutes_title">"10-minútové upozornenie"</string>
     <string name="pref_five_minutes_title">"5-minútové upozornenie"</string>
     <string name="pref_two_minutes_title">"2-minútové upozornenie"</string>
     <string name="pref_cat_trade_window">"Okno výmeny"</string>
     <string name="pref_trade_price_title">"Nastavenie cien"</string>
-    <string name="pref_trade_price_summary">"Použiť ceny TCGplayer pri zamieňaní kariet"</string>
+    <string name="pref_trade_price_summary">"Použiť ceny TCGplayer pri vymieňaní kariet"</string>
     <string name="pref_cat_result_list">"Zoznam výsledkov"</string>
-    <string name="pref_consolidate_title">"Konsolidácia výsledkov"</string>
+    <string name="pref_consolidate_title">"Skonsolidovať výsledky"</string>
     <string name="pref_consolidate_summary">"Zobraziť len najnovšiu verziu karty"</string>
     <string name="pref_show_set_title">"Zobraziť edíciu"</string>
     <string name="pref_show_mana_title">"Zobraziť manovú cenu"</string>
@@ -459,8 +458,8 @@ Manapool bude tiež vymazaný."</string>
     <string name="pref_cat_wishlist">"Zoznam želaní"</string>
     <string name="pref_wishlist_details_title">"Zobraziť podrobnosti"</string>
     <string name="pref_wishlist_details_summary">"Zobraziť úplné informácie o kartách v zozname želaní"</string>
-    <string name="pref_wishlist_totals_title">"Ukázať celkovú cenu"</string>
-    <string name="pref_wishlist_totals_summary">"Zobraziť celkovú prehľad o cenách v zozname požiadaviek"</string>
+    <string name="pref_wishlist_totals_title">"Zobraziť celkovú sumu"</string>
+    <string name="pref_wishlist_totals_summary">"Zobraziť celkovú sumu kariet v zozname želaní"</string>
     <string name="pref_wishlist_prices_title">"Zobraziť ceny kariet"</string>
     <string name="pref_wishlist_prices_summary">"Zobraziť cenu každej karty v zozname želaní"</string>
     <string name="pref_English">"Anglický"</string>
@@ -479,24 +478,24 @@ Manapool bude tiež vymazaný."</string>
     <string name="pref_5_days">"5 dní"</string>
     <string name="pref_1_week">"1 týždeň"</string>
     <string name="pref_2_weeks">"2 týždne"</string>
-    <string name="pref_life_timer_title">"Časovač"</string>
-    <string name="pref_life_timer_summary">"Ako dlho čakať pred spustením nového záznamu"</string>
-    <string name="pref_1_second">"1 "</string>
+    <string name="pref_life_timer_title">"Čakať na nový vstup"</string>
+    <string name="pref_life_timer_summary">"Ako dlho čakať pred zapísaním nového vstupu"</string>
+    <string name="pref_1_second">"1 sekundu"</string>
     <string name="pref_2_seconds">"2 sekundy"</string>
     <string name="pref_3_seconds">"3 sekundy"</string>
     <string name="pref_4_seconds">"4 sekundy"</string>
     <string name="pref_5_seconds">"5 sekúnd"</string>
     <string name="pref_cat_widget">"Miniaplikácia"</string>
-    <string name="pref_widget_mode_title">"Tlačítka miniaplikácie"</string>
-    <string name="pref_widget_mode_summary">"Tlačítka na zobrazenie v miniaplikácii"</string>
+    <string name="pref_widget_mode_title">"Tlačidlá miniaplikácie"</string>
+    <string name="pref_widget_mode_summary">"Tlačidlá, ktoré sa zobrazia v miniaplikácii"</string>
     <string name="pref_theme_dark">"Tmavý"</string>
     <string name="pref_theme_light">"Svetlý"</string>
-    <string name="pref_cat_theme">"Vzhľad a dojem"</string>
+    <string name="pref_cat_theme">"Vzhľad a forma"</string>
     <string name="pref_theme_title">"Motív"</string>
     <string name="pref_theme_summary">"Nastavte svetlý alebo tmavý motív"</string>
     <string name="pref_image_cache_size_summary">"Maximálny počet miesta na disku, ktorý sa môže použiť na ukladanie obrázkov kariet"</string>
-    <string name="pref_image_cache_size_title">"Veľkosť obrázkovej medzipamäte"</string>
-    <string name="pref_cat_card_cache">"Ukladanie obrázkov do medzipamäte"</string>
+    <string name="pref_image_cache_size_title">"Veľkosť pamäte na obrázky"</string>
+    <string name="pref_cat_card_cache">"Vyrovnávacia pamäť"</string>
     <string name="pref_language">"Jazyk"</string>
     <string name="pref_set_language">"Nastavte iný jazyk"</string>
 
@@ -533,20 +532,20 @@ Manapool bude tiež vymazaný."</string>
     <string name="decklist_sorceries">"Sorcery"</string>
     <string name="decklist_others">"Ostatné"</string>
     <string name="decklist_unnamed_deck">"Nepomenovaný balík"</string>
-    <string name="decklist_cards">"karty"</string>
+    <string name="decklist_cards">"kariet"</string>
     <string name="main_whats_new_text">"- Pridaný deckbuilder&lt;br&gt;
 - Pridané triedenie zoznamu výsledkov&lt;br&gt;
 - Pridané názvy kariet v iných jazykoch&lt;br&gt;
-- Pridané tlačidlo zdieľania pre text alebo obrázok karty&lt;br&gt;
-- Opravené obrázky kariet pre určité karty
-"</string>
+- Pridané tlačidlo zdieľať pre text alebo obrázok karty&lt;br&gt;
+- Opravené obrázky pre určité karty"
+    </string>
     <string name="card_view_send_to">"Zdieľať obrázok cez"</string>
     <string name="card_view_translated_dialog_title">"Preložený názov karty"</string>
     <string name="pref_Portuguese">"Portugalský (Brazílsky)"</string>
     <string name="pref_Chinese">"Čínsky zjednodušený"</string>
     <string name="pref_Chinese_trad">"Čínsky tradičný"</string>
-    <string name="pref_Korean">"Korejský"</string>
+    <string name="pref_Korean">"Kórejský"</string>
 
     <!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
-    <string name="search_hasManaX">"Cena obsahuje"</string>
+    <string name="search_hasManaX">"Cena obsahuje "</string>
 </resources>
