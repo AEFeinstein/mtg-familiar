@@ -155,7 +155,10 @@
 <string name="search_save_defaults">"Als Standard speichern"</string>
 <string name="search_load_defaults">"Standard laden"</string>
 <string name="search_toast_no_results">"Kein Suchergebnis"</string>
-<string name="search_toast_results">"%1$d Suchergebnis(se)"</string>
+<plurals name="search_toast_results">
+    <item quantity="one">"%1$d Suchergebnis(se)"</item>
+    <item quantity="other">"%1$d Suchergebnis(se)"</item>
+</plurals>
 <string name="search_toast_cannot_save">"Konnte Suchoptionen nicht speichern"</string>
 <string name="search_toast_cannot_load">"Konnte Suchoptionen nicht laden"</string>
 <string name="search_All_types">"Alle Typen"</string>

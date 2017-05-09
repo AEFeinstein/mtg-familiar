@@ -196,7 +196,7 @@ public class ResultListFragment extends FamiliarFragment {
                 }
             } else {
                 if (savedInstanceState == null) {
-                    ToastWrapper.makeText(this.getActivity(), String.format(getString(R.string.search_toast_results),
+                    ToastWrapper.makeText(this.getActivity(), String.format(getResources().getQuantityString(R.plurals.search_toast_results, mCursor.getCount()),
                             mCursor.getCount()), ToastWrapper.LENGTH_LONG).show();
                 }
             }

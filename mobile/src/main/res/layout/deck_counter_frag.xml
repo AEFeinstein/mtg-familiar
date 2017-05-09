@@ -41,6 +41,7 @@
         <Button
             android:id="@+id/deck_counter_1"
             style="?android:attr/buttonBarButtonStyle"
+            android:textColor="?android:textColorSecondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -50,6 +51,7 @@
         <Button
             android:id="@+id/deck_counter_2"
             style="?android:attr/buttonBarButtonStyle"
+            android:textColor="?android:textColorSecondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -72,6 +74,7 @@
         <Button
             android:id="@+id/deck_counter_3"
             style="?android:attr/buttonBarButtonStyle"
+            android:textColor="?android:textColorSecondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -81,6 +84,7 @@
         <Button
             android:id="@+id/deck_counter_4"
             style="?android:attr/buttonBarButtonStyle"
+            android:textColor="?android:textColorSecondary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -102,6 +106,7 @@
         <Button
             android:id="@+id/deck_counter_reset"
             style="?android:attr/buttonBarButtonStyle"
+            android:textColor="?android:textColorSecondary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -111,6 +116,7 @@
         <Button
             android:id="@+id/deck_counter_undo"
             style="?android:attr/buttonBarButtonStyle"
+            android:textColor="?android:textColorSecondary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

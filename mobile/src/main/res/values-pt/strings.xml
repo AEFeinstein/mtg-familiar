@@ -141,7 +141,10 @@
 <string name="search_save_defaults">"Salvar valor padrão."</string>
 <string name="search_load_defaults">"Carregar Valores Padrões"</string>
 <string name="search_toast_no_results">"Não foram encontrados resultados."</string>
-<string name="search_toast_results">"%1$d resultados de busca."</string>
+<plurals name="search_toast_results">
+    <item quantity="one">"%1$d resultados de busca."</item>
+    <item quantity="other">"%1$d resultados de busca."</item>
+</plurals>
 <string name="search_toast_cannot_save">"Não foi possível salvar suas opções de pesquisa."</string>
 <string name="search_toast_cannot_load">"Falha ao carregar opções de pesquisa."</string>
 <string name="search_All_types">"Todos os tipos"</string>

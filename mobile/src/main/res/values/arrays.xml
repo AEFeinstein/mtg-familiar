@@ -203,6 +203,7 @@
         <item>@string/pref_Spanish</item>
         <item>@string/pref_Portuguese</item>
         <item>@string/pref_Polish</item>
+        <item>@string/pref_Slovak</item>
     </string-array>
     <string-array name="pref_language_values">
         <item>en</item>
@@ -212,6 +213,7 @@
         <item>es</item>
         <item>pt</item>
         <item>pl</item>
+        <item>sk</item>
     </string-array>
 
     <string-array name="life_timer_array_entries">
