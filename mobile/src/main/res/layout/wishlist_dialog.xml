@@ -15,6 +15,7 @@
     <Button
         android:id="@+id/show_card_button"
         style="?android:attr/buttonBarButtonStyle"
+        android:textColor="?android:textColorSecondary"
         android:layout_width="match_parent"
         android:layout_height="47dp"
         android:text="@string/wishlist_view_card"
