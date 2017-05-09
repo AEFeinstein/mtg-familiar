@@ -61,7 +61,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        style="@style/forty_eight" >
+        style="@style/forty_eight">
 
         <TextView
             android:id="@+id/decklistName"
