@@ -82,6 +82,7 @@ along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
         - Added result list sorting&lt;br&gt;
         - Added card names in other languages&lt;br&gt;
         - Added share button for card text or image&lt;br&gt;
+        - Added Slovak translation&lt;br&gt;
         - Fixed card art for certain cards
     </string>
     <string name="main_tts_warning_title">Text-to-Speech</string>
