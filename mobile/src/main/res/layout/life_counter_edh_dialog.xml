@@ -49,7 +49,7 @@
         <Button
             android:id="@+id/commander_minus1"
             style="?android:attr/buttonBarButtonStyle"
-            android:textColor="?android:textColorSecondary"
+
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -59,7 +59,7 @@
         <Button
             android:id="@+id/commander_plus1"
             style="?android:attr/buttonBarButtonStyle"
-            android:textColor="?android:textColorSecondary"
+
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

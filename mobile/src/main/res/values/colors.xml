@@ -76,4 +76,5 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="icon_red">#fff44336</color>
     <color name="icon_green">#ff4caf50</color>
 
+    <color name="hyperlink_text">#0077CC</color>
 </resources>

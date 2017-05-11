@@ -102,7 +102,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             <Button
                 android:id="@+id/player_minus5"
                 style="?android:attr/buttonBarButtonStyle"
-                android:textColor="?android:textColorSecondary"
+
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -112,7 +112,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             <Button
                 android:id="@+id/player_minus1"
                 style="?android:attr/buttonBarButtonStyle"
-                android:textColor="?android:textColorSecondary"
+
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -122,7 +122,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             <Button
                 android:id="@+id/player_plus1"
                 style="?android:attr/buttonBarButtonStyle"
-                android:textColor="?android:textColorSecondary"
+
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -132,7 +132,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             <Button
                 android:id="@+id/player_plus5"
                 style="?android:attr/buttonBarButtonStyle"
-                android:textColor="?android:textColorSecondary"
+
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

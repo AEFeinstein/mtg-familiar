@@ -57,7 +57,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <Button
         android:id="@+id/rt_action_button"
         style="?android:attr/buttonBarButtonStyle"
-        android:textColor="?android:textColorSecondary"
+
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="@string/timer_start"
