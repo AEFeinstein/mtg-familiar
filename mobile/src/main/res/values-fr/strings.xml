@@ -543,7 +543,6 @@
 
 <!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
 <string name="search_hasManaX">"Coût contient "</string>
-<string name="search_hasManaX">"Coût contient "</string>
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovaque"</string>
