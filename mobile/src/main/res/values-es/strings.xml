@@ -86,7 +86,7 @@
         &lt;br&gt;
         Gracias a todos los contribuidores, en especial a jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, y bcGiR.&lt;br&gt;
         &lt;br&gt;
-        Gracias a todos los traductores, en especial a Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, y Sebastian.&lt;br&gt;
+        Gracias a todos los traductores, en especial a Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, y Sebastian.&lt;br&gt;
         &lt;br&gt;
         Gracias a todos lo que manejan las fuentes de datos, en especial a Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) y Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
         &lt;br&gt;
@@ -142,8 +142,8 @@
 <string name="search_load_defaults">"Cargar valores predeterm."</string>
 <string name="search_toast_no_results">"No se encontraron resultados."</string>
 <plurals name="search_toast_results">
-    <item quantity="one">"%1$d resultados encontrados."</item>
-    <item quantity="other">"%1$d resultados encontrados."</item>
+<item quantity="one">"%1$d resultados encontrados."</item>
+<item quantity="other">"%1$d resultados encontrados."</item>
 </plurals>
 <string name="search_toast_cannot_save">"No se pudieron guardar las opciones de búsqueda."</string>
 <string name="search_toast_cannot_load">"No se pudieron cargar las opciones de búsqueda."</string>
@@ -223,7 +223,8 @@
 <string name="life_counter_remove_player">"Eliminar un jugador"</string>
 <string name="life_counter_add_player">"Añadir un jugador"</string>
 <string name="life_counter_gathering_dialog_title">"Cargar un tipo de partida"</string>
-<string name="life_counter_clear_dialog_text">"¿Reiniciar el total de vida o los jugadores?\n
+<string name="life_counter_clear_dialog_text">"¿Reiniciar el total de vida o los jugadores?
+
     La reserva de maná también será vaciada."</string>
 <string name="life_counter_edit_name_dialog_title">"Introducir nombre"</string>
 <string name="life_counter_Commander">"Commander"</string>
@@ -526,12 +527,14 @@
 <string name="decklist_others">"Otros"</string>
 <string name="decklist_unnamed_deck">"Mazo sin nombre"</string>
 <string name="decklist_cards">"cartas"</string>
+
+<!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Añadido un constructor de mazos&lt;br&gt;
 - Añadido un clasificador de listas de resultados&lt;br&gt;
 - Añadidos los nombres de cartas en otros idiomas&lt;br&gt;
 - Añadido el botón de compartir para el texto o la imagen de una carta&lt;br&gt;
-- Arreglada la imagen de algunas cartas
-␣␣␣␣"</string>
+- Añadida la traducción al eslovaco&lt;br&gt;
+- Arreglada la imagen de algunas cartas"</string>
 <string name="card_view_send_to">"Compartir imagen con"</string>
 <string name="card_view_translated_dialog_title">"Nombre de Carta Traducido"</string>
 <string name="pref_Portuguese">"Portugués (Brasil)"</string>
@@ -541,4 +544,8 @@
 
 <!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
 <string name="search_hasManaX">"Cuyo coste contenga␣"</string>
+<string name="search_hasManaX">"Cuyo coste contenga␣"</string>
+
+<!-- Only used for app translation, not card names -->
+<string name="pref_Slovak">"Eslovaco"</string>
 </resources>
