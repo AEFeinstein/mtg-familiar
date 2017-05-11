@@ -86,7 +86,7 @@
         &lt;br&gt;
         Podziękowania dla wszystkich współpracowników, włączając, ale nie ograniczając się do: jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, and bcGiR.&lt;br&gt;
         &lt;br&gt;
-        Podziękowania dla wszystkich tłumaczy, włączając, ale nie ograniczając się do: Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, i Sebastian.&lt;br&gt;
+        Podziękowania dla wszystkich tłumaczy, włączając, ale nie ograniczając się do: Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, i Sebastian.&lt;br&gt;
         &lt;br&gt;
         Podziękowania dla wszystkich, którzy odpowiadają za źródła danych, włączając, ale nie ograniczając się do: Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) and Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
         &lt;br&gt;
@@ -143,9 +143,9 @@
 <string name="search_load_defaults">"Wczytaj domyślne"</string>
 <string name="search_toast_no_results">"Nie znaleziono wyników wyszukiwania."</string>
 <plurals name="search_toast_results">
-        <item quantity="one">"Znaleziono %1$d wyników wyszukiwania."</item>
-        <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
-        <item quantity="many">"Znaleziono %1$d wyników wyszukiwania."</item>
+<item quantity="one">"Znaleziono %1$d wyników wyszukiwania."</item>
+<item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
+<item quantity="other"></item>
 </plurals>
 <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
 <string name="search_toast_cannot_load">"Nie można wczytać opcji wyszukiwania."</string>
@@ -225,7 +225,8 @@
 <string name="life_counter_remove_player">"Usuń Gracza"</string>
 <string name="life_counter_add_player">"Dodaj gracza"</string>
 <string name="life_counter_gathering_dialog_title">"Wczytaj Pojedynek"</string>
-<string name="life_counter_clear_dialog_text">"Wyzerować licznik życia i nazwy graczy?\n
+<string name="life_counter_clear_dialog_text">"Wyzerować licznik życia i nazwy graczy?
+
         Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="life_counter_edit_name_dialog_title">"Wpisz imię"</string>
 <string name="life_counter_Commander">"Commander"</string>
@@ -526,6 +527,8 @@
 <string name="decklist_others">"Inne"</string>
 <string name="decklist_unnamed_deck">"Talia bez nazwy"</string>
 <string name="decklist_cards">"Karty"</string>
+
+<!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Dodano kreator talii&lt;br&gt;
 - Dodano sortowanie listy wyników&lt;br&gt;
 - Dodano nazwy kart w innych językach&lt;br&gt;
@@ -540,4 +543,7 @@
 
 <!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
 <string name="search_hasManaX">"Koszt zawiera␣"</string>
+
+<!-- Only used for app translation, not card names -->
+<string name="pref_Slovak">"Slovak"</string>
 </resources>
