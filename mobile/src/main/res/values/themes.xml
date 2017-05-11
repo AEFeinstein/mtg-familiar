@@ -144,7 +144,6 @@
 
     <style name="Theme.base.dark" parent="Theme.AppCompat.NoActionBar">
 
-        <item name="android:textColor">@android:color/secondary_text_dark</item>
         <item name="android:textColorLink">@color/hyperlink_text</item>
 
         <item name="colorPrimary_attr">@color/colorPrimary_dark</item>
