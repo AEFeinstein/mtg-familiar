@@ -86,7 +86,7 @@
         &lt;br&gt;
         Merci à tous les contributeurs incluant, mais de manière non exhaustive, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, et bcGiR.&lt;br&gt;
         &lt;br&gt;
-        Merci à tous les traducteurs incluant, mais de manière non exhaustive, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, et Sebastian.&lt;br&gt;
+        Merci à tous les traducteurs incluant, mais de manière non exhaustive, Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, et Sebastian.&lt;br&gt;
         &lt;br&gt;
         Merci à tous ceux qui gèrent les sources de données incluant, mais de manière non exhaustive, Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) et Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
         &lt;br&gt;
@@ -142,8 +142,8 @@
 <string name="search_load_defaults">"Charger Défaut"</string>
 <string name="search_toast_no_results">"Aucun résultat trouvé."</string>
 <plurals name="search_toast_results">
-    <item quantity="one">"%1$d résultats trouvés."</item>
-    <item quantity="other">"%1$d résultats trouvés."</item>
+<item quantity="one">"%1$d résultats trouvés."</item>
+<item quantity="other">"%1$d résultats trouvés."</item>
 </plurals>
 <string name="search_toast_cannot_save">"Sauvegarde impossible des options de recherche."</string>
 <string name="search_toast_cannot_load">"Chargement impossible des options de recherche."</string>
@@ -223,7 +223,8 @@
 <string name="life_counter_remove_player">"Enlever un joueur"</string>
 <string name="life_counter_add_player">"Ajouter un joueur"</string>
 <string name="life_counter_gathering_dialog_title">"Charger un Type de Match"</string>
-<string name="life_counter_clear_dialog_text">"Effacer les totaux de vie ou les joueurs?\n
+<string name="life_counter_clear_dialog_text">"Effacer les totaux de vie ou les joueurs?
+
     La réserve de mana sera aussi vidée."</string>
 <string name="life_counter_edit_name_dialog_title">"Saisir Nom"</string>
 <string name="life_counter_Commander">"Commander"</string>
@@ -525,10 +526,13 @@
 <string name="decklist_others">"Autres"</string>
 <string name="decklist_unnamed_deck">"Deck Sans Nom"</string>
 <string name="decklist_cards">"cartes"</string>
-<string name="main_whats_new_text">"- Ajout d'un créateur de deck&lt;br&gt;
-- Ajout de tri pour les résultats&lt;br&gt;
-- Ajout du nom des cartes dans d'autres langues&lt;br&gt;
-- Ajout d'un bouton de partage pour les textes de carte et les images&lt;br&gt;
+
+<!-- "Added Slovak Translation" was added -->
+<string name="main_whats_new_text">"- Ajout d'un créateur de deck&amp;lt;br&amp;gt;
+- Ajout de tri pour les résultats&amp;lt;br&amp;gt;
+- Ajout du nom des cartes dans d'autres langues&amp;lt;br&amp;gt;
+- Ajout d'un bouton de partage pour les textes de carte et les images&amp;lt;br&amp;gt;
+- Maintenant disponible en slovaque&amp;lt;br&amp;gt;
 - Réparer les images de certaines cartes"</string>
 <string name="card_view_send_to">"Partager l'image avec"</string>
 <string name="card_view_translated_dialog_title">"Nom de carte traduit"</string>
@@ -539,4 +543,8 @@
 
 <!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
 <string name="search_hasManaX">"Coût contient "</string>
+<string name="search_hasManaX">"Coût contient "</string>
+
+<!-- Only used for app translation, not card names -->
+<string name="pref_Slovak">"Slovaque"</string>
 </resources>
