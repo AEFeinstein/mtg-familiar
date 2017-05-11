@@ -544,7 +544,6 @@ Veľa šťastia a zabavte sa!"</string>
 
 <!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
 <string name="search_hasManaX">"Cena obsahuje "</string>
-<string name="search_hasManaX">"Cena obsahuje "</string>
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovenský"</string>
