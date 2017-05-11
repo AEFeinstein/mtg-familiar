@@ -144,6 +144,7 @@ public class CardViewFragment extends FamiliarFragment {
     private String mCardNumber;
     private String mSetCode;
     public String mCardName;
+    private int mCardCMC;
     private String mMagicCardsInfoSetCode;
     public int mMultiverseId;
     private String mCardType;
@@ -448,6 +449,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         /* http://magiccards.info/scans/en/mt/55.jpg */
         mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
+        mCardCMC = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_CMC));
         mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
 
         /* Start building a description */
@@ -1269,6 +1271,15 @@ public class CardViewFragment extends FamiliarFragment {
 
             if (bitmap == null) { /* Not found in disk cache */
 
+                /* Some trickery to figure out if we have a token */
+                boolean isToken = false;
+                if (mCardType.contains("Token") || /* try to take the easy way out */
+                    (mCardCMC == 0 && /* Tokens have a CMC of 0 */
+                     mSetName.contains("Duel Decks") && /* The only tokens in Gatherer are from Duel Decks */
+                     mCardType.contains("Creature"))) { /* The only tokens in Gatherer are creatures */
+                    isToken = true;
+                }
+
                 boolean bRetry = true;
 
                 boolean triedMtgi = false;
@@ -1282,17 +1293,17 @@ public class CardViewFragment extends FamiliarFragment {
 
                     try {
                         URL u;
-                        if (!cardLanguage.equalsIgnoreCase("en")) {
+                        if (!cardLanguage.equalsIgnoreCase("en") && !isToken) {
                             /* Non-English have to come from magiccards.info. Try there first */
                             u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                             /* If this fails, try next time with the English version */
                             cardLanguage = "en";
-                        } else if (!triedScryfall) {
+                        } else if (!triedScryfall && !isToken) {
                             /* Try downloading the image from Scryfall next */
                             u = new URL(getScryfallImageUri(mMultiverseId));
                             /* If this fails, try next time with the Magiccards.info version */
                             triedScryfall = true;
-                        } else if (!triedMtgi) {
+                        } else if (!triedMtgi && !isToken) {
                             /* Try downloading the image from magiccards.info next */
                             u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                             /* If this fails, try next time with the gatherer version */

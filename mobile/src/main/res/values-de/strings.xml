@@ -100,7 +100,7 @@
         &lt;br&gt;
         Danke an alle Mitwirkenden, unter anderem jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, und bcGiR.&lt;br&gt;
         &lt;br&gt;
-        Danke an alle Übersetzer, unter anderem Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo und Sebastian.&lt;br&gt;
+        Danke an alle Übersetzer, unter anderem Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo und Sebastian.&lt;br&gt;
         &lt;br&gt;
         Danke an alle, die sich um die Datenquellen kümmern, unter anderem Ryan Stapleton (&lt;a href=http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html&gt;Bluewizard.net&lt;/a&gt;) und Chedy Hampson (&lt;a href=http://tcgplayer.com&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
         &lt;br&gt;
@@ -156,8 +156,8 @@
 <string name="search_load_defaults">"Standard laden"</string>
 <string name="search_toast_no_results">"Kein Suchergebnis"</string>
 <plurals name="search_toast_results">
-    <item quantity="one">"%1$d Suchergebnis(se)"</item>
-    <item quantity="other">"%1$d Suchergebnis(se)"</item>
+<item quantity="one">"%1$d Suchergebnis(se)"</item>
+<item quantity="other">"%1$d Suchergebnis(se)"</item>
 </plurals>
 <string name="search_toast_cannot_save">"Konnte Suchoptionen nicht speichern"</string>
 <string name="search_toast_cannot_load">"Konnte Suchoptionen nicht laden"</string>
@@ -177,7 +177,7 @@
 <string name="search_Exact_all_selected_and_no_others">"Genau (alle ausgewählten und keine anderen)"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-See arrays.xml and onCreate method in SearchViewFragment -->
+    See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
@@ -239,7 +239,8 @@ See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="life_counter_remove_player">"Spieler entfernen"</string>
 <string name="life_counter_add_player">"Spieler hinzufügen"</string>
 <string name="life_counter_gathering_dialog_title">"Spiel wählen"</string>
-<string name="life_counter_clear_dialog_text">"Lebenspunkte oder Spieler zurücksetzen?\n
+<string name="life_counter_clear_dialog_text">"Lebenspunkte oder Spieler zurücksetzen?
+
 Der Manavorrat wird ebenfalls geleert"</string>
 <string name="life_counter_edit_name_dialog_title">"Namen eingeben"</string>
 <string name="life_counter_Commander">"Commander"</string>
@@ -539,6 +540,8 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="decklist_others">"Andere"</string>
 <string name="decklist_unnamed_deck">"Unbenanntes Deck"</string>
 <string name="decklist_cards">"Karten"</string>
+
+<!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Deckbauer hinzugefügt&lt;br&gt;
 - Option zum Filtern der Ergebnisse hinzugefügt&lt;br&gt;
 - Kartennamen in anderen Sprachen hinzugefügt&lt;br&gt;
@@ -553,4 +556,8 @@ Der Manavorrat wird ebenfalls geleert"</string>
 
 <!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
 <string name="search_hasManaX">"Manakosten enthalten"</string>
+<string name="search_hasManaX">"Manakosten enthalten"</string>
+
+<!-- Only used for app translation, not card names -->
+<string name="pref_Slovak">"Slowakisch"</string>
 </resources>

@@ -86,7 +86,7 @@
 		&lt;br&gt;
 		Obrigado a todos os colaboradores, incluindo, mas não limitado a, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener e bcGiR.&lt;br&gt;
 		&lt;br&gt;
-		Obrigado a todos os tradutores, incluindo, mas não limitado a, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, e Sebastian.&lt;br&gt;
+		Obrigado a todos os tradutores, incluindo, mas não limitado a, Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, e Sebastian.&lt;br&gt;
 		&lt;br&gt;
 		Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt; Bluewizard.net &lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt; TCGPlayer.com &lt;/a&gt;).&lt;br&gt;
 		&lt;br&gt;
@@ -142,8 +142,8 @@
 <string name="search_load_defaults">"Carregar Valores Padrões"</string>
 <string name="search_toast_no_results">"Não foram encontrados resultados."</string>
 <plurals name="search_toast_results">
-    <item quantity="one">"%1$d resultados de busca."</item>
-    <item quantity="other">"%1$d resultados de busca."</item>
+<item quantity="one">"%1$d resultados de busca."</item>
+<item quantity="other">"%1$d resultados de busca."</item>
 </plurals>
 <string name="search_toast_cannot_save">"Não foi possível salvar suas opções de pesquisa."</string>
 <string name="search_toast_cannot_load">"Falha ao carregar opções de pesquisa."</string>
@@ -223,7 +223,8 @@
 <string name="life_counter_remove_player">"Remover um jogador"</string>
 <string name="life_counter_add_player">"Adicionar um jogador"</string>
 <string name="life_counter_gathering_dialog_title">"Carregando um tipo de jogo"</string>
-<string name="life_counter_clear_dialog_text">"Limpar totais de vida ou jogadores?\n
+<string name="life_counter_clear_dialog_text">"Limpar totais de vida ou jogadores?
+
     Reserva de mana também serão apagados."</string>
 <string name="life_counter_edit_name_dialog_title">"Digite o nome"</string>
 <string name="life_counter_Commander">"Comandante"</string>
@@ -413,18 +414,20 @@
 <string name="pref_auto_updates_title">"Atualizações Automáticas"</string>
 <string name="pref_auto_updates_summary">"Verificar se há novas coleções e banimentos quando o app for aberto"</string>
 <string name="pref_update_frequency_title">"Frequência de Atualização"</string>
-<string name="pref_update_frequency_summary">"Número de dias para verificação de novas coleções e proibições"</string>
-<string name="pref_cat_card_view">"Visualizar Tabela"</string>
+<string name="pref_update_frequency_summary">"Número de dias para verificação de novas coleções e banimentos"</string>
+<string name="pref_cat_card_view">"Visualização de Carta"</string>
 <string name="pref_show_art_title">"Sempre Mostrar Arte da Carta"</string>
 <string name="pref_show_art_summary">"Exibir uma imagem oficial da carta em vez de texto de regras."</string>
 <string name="pref_card_language_title">"Idioma da carta"</string>
 <string name="pref_card_language_summary">"Escolha o idioma usado para pegar a imagem da carta."</string>
 <string name="pref_cat_life_counter">"Contador de Vida"</string>
 <string name="pref_cat_life_screen">"Configurações de exibição"</string>
+
+<!-- Fuzzy -->
 <string name="pref_wake_lock_title">"Evitar bloqueio de tela"</string>
 <string name="pref_wake_lock_summary">"Forçar a exibição do contador de vida para nunca \"dormir\"."</string>
 <string name="pref_dim_lock_summary">"Reduza o brilho da tela depois de inatividade"</string>
-<string name="pref_dim_lock_title">"Ativar tela de suavização"</string>
+<string name="pref_dim_lock_title">"Ativar escurecimento de tela"</string>
 <string name="pref_dim_lock_level_summary">"Selecione o nível de brilho para quando a tela escurecer"</string>
 <string name="pref_dim_lock_level_title">"Brilho da tela"</string>
 <string name="pref_display_mode_title">"Modo de Visualização"</string>
@@ -449,9 +452,9 @@
 <string name="pref_show_pt_title">"Mostrar Poder/Resistência"</string>
 <string name="pref_cat_wishlist">"Lista de Desejos"</string>
 <string name="pref_wishlist_details_title">"Mostrar Detalhes"</string>
-<string name="pref_wishlist_details_summary">"Ver detalhes da lista de cartas"</string>
+<string name="pref_wishlist_details_summary">"Ver detalhes completos da carta na lista de desejos"</string>
 <string name="pref_wishlist_totals_title">"Mostrar Preço Total"</string>
-<string name="pref_wishlist_totals_summary">"Mostrar o valor total da lista"</string>
+<string name="pref_wishlist_totals_summary">"Mostrar o valor total da lista de desejos"</string>
 <string name="pref_wishlist_prices_title">"Mostrar preços das cartas"</string>
 <string name="pref_wishlist_prices_summary">"Ver o preço de cada carta na lista de desejos"</string>
 <string name="pref_English">"Inglês"</string>
@@ -525,13 +528,14 @@
 <string name="decklist_others">"Outros"</string>
 <string name="decklist_unnamed_deck">"Deck sem nome"</string>
 <string name="decklist_cards">"cartas"</string>
-<string name="main_whats_new_text">"
-        - Adicionado um montador de decks&lt;br&gt;
+
+<!-- "Added Slovak Translation" was added -->
+<string name="main_whats_new_text">"        - Adicionado um montador de decks&lt;br&gt;
         - Adicionado ordenação na lista de resultados&lt;br&gt;
         - Adicionado nomes de cartas em outras linguagens&lt;br&gt;
         - Adicionado botão de compartilhar para o texto ou imagem da carta&lt;br&gt;
-        - Arrumado arte da carta para certas cartas
-␣␣␣␣"</string>
+        - Adicionado tradução Eslovaquia&lt;br&gt;
+        - Corrigido arte de carta para certas cartas"</string>
 <string name="card_view_send_to">"Compartilhar imagem usando"</string>
 <string name="card_view_translated_dialog_title">"Nome da carta traduzido"</string>
 <string name="pref_Portuguese">"Português (Brasil)"</string>
@@ -541,4 +545,8 @@
 
 <!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
 <string name="search_hasManaX">"Custo contém "</string>
+<string name="search_hasManaX">"Custo contém "</string>
+
+<!-- Only used for app translation, not card names -->
+<string name="pref_Slovak">"Eslovaca"</string>
 </resources>
