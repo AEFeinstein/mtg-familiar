@@ -52,18 +52,18 @@
 <string name="main_donate_dialog_title">"Wspomóż Programistów"</string>
 <string name="main_profile">"Profil"</string>
 <string name="main_donate_text">"
-        Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;
-        &lt;br&gt;
-        Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;
-        &lt;br&gt;
-        Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br&gt;
-        &lt;br&gt;
-        Mamy programistyczny nawyk do pracy, ok?&lt;br&gt;
-        &lt;br&gt;
-        Możesz kliknąć przycisk poniżej aby wpłacić dotację przez PayPal. $1 jest w porządku. $5 jeszcze lepiej. Łapiesz o co chodzi.&lt;br&gt;
-        &lt;br&gt;
-        Więc, na jak dużą hojność stać cię dzisiaj?
-    "</string>
+Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;
+&lt;br&gt;
+Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;
+&lt;br&gt;
+Programowanie to jednak ciężka sprawa, więc jako programiści docenimy każdego dolara podarowanego nam od czasu do czasu.&lt;br&gt;
+&lt;br&gt;
+Mamy programistyczny nawyk do pracy, ok?&lt;br&gt;
+&lt;br&gt;
+Możesz kliknąć przycisk poniżej aby wpłacić dotację przez PayPal. $1 jest w porządku. $5 jeszcze lepiej. Łapiesz o co chodzi.&lt;br&gt;
+&lt;br&gt;
+Więc, na jak dużą hojność stać cię dzisiaj?
+"</string>
 <string name="main_whats_new_title">"Nowości"</string>
 <string name="main_whats_new_in_title">"Nowości w aktualnej wersji"</string>
 <string name="main_tts_warning_title">"Synteza mowy (Text-To-Speech)"</string>
@@ -76,43 +76,43 @@
 <string name="main_import_fail">"Nie udało się zaimportować danych. Proszę wstawić MTGFamiliarBackup.zip w root'a swojej karty SD"</string>
 <string name="main_about">"O aplikacji"</string>
 <string name="main_about_text">"
-        Ta aplikacja jest moim darem dla społeczności MTG&lt;br&gt;
-        &lt;br&gt;
-        Jeśli masz jakieś pytania, komentarze lub prośby to wyślij je na:&lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Dołącz do &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt;społeczności&lt;/a&gt; na Google+ (beta).&lt;br&gt;
-        &lt;br&gt;
-        Dołącz do &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;projektu open source&lt;/a&gt; na GitHub.&lt;br&gt;
-        &lt;br&gt;
-        Podziękowania dla wszystkich współpracowników, włączając, ale nie ograniczając się do: jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, and bcGiR.&lt;br&gt;
-        &lt;br&gt;
-        Podziękowania dla wszystkich tłumaczy, włączając, ale nie ograniczając się do: Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, i Sebastian.&lt;br&gt;
-        &lt;br&gt;
-        Podziękowania dla wszystkich, którzy odpowiadają za źródła danych, włączając, ale nie ograniczając się do: Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) and Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
-        &lt;br&gt;
-        Podziękowania dla redditowego &lt;a href=\"http://www.reddit.com/r/magicTCG/\"&gt;/r/magictcg&lt;/a&gt; za testy i rady.&lt;br&gt;
-        &lt;br&gt;
-        Specjalne podziękowania dla Richarda Garfielda i pozostałych ludzi z &lt;a href=\"http://www.wizards.com/magic\"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        -gelakinetic&lt;br&gt;
-        &lt;br&gt;
-        &lt;br&gt;
-        Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=\"https://github.com/octo-online/robospice\"&gt;Robospice&lt;/a&gt; został użyty zgodnie z licencją Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=\"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; użyto w oparciu o licencję MIT License&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=\"https://github.com/derekbrameyer/android-betterpickers\"&gt;BetterPickers&lt;/a&gt; użyty w oparciu o licencję Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt;PagerSlidingTabStrip&lt;/a&gt; użyto w oparciu o licencję Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Program licenced under the &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Wyszukiwanie obrazu karty uzyskane przy pomocy &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;
-    "</string>
+Ta aplikacja jest moim darem dla społeczności MTG&lt;br&gt;
+&lt;br&gt;
+Jeśli masz jakieś pytania, komentarze lub prośby to wyślij je na:&lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Dołącz do &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt;społeczności&lt;/a&gt; na Google+ (beta).&lt;br&gt;
+&lt;br&gt;
+Dołącz do &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;projektu open source&lt;/a&gt; na GitHub.&lt;br&gt;
+&lt;br&gt;
+Podziękowania dla wszystkich współpracowników, włączając, ale nie ograniczając się do: jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, and bcGiR.&lt;br&gt;
+&lt;br&gt;
+Podziękowania dla wszystkich tłumaczy, włączając, ale nie ograniczając się do: Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, i Sebastian.&lt;br&gt;
+&lt;br&gt;
+Podziękowania dla wszystkich, którzy odpowiadają za źródła danych, włączając, ale nie ograniczając się do: Ryan Stapleton (&lt;a href=\"http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html\"&gt;Bluewizard.net&lt;/a&gt;) and Chedy Hampson (&lt;a href=\"http://tcgplayer.com\"&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
+&lt;br&gt;
+Podziękowania dla redditowego &lt;a href=\"http://www.reddit.com/r/magicTCG/\"&gt;/r/magictcg&lt;/a&gt; za testy i rady.&lt;br&gt;
+&lt;br&gt;
+Specjalne podziękowania dla Richarda Garfielda i pozostałych ludzi z &lt;a href=\"http://www.wizards.com/magic\"&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+-gelakinetic&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=\"https://github.com/octo-online/robospice\"&gt;Robospice&lt;/a&gt; został użyty zgodnie z licencją Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=\"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; użyto w oparciu o licencję MIT License&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=\"https://github.com/derekbrameyer/android-betterpickers\"&gt;BetterPickers&lt;/a&gt; użyty w oparciu o licencję Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt;PagerSlidingTabStrip&lt;/a&gt; użyto w oparciu o licencję Apache License, wersja 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Program licenced under the &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
+&lt;br&gt;
+Wyszukiwanie obrazu karty uzyskane przy pomocy &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;
+"</string>
 <string name="main_drawer_open">"Otwórz menu nawigacji"</string>
 <string name="main_drawer_close">"Zamknij menu nawigacji"</string>
 <string name="main_install_tts">"Zainstaluj TTS (Text-To-Speech)"</string>
@@ -165,7 +165,7 @@
 <string name="search_Exact_all_selected_and_no_others">"Dokładny (wszystkie wybrane i żadne inne)"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-    See arrays.xml and onCreate method in SearchViewFragment -->
+See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
@@ -226,8 +226,7 @@
 <string name="life_counter_add_player">"Dodaj gracza"</string>
 <string name="life_counter_gathering_dialog_title">"Wczytaj Pojedynek"</string>
 <string name="life_counter_clear_dialog_text">"Wyzerować licznik życia i nazwy graczy?
-
-        Licznik many także ulegnie wyczyszczeniu."</string>
+Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="life_counter_edit_name_dialog_title">"Wpisz imię"</string>
 <string name="life_counter_Commander">"Commander"</string>
 <string name="life_counter_Compact">"Kompaktowy"</string>
@@ -369,27 +368,27 @@
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"Zasady MoJhoSto Basic"</string>
 <string name="mojhosto_rules_text">"
-        MoJhoSto jest nieformalną odmianą formatu Vanguard z Magic Online.&lt;br&gt;
-        &lt;br&gt;
-        Aby móc zagrać, każdy z graczy potrzebuje podstawowej talii zawierającej wyłącznie 60 podstawowych landów.&lt;br&gt;
-        &lt;br&gt;
-        Każdy gracz zaczyna grę z trzema Vanguard'ami: Momir Vig, Jhoira i Stonehewer Giant.&lt;br&gt;
-        &lt;br&gt;
-        Powyższe Vanguardy ustanawiają początkową i maksymalną rękę gracza (9) oraz całkowite życie początkowe (19).&lt;br&gt;
-        &lt;br&gt;
-        Wszystkie zdolności umieszczone na kartach Vanguard są zagrywane tak samo jak zdolności z innych kart MTG obecnych w grze.&lt;br&gt;
-        &lt;br&gt;
-        Jednakże zdolności te nie posiadają koloru, a obrażenia przez nie zadane nie są traktowane jako obrażenia zadawane przez permanenty dowolnego rodzaju lub źródła dowolnego koloru.&lt;br /&gt;&lt;br&gt;
-        Karty Vanguard'ów nie są kartami MTG, więc nie mogą być celem zaklęć lub zdolności.&lt;br&gt;
-        &lt;br&gt;
-        Możesz zatapować każdy obrazek aby zobaczyć pełną kartę Vanguard'a.&lt;br&gt;
-        &lt;br&gt;
-        W każdej chwili możesz zajrzeć do menu aby przeczytać zasady.&lt;br&gt;
-        &lt;br&gt;
-        Kartka i długopis mogą być przydatne aby śledzić przebieg gry. Niestety, MTG Familiar nie może powielać rzeczywistych kart.&lt;br&gt;
-        &lt;br&gt;
-        Powodzenia i miłej zabawy!
-    "</string>
+MoJhoSto jest nieformalną odmianą formatu Vanguard z Magic Online.&lt;br&gt;
+&lt;br&gt;
+Aby móc zagrać, każdy z graczy potrzebuje podstawowej talii zawierającej wyłącznie 60 podstawowych landów.&lt;br&gt;
+&lt;br&gt;
+Każdy gracz zaczyna grę z trzema Vanguard'ami: Momir Vig, Jhoira i Stonehewer Giant.&lt;br&gt;
+&lt;br&gt;
+Powyższe Vanguardy ustanawiają początkową i maksymalną rękę gracza (9) oraz całkowite życie początkowe (19).&lt;br&gt;
+&lt;br&gt;
+Wszystkie zdolności umieszczone na kartach Vanguard są zagrywane tak samo jak zdolności z innych kart MTG obecnych w grze.&lt;br&gt;
+&lt;br&gt;
+Jednakże zdolności te nie posiadają koloru, a obrażenia przez nie zadane nie są traktowane jako obrażenia zadawane przez permanenty dowolnego rodzaju lub źródła dowolnego koloru.&lt;br /&gt;&lt;br&gt;
+Karty Vanguard'ów nie są kartami MTG, więc nie mogą być celem zaklęć lub zdolności.&lt;br&gt;
+&lt;br&gt;
+Możesz zatapować każdy obrazek aby zobaczyć pełną kartę Vanguard'a.&lt;br&gt;
+&lt;br&gt;
+W każdej chwili możesz zajrzeć do menu aby przeczytać zasady.&lt;br&gt;
+&lt;br&gt;
+Kartka i długopis mogą być przydatne aby śledzić przebieg gry. Niestety, MTG Familiar nie może powielać rzeczywistych kart.&lt;br&gt;
+&lt;br&gt;
+Powodzenia i miłej zabawy!
+"</string>
 
 <!-- Fuzzy -->
 <string name="mojhosto_momir_label">"CMC="</string>

@@ -52,18 +52,18 @@
 <string name="main_donate_dialog_title">"Doações para desenvolvedores"</string>
 <string name="main_profile">"Perfil"</string>
 <string name="main_donate_text">"
-        Quanto você pagaria por um excelente app de Magic como este? €1000? €10.000? &lt;br&gt;
-        &lt;br&gt;
-        Bem, se você está lendo isso, então você sabe que nós disponibilizamos de graça! &lt;br&gt;
-        &lt;br&gt;
-        Escrever código é um trabalho árduo e nós, os desenvolvedores, apreciamos cada euro que recebemos. &lt;br&gt;
-        &lt;br&gt;
-        Temos que manter nosso combustível de desenvolvimento, OK? &lt;br&gt;
-        &lt;br&gt;
-        pode pressionar o botão abaixo e doar através do Paypal. € 1 é bom, 5 € são melhores. Você me entende. &lt;br&gt;
-        &lt;br&gt;
-        Então, quão generoso você está sentindo-se hoje?
-    "</string>
+Quanto você pagaria por um excelente app de Magic como este? €1000? €10.000? &lt;br&gt;
+&lt;br&gt;
+Bem, se você está lendo isso, então você sabe que nós disponibilizamos de graça! &lt;br&gt;
+&lt;br&gt;
+Escrever código é um trabalho árduo e nós, os desenvolvedores, apreciamos cada euro que recebemos. &lt;br&gt;
+&lt;br&gt;
+Temos que manter nosso combustível de desenvolvimento, OK? &lt;br&gt;
+&lt;br&gt;
+pode pressionar o botão abaixo e doar através do Paypal. € 1 é bom, 5 € são melhores. Você me entende. &lt;br&gt;
+&lt;br&gt;
+Então, quão generoso você está sentindo-se hoje?
+"</string>
 <string name="main_whats_new_title">"O que há de novo"</string>
 <string name="main_whats_new_in_title">"O que há de Novo na Versão"</string>
 <string name="main_tts_warning_title">"TTS (Text-to-Speech)"</string>
@@ -76,42 +76,42 @@
 <string name="main_import_fail">"Importação falhou. Por favor, coloque MTGFamiliarBackup.zip no diretório raiz do seu cartão SD."</string>
 <string name="main_about">"Sobre"</string>
 <string name="main_about_text">"
-        Este aplicativo é o meu presente para a comunidade MTG.&lt;br&gt;
-		&lt;br&gt;
-		Por favor envie perguntas, comentários, preocupações e elogios a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt; mtg.familiar@gmail.com &lt;/a&gt;.&lt;br&gt;
-		&lt;br&gt;
-		Junte-se à &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt; comunidade beta &lt;/a&gt; no Google+.&lt;br&gt;
-		&lt;br&gt;
-		Junte-se à &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;, um projeto open source &lt;/a&gt; no GitHub.&lt;br&gt;
-		&lt;br&gt;
-		Obrigado a todos os colaboradores, incluindo, mas não limitado a, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener e bcGiR.&lt;br&gt;
-		&lt;br&gt;
-		Obrigado a todos os tradutores, incluindo, mas não limitado a, Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, e Sebastian.&lt;br&gt;
-		&lt;br&gt;
-		Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt; Bluewizard.net &lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt; TCGPlayer.com &lt;/a&gt;).&lt;br&gt;
-		&lt;br&gt;
-		Obrigado ao reddit  's &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt; / r / magictcg &lt;/a&gt; para testes e feedback.&lt;br&gt;
-		&lt;br&gt;
-		agradecimento especial a Richard Garfield eo resto das pessoas em &lt;a href =\" http://www.wizards.com/magic \" &gt; Wizards of the Coast. &lt;/a&gt;&lt;br&gt;
-		&lt;br&gt;
-		-gelakinetic&lt;br&gt;
-		&lt;br&gt;
-		Magic the Gathering e Magic the Gathering cartões são ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
-		&lt;br&gt;
-		&lt;a href = \"https://github.com/octo-online/robospice\"&gt; Robospice &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;&lt;br&gt;
-		&lt;br&gt;
-		&lt;a href = \"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; usado sob a licença MIT&lt;/a&gt;.&lt;br&gt;
-		&lt;br&gt;
-		&lt;a href = \"https://github.com/derekbrameyer/android -betterpickers \"&gt; BetterPickers &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;.&lt;br&gt;
-		&lt;br&gt;
-		&lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt; PagerSlidingTabStrip &lt;/ a &gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;.&lt;br&gt;
-		&lt;br&gt;
-		Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;.&lt;br&gt;
-		&lt;br&gt;
-		mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .&lt;br&gt;
-		&lt;br&gt;
-		Busca por imagem de carta desenvolvido por &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;
-    "</string>
+Este aplicativo é o meu presente para a comunidade MTG.&lt;br&gt;
+&lt;br&gt;
+Por favor envie perguntas, comentários, preocupações e elogios a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt; mtg.familiar@gmail.com &lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Junte-se à &lt;a href=\"https://plus.google.com/communities/110783165129365768059\"&gt; comunidade beta &lt;/a&gt; no Google+.&lt;br&gt;
+&lt;br&gt;
+Junte-se à &lt;a href=\"https://github.com/AEFeinstein/mtg-familiar\"&gt;, um projeto open source &lt;/a&gt; no GitHub.&lt;br&gt;
+&lt;br&gt;
+Obrigado a todos os colaboradores, incluindo, mas não limitado a, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener e bcGiR.&lt;br&gt;
+&lt;br&gt;
+Obrigado a todos os tradutores, incluindo, mas não limitado a, Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo, e Sebastian.&lt;br&gt;
+&lt;br&gt;
+Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt; Bluewizard.net &lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt; TCGPlayer.com &lt;/a&gt;).&lt;br&gt;
+&lt;br&gt;
+Obrigado ao reddit  's &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt; / r / magictcg &lt;/a&gt; para testes e feedback.&lt;br&gt;
+&lt;br&gt;
+agradecimento especial a Richard Garfield eo resto das pessoas em &lt;a href =\"http://www.wizards.com/magic \"&gt; Wizards of the Coast. &lt;/a&gt;&lt;br&gt;
+&lt;br&gt;
+-gelakinetic&lt;br&gt;
+&lt;br&gt;
+Magic the Gathering e Magic the Gathering cartões são ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
+&lt;br&gt;
+&lt;a href = \"https://github.com/octo-online/robospice\"&gt; Robospice &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;&lt;br&gt;
+&lt;br&gt;
+&lt;a href = \"https://github.com/afollestad/material-dialogs\"&gt;Material Dialogs&lt;/a&gt; usado sob a licença MIT&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href = \"https://github.com/derekbrameyer/android -betterpickers \"&gt; BetterPickers &lt;/a&gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=\"https://github.com/jpardogo/PagerSlidingTabStrip\"&gt; PagerSlidingTabStrip &lt;/ a &gt; usado sob a licença Apache, Versão 2.0 &lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .&lt;br&gt;
+&lt;br&gt;
+Busca por imagem de carta desenvolvido por &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;
+"</string>
 <string name="main_drawer_open">"Abrir coluna de navegação"</string>
 <string name="main_drawer_close">"Fechar coluna de navegação"</string>
 <string name="main_install_tts">"Instalar TTS (Text-To-Speech)"</string>
@@ -163,7 +163,7 @@
 <string name="search_Exact_all_selected_and_no_others">"Exatamente as cores selecionadas"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-    See arrays.xml and onCreate method in SearchViewFragment -->
+See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Comum"</string>
 <string name="search_Uncommon">"Incomum"</string>
 <string name="search_Rare">"Rara"</string>
@@ -224,8 +224,7 @@
 <string name="life_counter_add_player">"Adicionar um jogador"</string>
 <string name="life_counter_gathering_dialog_title">"Carregando um tipo de jogo"</string>
 <string name="life_counter_clear_dialog_text">"Limpar totais de vida ou jogadores?
-
-    Reserva de mana também serão apagados."</string>
+Reserva de mana também serão apagados."</string>
 <string name="life_counter_edit_name_dialog_title">"Digite o nome"</string>
 <string name="life_counter_Commander">"Comandante"</string>
 <string name="life_counter_Compact">"Compacto"</string>
@@ -367,28 +366,28 @@
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"Regras básicas MoJhoSto"</string>
 <string name="mojhosto_rules_text">"
-        MoJhoSto é um formato casual do Magic Online Vanguard. &lt;br&gt;
-        &lt;br&gt;
-        Para jogar, cada jogador deve ter um deck que tem apenas 60 terrenos básicos. &lt;br&gt;
-        &lt;br&gt;
-        Cada jogador começa com três Vanguard's. Momir Vig, Jhoira e Stonehewer gigante &lt;br&gt;
-        &lt;br&gt;
-        Estes Vanguardas ajustm a quantidade de cartas inicial e o tamanho máximo da sua mão (9) e a vida inicial (19). &lt;br&gt;
-        &lt;br&gt;
-        Qualquer habilidade de uma carta do Vanguard é jogada exatamente igual a de um card de Magic. &lt;br&gt;
-        &lt;br&gt;
-        No entanto, essas habilidades são incolores, e os danos dados a eles não está atrelado a nenhum dano de qualquer tipo de permanente ou qualquer fonte de qualquer cor. &lt;br&gt;
-        &lt;br&gt;
-        Uma carta Vanguard não é um card Magic, por isso, não é afetado por mágicas ou habilidades. &lt;br&gt;
-        &lt;br&gt;
-        Você pode clicar em cada imagem para ver o Vanguard. &lt;br&gt;
-        &lt;br&gt;
-        Você pode ler as regras a qualquer momento no menu. &lt;br&gt;
-        &lt;br&gt;
-        Recomendamos o uso de papel e lápis para acompanhar o andamento do jogo. Infelizmente, O MTG Familiar não pode trazer à tona as cartas reais. &lt;br&gt;
-        &lt;br&gt;
-        Boa sorte, e divirtam-se!
-    "</string>
+MoJhoSto é um formato casual do Magic Online Vanguard. &lt;br&gt;
+&lt;br&gt;
+Para jogar, cada jogador deve ter um deck que tem apenas 60 terrenos básicos. &lt;br&gt;
+&lt;br&gt;
+Cada jogador começa com três Vanguard's. Momir Vig, Jhoira e Stonehewer gigante &lt;br&gt;
+&lt;br&gt;
+Estes Vanguardas ajustm a quantidade de cartas inicial e o tamanho máximo da sua mão (9) e a vida inicial (19). &lt;br&gt;
+&lt;br&gt;
+Qualquer habilidade de uma carta do Vanguard é jogada exatamente igual a de um card de Magic. &lt;br&gt;
+&lt;br&gt;
+No entanto, essas habilidades são incolores, e os danos dados a eles não está atrelado a nenhum dano de qualquer tipo de permanente ou qualquer fonte de qualquer cor. &lt;br&gt;
+&lt;br&gt;
+Uma carta Vanguard não é um card Magic, por isso, não é afetado por mágicas ou habilidades. &lt;br&gt;
+&lt;br&gt;
+Você pode clicar em cada imagem para ver o Vanguard. &lt;br&gt;
+&lt;br&gt;
+Você pode ler as regras a qualquer momento no menu. &lt;br&gt;
+&lt;br&gt;
+Recomendamos o uso de papel e lápis para acompanhar o andamento do jogo. Infelizmente, O MTG Familiar não pode trazer à tona as cartas reais. &lt;br&gt;
+&lt;br&gt;
+Boa sorte, e divirtam-se!
+"</string>
 
 <!-- Fuzzy -->
 <string name="mojhosto_momir_label">"CMC ="</string>
@@ -530,12 +529,13 @@
 <string name="decklist_cards">"cartas"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"        - Adicionado um montador de decks&lt;br&gt;
-        - Adicionado ordenação na lista de resultados&lt;br&gt;
-        - Adicionado nomes de cartas em outras linguagens&lt;br&gt;
-        - Adicionado botão de compartilhar para o texto ou imagem da carta&lt;br&gt;
-        - Adicionado tradução Eslovaquia&lt;br&gt;
-        - Corrigido arte de carta para certas cartas"</string>
+<string name="main_whats_new_text">"
+- Adicionado um montador de decks&lt;br&gt;
+- Adicionado ordenação na lista de resultados&lt;br&gt;
+- Adicionado nomes de cartas em outras linguagens&lt;br&gt;
+- Adicionado botão de compartilhar para o texto ou imagem da carta&lt;br&gt;
+- Adicionado tradução Eslovaquia&lt;br&gt;
+- Corrigido arte de carta para certas cartas"</string>
 <string name="card_view_send_to">"Compartilhar imagem usando"</string>
 <string name="card_view_translated_dialog_title">"Nome da carta traduzido"</string>
 <string name="pref_Portuguese">"Português (Brasil)"</string>

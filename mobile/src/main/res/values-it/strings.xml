@@ -54,18 +54,18 @@
 <string name="main_donate_dialog_title">"Fai una donazione agli sviluppatori"</string>
 <string name="main_profile">"Profilo"</string>
 <string name="main_donate_text">"
-        Quanto pagheresti per un'eccellente applicazione di MTG come questa? $1,000? $10,000?&lt;br&gt;
-        &lt;br&gt;
-        Beh, se stai leggendo questo avviso, sai anche che la stiamo regalando!&lt;br&gt;
-        &lt;br&gt;
-        Programmare è un duro lavoro, e noi sviluppatori apprezziamo i dollari extra qui o là.&lt;br&gt;
-        &lt;br&gt;
-        Abbiamo l'abitudine di nutrirci, OK?&lt;br&gt;
-        &lt;br&gt;
-        Puoi toccare il bottone qua sotto per donare via PayPal. $1 è figo. $5 è più figo. La scelta è tua.&lt;br&gt;
-        &lt;br&gt;
-        Quindi, quanto ti senti generoso oggi?
-    "</string>
+Quanto pagheresti per un'eccellente applicazione di MTG come questa? $1,000? $10,000?&lt;br&gt;
+&lt;br&gt;
+Beh, se stai leggendo questo avviso, sai anche che la stiamo regalando!&lt;br&gt;
+&lt;br&gt;
+Programmare è un duro lavoro, e noi sviluppatori apprezziamo i dollari extra qui o là.&lt;br&gt;
+&lt;br&gt;
+Abbiamo l'abitudine di nutrirci, OK?&lt;br&gt;
+&lt;br&gt;
+Puoi toccare il bottone qua sotto per donare via PayPal. $1 è figo. $5 è più figo. La scelta è tua.&lt;br&gt;
+&lt;br&gt;
+Quindi, quanto ti senti generoso oggi?
+"</string>
 <string name="main_whats_new_title">"Novità"</string>
 <string name="main_whats_new_in_title">"Novità in questa versione"</string>
 <string name="main_tts_warning_title">"Sintetizzatore vocale (TTS)"</string>
@@ -78,42 +78,42 @@
 <string name="main_import_fail">"Caricamento fallito. Metti il file MTGFamiliarBackup.zip nella cartella files dei dati di quest app"</string>
 <string name="main_about">"Info"</string>
 <string name="main_about_text">"
-        Questa app è il mio regalo per la comunità di MTG.&lt;br&gt;
-        &lt;br&gt;
-        Invia commenti, suggerimenti, preghiere e tutto ciò che riguarda questa app a &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Unisciti alla &lt;a href=https://plus.google.com/communities/110783165129365768059&gt;beta community&lt;/a&gt; su Google+.&lt;br&gt;
-        &lt;br&gt;
-        Partecipa al&lt;a href=https://github.com/AEFeinstein/mtg-familiar&gt;progetto open source&lt;/a&gt; su GitHub.&lt;br&gt;
-        &lt;br&gt;
-        Grazie a tutti i collaboratori inclusi, ma non solo, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, e bcGiR.&lt;br&gt;
-        &lt;br&gt;
-        Grazie a tutti i traduttori inclusi, ma non solo, Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Sebastian e Jacopo.&lt;br&gt;
-        &lt;br&gt;
-        Grazie a tutti coloro che gestiscono le risorse di dati, inclusi, ma non solo, Ryan Stapleton (&lt;a href=http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html&gt;Bluewizard.net&lt;/a&gt;) e Chedy Hampson (&lt;a href=http://tcgplayer.com&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
-        &lt;br&gt;
-        Grazie al subreddit &lt;a href=http://www.reddit.com/r/magicTCG/&gt;/r/magictcg&lt;/a&gt; per i test e i feedback.&lt;br&gt;
-        &lt;br&gt;
-        Ringraziamenti speciali a Richard Garfield e gli altri ragazzi della &lt;a href=http://www.wizards.com/magic&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        -gelakinetic&lt;br&gt;
-        &lt;br&gt;
-        Magic the Gathering e Magic the Gathering cards sono ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=https://github.com/octo-online/robospice&gt;Robospice&lt;/a&gt;usato sotto Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; used under the MIT License&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=https://github.com/derekbrameyer/android-betterpickers&gt;BetterPickers&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=https://github.com/jpardogo/PagerSlidingTabStrip&gt;PagerSlidingTabStrip&lt;/a&gt; usato sotto Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Questo programma ha una licenza &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Ricerca tramite immagini fornita da &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.
-    "</string>
+Questa app è il mio regalo per la comunità di MTG.&lt;br&gt;
+&lt;br&gt;
+Invia commenti, suggerimenti, preghiere e tutto ciò che riguarda questa app a &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Unisciti alla &lt;a href=https://plus.google.com/communities/110783165129365768059&gt;beta community&lt;/a&gt; su Google+.&lt;br&gt;
+&lt;br&gt;
+Partecipa al&lt;a href=https://github.com/AEFeinstein/mtg-familiar&gt;progetto open source&lt;/a&gt; su GitHub.&lt;br&gt;
+&lt;br&gt;
+Grazie a tutti i collaboratori inclusi, ma non solo, jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, e bcGiR.&lt;br&gt;
+&lt;br&gt;
+Grazie a tutti i traduttori inclusi, ma non solo, Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Sebastian e Jacopo.&lt;br&gt;
+&lt;br&gt;
+Grazie a tutti coloro che gestiscono le risorse di dati, inclusi, ma non solo, Ryan Stapleton (&lt;a href=http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html&gt;Bluewizard.net&lt;/a&gt;) e Chedy Hampson (&lt;a href=http://tcgplayer.com&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
+&lt;br&gt;
+Grazie al subreddit &lt;a href=http://www.reddit.com/r/magicTCG/&gt;/r/magictcg&lt;/a&gt; per i test e i feedback.&lt;br&gt;
+&lt;br&gt;
+Ringraziamenti speciali a Richard Garfield e gli altri ragazzi della &lt;a href=http://www.wizards.com/magic&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+-gelakinetic&lt;br&gt;
+&lt;br&gt;
+Magic the Gathering e Magic the Gathering cards sono ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/octo-online/robospice&gt;Robospice&lt;/a&gt;usato sotto Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; used under the MIT License&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/derekbrameyer/android-betterpickers&gt;BetterPickers&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/jpardogo/PagerSlidingTabStrip&gt;PagerSlidingTabStrip&lt;/a&gt; usato sotto Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Questo programma ha una licenza &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
+&lt;br&gt;
+Ricerca tramite immagini fornita da &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.
+"</string>
 <string name="main_drawer_open">"Apri la colonna di navigazione"</string>
 <string name="main_drawer_close">"Chiudi la colonna di navigazione"</string>
 <string name="main_install_tts">"Installa un sintetizzatore vocale (TTS)"</string>
@@ -165,7 +165,7 @@
 <string name="search_Exact_all_selected_and_no_others">"Esatto (tutti i selezionati e nessun altro)"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-    See arrays.xml and onCreate method in SearchViewFragment -->
+See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Comune"</string>
 <string name="search_Uncommon">"Non comune"</string>
 <string name="search_Rare">"Rara"</string>
@@ -367,28 +367,28 @@ Verrà azzerata anche la riserva di mana"</string>
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"Regole base del MoJhoSto"</string>
 <string name="mojhosto_rules_text">"
-        Il MoJhoSto è un formato Vanguard tratto da Magic Online.&lt;br&gt;
-        &lt;br&gt;
-        Per giocare, ogni giocatore deve avere un mazzo che consista di sole 60 terre base.&lt;br&gt;
-        &lt;br&gt;
-        Ogni giocatore comicia il gioco con tre Vanguard: Momir Vig, Jhoira, e il Gigante Spaccapietre.&lt;br&gt;
-        &lt;br&gt;
-        Questi Vanguard modificano i punti vita (19) e il numero massimo di carte (9).&lt;br&gt;
-        &lt;br&gt;
-        Ogni abilità stampata su una carta Vanguard viene giocata esattamente come quelle di altre carte di Magic in gioco.&lt;br&gt;
-        &lt;br&gt;
-        Comunque, queste abilità non hanno colore e il danno da loro provocato non è danno da un permanente di qualunque tipo o da una fonte di qualsiasi colore.&lt;br&gt;
-        &lt;br&gt;
-        Una carta Vanguard non è una carta di Magic, perciò non può essere bersaglio di magie o abilità.&lt;br&gt;
-        &lt;br&gt;
-        Puoi toccare ogni figura per vedere l'intera carta Vanguard.&lt;br&gt;
-        &lt;br&gt;
-        Puoi leggere le regole dal menu in qualsiasi momento.&lt;br&gt;
-        &lt;br&gt;
-        Carta e penna potrebbero essere utili per tener conto dello stato del gioco. Sfortunatamente, MTG Familiar non può evocare carte reali.&lt;br&gt;
-        &lt;br&gt;
-        Buona fortuna, e divertiti!
-    "</string>
+Il MoJhoSto è un formato Vanguard tratto da Magic Online.&lt;br&gt;
+&lt;br&gt;
+Per giocare, ogni giocatore deve avere un mazzo che consista di sole 60 terre base.&lt;br&gt;
+&lt;br&gt;
+Ogni giocatore comicia il gioco con tre Vanguard: Momir Vig, Jhoira, e il Gigante Spaccapietre.&lt;br&gt;
+&lt;br&gt;
+Questi Vanguard modificano i punti vita (19) e il numero massimo di carte (9).&lt;br&gt;
+&lt;br&gt;
+Ogni abilità stampata su una carta Vanguard viene giocata esattamente come quelle di altre carte di Magic in gioco.&lt;br&gt;
+&lt;br&gt;
+Comunque, queste abilità non hanno colore e il danno da loro provocato non è danno da un permanente di qualunque tipo o da una fonte di qualsiasi colore.&lt;br&gt;
+&lt;br&gt;
+Una carta Vanguard non è una carta di Magic, perciò non può essere bersaglio di magie o abilità.&lt;br&gt;
+&lt;br&gt;
+Puoi toccare ogni figura per vedere l'intera carta Vanguard.&lt;br&gt;
+&lt;br&gt;
+Puoi leggere le regole dal menu in qualsiasi momento.&lt;br&gt;
+&lt;br&gt;
+Carta e penna potrebbero essere utili per tener conto dello stato del gioco. Sfortunatamente, MTG Familiar non può evocare carte reali.&lt;br&gt;
+&lt;br&gt;
+Buona fortuna, e divertiti!
+"</string>
 <string name="mojhosto_momir_label">"CMC="</string>
 <string name="mojhosto_random_creature">"Creatura casuale"</string>
 <string name="mojhosto_stonehewer_label">"CMC &lt;="</string>

@@ -60,18 +60,18 @@
 
 <!-- Some grammar corrections and changes to the overall tone. What do you mean with "We've got a drafting habit to fuel, OK?" Are you referring to drafting as a playmode Magic? How does this fit into the text? -->
 <string name="main_donate_text">"
-        Wie viel würdest du für eine Premium-MTG-App wie diese bezahlen? $1,000? $10,000?&lt;br&gt;
-        &lt;br&gt;
-        Wenn du das hier liest, weißt du ja bereits, dass wir sie kostenfrei bereit stellen!&lt;br&gt;
-        &lt;br&gt;
-        Programmieren ist dennoch harte Arbeit und wir Entwickler freuen uns über jeden Cent.&lt;br&gt;
-        &lt;br&gt;
-        Wir brauchen schließlich auch Geld zum draften:)&lt;br&gt;
-        &lt;br&gt;
-        Du kannst die Schaltfläche unten drücken, um über Paypal zu spenden. $1 ist gut. $5 sind besser. Und so weiter...&lt;br&gt;
-        &lt;br&gt;
-        Also, wie großzügig bist du heute?
-        "</string>
+Wie viel würdest du für eine Premium-MTG-App wie diese bezahlen? $1,000? $10,000?&lt;br&gt;
+&lt;br&gt;
+Wenn du das hier liest, weißt du ja bereits, dass wir sie kostenfrei bereit stellen!&lt;br&gt;
+&lt;br&gt;
+Programmieren ist dennoch harte Arbeit und wir Entwickler freuen uns über jeden Cent.&lt;br&gt;
+&lt;br&gt;
+Wir brauchen schließlich auch Geld zum draften:)&lt;br&gt;
+&lt;br&gt;
+Du kannst die Schaltfläche unten drücken, um über Paypal zu spenden. $1 ist gut. $5 sind besser. Und so weiter...&lt;br&gt;
+&lt;br&gt;
+Also, wie großzügig bist du heute?
+"</string>
 <string name="main_whats_new_title">"Neuerungen"</string>
 <string name="main_whats_new_in_title">"Neuerungen in Version"</string>
 
@@ -90,42 +90,42 @@
 
 <!-- Some grammar corrections and changes in language tone. -->
 <string name="main_about_text">"
-        Diese App ist mein Geschenk an die MTG-Gemeinschaft.&lt;br&gt;
-        &lt;br&gt;
-        Sende deine Fragen, Kommentare, Bedenken und dein Lob an &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Tritt der  &lt;a href=https://plus.google.com/communities/110783165129365768059&gt;Beta-Gemeinschaft&lt;/a&gt; auf Google+ bei.&lt;br&gt;
-        &lt;br&gt;
-        Tritt dem &lt;a href=https://github.com/AEFeinstein/mtg-familiar&gt;Open-Source-Projekt&lt;/a&gt; auf GitHub bei.&lt;br&gt;
-        &lt;br&gt;
-        Danke an alle Mitwirkenden, unter anderem jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, und bcGiR.&lt;br&gt;
-        &lt;br&gt;
-        Danke an alle Übersetzer, unter anderem Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo und Sebastian.&lt;br&gt;
-        &lt;br&gt;
-        Danke an alle, die sich um die Datenquellen kümmern, unter anderem Ryan Stapleton (&lt;a href=http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html&gt;Bluewizard.net&lt;/a&gt;) und Chedy Hampson (&lt;a href=http://tcgplayer.com&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
-        &lt;br&gt;
-        Danke an Reddits &lt;a href=http://www.reddit.com/r/magicTCG/&gt;/r/magictcg&lt;/a&gt; für das Testen der App und ihre Rückmeldungen dazu.&lt;br&gt;
-        &lt;br&gt;
-        Besonderer Dank geht an Richard Garfield und alle Mitarbeiter von&lt;a href=http://www.wizards.com/magic&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        -gelakinetic&lt;br&gt;
-        &lt;br&gt;
-        Magic the Gathering und Magic the Gathering Karten sind ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=https://github.com/octo-online/robospice&gt;Robospice&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; wird verwendet used unter der MIT License&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=https://github.com/derekbrameyer/android-betterpickers&gt;BetterPickers&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        &lt;a href=https://github.com/jpardogo/PagerSlidingTabStrip&gt;PagerSlidingTabStrip&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Programm lizenziert unter der &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-        &lt;br&gt;
-        Kartenbildsuche ermöglicht durch&lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.
-        "</string>
+Diese App ist mein Geschenk an die MTG-Gemeinschaft.&lt;br&gt;
+&lt;br&gt;
+Sende deine Fragen, Kommentare, Bedenken und dein Lob an &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Tritt der  &lt;a href=https://plus.google.com/communities/110783165129365768059&gt;Beta-Gemeinschaft&lt;/a&gt; auf Google+ bei.&lt;br&gt;
+&lt;br&gt;
+Tritt dem &lt;a href=https://github.com/AEFeinstein/mtg-familiar&gt;Open-Source-Projekt&lt;/a&gt; auf GitHub bei.&lt;br&gt;
+&lt;br&gt;
+Danke an alle Mitwirkenden, unter anderem jfeinstein10, zagaberoo, April King, Toastdeib, Reuben Kreigel, Lotier, Daniel Lawrence, Devin Collins, Ian Kenley, XVicarious, gopat, mattdiener, und bcGiR.&lt;br&gt;
+&lt;br&gt;
+Danke an alle Übersetzer, unter anderem Michal Ďurovič, Ghislain, Piotr, Víctor, Emilio, Alan, Jacopo und Sebastian.&lt;br&gt;
+&lt;br&gt;
+Danke an alle, die sich um die Datenquellen kümmern, unter anderem Ryan Stapleton (&lt;a href=http://www.bluewizard.net/Bluewizards_Tower/Home_Page.html&gt;Bluewizard.net&lt;/a&gt;) und Chedy Hampson (&lt;a href=http://tcgplayer.com&gt;TCGPlayer.com&lt;/a&gt;).&lt;br&gt;
+&lt;br&gt;
+Danke an Reddits &lt;a href=http://www.reddit.com/r/magicTCG/&gt;/r/magictcg&lt;/a&gt; für das Testen der App und ihre Rückmeldungen dazu.&lt;br&gt;
+&lt;br&gt;
+Besonderer Dank geht an Richard Garfield und alle Mitarbeiter von&lt;a href=http://www.wizards.com/magic&gt;Wizards of the Coast&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+-gelakinetic&lt;br&gt;
+&lt;br&gt;
+Magic the Gathering und Magic the Gathering Karten sind ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/octo-online/robospice&gt;Robospice&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; wird verwendet used unter der MIT License&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/derekbrameyer/android-betterpickers&gt;BetterPickers&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/jpardogo/PagerSlidingTabStrip&gt;PagerSlidingTabStrip&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Programm lizenziert unter der &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
+&lt;br&gt;
+Kartenbildsuche ermöglicht durch&lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.
+"</string>
 <string name="main_drawer_open">"Navigationsleiste öffnen"</string>
 <string name="main_drawer_close">"Navigationsleiste schließen"</string>
 <string name="main_install_tts">"TTS installieren"</string>
@@ -177,7 +177,7 @@
 <string name="search_Exact_all_selected_and_no_others">"Genau (alle ausgewählten und keine anderen)"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-    See arrays.xml and onCreate method in SearchViewFragment -->
+See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
@@ -385,28 +385,28 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"MoJhoSto-Basic-Regeln"</string>
 <string name="mojhosto_rules_text">"
-        MoJhoSto ist ein Vanguard-Freizeitformat aus Magic-Online. (Vanguard bedeutet Vorhut.)&lt;br&gt;
-        &lt;br&gt;
-        Zum Spielen benötigt jeder Spieler ein Deck aus 60 Standardländern.&lt;br&gt;
-        &lt;br&gt;
-        Jeder Spieler beginnt das Spiel mit drei Vanguards in der Hand: Momir Vig, Jhoira, und Stonehewer Giant.&lt;br&gt;
-        &lt;br&gt;
-        Diese Vanguards setzen für jeden Spieler das Startleben auf 19 und die Starthand sowie maximale Handkartenzahl auf 9.&lt;br&gt;
-        &lt;br&gt;
-        Alle auf einer Vanguard-Karte gedruckten Fähigkeiten werden genau so gespielt, wie auf einer im Spiel befindlichen Magic-Karte.&lt;br&gt;
-        &lt;br&gt;
-        Jedoch haben diese Fähigkeiten keine Farbe. Von ihnen ausgeteilter Schaden entspricht keinem Schaden von permanenten Karten beliebiger Art, oder Quellen beliebiger Farbe.&lt;br&gt;
-        &lt;br&gt;
-        Eine Vanguard-Karte ist keine Magic-Karte. Sie kann daher nicht von Zaubersprüchen oder Fähigkeiten beeinflusst werden.&lt;br&gt;
-        &lt;br&gt;
-        Du kannst auf jedes Bild drücken, um die volle Vanguard-Karte anzusehen.&lt;br&gt;
-        &lt;br&gt;
-        Du kannst die Regeln zu jeder Zeit im Menü nachschlagen.&lt;br&gt;
-        &lt;br&gt;
-        Stift und Papier sind nützlich, um den Status des Spiels festzuhalten. Leider kann MTG-Familiar keine wirklichen Karten erscheinen lassen.&lt;br&gt;
-        &lt;br&gt;
-        Viel Glück und viel Spaß!
-        "</string>
+MoJhoSto ist ein Vanguard-Freizeitformat aus Magic-Online. (Vanguard bedeutet Vorhut.)&lt;br&gt;
+&lt;br&gt;
+Zum Spielen benötigt jeder Spieler ein Deck aus 60 Standardländern.&lt;br&gt;
+&lt;br&gt;
+Jeder Spieler beginnt das Spiel mit drei Vanguards in der Hand: Momir Vig, Jhoira, und Stonehewer Giant.&lt;br&gt;
+&lt;br&gt;
+Diese Vanguards setzen für jeden Spieler das Startleben auf 19 und die Starthand sowie maximale Handkartenzahl auf 9.&lt;br&gt;
+&lt;br&gt;
+Alle auf einer Vanguard-Karte gedruckten Fähigkeiten werden genau so gespielt, wie auf einer im Spiel befindlichen Magic-Karte.&lt;br&gt;
+&lt;br&gt;
+Jedoch haben diese Fähigkeiten keine Farbe. Von ihnen ausgeteilter Schaden entspricht keinem Schaden von permanenten Karten beliebiger Art, oder Quellen beliebiger Farbe.&lt;br&gt;
+&lt;br&gt;
+Eine Vanguard-Karte ist keine Magic-Karte. Sie kann daher nicht von Zaubersprüchen oder Fähigkeiten beeinflusst werden.&lt;br&gt;
+&lt;br&gt;
+Du kannst auf jedes Bild drücken, um die volle Vanguard-Karte anzusehen.&lt;br&gt;
+&lt;br&gt;
+Du kannst die Regeln zu jeder Zeit im Menü nachschlagen.&lt;br&gt;
+&lt;br&gt;
+Stift und Papier sind nützlich, um den Status des Spiels festzuhalten. Leider kann MTG-Familiar keine wirklichen Karten erscheinen lassen.&lt;br&gt;
+&lt;br&gt;
+Viel Glück und viel Spaß!
+"</string>
 <string name="mojhosto_momir_label">"CMC ="</string>
 <string name="mojhosto_random_creature">"Zufällige Kreatur"</string>
 <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
