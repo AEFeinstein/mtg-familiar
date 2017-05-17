@@ -74,6 +74,7 @@ import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -315,6 +316,19 @@ public class CardViewFragment extends FamiliarFragment {
         registerForContextMenu(mFlavorTextView);
         registerForContextMenu(mArtistTextView);
         registerForContextMenu(mNumberTextView);
+
+        mSetTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchCriteria setSearch = new SearchCriteria();
+                assert mSetTextView.getText() != null;
+                setSearch.set = mSetTextView.getText().toString();
+                Bundle arguments = new Bundle();
+                arguments.putSerializable(SearchViewFragment.CRITERIA, setSearch);
+                ResultListFragment rlFrag = new ResultListFragment();
+                startNewFragment(rlFrag, arguments);
+            }
+        });
 
         mCardImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
