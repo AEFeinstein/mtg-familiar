@@ -51,8 +51,7 @@
 <string name="main_donate_title">"Faire un don"</string>
 <string name="main_donate_dialog_title">"Don aux créateurs"</string>
 <string name="main_profile">"Profile"</string>
-<string name="main_donate_text">"
-Pour une appli MTG premium comme celle-ci, combien paieriez-vous ? 1 000 €? 10 000 €?&lt;br&gt;
+<string name="main_donate_text">"Pour une appli MTG premium comme celle-ci, combien paieriez-vous ? 1 000 €? 10 000 €?&lt;br&gt;
 &lt;br&gt;
 Bon, si vous lisez ceci, vous savez déjà qu'on la distribue gratuitement!&lt;br&gt;
 &lt;br&gt;
@@ -75,8 +74,7 @@ Alors, à quel point vous sentez-vous généreux aujourd'hui?
 <string name="main_import_success">"Import réalisé avec succès"</string>
 <string name="main_import_fail">"Echec de l'import. Veuillez placer MTGFamiliarBackup.zip à la racine de votre carte SD"</string>
 <string name="main_about">"A propos"</string>
-<string name="main_about_text">"
-Cette appli est mon cadeau à la communauté MTG.&lt;br&gt;
+<string name="main_about_text">"Cette appli est mon cadeau à la communauté MTG.&lt;br&gt;
 &lt;br&gt;
 Envoyez vos questions, commentaires, problèmes et souhaits à &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -163,7 +161,7 @@ Recherche de carte par image optimisée par &lt;a href=https://tutor.cards&gt;Tu
 <string name="search_Exact_all_selected_and_no_others">"Exactement ces couleurs"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-See arrays.xml and onCreate method in SearchViewFragment -->
+    See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Commune"</string>
 <string name="search_Uncommon">"Unco"</string>
 <string name="search_Rare">"Rare"</string>
@@ -365,8 +363,7 @@ La réserve de mana sera aussi vidée."</string>
 
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"Règles MoJhoSto Basic"</string>
-<string name="mojhosto_rules_text">"
-MoJhoSto est un format avec Fun card de Magic Online.&lt;br&gt;
+<string name="mojhosto_rules_text">"MoJhoSto est un format avec Fun card de Magic Online.&lt;br&gt;
 &lt;br&gt;
 Pour jouer, chaque joueur doit avoir un deck constitué de 60 terrains basiques uniquement.&lt;br&gt;
 &lt;br&gt;

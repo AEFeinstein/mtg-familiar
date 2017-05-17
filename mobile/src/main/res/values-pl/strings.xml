@@ -51,8 +51,7 @@
 <string name="main_donate_title">"Wspomóż nas"</string>
 <string name="main_donate_dialog_title">"Wspomóż Programistów"</string>
 <string name="main_profile">"Profil"</string>
-<string name="main_donate_text">"
-Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;
+<string name="main_donate_text">"Ile jesteś gotów zapłacić za wersję premium aplikacji MTG takiej jak ta? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
 Jeśli to czytasz, to wiesz, że ta aplikacja jest darmowa!&lt;br&gt;
 &lt;br&gt;
@@ -75,8 +74,7 @@ Więc, na jak dużą hojność stać cię dzisiaj?
 <string name="main_import_success">"Import zakończony powodzeniem"</string>
 <string name="main_import_fail">"Nie udało się zaimportować danych. Proszę wstawić MTGFamiliarBackup.zip w root'a swojej karty SD"</string>
 <string name="main_about">"O aplikacji"</string>
-<string name="main_about_text">"
-Ta aplikacja jest moim darem dla społeczności MTG&lt;br&gt;
+<string name="main_about_text">"Ta aplikacja jest moim darem dla społeczności MTG&lt;br&gt;
 &lt;br&gt;
 Jeśli masz jakieś pytania, komentarze lub prośby to wyślij je na:&lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -143,9 +141,9 @@ Wyszukiwanie obrazu karty uzyskane przy pomocy &lt;a href=https://tutor.cards&gt
 <string name="search_load_defaults">"Wczytaj domyślne"</string>
 <string name="search_toast_no_results">"Nie znaleziono wyników wyszukiwania."</string>
 <plurals name="search_toast_results">
-<item quantity="one">"Znaleziono %1$d wyników wyszukiwania."</item>
+<item quantity="one">"Znaleziono %1$d wynik wyszukiwania."</item>
 <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
-<item quantity="other"></item>
+<item quantity="other">"Znaleziono %1$d wyników wyszukiwania."</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
 <string name="search_toast_cannot_load">"Nie można wczytać opcji wyszukiwania."</string>
@@ -165,7 +163,7 @@ Wyszukiwanie obrazu karty uzyskane przy pomocy &lt;a href=https://tutor.cards&gt
 <string name="search_Exact_all_selected_and_no_others">"Dokładny (wszystkie wybrane i żadne inne)"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-See arrays.xml and onCreate method in SearchViewFragment -->
+    See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
@@ -367,8 +365,7 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"Zasady MoJhoSto Basic"</string>
-<string name="mojhosto_rules_text">"
-MoJhoSto jest nieformalną odmianą formatu Vanguard z Magic Online.&lt;br&gt;
+<string name="mojhosto_rules_text">"MoJhoSto jest nieformalną odmianą formatu Vanguard z Magic Online.&lt;br&gt;
 &lt;br&gt;
 Aby móc zagrać, każdy z graczy potrzebuje podstawowej talii zawierającej wyłącznie 60 podstawowych landów.&lt;br&gt;
 &lt;br&gt;

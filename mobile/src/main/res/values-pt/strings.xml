@@ -51,8 +51,7 @@
 <string name="main_donate_title">"Doar"</string>
 <string name="main_donate_dialog_title">"Doações para desenvolvedores"</string>
 <string name="main_profile">"Perfil"</string>
-<string name="main_donate_text">"
-Quanto você pagaria por um excelente app de Magic como este? €1000? €10.000? &lt;br&gt;
+<string name="main_donate_text">"Quanto você pagaria por um excelente app de Magic como este? €1000? €10.000? &lt;br&gt;
 &lt;br&gt;
 Bem, se você está lendo isso, então você sabe que nós disponibilizamos de graça! &lt;br&gt;
 &lt;br&gt;
@@ -75,8 +74,7 @@ Então, quão generoso você está sentindo-se hoje?
 <string name="main_import_success">"Dados importados com sucesso"</string>
 <string name="main_import_fail">"Importação falhou. Por favor, coloque MTGFamiliarBackup.zip no diretório raiz do seu cartão SD."</string>
 <string name="main_about">"Sobre"</string>
-<string name="main_about_text">"
-Este aplicativo é o meu presente para a comunidade MTG.&lt;br&gt;
+<string name="main_about_text">"Este aplicativo é o meu presente para a comunidade MTG.&lt;br&gt;
 &lt;br&gt;
 Por favor envie perguntas, comentários, preocupações e elogios a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt; mtg.familiar@gmail.com &lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -163,7 +161,7 @@ Busca por imagem de carta desenvolvido por &lt;a href=https://tutor.cards&gt;Tut
 <string name="search_Exact_all_selected_and_no_others">"Exatamente as cores selecionadas"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-See arrays.xml and onCreate method in SearchViewFragment -->
+    See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Comum"</string>
 <string name="search_Uncommon">"Incomum"</string>
 <string name="search_Rare">"Rara"</string>
@@ -365,8 +363,7 @@ Reserva de mana também serão apagados."</string>
 
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"Regras básicas MoJhoSto"</string>
-<string name="mojhosto_rules_text">"
-MoJhoSto é um formato casual do Magic Online Vanguard. &lt;br&gt;
+<string name="mojhosto_rules_text">"MoJhoSto é um formato casual do Magic Online Vanguard. &lt;br&gt;
 &lt;br&gt;
 Para jogar, cada jogador deve ter um deck que tem apenas 60 terrenos básicos. &lt;br&gt;
 &lt;br&gt;
@@ -529,8 +526,7 @@ Boa sorte, e divirtam-se!
 <string name="decklist_cards">"cartas"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"
-- Adicionado um montador de decks&lt;br&gt;
+<string name="main_whats_new_text">"- Adicionado um montador de decks&lt;br&gt;
 - Adicionado ordenação na lista de resultados&lt;br&gt;
 - Adicionado nomes de cartas em outras linguagens&lt;br&gt;
 - Adicionado botão de compartilhar para o texto ou imagem da carta&lt;br&gt;
