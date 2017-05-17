@@ -690,6 +690,17 @@ public class CardViewFragment extends FamiliarFragment {
                 {Language.Spanish, CardDbAdapter.KEY_NAME_SPANISH, CardDbAdapter.KEY_MULTIVERSEID_SPANISH},
                 {Language.Korean, CardDbAdapter.KEY_NAME_KOREAN, CardDbAdapter.KEY_MULTIVERSEID_KOREAN}};
 
+        // Clear the translations first
+        mTranslatedNames.clear();
+
+        // Add English
+        Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting();
+        englishPrinting.mLanguageCode = Language.English;
+        englishPrinting.mName = mCardName;
+        englishPrinting.mMultiverseId = mMultiverseId;
+        mTranslatedNames.add(englishPrinting);
+
+        // Add all the others
         for (String lang[] : allLanguageKeys) {
             Card.ForeignPrinting fp = new Card.ForeignPrinting();
             fp.mLanguageCode = lang[0];
