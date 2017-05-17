@@ -171,7 +171,7 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="search_Exact_all_selected_and_no_others">"Presne (všetky vybrané a žiadne iné)"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-See arrays.xml and onCreate method in SearchViewFragment -->
+    See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
