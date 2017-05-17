@@ -59,8 +59,7 @@
 <string name="main_profile">"Profil"</string>
 
 <!-- Some grammar corrections and changes to the overall tone. What do you mean with "We've got a drafting habit to fuel, OK?" Are you referring to drafting as a playmode Magic? How does this fit into the text? -->
-<string name="main_donate_text">"
-Wie viel würdest du für eine Premium-MTG-App wie diese bezahlen? $1,000? $10,000?&lt;br&gt;
+<string name="main_donate_text">"Wie viel würdest du für eine Premium-MTG-App wie diese bezahlen? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
 Wenn du das hier liest, weißt du ja bereits, dass wir sie kostenfrei bereit stellen!&lt;br&gt;
 &lt;br&gt;
@@ -89,8 +88,7 @@ Also, wie großzügig bist du heute?
 <string name="main_about">"Über diese App"</string>
 
 <!-- Some grammar corrections and changes in language tone. -->
-<string name="main_about_text">"
-Diese App ist mein Geschenk an die MTG-Gemeinschaft.&lt;br&gt;
+<string name="main_about_text">"Diese App ist mein Geschenk an die MTG-Gemeinschaft.&lt;br&gt;
 &lt;br&gt;
 Sende deine Fragen, Kommentare, Bedenken und dein Lob an &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -177,7 +175,7 @@ Kartenbildsuche ermöglicht durch&lt;a href=https://tutor.cards&gt;TutorCards&lt
 <string name="search_Exact_all_selected_and_no_others">"Genau (alle ausgewählten und keine anderen)"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-See arrays.xml and onCreate method in SearchViewFragment -->
+    See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
@@ -384,8 +382,7 @@ Der Manavorrat wird ebenfalls geleert"</string>
 
 <!-- MoJhoSto activity -->
 <string name="mojhosto_rules_title">"MoJhoSto-Basic-Regeln"</string>
-<string name="mojhosto_rules_text">"
-MoJhoSto ist ein Vanguard-Freizeitformat aus Magic-Online. (Vanguard bedeutet Vorhut.)&lt;br&gt;
+<string name="mojhosto_rules_text">"MoJhoSto ist ein Vanguard-Freizeitformat aus Magic-Online. (Vanguard bedeutet Vorhut.)&lt;br&gt;
 &lt;br&gt;
 Zum Spielen benötigt jeder Spieler ein Deck aus 60 Standardländern.&lt;br&gt;
 &lt;br&gt;
@@ -546,6 +543,7 @@ Viel Glück und viel Spaß!
 - Option zum Filtern der Ergebnisse hinzugefügt&lt;br&gt;
 - Kartennamen in anderen Sprachen hinzugefügt&lt;br&gt;
 - Teilen-Schaltfäche für Kartentext und Kartenbilder hinzugefügt&lt;br&gt;
+- Slowakische Übersetzung hinzugefügt
 - Einige Kartenbilder angepasst"</string>
 <string name="card_view_send_to">"Bild teilen via"</string>
 <string name="card_view_translated_dialog_title">"Übersetzter Kartenname"</string>
