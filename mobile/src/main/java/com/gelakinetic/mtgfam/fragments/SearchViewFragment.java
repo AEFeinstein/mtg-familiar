@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -968,9 +969,9 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         /* Set the default color */
-        mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
-        mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
-        mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.color_text)));
+        mSetButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
+        mFormatButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
+        mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
 
         if (mSetCheckedIndices == null || mRarityCheckedIndices == null) {
             return;
@@ -978,13 +979,13 @@ public class SearchViewFragment extends FamiliarFragment {
 
         /* Set the selected color, if necessary */
         if (mSetCheckedIndices.length > 0) {
-            mSetButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
+            mSetButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
         if (mSelectedFormat != -1) {
-            mFormatButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
+            mFormatButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
         if (mRarityCheckedIndices.length > 0) {
-            mRarityButton.setTextColor(getResources().getColor(getResourceIdFromAttr(R.attr.colorPrimary_attr)));
+            mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }
     }
 

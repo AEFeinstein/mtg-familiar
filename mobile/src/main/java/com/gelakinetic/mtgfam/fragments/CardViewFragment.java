@@ -475,27 +475,27 @@ public class CardViewFragment extends FamiliarFragment {
         switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
             case 'C':
             case 'c':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_common)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_common)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Common));
                 break;
             case 'U':
             case 'u':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_uncommon)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Uncommon));
                 break;
             case 'R':
             case 'r':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_rare)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_rare)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Rare));
                 break;
             case 'M':
             case 'm':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_mythic)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_mythic)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Mythic));
                 break;
             case 'T':
             case 't':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_timeshifted)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Timeshifted));
                 break;
         }

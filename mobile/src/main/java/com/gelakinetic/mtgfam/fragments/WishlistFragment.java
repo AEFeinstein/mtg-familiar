@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -833,8 +834,8 @@ public class WishlistFragment extends FamiliarFragment {
                 }
                 String setAndRarity = isi.mSet + " (" + isi.mRarity + ")";
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(setAndRarity);
-                ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(getResources()
-                        .getColor(getResourceIdFromAttr(color)));
+                ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
+                        ContextCompat.getColor(getContext(), getResourceIdFromAttr(color)));
 
                 /* Show or hide the foil indicator */
                 if (isi.mIsFoil) {
@@ -849,11 +850,11 @@ public class WishlistFragment extends FamiliarFragment {
                     if (isi.mIsFoil) {
                         if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
                             priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
-                            priceText.setTextColor(getResources().getColor(
+                            priceText.setTextColor(ContextCompat.getColor(getContext(), 
                                     getResourceIdFromAttr(R.attr.color_text)));
                         } else {
                             priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
-                            priceText.setTextColor(getResources().getColor(R.color.material_red_500));
+                            priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
                         }
                     } else {
                         boolean priceFound = false;
@@ -882,13 +883,13 @@ public class WishlistFragment extends FamiliarFragment {
                                     }
                                     break;
                             }
-                            priceText.setTextColor(getResources().getColor(
+                            priceText.setTextColor(ContextCompat.getColor(getContext(), 
                                     getResourceIdFromAttr(R.attr.color_text)
                             ));
                         }
                         if (!priceFound) {
                             priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
-                            priceText.setTextColor(getResources().getColor(R.color.material_red_500));
+                            priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
                         }
                     }
                 } else {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.ArcShape;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.gelakinetic.mtgfam.R;
@@ -71,7 +72,7 @@ public class ColorIndicatorView extends View {
         for (int i = 0; i < COLORS_CHARS.length; i++) {
             if (color.contains(COLORS_CHARS[i] + "")) {
                 mDrawableShapes[shapesIndex] = new ShapeDrawable(new ArcShape(shapesIndex * (360 / numColors) + 135, (360 / numColors)));
-                mDrawableShapes[shapesIndex].getPaint().setColor(context.getResources().getColor(COLOR_RESOURCES[i]));
+                mDrawableShapes[shapesIndex].getPaint().setColor(ContextCompat.getColor(context, COLOR_RESOURCES[i]));
                 mDrawableShapes[shapesIndex].setBounds(border, border, dimen - border, dimen - border);
                 shapesIndex++;
             }
@@ -79,7 +80,7 @@ public class ColorIndicatorView extends View {
 
         /* Set up a border for the indicator, helps to see white */
         mBackground = new ShapeDrawable(new ArcShape(0, 360));
-        mBackground.getPaint().setColor(context.getResources().getColor(android.R.color.black));
+        mBackground.getPaint().setColor(ContextCompat.getColor(context, android.R.color.black));
         mBackground.setBounds(0, 0, dimen, dimen);
     }
 
