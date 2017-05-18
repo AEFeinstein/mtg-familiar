@@ -59,7 +59,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 79;
+    public static final int DATABASE_VERSION = 81;
 
     /* The name of the database */
     public static final String DATABASE_NAME = "data";
@@ -286,6 +286,7 @@ public class CardDbAdapter {
     public static final int SEVEN_MINUS_STAR = -1003;
     public static final int STAR_SQUARED = -1004;
     public static final int NO_ONE_CARES = -1005;
+    public static final int X = -1006;
 
     /* The options for printings for a query */
     public static final int MOST_RECENT_PRINTING = 0;

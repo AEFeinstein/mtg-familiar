@@ -3,6 +3,8 @@
 
     <style name="Theme.base.light" parent="Theme.AppCompat.Light.NoActionBar">
 
+        <item name="android:textColorLink">@color/hyperlink_text</item>
+
         <item name="colorPrimary_attr">@color/colorPrimary_light</item>
         <item name="colorPrimaryDark_attr">@color/colorPrimaryDark_light</item>
         <item name="colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_light</item>
@@ -142,6 +144,8 @@
 
     <style name="Theme.base.dark" parent="Theme.AppCompat.NoActionBar">
 
+        <item name="android:textColorLink">@color/hyperlink_text</item>
+
         <item name="colorPrimary_attr">@color/colorPrimary_dark</item>
         <item name="colorPrimaryDark_attr">@color/colorPrimaryDark_dark</item>
         <item name="colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_dark</item>
@@ -273,6 +277,10 @@
 
         <!-- Use dark theme for dialogs -->
         <item name="md_dark_theme">true</item>
+        <item name="md_positive_color">@android:color/secondary_text_dark</item>
+        <item name="md_neutral_color">@android:color/secondary_text_dark</item>
+        <item name="md_negative_color">@android:color/secondary_text_dark</item>
+
     </style>
 
     <style name="Theme.light" parent="Theme.base.light">

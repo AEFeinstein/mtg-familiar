@@ -38,6 +38,7 @@
     <Button
         android:id="@+id/mtr_ipg_jump_to_top"
         style="?android:attr/buttonBarButtonStyle"
+
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="@string/judges_corner_jump_to_top"

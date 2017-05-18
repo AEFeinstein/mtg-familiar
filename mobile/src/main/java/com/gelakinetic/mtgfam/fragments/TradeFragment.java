@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -459,8 +460,8 @@ public class TradeFragment extends FamiliarFragment {
 
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
-                        this.getActivity().getResources().getColor(R.color.material_red_500) :
-                        this.getActivity().getResources().getColor(
+                        ContextCompat.getColor(getContext(), R.color.material_red_500) :
+                        ContextCompat.getColor(getContext(), 
                                 getResourceIdFromAttr(R.attr.color_text));
                 mTotalPriceLeft.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100)
                         + " (" + totalCards + ")");
@@ -482,8 +483,8 @@ public class TradeFragment extends FamiliarFragment {
 
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
-                        this.getActivity().getResources().getColor(R.color.material_red_500) :
-                        this.getActivity().getResources().getColor(
+                        ContextCompat.getColor(getContext(), R.color.material_red_500) :
+                        ContextCompat.getColor(getContext(), 
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
                 mTotalPriceRight.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100)
@@ -781,14 +782,14 @@ public class TradeFragment extends FamiliarFragment {
                 priceField.setText(data.hasPrice() ? data.getPriceString() : data.message);
                 if (data.hasPrice()) {
                     if (data.customPrice) {
-                        priceField.setTextColor(getActivity().getResources().getColor(R.color.material_green_500));
+                        priceField.setTextColor(ContextCompat.getColor(getContext(), R.color.material_green_500));
                     } else {
-                        priceField.setTextColor(getActivity().getResources().getColor(
+                        priceField.setTextColor(ContextCompat.getColor(getContext(),
                                 getResourceIdFromAttr(R.attr.color_text)
                         ));
                     }
                 } else {
-                    priceField.setTextColor(getActivity().getResources().getColor(R.color.material_red_500));
+                    priceField.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
                 }
             }
             return convertView;
