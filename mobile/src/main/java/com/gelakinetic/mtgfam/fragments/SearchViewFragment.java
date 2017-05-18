@@ -425,7 +425,7 @@ public class SearchViewFragment extends FamiliarFragment {
         SetAdapter() {
             super(SearchViewFragment.this.getActivity(), R.layout.list_item_1);
             for (int index = 0; index < mSetSymbols.length; index++) {
-                String autocomplete = mSetSymbols[index] + " " + mSetNames[index];
+                String autocomplete = "[" + mSetSymbols[index] + "] " + mSetNames[index];
                 String set = mSetSymbols[index];
                 symbolsByAutocomplete.put(autocomplete, set);
                 this.add(autocomplete);
