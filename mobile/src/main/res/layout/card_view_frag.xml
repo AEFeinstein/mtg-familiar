@@ -209,6 +209,7 @@
     <Button
         android:id="@+id/transformbutton"
         style="?android:attr/buttonBarButtonStyle"
+
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:text="@string/card_view_transform"

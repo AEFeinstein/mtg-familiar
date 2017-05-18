@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.text.Html.ImageGetter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,23 +136,23 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     switch (rarity) {
                         case 'c':
                         case 'C':
-                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_common)));
+                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_common)));
                             break;
                         case 'u':
                         case 'U':
-                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
+                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_uncommon)));
                             break;
                         case 'r':
                         case 'R':
-                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_rare)));
+                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_rare)));
                             break;
                         case 'm':
                         case 'M':
-                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_mythic)));
+                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_mythic)));
                             break;
                         case 't':
                         case 'T':
-                            textField.setTextColor(mResources.getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
+                            textField.setTextColor(ContextCompat.getColor(context, getResourceIdFromAttr(R.attr.color_timeshifted)));
                             break;
                     }
                     break;

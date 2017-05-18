@@ -11,8 +11,8 @@ android {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 47
-        versionName "3.4.0"
+        versionCode 48
+        versionName "3.4.1"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -32,7 +32,7 @@ android {
             }
         }
         foss {
-            versionName "3.4.0-foss"
+            versionName "3.4.1-foss"
         }
     }
 }

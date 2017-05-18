@@ -74,6 +74,7 @@ import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -144,6 +145,7 @@ public class CardViewFragment extends FamiliarFragment {
     private String mCardNumber;
     private String mSetCode;
     public String mCardName;
+    private int mCardCMC;
     private String mMagicCardsInfoSetCode;
     public int mMultiverseId;
     private String mCardType;
@@ -315,6 +317,19 @@ public class CardViewFragment extends FamiliarFragment {
         registerForContextMenu(mArtistTextView);
         registerForContextMenu(mNumberTextView);
 
+        mSetTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchCriteria setSearch = new SearchCriteria();
+                assert mSetTextView.getText() != null;
+                setSearch.set = mSetTextView.getText().toString();
+                Bundle arguments = new Bundle();
+                arguments.putSerializable(SearchViewFragment.CRITERIA, setSearch);
+                ResultListFragment rlFrag = new ResultListFragment();
+                startNewFragment(rlFrag, arguments);
+            }
+        });
+
         mCardImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -448,6 +463,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         /* http://magiccards.info/scans/en/mt/55.jpg */
         mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
+        mCardCMC = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_CMC));
         mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
 
         /* Start building a description */
@@ -473,27 +489,27 @@ public class CardViewFragment extends FamiliarFragment {
         switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
             case 'C':
             case 'c':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_common)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_common)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Common));
                 break;
             case 'U':
             case 'u':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_uncommon)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_uncommon)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Uncommon));
                 break;
             case 'R':
             case 'r':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_rare)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_rare)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Rare));
                 break;
             case 'M':
             case 'm':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_mythic)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_mythic)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Mythic));
                 break;
             case 'T':
             case 't':
-                mSetTextView.setTextColor(CardViewFragment.this.getResources().getColor(getResourceIdFromAttr(R.attr.color_timeshifted)));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_timeshifted)));
                 addToDescription(getString(R.string.search_rarity), getString(R.string.search_Timeshifted));
                 break;
         }
@@ -688,6 +704,17 @@ public class CardViewFragment extends FamiliarFragment {
                 {Language.Spanish, CardDbAdapter.KEY_NAME_SPANISH, CardDbAdapter.KEY_MULTIVERSEID_SPANISH},
                 {Language.Korean, CardDbAdapter.KEY_NAME_KOREAN, CardDbAdapter.KEY_MULTIVERSEID_KOREAN}};
 
+        // Clear the translations first
+        mTranslatedNames.clear();
+
+        // Add English
+        Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting();
+        englishPrinting.mLanguageCode = Language.English;
+        englishPrinting.mName = mCardName;
+        englishPrinting.mMultiverseId = mMultiverseId;
+        mTranslatedNames.add(englishPrinting);
+
+        // Add all the others
         for (String lang[] : allLanguageKeys) {
             Card.ForeignPrinting fp = new Card.ForeignPrinting();
             fp.mLanguageCode = lang[0];
@@ -1269,6 +1296,15 @@ public class CardViewFragment extends FamiliarFragment {
 
             if (bitmap == null) { /* Not found in disk cache */
 
+                /* Some trickery to figure out if we have a token */
+                boolean isToken = false;
+                if (mCardType.contains("Token") || /* try to take the easy way out */
+                    (mCardCMC == 0 && /* Tokens have a CMC of 0 */
+                     mSetName.contains("Duel Decks") && /* The only tokens in Gatherer are from Duel Decks */
+                     mCardType.contains("Creature"))) { /* The only tokens in Gatherer are creatures */
+                    isToken = true;
+                }
+
                 boolean bRetry = true;
 
                 boolean triedMtgi = false;
@@ -1282,17 +1318,17 @@ public class CardViewFragment extends FamiliarFragment {
 
                     try {
                         URL u;
-                        if (!cardLanguage.equalsIgnoreCase("en")) {
+                        if (!cardLanguage.equalsIgnoreCase("en") && !isToken) {
                             /* Non-English have to come from magiccards.info. Try there first */
                             u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                             /* If this fails, try next time with the English version */
                             cardLanguage = "en";
-                        } else if (!triedScryfall) {
+                        } else if (!triedScryfall && !isToken) {
                             /* Try downloading the image from Scryfall next */
                             u = new URL(getScryfallImageUri(mMultiverseId));
                             /* If this fails, try next time with the Magiccards.info version */
                             triedScryfall = true;
-                        } else if (!triedMtgi) {
+                        } else if (!triedMtgi && !isToken) {
                             /* Try downloading the image from magiccards.info next */
                             u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
                             /* If this fails, try next time with the gatherer version */
