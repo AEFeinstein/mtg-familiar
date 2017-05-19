@@ -486,6 +486,7 @@ Good luck, and have fun!
 <string name="pref_cat_card_cache">"Image Caching"</string>
 <string name="pref_language">"Language"</string>
 <string name="pref_set_language">"Set a different language"</string>
+<string name="pref_use_sound_instead_of_tts">Use sound instead of TTS</string>
 
 <!-- Judge's Corner -->
 <string name="judges_corner_MTR">"MTR"</string>
