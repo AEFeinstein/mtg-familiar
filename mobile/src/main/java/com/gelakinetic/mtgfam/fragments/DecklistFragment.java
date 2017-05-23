@@ -252,26 +252,15 @@ public class DecklistFragment extends FamiliarFragment {
             }
         });
 
-        /*decklistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mDecklistAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onClick(View view) {
+                int position = decklistView.indexOfChild(view);
                 CompressedDecklistInfo item = mCompressedDecklist.get(position);
-                /* Show the dialog for this particular card
+                /* Show the dialog for this particular card */
                 showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
             }
         });
-        decklistView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                /* Remove the card
-                mCompressedDecklist.remove(position);
-                /* Save the decklist
-                DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
-                /* Redraw the new decklist
-                mDecklistAdapter.notifyDataSetChanged();
-                return true;
-            }
-        });*/
 
         return myFragmentView;
     }
@@ -445,7 +434,7 @@ public class DecklistFragment extends FamiliarFragment {
                 mCompressedDecklist.clear();
             } else {
                 for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                    if (cdi.mCard.mName.equals(changedCardName)) {
+                    if (cdi.mCard != null && cdi.mCard.mName.equals(changedCardName)) {
                         cdi.clearCompressedInfo();
                     }
                 }
@@ -490,8 +479,9 @@ public class DecklistFragment extends FamiliarFragment {
     @Override
     public void onWishlistChanged(String cardName) {
         readAndCompressDecklist(cardName, mCurrentDeck);
+        clearHeaders();
         Collections.sort(mCompressedDecklist, mDecklistChain);
-        //mDecklistAdapter.notifyDataSetChanged();
+        mDecklistAdapter.notifyDataSetChanged2();
     }
 
     /**
@@ -560,9 +550,13 @@ public class DecklistFragment extends FamiliarFragment {
         }
     }
 
+    /**
+     * Removes all of the headers
+     */
     private void clearHeaders() {
         for (int i = 0; i < mCompressedDecklist.size(); i++) {
-            if (mCompressedDecklist.get(i).mCard == null) {
+            if (mCompressedDecklist.get(i).mCard == null) { /* We found our header */
+                /* Now remove it, and then back up a step */
                 mCompressedDecklist.remove(i);
                 i--;
             }
@@ -570,26 +564,39 @@ public class DecklistFragment extends FamiliarFragment {
     }
 
     /**
-     * Sets the header values for all the cards in the list
+     * Inserts the headers for each type
      */
     private void setHeaderValues() {
         final String[] cardTypes = getResources().getStringArray(R.array.card_types_extra);
         final String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
-            /* We need to tell each card what it should be classified as, that is the order as
-             * defined by R.array.card_types_extra */
+        ArrayList<String> insertedHeaders = new ArrayList<>();
         for (int i = 0; i < mCompressedDecklist.size(); i++) {
             for (int j = 0; j < cardTypes.length; j++) {
-                if (mCompressedDecklist.get(i).mCard != null) {
-                    if (j < cardHeaders.length - 1 &&
-                            mCompressedDecklist.get(i).mCard.mType.contains(cardTypes[j]) &&
-                            (i == 0 || mCompressedDecklist.get(i - 1).header == null)) {
+                CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
+                if (cdi.mCard != null && /* We only want entries that have a card attached */
+                    (i == 0 || mCompressedDecklist.get(i - 1).header == null)) {
+                    if (!cdi.mIsSideboard) {
+                        if (j < cardHeaders.length - 1 && /* if j is in range */
+                                cdi.mCard.mType.contains(cardTypes[j])) { /* the current card has the selected card type */
+                            if (!insertedHeaders.contains(cardHeaders[j + 1])) {
+                                mCompressedDecklist.add(i, new CompressedDecklistInfo(null, false)); /* Add a new entry that will be our header */
+                                mCompressedDecklist.get(i).header = cardHeaders[j + 1]; /* Use the header for the card type */
+                                insertedHeaders.add(cardHeaders[j + 1]);
+                            }
+                            break;
+                        } else if (j >= cardHeaders.length - 1) { /* j is out of bounds */
+                            if (!insertedHeaders.contains(cardHeaders[cardHeaders.length - 1])) {
+                                mCompressedDecklist.add(i, new CompressedDecklistInfo(null, false)); /* Add a new entry that will be our header */
+                                mCompressedDecklist.get(i).header = cardHeaders[cardHeaders.length - 1]; /* Use the last card header, "Other" */
+                                insertedHeaders.add(cardHeaders[cardHeaders.length - 1]);
+                            }
+                            break;
+                        }
+                    } else if (!insertedHeaders.contains(cardHeaders[0])) { /* it is sideboard, if sideboard header hasn't already been added */
                         mCompressedDecklist.add(i, new CompressedDecklistInfo(null, false));
-                        mCompressedDecklist.get(i).header = cardHeaders[j + 1];
+                        mCompressedDecklist.get(i).header = cardHeaders[0];
+                        insertedHeaders.add(cardHeaders[0]);
                         break;
-                    } else if (j >= cardHeaders.length - 1 &&
-                            (i == 0 || mCompressedDecklist.get(i - 1).header == null)) {
-                        mCompressedDecklist.add(i, new CompressedDecklistInfo(null, false));
-                        mCompressedDecklist.get(i).header = cardHeaders[cardHeaders.length - 1];
                     }
                 }
             }
@@ -608,13 +615,15 @@ public class DecklistFragment extends FamiliarFragment {
 
     public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHolder> {
 
-        private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3 seconds
+        private static final int PENDING_REMOVAL_TIMEOUT = 3000; /* 3 seconds */
 
         private ArrayList<CompressedDecklistInfo> compressedCardInfos;
         private ArrayList<CompressedDecklistInfo> itemsPendingRemoval = new ArrayList<>();
 
         private Handler handler = new Handler();
         HashMap<CompressedDecklistInfo, Runnable> pendingRunnables = new HashMap<>();
+
+        private View.OnClickListener mClickListener;
 
         public CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
             compressedCardInfos = values;
@@ -649,47 +658,19 @@ public class DecklistFragment extends FamiliarFragment {
                     }
                 });
             } else { /* if the item IS NOT pending removal */
+                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
                 if (info.header != null) {
+                    holder.itemView.setOnClickListener(null);
                     holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.VISIBLE);
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
                     ((TextView) holder.itemView.findViewById(R.id.decklistHeaderType)).setText(info.header);
                     holder.swipeable = false;
                 } else {
-                    holder.itemView.setBackgroundColor(Color.TRANSPARENT);
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
                     holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
                     holder.undoButton.setVisibility(View.GONE);
-                    DecklistHelpers.CompressedDecklistInfo previousInfo = null;
-                    try {
-                        previousInfo = compressedCardInfos.get(position - 1);
-                    } catch (ArrayIndexOutOfBoundsException aie) {
-                    }
-                    String[] cardTypes = getResources().getStringArray(R.array.card_types);
-                    String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
                     View separator = holder.itemView.findViewById(R.id.decklistSeparator);
-                    TextView separatorText = (TextView) separator.findViewById(R.id.decklistHeaderType);
-                    TextView separatorNumber = (TextView) separator.findViewById(R.id.decklistHeaderNumber);
                     separator.setVisibility(View.GONE);
-                    if (info.mIsSideboard) {
-                        if (previousInfo == null || !previousInfo.mIsSideboard) {
-                            separator.setVisibility(View.VISIBLE);
-                            separatorText.setText(cardHeaders[0]);
-                            String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
-                            separatorNumber.setText(number);
-                        }
-                    } else {
-                        for (int i = 0; i < cardTypes.length + 1; i++) {
-                            /*if (i == cardTypes.length || info.mCard.mType.contains(cardTypes[i])) {
-                                if (previousInfo == null || !previousInfo.header.equals(info.header)) {
-                                    separator.setVisibility(View.VISIBLE);
-                                    separatorText.setText(cardHeaders[i + 1]);
-                                    String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
-                                    separatorNumber.setText(number);
-                                }
-                                break;
-                            }*/
-                        }
-                    }
                     Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
                     holder.cardName.setText(info.mCard.mName);
                     holder.cardQuantity.setText(String.valueOf(info.getTotalNumber()));
@@ -776,6 +757,10 @@ public class DecklistFragment extends FamiliarFragment {
             notifyDataSetChanged();
         }
 
+        public void setOnClickListener(View.OnClickListener listener) {
+            mClickListener = listener;
+        }
+
         class ViewHolder extends RecyclerView.ViewHolder {
 
             private TextView cardName;
@@ -786,6 +771,12 @@ public class DecklistFragment extends FamiliarFragment {
 
             ViewHolder(ViewGroup view) {
                 super(LayoutInflater.from(view.getContext()).inflate(R.layout.decklist_card_row, view, false));
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mClickListener.onClick(view);
+                    }
+                });
                 cardName = (TextView) itemView.findViewById(R.id.decklistRowName);
                 cardQuantity = (TextView) itemView.findViewById(R.id.decklistRowNumber);
                 cardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
