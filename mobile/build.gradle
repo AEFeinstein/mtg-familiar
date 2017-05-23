@@ -11,8 +11,8 @@ android {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 48
-        versionName "3.4.1"
+        versionCode 49
+        versionName "3.4.2"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -28,11 +28,11 @@ android {
     productFlavors {
         standard {
             dependencies {
-                compile 'com.google.firebase:firebase-appindexing:10.2.4'
+                compile 'com.google.firebase:firebase-appindexing:10.2.6'
             }
         }
         foss {
-            versionName "3.4.1-foss"
+            versionName "3.4.2-foss"
         }
     }
 }
@@ -49,12 +49,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:gridlayout-v7:25.3.1'
-    compile 'com.github.woxthebox:draglistview:1.4.3' // This includes support recyclerview
+    compile 'com.github.woxthebox:draglistview:1.4.4' // This includes support recyclerview
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.afollestad.material-dialogs:core:0.9.4.4'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     compile 'com.jpardogo.materialtabstrip:library:1.1.1'
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
     compile 'org.jsoup:jsoup:1.10.2'
+    compile "com.splitwise:tokenautocomplete:2.0.8@aar"
 }

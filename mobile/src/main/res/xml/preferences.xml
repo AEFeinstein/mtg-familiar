@@ -236,6 +236,11 @@
                 android:key="@string/key_twoMinutePref"
                 android:title="@string/pref_two_minutes_title" />
 
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/key_useSoundInsteadOfTTSPref"
+                android:title="@string/pref_use_sound_instead_of_tts" />
+
         </PreferenceCategory>
 
     </PreferenceScreen>

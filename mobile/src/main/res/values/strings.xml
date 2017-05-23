@@ -51,8 +51,7 @@
 <string name="main_donate_title">"Donate"</string>
 <string name="main_donate_dialog_title">"Donate to the Developers"</string>
 <string name="main_profile">"Profile"</string>
-<string name="main_donate_text">"
-For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
+<string name="main_donate_text">"For a premium MTG app like this, how much would you pay? $1,000? $10,000?&lt;br&gt;
 &lt;br&gt;
 Well, if you're reading this, you already know we're giving it away for free!&lt;br&gt;
 &lt;br&gt;
@@ -75,8 +74,7 @@ So, how generous are you feeling today?
 <string name="main_import_success">"Load succeeded"</string>
 <string name="main_import_fail">"Load failed. Please put MTGFamiliarBackup.zip in the root of your SD card"</string>
 <string name="main_about">"About"</string>
-<string name="main_about_text">"
-This app is my gift to the MTG community.&lt;br&gt;
+<string name="main_about_text">"This app is my gift to the MTG community.&lt;br&gt;
 &lt;br&gt;
 Please send questions, comments, concerns, and praise to &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -105,6 +103,10 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 &lt;a href=https://github.com/derekbrameyer/android-betterpickers&gt;BetterPickers&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/jpardogo/PagerSlidingTabStrip&gt;PagerSlidingTabStrip&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/woxblom/DragListView&gt;DragListView&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Program licenced under the &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -163,7 +165,7 @@ Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&
 <string name="search_Exact_all_selected_and_no_others">"Exact (all selected and no others)"</string>
 
 <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-See arrays.xml and onCreate method in SearchViewFragment -->
+    See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
@@ -484,6 +486,7 @@ Good luck, and have fun!
 <string name="pref_cat_card_cache">"Image Caching"</string>
 <string name="pref_language">"Language"</string>
 <string name="pref_set_language">"Set a different language"</string>
+<string name="pref_use_sound_instead_of_tts">Use sound instead of TTS</string>
 
 <!-- Judge's Corner -->
 <string name="judges_corner_MTR">"MTR"</string>
@@ -524,8 +527,7 @@ Good luck, and have fun!
 <string name="decklist_cards">"cards"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"
-- Added a deckbuilder&lt;br&gt;
+<string name="main_whats_new_text">"- Added a deckbuilder&lt;br&gt;
 - Added result list sorting&lt;br&gt;
 - Added card names in other languages&lt;br&gt;
 - Added share button for card text or image&lt;br&gt;

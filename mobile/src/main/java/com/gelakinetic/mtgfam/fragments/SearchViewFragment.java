@@ -8,6 +8,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,7 +25,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,8 +34,8 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.SpaceTokenizer;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.autocomplete.CompletionView;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -46,7 +47,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This fragment lets users configure search parameters, and then search for a card
@@ -83,8 +86,8 @@ public class SearchViewFragment extends FamiliarFragment {
     /* UI Elements */
     private AutoCompleteTextView mNameField;
     private EditText mTextField;
-    private MultiAutoCompleteTextView mSupertypeField = null;
-    private MultiAutoCompleteTextView mSubtypeField = null;
+    private CompletionView mSupertypeField = null;
+    private CompletionView mSubtypeField = null;
     private EditText mCollectorsNumberField;
     private CheckBox mCheckboxW;
     private CheckBox mCheckboxU;
@@ -100,7 +103,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private CheckBox mCheckboxGIdentity;
     private CheckBox mCheckboxLIdentity;
     private Spinner mColorIdentitySpinner;
-    private Button mSetButton;
+    private CompletionView mSetField;
     private Button mFormatButton;
     private Button mRarityButton;
     private Spinner mPowLogic;
@@ -110,7 +113,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mCmcLogic;
     private Spinner mCmcChoice;
     private CheckBox mCheckboxHasManaX;
-    public Dialog mSetDialog;
+
     public Dialog mFormatDialog;
     public Dialog mRarityDialog;
     private EditText mFlavorField;
@@ -178,8 +181,8 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Get references to UI elements. When a search is preformed, these values will be queried */
         mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
         mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
-        mSupertypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.supertypesearch);
-        mSubtypeField = (MultiAutoCompleteTextView) myFragmentView.findViewById(R.id.subtypesearch);
+        mSupertypeField = (CompletionView) myFragmentView.findViewById(R.id.supertypesearch);
+        mSubtypeField = (CompletionView) myFragmentView.findViewById(R.id.subtypesearch);
         mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
         mArtistField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.artistsearch);
         mCollectorsNumberField = (EditText) myFragmentView.findViewById(R.id.collectorsnumbersearch);
@@ -206,7 +209,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mTypeSpinner = (Spinner) myFragmentView.findViewById(R.id.typelogic);
         mSetSpinner = (Spinner) myFragmentView.findViewById(R.id.setlogic);
 
-        mSetButton = (Button) myFragmentView.findViewById(R.id.setsearch);
+        mSetField = (CompletionView) myFragmentView.findViewById(R.id.setsearch);
         mFormatButton = (Button) myFragmentView.findViewById(R.id.formatsearch);
         mRarityButton = (Button) myFragmentView.findViewById(R.id.raritysearch);
 
@@ -234,11 +237,6 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcChoice.setAdapter(cmcChoiceAdapter);
 
         /* set the buttons to open the dialogs */
-        mSetButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(SearchViewDialogFragment.SET_LIST);
-            }
-        });
         mFormatButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showDialog(SearchViewDialogFragment.FORMAT_LIST);
@@ -270,6 +268,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mTextField.setOnEditorActionListener(doSearchListener);
         mSupertypeField.setOnEditorActionListener(doSearchListener);
         mSubtypeField.setOnEditorActionListener(doSearchListener);
+        mSetField.setOnEditorActionListener(doSearchListener);
         mFlavorField.setOnEditorActionListener(doSearchListener);
         mArtistField.setOnEditorActionListener(doSearchListener);
         mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
@@ -378,16 +377,16 @@ public class SearchViewFragment extends FamiliarFragment {
                             /* set the autocomplete for supertypes */
                             ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
-                            mSupertypeField.setThreshold(1);
                             mSupertypeField.setAdapter(supertypeAdapter);
-                            mSupertypeField.setTokenizer(new SpaceTokenizer());
 
                             /* set the autocomplete for subtypes */
                             ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
-                            mSubtypeField.setThreshold(1);
                             mSubtypeField.setAdapter(subtypeAdapter);
-                            mSubtypeField.setTokenizer(new SpaceTokenizer());
+
+                            /* set the autocomplete for sets */
+                            final SetAdapter setAdapter = new SetAdapter();
+                            mSetField.setAdapter(setAdapter);
 
                             /* set the autocomplete for artists */
                             ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
@@ -418,6 +417,35 @@ public class SearchViewFragment extends FamiliarFragment {
                 }
         );
         return myFragmentView;
+    }
+
+    private class SetAdapter extends ArrayAdapter<String> {
+        final Map<String, String> symbolsByAutocomplete = new LinkedHashMap<>();
+
+        SetAdapter() {
+            super(SearchViewFragment.this.getActivity(), R.layout.list_item_1);
+            for (int index = 0; index < mSetSymbols.length; index++) {
+                String autocomplete = "[" + mSetSymbols[index] + "] " + mSetNames[index];
+                String set = mSetSymbols[index];
+                symbolsByAutocomplete.put(autocomplete, set);
+                this.add(autocomplete);
+            }
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            ((TextView) view.findViewById(R.id.text1)).setText(super.getItem(position));
+            return view;
+        }
+
+        @Nullable
+        @Override
+        public String getItem(int position) {
+            String key = super.getItem(position);
+            return symbolsByAutocomplete.get(key);
+        }
     }
 
     /**
@@ -473,17 +501,41 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mSubtypeField.getText() != null;
         assert mFlavorField.getText() != null;
         assert mArtistField.getText() != null;
+        assert mSetField.getText() != null;
         assert mCollectorsNumberField.getText() != null;
 
         /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString().trim();
         searchCriteria.text = mTextField.getText().toString().trim();
-        String supertype = mSupertypeField.getText().toString().trim();
-        String subtype = mSubtypeField.getText().toString().trim();
+        String supertype = "";
+        for (String type : mSupertypeField.getObjects()) {
+            if (supertype.isEmpty()) {
+                supertype = type;
+            } else {
+                supertype += " " + type;
+            }
+        }
+        String subtype = "";
+        for (String type : mSubtypeField.getObjects()) {
+            if (subtype.isEmpty()) {
+                subtype = type;
+            } else {
+                subtype += " " + type;
+            }
+        }
+        String sets = null;
+        for (String set : mSetField.getObjects()) {
+            if (sets == null) {
+                sets = set;
+            } else {
+                sets += "-" + set;
+            }
+        }
         searchCriteria.type = supertype.trim() + " - " + subtype.trim();
         searchCriteria.flavor = mFlavorField.getText().toString().trim();
         searchCriteria.artist = mArtistField.getText().toString().trim();
         searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString().trim();
+        searchCriteria.set = sets;
 
         if (searchCriteria.name.length() == 0) {
             searchCriteria.name = null;
@@ -574,18 +626,6 @@ public class SearchViewFragment extends FamiliarFragment {
             searchCriteria.colorIdentity += "l";
         }
         searchCriteria.colorIdentityLogic = mColorIdentitySpinner.getSelectedItemPosition();
-
-        searchCriteria.set = null;
-
-        if (mSetCheckedIndices != null) {
-            for (int index : mSetCheckedIndices) {
-                if (searchCriteria.set == null) {
-                    searchCriteria.set = mSetSymbols[index];
-                } else {
-                    searchCriteria.set += "-" + mSetSymbols[index];
-                }
-            }
-        }
 
         searchCriteria.format = null;
         if (mSelectedFormat != -1 && mFormatNames != null) {
@@ -685,12 +725,13 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void clear() {
         mNameField.setText("");
-        mSupertypeField.setText("");
-        mSubtypeField.setText("");
+        mSupertypeField.clear();
+        mSubtypeField.clear();
         mTextField.setText("");
         mArtistField.setText("");
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
+        mSetField.clear();
 
         mCheckboxW.setChecked(false);
         mCheckboxU.setChecked(false);
@@ -761,7 +802,7 @@ public class SearchViewFragment extends FamiliarFragment {
             String delimiter = " - ";
             String[] type = criteria.type.split(delimiter);
             if (type.length > 0 && type[0] != null) {
-                mSupertypeField.setText(type[0]);
+                mSupertypeField.addObject(type[0]);
             }
             if (type.length > 1 && type[1] != null) {
                 /* Concatenate all strings after the first delimiter
@@ -770,13 +811,8 @@ public class SearchViewFragment extends FamiliarFragment {
                 String subtype = "";
                 boolean first = true;
                 for (int i = 1; i < type.length; i++) {
-                    if (!first) {
-                        subtype += delimiter;
-                    }
-                    subtype += type[i];
-                    first = false;
+                    mSubtypeField.addObject(type[i]);
                 }
-                mSubtypeField.setText(subtype);
             }
             mTextField.setText(criteria.text);
             mArtistField.setText(criteria.artist);
@@ -863,26 +899,11 @@ public class SearchViewFragment extends FamiliarFragment {
 
             if (criteria.set != null) {
                 /* Get a list of the persisted sets */
-                List<String> sets = Arrays.asList(criteria.set.split("-"));
-                ArrayList<Integer> setCheckedIndicesTmp = new ArrayList<>();
-                /* For each set */
-                for (String set : sets) {
-                    for (int i = 0; i < mSetSymbols.length; i++) {
-                        /* Find the index of that set */
-                        if (mSetSymbols[i].equals(set)) {
-                            /* And add it to the selected indices */
-                            setCheckedIndicesTmp.add(i);
-                            break;
-                        }
-                    }
-                }
-                /* Copy over the indices */
-                mSetCheckedIndices = new int[sets.size()];
-                for (int i = 0; i < setCheckedIndicesTmp.size(); i++) {
-                    mSetCheckedIndices[i] = setCheckedIndicesTmp.get(i);
+                for (String set : criteria.set.split("-")) {
+                    mSetField.addObject(set);
                 }
             } else {
-                mSetCheckedIndices = new int[0];
+                mSetField.clear();
             }
 
             if (mFormatNames != null) {
@@ -969,7 +990,6 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         /* Set the default color */
-        mSetButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
         mFormatButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
         mRarityButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
 
@@ -978,9 +998,6 @@ public class SearchViewFragment extends FamiliarFragment {
         }
 
         /* Set the selected color, if necessary */
-        if (mSetCheckedIndices.length > 0) {
-            mSetButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.colorPrimary_attr)));
-        }
         if (mSelectedFormat != -1) {
             mFormatButton.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.colorPrimary_attr)));
         }

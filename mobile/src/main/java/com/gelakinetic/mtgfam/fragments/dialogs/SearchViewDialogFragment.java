@@ -48,25 +48,9 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
 
         mDialogId = getArguments().getInt(ID_KEY);
         try {
-                    /* Build the dialogs to display format, rarity, and set choices. The arrays were already filled in
-                       onCreate() */
+                    /* Build the dialogs to display format and rarity choices. The arrays were
+                        already filled in onCreate() */
             switch (mDialogId) {
-                case SET_LIST: {
-                    getParentSearchViewFragment().mSetDialog = new MaterialDialog.Builder(this.getActivity())
-                            .title(R.string.search_sets)
-                            .positiveText(R.string.dialog_ok)
-                            .items(getParentSearchViewFragment().mSetNames)
-                            .alwaysCallMultiChoiceCallback()
-                            .itemsCallbackMultiChoice(toIntegerArray(getParentSearchViewFragment().mSetCheckedIndices), new MaterialDialog.ListCallbackMultiChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                                    getParentSearchViewFragment().mSetCheckedIndices = toIntArray(which);
-                                    return true;
-                                }
-                            })
-                            .build();
-                    return getParentSearchViewFragment().mSetDialog;
-                }
                 case FORMAT_LIST: {
                     getParentSearchViewFragment().mFormatDialog = new MaterialDialog.Builder(this.getActivity())
                             .title(R.string.search_formats)

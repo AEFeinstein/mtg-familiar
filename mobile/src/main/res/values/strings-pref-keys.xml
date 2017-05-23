@@ -29,6 +29,7 @@
     <string name="key_tenMinutePref" translatable="false">tenMinutePref</string>
     <string name="key_fiveMinutePref" translatable="false">fiveMinutePref</string>
     <string name="key_twoMinutePref" translatable="false">twoMinutePref</string>
+    <string name="key_useSoundInsteadOfTTSPref" translatable="false">useSoundInsteadOfTTSPref</string>
     <string name="key_showTotalPriceWishlistPref" translatable="false">showTotalPriceWishlistPref</string>
     <string name="key_showIndividualPricesWishlistPref" translatable="false">showIndividualPricesWishlistPref</string>
     <string name="key_verboseWishlistPref" translatable="false">verboseWishlistPref</string>
