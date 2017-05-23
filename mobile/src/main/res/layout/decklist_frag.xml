@@ -70,7 +70,8 @@
             style="@style/text.medium"
             android:layout_gravity="center_vertical"
             android:paddingEnd="10dp"
-            tools:text="Deck Name" />
+            tools:text="Deck Name"
+            android:paddingRight="10dp" />
 
         <TextView
             android:id="@+id/decklistCards"
@@ -102,7 +103,8 @@
         android:layout_height="1dp"
         android:background="?attr/color_drawer_divider_item" />
 
-    <ListView
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/decklist"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

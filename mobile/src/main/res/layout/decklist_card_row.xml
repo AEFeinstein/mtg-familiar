@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_row_full"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -27,6 +28,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/card_row"
         android:layout_width="match_parent"
         android:layout_height="48sp"
         android:orientation="horizontal">
@@ -38,16 +40,18 @@
             android:layout_height="wrap_content"
             android:id="@+id/decklistRowNumber"
             android:layout_gravity="center_vertical"
-            android:paddingStart="16dp" />
+            android:paddingStart="16dp"
+            android:paddingLeft="16dp" />
 
         <TextView
-            tools:text="Name"
+            tools:text="Rift Bolt"
             style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/decklistRowName"
             android:layout_gravity="center_vertical"
-            android:paddingStart="10dp" />
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp" />
 
         <TextView
             tools:text="{2}{R}"
@@ -60,4 +64,16 @@
             android:paddingEnd="16dp"
             android:paddingRight="16dp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/undo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cardlist_undo"
+        android:visibility="gone"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:layout_gravity="end|center_vertical"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+
 </LinearLayout>

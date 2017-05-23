@@ -4,8 +4,17 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -16,11 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -40,12 +46,10 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static com.gelakinetic.mtgfam.R.id.decklist;
+import java.util.HashMap;
 
 public class DecklistFragment extends FamiliarFragment {
 
@@ -57,9 +61,9 @@ public class DecklistFragment extends FamiliarFragment {
     private TextView mDeckPrice;
 
     /* Decklist and adapters */
-    private ListView decklistView;
+    private RecyclerView decklistView;
     public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
-    public DecklistArrayAdapter mDecklistAdapter;
+    public CardDataAdapter mDecklistAdapter;
     private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
@@ -103,7 +107,8 @@ public class DecklistFragment extends FamiliarFragment {
         mNumberField.setText("1");
         mNumberField.setOnEditorActionListener(addCardListener);
 
-        decklistView = (ListView) myFragmentView.findViewById(decklist);
+        decklistView = (RecyclerView) myFragmentView.findViewById(R.id.decklist);
+        decklistView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +126,7 @@ public class DecklistFragment extends FamiliarFragment {
 
         /* Set up the decklist and adapter, it will be read in onResume() */
         mCompressedDecklist = new ArrayList<>();
-        mDecklistAdapter = new DecklistArrayAdapter(mCompressedDecklist);
+        mDecklistAdapter = new CardDataAdapter(mCompressedDecklist);
         decklistView.setAdapter(mDecklistAdapter);
 
         /* Decklist information */
@@ -139,26 +144,124 @@ public class DecklistFragment extends FamiliarFragment {
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
 
-        decklistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            Drawable background;
+            Drawable xMark;
+            int xMarkMargin;
+            boolean initiated;
+
+            private void init() {
+                background = new ColorDrawable(Color.RED);
+                xMark = ContextCompat.getDrawable(getContext(), R.drawable.ic_menu_delete_light);
+                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                xMarkMargin = 10; // todo: actually make this dimension
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int swipedPosition = viewHolder.getAdapterPosition();
+                mDecklistAdapter.pendingRemoval(swipedPosition);
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyAction) {
+                View itemView = viewHolder.itemView;
+                if (viewHolder.getAdapterPosition() == -1) {
+                    return;
+                }
+                if (!initiated) {
+                    init();
+                }
+                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                background.draw(c);
+                int itemHeight = itemView.getBottom() - itemView.getTop();
+                int intrinsicWidth = xMark.getIntrinsicWidth();
+                int intrinsicHeight = xMark.getIntrinsicHeight();
+                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
+                int xMarkRight = itemView.getRight() - xMarkMargin;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+                int xMarkBottom = xMarkTop + intrinsicHeight;
+                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+                xMark.draw(c);
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyAction);
+            }
+
+        };
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        mItemTouchHelper.attachToRecyclerView(decklistView);
+        decklistView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            Drawable background;
+            boolean initiated;
+            private void init() {
+                background = new ColorDrawable(Color.RED);
+                initiated = true;
+            }
+            @Override
+            public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+                if (!initiated) {
+                    init();
+                }
+                if (parent.getItemAnimator().isRunning()) {
+                    View lastViewComingDown = null;
+                    View firstViewComingUp = null;
+                    int left = 0;
+                    int right = parent.getWidth();
+                    int top = 0;
+                    int bottom = 0;
+                    int childCount = parent.getLayoutManager().getChildCount();
+                    for (int i = 0; i < childCount; i++) {
+                        View child = parent.getLayoutManager().getChildAt(i);
+                        if (child.getTranslationY() < 0) {
+                            lastViewComingDown = child;
+                        } else if (child.getTranslationY() > 0) {
+                            if (firstViewComingUp == null) {
+                                firstViewComingUp = child;
+                            }
+                        }
+                    }
+                    if (lastViewComingDown != null && firstViewComingUp != null) {
+                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
+                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
+                    } else if (lastViewComingDown != null) {
+                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
+                        bottom = lastViewComingDown.getBottom();
+                    } else if (firstViewComingUp != null) {
+                        top = firstViewComingUp.getTop();
+                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
+                    }
+                    background.setBounds(left, top, right, bottom);
+                    background.draw(canvas);
+                }
+                super.onDraw(canvas, parent, state);
+            }
+        });
+
+        /*decklistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CompressedDecklistInfo item = mCompressedDecklist.get(position);
-                /* Show the dialog for this particular card */
+                /* Show the dialog for this particular card
                 showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
             }
         });
         decklistView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                /* Remove the card */
+                /* Remove the card
                 mCompressedDecklist.remove(position);
-                /* Save the decklist */
+                /* Save the decklist
                 DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
-                /* Redraw the new decklist */
+                /* Redraw the new decklist
                 mDecklistAdapter.notifyDataSetChanged();
                 return true;
             }
-        });
+        });*/
 
         return myFragmentView;
     }
@@ -280,7 +383,7 @@ public class DecklistFragment extends FamiliarFragment {
             setHeaderValues();
 
             /* Redraw the new decklist with the new card */
-            mDecklistAdapter.notifyDataSetChanged();
+            mDecklistAdapter.notifyDataSetChanged2();
 
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
@@ -297,7 +400,7 @@ public class DecklistFragment extends FamiliarFragment {
         super.onResume();
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
-        mDecklistAdapter.notifyDataSetChanged();
+        //mDecklistAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -379,7 +482,7 @@ public class DecklistFragment extends FamiliarFragment {
     public void onWishlistChanged(String cardName) {
         readAndCompressDecklist(cardName, mCurrentDeck);
         Collections.sort(mCompressedDecklist, mDecklistChain);
-        mDecklistAdapter.notifyDataSetChanged();
+        //mDecklistAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -478,79 +581,88 @@ public class DecklistFragment extends FamiliarFragment {
         inflater.inflate(R.menu.decklist_menu, menu);
     }
 
-    /**
-     * This nested class is the adapter which populates the ListView in the drawer menu. It handles
-     * both entries and headers.
-     */
-    public class DecklistArrayAdapter extends ArrayAdapter<CompressedDecklistInfo> {
+    public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHolder> {
 
-        private final ArrayList<CompressedDecklistInfo> values;
+        private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3 seconds
 
-        /**
-         * Constructor. The context will be used to inflate views later. The array of values will be
-         * used to populate the views
-         * @param values an array of DrawerEntries which will populate the list.
-         */
-        public DecklistArrayAdapter(ArrayList<CompressedDecklistInfo> values) {
-            super(getActivity(), R.layout.drawer_list_item, values);
-            this.values = values;
+        private ArrayList<CompressedDecklistInfo> compressedCardInfos;
+        private ArrayList<CompressedDecklistInfo> itemsPendingRemoval = new ArrayList<>();
+
+        private Handler handler = new Handler();
+        HashMap<CompressedDecklistInfo, Runnable> pendingRunnables = new HashMap<>();
+
+        public CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
+            compressedCardInfos = values;
         }
 
-        /**
-         * Called to get a view for an entry in the ListView
-         * @param position The position of the ListView to populate
-         * @param convertView The old view to reuse if possible. Since the layouts for enteries and
-         *                    headers are different, this will be ignored
-         * @param parent The parent this view will eventually be attached to
-         * @return The view for the data at this position
-         */
-        @NotNull
         @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.decklist_card_row, parent, false);
-                assert convertView != null;
+        public CardDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new ViewHolder(parent);
+        }
+
+        @Override
+        public void onBindViewHolder(CardDataAdapter.ViewHolder holder, int position) {
+            if (position >= compressedCardInfos.size()) {
+                return;
             }
-            /* Get the decklist information for this entry */
-            CompressedDecklistInfo info = values.get(position);
-            /* Get the information for the previous, if it exists */
-            CompressedDecklistInfo previousInfo = null;
-            try {
-                previousInfo = values.get(position - 1);
-            } catch (ArrayIndexOutOfBoundsException aie) { /* this is fine, we check for a null value later */ }
-            String[] cardTypes = getResources().getStringArray(R.array.card_types);
-            /* Note "Creature" is index 1 */
-            String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
-            View separator = convertView.findViewById(R.id.decklistSeparator);
-            TextView separatorText = (TextView) separator.findViewById(R.id.decklistHeaderType);
-            TextView separatorNumber = (TextView) separator.findViewById(R.id.decklistHeaderNumber);
-            separator.setVisibility(View.GONE);
-            if (info.mIsSideboard) { // Card is in the sideboard
-                if (previousInfo == null || !previousInfo.mIsSideboard) { // The card before either does not exist, or is not in the sideboard
-                    separator.setVisibility(View.VISIBLE);
-                    separatorText.setText(cardHeaders[0]);
-                    String number = "(" + String.valueOf(getTotalNumberOfType(getString(R.string.decklist_sideboard))) + ")";
-                    separatorNumber.setText(number);
-                }
-            } else { // Card is in the mainboard
-                for (int i = 0; i < cardTypes.length + 1; i++) {
-                    if (i == cardTypes.length || info.mCard.mType.contains(cardTypes[i])) { // if the card is of type cardTypes[i]
-                        if (previousInfo == null || !previousInfo.header.equals(info.header)) { // if the previous card is null, or the previous header is not equal to the current header
-                            separator.setVisibility(View.VISIBLE);
-                            separatorText.setText(cardHeaders[i + 1]);
-                            String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
-                            separatorNumber.setText(number);
+            final DecklistHelpers.CompressedDecklistInfo info = compressedCardInfos.get(position);
+            if (itemsPendingRemoval.contains(info)) { /* if the item IS pending removal */
+                holder.itemView.setBackgroundColor(Color.RED);
+                holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
+                holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
+                holder.undoButton.setVisibility(View.VISIBLE);
+                holder.undoButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Runnable pendingRemovalRunnable = pendingRunnables.get(info);
+                        pendingRunnables.remove(info);
+                        if (pendingRemovalRunnable != null) {
+                            handler.removeCallbacks(pendingRemovalRunnable);
                         }
-                        break; // We don't need to continue checking, since we found the header
+                        itemsPendingRemoval.remove(info);
+                        notifyItemChanged(compressedCardInfos.indexOf(info));
+                    }
+                });
+            } else { /* if the item IS NOT pending removal */
+                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
+                holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.VISIBLE);
+                holder.undoButton.setVisibility(View.GONE);
+                DecklistHelpers.CompressedDecklistInfo previousInfo = null;
+                try {
+                    previousInfo = compressedCardInfos.get(position - 1);
+                } catch (ArrayIndexOutOfBoundsException aie) {}
+                String[] cardTypes = getResources().getStringArray(R.array.card_types);
+                String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
+                View separator = holder.itemView.findViewById(R.id.decklistSeparator);
+                TextView separatorText = (TextView) separator.findViewById(R.id.decklistHeaderType);
+                TextView separatorNumber = (TextView) separator.findViewById(R.id.decklistHeaderNumber);
+                separator.setVisibility(View.GONE);
+                if (info.mIsSideboard) {
+                    if (previousInfo == null || !previousInfo.mIsSideboard) {
+                        separator.setVisibility(View.VISIBLE);
+                        separatorText.setText(cardHeaders[0]);
+                        String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
+                        separatorNumber.setText(number);
+                    }
+                } else {
+                    for (int i = 0; i < cardTypes.length + 1; i++) {
+                        if (i == cardTypes.length || info.mCard.mType.contains(cardTypes[i])) {
+                            if (previousInfo == null || !previousInfo.header.equals(info.header)) {
+                                separator.setVisibility(View.VISIBLE);
+                                separatorText.setText(cardHeaders[i + 1]);
+                                String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
+                                separatorNumber.setText(number);
+                            }
+                            break;
+                        }
                     }
                 }
+                Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
+                holder.cardName.setText(info.mCard.mName);
+                holder.cardQuantity.setText(String.valueOf(info.getTotalNumber()));
+                holder.cardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
             }
-            Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
-            /* Get the numberOf of the card, the name, and the mana cost to display */
-            ((TextView) convertView.findViewById(R.id.decklistRowNumber)).setText(String.valueOf(info.getTotalNumber()));
-            ((TextView) convertView.findViewById(R.id.decklistRowName)).setText(info.mCard.mName);
-            ((TextView) convertView.findViewById(R.id.decklistRowCost)).setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
-            return convertView;
         }
 
         /**
@@ -560,7 +672,7 @@ public class DecklistFragment extends FamiliarFragment {
          */
         private int getTotalNumberOfType(final String headerValue) {
             int totalCards = 0;
-            for (CompressedDecklistInfo cdi : values) {
+            for (CompressedDecklistInfo cdi : compressedCardInfos) {
                 /* check if one of two things is correct
                  * 1. the card is a sideboard card
                  * 2. the card's header is the headerValue, and isn't in the sideboard */
@@ -576,20 +688,71 @@ public class DecklistFragment extends FamiliarFragment {
          * Get the total number of cards in this adapter
          * @return the total number of cards
          */
-        public int getTotalCards() {
+        int getTotalCards() {
             int totalCards = 0;
-            for (CompressedDecklistInfo cdi : values) {
+            for (CompressedDecklistInfo cdi : compressedCardInfos) {
                 totalCards += cdi.getTotalNumber();
             }
             return totalCards;
         }
 
         @Override
-        public void notifyDataSetChanged() {
-            super.notifyDataSetChanged();
+        public int getItemCount() {
+            return compressedCardInfos.size();
+        }
+
+        void pendingRemoval(int position) {
+            final CompressedDecklistInfo info = compressedCardInfos.get(position);
+            if (!itemsPendingRemoval.contains(info)) {
+                itemsPendingRemoval.add(info);
+                notifyItemChanged(position);
+                Runnable pendingRemovalRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        remove(compressedCardInfos.indexOf(info));
+                    }
+                };
+                handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
+                pendingRunnables.put(info, pendingRemovalRunnable);
+            }
+
+        }
+
+        public void remove(int position) {
+            CompressedDecklistInfo info = compressedCardInfos.get(position);
+            if (itemsPendingRemoval.contains(info)) {
+                itemsPendingRemoval.remove(info);
+            }
+            if (compressedCardInfos.contains(info)) {
+                compressedCardInfos.remove(info);
+                notifyItemChanged(position);
+            }
+            notifyDataSetChanged2();
+        }
+
+        private void notifyDataSetChanged2() {
             String totalCards = String.valueOf(getTotalCards()) + " ";
             mDeckCards.setText(totalCards);
+            notifyDataSetChanged();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView cardName;
+            private TextView cardQuantity;
+            private TextView cardCost;
+            private TextView undoButton;
+
+            ViewHolder(ViewGroup view) {
+                super(LayoutInflater.from(view.getContext()).inflate(R.layout.decklist_card_row, view, false));
+                cardName = (TextView) itemView.findViewById(R.id.decklistRowName);
+                cardQuantity = (TextView) itemView.findViewById(R.id.decklistRowNumber);
+                cardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
+                undoButton = (TextView) itemView.findViewById(R.id.undo_button);
+            }
+
         }
 
     }
+
 }

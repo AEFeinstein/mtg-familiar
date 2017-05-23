@@ -311,7 +311,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 getParentDecklistFragment().readAndCompressDecklist(null, deckNames[position]);
                                 getParentDecklistFragment().mCurrentDeck = deckNames[position];
                                 /* Alert things to update */
-                                getParentDecklistFragment().mDecklistAdapter.notifyDataSetChanged();
+                                //getParentDecklistFragment().mDecklistAdapter.notifyDataSetChanged();
                             }
                         })
                         .build();
@@ -363,7 +363,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 /* do some cleaning up */
                                 getParentDecklistFragment().mCurrentDeck = "autosave";
                                 getParentDecklistFragment().mCompressedDecklist.clear();
-                                getParentDecklistFragment().mDecklistAdapter.notifyDataSetChanged();
+                                //getParentDecklistFragment().mDecklistAdapter.notifyDataSetChanged();
                                 dialog.dismiss();
                             }
                         })
