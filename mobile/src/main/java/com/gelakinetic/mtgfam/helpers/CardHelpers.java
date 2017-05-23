@@ -43,7 +43,9 @@ public class CardHelpers {
         public CompressedCardInfo(MtgCard card) {
             mInfo = new ArrayList<>();
             mCard = card;
-            add(card);
+            if (mCard != null) {
+                add(card);
+            }
         }
 
         /**

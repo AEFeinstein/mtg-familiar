@@ -53,19 +53,21 @@ public class DecklistHelpers {
             FileOutputStream fos = mCtx.openFileOutput(fileName, Context.MODE_PRIVATE);
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                MtgCard card = cdi.mCard;
-                for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                    card.mExpansion = isi.mSet;
-                    card.setCode = isi.mSetCode;
-                    card.mNumber = isi.mNumber;
-                    card.foil = isi.mIsFoil;
-                    card.numberOf = isi.mNumberOf;
-                    String cardString = card.toWishlistString();
+                if (cdi.mCard != null) {
+                    MtgCard card = cdi.mCard;
+                    for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
+                        card.mExpansion = isi.mSet;
+                        card.setCode = isi.mSetCode;
+                        card.mNumber = isi.mNumber;
+                        card.foil = isi.mIsFoil;
+                        card.numberOf = isi.mNumberOf;
+                        String cardString = card.toWishlistString();
                     /* If the card is a sideboard card, add the sideboard marking */
-                    if (cdi.mIsSideboard) {
-                        cardString = "SB:" + cardString;
+                        if (cdi.mIsSideboard) {
+                            cardString = "SB:" + cardString;
+                        }
+                        fos.write(cardString.getBytes());
                     }
-                    fos.write(cardString.getBytes());
                 }
             }
             fos.close();
@@ -166,9 +168,15 @@ public class DecklistHelpers {
         public boolean equals(Object o) {
             if (o instanceof CompressedDecklistInfo) {
                 CompressedDecklistInfo cdi = (CompressedDecklistInfo) o;
-                return (mCard.mName.equals(cdi.mCard.mName) && mIsSideboard == cdi.mIsSideboard);
+                if (cdi.mCard != null) {
+                    return (mCard.mName.equals(cdi.mCard.mName) && mIsSideboard == cdi.mIsSideboard);
+                } else if (cdi.header.equals(header)) {
+                    return true;
+                }
             } else if (o instanceof MtgCard) {
-                return mCard.mName.equals(((MtgCard) o).mName);
+                if (mCard != null) {
+                    return mCard.mName.equals(((MtgCard) o).mName);
+                }
             }
             return false;
         }

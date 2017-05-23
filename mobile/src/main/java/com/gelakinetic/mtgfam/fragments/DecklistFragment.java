@@ -192,6 +192,16 @@ public class DecklistFragment extends FamiliarFragment {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyAction);
             }
 
+            @Override
+            public int getSwipeDirs(RecyclerView parent, RecyclerView.ViewHolder holder) {
+                if (holder instanceof CardDataAdapter.ViewHolder) {
+                    if (!((CardDataAdapter.ViewHolder) holder).swipeable) {
+                        return 0;
+                    }
+                }
+                return super.getSwipeDirs(parent, holder);
+            }
+
         };
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         mItemTouchHelper.attachToRecyclerView(decklistView);
@@ -368,9 +378,11 @@ public class DecklistFragment extends FamiliarFragment {
                 mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
             }
 
+            /* The headers shouldn't (and can't) be sorted */
+            clearHeaders();
+
             /* Sort the decklist */
             Collections.sort(mCompressedDecklist, mDecklistChain);
-
 
             /* Save the decklist */
             DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
@@ -378,9 +390,6 @@ public class DecklistFragment extends FamiliarFragment {
             /* Clean up for the next add */
             mNumberField.setText("1");
             mNameField.setText("");
-
-            /* Update the headers */
-            setHeaderValues();
 
             /* Redraw the new decklist with the new card */
             mDecklistAdapter.notifyDataSetChanged2();
@@ -400,7 +409,7 @@ public class DecklistFragment extends FamiliarFragment {
         super.onResume();
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
-        //mDecklistAdapter.notifyDataSetChanged();
+        mDecklistAdapter.notifyDataSetChanged2();
     }
 
     @Override
@@ -551,6 +560,15 @@ public class DecklistFragment extends FamiliarFragment {
         }
     }
 
+    private void clearHeaders() {
+        for (int i = 0; i < mCompressedDecklist.size(); i++) {
+            if (mCompressedDecklist.get(i).mCard == null) {
+                mCompressedDecklist.remove(i);
+                i--;
+            }
+        }
+    }
+
     /**
      * Sets the header values for all the cards in the list
      */
@@ -559,13 +577,20 @@ public class DecklistFragment extends FamiliarFragment {
         final String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
             /* We need to tell each card what it should be classified as, that is the order as
              * defined by R.array.card_types_extra */
-        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-            for (int i = 0; i < cardTypes.length; i++) {
-                if (i < cardHeaders.length - 1 && cdi.mCard.mType.contains(cardTypes[i])) {
-                    cdi.header = cardHeaders[i + 1];
-                    break;
-                } else if (i >= cardHeaders.length - 1) {
-                    cdi.header = cardHeaders[cardHeaders.length - 1];
+        for (int i = 0; i < mCompressedDecklist.size(); i++) {
+            for (int j = 0; j < cardTypes.length; j++) {
+                if (mCompressedDecklist.get(i).mCard != null) {
+                    if (j < cardHeaders.length - 1 &&
+                            mCompressedDecklist.get(i).mCard.mType.contains(cardTypes[j]) &&
+                            (i == 0 || mCompressedDecklist.get(i - 1).header == null)) {
+                        mCompressedDecklist.add(i, new CompressedDecklistInfo(null, false));
+                        mCompressedDecklist.get(i).header = cardHeaders[j + 1];
+                        break;
+                    } else if (j >= cardHeaders.length - 1 &&
+                            (i == 0 || mCompressedDecklist.get(i - 1).header == null)) {
+                        mCompressedDecklist.add(i, new CompressedDecklistInfo(null, false));
+                        mCompressedDecklist.get(i).header = cardHeaders[cardHeaders.length - 1];
+                    }
                 }
             }
         }
@@ -624,44 +649,52 @@ public class DecklistFragment extends FamiliarFragment {
                     }
                 });
             } else { /* if the item IS NOT pending removal */
-                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
-                holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
-                holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.VISIBLE);
-                holder.undoButton.setVisibility(View.GONE);
-                DecklistHelpers.CompressedDecklistInfo previousInfo = null;
-                try {
-                    previousInfo = compressedCardInfos.get(position - 1);
-                } catch (ArrayIndexOutOfBoundsException aie) {}
-                String[] cardTypes = getResources().getStringArray(R.array.card_types);
-                String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
-                View separator = holder.itemView.findViewById(R.id.decklistSeparator);
-                TextView separatorText = (TextView) separator.findViewById(R.id.decklistHeaderType);
-                TextView separatorNumber = (TextView) separator.findViewById(R.id.decklistHeaderNumber);
-                separator.setVisibility(View.GONE);
-                if (info.mIsSideboard) {
-                    if (previousInfo == null || !previousInfo.mIsSideboard) {
-                        separator.setVisibility(View.VISIBLE);
-                        separatorText.setText(cardHeaders[0]);
-                        String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
-                        separatorNumber.setText(number);
-                    }
+                if (info.header != null) {
+                    holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.VISIBLE);
+                    holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
+                    ((TextView) holder.itemView.findViewById(R.id.decklistHeaderType)).setText(info.header);
+                    holder.swipeable = false;
                 } else {
-                    for (int i = 0; i < cardTypes.length + 1; i++) {
-                        if (i == cardTypes.length || info.mCard.mType.contains(cardTypes[i])) {
-                            if (previousInfo == null || !previousInfo.header.equals(info.header)) {
-                                separator.setVisibility(View.VISIBLE);
-                                separatorText.setText(cardHeaders[i + 1]);
-                                String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
-                                separatorNumber.setText(number);
-                            }
-                            break;
+                    holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                    holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
+                    holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
+                    holder.undoButton.setVisibility(View.GONE);
+                    DecklistHelpers.CompressedDecklistInfo previousInfo = null;
+                    try {
+                        previousInfo = compressedCardInfos.get(position - 1);
+                    } catch (ArrayIndexOutOfBoundsException aie) {
+                    }
+                    String[] cardTypes = getResources().getStringArray(R.array.card_types);
+                    String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
+                    View separator = holder.itemView.findViewById(R.id.decklistSeparator);
+                    TextView separatorText = (TextView) separator.findViewById(R.id.decklistHeaderType);
+                    TextView separatorNumber = (TextView) separator.findViewById(R.id.decklistHeaderNumber);
+                    separator.setVisibility(View.GONE);
+                    if (info.mIsSideboard) {
+                        if (previousInfo == null || !previousInfo.mIsSideboard) {
+                            separator.setVisibility(View.VISIBLE);
+                            separatorText.setText(cardHeaders[0]);
+                            String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
+                            separatorNumber.setText(number);
+                        }
+                    } else {
+                        for (int i = 0; i < cardTypes.length + 1; i++) {
+                            /*if (i == cardTypes.length || info.mCard.mType.contains(cardTypes[i])) {
+                                if (previousInfo == null || !previousInfo.header.equals(info.header)) {
+                                    separator.setVisibility(View.VISIBLE);
+                                    separatorText.setText(cardHeaders[i + 1]);
+                                    String number = "(" + String.valueOf(getTotalNumberOfType(info.header)) + ")";
+                                    separatorNumber.setText(number);
+                                }
+                                break;
+                            }*/
                         }
                     }
+                    Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
+                    holder.cardName.setText(info.mCard.mName);
+                    holder.cardQuantity.setText(String.valueOf(info.getTotalNumber()));
+                    holder.cardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
                 }
-                Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                holder.cardName.setText(info.mCard.mName);
-                holder.cardQuantity.setText(String.valueOf(info.getTotalNumber()));
-                holder.cardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
             }
         }
 
@@ -672,12 +705,17 @@ public class DecklistFragment extends FamiliarFragment {
          */
         private int getTotalNumberOfType(final String headerValue) {
             int totalCards = 0;
+            String currentHeader = "";
             for (CompressedDecklistInfo cdi : compressedCardInfos) {
                 /* check if one of two things is correct
                  * 1. the card is a sideboard card
                  * 2. the card's header is the headerValue, and isn't in the sideboard */
+                if (cdi.header != null) {
+                    currentHeader = cdi.header;
+                    continue;
+                }
                 if ((headerValue.equals(getString(R.string.decklist_sideboard)) && cdi.mIsSideboard)
-                        || (cdi.header.equals(headerValue) && !cdi.mIsSideboard)) {
+                        || (currentHeader.equals(headerValue) && !cdi.mIsSideboard)) {
                     totalCards += cdi.getTotalNumber();
                 }
             }
@@ -733,6 +771,8 @@ public class DecklistFragment extends FamiliarFragment {
         private void notifyDataSetChanged2() {
             String totalCards = String.valueOf(getTotalCards()) + " ";
             mDeckCards.setText(totalCards);
+            clearHeaders();
+            setHeaderValues();
             notifyDataSetChanged();
         }
 
@@ -742,6 +782,7 @@ public class DecklistFragment extends FamiliarFragment {
             private TextView cardQuantity;
             private TextView cardCost;
             private TextView undoButton;
+            public boolean swipeable = true;
 
             ViewHolder(ViewGroup view) {
                 super(LayoutInflater.from(view.getContext()).inflate(R.layout.decklist_card_row, view, false));
