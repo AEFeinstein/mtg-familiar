@@ -40,6 +40,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -668,8 +669,6 @@ public class DecklistFragment extends FamiliarFragment {
      */
     public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHolder> {
 
-        private static final int PENDING_REMOVAL_TIMEOUT = 3000; /* 3 seconds */
-
         private ArrayList<CompressedDecklistInfo> compressedCardInfos;
         private ArrayList<CompressedDecklistInfo> itemsPendingRemoval = new ArrayList<>();
 
@@ -811,7 +810,8 @@ public class DecklistFragment extends FamiliarFragment {
                         remove(compressedCardInfos.indexOf(info));
                     }
                 };
-                handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
+                PreferenceAdapter pa = new PreferenceAdapter(getContext());
+                handler.postDelayed(pendingRemovalRunnable, pa.getUndoTimeout());
                 pendingRunnables.put(info, pendingRemovalRunnable);
             }
 

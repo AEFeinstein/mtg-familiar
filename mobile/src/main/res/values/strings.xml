@@ -487,6 +487,9 @@ Good luck, and have fun!
 <string name="pref_language">"Language"</string>
 <string name="pref_set_language">"Set a different language"</string>
 <string name="pref_use_sound_instead_of_tts">Use sound instead of TTS</string>
+<string name="pref_cat_list_general">General Lists</string>
+<string name="pref_undo_timeout_seconds_summary">The number of seconds an item will stay in the undo state before it is deleted</string>
+<string name="pref_undo_timeout_seconds_title">Undo Timeout</string>
 
 <!-- Judge's Corner -->
 <string name="judges_corner_MTR">"MTR"</string>
@@ -545,4 +548,5 @@ Good luck, and have fun!
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovak"</string>
+
 </resources>

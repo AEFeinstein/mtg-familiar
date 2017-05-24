@@ -63,6 +63,6 @@
     <string name="key_wishlist_sort_order_2" translatable="false">wishlist_sort_order_2</string>
     <string name="key_legality_timestamp" translatable="false">legality_timestamp</string>
     <string name="key_last_update_timestamp" translatable="false">last_update_timestamp</string>
-
+    <string name="key_undoTimeout" translatable="false">undo_timeout</string>
 
 </resources>

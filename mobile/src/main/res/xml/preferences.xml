@@ -248,6 +248,22 @@
     <!-- Trade and wishlist preferences -->
     <PreferenceScreen android:title="@string/pref_screen_trade_wishlist">
 
+        <PreferenceCategory
+            xmlns:robobunny="http://robobunny.com"
+            android:title="@string/pref_cat_list_general">
+
+            <com.robobunny.preferences.SeekBarPreference
+                android:defaultValue="3"
+                android:key="@string/key_undoTimeout"
+                android:max="10"
+                android:summary="@string/pref_undo_timeout_seconds_summary"
+                android:title="@string/pref_undo_timeout_seconds_title"
+                robobunny:interval="1"
+                robobunny:min="1"
+                robobunny:unitsRight="s" />
+
+        </PreferenceCategory>
+
         <PreferenceCategory android:title="@string/pref_cat_trade_window">
 
             <ListPreference
