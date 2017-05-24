@@ -168,9 +168,9 @@ public class DecklistHelpers {
         public boolean equals(Object o) {
             if (o instanceof CompressedDecklistInfo) {
                 CompressedDecklistInfo cdi = (CompressedDecklistInfo) o;
-                if (cdi.mCard != null) {
+                if (cdi.mCard != null && mCard != null) {
                     return (mCard.mName.equals(cdi.mCard.mName) && mIsSideboard == cdi.mIsSideboard);
-                } else if (cdi.header.equals(header)) {
+                } else if (cdi.header != null && cdi.header.equals(header)) {
                     return true;
                 }
             } else if (o instanceof MtgCard) {
