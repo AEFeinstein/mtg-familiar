@@ -284,23 +284,16 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 return dialog;
             }
             case DIALOG_LOAD_DECK: {
-                /* Find all the decklist files */
-                String[] files = this.getActivity().fileList();
-                ArrayList<String> validFiles = new ArrayList<>();
-                for (String fileName : files) {
-                    if (fileName.endsWith(DecklistFragment.DECK_EXTENSION)) {
-                        validFiles.add(fileName.substring(0, fileName.indexOf(DecklistFragment.DECK_EXTENSION)));
-                    }
-                }
+
+                final String[] deckNames = getFiles(DecklistFragment.DECK_EXTENSION);
+
                 /* If there are no files, don't show the dialog */
-                if (validFiles.size() == 0) {
+                if (deckNames.length == 0) {
                     ToastWrapper.makeText(this.getActivity(), R.string.decklist_toast_no_decks,
                             ToastWrapper.LENGTH_LONG).show();
                     return DontShowDialog();
                 }
-                /* Make an array of the trade file names */
-                final String[] deckNames = new String[validFiles.size()];
-                validFiles.toArray(deckNames);
+
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
@@ -317,23 +310,16 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_DELETE_DECK: {
-                /* Find all the trade files */
-                String[] files = this.getActivity().fileList();
-                ArrayList<String> validFiles = new ArrayList<>();
-                for (String fileName : files) {
-                    if (fileName.endsWith(DecklistFragment.DECK_EXTENSION)) {
-                        validFiles.add(fileName.substring(0, fileName.indexOf(DecklistFragment.DECK_EXTENSION)));
-                    }
-                }
+
+                final String[] deckNames = getFiles(DecklistFragment.DECK_EXTENSION);
+
                 /* if there are no files, don't show the dialog */
-                if (validFiles.size() == 0) {
+                if (deckNames.length == 0) {
                     ToastWrapper.makeText(this.getActivity(), R.string.decklist_toast_no_decks,
                             ToastWrapper.LENGTH_LONG).show();
                     return DontShowDialog();
                 }
-                /* make an array of the file names */
-                final String[] deckNames = new String[validFiles.size()];
-                validFiles.toArray(deckNames);
+
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.decklist_delete_dialog_title)
                         .negativeText(R.string.dialog_cancel)

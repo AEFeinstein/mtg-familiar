@@ -429,25 +429,15 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 return dialog;
             }
             case DIALOG_LOAD_TRADE: {
-                /* Find all the trade files */
-                String[] files = this.getActivity().fileList();
-                ArrayList<String> validFiles = new ArrayList<>();
-                for (String fileName : files) {
-                    if (fileName.endsWith(TradeFragment.TRADE_EXTENSION)) {
-                        validFiles.add(fileName.substring(0, fileName.indexOf(TradeFragment.TRADE_EXTENSION)));
-                    }
-                }
+
+                final String[] tradeNames = getFiles(TradeFragment.TRADE_EXTENSION);
 
                 /* If there are no files, don't show the dialog */
-                if (validFiles.size() == 0) {
+                if (tradeNames.length == 0) {
                     ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
                             .show();
                     return DontShowDialog();
                 }
-
-                /* Make an array of the trade file names */
-                final String[] tradeNames = new String[validFiles.size()];
-                validFiles.toArray(tradeNames);
 
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.trader_select_dialog_title)
@@ -469,25 +459,15 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_DELETE_TRADE: {
-                /* Find all the trade files */
-                String[] files = this.getActivity().fileList();
-                ArrayList<String> validFiles = new ArrayList<>();
-                for (String fileName : files) {
-                    if (fileName.endsWith(TradeFragment.TRADE_EXTENSION)) {
-                        validFiles.add(fileName.substring(0, fileName.indexOf(TradeFragment.TRADE_EXTENSION)));
-                    }
-                }
+
+                final String[] tradeNames = getFiles(TradeFragment.TRADE_EXTENSION);
 
                 /* If there are no files, don't show the dialog */
-                if (validFiles.size() == 0) {
+                if (tradeNames.length == 0) {
                     ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
                             .show();
                     return DontShowDialog();
                 }
-
-                /* Make an array of the trade file names */
-                final String[] tradeNames = new String[validFiles.size()];
-                validFiles.toArray(tradeNames);
 
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.trader_delete_dialog_title)
@@ -534,4 +514,5 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             }
         }
     }
+
 }
