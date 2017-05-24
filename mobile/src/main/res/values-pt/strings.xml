@@ -512,8 +512,7 @@ Boa sorte, e divirtam-se!
 <string name="decklist_artifacts">"Artefatos"</string>
 <string name="decklist_lands">"Terrenos"</string>
 <string name="decklist_edit_dialog_title_end">"no deck"</string>
-<string name="deck_save_dialog_title">"Salvar Deck"</string>
-<string name="decklist_delete">"Deletar Deck"</string>
+    <string name="decklist_delete">"Deletar Deck"</string>
 <string name="decklist_save">"Salvar Deck"</string>
 <string name="decklist_load">"Carregar Deck"</string>
 <string name="decklist_clear">"Limpar Deck"</string>

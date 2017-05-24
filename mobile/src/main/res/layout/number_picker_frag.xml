@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/numberInput"
+        android:id="@+id/number_input"
         android:layout_width="96dp"
         android:layout_height="wrap_content"
         android:ems="10"

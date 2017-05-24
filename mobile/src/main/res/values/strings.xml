@@ -512,8 +512,7 @@ Good luck, and have fun!
 <string name="decklist_artifacts">"Artifacts"</string>
 <string name="decklist_lands">"Lands"</string>
 <string name="decklist_edit_dialog_title_end">"in the deck"</string>
-<string name="deck_save_dialog_title">"Save Deck"</string>
-<string name="decklist_delete">"Delete Deck"</string>
+    <string name="decklist_delete">"Delete Deck"</string>
 <string name="decklist_save">"Save Deck"</string>
 <string name="decklist_load">"Load Deck"</string>
 <string name="decklist_clear">"Clear Deck"</string>

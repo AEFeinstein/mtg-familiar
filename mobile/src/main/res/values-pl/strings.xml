@@ -511,8 +511,7 @@ Powodzenia i miłej zabawy!
 <string name="decklist_artifacts">"Artefakty"</string>
 <string name="decklist_lands">"Landy"</string>
 <string name="decklist_edit_dialog_title_end">"w talii"</string>
-<string name="deck_save_dialog_title">"Zapisz talię"</string>
-<string name="decklist_delete">"Usuń talię"</string>
+    <string name="decklist_delete">"Usuń talię"</string>
 <string name="decklist_save">"Zapisz talię"</string>
 <string name="decklist_load">"Załaduj talię"</string>
 <string name="decklist_clear">"Wyczyść talię"</string>

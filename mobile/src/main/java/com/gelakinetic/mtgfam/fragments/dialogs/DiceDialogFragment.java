@@ -37,7 +37,7 @@ public class DiceDialogFragment extends FamiliarDialogFragment {
 
         assert v != null;
 
-        final EditText txtNumber = (EditText) v.findViewById(R.id.numberInput);
+        final EditText txtNumber = (EditText) v.findViewById(R.id.number_input);
 
         if (getParentDiceFragment().mLastNumber > 0) {
             txtNumber.setText(String.valueOf(getParentDiceFragment().mLastNumber));

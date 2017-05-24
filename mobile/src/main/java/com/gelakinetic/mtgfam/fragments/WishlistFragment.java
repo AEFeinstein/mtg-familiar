@@ -31,6 +31,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -117,7 +118,7 @@ public class WishlistFragment extends FamiliarFragment {
         /* Grab other elements */
         mTotalPriceField = (TextView) myFragmentView.findViewById(R.id.priceText);
         mTotalPriceDivider = myFragmentView.findViewById(R.id.divider_total_price);
-        mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.wishlistFoil);
+        mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.list_foil);
         ListView listView = (ListView) myFragmentView.findViewById(R.id.wishlist);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
@@ -190,94 +191,52 @@ public class WishlistFragment extends FamiliarFragment {
     private void addCardToWishlist() {
         /* Do not allow empty fields */
         String name = String.valueOf(mNameField.getText());
-        String numberOf = (String.valueOf(mNumberField.getText()));
         if (name == null || name.equals("")) {
             return;
         }
+        String numberOf = (String.valueOf(mNumberField.getText()));
         if (numberOf == null || numberOf.equals("")) {
             return;
         }
 
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-        try {
-            /* Make the new card */
-            MtgCard card = new MtgCard();
-            card.mName = name;
-            card.foil = mCheckboxFoil.isChecked();
-            card.numberOf = Integer.parseInt(numberOf);
-            card.message = getString(R.string.wishlist_loading);
+        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, mCheckboxFoil.isChecked(), Integer.valueOf(numberOf));
 
-            /* Get some extra information from the database */
-            Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, CardDbAdapter.allCardDataKeys, true, database);
-            if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeText(WishlistFragment.this.getActivity(), getString(R.string.toast_no_card),
-                        ToastWrapper.LENGTH_LONG).show();
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return;
-            }
-            /* Don't rely on the user's mName, get it from the DB just to be sure */
-            card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            card.mType = CardDbAdapter.getTypeLine(cardCursor);
-            card.mRarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-            card.mManaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-            card.mPower = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-            card.mToughness = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-            card.mLoyalty = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-            card.mText = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-            card.mFlavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            card.mNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-            card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
-            card.mCmc = cardCursor.getInt((cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
-            card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
-            /* Override choice if the card can't be foil */
-            if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
-                card.foil = false;
-            }
-            /* Clean up */
-            cardCursor.close();
-
-            /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
-            if (mCompressedWishlist.contains(card)) {
-                CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(card));
-                boolean added = false;
-                for (IndividualSetInfo isi : cwi.mInfo) {
-                    if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-                        added = true;
-                        isi.mNumberOf++;
-                    }
+        /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
+        if (mCompressedWishlist.contains(card)) {
+            CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(card));
+            boolean added = false;
+            for (IndividualSetInfo isi : cwi.mInfo) {
+                if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
+                    added = true;
+                    isi.mNumberOf++;
                 }
-                if (!added) {
-                    cwi.add(card);
-                }
-            } else {
-                mCompressedWishlist.add(new CompressedWishlistInfo(card));
             }
-
-            /* load the price */
-            loadPrice(card.mName, card.setCode, card.mNumber);
-
-            /* Sort the wishlist */
-            sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
-
-            /* Save the wishlist */
-            WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
-
-            /* Clean up for the next add */
-            mNumberField.setText("1");
-            mNameField.setText("");
-            /* Only unselect the checkbox if it isn't locked */
-            if (!mCheckboxFoilLocked) {
-                mCheckboxFoil.setChecked(false);
+            if (!added) {
+                cwi.add(card);
             }
-            /* Redraw the new wishlist with the new card */
-            mWishlistAdapter.notifyDataSetChanged();
-
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(false);
-        } catch (NumberFormatException e) {
-            /* eat it */
+        } else {
+            mCompressedWishlist.add(new CompressedWishlistInfo(card));
         }
+
+        /* load the price */
+        loadPrice(card.mName, card.setCode, card.mNumber);
+
+        /* Sort the wishlist */
+        sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
+
+        /* Save the wishlist */
+        WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+
+        /* Clean up for the next add */
+        mNumberField.setText("1");
+        mNameField.setText("");
+        /* Only unselect the checkbox if it isn't locked */
+        if (!mCheckboxFoilLocked) {
+            mCheckboxFoil.setChecked(false);
+        }
+        /* Redraw the new wishlist with the new card */
+        mWishlistAdapter.notifyDataSetChanged();
+
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 

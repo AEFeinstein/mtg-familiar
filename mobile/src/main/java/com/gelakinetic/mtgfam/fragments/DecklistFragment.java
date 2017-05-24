@@ -2,7 +2,6 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -26,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -60,12 +61,14 @@ public class DecklistFragment extends FamiliarFragment {
     public TextView mDeckName;
     private TextView mDeckCards;
     private TextView mDeckPrice;
+    public CheckBox mCheckboxFoil;
 
     /* Decklist and adapters */
     private RecyclerView decklistView;
     public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
     public CardDataAdapter mDecklistAdapter;
     private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
+    private boolean mCheckboxFoilLocked = false;
 
     public static final String AUTOSAVE_NAME = "autosave";
     public String mCurrentDeck = "";
@@ -107,6 +110,8 @@ public class DecklistFragment extends FamiliarFragment {
         mNumberField = (EditText) myFragmentView.findViewById(R.id.number_input);
         mNumberField.setText("1");
         mNumberField.setOnEditorActionListener(addCardListener);
+
+        mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.list_foil);
 
         decklistView = (RecyclerView) myFragmentView.findViewById(R.id.decklist);
         decklistView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -192,18 +197,22 @@ public class DecklistFragment extends FamiliarFragment {
              */
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                View itemView = viewHolder.itemView;
                 /* Sometimes this is called even if the item is gone */
                 if (viewHolder.getAdapterPosition() == -1) {
                     return;
                 }
+
                 /* If the user aborts the swipe, don't go through the drawing */
                 if (!isCurrentlyActive) {
                     return;
                 }
+
                 if (!initiated) {
                     init();
                 }
+
+                View itemView = viewHolder.itemView;
+
                 background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
                 background.draw(c);
                 int itemHeight = itemView.getBottom() - itemView.getTop();
@@ -301,6 +310,33 @@ public class DecklistFragment extends FamiliarFragment {
 
         });
 
+        myFragmentView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFamiliarActivity().startTutorCardsSearch();
+            }
+        });
+
+        mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                /* Lock the checkbox when the user long clicks it */
+                mCheckboxFoilLocked = true;
+                mCheckboxFoil.setChecked(true);
+                return true;
+            }
+        });
+
+        mCheckboxFoil.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    /* Unlock the checkbox whne the user unchecks it */
+                    mCheckboxFoilLocked = false;
+                }
+            }
+        });
+
         /* on the click */
         mDecklistAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -323,122 +359,87 @@ public class DecklistFragment extends FamiliarFragment {
      */
     private void addCardToDeck(boolean isSideboard) {
         String name = String.valueOf(mNameField.getText());
-        String numberOf = String.valueOf(mNumberField.getText());
         /* Don't allow the fields to be empty */
         if (name == null || name.equals("")) {
             return;
         }
+        String numberOf = String.valueOf(mNumberField.getText());
         if (numberOf == null || numberOf.equals("")) {
             return;
         }
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-        try {
-            /* Make the new card */
-            MtgCard card = new MtgCard();
-            card.mName = name;
-            card.foil = false;
-            card.numberOf = Integer.parseInt(numberOf);
-            card.message = getString(R.string.wishlist_loading);
 
-            /* Get some extra information from the database */
-            Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, CardDbAdapter.allCardDataKeys, true, database);
-            if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeText(DecklistFragment.this.getActivity(), getString(R.string.toast_no_card),
-                        ToastWrapper.LENGTH_LONG).show();
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return;
-            }
-            card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            card.mType = CardDbAdapter.getTypeLine(cardCursor);
-            card.mRarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-            card.mManaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-            card.mPower = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-            card.mToughness = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-            card.mLoyalty = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-            card.mText = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-            card.mFlavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            card.mNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-            card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
-            card.mCmc = cardCursor.getInt((cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
-            card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
-            /* Override choice if the card can't be foil */
-            if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
-                card.foil = false;
-            }
-            /* Clean up */
-            cardCursor.close();
+        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, mCheckboxFoil.isChecked(), Integer.valueOf(numberOf));
 
-            /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
-            if (mCompressedDecklist.contains(card)) {
-                boolean added = false;
-                int firstIndex = mCompressedDecklist.indexOf(card);
-                int lastIndex = mCompressedDecklist.lastIndexOf(card);
-                if (firstIndex == lastIndex) {
-                    CompressedDecklistInfo existingCard = mCompressedDecklist.get(firstIndex);
-                    if (existingCard.mIsSideboard == isSideboard) {
-                        for (IndividualSetInfo isi : existingCard.mInfo) {
-                            if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-                                added = true;
-                                isi.mNumberOf++;
-                            }
+        /* Add it to the decklist, either as a new CompressedDecklistInfo, or to an existing one */
+        if (mCompressedDecklist.contains(card)) {
+            boolean added = false;
+            int firstIndex = mCompressedDecklist.indexOf(card);
+            int lastIndex = mCompressedDecklist.lastIndexOf(card);
+            if (firstIndex == lastIndex) {
+                CompressedDecklistInfo existingCard = mCompressedDecklist.get(firstIndex);
+                if (existingCard.mIsSideboard == isSideboard) {
+                    for (IndividualSetInfo isi : existingCard.mInfo) {
+                        if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
+                            added = true;
+                            isi.mNumberOf++;
                         }
-                        if (!added) {
-                            existingCard.add(card);
-                        }
-                    } else {
-                        mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
+                    }
+                    if (!added) {
+                        existingCard.add(card);
                     }
                 } else {
-                    CompressedDecklistInfo firstCard = mCompressedDecklist.get(firstIndex);
-                    CompressedDecklistInfo secondCard = mCompressedDecklist.get(lastIndex);
-                    if (firstCard.mIsSideboard == isSideboard) {
-                        for (IndividualSetInfo isi : firstCard.mInfo) {
-                            if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-                                added = true;
-                                isi.mNumberOf++;
-                            }
-                        }
-                        if (!added) {
-                            firstCard.add(card);
-                        }
-                    } else {
-                        for (IndividualSetInfo isi : firstCard.mInfo) {
-                            if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-                                added = true;
-                                isi.mNumberOf++;
-                            }
-                        }
-                        if (!added) {
-                            secondCard.add(card);
-                        }
-                    }
+                    mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
                 }
             } else {
-                mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
+                CompressedDecklistInfo firstCard = mCompressedDecklist.get(firstIndex);
+                CompressedDecklistInfo secondCard = mCompressedDecklist.get(lastIndex);
+                if (firstCard.mIsSideboard == isSideboard) {
+                    for (IndividualSetInfo isi : firstCard.mInfo) {
+                        if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
+                            added = true;
+                            isi.mNumberOf++;
+                        }
+                    }
+                    if (!added) {
+                        firstCard.add(card);
+                    }
+                } else {
+                    for (IndividualSetInfo isi : firstCard.mInfo) {
+                        if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
+                            added = true;
+                            isi.mNumberOf++;
+                        }
+                    }
+                    if (!added) {
+                        secondCard.add(card);
+                    }
+                }
             }
-
-            /* The headers shouldn't (and can't) be sorted */
-            clearHeaders();
-
-            /* Sort the decklist */
-            Collections.sort(mCompressedDecklist, mDecklistChain);
-
-            /* Save the decklist */
-            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
-
-            /* Clean up for the next add */
-            mNumberField.setText("1");
-            mNameField.setText("");
-
-            /* Redraw the new decklist with the new card */
-            mDecklistAdapter.notifyDataSetChanged2();
-
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(false);
-        } catch (NumberFormatException e) {
-            /* eat it */
+        } else {
+            mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
         }
+
+        /* The headers shouldn't (and can't) be sorted */
+        clearHeaders();
+
+        /* Sort the decklist */
+        Collections.sort(mCompressedDecklist, mDecklistChain);
+
+        /* Save the decklist */
+        DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
+
+        /* Clean up for the next add */
+        mNumberField.setText("1");
+        mNameField.setText("");
+
+        /* Uncheck the foil box if it isn't locked */
+        if (!mCheckboxFoilLocked) {
+            mCheckboxFoil.setChecked(false);
+        }
+
+        /* Redraw the new decklist with the new card */
+        mDecklistAdapter.notifyDataSetChanged2();
+
     }
 
     /**

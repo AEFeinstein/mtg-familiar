@@ -240,7 +240,7 @@ public class WishlistHelpers {
             ((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
             String numberOf = targetCardNumberOfs.get(setCode);
             numberOf = numberOf == null ? "0" : numberOf;
-            ((EditText) wishlistRow.findViewById(R.id.numberInput)).setText(numberOf);
+            ((EditText) wishlistRow.findViewById(R.id.number_input)).setText(numberOf);
             wishlistRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
             linearLayout.addView(wishlistRow);
             potentialSetCodes.add(setCode);
@@ -256,7 +256,7 @@ public class WishlistHelpers {
                 ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
                 String foilNumberOf = targetFoilCardNumberOfs.get(setCode);
                 foilNumberOf = foilNumberOf == null ? "0" : foilNumberOf;
-                ((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText(foilNumberOf);
+                ((EditText) wishlistRowFoil.findViewById(R.id.number_input)).setText(foilNumberOf);
                 wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
                 linearLayout.addView(wishlistRowFoil);
                 potentialSetCodes.add(setCode);
@@ -293,7 +293,7 @@ public class WishlistHelpers {
                             card.mName = mCardName;
                             card.setCode = potentialSetCodes.get(i);
                             try {
-                                EditText numberInput = ((EditText) view.findViewById(R.id.numberInput));
+                                EditText numberInput = ((EditText) view.findViewById(R.id.number_input));
                                 assert numberInput.getText() != null;
                                 card.numberOf = Integer.valueOf(numberInput.getText().toString());
                             } catch (NumberFormatException e) {

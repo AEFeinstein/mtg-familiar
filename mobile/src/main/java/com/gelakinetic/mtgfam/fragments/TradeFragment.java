@@ -29,6 +29,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
@@ -104,9 +105,9 @@ public class TradeFragment extends FamiliarFragment {
         /* Inflate the view, pull out UI elements */
         View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
         assert myFragmentView != null;
-        mNameEditText = (AutoCompleteTextView) myFragmentView.findViewById(R.id.namesearch);
-        mNumberEditText = (EditText) myFragmentView.findViewById(R.id.numberInput);
-        mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.trader_foil);
+        mNameEditText = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
+        mNumberEditText = (EditText) myFragmentView.findViewById(R.id.number_input);
+        mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.list_foil);
         mTotalPriceRight = (TextView) myFragmentView.findViewById(R.id.priceTextRight);
         mTotalPriceLeft = (TextView) myFragmentView.findViewById(R.id.priceTextLeft);
 
@@ -200,6 +201,8 @@ public class TradeFragment extends FamiliarFragment {
             }
         });
 
+        CardHelpers.makeMtgCard(getContext(), "Lightning Bolt", false, 1);
+
         /* Return the view */
         return myFragmentView;
     }
@@ -216,86 +219,44 @@ public class TradeFragment extends FamiliarFragment {
         }
 
         /* Get the card info from the UI */
-        String cardName, setCode, setName, cardNumber, color;
-        int cmc;
+        String cardName;
         cardName = mNameEditText.getText().toString();
         String numberOfFromField = mNumberEditText.getText().toString();
-        boolean foil = mCheckboxFoil.isChecked();
 
         /* Make sure it isn't the empty string */
         if (cardName.equals("") || numberOfFromField.equals("")) {
             return;
         }
 
+        boolean foil = mCheckboxFoil.isChecked();
+
         /* Parse the int after the "" check */
         int numberOf = Integer.parseInt(numberOfFromField);
 
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-        try {
-            String CARDNAME = "cardnameColumn";
-            /* Get the rest of the relevant card info from the database */
-            Cursor cardCursor = CardDbAdapter.fetchCardByName(cardName, new String[]{
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC, /* For sorting */
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR, /* For sorting */
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME + " as " + CARDNAME, /* Don't trust the user */
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, database);
-
-            /* Make sure there was a database hit */
-            if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeText(TradeFragment.this.getActivity(), getString(R.string.toast_no_card), ToastWrapper.LENGTH_LONG)
-                        .show();
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return;
+        /* Create the card, add it to a list, start a price fetch */
+        MtgCard data = CardHelpers.makeMtgCard(getContext(), cardName, foil, numberOf);
+        switch (side) {
+            case LEFT: {
+                mLeftList.add(0, data);
+                mLeftAdapter.notifyDataSetChanged();
+                loadPrice(data, mLeftAdapter);
+                break;
             }
-
-            /* Read the information from the cursor, check if the card can be foil */
-            cardName = cardCursor.getString(cardCursor.getColumnIndex(CARDNAME)); /* The set name and card name keys overlap each other, so just get the second to last column */
-            setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            setName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            cardNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-            if (foil && !CardDbAdapter.canBeFoil(setCode, database)) {
-                foil = false;
+            case RIGHT: {
+                mRightList.add(0, data);
+                mRightAdapter.notifyDataSetChanged();
+                loadPrice(data, mRightAdapter);
+                break;
             }
-            cmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
-            color = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
-
-            /* Clean up */
-            cardCursor.close();
-
-            /* Create the card, add it to a list, start a price fetch */
-            MtgCard data = new MtgCard(cardName, setName, setCode, numberOf, getString(R.string.wishlist_loading),
-                    cardNumber, foil, color, cmc);
-            switch (side) {
-                case LEFT: {
-                    mLeftList.add(0, data);
-                    mLeftAdapter.notifyDataSetChanged();
-                    loadPrice(data, mLeftAdapter);
-                    break;
-                }
-                case RIGHT: {
-                    mRightList.add(0, data);
-                    mRightAdapter.notifyDataSetChanged();
-                    loadPrice(data, mRightAdapter);
-                    break;
-                }
-            }
-
-            /* Return the input fields to defaults */
-            mNameEditText.setText("");
-            mNumberEditText.setText("1");
-            /* Only clear the checkbox if it is unlocked */
-            if (!mCheckboxFoilLocked) {
-                mCheckboxFoil.setChecked(false);
-            }
-
-        } catch (FamiliarDbException e) {
-            /* Something went wrong, but it's not worth quitting */
-            handleFamiliarDbException(false);
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+
+        /* Return the input fields to defaults */
+        mNameEditText.setText("");
+        mNumberEditText.setText("1");
+        /* Only clear the checkbox if it is unlocked */
+        if (!mCheckboxFoilLocked) {
+            mCheckboxFoil.setChecked(false);
+        }
 
         /* Sort the newly added card */
         sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());

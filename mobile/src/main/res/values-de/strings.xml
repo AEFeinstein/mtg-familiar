@@ -525,8 +525,7 @@ Viel Glück und viel Spaß!
 <string name="decklist_artifacts">"Artefakte"</string>
 <string name="decklist_lands">"Länder"</string>
 <string name="decklist_edit_dialog_title_end">"im Deck"</string>
-<string name="deck_save_dialog_title">"Deck speichern"</string>
-<string name="decklist_delete">"Deck löschen"</string>
+    <string name="decklist_delete">"Deck löschen"</string>
 <string name="decklist_save">"Deck speichern"</string>
 <string name="decklist_load">"Deck laden"</string>
 <string name="decklist_clear">"Deck leeren"</string>

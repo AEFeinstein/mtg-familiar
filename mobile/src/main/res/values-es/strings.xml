@@ -510,8 +510,7 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="decklist_artifacts">"Artefactos"</string>
 <string name="decklist_lands">"Tierras"</string>
 <string name="decklist_edit_dialog_title_end">"en el mazo"</string>
-<string name="deck_save_dialog_title">"Guardar mazo"</string>
-<string name="decklist_delete">"Eliminar mazo"</string>
+    <string name="decklist_delete">"Eliminar mazo"</string>
 <string name="decklist_save">"Guardar mazo"</string>
 <string name="decklist_load">"Cargar mazo"</string>
 <string name="decklist_clear">"Limpiar mazo"</string>

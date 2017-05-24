@@ -18,7 +18,7 @@
     android:orientation="horizontal">
 
     <EditText
-        android:id="@+id/numberInput"
+        android:id="@+id/number_input"
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:ems="10"

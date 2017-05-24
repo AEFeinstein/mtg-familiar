@@ -1,6 +1,17 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.Fragment;
+
+import com.gelakinetic.mtgfam.FamiliarActivity;
+import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -288,6 +299,73 @@ public class CardHelpers {
         public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
             return card1.mInfo.get(0).mSet.compareTo(card2.mInfo.get(0).mSet);
         }
+    }
+
+    public static MtgCard makeMtgCard(Context context, String cardName, boolean isFoil, int numberOf) {
+        FamiliarActivity activity = (FamiliarActivity) context;
+        SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false);
+        try {
+            /* Make the new MTGCard */
+            MtgCard card = new MtgCard();
+            card.foil = isFoil;
+            card.numberOf = numberOf;
+            /* Find out what kind of fragment we are in, so we can pull less stuff if we can */
+            /* trade, wishlist, and decklist all use "name_search" */
+            Fragment fragment = activity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            String[] fields;
+            boolean isTradeFragment = fragment instanceof TradeFragment;
+            if (isTradeFragment) {
+                fields = new String[]{
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC, /* For sorting */
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR, /* For sorting */
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME, /* Don't trust the user */};
+            } else {
+                fields = CardDbAdapter.allCardDataKeys;
+                card.message = activity.getString(R.string.wishlist_loading);
+            }
+            /* Get extra information from the database */
+            Cursor cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+            if (cardCursor.getCount() == 0) {
+                ToastWrapper.makeText(activity, activity.getString(R.string.toast_no_card),
+                        ToastWrapper.LENGTH_LONG).show();
+                DatabaseManager.getInstance(activity, false).closeDatabase(false);
+                return null;
+            }
+            /* Don't rely on the user's given name, get it from the DB just to be sure */
+            card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+            card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
+            card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
+            card.mNumber = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+            if (!isTradeFragment) {
+                card.mType = CardDbAdapter.getTypeLine(cardCursor);
+                card.mRarity = (char) cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
+                card.mManaCost = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+                card.mPower = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_POWER));
+                card.mToughness = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+                card.mLoyalty = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+                card.mText = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+                card.mFlavor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+                card.mCmc = cardCursor.getInt((cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
+                card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
+            }
+            /* Override choice is the card can't be foil */
+            if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
+                card.foil = false;
+            }
+            /* clean up */
+            cardCursor.close();
+            /* return our made card! */
+            return card;
+        } catch (FamiliarDbException fde) {
+            /* todo: handle this */
+        } catch (NumberFormatException nfe) {
+            /* eat it */
+        }
+        DatabaseManager.getInstance(activity, false).closeDatabase(false);
+        return null;
     }
 
 }

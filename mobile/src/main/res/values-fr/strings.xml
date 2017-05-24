@@ -510,8 +510,7 @@ Bonne chance, et bon jeu!
 <string name="decklist_artifacts">"Artefacts"</string>
 <string name="decklist_lands">"Terrains"</string>
 <string name="decklist_edit_dialog_title_end">"dans le deck"</string>
-<string name="deck_save_dialog_title">"Sauver Deck"</string>
-<string name="decklist_delete">"Supprimer Deck"</string>
+    <string name="decklist_delete">"Supprimer Deck"</string>
 <string name="decklist_save">"Sauver Deck"</string>
 <string name="decklist_load">"Charger Deck"</string>
 <string name="decklist_clear">"Vider Deck"</string>
