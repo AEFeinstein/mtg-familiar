@@ -732,7 +732,7 @@ public class TradeFragment extends FamiliarFragment {
                 assert convertView != null;
 
                 /* Set the name, set number, and foil indicators */
-                ((TextView) convertView.findViewById(R.id.traderRowName)).setText(data.mName);
+                ((TextView) convertView.findViewById(R.id.card_name)).setText(data.mName);
                 ((TextView) convertView.findViewById(R.id.traderRowSet)).setText(data.setName);
                 ((TextView) convertView.findViewById(R.id.traderNumber)).setText(data.hasPrice() ?
                         data.numberOf + "x" : "");

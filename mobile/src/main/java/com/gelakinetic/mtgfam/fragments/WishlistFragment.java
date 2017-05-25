@@ -640,7 +640,7 @@ public class WishlistFragment extends FamiliarFragment {
             CompressedWishlistInfo info = values.get(position);
 
             /* Set the card name, always */
-            ((TextView) convertView.findViewById(R.id.cardname)).setText(info.mCard.mName);
+            ((TextView) convertView.findViewById(R.id.card_name)).setText(info.mCard.mName);
 
             /* Show or hide full card information */
             convertView.findViewById(R.id.cardset).setVisibility(View.GONE);

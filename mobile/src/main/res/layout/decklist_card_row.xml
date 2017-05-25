@@ -48,7 +48,7 @@
             style="@style/text.medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/decklistRowName"
+            android:id="@+id/card_name"
             android:layout_gravity="center_vertical"
             android:paddingStart="10dp"
             android:paddingLeft="10dp" />
