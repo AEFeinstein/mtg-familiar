@@ -20,6 +20,7 @@ import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
+import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -88,7 +89,7 @@ public class CardHelpers {
         final Map<String, String> targetCardNumberOfs;
         final Map<String, String> targetFoilCardNumberOfs;
 
-        final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(ctx, WishlistDialogFragment.class);
+        final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(ctx, WishlistFragment.class);
 
         final String deckName;
         final boolean isSideboard;
@@ -156,7 +157,6 @@ public class CardHelpers {
             String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
             /* Inflate a row and fill it with stuff */
-            /* fixme: adding to this row does nothing, but removing from this row does remove */
             View listDialogRow = createDialogRow(fragment, setName, targetCardNumberOfs.get(setCode), false);
             linearLayout.addView(listDialogRow);
             potentialSetCodes.add(setCode);
@@ -165,8 +165,7 @@ public class CardHelpers {
 
             /* If this card has a foil version, add that too */
             if (foilSets.contains(setCode)) {
-                /* fixme: adding to the foil row adds to the normal row */
-                View wishlistRowFoil = createDialogRow(fragment, setName, targetFoilCardNumberOfs.get(setCode), false);
+                View wishlistRowFoil = createDialogRow(fragment, setName, targetFoilCardNumberOfs.get(setCode), true);
                 linearLayout.addView(wishlistRowFoil);
                 potentialSetCodes.add(setCode);
                 potentialRarities.add(rarity);
@@ -283,7 +282,6 @@ public class CardHelpers {
         if (!isFoil) {
             dialogRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
         } else {
-            /* todo: investigate why this isn't appearing */
             dialogRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
         }
         return dialogRow;

@@ -583,6 +583,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
         private void onBindViewHolder(ViewHolder holder, int position) {
             /* todo: implement the swiped away view for this */
+            holder.mWishlistSets.removeAllViews();
             /* Get all the wishlist info for this entry */
             final CompressedWishlistInfo info = mItems.get(position);
             /* Set the card name, always */
@@ -730,7 +731,6 @@ public class WishlistFragment extends FamiliarListFragment {
                     priceText.setText("x" + isi.mNumberOf);
                 }
                 /* Add the view to the linear layout */
-                /* todo: figure out why this is adding two rows, and why one price is stuck on "loading" */
                 holder.mWishlistSets.addView(setRow);
             }
         }
