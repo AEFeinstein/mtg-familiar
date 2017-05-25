@@ -41,7 +41,7 @@
         android:layout_height="1dp"
         android:background="?attr/color_drawer_divider_item" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/wishlist"
         style="@style/list_view_divider"
         android:layout_width="fill_parent"

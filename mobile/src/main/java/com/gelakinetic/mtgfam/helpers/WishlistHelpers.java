@@ -1,27 +1,13 @@
 package com.gelakinetic.mtgfam.helpers;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.util.Pair;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
-import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -32,7 +18,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.AVG_PRICE;
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.HIGH_PRICE;
@@ -52,7 +37,7 @@ public class WishlistHelpers {
      * @param mCtx      A context to open the file and pop toasts with
      * @param lWishlist The wishlist to write to the file
      */
-    private static void WriteWishlist(Context mCtx, ArrayList<MtgCard> lWishlist) {
+    public static void WriteWishlist(Context mCtx, ArrayList<MtgCard> lWishlist) {
         try {
             FileOutputStream fos = mCtx.openFileOutput(WISHLIST_NAME, Context.MODE_PRIVATE);
 
@@ -136,206 +121,6 @@ public class WishlistHelpers {
     }
 
     /**
-     * Return a dialog in which a user can specify how many of what set of a card are in the wishlist
-     *
-     * @param mCardName      The name of the card
-     * @param fragment       The fragment which hosts the dialog and receives onWishlistChanged()
-     * @param showCardButton Whether the button to launch the CardViewFragment should be shown
-     * @return A dialog which edits the wishlist
-     */
-    public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment, boolean showCardButton) {
-
-        final Context ctx = fragment.getActivity();
-
-        /* Create the custom view */
-        View customView = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog,
-                null, false);
-        assert customView != null;
-
-        /* Grab the linear layout. Make it final to be accessible from the button later */
-        final LinearLayout linearLayout = (LinearLayout) customView.findViewById(R.id.linear_layout);
-
-        /* If the button should be shown, show it and attach a listener */
-        if (showCardButton) {
-            customView.findViewById(R.id.show_card_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle args = new Bundle();
-                        /* Open the database */
-                    SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
-                    try {
-                        /* Get the card ID, and send it to a new CardViewFragment */
-                        args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{CardDbAdapter.fetchIdByName(mCardName, db)});
-                        args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-                        CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
-                        fragment.startNewFragment(cvpFrag, args);
-                    } catch (FamiliarDbException e) {
-                        fragment.handleFamiliarDbException(false);
-                    }
-                    DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-                }
-            });
-        } else {
-            customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
-            customView.findViewById(R.id.divider1).setVisibility(View.GONE);
-            customView.findViewById(R.id.divider2).setVisibility(View.GONE);
-        }
-
-        /* Read the wishlist */
-        ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
-
-        /* Find any counts currently in the wishlist */
-        final Map<String, String> targetCardNumberOfs = new HashMap<>();
-        final Map<String, String> targetFoilCardNumberOfs = new HashMap<>();
-        for (MtgCard card : wishlist) {
-            if (card.mName.equals(mCardName)) {
-                if (card.foil) {
-                    targetFoilCardNumberOfs.put(card.setCode, card.numberOf + "");
-                } else {
-                    targetCardNumberOfs.put(card.setCode, card.numberOf + "");
-                }
-            }
-        }
-
-        /* Get all potential sets and rarities for this card */
-        final ArrayList<String> potentialSetCodes = new ArrayList<>();
-        final ArrayList<Character> potentialRarities = new ArrayList<>();
-        final ArrayList<String> potentialNumbers = new ArrayList<>();
-
-        /* Open the database */
-        SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
-
-        /* Get all the cards with relevant info from the database */
-        Cursor cards;
-        try {
-            cards = CardDbAdapter.fetchCardByName(mCardName, new String[]{
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, db);
-        } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-            return null;
-        }
-
-        Set<String> foilSets;
-        try {
-            foilSets = CardDbAdapter.getFoilSets(db);
-        } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-            return null;
-        }
-
-        /* For each card, add it to the wishlist view */
-        while (!cards.isAfterLast()) {
-            String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
-            String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
-            char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
-            String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-
-            /* Inflate a row and fill it with stuff */
-            View wishlistRow = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null, false);
-            assert wishlistRow != null;
-            ((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
-            String numberOf = targetCardNumberOfs.get(setCode);
-            numberOf = numberOf == null ? "0" : numberOf;
-            ((EditText) wishlistRow.findViewById(R.id.number_input)).setText(numberOf);
-            wishlistRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
-            linearLayout.addView(wishlistRow);
-            potentialSetCodes.add(setCode);
-            potentialRarities.add(rarity);
-            potentialNumbers.add(number);
-
-            /* If this card has a foil version, add that too */
-            View wishlistRowFoil;
-            if (foilSets.contains(setCode)) {
-                wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
-                        null, false);
-                assert wishlistRowFoil != null;
-                ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
-                String foilNumberOf = targetFoilCardNumberOfs.get(setCode);
-                foilNumberOf = foilNumberOf == null ? "0" : foilNumberOf;
-                ((EditText) wishlistRowFoil.findViewById(R.id.number_input)).setText(foilNumberOf);
-                wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
-                linearLayout.addView(wishlistRowFoil);
-                potentialSetCodes.add(setCode);
-                potentialRarities.add(rarity);
-                potentialNumbers.add(number);
-            }
-
-            cards.moveToNext();
-        }
-
-        /* Clean up */
-        cards.close();
-        DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-
-        /* make and return the actual dialog */
-        return new MaterialDialog.Builder(ctx)
-                .title(mCardName + " " + fragment.getString(R.string.wishlist_edit_dialog_title_end))
-                .customView(customView, false)
-                .positiveText(fragment.getString(R.string.dialog_ok))
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                        /* Read the wishlist */
-                        ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
-
-                        /* Add the cards listed in the dialog to the wishlist */
-                        for (int i = 0; i < linearLayout.getChildCount(); i++) {
-                            View view = linearLayout.getChildAt(i);
-                            assert view != null;
-
-                            /* build the card object */
-                            MtgCard card = new MtgCard();
-                            card.mName = mCardName;
-                            card.setCode = potentialSetCodes.get(i);
-                            try {
-                                EditText numberInput = ((EditText) view.findViewById(R.id.number_input));
-                                assert numberInput.getText() != null;
-                                card.numberOf = Integer.valueOf(numberInput.getText().toString());
-                            } catch (NumberFormatException e) {
-                                card.numberOf = 0;
-                            }
-                            card.foil = (view.findViewById(R.id.wishlistDialogFoil).getVisibility() == View.VISIBLE);
-                            card.mRarity = potentialRarities.get(i);
-                            card.mNumber = potentialNumbers.get(i);
-
-                            /* Look through the wishlist for each card, set the numberOf or remove it if it exists, or
-                             * add the card if it doesn't */
-                            boolean added = false;
-                            for (int j = 0; j < wishlist.size(); j++) {
-                                if (card.mName.equals(wishlist.get(j).mName)
-                                        && card.setCode.equals(wishlist.get(j).setCode)
-                                        && card.foil == wishlist.get(j).foil) {
-                                    if (card.numberOf == 0) {
-                                        wishlist.remove(j);
-                                        j--;
-                                    } else {
-                                        wishlist.get(j).numberOf = card.numberOf;
-                                    }
-                                    added = true;
-                                }
-                            }
-                            if (!added && card.numberOf > 0) {
-                                wishlist.add(card);
-                            }
-
-                        }
-
-                        /* Write the wishlist */
-                        WriteWishlist(fragment.getActivity(), wishlist);
-                        /* notify the fragment of a change in the wishlist */
-                        fragment.onWishlistChanged(mCardName);
-                    }
-                })
-                .negativeText(fragment.getString(R.string.dialog_cancel))
-                .build();
-    }
-
-    /**
      * Take a wishlist and turn it into plaintext so that it can be shared via email or whatever,
      * with the choice of including the set in the wishlist export
      *
@@ -407,6 +192,21 @@ public class WishlistHelpers {
             readableWishlist.append("\r\n");
         }
         return readableWishlist.toString();
+    }
+
+    public static Pair<Map<String, String>, Map<String, String>> getTargetNumberOfs(String cardName, ArrayList<MtgCard> wishlist) {
+        final Map<String, String> targetCardNumberOfs = new HashMap<>();
+        final Map<String, String> targetFoilNumberOfs = new HashMap<>();
+        for (MtgCard card : wishlist) {
+            if (card.mName.equals(cardName)) {
+                if (card.foil) {
+                    targetFoilNumberOfs.put(card.setCode, String.valueOf(card.numberOf));
+                    continue;
+                }
+                targetCardNumberOfs.put(card.setCode, String.valueOf(card.numberOf));
+            }
+        }
+        return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);
     }
 
     /**

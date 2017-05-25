@@ -9,6 +9,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
+import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
         String cardName = getArguments().getString(NAME_KEY);
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
-                Dialog dialog = WishlistHelpers.getDialog(cardName, getParentWishlistFragment(), true);
+                Dialog dialog = CardHelpers.getDialog(cardName, getParentWishlistFragment(), true);
                 if (dialog == null) {
                     getParentWishlistFragment().handleFamiliarDbException(false);
                     return DontShowDialog();
@@ -60,7 +61,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                                     getParentWishlistFragment().mPriceSetting = which;
                                     getFamiliarActivity().mPreferenceAdapter.setTradePrice(
                                             String.valueOf(getParentWishlistFragment().mPriceSetting));
-                                    getParentWishlistFragment().mWishlistAdapter.notifyDataSetChanged();
+                                    getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
                                     getParentWishlistFragment().sumTotalPrice();
                                 }
                                 dialog.dismiss();
@@ -79,11 +80,11 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 WishlistHelpers.ResetCards(getActivity());
                                 getParentWishlistFragment().mCompressedWishlist.clear();
-                                getParentWishlistFragment().mWishlistAdapter.notifyDataSetChanged();
+                                getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
                                 getParentWishlistFragment().sumTotalPrice();
                                 /* Clear input too */
                                 getParentWishlistFragment().mNameField.setText("");
-                                getParentWishlistFragment().mNumberField.setText("1");
+                                getParentWishlistFragment().mNumberOfField.setText("1");
                                 getParentWishlistFragment().mCheckboxFoil.setChecked(false);
                                 dialog.dismiss();
                             }

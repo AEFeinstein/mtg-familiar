@@ -3,17 +3,10 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -26,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -41,7 +33,6 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -51,24 +42,17 @@ import org.apache.commons.collections4.comparators.ComparatorChain;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class DecklistFragment extends FamiliarListFragment {
 
     /* UI Elements */
-    private AutoCompleteTextView mNameField;
-    private EditText mNumberField;
     public TextView mDeckName;
     private TextView mDeckCards;
     private TextView mDeckPrice;
-    public CheckBox mCheckboxFoil;
 
     /* Decklist and adapters */
-    private RecyclerView decklistView;
     public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
-    public CardDataAdapter mDecklistAdapter;
     private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
-    private boolean mCheckboxFoilLocked = false;
 
     public static final String AUTOSAVE_NAME = "autosave";
     public String mCurrentDeck = "";
@@ -107,14 +91,14 @@ public class DecklistFragment extends FamiliarListFragment {
         mNameField.setOnEditorActionListener(addCardListener);
 
         /* Default the number of cards field */
-        mNumberField = (EditText) myFragmentView.findViewById(R.id.number_input);
-        mNumberField.setText("1");
-        mNumberField.setOnEditorActionListener(addCardListener);
+        mNumberOfField = (EditText) myFragmentView.findViewById(R.id.number_input);
+        mNumberOfField.setText("1");
+        mNumberOfField.setOnEditorActionListener(addCardListener);
 
         mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.list_foil);
 
-        decklistView = (RecyclerView) myFragmentView.findViewById(R.id.decklist);
-        decklistView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mListView = (RecyclerView) myFragmentView.findViewById(R.id.decklist);
+        mListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,8 +116,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Set up the decklist and adapter, it will be read in onResume() */
         mCompressedDecklist = new ArrayList<>();
-        mDecklistAdapter = new CardDataAdapter(mCompressedDecklist);
-        decklistView.setAdapter(mDecklistAdapter);
+        mListAdapter = new CardDataAdapter(mCompressedDecklist);
+        mListView.setAdapter(mListAdapter);
 
         /* Decklist information */
         mDeckName = (TextView) myFragmentView.findViewById(R.id.decklistName);
@@ -150,165 +134,10 @@ public class DecklistFragment extends FamiliarListFragment {
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
 
-        /* A Callback to detect if our item is being swiped away */
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
-            Drawable background;
-            Drawable xMark;
-            int xMarkMargin;
-            boolean initiated;
-
-            /**
-             * Initialize the variables used in the callback
-             */
-            private void init() {
-                background = new ColorDrawable(Color.RED);
-                xMark = ContextCompat.getDrawable(getContext(), R.drawable.ic_close_dark);
-                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                xMarkMargin = 10; // todo: actually make this dimension
-            }
-
-            /* This is unused */
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            /**
-             * The item is swiped
-             * @param viewHolder what is swiped
-             * @param direction direction of what was swiped
-             */
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int swipedPosition = viewHolder.getAdapterPosition();
-                mDecklistAdapter.pendingRemoval(swipedPosition);
-            }
-
-            /**
-             * Upon drawing the item
-             * @param c canvas to draw on
-             * @param recyclerView the parent
-             * @param viewHolder what holder is being drawn on
-             * @param dX see super
-             * @param dY see super
-             * @param actionState see super
-             * @param isCurrentlyActive see super
-             */
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                /* Sometimes this is called even if the item is gone */
-                if (viewHolder.getAdapterPosition() == -1) {
-                    return;
-                }
-
-                /* If the user aborts the swipe, don't go through the drawing */
-                if (!isCurrentlyActive) {
-                    return;
-                }
-
-                if (!initiated) {
-                    init();
-                }
-
-                View itemView = viewHolder.itemView;
-
-                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                background.draw(c);
-                int itemHeight = itemView.getBottom() - itemView.getTop();
-                int intrinsicWidth = xMark.getIntrinsicWidth();
-                int intrinsicHeight = xMark.getIntrinsicHeight();
-                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-                int xMarkBottom = xMarkTop + intrinsicHeight;
-                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-                xMark.draw(c);
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-
-            /**
-             * Get the direction that an item can swipe
-             * @param parent the parent
-             * @param holder holder being swiped
-             * @return what directions the item can be swiped
-             */
-            @Override
-            public int getSwipeDirs(RecyclerView parent, RecyclerView.ViewHolder holder) {
-                if (!((CardDataAdapter.ViewHolder) holder).swipeable) {
-                    /* If swipeable is false, return 0 */
-                    return 0;
-                }
-                /* Otherwise the default */
-                return super.getSwipeDirs(parent, holder);
-            }
-
-        };
-        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        mItemTouchHelper.attachToRecyclerView(decklistView);
+        getTouchHelper().attachToRecyclerView(mListView);
 
         /* Hopefully things look fancy */
-        decklistView.addItemDecoration(new RecyclerView.ItemDecoration() {
-
-            Drawable background;
-            boolean initiated;
-
-            /**
-             * Setup the drawables
-             */
-            private void init() {
-                background = new ColorDrawable(Color.RED);
-                initiated = true;
-            }
-
-            /**
-             * @param canvas the cavas to draw on
-             * @param parent parent of the drawn item
-             * @param state see super
-             */
-            @Override
-            public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
-                if (!initiated) {
-                    init();
-                }
-                /* Only do it if the animation is running */
-                if (parent.getItemAnimator().isRunning()) {
-                    View lastViewComingDown = null;
-                    View firstViewComingUp = null;
-                    int left = 0;
-                    int right = parent.getWidth();
-                    int top = 0;
-                    int bottom = 0;
-                    int childCount = parent.getLayoutManager().getChildCount();
-                    /* get the children above and below the removed item */
-                    for (int i = 0; i < childCount; i++) {
-                        View child = parent.getLayoutManager().getChildAt(i);
-                        if (child.getTranslationY() < 0) {
-                            lastViewComingDown = child;
-                        } else if (child.getTranslationY() > 0) {
-                            if (firstViewComingUp == null) {
-                                firstViewComingUp = child;
-                            }
-                        }
-                    }
-                    /* set the tops and bottoms for the animation */
-                    if (lastViewComingDown != null && firstViewComingUp != null) {
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    } else if (lastViewComingDown != null) {
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = lastViewComingDown.getBottom();
-                    } else if (firstViewComingUp != null) {
-                        top = firstViewComingUp.getTop();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
-                    }
-                    background.setBounds(left, top, right, bottom);
-                    background.draw(canvas);
-                }
-                super.onDraw(canvas, parent, state);
-            }
-
-        });
+        mListView.addItemDecoration(getItemDecorator());
 
         myFragmentView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,32 +146,14 @@ public class DecklistFragment extends FamiliarListFragment {
             }
         });
 
-        mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                /* Lock the checkbox when the user long clicks it */
-                mCheckboxFoilLocked = true;
-                mCheckboxFoil.setChecked(true);
-                return true;
-            }
-        });
-
-        mCheckboxFoil.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    /* Unlock the checkbox whne the user unchecks it */
-                    mCheckboxFoilLocked = false;
-                }
-            }
-        });
+        setUpCheckBoxClickListeners();
 
         /* on the click */
-        mDecklistAdapter.setOnClickListener(new View.OnClickListener() {
+        mListAdapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 /* get the position so we can work with it */
-                int position = decklistView.getChildAdapterPosition(view);
+                int position = mListView.getChildAdapterPosition(view);
                 CompressedDecklistInfo item = mCompressedDecklist.get(position);
                 /* Show the dialog for this particular card */
                 showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
@@ -363,7 +174,7 @@ public class DecklistFragment extends FamiliarListFragment {
         if (name == null || name.equals("")) {
             return;
         }
-        String numberOf = String.valueOf(mNumberField.getText());
+        String numberOf = String.valueOf(mNumberOfField.getText());
         if (numberOf == null || numberOf.equals("")) {
             return;
         }
@@ -433,7 +244,7 @@ public class DecklistFragment extends FamiliarListFragment {
         DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
 
         /* Clean up for the next add */
-        mNumberField.setText("1");
+        mNumberOfField.setText("1");
         mNameField.setText("");
 
         /* Uncheck the foil box if it isn't locked */
@@ -442,7 +253,7 @@ public class DecklistFragment extends FamiliarListFragment {
         }
 
         /* Redraw the new decklist with the new card */
-        mDecklistAdapter.notifyDataSetChanged2();
+        ((CardDataAdapter) mListAdapter).notifyDataSetChanged2();
 
     }
 
@@ -454,7 +265,7 @@ public class DecklistFragment extends FamiliarListFragment {
         super.onResume();
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
-        mDecklistAdapter.notifyDataSetChanged2();
+        ((CardDataAdapter) mListAdapter).notifyDataSetChanged2();
     }
 
     @Override
@@ -537,7 +348,7 @@ public class DecklistFragment extends FamiliarListFragment {
         readAndCompressDecklist(cardName, mCurrentDeck);
         clearHeaders();
         Collections.sort(mCompressedDecklist, mDecklistChain);
-        mDecklistAdapter.notifyDataSetChanged2();
+        ((CardDataAdapter) mListAdapter).notifyDataSetChanged2();
     }
 
     /**
@@ -718,9 +529,9 @@ public class DecklistFragment extends FamiliarListFragment {
                 holder.itemView.setBackgroundColor(Color.RED);
                 holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
                 holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
-                holder.undoButton.setVisibility(View.VISIBLE);
+                holder.mUndoButton.setVisibility(View.VISIBLE);
                 /* When the undo button is clicked, restore the item */
-                holder.undoButton.setOnClickListener(new View.OnClickListener() {
+                holder.mUndoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Runnable pendingRemovalRunnable = mPendingRunnables.get(info);
@@ -745,11 +556,11 @@ public class DecklistFragment extends FamiliarListFragment {
                     /* set up the card's views */
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
                     holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
-                    holder.undoButton.setVisibility(View.GONE);
+                    holder.mUndoButton.setVisibility(View.GONE);
                     View separator = holder.itemView.findViewById(R.id.decklistSeparator);
                     separator.setVisibility(View.GONE);
                     Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                    holder.cardName.setText(info.mCard.mName);
+                    holder.mCardName.setText(info.mCard.mName);
                     holder.cardQuantity.setText(String.valueOf(info.getTotalNumber()));
                     holder.cardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
                 }
@@ -796,6 +607,7 @@ public class DecklistFragment extends FamiliarListFragment {
          * just a simple extension of notifyDataSetChanged() because it is final for this adapter
          */
         private void notifyDataSetChanged2() {
+            /* todo: make sure to clear the headers when a card is removed, or the headers will stick */
             String totalCards = String.valueOf(getTotalCards()) + " ";
             mDeckCards.setText(totalCards);
             clearHeaders();
@@ -805,23 +617,13 @@ public class DecklistFragment extends FamiliarListFragment {
 
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
 
-            private TextView cardName;
             private TextView cardQuantity;
             private TextView cardCost;
-            private TextView undoButton;
 
             ViewHolder(ViewGroup view) {
                 super(view, R.layout.decklist_card_row);
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mClickListener.onClick(view);
-                    }
-                });
-                cardName = (TextView) itemView.findViewById(R.id.card_name);
                 cardQuantity = (TextView) itemView.findViewById(R.id.decklistRowNumber);
                 cardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
-                undoButton = (TextView) itemView.findViewById(R.id.undo_button);
             }
 
         }

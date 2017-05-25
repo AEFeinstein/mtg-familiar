@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class has helpers for reading, writing, and modifying the decklist from different fragments
@@ -139,6 +141,21 @@ public class DecklistHelpers {
         return readableDecklist.toString();
     }
 
+    public static Pair<Map<String,String>,Map<String,String>> getTargetNumberOfs(String mCardName, ArrayList<Pair<MtgCard, Boolean>> decklist) {
+        final Map<String, String> targetCardNumberOfs = new HashMap<>();
+        final Map<String, String> targetFoilNumberOfs = new HashMap<>();
+        for (Pair<MtgCard, Boolean> card : decklist) {
+            if (card.first.mName.equals(mCardName)) {
+                if (card.first.foil) {
+                    targetFoilNumberOfs.put(card.first.setCode, String.valueOf(card.first.numberOf));
+                    continue;
+                }
+                targetCardNumberOfs.put(card.first.setCode, String.valueOf(card.first.numberOf));
+            }
+        }
+        return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);
+    }
+
     /**
      * This class encapsulates a single MtgCard, an ArrayList of non-duplicated information for
      * different printings of that card, and if the card is part of the sideboard
@@ -173,10 +190,9 @@ public class DecklistHelpers {
                 } else if (cdi.header != null && cdi.header.equals(header)) {
                     return true;
                 }
-            } else if (o instanceof MtgCard) {
-                if (mCard != null) {
-                    return mCard.mName.equals(((MtgCard) o).mName);
-                }
+            } else if (o instanceof MtgCard
+                    && mCard != null) {
+                return mCard.mName.equals(((MtgCard) o).mName);
             }
             return false;
         }
