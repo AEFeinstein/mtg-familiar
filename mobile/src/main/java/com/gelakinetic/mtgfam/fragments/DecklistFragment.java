@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class DecklistFragment extends FamiliarFragment {
+public class DecklistFragment extends FamiliarListFragment {
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
@@ -370,6 +370,10 @@ public class DecklistFragment extends FamiliarFragment {
 
         MtgCard card = CardHelpers.makeMtgCard(getContext(), name, mCheckboxFoil.isChecked(), Integer.valueOf(numberOf));
 
+        if (card == null) {
+            return;
+        }
+
         /* Add it to the decklist, either as a new CompressedDecklistInfo, or to an existing one */
         if (mCompressedDecklist.contains(card)) {
             boolean added = false;
@@ -668,22 +672,14 @@ public class DecklistFragment extends FamiliarFragment {
     /**
      * The adapter that drives the deck list
      */
-    public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHolder> {
-
-        private ArrayList<CompressedDecklistInfo> compressedCardInfos;
-        private ArrayList<CompressedDecklistInfo> itemsPendingRemoval = new ArrayList<>();
-
-        private Handler handler = new Handler();
-        HashMap<CompressedDecklistInfo, Runnable> pendingRunnables = new HashMap<>();
-
-        private View.OnClickListener mClickListener;
+    public class CardDataAdapter extends FamiliarListFragment.CardDataAdapter<CompressedDecklistInfo> {
 
         /**
          * Create the adapter
          * @param values the data set
          */
-        public CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
-            compressedCardInfos = values;
+        CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
+            super(values);
         }
 
         /**
@@ -703,13 +699,22 @@ public class DecklistFragment extends FamiliarFragment {
          * @param position where the holder is
          */
         @Override
-        public void onBindViewHolder(CardDataAdapter.ViewHolder holder, int position) {
-            if (position >= compressedCardInfos.size()) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            onBindViewHolder((ViewHolder) holder, position);
+        }
+
+        /**
+         * On binding the view holder
+         * @param holder the holder being bound
+         * @param position where the holder is
+         */
+        private void onBindViewHolder(ViewHolder holder, int position) {
+            if (position >= mItems.size()) {
                 /* todo: figure out if this happens anymore */
                 return;
             }
-            final DecklistHelpers.CompressedDecklistInfo info = compressedCardInfos.get(position);
-            if (itemsPendingRemoval.contains(info)) { /* if the item IS pending removal */
+            final CompressedDecklistInfo info = mItems.get(position);
+            if (mItemsPendingRemoval.contains(info)) { /* if the item IS pending removal */
                 holder.itemView.setBackgroundColor(Color.RED);
                 holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
                 holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
@@ -718,13 +723,13 @@ public class DecklistFragment extends FamiliarFragment {
                 holder.undoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Runnable pendingRemovalRunnable = pendingRunnables.get(info);
-                        pendingRunnables.remove(info);
+                        Runnable pendingRemovalRunnable = mPendingRunnables.get(info);
+                        mPendingRunnables.remove(info);
                         if (pendingRemovalRunnable != null) {
-                            handler.removeCallbacks(pendingRemovalRunnable);
+                            mHandler.removeCallbacks(pendingRemovalRunnable);
                         }
-                        itemsPendingRemoval.remove(info);
-                        notifyItemChanged(compressedCardInfos.indexOf(info));
+                        mItemsPendingRemoval.remove(info);
+                        notifyItemChanged(mItems.indexOf(info));
                     }
                 });
             } else { /* if the item IS NOT pending removal */
@@ -759,7 +764,7 @@ public class DecklistFragment extends FamiliarFragment {
         private int getTotalNumberOfType(final String headerValue) {
             int totalCards = 0;
             String currentHeader = "";
-            for (CompressedDecklistInfo cdi : compressedCardInfos) {
+            for (CompressedDecklistInfo cdi : mItems) {
                 /* check if one of two things is correct
                  * 1. the card is a sideboard card
                  * 2. the card's header is the headerValue, and isn't in the sideboard */
@@ -781,57 +786,10 @@ public class DecklistFragment extends FamiliarFragment {
          */
         int getTotalCards() {
             int totalCards = 0;
-            for (CompressedDecklistInfo cdi : compressedCardInfos) {
+            for (CompressedDecklistInfo cdi : mItems) {
                 totalCards += cdi.getTotalNumber();
             }
             return totalCards;
-        }
-
-        /**
-         * The number of items in the data set
-         * @return the number of items in the data set
-         */
-        @Override
-        public int getItemCount() {
-            return compressedCardInfos.size();
-        }
-
-        /**
-         * Where things go before they get removed
-         * @param position where the item to be removed is
-         */
-        void pendingRemoval(int position) {
-            final CompressedDecklistInfo info = compressedCardInfos.get(position);
-            if (!itemsPendingRemoval.contains(info)) {
-                itemsPendingRemoval.add(info);
-                notifyItemChanged(position);
-                Runnable pendingRemovalRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        remove(compressedCardInfos.indexOf(info));
-                    }
-                };
-                PreferenceAdapter pa = new PreferenceAdapter(getContext());
-                handler.postDelayed(pendingRemovalRunnable, pa.getUndoTimeout());
-                pendingRunnables.put(info, pendingRemovalRunnable);
-            }
-
-        }
-
-        /**
-         * Properly go about removing an item from the list
-         * @param position where the item to remove is
-         */
-        public void remove(int position) {
-            CompressedDecklistInfo info = compressedCardInfos.get(position);
-            if (itemsPendingRemoval.contains(info)) {
-                itemsPendingRemoval.remove(info);
-            }
-            if (compressedCardInfos.contains(info)) {
-                compressedCardInfos.remove(info);
-                notifyItemChanged(position);
-            }
-            notifyDataSetChanged2();
         }
 
         /**
@@ -845,30 +803,22 @@ public class DecklistFragment extends FamiliarFragment {
             notifyDataSetChanged();
         }
 
-        /**
-         * @param listener a listener for what happens when the item is clicked
-         */
-        public void setOnClickListener(View.OnClickListener listener) {
-            mClickListener = listener;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
 
             private TextView cardName;
             private TextView cardQuantity;
             private TextView cardCost;
             private TextView undoButton;
-            public boolean swipeable = true;
 
             ViewHolder(ViewGroup view) {
-                super(LayoutInflater.from(view.getContext()).inflate(R.layout.decklist_card_row, view, false));
+                super(view, R.layout.decklist_card_row);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mClickListener.onClick(view);
                     }
                 });
-                cardName = (TextView) itemView.findViewById(R.id.decklistRowName);
+                cardName = (TextView) itemView.findViewById(R.id.card_name);
                 cardQuantity = (TextView) itemView.findViewById(R.id.decklistRowNumber);
                 cardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
                 undoButton = (TextView) itemView.findViewById(R.id.undo_button);
