@@ -268,12 +268,6 @@ public class DecklistFragment extends FamiliarListFragment {
         ((CardDataAdapter) mListAdapter).notifyDataSetChanged2();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
-    }
-
     /**
      * Read in the decklist from the file, and pack it into an ArrayList of CompressedDecklistInfo
      * for display in a ListView. This data structure stores one copy of the card itself, and a list
@@ -601,6 +595,12 @@ public class DecklistFragment extends FamiliarListFragment {
                 totalCards += cdi.getTotalNumber();
             }
             return totalCards;
+        }
+
+        @Override
+        public void remove(int position) {
+            super.remove(position);
+            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
         }
 
         /**

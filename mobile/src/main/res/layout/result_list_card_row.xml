@@ -20,115 +20,132 @@
     android:paddingTop="4dp">
 
     <LinearLayout
+        android:id="@+id/card_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/card_name"
-            style="@style/text.large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="Name" />
-
-        <TextView
-            android:id="@+id/cardcost"
-            style="@style/text.medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="Cost" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/cardtype"
-            style="@style/text.medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="Type" />
-
-        <TextView
-            android:id="@+id/cardset"
-            style="@style/text.large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="Set" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/cardability"
-        style="@style/text.medium"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Ability" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/rarity"
-            style="@style/text.medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="(R)" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/cardp"
-                style="@style/text.medium"
+                android:id="@+id/card_name"
+                style="@style/text.large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="P" />
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Name" />
 
             <TextView
-                android:id="@+id/cardslash"
+                android:id="@+id/cardcost"
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="/" />
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="Cost" />
 
-            <TextView
-                android:id="@+id/cardt"
-                style="@style/text.medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="T" />
+
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cardtype"
+                style="@style/text.medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="Type" />
+
+            <TextView
+                android:id="@+id/cardset"
+                style="@style/text.large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="Set" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cardability"
+            style="@style/text.medium"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Ability" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/rarity"
+                style="@style/text.medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="(R)" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/cardp"
+                    style="@style/text.medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="P" />
+
+                <TextView
+                    android:id="@+id/cardslash"
+                    style="@style/text.medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/" />
+
+                <TextView
+                    android:id="@+id/cardt"
+                    style="@style/text.medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/wishlist_sets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/wishlist_sets"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/undo_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
-
-    <!-- todo: add a proper undo button here -->
+        android:text="@string/cardlist_undo"
+        android:visibility="gone"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:layout_gravity="end|center_vertical"
+        style="@style/Base.Widget.AppCompat.Button.Borderless" />
 
 </LinearLayout>

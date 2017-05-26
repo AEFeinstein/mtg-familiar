@@ -290,7 +290,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             if (mItems.contains(item)) {
                 mItems.remove(item);
                 /* The items that change are including and after position */
-                notifyItemRangeChanged(position, mItems.size() - position);
+                notifyItemRemoved(position);
             }
         };
 

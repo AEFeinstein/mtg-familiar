@@ -3,6 +3,7 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -70,7 +71,6 @@ public class WishlistFragment extends FamiliarListFragment {
     /* The wishlist and adapter */
     public ArrayList<CompressedWishlistInfo> mCompressedWishlist;
     private View mTotalPriceDivider;
-    private boolean mCheckboxFoilLocked = false;
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -582,157 +582,191 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         private void onBindViewHolder(ViewHolder holder, int position) {
-            /* todo: implement the swiped away view for this */
-            holder.mWishlistSets.removeAllViews();
+
             /* Get all the wishlist info for this entry */
             final CompressedWishlistInfo info = mItems.get(position);
-            /* Set the card name, always */
-            holder.mCardName.setText(info.mCard.mName);
-            /* Show or hide full card information */
-            holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
-            if (mShowCardInfo) {
-                Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                /* make sure everything is showing */
-                holder.mCardCost.setVisibility(View.VISIBLE);
-                holder.mCardType.setVisibility(View.VISIBLE);
-                holder.mCardText.setVisibility(View.VISIBLE);
-                /* Show the power, toughness, or loyalty if the card has it */
-                holder.mCardPower.setVisibility(View.GONE);
-                holder.mCardSlash.setVisibility(View.GONE);
-                holder.mCardToughness.setVisibility(View.GONE);
-                /* Set the type, cost, and ability */
-                holder.mCardType.setText(info.mCard.mType);
-                holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imgGetter));
-                holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mText, imgGetter));
-                try {
-                    String power = CardHelpers.adaptCardPT(info.mCard.mPower);
-                    String toughness = CardHelpers.adaptCardPT(info.mCard.mToughness);
-                    holder.mCardPower.setText(power);
-                    holder.mCardToughness.setText(toughness);
-                    holder.mCardPower.setVisibility(View.VISIBLE);
-                    holder.mCardSlash.setVisibility(View.VISIBLE);
-                    holder.mCardToughness.setVisibility(View.VISIBLE);
-                } catch (NumberFormatException nfe) {
-                    /* eat it */
-                }
 
-                /* Show the loyalty, if the card has any (traitor...) */
-                float loyalty = info.mCard.mLoyalty;
-                if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
-                    if (loyalty == CardDbAdapter.X) {
-                        holder.mCardToughness.setText("X");
-                    } else if (loyalty == (int) loyalty) {
-                        holder.mCardToughness.setText(Integer.toString((int) loyalty));
-                    } else {
-                        holder.mCardToughness.setText(Float.toString(loyalty));
+            if (mItemsPendingRemoval.contains(info)) {
+                holder.itemView.setBackgroundColor(Color.RED);
+                holder.itemView.findViewById(R.id.card_info).setVisibility(View.GONE);
+                holder.mUndoButton.setVisibility(View.VISIBLE);
+                holder.mUndoButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Runnable pendingRemovalRunnable = mPendingRunnables.get(info);
+                        mPendingRunnables.remove(info);
+                        if (pendingRemovalRunnable != null) {
+                            mHandler.removeCallbacks(pendingRemovalRunnable);
+                        }
+                        mItemsPendingRemoval.remove(info);
+                        notifyItemChanged(mItems.indexOf(info));
                     }
-                    holder.mCardToughness.setVisibility(View.VISIBLE);
-                }
+                });
             } else {
+                /* Make sure the undo button is gone, and the card info is here */
+                holder.mUndoButton.setVisibility(View.GONE);
+                holder.itemView.findViewById(R.id.card_info).setVisibility(View.VISIBLE);
+                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+
+                /* Clear out the old items in the view */
+                holder.mWishlistSets.removeAllViews();
+
+                /* Set the card name, always */
+                holder.mCardName.setText(info.mCard.mName);
+
+                /* Show or hide full card information */
+                holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
+                if (mShowCardInfo) {
+                    Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
+                    /* make sure everything is showing */
+                    holder.mCardCost.setVisibility(View.VISIBLE);
+                    holder.mCardType.setVisibility(View.VISIBLE);
+                    holder.mCardText.setVisibility(View.VISIBLE);
+                    /* Show the power, toughness, or loyalty if the card has it */
+                    holder.mCardPower.setVisibility(View.GONE);
+                    holder.mCardSlash.setVisibility(View.GONE);
+                    holder.mCardToughness.setVisibility(View.GONE);
+                    /* Set the type, cost, and ability */
+                    holder.mCardType.setText(info.mCard.mType);
+                    holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imgGetter));
+                    holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mText, imgGetter));
+                    try {
+                        String power = CardHelpers.adaptCardPT(info.mCard.mPower);
+                        String toughness = CardHelpers.adaptCardPT(info.mCard.mToughness);
+                        holder.mCardPower.setText(power);
+                        holder.mCardToughness.setText(toughness);
+                        holder.mCardPower.setVisibility(View.VISIBLE);
+                        holder.mCardSlash.setVisibility(View.VISIBLE);
+                        holder.mCardToughness.setVisibility(View.VISIBLE);
+                    } catch (NumberFormatException nfe) {
+                        /* eat it */
+                    }
+
+                    /* Show the loyalty, if the card has any (traitor...) */
+                    float loyalty = info.mCard.mLoyalty;
+                    if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
+                        if (loyalty == CardDbAdapter.X) {
+                            holder.mCardToughness.setText("X");
+                        } else if (loyalty == (int) loyalty) {
+                            holder.mCardToughness.setText(Integer.toString((int) loyalty));
+                        } else {
+                            holder.mCardToughness.setText(Float.toString(loyalty));
+                        }
+                        holder.mCardToughness.setVisibility(View.VISIBLE);
+                    }
+                } else {
                 /* hide all the extra fields */
-                holder.mCardCost.setVisibility(View.GONE);
-                holder.mCardType.setVisibility(View.GONE);
-                holder.mCardText.setVisibility(View.GONE);
-                holder.mCardPower.setVisibility(View.GONE);
-                holder.mCardSlash.setVisibility(View.GONE);
-                holder.mCardToughness.setVisibility(View.GONE);
-            }
+                    holder.mCardCost.setVisibility(View.GONE);
+                    holder.mCardType.setVisibility(View.GONE);
+                    holder.mCardText.setVisibility(View.GONE);
+                    holder.mCardPower.setVisibility(View.GONE);
+                    holder.mCardSlash.setVisibility(View.GONE);
+                    holder.mCardToughness.setVisibility(View.GONE);
+                }
 
             /* Rarity is displayed on the expansion lines */
-            holder.itemView.findViewById(R.id.rarity).setVisibility(View.GONE);
+                holder.itemView.findViewById(R.id.rarity).setVisibility(View.GONE);
 
             /* List all the sets and wishlist values for this card */
-            for (IndividualSetInfo isi : info.mInfo) {
+                for (IndividualSetInfo isi : info.mInfo) {
                 /* inflate a new row */
-                View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
-                assert setRow != null;
+                    View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
+                    assert setRow != null;
                 /* Write the set name, color it with the rarity */
-                int color;
-                switch (isi.mRarity) {
-                    case 'c':
-                    case 'C':
-                        color = R.attr.color_common;
-                        break;
-                    case 'u':
-                    case 'U':
-                        color = R.attr.color_uncommon;
-                        break;
-                    case 'r':
-                    case 'R':
-                        color = R.attr.color_rare;
-                        break;
-                    case 'm':
-                    case 'M':
-                        color = R.attr.color_mythic;
-                        break;
-                    case 't':
-                    case 'T':
-                        color = R.attr.color_timeshifted;
-                        break;
-                    default:
-                        color = R.attr.color_text;
-                        break;
-                }
-                String setAndRarity = isi.mSet + " (" + isi.mRarity + ")";
-                ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(setAndRarity);
-                ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
-                        ContextCompat.getColor(getContext(), getResourceIdFromAttr(color)));
+                    int color;
+                    switch (isi.mRarity) {
+                        case 'c':
+                        case 'C':
+                            color = R.attr.color_common;
+                            break;
+                        case 'u':
+                        case 'U':
+                            color = R.attr.color_uncommon;
+                            break;
+                        case 'r':
+                        case 'R':
+                            color = R.attr.color_rare;
+                            break;
+                        case 'm':
+                        case 'M':
+                            color = R.attr.color_mythic;
+                            break;
+                        case 't':
+                        case 'T':
+                            color = R.attr.color_timeshifted;
+                            break;
+                        default:
+                            color = R.attr.color_text;
+                            break;
+                    }
+                    String setAndRarity = isi.mSet + " (" + isi.mRarity + ")";
+                    ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setText(setAndRarity);
+                    ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
+                            ContextCompat.getColor(getContext(), getResourceIdFromAttr(color)));
 
-                /* Show or hide the foil indicator */
-                if (isi.mIsFoil) {
-                    setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.VISIBLE);
-                } else {
-                    setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.GONE);
-                }
-
-                /* Show individual prices and number of each card, or message if price does not exist, if desired */
-                TextView priceText = ((TextView) setRow.findViewById(R.id.wishlistRowPrice));
-                if (mShowIndividualPrices) {
+                    /* Show or hide the foil indicator */
                     if (isi.mIsFoil) {
-                        if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
-                            priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
+                        setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.VISIBLE);
+                    } else {
+                        setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.GONE);
+                    }
+
+                    /* Show individual prices and number of each card, or message if price does not exist, if desired */
+                    TextView priceText = ((TextView) setRow.findViewById(R.id.wishlistRowPrice));
+                    if (mShowIndividualPrices) {
+                        if (isi.mIsFoil) {
+                            if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
+                                priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
+                            } else {
+                                priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
+                                priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
+                            }
                         } else {
-                            priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
-                            priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
+                            boolean priceFound = false;
+                            if (isi.mPrice != null) {
+                                switch (mPriceSetting) {
+                                    case LOW_PRICE:
+                                        if (isi.mPrice.mLow != 0) {
+                                            priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mLow));
+                                            priceFound = true;
+                                        }
+                                        break;
+                                    case AVG_PRICE:
+                                        if (isi.mPrice.mAverage != 0) {
+                                            priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mAverage));
+                                            priceFound = true;
+                                        }
+                                        break;
+                                    case HIGH_PRICE:
+                                        if (isi.mPrice.mHigh != 0) {
+                                            priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mHigh));
+                                            priceFound = true;
+                                        }
+                                        break;
+                                }
+                                priceText.setTextColor(ContextCompat.getColor(getContext(),
+                                        getResourceIdFromAttr(R.attr.color_text)));
+                            }
+                            if (!priceFound) {
+                                priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
+                                priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
+                            }
                         }
                     } else {
-                        boolean priceFound = false;
-                        if (isi.mPrice != null) {
-                            switch (mPriceSetting) {
-                                case LOW_PRICE:
-                                    if (isi.mPrice.mLow != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mLow));
-                                        priceFound = true;
-                                    }
-                                    break;
-                                case AVG_PRICE:
-                                    if (isi.mPrice.mAverage != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mAverage));
-                                        priceFound = true;
-                                    }
-                                    break;
-                                case HIGH_PRICE:
-                                    if (isi.mPrice.mHigh != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mHigh));
-                                        priceFound = true;
-                                    }
-                                    break;
-                            }
-                            priceText.setTextColor(ContextCompat.getColor(getContext(),
-                                    getResourceIdFromAttr(R.attr.color_text)));
-                        }
-                        if (!priceFound) {
-                            priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
-                            priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
-                        }
+                        /* Just show the number of */
+                        priceText.setText("x" + isi.mNumberOf);
                     }
-                } else {
-                    /* Just show the number of */
-                    priceText.setText("x" + isi.mNumberOf);
+                    /* Add the view to the linear layout */
+                    holder.mWishlistSets.addView(setRow);
                 }
-                /* Add the view to the linear layout */
-                holder.mWishlistSets.addView(setRow);
             }
+
+        }
+
+        @Override
+        public void remove(int position) {
+            super.remove(position);
+            WishlistHelpers.WriteCompressedWishlist(getContext(), mCompressedWishlist);
         }
 
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
