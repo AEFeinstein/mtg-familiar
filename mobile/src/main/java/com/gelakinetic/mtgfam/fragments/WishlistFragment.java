@@ -655,7 +655,7 @@ public class WishlistFragment extends FamiliarListFragment {
                         holder.mCardToughness.setVisibility(View.VISIBLE);
                     }
                 } else {
-                /* hide all the extra fields */
+                    /* hide all the extra fields */
                     holder.mCardCost.setVisibility(View.GONE);
                     holder.mCardType.setVisibility(View.GONE);
                     holder.mCardText.setVisibility(View.GONE);
@@ -664,15 +664,15 @@ public class WishlistFragment extends FamiliarListFragment {
                     holder.mCardToughness.setVisibility(View.GONE);
                 }
 
-            /* Rarity is displayed on the expansion lines */
+                /* Rarity is displayed on the expansion lines */
                 holder.itemView.findViewById(R.id.rarity).setVisibility(View.GONE);
 
-            /* List all the sets and wishlist values for this card */
+                /* List all the sets and wishlist values for this card */
                 for (IndividualSetInfo isi : info.mInfo) {
-                /* inflate a new row */
+                    /* inflate a new row */
                     View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
                     assert setRow != null;
-                /* Write the set name, color it with the rarity */
+                    /* Write the set name, color it with the rarity */
                     int color;
                     switch (isi.mRarity) {
                         case 'c':
@@ -760,7 +760,6 @@ public class WishlistFragment extends FamiliarListFragment {
                     holder.mWishlistSets.addView(setRow);
                 }
             }
-
         }
 
         @Override

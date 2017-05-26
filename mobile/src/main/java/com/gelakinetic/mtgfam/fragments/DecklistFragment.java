@@ -170,12 +170,10 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     private void addCardToDeck(boolean isSideboard) {
         String name = String.valueOf(mNameField.getText());
-        /* Don't allow the fields to be empty */
-        if (name == null || name.equals("")) {
-            return;
-        }
         String numberOf = String.valueOf(mNumberOfField.getText());
-        if (numberOf == null || numberOf.equals("")) {
+        /* Don't allow the fields to be empty */
+        if ((name == null || name.equals(""))
+                && (numberOf == null || numberOf.equals(""))) {
             return;
         }
 
@@ -190,45 +188,28 @@ public class DecklistFragment extends FamiliarListFragment {
             boolean added = false;
             int firstIndex = mCompressedDecklist.indexOf(card);
             int lastIndex = mCompressedDecklist.lastIndexOf(card);
-            if (firstIndex == lastIndex) {
-                CompressedDecklistInfo existingCard = mCompressedDecklist.get(firstIndex);
-                if (existingCard.mIsSideboard == isSideboard) {
-                    for (IndividualSetInfo isi : existingCard.mInfo) {
-                        if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-                            added = true;
-                            isi.mNumberOf++;
-                        }
-                    }
-                    if (!added) {
-                        existingCard.add(card);
-                    }
-                } else {
-                    mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
+            CompressedDecklistInfo firstCard = mCompressedDecklist.get(firstIndex);
+            CompressedDecklistInfo secondCard = mCompressedDecklist.get(lastIndex);
+            int isiSize = Math.max(firstCard.mInfo.size(), secondCard.mInfo.size());
+            for (int i = 0; i < isiSize; i++) {
+                IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
+                IndividualSetInfo secondIsi = secondCard.mInfo.get(i);
+                if (firstCard.mIsSideboard == isSideboard
+                        && firstIsi.mSetCode.equals(card.setCode)
+                        && firstIsi.mIsFoil.equals(card.foil)) {
+                    firstIsi.mNumberOf++;
+                    added = true;
+                    break;
+                } else if (secondCard.mIsSideboard == isSideboard
+                        && secondIsi.mSetCode.equals(card.setCode)
+                        && secondIsi.mIsFoil.equals(card.foil)) {
+                    secondIsi.mNumberOf++;
+                    added = true;
+                    break;
                 }
-            } else {
-                CompressedDecklistInfo firstCard = mCompressedDecklist.get(firstIndex);
-                CompressedDecklistInfo secondCard = mCompressedDecklist.get(lastIndex);
-                if (firstCard.mIsSideboard == isSideboard) {
-                    for (IndividualSetInfo isi : firstCard.mInfo) {
-                        if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-                            added = true;
-                            isi.mNumberOf++;
-                        }
-                    }
-                    if (!added) {
-                        firstCard.add(card);
-                    }
-                } else {
-                    for (IndividualSetInfo isi : firstCard.mInfo) {
-                        if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
-                            added = true;
-                            isi.mNumberOf++;
-                        }
-                    }
-                    if (!added) {
-                        secondCard.add(card);
-                    }
-                }
+            }
+            if (!added) { // todo: account for reprints since last added
+                mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
             }
         } else {
             mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
