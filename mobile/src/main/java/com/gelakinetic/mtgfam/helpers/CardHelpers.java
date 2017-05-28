@@ -56,7 +56,7 @@ public class CardHelpers {
 
             isi.mSet = card.setName;
             isi.mSetCode = card.setCode;
-            isi.mNumber = card.mName;
+            isi.mNumber = card.mNumber;
             isi.mIsFoil = card.foil;
             isi.mPrice = null;
             isi.mMessage = card.message;
