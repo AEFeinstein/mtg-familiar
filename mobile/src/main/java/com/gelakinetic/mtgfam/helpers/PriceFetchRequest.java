@@ -91,7 +91,6 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         /* then the same for multicard ordering */
         SpiceException exception = null; /* Save the exception during while loops */
         SQLiteDatabase database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
-        CardDbAdapter.MultiCardType multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
         while (retry > 0) {
             try {
                 /* If the card number wasn't given, figure it out */
@@ -115,6 +114,8 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                     }
                     c.close();
                 }
+
+                CardDbAdapter.MultiCardType multiCardType = CardDbAdapter.isMultiCard(mCardNumber, mSetCode);
 
                 /* Get the TCGplayer.com set name, why can't everything be consistent? */
                 String tcgName = CardDbAdapter.getTcgName(mSetCode, database);

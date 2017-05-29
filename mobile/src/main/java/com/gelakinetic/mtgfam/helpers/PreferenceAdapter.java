@@ -284,6 +284,16 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
+    /* Use sound instead of TTS pref */
+    public synchronized boolean getUseSoundInsteadOfTTSPref() {
+        return this.prefs.getBoolean(context.getString(R.string.key_useSoundInsteadOfTTSPref), false);
+    }
+
+    public synchronized void setUseSoundInsteadOfTTSPref(boolean useSoundPref) {
+        this.edit.putBoolean(context.getString(R.string.key_useSoundInsteadOfTTSPref), useSoundPref);
+        this.edit.commit();
+    }
+
     /* Show total wishlist price */
     public synchronized boolean getShowTotalWishlistPrice() {
         return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceWishlistPref), false);

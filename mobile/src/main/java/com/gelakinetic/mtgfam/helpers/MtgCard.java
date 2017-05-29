@@ -264,8 +264,12 @@ public class MtgCard extends Card {
      * @return A String representing this card
      */
     public String toWishlistString() {
-        return this.mName + DELIMITER + this.setCode + DELIMITER + this.numberOf + DELIMITER + this.mNumber + DELIMITER +
-                ((int) this.mRarity) + DELIMITER + this.foil + '\n';
+        return  this.mName + DELIMITER +
+                this.setCode + DELIMITER +
+                this.numberOf + DELIMITER +
+                this.mNumber + DELIMITER +
+                ((int) this.mRarity) + DELIMITER +
+                this.foil + '\n';
     }
 
 
@@ -298,6 +302,12 @@ public class MtgCard extends Card {
         /* "foil" didn't exist in earlier versions, so it may not be part of the string */
         if (parts.length > 3) {
             newCard.mNumber = parts[3];
+            /* This is to fix a bug where the number was saved as the name. Clear it so it gets
+             * fixed later
+             */
+            if(newCard.mNumber.equals(newCard.mName)) {
+                newCard.mNumber = "";
+            }
         }
         if (parts.length > 4) {
             newCard.mRarity = (char) Integer.parseInt(parts[4]);

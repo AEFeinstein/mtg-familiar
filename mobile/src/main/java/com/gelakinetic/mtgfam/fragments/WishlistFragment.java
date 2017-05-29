@@ -324,10 +324,26 @@ public class WishlistFragment extends FamiliarFragment {
         /* Read the wishlist */
         ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+        boolean cardNumberFixed = false;
         try {
             /* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
                 card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
+
+                /* If the number is empty because of a prior bug, get it from the database */
+                if (card.mNumber.equals("")) {
+                    Cursor numberCursor = CardDbAdapter.fetchCardByName(card.mName, new String[]{CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CODE}, false, database);
+                    numberCursor.moveToFirst();
+                    while (!numberCursor.isAfterLast()) {
+                        if (card.setCode.equals(numberCursor.getString(numberCursor.getColumnIndex(CardDbAdapter.KEY_CODE)))) {
+                            card.mNumber = numberCursor.getString(numberCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                            cardNumberFixed = true;
+                            break;
+                        }
+                        numberCursor.moveToNext();
+                    }
+                    numberCursor.close();
+                }
             }
 
             /* Clear the wishlist, or just the card that changed */
@@ -370,6 +386,10 @@ public class WishlistFragment extends FamiliarFragment {
 
             /* Fill extra card data from the database, for displaying full card info */
             CardDbAdapter.fillExtraWishlistData(mCompressedWishlist, database);
+
+            if(cardNumberFixed) {
+                WishlistHelpers.WriteCompressedWishlist(getContext(), mCompressedWishlist);
+            }
 
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
@@ -850,7 +870,7 @@ public class WishlistFragment extends FamiliarFragment {
                     if (isi.mIsFoil) {
                         if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
                             priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
-                            priceText.setTextColor(ContextCompat.getColor(getContext(), 
+                            priceText.setTextColor(ContextCompat.getColor(getContext(),
                                     getResourceIdFromAttr(R.attr.color_text)));
                         } else {
                             priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
@@ -883,7 +903,7 @@ public class WishlistFragment extends FamiliarFragment {
                                     }
                                     break;
                             }
-                            priceText.setTextColor(ContextCompat.getColor(getContext(), 
+                            priceText.setTextColor(ContextCompat.getColor(getContext(),
                                     getResourceIdFromAttr(R.attr.color_text)
                             ));
                         }
