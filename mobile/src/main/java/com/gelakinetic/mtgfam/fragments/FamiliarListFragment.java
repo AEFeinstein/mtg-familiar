@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -275,6 +276,23 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 PreferenceAdapter pa = new PreferenceAdapter(getContext());
                 mHandler.postDelayed(pendingRemovalRunnable, pa.getUndoTimeout());
                 mPendingRunnables.put(item, pendingRemovalRunnable);
+                Snackbar undoBar = Snackbar.make(getFamiliarActivity().findViewById(R.id.fragment_container),
+                        /* todo: Actual text for this part.
+                         * Possibly make it so the action says the card's name? */
+                        R.string.app_name, Snackbar.LENGTH_SHORT);
+                undoBar.setAction(R.string.cardlist_undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Runnable pendingRemovalRunnable = mPendingRunnables.get(item);
+                        mPendingRunnables.remove(item);
+                        if (pendingRemovalRunnable != null) {
+                            mHandler.removeCallbacks(pendingRemovalRunnable);
+                        }
+                        mItemsPendingRemoval.remove(item);
+                        notifyItemChanged(mItems.indexOf(item));
+                    }
+                });
+                undoBar.show();
             }
         }
 
@@ -301,7 +319,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         abstract class ViewHolder extends RecyclerView.ViewHolder {
 
             TextView mCardName;
-            TextView mUndoButton;
 
             boolean swipeable = true;
 
@@ -314,7 +331,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                     }
                 });
                 mCardName = (TextView) itemView.findViewById(R.id.card_name);
-                mUndoButton = (TextView) itemView.findViewById(R.id.undo_button);
             }
 
         }

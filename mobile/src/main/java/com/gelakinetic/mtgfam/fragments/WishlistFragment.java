@@ -586,28 +586,7 @@ public class WishlistFragment extends FamiliarListFragment {
             /* Get all the wishlist info for this entry */
             final CompressedWishlistInfo info = mItems.get(position);
 
-            if (mItemsPendingRemoval.contains(info)) {
-                holder.itemView.setBackgroundColor(Color.RED);
-                holder.itemView.findViewById(R.id.card_info).setVisibility(View.GONE);
-                holder.mUndoButton.setVisibility(View.VISIBLE);
-                holder.mUndoButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Runnable pendingRemovalRunnable = mPendingRunnables.get(info);
-                        mPendingRunnables.remove(info);
-                        if (pendingRemovalRunnable != null) {
-                            mHandler.removeCallbacks(pendingRemovalRunnable);
-                        }
-                        mItemsPendingRemoval.remove(info);
-                        notifyItemChanged(mItems.indexOf(info));
-                    }
-                });
-            } else {
-                /* Make sure the undo button is gone, and the card info is here */
-                holder.mUndoButton.setVisibility(View.GONE);
-                holder.itemView.findViewById(R.id.card_info).setVisibility(View.VISIBLE);
-                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
-
+            if (!mItemsPendingRemoval.contains(info)) {
                 /* Clear out the old items in the view */
                 holder.mWishlistSets.removeAllViews();
 
@@ -759,6 +738,8 @@ public class WishlistFragment extends FamiliarListFragment {
                     /* Add the view to the linear layout */
                     holder.mWishlistSets.addView(setRow);
                 }
+            } else {
+                holder.itemView.setVisibility(View.GONE);
             }
         }
 

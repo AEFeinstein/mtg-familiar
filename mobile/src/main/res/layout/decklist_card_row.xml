@@ -65,15 +65,4 @@
             android:paddingRight="16dp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/undo_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cardlist_undo"
-        android:visibility="gone"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:layout_gravity="end|center_vertical"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
-
 </LinearLayout>

@@ -495,30 +495,8 @@ public class DecklistFragment extends FamiliarListFragment {
          * @param position where the holder is
          */
         private void onBindViewHolder(ViewHolder holder, int position) {
-            if (position >= mItems.size()) {
-                /* todo: figure out if this happens anymore */
-                return;
-            }
             final CompressedDecklistInfo info = mItems.get(position);
-            if (mItemsPendingRemoval.contains(info)) { /* if the item IS pending removal */
-                holder.itemView.setBackgroundColor(Color.RED);
-                holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
-                holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
-                holder.mUndoButton.setVisibility(View.VISIBLE);
-                /* When the undo button is clicked, restore the item */
-                holder.mUndoButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Runnable pendingRemovalRunnable = mPendingRunnables.get(info);
-                        mPendingRunnables.remove(info);
-                        if (pendingRemovalRunnable != null) {
-                            mHandler.removeCallbacks(pendingRemovalRunnable);
-                        }
-                        mItemsPendingRemoval.remove(info);
-                        notifyItemChanged(mItems.indexOf(info));
-                    }
-                });
-            } else { /* if the item IS NOT pending removal */
+            if (!mItemsPendingRemoval.contains(info)) { /* if the item IS NOT pending removal */
                 holder.itemView.setBackgroundColor(Color.TRANSPARENT);
                 if (info.header != null) {
                     /* The header uses the same layout, just set it up */
@@ -531,14 +509,15 @@ public class DecklistFragment extends FamiliarListFragment {
                     /* set up the card's views */
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
                     holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
-                    holder.mUndoButton.setVisibility(View.GONE);
                     View separator = holder.itemView.findViewById(R.id.decklistSeparator);
                     separator.setVisibility(View.GONE);
                     Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
                     holder.mCardName.setText(info.mCard.mName);
-                    holder.cardQuantity.setText(String.valueOf(info.getTotalNumber()));
-                    holder.cardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
+                    holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
+                    holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
                 }
+            } else {
+                holder.itemView.setVisibility(View.GONE);
             }
         }
 
@@ -598,13 +577,13 @@ public class DecklistFragment extends FamiliarListFragment {
 
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
 
-            private TextView cardQuantity;
-            private TextView cardCost;
+            private TextView mCardNumberOf;
+            private TextView mCardCost;
 
             ViewHolder(ViewGroup view) {
                 super(view, R.layout.decklist_card_row);
-                cardQuantity = (TextView) itemView.findViewById(R.id.decklistRowNumber);
-                cardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
+                mCardNumberOf = (TextView) itemView.findViewById(R.id.decklistRowNumber);
+                mCardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
             }
 
         }
