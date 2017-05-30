@@ -161,7 +161,8 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 /* do some cleaning up */
                                 getParentDecklistFragment().mCurrentDeck = "autosave";
                                 getParentDecklistFragment().mCompressedDecklist.clear();
-                                //getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentDecklistFragment().mDeckCards.setText("0 ");
                                 dialog.dismiss();
                             }
                         })

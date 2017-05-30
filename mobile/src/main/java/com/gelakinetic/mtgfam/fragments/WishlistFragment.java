@@ -3,7 +3,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -586,7 +585,13 @@ public class WishlistFragment extends FamiliarListFragment {
             /* Get all the wishlist info for this entry */
             final CompressedWishlistInfo info = mItems.get(position);
 
-            if (!mItemsPendingRemoval.contains(info)) {
+            if (mItemsPendingRemoval.contains(info)) {
+                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
+            } else {
+
+                /* Make sure you can see the item */
+                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
+
                 /* Clear out the old items in the view */
                 holder.mWishlistSets.removeAllViews();
 
@@ -738,8 +743,6 @@ public class WishlistFragment extends FamiliarListFragment {
                     /* Add the view to the linear layout */
                     holder.mWishlistSets.addView(setRow);
                 }
-            } else {
-                holder.itemView.setVisibility(View.GONE);
             }
         }
 

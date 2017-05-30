@@ -3,7 +3,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +46,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /* UI Elements */
     public TextView mDeckName;
-    private TextView mDeckCards;
+    public TextView mDeckCards;
     private TextView mDeckPrice;
 
     /* Decklist and adapters */
@@ -496,8 +495,10 @@ public class DecklistFragment extends FamiliarListFragment {
          */
         private void onBindViewHolder(ViewHolder holder, int position) {
             final CompressedDecklistInfo info = mItems.get(position);
-            if (!mItemsPendingRemoval.contains(info)) { /* if the item IS NOT pending removal */
-                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+            if (mItemsPendingRemoval.contains(info)) {
+                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
+            } else { /* if the item IS NOT pending removal */
+                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
                 if (info.header != null) {
                     /* The header uses the same layout, just set it up */
                     holder.itemView.setOnClickListener(null);
@@ -516,8 +517,6 @@ public class DecklistFragment extends FamiliarListFragment {
                     holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
                     holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
                 }
-            } else {
-                holder.itemView.setVisibility(View.GONE);
             }
         }
 
@@ -526,7 +525,7 @@ public class DecklistFragment extends FamiliarListFragment {
          * @param headerValue the card type we are counting
          * @return the number of cards of the given type
          */
-        private int getTotalNumberOfType(final String headerValue) {
+        int getTotalNumberOfType(final String headerValue) {
             int totalCards = 0;
             String currentHeader = "";
             for (CompressedDecklistInfo cdi : mItems) {
@@ -560,6 +559,10 @@ public class DecklistFragment extends FamiliarListFragment {
         @Override
         public void remove(int position) {
             super.remove(position);
+            mDeckCards.setText(String.valueOf(getTotalCards()) + " ");
+            clearHeaders();
+            notifyDataSetChanged();
+            setHeaderValues();
             DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
         }
 
@@ -567,7 +570,6 @@ public class DecklistFragment extends FamiliarListFragment {
          * just a simple extension of notifyDataSetChanged() because it is final for this adapter
          */
         private void notifyDataSetChanged2() {
-            /* todo: make sure to clear the headers when a card is removed, or the headers will stick */
             String totalCards = String.valueOf(getTotalCards()) + " ";
             mDeckCards.setText(totalCards);
             clearHeaders();
