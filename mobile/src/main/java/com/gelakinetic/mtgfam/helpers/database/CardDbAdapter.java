@@ -952,7 +952,6 @@ public class CardDbAdapter {
         if (supertypes != null) {
             /* Separate each individual */
             String[] supertypesParts = supertypes.split(" ");
-            String supertypeInDatabase = "' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' '";
 
             switch (criteria.typeLogic) {
                 case 0:
@@ -1002,7 +1001,6 @@ public class CardDbAdapter {
         if (subtypes != null) {
             /* Separate each individual */
             String[] subtypesParts = subtypes.split(" ");
-            String subtypeInDatabase = "' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUBTYPE + " || ' '";
 
             switch (criteria.typeLogic) {
                 case 0:

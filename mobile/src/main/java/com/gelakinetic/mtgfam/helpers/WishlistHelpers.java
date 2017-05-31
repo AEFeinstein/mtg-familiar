@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -17,7 +19,6 @@ import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
-import com.gelakinetic.mtgfam.helpers.autocomplete.AddToWishlistSetsField;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -29,8 +30,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -183,23 +182,26 @@ public class WishlistHelpers {
         }
 
         /* Read the wishlist */
-        final ArrayList<MtgCard> wishlist = new ArrayList<>();
+        ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
 
         /* Find any counts currently in the wishlist */
-        final HashMap<String, MtgCard> targetCardNumberOfs = new HashMap<>();
-        final HashMap<String, MtgCard> targetFoilCardNumberOfs = new HashMap<>();
-        for (MtgCard card : ReadWishlist(ctx)) {
+        final Map<String, String> targetCardNumberOfs = new HashMap<>();
+        final Map<String, String> targetFoilCardNumberOfs = new HashMap<>();
+        for (MtgCard card : wishlist) {
             if (card.mName.equals(mCardName)) {
                 if (card.foil) {
-                    targetFoilCardNumberOfs.put(card.setCode, card);
+                    targetFoilCardNumberOfs.put(card.setCode, card.numberOf + "");
                 } else {
-                    targetCardNumberOfs.put(card.setCode, card);
+                    targetCardNumberOfs.put(card.setCode, card.numberOf + "");
                 }
-                wishlist.add(card);
             }
         }
 
         /* Get all potential sets and rarities for this card */
+        final ArrayList<String> potentialSetCodes = new ArrayList<>();
+        final ArrayList<Character> potentialRarities = new ArrayList<>();
+        final ArrayList<String> potentialNumbers = new ArrayList<>();
+
         /* Open the database */
         SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
 
@@ -231,40 +233,40 @@ public class WishlistHelpers {
             String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
             char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
             String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-            MtgCard mtgCard = targetCardNumberOfs.get(setCode);
-            if (mtgCard == null) {
-                mtgCard = new MtgCard();
-                mtgCard.setName = setName;
-                mtgCard.setCode = setCode;
-                mtgCard.mName = mCardName;
-                mtgCard.mRarity = rarity;
-                mtgCard.mNumber = number;
-                wishlist.add(mtgCard);
-            } else {
-                /* Set name not stored */
-                mtgCard.setName = setName;
-            }
+
+            /* Inflate a row and fill it with stuff */
+            View wishlistRow = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row, null, false);
+            assert wishlistRow != null;
+            ((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
+            String numberOf = targetCardNumberOfs.get(setCode);
+            numberOf = numberOf == null ? "0" : numberOf;
+            ((EditText) wishlistRow.findViewById(R.id.numberInput)).setText(numberOf);
+            wishlistRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
+            linearLayout.addView(wishlistRow);
+            potentialSetCodes.add(setCode);
+            potentialRarities.add(rarity);
+            potentialNumbers.add(number);
 
             /* If this card has a foil version, add that too */
-            mtgCard = targetFoilCardNumberOfs.get(setCode);
-            if (mtgCard == null) {
-                mtgCard = new MtgCard();
-                mtgCard.setName = setName;
-                mtgCard.setCode = setCode;
-                mtgCard.mName = mCardName;
-                mtgCard.mRarity = rarity;
-                mtgCard.mNumber = number;
-                mtgCard.foil = true;
-                wishlist.add(mtgCard);
-            } else {
-                /* Set name not stored */
-                mtgCard.setName = setName;
+            View wishlistRowFoil;
+            if (foilSets.contains(setCode)) {
+                wishlistRowFoil = fragment.getActivity().getLayoutInflater().inflate(R.layout.wishlist_dialog_row,
+                        null, false);
+                assert wishlistRowFoil != null;
+                ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
+                String foilNumberOf = targetFoilCardNumberOfs.get(setCode);
+                foilNumberOf = foilNumberOf == null ? "0" : foilNumberOf;
+                ((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText(foilNumberOf);
+                wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
+                linearLayout.addView(wishlistRowFoil);
+                potentialSetCodes.add(setCode);
+                potentialRarities.add(rarity);
+                potentialNumbers.add(number);
             }
+
             cards.moveToNext();
         }
-        AddToWishlistSetsField setField = (AddToWishlistSetsField) customView.findViewById(
-                R.id.wishlist_sets);
-        setField.init(fragment.getActivity(), wishlist.toArray(new MtgCard[0]));
+
         /* Clean up */
         cards.close();
         DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
@@ -277,13 +279,52 @@ public class WishlistHelpers {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        /* REmove empty rows */
-                        final ArrayList<MtgCard> mtgCards = new ArrayList<>();
-                        for (MtgCard mtgCard : wishlist) {
-                            if (mtgCard.numberOf > 0) {
-                                mtgCards.add(mtgCard);
+
+                        /* Read the wishlist */
+                        ArrayList<MtgCard> wishlist = ReadWishlist(ctx);
+
+                        /* Add the cards listed in the dialog to the wishlist */
+                        for (int i = 0; i < linearLayout.getChildCount(); i++) {
+                            View view = linearLayout.getChildAt(i);
+                            assert view != null;
+
+                            /* build the card object */
+                            MtgCard card = new MtgCard();
+                            card.mName = mCardName;
+                            card.setCode = potentialSetCodes.get(i);
+                            try {
+                                EditText numberInput = ((EditText) view.findViewById(R.id.numberInput));
+                                assert numberInput.getText() != null;
+                                card.numberOf = Integer.valueOf(numberInput.getText().toString());
+                            } catch (NumberFormatException e) {
+                                card.numberOf = 0;
                             }
+                            card.foil = (view.findViewById(R.id.wishlistDialogFoil).getVisibility() == View.VISIBLE);
+                            card.mRarity = potentialRarities.get(i);
+                            card.mNumber = potentialNumbers.get(i);
+
+                            /* Look through the wishlist for each card, set the numberOf or remove it if it exists, or
+                             * add the card if it doesn't */
+                            boolean added = false;
+                            for (int j = 0; j < wishlist.size(); j++) {
+                                if (card.mName.equals(wishlist.get(j).mName)
+                                        && card.setCode.equals(wishlist.get(j).setCode)
+                                        && card.foil == wishlist.get(j).foil) {
+                                    if (card.numberOf == 0) {
+                                        wishlist.remove(j);
+                                        j--;
+                                    } else {
+                                        wishlist.get(j).numberOf = card.numberOf;
+                                    }
+                                    added = true;
+                                }
+                            }
+                            if (!added && card.numberOf > 0) {
+                                wishlist.add(card);
+                            }
+
                         }
+
                         /* Write the wishlist */
                         WriteWishlist(fragment.getActivity(), wishlist);
                         /* notify the fragment of a change in the wishlist */

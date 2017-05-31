@@ -27,14 +27,15 @@
         android:layout_height="1dp"
         android:background="?attr/colorPrimary_attr" />
 
-    <com.gelakinetic.mtgfam.helpers.autocomplete.AddToWishlistSetsField
-        android:id="@+id/wishlist_sets"
-        style="@style/Widget.AppCompat.AutoCompleteTextView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:dropDownWidth="wrap_content"
-        android:hint="@string/search_sets"
-        android:imeOptions="actionSearch"
-        android:inputType="text" />
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 </LinearLayout>
