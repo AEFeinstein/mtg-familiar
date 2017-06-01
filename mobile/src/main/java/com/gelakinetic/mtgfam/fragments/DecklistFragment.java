@@ -507,6 +507,8 @@ public class DecklistFragment extends FamiliarListFragment {
                     ((TextView) holder.itemView.findViewById(R.id.decklistHeaderType)).setText(info.header);
                     holder.swipeable = false;
                 } else {
+                    /* Enable the on click listener */
+                    holder.enableClickListener();
                     /* set up the card's views */
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
                     holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);

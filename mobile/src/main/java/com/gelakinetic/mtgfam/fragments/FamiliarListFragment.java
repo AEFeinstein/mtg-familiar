@@ -324,13 +324,20 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
             ViewHolder(ViewGroup view, @LayoutRes int listRowLayout) {
                 super(LayoutInflater.from(view.getContext()).inflate(listRowLayout, view, false));
+                mCardName = (TextView) itemView.findViewById(R.id.card_name);
+            }
+
+            boolean enableClickListener() {
+                if (itemView.hasOnClickListeners()) {
+                    return false;
+                }
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mClickListener.onClick(view);
                     }
                 });
-                mCardName = (TextView) itemView.findViewById(R.id.card_name);
+                return true;
             }
 
         }

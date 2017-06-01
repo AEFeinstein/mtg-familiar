@@ -589,6 +589,9 @@ public class WishlistFragment extends FamiliarListFragment {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else {
 
+                /* Make sure the click listener is here */
+                holder.enableClickListener();
+
                 /* Make sure you can see the item */
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
 
