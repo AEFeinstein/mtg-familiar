@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -16,9 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -97,21 +93,20 @@ public class WishlistFragment extends FamiliarListFragment {
             }
         };
 
+        /* Make sure to initialize shared members */
+        initializeMembers(myFragmentView);
+
         /* set the autocomplete for card names */
-        mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, false));
         mNameField.setOnEditorActionListener(addCardListener);
 
         /* Default the number of cards field */
-        mNumberOfField = (EditText) myFragmentView.findViewById(R.id.number_input);
         mNumberOfField.setText("1");
         mNumberOfField.setOnEditorActionListener(addCardListener);
 
         /* Grab other elements */
         mTotalPriceField = (TextView) myFragmentView.findViewById(R.id.priceText);
         mTotalPriceDivider = myFragmentView.findViewById(R.id.divider_total_price);
-        mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.list_foil);
-        mListView = (RecyclerView) myFragmentView.findViewById(R.id.wishlist);
         mListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
@@ -273,10 +268,10 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (changedCardName == null || changedCardName.equals(card.mName)) {
                     /* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each
                      * other */
-                    if (!mCompressedWishlist.contains(card)) {
-                        mCompressedWishlist.add(new CompressedWishlistInfo(card));
-                    } else {
+                    if (mCompressedWishlist.contains(card)) {
                         mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
+                    } else {
+                        mCompressedWishlist.add(new CompressedWishlistInfo(card));
                     }
                     /* Look up the new price */
                     if (mShowIndividualPrices || mShowTotalWishlistPrice) {
@@ -535,33 +530,6 @@ public class WishlistFragment extends FamiliarListFragment {
     }
 
     /**
-     * Receive the result from the card image search, then fill in the name edit text on the
-     * UI thread
-     *
-     * @param multiverseId The multiverseId of the card the query returned
-     */
-    @Override
-    public void receiveTutorCardsResult(long multiverseId) {
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false)
-                .openDatabase(false);
-        try {
-            Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
-            final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
-            getFamiliarActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mNameField.setText(name);
-                }
-            });
-            card.close();
-        } catch (FamiliarDbException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-    }
-
-    /**
      * The adapter that drives the wish list
      */
     public class CardDataAdapter extends FamiliarListFragment.CardDataAdapter<CompressedWishlistInfo> {
@@ -702,11 +670,11 @@ public class WishlistFragment extends FamiliarListFragment {
                     TextView priceText = ((TextView) setRow.findViewById(R.id.wishlistRowPrice));
                     if (mShowIndividualPrices) {
                         if (isi.mIsFoil) {
-                            if (isi.mPrice != null && isi.mPrice.mFoilAverage != 0) {
-                                priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
-                            } else {
+                            if (isi.mPrice == null || isi.mPrice.mFoilAverage == 0) {
                                 priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
                                 priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
+                            } else {
+                                priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
                             }
                         } else {
                             boolean priceFound = false;

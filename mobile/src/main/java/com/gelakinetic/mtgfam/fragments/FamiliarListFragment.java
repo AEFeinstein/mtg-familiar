@@ -1,5 +1,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -22,6 +24,9 @@ import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,11 +48,18 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
     boolean mCheckboxFoilLocked = false;
 
+    void initializeMembers(View fragmentView) {
+        mNameField = (AutoCompleteTextView) fragmentView.findViewById(R.id.name_search);
+        mNumberOfField = (EditText) fragmentView.findViewById(R.id.number_input);
+        mCheckboxFoil = (CheckBox) fragmentView.findViewById(R.id.list_foil);
+        mListView = (RecyclerView) fragmentView.findViewById(R.id.cardlist);
+    }
+
     void setUpCheckBoxClickListeners() {
 
         mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onLongClick(View view) {
                 /* Lock the checkbox on long click */
                 mCheckboxFoilLocked = true;
                 mCheckboxFoil.setChecked(true);
@@ -234,6 +246,33 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             }
 
         };
+    }
+
+    /**
+     * Receive the result from the card image search, then fill in the name edit text on the
+     * UI thread
+     *
+     * @param multiverseId The multiverseId of the card the query returned
+     */
+    @Override
+    public void receiveTutorCardsResult(long multiverseId) {
+        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false)
+                .openDatabase(false);
+        try {
+            Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
+                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
+            final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
+            getFamiliarActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mNameField.setText(name);
+                }
+            });
+            card.close();
+        } catch (FamiliarDbException e) {
+            e.printStackTrace();
+        }
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     public abstract class CardDataAdapter<E> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

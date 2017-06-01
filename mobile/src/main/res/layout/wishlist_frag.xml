@@ -42,7 +42,7 @@
         android:background="?attr/color_drawer_divider_item" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/wishlist"
+        android:id="@+id/cardlist"
         style="@style/list_view_divider"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />

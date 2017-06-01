@@ -116,7 +116,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 getParentDecklistFragment().readAndCompressDecklist(null, deckNames[position]);
                                 getParentDecklistFragment().mCurrentDeck = deckNames[position];
                                 /* Alert things to update */
-                                //getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
                             }
                         })
                         .build();

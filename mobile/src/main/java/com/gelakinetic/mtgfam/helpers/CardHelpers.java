@@ -279,10 +279,10 @@ public class CardHelpers {
         String numberOf = targetCardNumberOf;
         numberOf = numberOf == null ? "0" : numberOf;
         ((EditText) dialogRow.findViewById(R.id.number_input)).setText(numberOf);
-        if (!isFoil) {
-            dialogRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
-        } else {
+        if (isFoil) {
             dialogRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
+        } else {
+            dialogRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
         }
         return dialogRow;
     }
@@ -329,7 +329,7 @@ public class CardHelpers {
          *
          * @param card The new printing to add to this object
          */
-        public void add(MtgCard card) {
+        final public void add(MtgCard card) {
             IndividualSetInfo isi = new IndividualSetInfo();
 
             isi.mSet = card.setName;
@@ -389,13 +389,13 @@ public class CardHelpers {
     /* Comparator based on color */
     public static class CardComparatorColor implements Comparator<CompressedDecklistInfo> {
 
-        private static final String colors = "WUBRG";
-        private static final String nonColors = "LAC";
+        private static final String COLORS = "WUBRG";
+        private static final String NON_COLORS = "LAC";
 
         /**
-         * Gets what colors are in the given string
-         * @param c the string of colors
-         * @return valid colors from the string
+         * Gets what COLORS are in the given string
+         * @param c the string of COLORS
+         * @return valid COLORS from the string
          */
         private String getColors(String c) {
             String validColors = "";
@@ -405,7 +405,7 @@ public class CardHelpers {
             }
             //2. For each char, if a valid color, add to return String
             for (int i = 0; i < c.length(); i++) {
-                if (colors.indexOf(c.charAt(i)) > -1) {
+                if (COLORS.indexOf(c.charAt(i)) > -1) {
                     validColors += c.charAt(i);
                 }
             }
@@ -423,8 +423,8 @@ public class CardHelpers {
                 cardColors1 = card1.mCard.mColor;
                 cardColors2 = card2.mCard.mColor;
                 for (int i = 0; i < Math.min(cardColors1.length(), cardColors2.length()); i++) {
-                    priority1 = nonColors.indexOf(cardColors1.charAt(i));
-                    priority2 = nonColors.indexOf(cardColors2.charAt(i));
+                    priority1 = NON_COLORS.indexOf(cardColors1.charAt(i));
+                    priority2 = NON_COLORS.indexOf(cardColors2.charAt(i));
                     if (priority1 != priority2) {
                         return priority1 < priority2 ? -1 : 1;
                     }
@@ -436,11 +436,11 @@ public class CardHelpers {
             } else if (cardColors1.length() > cardColors2.length()) {
                 return 1;
             }
-            //3. Else if the same number of colors exist, compare based on WUBRG-ness
+            //3. Else if the same number of COLORS exist, compare based on WUBRG-ness
             else {
                 for (int i = 0; i < Math.min(cardColors1.length(), cardColors2.length()); i++) {
-                    priority1 = colors.indexOf(cardColors1.charAt(i));
-                    priority2 = colors.indexOf(cardColors2.charAt(i));
+                    priority1 = COLORS.indexOf(cardColors1.charAt(i));
+                    priority2 = COLORS.indexOf(cardColors2.charAt(i));
                     if (priority1 != priority2) {
                         return priority1 < priority2 ? -1 : 1;
                     }
