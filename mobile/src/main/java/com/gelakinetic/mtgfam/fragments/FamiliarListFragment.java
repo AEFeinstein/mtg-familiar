@@ -37,10 +37,21 @@ import java.util.HashMap;
 
 public abstract class FamiliarListFragment extends FamiliarFragment {
 
+    /* Preferences */
+    public int mPriceSetting;
+
+    /* Pricing Constants */
+    public static final int LOW_PRICE = 0;
+    public static final int AVG_PRICE = 1;
+    public static final int HIGH_PRICE = 2;
+
     /* UI Elements */
     public AutoCompleteTextView mNameField;
     public EditText mNumberOfField;
     public CheckBox mCheckboxFoil;
+    TextView mTotalPriceField;
+
+    int mPriceFetchRequests = 0;
 
     RecyclerView mListView;
 
@@ -284,12 +295,16 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         HashMap<E, Runnable> mPendingRunnables;
 
         View.OnClickListener mClickListener;
+        View.OnLongClickListener mLongClickListener;
+
+        boolean mSelectMode;
 
         CardDataAdapter(ArrayList<E> values) {
             mItems = values;
             mItemsPendingRemoval = new ArrayList<>();
             mHandler = new Handler();
             mPendingRunnables = new HashMap<>();
+            mSelectMode = false;
         }
 
         @Override
@@ -355,6 +370,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             mClickListener = clickListener;
         }
 
+        public void setOnLongClickListener(View.OnLongClickListener longClickListener) {
+            mLongClickListener = longClickListener;
+        }
+
         abstract class ViewHolder extends RecyclerView.ViewHolder {
 
             TextView mCardName;
@@ -374,6 +393,13 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                     @Override
                     public void onClick(View view) {
                         mClickListener.onClick(view);
+                    }
+                });
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        mLongClickListener.onLongClick(view);
+                        return true;
                     }
                 });
                 return true;

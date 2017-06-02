@@ -49,19 +49,10 @@ import java.util.Locale;
  */
 public class WishlistFragment extends FamiliarListFragment {
 
-    /* Price setting constants */
-    public static final int LOW_PRICE = 0;
-    public static final int AVG_PRICE = 1;
-    public static final int HIGH_PRICE = 2;
     /* Preferences */
-    public int mPriceSetting;
     private boolean mShowCardInfo;
     private boolean mShowIndividualPrices;
     private boolean mShowTotalWishlistPrice;
-
-    /* UI Elements */
-    private TextView mTotalPriceField;
-    private int mPriceFetchRequests = 0;
 
     /* The wishlist and adapter */
     public ArrayList<CompressedWishlistInfo> mCompressedWishlist;

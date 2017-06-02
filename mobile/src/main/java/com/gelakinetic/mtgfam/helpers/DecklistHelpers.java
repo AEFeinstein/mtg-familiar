@@ -51,8 +51,8 @@ public class DecklistHelpers {
      */
     public static void WriteCompressedDecklist(Context mCtx, ArrayList<CompressedDecklistInfo> mCompressedDecklist, String fileName) {
         try {
-            fileName = fileName.replaceAll("(\\s)", "_"); // Unix doesn't like spaces in the file name
-            FileOutputStream fos = mCtx.openFileOutput(fileName, Context.MODE_PRIVATE);
+            final String newFileName = fileName.replaceAll("(\\s)", "_"); // Unix doesn't like spaces in the file name
+            FileOutputStream fos = mCtx.openFileOutput(newFileName, Context.MODE_PRIVATE);
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                 if (cdi.mCard != null) {
