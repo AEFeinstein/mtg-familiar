@@ -104,6 +104,10 @@
             @style/MyCustomBetterPickerTheme.Light
         </item>
 
+        <item name="num_picker_style">
+            @style/BetterPickersDialogFragment.Light
+        </item>
+
         <item name="glyph_pwk">@drawable/glyph_pwk_light</item>
         <item name="glyph_chaos">@drawable/glyph_chaos_light</item>
         <item name="glyph_e">@drawable/glyph_e_light</item>
@@ -240,6 +244,7 @@
         <item name="btn_check_foil">@drawable/btn_check_dark_foil</item>
 
         <item name="hms_picker_style">@style/MyCustomBetterPickerTheme</item>
+        <item name="num_picker_style">@style/BetterPickersDialogFragment</item>
 
         <item name="glyph_pwk">@drawable/glyph_pwk_dark</item>
         <item name="glyph_chaos">@drawable/glyph_chaos_dark</item>
