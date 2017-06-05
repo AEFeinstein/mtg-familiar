@@ -141,11 +141,11 @@ public class DecklistHelpers {
         return readableDecklist.toString();
     }
 
-    public static Pair<Map<String,String>,Map<String,String>> getTargetNumberOfs(String mCardName, ArrayList<Pair<MtgCard, Boolean>> decklist) {
+    public static Pair<Map<String,String>,Map<String,String>> getTargetNumberOfs(String mCardName, ArrayList<Pair<MtgCard, Boolean>> decklist, boolean isSideboard) {
         final Map<String, String> targetCardNumberOfs = new HashMap<>();
         final Map<String, String> targetFoilNumberOfs = new HashMap<>();
         for (Pair<MtgCard, Boolean> card : decklist) {
-            if (card.first.mName.equals(mCardName)) {
+            if (card.first.mName.equals(mCardName) && card.second == isSideboard) {
                 if (card.first.foil) {
                     targetFoilNumberOfs.put(card.first.setCode, String.valueOf(card.first.numberOf));
                     continue;

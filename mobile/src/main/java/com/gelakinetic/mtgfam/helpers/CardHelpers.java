@@ -21,7 +21,6 @@ import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
-import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -45,9 +44,10 @@ public class CardHelpers {
      * @param mCardName      The name of the card
      * @param fragment       The fragment which hosts the dialog and receives onWishlistChanged()
      * @param showCardButton Whether the button to launch the CardViewFragment should be shown
+     * @param isSideboard
      * @return A dialog which edits the wishlist
      */
-    public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment, boolean showCardButton) {
+    public static Dialog getDialog(final String mCardName, final FamiliarFragment fragment, boolean showCardButton, final boolean isSideboard) {
 
         final Context ctx = fragment.getActivity();
 
@@ -92,7 +92,6 @@ public class CardHelpers {
         final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(ctx, WishlistFragment.class);
 
         final String deckName;
-        final boolean isSideboard;
         final String dialogText;
 
         if (isWishlistDialog) {
@@ -100,7 +99,6 @@ public class CardHelpers {
             ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
             targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
             deckName = "";
-            isSideboard = false;
             dialogText = ctx.getString(R.string.wishlist_edit_dialog_title_end);
         } else {
             /* Right now only WishlistDialogFragment and DecklistDialogFragment call this, so obviously now it is the decklist */
@@ -111,8 +109,7 @@ public class CardHelpers {
                 deckName = ((DecklistFragment) fragment).mCurrentDeck;
             }
             ArrayList<Pair<MtgCard, Boolean>> decklist = DecklistHelpers.ReadDecklist(ctx, deckName + DecklistFragment.DECK_EXTENSION);
-            targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist);
-            isSideboard = decklist.get(0).second;
+            targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
             dialogText = ctx.getString(R.string.decklist_edit_dialog_title_end);
         }
         targetCardNumberOfs = targetNumberOfs.first;

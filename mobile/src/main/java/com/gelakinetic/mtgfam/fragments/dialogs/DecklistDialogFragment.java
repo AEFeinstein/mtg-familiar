@@ -50,7 +50,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
         final boolean isSideboard = getArguments().getBoolean(SIDE_KEY);
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
-                Dialog dialog = CardHelpers.getDialog(cardName, getParentDecklistFragment(), true);
+                Dialog dialog = CardHelpers.getDialog(cardName, getParentDecklistFragment(), true, isSideboard);
                 if (dialog == null) {
                     getParentDecklistFragment().handleFamiliarDbException(false);
                     return DontShowDialog();

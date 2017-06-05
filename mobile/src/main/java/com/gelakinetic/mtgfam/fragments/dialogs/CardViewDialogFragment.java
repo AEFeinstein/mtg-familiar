@@ -212,7 +212,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return builder.build();
             }
             case WISH_LIST_COUNTS: {
-                Dialog dialog = CardHelpers.getDialog(getCardViewFragment().mCardName, getCardViewFragment(), false);
+                Dialog dialog = CardHelpers.getDialog(getCardViewFragment().mCardName, getCardViewFragment(), false, false);
                 if (dialog == null) {
                     getCardViewFragment().handleFamiliarDbException(false);
                     return DontShowDialog();

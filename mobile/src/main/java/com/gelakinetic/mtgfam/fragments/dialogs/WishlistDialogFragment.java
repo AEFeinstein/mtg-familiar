@@ -42,7 +42,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
         String cardName = getArguments().getString(NAME_KEY);
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
-                Dialog dialog = CardHelpers.getDialog(cardName, getParentWishlistFragment(), true);
+                Dialog dialog = CardHelpers.getDialog(cardName, getParentWishlistFragment(), true, false);
                 if (dialog == null) {
                     getParentWishlistFragment().handleFamiliarDbException(false);
                     return DontShowDialog();

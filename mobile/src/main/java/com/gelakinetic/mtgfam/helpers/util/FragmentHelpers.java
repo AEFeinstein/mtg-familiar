@@ -14,10 +14,7 @@ public class FragmentHelpers {
 
     public static boolean isInstanceOf(final Context context, final Class<?> pClass) {
         final Fragment fragment = ((FamiliarActivity) context).getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (pClass.isInstance(fragment)) {
-            return true;
-        }
-        return false;
+        return pClass.isInstance(fragment);
     }
 
 }

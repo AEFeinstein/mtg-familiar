@@ -112,7 +112,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 xMarkMargin = 10; // todo: actually make this dimension
             }
 
-            /* This is unused */
+            /** This is unused */
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -127,11 +127,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 mListAdapter.pendingRemoval(swipedPosition);
+                mListAdapter.notifyItemChanged(swipedPosition);
             }
 
             /**
              * Upon drawing the item
-             * @param c canvas to draw on
+             * @param canvas canvas to draw on
              * @param recyclerView the parent
              * @param viewHolder what holder is being drawn on
              * @param dX see super
@@ -140,7 +141,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
              * @param isCurrentlyActive see super
              */
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 /* Sometimes this is called even if the item is gone */
                 if (viewHolder.getAdapterPosition() == -1) {
                     return;
@@ -158,7 +159,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 View itemView = viewHolder.itemView;
 
                 background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                background.draw(c);
+                background.draw(canvas);
                 int itemHeight = itemView.getBottom() - itemView.getTop();
                 int intrinsicWidth = xMark.getIntrinsicWidth();
                 int intrinsicHeight = xMark.getIntrinsicHeight();
@@ -167,8 +168,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                 int xMarkBottom = xMarkTop + intrinsicHeight;
                 xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-                xMark.draw(c);
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                xMark.draw(canvas);
+                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 
             /**
@@ -239,8 +240,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         }
                     }
                     /* set the tops and bottoms for the animation */
-                    if (lastViewComingDown != null
-                            && firstViewComingUp != null) {
+                    if (lastViewComingDown != null && firstViewComingUp != null) {
                         top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
                         bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
                     } else if (lastViewComingDown != null) {
