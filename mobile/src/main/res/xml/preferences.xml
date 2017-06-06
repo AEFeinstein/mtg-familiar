@@ -298,6 +298,16 @@
 
         </PreferenceCategory>
 
+        <PreferenceCategory android:title="@string/pref_cat_decklist">
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="@string/key_showTotalPriceDecklistPref"
+                android:summary="@string/pref_decklist_totals_summary"
+                android:title="@string/pref_wishlist_totals_title" />
+
+        </PreferenceCategory>
+
     </PreferenceScreen>
 
 </PreferenceScreen>

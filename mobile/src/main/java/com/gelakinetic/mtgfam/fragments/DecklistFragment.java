@@ -3,7 +3,9 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -50,6 +52,9 @@ import java.util.Locale;
  * This fragment shows a deck, and allows you to add to and modify it
  */
 public class DecklistFragment extends FamiliarListFragment {
+
+    /* Preferences */
+    private boolean mShowTotalDecklistPrice;
 
     /* UI Elements */
     public TextView mDeckName;
@@ -140,7 +145,7 @@ public class DecklistFragment extends FamiliarListFragment {
         getTouchHelper().attachToRecyclerView(mListView);
 
         /* Hopefully things look fancy */
-        mListView.addItemDecoration(getItemDecorator());
+        // mListView.addItemDecoration(getItemDecorator());
 
         myFragmentView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,22 +166,38 @@ public class DecklistFragment extends FamiliarListFragment {
             public void onClick(final View view) {
                 /* get the position so we can work with it */
                 final int position = mListView.getChildAdapterPosition(view);
+                final CompressedDecklistInfo item = mCompressedDecklist.get(position);
                 if (mListAdapter.mSelectMode) {
-                    view.setSelected(true);
-                } else {
-                    final CompressedDecklistInfo item = mCompressedDecklist.get(position);
-                    /* Show the dialog for this particular card */
-                    showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
+                    if (mListAdapter.mItemsSelected.contains(item)) {
+                        view.setBackgroundColor(Color.TRANSPARENT);
+                        mListAdapter.mItemsSelected.remove(item);
+                        if (mListAdapter.mItemsSelected.isEmpty()) {
+                            mListAdapter.mSelectMode = false;
+                            getFamiliarActivity().invalidateOptionsMenu();
+                        }
+                        return;
+                    }
+                    view.setBackgroundColor(Color.BLUE);
+                    mListAdapter.mItemsSelected.add(item);
+                    return;
                 }
+                /* Show the dialog for this particular card */
+                showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
             }
         });
 
         mListAdapter.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                //view.setSelected(true);
-                //mListAdapter.mSelectMode = true;
-                return true;
+                if (!mListAdapter.mSelectMode) {
+                    final CompressedDecklistInfo item = mCompressedDecklist.get(mListView.getChildAdapterPosition(view));
+                    view.setBackgroundColor(Color.BLUE);
+                    mListAdapter.mItemsSelected.add(item);
+                    mListAdapter.mSelectMode = true;
+                    getFamiliarActivity().invalidateOptionsMenu();
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -201,33 +222,23 @@ public class DecklistFragment extends FamiliarListFragment {
             return;
         }
 
+        final CompressedDecklistInfo decklistInfo = new CompressedDecklistInfo(card, isSideboard);
+
         /* Add it to the decklist, either as a new CompressedDecklistInfo, or to an existing one */
-        if (mCompressedDecklist.contains(card)) {
+        if (mCompressedDecklist.contains(decklistInfo)) {
             boolean added = false;
-            final int firstIndex = mCompressedDecklist.indexOf(card);
-            final int lastIndex = mCompressedDecklist.lastIndexOf(card);
+            final int firstIndex = mCompressedDecklist.indexOf(decklistInfo);
             final CompressedDecklistInfo firstCard = mCompressedDecklist.get(firstIndex);
-            final CompressedDecklistInfo secondCard = mCompressedDecklist.get(lastIndex);
-            final int isiSize = Math.max(firstCard.mInfo.size(), secondCard.mInfo.size());
-            for (int i = 0; i < isiSize; i++) {
+            for (int i = 0; i < firstCard.mInfo.size(); i++) {
                 IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
-                IndividualSetInfo secondIsi = secondCard.mInfo.get(i);
-                if (firstCard.mIsSideboard == isSideboard
-                        && firstIsi.mSetCode.equals(card.setCode)
-                        && firstIsi.mIsFoil.equals(card.foil)) {
+                if (firstIsi.mSetCode.equals(card.setCode) && firstIsi.mIsFoil.equals(card.foil)) {
                     firstIsi.mNumberOf++;
-                    added = true;
-                    break;
-                } else if (secondCard.mIsSideboard == isSideboard
-                        && secondIsi.mSetCode.equals(card.setCode)
-                        && secondIsi.mIsFoil.equals(card.foil)) {
-                    secondIsi.mNumberOf++;
                     added = true;
                     break;
                 }
             }
-            if (!added) { // todo: account for reprints since last added
-                mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
+            if (!added) {
+                firstCard.add(card);
             }
         } else {
             mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
@@ -237,7 +248,9 @@ public class DecklistFragment extends FamiliarListFragment {
         clearHeaders();
 
         /* Load the card's price */
-        loadPrice(card.mName, card.setCode, card.mNumber);
+        if (mShowTotalDecklistPrice) {
+            loadPrice(card.mName, card.setCode, card.mNumber);
+        }
 
         /* Sort the decklist */
         Collections.sort(mCompressedDecklist, mDecklistChain);
@@ -266,13 +279,21 @@ public class DecklistFragment extends FamiliarListFragment {
     @Override
     public void onResume() {
         super.onResume();
+        final String totalCards = ((CardDataAdapter) mListAdapter).getTotalCards() + " ";
+        mDeckCards.setText(totalCards);
         mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
+        mShowTotalDecklistPrice = getFamiliarActivity().mPreferenceAdapter.getShowtotalDecklistPrice();
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
         mListAdapter.notifyDataSetChanged();
     }
 
-    private String getAndSetDeckName(final String deckName) {
+    /**
+     * Sets the deck name header, and returns the full name with extension
+     * @param deckName name of the deck, null if autosave
+     * @return the name of the deck with extension
+     */
+    private String getAndSetDeckName(final @Nullable String deckName) {
         String lDeckName;
         if (deckName == null || deckName.equals("") || deckName.equals(AUTOSAVE_NAME)) {
             lDeckName = AUTOSAVE_NAME;
@@ -282,6 +303,22 @@ public class DecklistFragment extends FamiliarListFragment {
             mDeckName.setText(lDeckName);
         }
         return lDeckName + DECK_EXTENSION;
+    }
+
+    /**
+     * Clears the compressed decklist info
+     * @param cardChanged the card that was changed, null to clear everything
+     */
+    private void clearCompressedInfo(final @Nullable String cardChanged) {
+        if (cardChanged == null) {
+            mCompressedDecklist.clear();
+            return;
+        }
+        for (final CompressedDecklistInfo cdi : mCompressedDecklist) {
+            if (cdi.mCard != null && cdi.mCard.mName.equals(cardChanged)) {
+                cdi.clearCompressedInfo();
+            }
+        }
     }
 
     /**
@@ -301,15 +338,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
         try {
             /* Clear the decklist, or just the card that changed */
-            if (changedCardName == null) {
-                mCompressedDecklist.clear();
-            } else {
-                for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                    if (cdi.mCard != null && cdi.mCard.mName.equals(changedCardName)) {
-                        cdi.clearCompressedInfo();
-                    }
-                }
-            }
+            clearCompressedInfo(changedCardName);
+
             /* Compress the whole decklist, or just the card that changed */
             for (Pair<MtgCard, Boolean> card : decklist) {
                 /* Translate the set code to TCG name of course it's not saved */
@@ -325,7 +355,9 @@ public class DecklistFragment extends FamiliarListFragment {
                     } else {
                         mCompressedDecklist.add(new CompressedDecklistInfo(card.first, card.second));
                     }
-                    loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
+                    if (mShowTotalDecklistPrice) {
+                        loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
+                    }
                 }
             }
             /* check for wholly removed cards if one card was modified */
@@ -445,10 +477,15 @@ public class DecklistFragment extends FamiliarListFragment {
      * @param position where to put the header
      * @param headerText what the header says
      */
-    private void insertHeaderAt(final int position, final String headerText) {
-        mCompressedDecklist.add(position, new CompressedDecklistInfo(null, false));
-        mCompressedDecklist.get(position).header = headerText;
-        mListAdapter.notifyItemInserted(position);
+    private boolean insertHeaderAt(final int position, final String headerText) {
+        final CompressedDecklistInfo header = new CompressedDecklistInfo(null, false);
+        header.header = headerText;
+        if (!mCompressedDecklist.contains(header)) {
+            mCompressedDecklist.add(position, header);
+            mListAdapter.notifyItemInserted(position);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -457,34 +494,25 @@ public class DecklistFragment extends FamiliarListFragment {
     private void setHeaderValues() {
         final String[] cardTypes = getResources().getStringArray(R.array.card_types_extra);
         final String[] cardHeaders = getResources().getStringArray(R.array.decklist_card_headers);
-        final ArrayList<String> insertedHeaders = new ArrayList<>();
         for (int i = 0; i < mCompressedDecklist.size(); i++) {
             for (int j = 0; j < cardTypes.length; j++) {
                 final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
                 if (cdi.mCard != null /* We only want entries that have a card attached */
                     && (i == 0 || mCompressedDecklist.get(i - 1).header == null)) {
                     if (cdi.mIsSideboard) {
-                        if (!insertedHeaders.contains(cardHeaders[0])) { /* it is sideboard, if sideboard header hasn't already been added */
-                            insertHeaderAt(i, cardHeaders[0]);
-                            insertedHeaders.add(cardHeaders[0]);
+                        if (insertHeaderAt(i, cardHeaders[0])){
                             break;
                         }
-                    } else {
-                        if (j < cardHeaders.length - 1 /* if j is in range */
-                                && cdi.mCard.mType.contains(cardTypes[j]) /* the current card has the selected card type */
-                                && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) {
-                            if (!insertedHeaders.contains(cardHeaders[j + 1])) {
-                                insertHeaderAt(i, cardHeaders[j + 1]); /* Use the header for the card type */
-                                insertedHeaders.add(cardHeaders[j + 1]);
-                                mListAdapter.notifyItemInserted(i);
-                            }
+                        continue;
+                    }
+                    if (j < cardHeaders.length - 1 /* if j is in range */
+                            && cdi.mCard.mType.contains(cardTypes[j]) /* the current card has the selected card type */
+                            && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) /* There are at least 1 of this type */ {
+                        if (insertHeaderAt(i, cardHeaders[j + 1])) {
                             break;
-                        } else if (j >= cardHeaders.length - 1) { /* j is out of bounds */
-                            if (!insertedHeaders.contains(cardHeaders[cardHeaders.length - 1])) {
-                                insertHeaderAt(i, cardHeaders[cardHeaders.length - 1]); /* Use the last card header, "Other" */
-                                insertedHeaders.add(cardHeaders[cardHeaders.length - 1]);
-                                mListAdapter.notifyItemInserted(i);
-                            }
+                        }
+                    } else if (j >= cardHeaders.length - 1) { /* j is out of bounds */
+                        if (insertHeaderAt(i, cardHeaders[cardHeaders.length - 1])) {
                             break;
                         }
                     }
@@ -500,6 +528,10 @@ public class DecklistFragment extends FamiliarListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        if (mListAdapter.mSelectMode) {
+            inflater.inflate(R.menu.decklist_select_menu, menu);
+            return;
+        }
         inflater.inflate(R.menu.decklist_menu, menu);
     }
 
@@ -659,6 +691,11 @@ public class DecklistFragment extends FamiliarListFragment {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else { /* if the item IS NOT pending removal */
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
+                if (mItemsSelected.contains(info)) {
+                    holder.itemView.setBackgroundColor(Color.BLUE);
+                } else {
+                    holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                }
                 if (info.header == null) {
                     /* Enable the on click listener */
                     holder.enableClickListener();

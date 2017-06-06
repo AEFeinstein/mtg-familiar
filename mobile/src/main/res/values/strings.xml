@@ -450,6 +450,8 @@ Good luck, and have fun!
 <string name="pref_wishlist_totals_summary">"Display total price summary in the wishlist"</string>
 <string name="pref_wishlist_prices_title">"Show Card Prices"</string>
 <string name="pref_wishlist_prices_summary">"Display each card price in the wishlist"</string>
+<string name="pref_cat_decklist">"Decklist"</string>
+<string name="pref_decklist_totals_summary">"Display total price in the deck editor"</string>
 <string name="pref_English">"English"</string>
 <string name="pref_French">"French"</string>
 <string name="pref_Italian">"Italian"</string>
@@ -512,7 +514,7 @@ Good luck, and have fun!
 <string name="decklist_artifacts">"Artifacts"</string>
 <string name="decklist_lands">"Lands"</string>
 <string name="decklist_edit_dialog_title_end">"in the deck"</string>
-    <string name="decklist_delete">"Delete Deck"</string>
+<string name="decklist_delete">"Delete Deck"</string>
 <string name="decklist_save">"Save Deck"</string>
 <string name="decklist_load">"Load Deck"</string>
 <string name="decklist_clear">"Clear Deck"</string>
@@ -527,6 +529,7 @@ Good luck, and have fun!
 <string name="decklist_others">"Others"</string>
 <string name="decklist_unnamed_deck">"Unnamed Deck"</string>
 <string name="decklist_cards">"cards"</string>
+<string name="decklist_import_to_wishlist">"Import Selected to Wishlist"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Added a deckbuilder&lt;br&gt;

@@ -33,9 +33,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by bmaurer on 3/6/2017.
+ * This class has helpers for anything that utilizes card things, and has classes that
+ * DecklistHelpers and WishlistHelpers override
  */
-
 public class CardHelpers {
 
     /**

@@ -127,7 +127,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 mListAdapter.pendingRemoval(swipedPosition);
-                mListAdapter.notifyItemChanged(swipedPosition);
+                mListAdapter.notifyDataSetChanged();
             }
 
             /**
@@ -290,6 +290,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         ArrayList<E> mItems;
         ArrayList<E> mItemsPendingRemoval;
+        ArrayList<E> mItemsSelected;
 
         Handler mHandler;
         HashMap<E, Runnable> mPendingRunnables;
@@ -302,6 +303,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         CardDataAdapter(ArrayList<E> values) {
             mItems = values;
             mItemsPendingRemoval = new ArrayList<>();
+            mItemsSelected = new ArrayList<>();
             mHandler = new Handler();
             mPendingRunnables = new HashMap<>();
             mSelectMode = false;
@@ -364,7 +366,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 /* The items that change are including and after position */
                 notifyItemRemoved(position);
             }
-        };
+        }
 
         public void setOnClickListener(View.OnClickListener clickListener) {
             mClickListener = clickListener;

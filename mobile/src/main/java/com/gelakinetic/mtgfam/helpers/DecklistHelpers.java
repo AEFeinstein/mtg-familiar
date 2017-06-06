@@ -184,16 +184,13 @@ public class DecklistHelpers {
         @Override
         public boolean equals(Object o) {
             if (o instanceof CompressedDecklistInfo) {
-                CompressedDecklistInfo cdi = (CompressedDecklistInfo) o;
-                if (cdi.mCard == null || mCard == null) {
-                    if (cdi.header != null && cdi.header.equals(header)) {
-                        return true;
-                    }
-                } else {
-                    return (mCard.mName.equals(cdi.mCard.mName) && mIsSideboard == cdi.mIsSideboard);
-                }
-            } else if (o instanceof MtgCard
-                    && mCard != null) {
+                final CompressedDecklistInfo cdi = (CompressedDecklistInfo) o;
+                return (cdi.header != null && cdi.header.equals(header)) /* Are the headers equal? */
+                        || (mCard != null /* or is this card not null? */
+                            && cdi.mCard != null /* and is that card not null? */
+                            && mCard.mName.equals(cdi.mCard.mName) /* do their names equal? */
+                            && mIsSideboard == cdi.mIsSideboard); /* Do both have the same sideboard status? */
+            } else if (o instanceof MtgCard && mCard != null) {
                 return mCard.mName.equals(((MtgCard) o).mName);
             }
             return false;
