@@ -114,17 +114,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
         getTouchHelper().attachToRecyclerView(mListView);
 
-        mListView.addItemDecoration(getItemDecorator());
-
-        mListAdapter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /* get the position so we can work with it */
-                int position = mListView.getChildAdapterPosition(view);
-                CompressedWishlistInfo item = mCompressedWishlist.get(position);
-                showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName);
-            }
-        });
+        // mListView.addItemDecoration(getItemDecorator());
 
         myFragmentView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -549,7 +539,7 @@ public class WishlistFragment extends FamiliarListFragment {
             } else {
 
                 /* Make sure the click listener is here */
-                holder.enableClickListener();
+                // holder.enableClickListener();
 
                 /* Make sure you can see the item */
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
@@ -736,6 +726,12 @@ public class WishlistFragment extends FamiliarListFragment {
                 mCardToughness = (TextView) itemView.findViewById(R.id.cardt);
                 mCardCost = (TextView) itemView.findViewById(R.id.cardcost);
                 mWishlistSets = ((LinearLayout) itemView.findViewById(R.id.wishlist_sets));
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View view) {
+                showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD, mCardName.getText().toString());
             }
 
         }

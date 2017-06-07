@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -298,7 +299,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         ArrayList<E> mItems;
         ArrayList<E> mItemsPendingRemoval;
-        ArrayList<E> mItemsSelected;
+
+        SparseBooleanArray mSelectedItems;
 
         Handler mHandler;
         HashMap<E, Runnable> mPendingRunnables;
@@ -311,10 +313,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         CardDataAdapter(ArrayList<E> values) {
             mItems = values;
             mItemsPendingRemoval = new ArrayList<>();
-            mItemsSelected = new ArrayList<>();
             mHandler = new Handler();
             mPendingRunnables = new HashMap<>();
             mSelectMode = false;
+            mSelectedItems = new SparseBooleanArray();
         }
 
         @Override
@@ -379,59 +381,19 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
          * @param position where the item to remove is
          */
         public void remove(int position) {
-            final E item = mItems.get(position);
-            if (mItemsPendingRemoval.contains(item)) {
-                mItemsPendingRemoval.remove(item);
+            try {
+                final E item = mItems.get(position);
+                if (mItemsPendingRemoval.contains(item)) {
+                    mItemsPendingRemoval.remove(item);
+                }
+                if (mItems.contains(item)) {
+                    mItems.remove(item);
+                    /* The items that change are including and after position */
+                    notifyItemRemoved(position);
+                }
+            } catch (ArrayIndexOutOfBoundsException aob) {
+                /* Eat it, because who cares? */
             }
-            if (mItems.contains(item)) {
-                mItems.remove(item);
-                /* The items that change are including and after position */
-                notifyItemRemoved(position);
-            }
-        }
-
-        /**
-         * Select the item at position
-         * @param position where the item is
-         * @return true if the item gets selected, false if it is already selected
-         */
-        public boolean selectItem(final int position) {
-            final E item = mItems.get(position);
-            if (!mItemsSelected.contains(item)) {
-                mItemsSelected.add(item);
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * Unselect the item at position
-         * @param position where the item is
-         * @return true if the item is unselected, false if the item is already unselected
-         */
-        public boolean unselectItem(final int position) {
-            final E item = mItems.get(position);
-            if (mItemsSelected.contains(item)) {
-                mItemsSelected.remove(item);
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * Get the items that are currently selected
-         * @return arraylist of type E of items that are selected
-         */
-        public ArrayList<E> getSelectedItems() {
-            return mItemsSelected;
-        }
-
-        /**
-         * How many items are selected
-         * @return number of selected items
-         */
-        public int getSelectedCount() {
-            return mItemsSelected.size();
         }
 
         /**
@@ -450,24 +412,26 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             mSelectMode = isOn;
         }
 
+        public ArrayList<E> getSelectedItems() {
+            final ArrayList<E> selectedItems = new ArrayList<>();
+            for (int i = 0; i < mSelectedItems.size(); i++) {
+                if (mSelectedItems.valueAt(i)) {
+                    selectedItems.add(mItems.get(mSelectedItems.keyAt(i)));
+                }
+            }
+            return selectedItems;
+        }
+
         /**
          * Deselect all items
          */
         public void unselectAll() {
-            mItemsSelected.clear();
+            mSelectedItems.clear();
             setSelectMode(false);
             notifyDataSetChanged();
         }
 
-        public void setOnClickListener(View.OnClickListener clickListener) {
-            mClickListener = clickListener;
-        }
-
-        public void setOnLongClickListener(View.OnLongClickListener longClickListener) {
-            mLongClickListener = longClickListener;
-        }
-
-        abstract class ViewHolder extends RecyclerView.ViewHolder {
+        abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
             TextView mCardName;
 
@@ -478,24 +442,33 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 mCardName = (TextView) itemView.findViewById(R.id.card_name);
             }
 
-            boolean enableClickListener() {
-                if (itemView.hasOnClickListeners()) {
-                    return false;
+            @Override
+            public void onClick(View view) {
+                if (getSelectMode()) {
+                    if (mSelectedItems.get(getAdapterPosition(), false)) {
+                        mSelectedItems.delete(getAdapterPosition());
+                        itemView.setSelected(false);
+                        if (mSelectedItems.size() < 1) {
+                            setSelectMode(false);
+                            getFamiliarActivity().invalidateOptionsMenu();
+                        }
+                        return;
+                    }
+                    itemView.setSelected(true);
+                    mSelectedItems.put(getAdapterPosition(), true);
                 }
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mClickListener.onClick(view);
-                    }
-                });
-                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        mLongClickListener.onLongClick(view);
-                        return true;
-                    }
-                });
-                return true;
+            }
+
+            @Override
+            public boolean onLongClick(View view) {
+                if (!getSelectMode()) {
+                    itemView.setSelected(true);
+                    mSelectedItems.put(getAdapterPosition(), true);
+                    setSelectMode(true);
+                    getFamiliarActivity().invalidateOptionsMenu();
+                    return true;
+                }
+                return false;
             }
 
         }

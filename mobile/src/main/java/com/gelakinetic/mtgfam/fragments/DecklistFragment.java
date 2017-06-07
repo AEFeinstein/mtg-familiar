@@ -3,7 +3,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -156,51 +155,6 @@ public class DecklistFragment extends FamiliarListFragment {
         });
 
         setUpCheckBoxClickListeners();
-
-        /* on the click */
-        mListAdapter.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Called when an item in the RecyclerView is clicked on
-             * @param view the clicked view object
-             */
-            @Override
-            public void onClick(final View view) {
-                /* get the position so we can work with it */
-                final int position = mListView.getChildAdapterPosition(view);
-                final CompressedDecklistInfo item = mCompressedDecklist.get(position);
-                if (mListAdapter.getSelectMode()) {
-                    if (mListAdapter.mItemsSelected.contains(item)) {
-                        view.setBackgroundColor(Color.TRANSPARENT);
-                        mListAdapter.unselectItem(position);
-                        if (mListAdapter.getSelectedCount() < 1) {
-                            mListAdapter.setSelectMode(false);
-                            getFamiliarActivity().invalidateOptionsMenu();
-                        }
-                        return;
-                    }
-                    view.setBackgroundColor(Color.BLUE);
-                    mListAdapter.selectItem(position);
-                    return;
-                }
-                /* Show the dialog for this particular card */
-                showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
-            }
-        });
-
-        mListAdapter.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!mListAdapter.getSelectMode()) {
-                    final int position = mListView.getChildAdapterPosition(view);
-                    view.setBackgroundColor(Color.BLUE);
-                    mListAdapter.selectItem(position);
-                    mListAdapter.setSelectMode(true);
-                    getFamiliarActivity().invalidateOptionsMenu();
-                    return true;
-                }
-                return false;
-            }
-        });
 
         return myFragmentView;
     }
@@ -699,15 +653,16 @@ public class DecklistFragment extends FamiliarListFragment {
             if (mItemsPendingRemoval.contains(info)) {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else { /* if the item IS NOT pending removal */
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
-                if (mItemsSelected.contains(info)) {
-                    holder.itemView.setBackgroundColor(Color.BLUE);
+                if (mSelectedItems.get(position, false)) {
+                    holder.itemView.setSelected(true);
                 } else {
-                    holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                    holder.itemView.setSelected(false);
                 }
+                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
                 if (info.header == null) {
                     /* Enable the on click listener */
-                    holder.enableClickListener();
+                    holder.itemView.setOnClickListener(holder);
+                    holder.itemView.setOnLongClickListener(holder);
                     /* set up the card's views */
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
                     holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
@@ -720,6 +675,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 } else {
                     /* The header uses the same layout, just set it up */
                     holder.itemView.setOnClickListener(null);
+                    holder.itemView.setOnLongClickListener(null);
                     final int typeIndex = Arrays.asList(getResources().getStringArray(R.array.decklist_card_headers)).indexOf(info.header) - 1;
                     holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.VISIBLE);
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
@@ -800,6 +756,16 @@ public class DecklistFragment extends FamiliarListFragment {
                 super(view, R.layout.decklist_card_row);
                 mCardNumberOf = (TextView) itemView.findViewById(R.id.decklistRowNumber);
                 mCardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
+            }
+
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                if (!getSelectMode()) {
+                    /* if we aren't in select mode, open a dialog to edit this card */
+                    final CompressedDecklistInfo item = mItems.get(getAdapterPosition());
+                    showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
+                }
             }
 
         }
