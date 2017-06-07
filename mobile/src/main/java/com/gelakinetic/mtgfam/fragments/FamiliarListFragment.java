@@ -30,6 +30,8 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by xvicarious on 5/24/17.
@@ -259,6 +261,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         };
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mListAdapter.removePendingNow();
+    }
+
     /**
      * Receive the result from the card image search, then fill in the name edit text on the
      * UI thread
@@ -298,7 +306,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         View.OnClickListener mClickListener;
         View.OnLongClickListener mLongClickListener;
 
-        boolean mSelectMode;
+        private boolean mSelectMode;
 
         CardDataAdapter(ArrayList<E> values) {
             mItems = values;
@@ -353,6 +361,20 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         }
 
         /**
+         * Execute any pending runnables NOW. This generally means we are moving away from this
+         * fragment
+         */
+        void removePendingNow() {
+            Iterator iterator = mPendingRunnables.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Runnable runnable = (Runnable) ((Map.Entry) iterator.next()).getValue();
+                mHandler.removeCallbacks(runnable);
+                runnable.run();
+            }
+            mPendingRunnables.clear();
+        }
+
+        /**
          * Properly go about removing an item from the list
          * @param position where the item to remove is
          */
@@ -366,6 +388,75 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 /* The items that change are including and after position */
                 notifyItemRemoved(position);
             }
+        }
+
+        /**
+         * Select the item at position
+         * @param position where the item is
+         * @return true if the item gets selected, false if it is already selected
+         */
+        public boolean selectItem(final int position) {
+            final E item = mItems.get(position);
+            if (!mItemsSelected.contains(item)) {
+                mItemsSelected.add(item);
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Unselect the item at position
+         * @param position where the item is
+         * @return true if the item is unselected, false if the item is already unselected
+         */
+        public boolean unselectItem(final int position) {
+            final E item = mItems.get(position);
+            if (mItemsSelected.contains(item)) {
+                mItemsSelected.remove(item);
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Get the items that are currently selected
+         * @return arraylist of type E of items that are selected
+         */
+        public ArrayList<E> getSelectedItems() {
+            return mItemsSelected;
+        }
+
+        /**
+         * How many items are selected
+         * @return number of selected items
+         */
+        public int getSelectedCount() {
+            return mItemsSelected.size();
+        }
+
+        /**
+         * If we are in select mode
+         * @return mSelectMode
+         */
+        public boolean getSelectMode() {
+            return mSelectMode;
+        }
+
+        /**
+         * Set if we are in select mode
+         * @param isOn if we should be in select mode or not
+         */
+        public void setSelectMode(final boolean isOn) {
+            mSelectMode = isOn;
+        }
+
+        /**
+         * Deselect all items
+         */
+        public void unselectAll() {
+            mItemsSelected.clear();
+            setSelectMode(false);
+            notifyDataSetChanged();
         }
 
         public void setOnClickListener(View.OnClickListener clickListener) {

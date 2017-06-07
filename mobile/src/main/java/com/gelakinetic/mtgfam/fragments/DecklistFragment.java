@@ -34,6 +34,7 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -167,18 +168,18 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* get the position so we can work with it */
                 final int position = mListView.getChildAdapterPosition(view);
                 final CompressedDecklistInfo item = mCompressedDecklist.get(position);
-                if (mListAdapter.mSelectMode) {
+                if (mListAdapter.getSelectMode()) {
                     if (mListAdapter.mItemsSelected.contains(item)) {
                         view.setBackgroundColor(Color.TRANSPARENT);
-                        mListAdapter.mItemsSelected.remove(item);
-                        if (mListAdapter.mItemsSelected.isEmpty()) {
-                            mListAdapter.mSelectMode = false;
+                        mListAdapter.unselectItem(position);
+                        if (mListAdapter.getSelectedCount() < 1) {
+                            mListAdapter.setSelectMode(false);
                             getFamiliarActivity().invalidateOptionsMenu();
                         }
                         return;
                     }
                     view.setBackgroundColor(Color.BLUE);
-                    mListAdapter.mItemsSelected.add(item);
+                    mListAdapter.selectItem(position);
                     return;
                 }
                 /* Show the dialog for this particular card */
@@ -189,11 +190,11 @@ public class DecklistFragment extends FamiliarListFragment {
         mListAdapter.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (!mListAdapter.mSelectMode) {
-                    final CompressedDecklistInfo item = mCompressedDecklist.get(mListView.getChildAdapterPosition(view));
+                if (!mListAdapter.getSelectMode()) {
+                    final int position = mListView.getChildAdapterPosition(view);
                     view.setBackgroundColor(Color.BLUE);
-                    mListAdapter.mItemsSelected.add(item);
-                    mListAdapter.mSelectMode = true;
+                    mListAdapter.selectItem(position);
+                    mListAdapter.setSelectMode(true);
                     getFamiliarActivity().invalidateOptionsMenu();
                     return true;
                 }
@@ -452,6 +453,14 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 return true;
             }
+            case R.id.deck_import_selected: {
+                ArrayList<CompressedDecklistInfo> selectedItems = mListAdapter.getSelectedItems();
+                for (CompressedDecklistInfo info : selectedItems) {
+                    WishlistHelpers.addItemToWishlist(getContext(), info.convertToWishlist());
+                }
+                mListAdapter.unselectAll();
+                return true;
+            }
             default: {
                 return super.onOptionsItemSelected(item);
             }
@@ -528,7 +537,7 @@ public class DecklistFragment extends FamiliarListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (mListAdapter.mSelectMode) {
+        if (mListAdapter.getSelectMode()) {
             inflater.inflate(R.menu.decklist_select_menu, menu);
             return;
         }

@@ -81,6 +81,30 @@ public class WishlistHelpers {
     }
 
     /**
+     * Adds an item as a CompressedWishlistInfo to the wishlist
+     * @param context context that this is being called from
+     * @param wishlistInfo the CompressedWishlistInfo to add to the wishlist
+     */
+    public static void addItemToWishlist(final Context context, final CompressedWishlistInfo wishlistInfo) {
+        final ArrayList<MtgCard> currentWishlist = ReadWishlist(context);
+        for (IndividualSetInfo isi : wishlistInfo.mInfo) {
+            final MtgCard card = wishlistInfo.mCard;
+            card.mExpansion = isi.mSet;
+            card.setCode = isi.mSetCode;
+            card.mNumber = isi.mNumber;
+            card.foil = isi.mIsFoil;
+            card.numberOf = isi.mNumberOf;
+            if (currentWishlist.contains(card)) {
+                final int existingIndex = currentWishlist.indexOf(card);
+                currentWishlist.get(existingIndex).numberOf += card.numberOf;
+            } else {
+                currentWishlist.add(card);
+            }
+        }
+        WriteWishlist(context, currentWishlist);
+    }
+
+    /**
      * Delete the wishlist
      *
      * @param mCtx A context to open the file wish

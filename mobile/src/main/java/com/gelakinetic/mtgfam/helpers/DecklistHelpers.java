@@ -6,6 +6,7 @@ import android.util.Pair;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -173,6 +174,13 @@ public class DecklistHelpers {
         public CompressedDecklistInfo(MtgCard card, boolean isSideboard) {
             super(card);
             mIsSideboard = isSideboard;
+        }
+
+        public CompressedWishlistInfo convertToWishlist() {
+            final CompressedWishlistInfo wishlist = new CompressedWishlistInfo(this.mCard);
+            wishlist.mInfo.clear();
+            wishlist.mInfo.addAll(this.mInfo);
+            return wishlist;
         }
 
         /**
