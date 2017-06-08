@@ -439,6 +439,7 @@ public class DecklistFragment extends FamiliarListFragment {
      * Inserts a header entry at the given position with the given text
      * @param position where to put the header
      * @param headerText what the header says
+     * @return true if the header is inserted, false if it isn't
      */
     private boolean insertHeaderAt(final int position, final String headerText) {
         final CompressedDecklistInfo header = new CompressedDecklistInfo(null, false);
@@ -463,7 +464,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (cdi.mCard != null /* We only want entries that have a card attached */
                     && (i == 0 || mCompressedDecklist.get(i - 1).header == null)) {
                     if (cdi.mIsSideboard) {
-                        if (insertHeaderAt(i, cardHeaders[0])){
+                        if (!insertHeaderAt(i, cardHeaders[0])){
                             break;
                         }
                         continue;
@@ -471,11 +472,11 @@ public class DecklistFragment extends FamiliarListFragment {
                     if (j < cardHeaders.length - 1 /* if j is in range */
                             && cdi.mCard.mType.contains(cardTypes[j]) /* the current card has the selected card type */
                             && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) /* There are at least 1 of this type */ {
-                        if (insertHeaderAt(i, cardHeaders[j + 1])) {
+                        if (!insertHeaderAt(i, cardHeaders[j + 1])) {
                             break;
                         }
                     } else if (j >= cardHeaders.length - 1) { /* j is out of bounds */
-                        if (insertHeaderAt(i, cardHeaders[cardHeaders.length - 1])) {
+                        if (!insertHeaderAt(i, cardHeaders[cardHeaders.length - 1])) {
                             break;
                         }
                     }
@@ -760,12 +761,12 @@ public class DecklistFragment extends FamiliarListFragment {
 
             @Override
             public void onClick(View view) {
-                super.onClick(view);
                 if (!getSelectMode()) {
                     /* if we aren't in select mode, open a dialog to edit this card */
                     final CompressedDecklistInfo item = mItems.get(getAdapterPosition());
                     showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD, item.mCard.mName, item.mIsSideboard);
                 }
+                super.onClick(view);
             }
 
         }
