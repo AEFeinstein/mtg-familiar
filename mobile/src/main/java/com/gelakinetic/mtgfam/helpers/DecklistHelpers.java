@@ -204,6 +204,14 @@ public class DecklistHelpers {
             return false;
         }
 
+        @Override
+        public int hashCode() {
+            int hash = 23;
+            hash = hash * 31 + mCard.hashCode();
+            hash = hash * 31 + ((Boolean) mIsSideboard).hashCode();
+            return hash;
+        }
+
     }
 
 }

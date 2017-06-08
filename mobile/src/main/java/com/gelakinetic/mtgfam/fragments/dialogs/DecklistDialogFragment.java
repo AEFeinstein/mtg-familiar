@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 /**
- * Class that creates dialogs for DecklistFragment
+ * Class that creates dialogs for DecklistFragment.
  */
 public class DecklistDialogFragment extends FamiliarDialogFragment {
 
@@ -50,7 +50,12 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
         final boolean isSideboard = getArguments().getBoolean(SIDE_KEY);
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
-                Dialog dialog = CardHelpers.getDialog(cardName, getParentDecklistFragment(), true, isSideboard);
+                Dialog dialog = CardHelpers.getDialog(
+                        cardName,
+                        getParentDecklistFragment(),
+                        true,
+                        isSideboard
+                );
                 if (dialog == null) {
                     getParentDecklistFragment().handleFamiliarDbException(false);
                     return DontShowDialog();
@@ -59,24 +64,32 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_SAVE_DECK_AS: {
                 /* Inflate a view to type in the deck's name and show it in an AlertDialog */
-                View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry, null, false);
+                View textEntryView = getActivity().getLayoutInflater()
+                        .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
                 nameInput.append(getParentDecklistFragment().mCurrentDeck);
                 /* Set the button to clear the text field */
-                textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
+                textEntryView.findViewById(R.id.clear_button).setOnClickListener(
+                        new View.OnClickListener() {
+
                     @Override
                     public void onClick(View v) {
                         nameInput.setText("");
                     }
+
                 });
                 Dialog dialog = new MaterialDialog.Builder(getActivity())
                         .title(R.string.decklist_save)
                         .customView(textEntryView, false)
                         .positiveText(R.string.dialog_ok)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
+
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            public void onClick(
+                                    @NonNull MaterialDialog dialog,
+                                    @NonNull DialogAction which) {
+
                                 if (nameInput.getText() == null) {
                                     return;
                                 }
@@ -85,14 +98,21 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 if (deckName.length() == 0 || deckName.equals("")) {
                                     return;
                                 }
-                                DecklistHelpers.WriteCompressedDecklist(getActivity(), getParentDecklistFragment().mCompressedDecklist, deckName + DecklistFragment.DECK_EXTENSION);
+                                DecklistHelpers.WriteCompressedDecklist(
+                                        getActivity(),
+                                        getParentDecklistFragment().mCompressedDecklist,
+                                        deckName + DecklistFragment.DECK_EXTENSION
+                                );
                                 getParentDecklistFragment().mCurrentDeck = deckName;
                                 getParentDecklistFragment().mDeckName.setText(deckName);
+
                             }
+
                         })
                         .negativeText(R.string.dialog_cancel)
                         .build();
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                dialog.getWindow()
+                        .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 return dialog;
             }
             case DIALOG_LOAD_DECK: {
@@ -111,13 +131,22 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .negativeText(R.string.dialog_cancel)
                         .items(deckNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
+
                             @Override
-                            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
-                                getParentDecklistFragment().readAndCompressDecklist(null, deckNames[position]);
+                            public void onSelection(
+                                    MaterialDialog dialog,
+                                    View itemView,
+                                    int position,
+                                    CharSequence text) {
+
+                                getParentDecklistFragment()
+                                        .readAndCompressDecklist(null, deckNames[position]);
                                 getParentDecklistFragment().mCurrentDeck = deckNames[position];
                                 /* Alert things to update */
                                 getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+
                             }
+
                         })
                         .build();
             }
@@ -127,8 +156,11 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                 /* if there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.decklist_toast_no_decks,
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeText(
+                            this.getActivity(),
+                            R.string.decklist_toast_no_decks,
+                            ToastWrapper.LENGTH_LONG
+                    ).show();
                     return DontShowDialog();
                 }
 
@@ -138,15 +170,25 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .items(deckNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
-                            public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                            public void onSelection(
+                                    MaterialDialog dialog,
+                                    View itemView,
+                                    int position,
+                                    CharSequence text) {
+
                                 File toDelete = new File(getActivity().getFilesDir(),
                                         deckNames[position] + DecklistFragment.DECK_EXTENSION);
                                 if (!toDelete.delete()) {
-                                    ToastWrapper.makeText(getActivity(), toDelete.getName() + " " +
-                                            getString(R.string.not_deleted),
-                                            ToastWrapper.LENGTH_LONG).show();
+                                    ToastWrapper.makeText(
+                                            getActivity(),
+                                            toDelete.getName() + " "
+                                                    + getString(R.string.not_deleted),
+                                            ToastWrapper.LENGTH_LONG
+                                    ).show();
                                 }
+
                             }
+
                         })
                         .build();
             }
@@ -156,17 +198,28 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .content(R.string.decklist_clear_dialog_text)
                         .positiveText(R.string.dialog_ok)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
+
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            public void onClick(
+                                    @NonNull MaterialDialog dialog,
+                                    @NonNull DialogAction which) {
+
                                 /* do some cleaning up */
                                 getParentDecklistFragment().mCurrentDeck = "autosave";
                                 getParentDecklistFragment().mCompressedDecklist.clear();
                                 getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
-                                getParentDecklistFragment().mDeckName.setText(R.string.decklist_unnamed_deck);
+                                getParentDecklistFragment().mDeckName.setText(
+                                        R.string.decklist_unnamed_deck
+                                );
                                 getParentDecklistFragment().mDeckCards.setText("0 ");
-                                DecklistHelpers.WriteCompressedDecklist(getActivity(), getParentDecklistFragment().mCompressedDecklist);
+                                DecklistHelpers.WriteCompressedDecklist(
+                                        getActivity(),
+                                        getParentDecklistFragment().mCompressedDecklist
+                                );
                                 dialog.dismiss();
+
                             }
+
                         })
                         .negativeText(R.string.dialog_cancel)
                         .cancelable(true)

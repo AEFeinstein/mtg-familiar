@@ -331,6 +331,13 @@ public class MtgCard extends Card {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 23;
+        hash = hash * 31 + mName.hashCode();
+        return hash;
+    }
+
     /**
      * Append the card's oracle text to the StringBuilder.
      * This is used when sharing a wishlist

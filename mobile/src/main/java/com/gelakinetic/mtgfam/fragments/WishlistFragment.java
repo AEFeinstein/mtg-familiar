@@ -143,7 +143,7 @@ public class WishlistFragment extends FamiliarListFragment {
             return;
         }
 
-        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, mCheckboxFoil.isChecked(), Integer.valueOf(numberOf));
+        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
 
         /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
         if (mCompressedWishlist.contains(card)) {

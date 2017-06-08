@@ -35,9 +35,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Created by xvicarious on 5/24/17.
+ * This class is for extension by any Fragment that has a custom list of cards at it's base that
+ * allows modification.
  */
-
 public abstract class FamiliarListFragment extends FamiliarFragment {
 
     /* Preferences */
@@ -62,33 +62,47 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
     boolean mCheckboxFoilLocked = false;
 
+    /**
+     * Initializes common members. Generally called in onCreate
+     * @param fragmentView the fragment calling this method
+     */
     void initializeMembers(View fragmentView) {
+
         mNameField = (AutoCompleteTextView) fragmentView.findViewById(R.id.name_search);
         mNumberOfField = (EditText) fragmentView.findViewById(R.id.number_input);
         mCheckboxFoil = (CheckBox) fragmentView.findViewById(R.id.list_foil);
         mListView = (RecyclerView) fragmentView.findViewById(R.id.cardlist);
+
     }
 
     void setUpCheckBoxClickListeners() {
 
         mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
+
             @Override
             public boolean onLongClick(View view) {
+
                 /* Lock the checkbox on long click */
                 mCheckboxFoilLocked = true;
                 mCheckboxFoil.setChecked(true);
                 return true;
+
             }
+
         });
 
         mCheckboxFoil.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 if (!isChecked) {
                     /* Unlock the checkbox when the user unchecks it */
                     mCheckboxFoilLocked = false;
                 }
+
             }
+
         });
 
     }
@@ -97,8 +111,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @return a callback helper for swipe to delete
      */
     ItemTouchHelper getTouchHelper() {
-                /* A Callback to detect if our item is being swiped away */
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+        /* A Callback to detect if our item is being swiped away */
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
             Drawable background;
             Drawable xMark;
@@ -109,15 +125,20 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
              * Initialize the variables used in the callback
              */
             private void init() {
+
                 background = new ColorDrawable(Color.RED);
                 xMark = ContextCompat.getDrawable(getContext(), R.drawable.ic_close_dark);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = 10; // todo: actually make this dimension
+
             }
 
             /** This is unused */
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean onMove(
+                    RecyclerView recyclerView,
+                    RecyclerView.ViewHolder viewHolder,
+                    RecyclerView.ViewHolder target) {
                 return false;
             }
 
@@ -128,9 +149,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
              */
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
                 int swipedPosition = viewHolder.getAdapterPosition();
                 mListAdapter.pendingRemoval(swipedPosition);
                 mListAdapter.notifyDataSetChanged();
+
             }
 
             /**
@@ -144,7 +167,15 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
              * @param isCurrentlyActive see super
              */
             @Override
-            public void onChildDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(
+                    Canvas canvas,
+                    RecyclerView recyclerView,
+                    RecyclerView.ViewHolder viewHolder,
+                    float dX,
+                    float dY,
+                    int actionState,
+                    boolean isCurrentlyActive) {
+
                 /* Sometimes this is called even if the item is gone */
                 if (viewHolder.getAdapterPosition() == -1) {
                     return;
@@ -161,7 +192,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
                 View itemView = viewHolder.itemView;
 
-                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(),
+                        itemView.getRight(), itemView.getBottom());
                 background.draw(canvas);
                 int itemHeight = itemView.getBottom() - itemView.getTop();
                 int intrinsicWidth = xMark.getIntrinsicWidth();
@@ -172,7 +204,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 int xMarkBottom = xMarkTop + intrinsicHeight;
                 xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
                 xMark.draw(canvas);
-                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState,
+                        isCurrentlyActive);
             }
 
             /**
@@ -183,34 +216,41 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
              */
             @Override
             public int getSwipeDirs(RecyclerView parent, RecyclerView.ViewHolder holder) {
+
                 if (!((CardDataAdapter.ViewHolder) holder).swipeable) {
                     /* If swipeable is false, return 0 */
                     return 0;
                 }
                 /* Otherwise the default */
                 return super.getSwipeDirs(parent, holder);
+
             }
 
         };
+
         return new ItemTouchHelper(simpleItemTouchCallback);
+
     }
 
     /**
-     * Create the item decoration for swipe to delete
+     * Create the item decoration for swipe to delete.
      * @return a pretty animation thing
      */
     RecyclerView.ItemDecoration getItemDecorator() {
+
         return new RecyclerView.ItemDecoration() {
 
             Drawable background;
             boolean initiated;
 
             /**
-             * Setup the drawables
+             * Setup the drawables.
              */
             private void init() {
+
                 background = new ColorDrawable(Color.RED);
                 initiated = true;
+
             }
 
             /**
@@ -220,6 +260,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
              */
             @Override
             public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+
                 if (!initiated) {
                     init();
                 }
@@ -244,14 +285,18 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                     }
                     /* set the tops and bottoms for the animation */
                     if (lastViewComingDown != null && firstViewComingUp != null) {
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
+                        top = lastViewComingDown.getBottom()
+                                + (int) lastViewComingDown.getTranslationY();
+                        bottom = firstViewComingUp.getTop()
+                                + (int) firstViewComingUp.getTranslationY();
                     } else if (lastViewComingDown != null) {
-                        top = lastViewComingDown.getBottom() + (int) lastViewComingDown.getTranslationY();
+                        top = lastViewComingDown.getBottom()
+                                + (int) lastViewComingDown.getTranslationY();
                         bottom = lastViewComingDown.getBottom();
                     } else if (firstViewComingUp != null) {
                         top = firstViewComingUp.getTop();
-                        bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
+                        bottom = firstViewComingUp.getTop()
+                                + (int) firstViewComingUp.getTranslationY();
                     }
                     background.setBounds(left, top, right, bottom);
                     background.draw(canvas);
@@ -264,20 +309,23 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
     @Override
     public void onPause() {
+
         super.onPause();
         mListAdapter.removePendingNow();
+
     }
 
     /**
      * Receive the result from the card image search, then fill in the name edit text on the
-     * UI thread
+     * UI thread.
      *
      * @param multiverseId The multiverseId of the card the query returned
      */
     @Override
     public void receiveTutorCardsResult(long multiverseId) {
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false)
-                .openDatabase(false);
+
+        SQLiteDatabase database =
+                DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
             Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
@@ -293,8 +341,13 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             e.printStackTrace();
         }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+
     }
 
+    /**
+     * Handle the given list, supporting "undo", and selection of multiple items.
+     * @param <E> type of data that the adapter will be handling
+     */
     public abstract class CardDataAdapter<E> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         ArrayList<E> mItems;
@@ -304,9 +357,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         Handler mHandler;
         HashMap<E, Runnable> mPendingRunnables;
-
-        View.OnClickListener mClickListener;
-        View.OnLongClickListener mLongClickListener;
 
         private boolean mSelectMode;
 
@@ -325,7 +375,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         }
 
         /**
-         * Where things go before they get removed
+         * Where things go before they get removed.
          * @param position where the item to be removed is
          */
         void pendingRemoval(int position) {
@@ -342,13 +392,16 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 PreferenceAdapter pa = new PreferenceAdapter(getContext());
                 mHandler.postDelayed(pendingRemovalRunnable, pa.getUndoTimeout());
                 mPendingRunnables.put(item, pendingRemovalRunnable);
-                Snackbar undoBar = Snackbar.make(getFamiliarActivity().findViewById(R.id.fragment_container),
-                        /* todo: Actual text for this part.
-                         * Possibly make it so the action says the card's name? */
-                        R.string.app_name, Snackbar.LENGTH_SHORT);
+                Snackbar undoBar = Snackbar.make(
+                        getFamiliarActivity().findViewById(R.id.fragment_container),
+                        R.string.app_name,
+                        Snackbar.LENGTH_SHORT
+                );
                 undoBar.setAction(R.string.cardlist_undo, new View.OnClickListener() {
+
                     @Override
                     public void onClick(View view) {
+
                         Runnable pendingRemovalRunnable = mPendingRunnables.get(item);
                         mPendingRunnables.remove(item);
                         if (pendingRemovalRunnable != null) {
@@ -356,17 +409,21 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         }
                         mItemsPendingRemoval.remove(item);
                         notifyItemChanged(mItems.indexOf(item));
+
                     }
+
                 });
                 undoBar.show();
+
             }
         }
 
         /**
          * Execute any pending runnables NOW. This generally means we are moving away from this
-         * fragment
+         * fragment.
          */
         void removePendingNow() {
+
             Iterator iterator = mPendingRunnables.entrySet().iterator();
             while (iterator.hasNext()) {
                 Runnable runnable = (Runnable) ((Map.Entry) iterator.next()).getValue();
@@ -374,13 +431,15 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 runnable.run();
             }
             mPendingRunnables.clear();
+
         }
 
         /**
-         * Properly go about removing an item from the list
+         * Properly go about removing an item from the list.
          * @param position where the item to remove is
          */
         public void remove(int position) {
+
             try {
                 final E item = mItems.get(position);
                 if (mItemsPendingRemoval.contains(item)) {
@@ -394,10 +453,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             } catch (ArrayIndexOutOfBoundsException aob) {
                 /* Eat it, because who cares? */
             }
+
         }
 
         /**
-         * If we are in select mode
+         * If we are in select mode.
          * @return mSelectMode
          */
         public boolean getSelectMode() {
@@ -405,7 +465,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         }
 
         /**
-         * Set if we are in select mode
+         * Set if we are in select mode.
          * @param isOn if we should be in select mode or not
          */
         public void setSelectMode(final boolean isOn) {
@@ -413,6 +473,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         }
 
         public ArrayList<E> getSelectedItems() {
+
             final ArrayList<E> selectedItems = new ArrayList<>();
             for (int i = 0; i < mSelectedItems.size(); i++) {
                 if (mSelectedItems.valueAt(i)) {
@@ -420,30 +481,38 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 }
             }
             return selectedItems;
+
         }
 
         /**
-         * Deselect all items
+         * Deselect all items.
          */
         public void unselectAll() {
+
             mSelectedItems.clear();
             setSelectMode(false);
             notifyDataSetChanged();
+
         }
 
-        abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        abstract class ViewHolder
+                extends RecyclerView.ViewHolder
+                implements View.OnClickListener, View.OnLongClickListener {
 
             TextView mCardName;
 
             boolean swipeable = true;
 
             ViewHolder(ViewGroup view, @LayoutRes int listRowLayout) {
+
                 super(LayoutInflater.from(view.getContext()).inflate(listRowLayout, view, false));
                 mCardName = (TextView) itemView.findViewById(R.id.card_name);
+
             }
 
             @Override
             public void onClick(View view) {
+
                 if (getSelectMode()) {
                     if (mSelectedItems.get(getAdapterPosition(), false)) {
                         mSelectedItems.delete(getAdapterPosition());
@@ -457,10 +526,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                     itemView.setSelected(true);
                     mSelectedItems.put(getAdapterPosition(), true);
                 }
+
             }
 
             @Override
             public boolean onLongClick(View view) {
+
                 if (!getSelectMode()) {
                     itemView.setSelected(true);
                     mSelectedItems.put(getAdapterPosition(), true);
@@ -469,6 +540,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                     return true;
                 }
                 return false;
+
             }
 
         }
