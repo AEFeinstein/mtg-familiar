@@ -26,7 +26,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
     /* Dialog constants */
     public static final int DIALOG_UPDATE_CARD = 1;
-    public static final int DIALOG_SAVE_DECK = 2;
+    public static final int DIALOG_SAVE_DECK_AS = 2;
     public static final int DIALOG_LOAD_DECK = 3;
     public static final int DIALOG_DELETE_DECK = 4;
     public static final int DIALOG_CONFIRMATION = 5;
@@ -57,7 +57,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 }
                 return dialog;
             }
-            case DIALOG_SAVE_DECK: {
+            case DIALOG_SAVE_DECK_AS: {
                 /* Inflate a view to type in the deck's name and show it in an AlertDialog */
                 View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
@@ -162,7 +162,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 getParentDecklistFragment().mCurrentDeck = "autosave";
                                 getParentDecklistFragment().mCompressedDecklist.clear();
                                 getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentDecklistFragment().mDeckName.setText(R.string.decklist_unnamed_deck);
                                 getParentDecklistFragment().mDeckCards.setText("0 ");
+                                DecklistHelpers.WriteCompressedDecklist(getActivity(), getParentDecklistFragment().mCompressedDecklist);
                                 dialog.dismiss();
                             }
                         })

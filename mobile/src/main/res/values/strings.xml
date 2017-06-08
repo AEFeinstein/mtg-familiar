@@ -530,6 +530,7 @@ Good luck, and have fun!
 <string name="decklist_unnamed_deck">"Unnamed Deck"</string>
 <string name="decklist_cards">"cards"</string>
 <string name="decklist_import_to_wishlist">"Import Selected to Wishlist"</string>
+<string name="decklist_save_as">"Save Deck As"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Added a deckbuilder&lt;br&gt;

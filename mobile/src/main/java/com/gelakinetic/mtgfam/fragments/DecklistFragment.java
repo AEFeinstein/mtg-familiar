@@ -377,8 +377,8 @@ public class DecklistFragment extends FamiliarListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         /* handle item selection */
         switch (item.getItemId()) {
-            case R.id.deck_menu_save: {
-                showDialog(DecklistDialogFragment.DIALOG_SAVE_DECK, null, false);
+            case R.id.deck_menu_save_as: {
+                showDialog(DecklistDialogFragment.DIALOG_SAVE_DECK_AS, null, false);
                 return true;
             }
             case R.id.deck_menu_load: {
@@ -414,6 +414,14 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 mListAdapter.unselectAll();
                 return true;
+            }
+            case R.id.deck_menu_save: {
+                String deckName = mCurrentDeck;
+                if (deckName == null || deckName.equals("")) {
+                    deckName = AUTOSAVE_NAME;
+                }
+                deckName += DECK_EXTENSION;
+                DecklistHelpers.WriteCompressedDecklist(getContext(), mCompressedDecklist, deckName);
             }
             default: {
                 return super.onOptionsItemSelected(item);
