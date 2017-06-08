@@ -1,7 +1,56 @@
 apply plugin: 'com.android.application'
+apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+
+check.dependsOn 'pmd', 'checkstyle', 'findbugs'
 
 repositories {
     mavenCentral()
+}
+
+def configDir = "${project.rootDir}/config"
+
+task checkstyle(type: Checkstyle) {
+    configFile file("$configDir/checkstyle.xml")
+    configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle.suppressions.xml").absolutePath
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    classpath = files()
+}
+
+task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+    ignoreFailures = false
+    effort = "max"
+    reportLevel = "high"
+    excludeFilter = new File("$configDir/findbugs.filter.xml")
+    classes = files("${project.rootDir}/mobile/build/intermediates/classes")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html {
+            destination "$project.buildDir/reports/findbugs.html"
+        }
+    }
+    classpath = files()
+}
+
+task pmd(type: Pmd) {
+    ignoreFailures = true
+    ruleSetFiles = files("$configDir/pmd.xml")
+    reports {
+        html.enabled = true
+        html {
+            destination "$project.buildDir/reports/pmd.html"
+        }
+    }
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
 }
 
 android {
