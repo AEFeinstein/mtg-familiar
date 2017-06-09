@@ -14,9 +14,8 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.dialogs.DiceDialogFragment;
+import com.gelakinetic.mtgfam.helpers.NumberButtonOnClickListener;
 
 import java.util.Random;
 
@@ -27,9 +26,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
 
     private Random mRandom;
     private TextSwitcher mDieOutput;
-
-    public FamiliarActivity mActivity;
-    public int mLastNumber = -1;
+    private Integer mLastNumber;
 
     /**
      * Set up the TextSwitcher animations, button handlers
@@ -44,13 +41,6 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        try {
-            mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
-        } catch (NullPointerException e) {
-            mActivity = getFamiliarActivity();
-        }
-
         View myFragmentView = inflater.inflate(R.layout.dice_frag, container, false);
 
         mRandom = new Random();
@@ -139,10 +129,23 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
             d100.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (dN != null) {
-            dN.setOnClickListener(new View.OnClickListener() {
+            dN.setOnClickListener(new NumberButtonOnClickListener(DiceFragment.this) {
                 @Override
-                public void onClick(View view) {
-                    chooseDie();
+                public void onDialogNumberSet(Integer number) {
+                    mLastNumber = number;
+                    DiceFragment.this.rollDie(number);
+                }
+                @Override
+                public Integer getMaxNumber() {
+                    return Integer.MAX_VALUE;
+                }
+                @Override
+                public Integer getInitialValue() {
+                    return mLastNumber;
+                }
+                @Override
+                public String getLabelText() {
+                    return DiceFragment.this.getString(R.string.dice_choose_sides);
                 }
             });
             dN.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
@@ -151,26 +154,11 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
     }
 
     /**
-     * Present a fragment that lets the user choose the number of sides on the die
-     */
-    private void chooseDie() {
-        if (!this.isVisible()) {
-            return;
-        }
-
-        removeDialog(getFragmentManager());
-
-        DiceDialogFragment newFragment = new DiceDialogFragment();
-
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
-    }
-
-    /**
      * Get a random number between [0, d) and display it as [1,d]
      *
      * @param dieFaces the number of "die faces" for the die being "rolled"
      */
-    public void rollDie(int dieFaces) {
+    private void rollDie(int dieFaces) {
         if (mDieOutput != null) {
             mDieOutput.setText("" + (mRandom.nextInt(dieFaces) + 1));
         }

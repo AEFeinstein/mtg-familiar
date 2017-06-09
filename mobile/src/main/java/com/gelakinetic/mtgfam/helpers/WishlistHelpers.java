@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -240,7 +241,15 @@ public class WishlistHelpers {
             ((TextView) wishlistRow.findViewById(R.id.cardset)).setText(setName);
             String numberOf = targetCardNumberOfs.get(setCode);
             numberOf = numberOf == null ? "0" : numberOf;
-            ((EditText) wishlistRow.findViewById(R.id.numberInput)).setText(numberOf);
+            final Button numberButton = (Button) wishlistRow.findViewById(R.id.number_button);
+            numberButton.setText(numberOf);
+            numberButton.setOnClickListener(new NumberButtonOnClickListener(fragment) {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onDialogNumberSet(Integer number) {
+                    numberButton.setText(number.toString());
+                }
+            });
             wishlistRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.GONE);
             linearLayout.addView(wishlistRow);
             potentialSetCodes.add(setCode);
@@ -256,7 +265,15 @@ public class WishlistHelpers {
                 ((TextView) wishlistRowFoil.findViewById(R.id.cardset)).setText(setName);
                 String foilNumberOf = targetFoilCardNumberOfs.get(setCode);
                 foilNumberOf = foilNumberOf == null ? "0" : foilNumberOf;
-                ((EditText) wishlistRowFoil.findViewById(R.id.numberInput)).setText(foilNumberOf);
+                final Button numberButtonFoil = (Button) wishlistRowFoil.findViewById(R.id.number_button);
+                numberButtonFoil.setText(foilNumberOf);
+                numberButtonFoil.setOnClickListener(new NumberButtonOnClickListener(fragment) {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onDialogNumberSet(Integer number) {
+                        numberButtonFoil.setText(number.toString());
+                    }
+                });
                 wishlistRowFoil.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
                 linearLayout.addView(wishlistRowFoil);
                 potentialSetCodes.add(setCode);
@@ -293,7 +310,7 @@ public class WishlistHelpers {
                             card.mName = mCardName;
                             card.setCode = potentialSetCodes.get(i);
                             try {
-                                EditText numberInput = ((EditText) view.findViewById(R.id.numberInput));
+                                Button numberInput = ((Button) view.findViewById(R.id.number_button));
                                 assert numberInput.getText() != null;
                                 card.numberOf = Integer.valueOf(numberInput.getText().toString());
                             } catch (NumberFormatException e) {
