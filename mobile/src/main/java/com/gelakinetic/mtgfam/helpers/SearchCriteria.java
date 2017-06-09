@@ -32,4 +32,5 @@ public class SearchCriteria implements Serializable {
     public String collectorsNumber = null;
     public String colorIdentity = "wubrgl";
     public int colorIdentityLogic = 0;
+    public boolean noTokens;
 }

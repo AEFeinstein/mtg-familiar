@@ -1249,6 +1249,14 @@ public class CardDbAdapter {
                     + " " + criteria.cmc + ")";
         }
 
+        if (criteria.noTokens) {
+            statement += " AND (" +
+                        "(NOT " + DATABASE_TABLE_CARDS + "." + KEY_MANACOST + " = '') " +
+                        "OR " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " LIKE '%Land%' " +
+                        "OR " + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE '%Suspend%' " +
+                        "OR " + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE '%Splice onto Arcane%')";
+        }
+
         if (criteria.rarity != null) {
             statement += " AND (";
 
