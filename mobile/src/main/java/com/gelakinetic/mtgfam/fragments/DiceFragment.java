@@ -143,10 +143,6 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                 public Integer getInitialValue() {
                     return mLastNumber;
                 }
-                @Override
-                public String getLabelText() {
-                    return DiceFragment.this.getString(R.string.dice_choose_sides);
-                }
             });
             dN.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
