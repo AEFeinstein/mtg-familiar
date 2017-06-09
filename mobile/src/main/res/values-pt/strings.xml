@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
 <string name="dialog_yes">"Sim"</string>
-<string name="dialog_no">"Não"</string>
 <string name="dialog_done">"Pronto"</string>
 <string name="dialog_both">"Ambos"</string>
 <string name="dialog_life">"Vida"</string>
@@ -215,7 +214,6 @@ Busca por imagem de carta desenvolvido por &lt;a href=https://tutor.cards&gt;Tut
 <string name="card_view_image_saved">"Imagem salva"</string>
 <string name="card_view_share_card">"Compartilhar Carta"</string>
 <string name="card_view_share_text">"Texto"</string>
-<string name="card_view_share_image">"Imagem"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Anunciar total de vida"</string>
@@ -262,9 +260,6 @@ Reserva de mana também serão apagados."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"Cara"</string>
 <string name="dice_tails">"Coroa"</string>
-<string name="dice_choose_sides">"Escolha o número de lados"</string>
-<string name="dice_num_too_large">"O número digitado é muito grande"</string>
-<string name="dice_postive">"Você deve digitar um número positivo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Falha ao carregar Reserva de mana!"</string>
@@ -311,14 +306,8 @@ Reserva de mana também serão apagados."</string>
 <string name="wishlist_view_card">"Ver carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordenar Lista de Desejos"</string>
-<string name="wishlist_type_none">"Nenhum"</string>
-<string name="wishlist_type_cmc">"Custo de mana convertido"</string>
-<string name="wishlist_type_color">"Cor"</string>
-<string name="wishlist_type_name">"Nome"</string>
 <string name="wishlist_type_price">"Preço"</string>
-<string name="wishlist_type_set">"Coleção"</string>
 <string name="wishlist_ascending">"Crescente"</string>
-<string name="wishlist_descending">"Descendente"</string>
 <string name="wishlist_sort_by">"Ordenar Por"</string>
 
 <!-- Round timer activity -->

@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
 <string name="dialog_yes">"Sí"</string>
-<string name="dialog_no">"No"</string>
 <string name="dialog_done">"Listo"</string>
 <string name="dialog_both">"Ambos"</string>
 <string name="dialog_life">"Vida"</string>
@@ -215,7 +214,6 @@ La búsqueda de cartas por imagen funciona con &lt;a href=https://tutor.cards&gt
 <string name="card_view_image_saved">"Imagen guardada en"</string>
 <string name="card_view_share_card">"Compartir la carta"</string>
 <string name="card_view_share_text">"El texto"</string>
-<string name="card_view_share_image">"La imagen"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Anunciar total de vida"</string>
@@ -262,9 +260,6 @@ La reserva de maná también será vaciada."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"cara"</string>
 <string name="dice_tails">"cruz"</string>
-<string name="dice_choose_sides">"Elige el número de lados"</string>
-<string name="dice_num_too_large">"El número introducido es demasiado alto"</string>
-<string name="dice_postive">"Tienes que ingresar un número positivo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"¡La reserva de maná falló al cargar!"</string>
@@ -311,14 +306,8 @@ La reserva de maná también será vaciada."</string>
 <string name="wishlist_view_card">"Ver carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordenar lista de deseos"</string>
-<string name="wishlist_type_none">"Ninguno"</string>
-<string name="wishlist_type_cmc">"Coste de maná convertido"</string>
-<string name="wishlist_type_color">"Color"</string>
-<string name="wishlist_type_name">"Nombre"</string>
 <string name="wishlist_type_price">"Precio"</string>
-<string name="wishlist_type_set">"Expansión"</string>
 <string name="wishlist_ascending">"Ascendente"</string>
-<string name="wishlist_descending">"Descendente"</string>
 <string name="wishlist_sort_by">"Ordenar por"</string>
 
 <!-- Round timer activity -->

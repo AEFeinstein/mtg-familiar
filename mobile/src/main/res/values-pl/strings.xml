@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Anuluj"</string>
 <string name="dialog_yes">"Tak"</string>
-<string name="dialog_no">"Nie"</string>
 <string name="dialog_done">"Gotowe"</string>
 <string name="dialog_both">"Wyczyść oba"</string>
 <string name="dialog_life">"Życie"</string>
@@ -217,7 +216,6 @@ Wyszukiwanie obrazu karty uzyskane przy pomocy &lt;a href=https://tutor.cards&gt
 <string name="card_view_image_saved">"Obrazek zapisano w"</string>
 <string name="card_view_share_card">"Udostępnij kartę"</string>
 <string name="card_view_share_text">"Tekst"</string>
-<string name="card_view_share_image">"Obrazek"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Komunikat o ilości życia"</string>
@@ -264,9 +262,6 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"Orzeł"</string>
 <string name="dice_tails">"Reszka"</string>
-<string name="dice_choose_sides">"Wpisz ilość ścianek"</string>
-<string name="dice_num_too_large">"Liczba którą wprowadziłeś jest zbyt duża"</string>
-<string name="dice_postive">"Musisz wprowadzić liczbę dodatnią"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Nie udało się wczytać licznika many!"</string>
@@ -313,14 +308,8 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="wishlist_view_card">"Zobacz kartę"</string>
 <string name="wishlist_foil">"foliowane"</string>
 <string name="wishlist_sort">"Sortuj Listę Życzeń"</string>
-<string name="wishlist_type_none">"Żadne"</string>
-<string name="wishlist_type_cmc">"Całkowity koszt Many"</string>
-<string name="wishlist_type_color">"Kolor"</string>
-<string name="wishlist_type_name">"Nazwa"</string>
 <string name="wishlist_type_price">"Cena"</string>
-<string name="wishlist_type_set">"Edycja"</string>
 <string name="wishlist_ascending">"Wzrastająco"</string>
-<string name="wishlist_descending">"Opadająco"</string>
 <string name="wishlist_sort_by">"Sortuj według"</string>
 
 <!-- Round timer activity -->
