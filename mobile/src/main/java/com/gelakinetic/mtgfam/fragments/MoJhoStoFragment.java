@@ -210,7 +210,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             criteria.type = type;
             criteria.cmc = cmc;
             criteria.cmcLogic = logic;
-            criteria.noTokens = true;
+            criteria.moJhoStoFilter = true;
             Cursor permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
             if (permanents == null) {
