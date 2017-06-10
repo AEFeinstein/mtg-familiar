@@ -1249,6 +1249,17 @@ public class CardDbAdapter {
                     + " " + criteria.cmc + ")";
         }
 
+        if (criteria.moJhoStoFilter) {
+            /* Filter out tokens. */
+            statement += " AND (" +
+                    /* Cards without mana costs. */
+                    "NOT " + DATABASE_TABLE_CARDS + "." + KEY_MANACOST + " = '' " +
+                    /* Cards like 'Dryad Arbor'. */
+                    "OR " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " LIKE '%Land Creature%')";
+            /* Filter out 'UN-'sets*/
+            statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " IN ('UG', 'UNH')";
+        }
+
         if (criteria.rarity != null) {
             statement += " AND (";
 
