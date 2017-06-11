@@ -1,6 +1,9 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,10 +12,12 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -332,6 +337,22 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         from, to);
                 ListView lv = new ListView(getActivity());
                 lv.setAdapter(adapter);
+                lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        /* Copy the translated name to the clipboard */
+                        ClipboardManager clipboard = (ClipboardManager) (getCardViewFragment().getContext().
+                                getSystemService(android.content.Context.CLIPBOARD_SERVICE));
+                        ClipData cd = new ClipData(
+                                ((TextView) view.findViewById(R.id.format)).getText(),
+                                new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
+                                new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
+                        clipboard.setPrimaryClip(cd);
+
+                        Toast.makeText(getContext(), R.string.card_view_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
                 builder.customView(lv, false);

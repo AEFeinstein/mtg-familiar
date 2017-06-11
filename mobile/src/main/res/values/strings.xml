@@ -214,6 +214,7 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
 <string name="card_view_image_saved">"Image saved to "</string>
 <string name="card_view_share_card">"Share Card"</string>
 <string name="card_view_share_text">"Text"</string>
+<string name="card_view_copied_to_clipboard">"Copied to Clipboard"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Announce Life Totals"</string>
