@@ -110,8 +110,8 @@ Magic the Gathering y las cartas de Magic the Gathering son ™ &amp; © Wizards
 Programa licenciado bajo la &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-&lt;br&gt;
-La búsqueda de cartas por imagen funciona con &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.
+<!--&lt;br&gt;-->
+<!--La búsqueda de cartas por imagen funciona con &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.-->
 "</string>
 <string name="main_drawer_open">"Abrir columna de navegación"</string>
 <string name="main_drawer_close">"Cerrar columna de navegación"</string>

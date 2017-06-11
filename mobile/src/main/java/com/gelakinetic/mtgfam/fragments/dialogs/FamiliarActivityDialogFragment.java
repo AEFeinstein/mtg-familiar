@@ -78,6 +78,8 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 text.setMovementMethod(LinkMovementMethod.getInstance());
                 builder.customView(dialogLayout, false);
 
+                dialogLayout.findViewById(R.id.imageview3).setVisibility(View.GONE);
+
                 return builder.build();
             }
             case DIALOG_CHANGE_LOG: {
