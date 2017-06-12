@@ -775,7 +775,7 @@ public class CardHelpers {
                 if (data == (int) data) {
                     return Integer.toString((int) data);
                 } else {
-                    return Float.valueOf(data).toString();
+                    return Float.toString(data);
                 }
             }
         }
