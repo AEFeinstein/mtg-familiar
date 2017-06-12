@@ -23,7 +23,7 @@ task checkstyle(type: Checkstyle) {
 task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     ignoreFailures = false
     effort = "max"
-    reportLevel = "high"
+    reportLevel = "medium"
     excludeFilter = new File("$configDir/findbugs.filter.xml")
     classes = files("${project.rootDir}/mobile/build/intermediates/classes")
     source 'src'

@@ -484,6 +484,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         }
 
+        boolean getItemSelected(int position) {
+            return mSelectedItems.get(position, false);
+        }
+
         /**
          * Deselect all items.
          */
@@ -506,7 +510,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             ViewHolder(ViewGroup view, @LayoutRes int listRowLayout) {
 
                 super(LayoutInflater.from(view.getContext()).inflate(listRowLayout, view, false));
-                mCardName = (TextView) itemView.findViewById(R.id.card_name);
+                mCardName = itemView.findViewById(R.id.card_name);
 
             }
 
@@ -521,10 +525,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                             setSelectMode(false);
                             getFamiliarActivity().invalidateOptionsMenu();
                         }
+                        notifyItemChanged(getAdapterPosition());
                         return;
                     }
                     itemView.setSelected(true);
                     mSelectedItems.put(getAdapterPosition(), true);
+                    notifyItemChanged(getAdapterPosition());
                 }
 
             }
@@ -537,6 +543,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                     mSelectedItems.put(getAdapterPosition(), true);
                     setSelectMode(true);
                     getFamiliarActivity().invalidateOptionsMenu();
+                    notifyItemChanged(getAdapterPosition());
                     return true;
                 }
                 return false;

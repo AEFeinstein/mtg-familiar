@@ -761,7 +761,11 @@ public class DecklistFragment extends FamiliarListFragment {
                     separator.setVisibility(View.GONE);
                     Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
                     holder.mCardName.setText(info.mCard.mName);
-                    holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
+                    if (getItemSelected(position)) {
+                        holder.mCardNumberOf.setText("\u2713");
+                    } else {
+                        holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
+                    }
                     holder.mCardCost.setText(ImageGetterHelper
                             .formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
                 } else {
@@ -874,8 +878,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 super(view, R.layout.decklist_card_row);
 
-                mCardNumberOf = (TextView) itemView.findViewById(R.id.decklistRowNumber);
-                mCardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
+                mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
+                mCardCost = itemView.findViewById(R.id.decklistRowCost);
 
             }
 

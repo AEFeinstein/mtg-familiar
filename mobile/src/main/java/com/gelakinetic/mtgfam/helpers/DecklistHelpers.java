@@ -238,7 +238,7 @@ public class DecklistHelpers {
                         /* or is this card not null? */
                         || (mCard != null
                             /* and is that card not null? */
-                            && cdi.mCard != null 
+                            && cdi.mCard != null
                             /* Are their names equal? */
                             && mCard.mName.equals(cdi.mCard.mName)
                             /* Both have same sideboard status? */
