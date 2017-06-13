@@ -11,6 +11,7 @@
         <item name="colorAccent_attr">@color/colorAccent_light</item>
 
         <item name="android:windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
 
         <item name="color_background">@color/background_light</item>
         <item name="color_background_selected">@color/background_light_selected</item>
@@ -135,6 +136,7 @@
         <item name="ic_menu_warning">@drawable/ic_menu_warning_light</item>
         <item name="ic_menu_wishlist">@drawable/ic_menu_wishlist_light</item>
         <item name="ic_menu_translate">@drawable/ic_menu_translate_light</item>
+        <item name="ic_menu_done">@drawable/ic_menu_done_light</item>
 
         <item name="button">@style/button_light</item>
 
@@ -154,6 +156,7 @@
         <item name="colorAccent_attr">@color/colorAccent_dark</item>
 
         <item name="android:windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
 
         <item name="color_background">@color/background_dark</item>
         <item name="color_background_selected">@color/background_dark_selected</item>
@@ -274,6 +277,7 @@
         <item name="ic_menu_warning">@drawable/ic_menu_warning_dark</item>
         <item name="ic_menu_wishlist">@drawable/ic_menu_wishlist_dark</item>
         <item name="ic_menu_translate">@drawable/ic_menu_translate_light</item>
+        <item name="ic_menu_done">@drawable/ic_menu_done_dark</item>
 
         <item name="button">@style/button_dark</item>
 

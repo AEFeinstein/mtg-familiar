@@ -40,11 +40,13 @@
             android:orientation="horizontal">
 
             <TextView
-                tools:text="0"
+                tools:text="99"
                 style="@style/text.medium"
+                android:minEms="2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/decklistRowNumber"
+                android:gravity="center"
                 android:layout_gravity="center_vertical"
                 android:paddingStart="16dp"
                 android:paddingLeft="16dp" />

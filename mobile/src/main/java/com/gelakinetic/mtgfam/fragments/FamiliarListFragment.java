@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.SparseBooleanArray;
@@ -61,6 +62,9 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public CardDataAdapter mListAdapter;
 
     boolean mCheckboxFoilLocked = false;
+
+    ActionMode mActionMode;
+    ActionMode.Callback mActionModeCallback;
 
     /**
      * Initializes common members. Generally called in onCreate
@@ -484,12 +488,16 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         }
 
-        boolean getItemSelected(int position) {
-            return mSelectedItems.get(position, false);
+        public void deleteSelectedItems() {
+            for (int i = 0; i < mSelectedItems.size(); i++) {
+                if (mSelectedItems.valueAt(i)) {
+                    remove(mSelectedItems.keyAt(i));
+                }
+            }
         }
 
         /**
-         * Deselect all items.
+         * Deselect all items, and set select mode to false.
          */
         public void unselectAll() {
 
@@ -510,7 +518,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             ViewHolder(ViewGroup view, @LayoutRes int listRowLayout) {
 
                 super(LayoutInflater.from(view.getContext()).inflate(listRowLayout, view, false));
-                mCardName = itemView.findViewById(R.id.card_name);
+                mCardName = (TextView) itemView.findViewById(R.id.card_name);
 
             }
 
@@ -522,8 +530,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         mSelectedItems.delete(getAdapterPosition());
                         itemView.setSelected(false);
                         if (mSelectedItems.size() < 1) {
+                            mActionMode.finish();
                             setSelectMode(false);
-                            getFamiliarActivity().invalidateOptionsMenu();
                         }
                         notifyItemChanged(getAdapterPosition());
                         return;
@@ -539,10 +547,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             public boolean onLongClick(View view) {
 
                 if (!getSelectMode()) {
+                    mActionMode = getFamiliarActivity().startSupportActionMode(mActionModeCallback);
                     itemView.setSelected(true);
                     mSelectedItems.put(getAdapterPosition(), true);
                     setSelectMode(true);
-                    getFamiliarActivity().invalidateOptionsMenu();
                     notifyItemChanged(getAdapterPosition());
                     return true;
                 }

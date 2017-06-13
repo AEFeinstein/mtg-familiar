@@ -505,6 +505,7 @@ Good luck, and have fun!
 
 <!-- General Card List -->
 <string name="cardlist_undo">"undo"</string>
+<string name="cardlist_delete_selected">"Delete Selected Items"</string>
 
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Sideboard"</string>

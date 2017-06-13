@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -178,6 +179,51 @@ public class DecklistFragment extends FamiliarListFragment {
         });
 
         setUpCheckBoxClickListeners();
+
+        mActionModeCallback = new ActionMode.Callback() {
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.decklist_select_menu, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.deck_import_selected: {
+                        ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
+                                mListAdapter.getSelectedItems();
+                        for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
+                            WishlistHelpers.addItemToWishlist(getContext(),
+                                    info.convertToWishlist());
+                        }
+                        mActionMode.finish();
+                        return true;
+                    }
+                    case R.id.deck_delete_selected: {
+                        mListAdapter.deleteSelectedItems();
+                        mActionMode.finish();
+                        return true;
+                    }
+                    default: {
+                        return false;
+                    }
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                mListAdapter.unselectAll();
+            }
+
+        };
 
         return myFragmentView;
     }
@@ -458,15 +504,6 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 return true;
             }
-            case R.id.deck_import_selected: {
-                ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
-                        mListAdapter.getSelectedItems();
-                for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-                    WishlistHelpers.addItemToWishlist(getContext(), info.convertToWishlist());
-                }
-                mListAdapter.unselectAll();
-                return true;
-            }
             case R.id.deck_menu_save: {
                 String deckName = mCurrentDeck;
                 if (deckName == null || deckName.equals("")) {
@@ -744,16 +781,24 @@ public class DecklistFragment extends FamiliarListFragment {
             if (mItemsPendingRemoval.contains(info)) {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else { /* if the item IS NOT pending removal */
-                if (mSelectedItems.get(position, false)) {
-                    holder.itemView.setSelected(true);
-                } else {
-                    holder.itemView.setSelected(false);
-                }
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
                 if (info.header == null) {
+
                     /* Enable the on click listener */
                     holder.itemView.setOnClickListener(holder);
                     holder.itemView.setOnLongClickListener(holder);
+
+                    /* Do the selection stuff */
+                    if (mSelectedItems.get(position, false)) {
+                        holder.itemView.setSelected(true);
+                        holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(R.attr.ic_menu_done), 0, 0, 0);
+                        holder.mCardNumberOf.setText("");
+                    } else {
+                        holder.itemView.setSelected(false);
+                        holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                        holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
+                    }
+
                     /* set up the card's views */
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
                     holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
@@ -761,11 +806,6 @@ public class DecklistFragment extends FamiliarListFragment {
                     separator.setVisibility(View.GONE);
                     Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
                     holder.mCardName.setText(info.mCard.mName);
-                    if (getItemSelected(position)) {
-                        holder.mCardNumberOf.setText("\u2713");
-                    } else {
-                        holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
-                    }
                     holder.mCardCost.setText(ImageGetterHelper
                             .formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
                 } else {
@@ -878,8 +918,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 super(view, R.layout.decklist_card_row);
 
-                mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
-                mCardCost = itemView.findViewById(R.id.decklistRowCost);
+                mCardNumberOf = (TextView) itemView.findViewById(R.id.decklistRowNumber);
+                mCardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
 
             }
 
