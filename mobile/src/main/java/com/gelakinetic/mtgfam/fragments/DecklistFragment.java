@@ -573,10 +573,10 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (cdi.mCard != null /* We only want entries that have a card attached */
                         && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
                         && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) {
-                    if (cdi.mIsSideboard) {
-                        if (!insertHeaderAt(i, cardHeaders[0])){
-                            break;
-                        }
+                    if (cdi.mIsSideboard /* it is in the sideboard */
+                            /* The sideboard header isn't already there */
+                            && !insertHeaderAt(i, cardHeaders[0])) {
+                        break;
                     } else if (j < cardHeaders.length - 1 /* if j is in range */
                             /* the current card has the selected card type */
                             && cdi.mCard.mType.contains(cardTypes[j])
@@ -805,6 +805,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     holder.mCardName.setText(info.mCard.mName);
                     holder.mCardCost.setText(ImageGetterHelper
                             .formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
+                    holder.swipeable = true;
                 } else {
                     /* The header uses the same layout, just set it up */
                     holder.itemView.setOnClickListener(null);
