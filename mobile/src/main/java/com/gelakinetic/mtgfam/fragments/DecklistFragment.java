@@ -571,21 +571,18 @@ public class DecklistFragment extends FamiliarListFragment {
             for (int j = 0; j < cardTypes.length; j++) {
                 final DecklistHelpers.CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
                 if (cdi.mCard != null /* We only want entries that have a card attached */
-                    && (i == 0 || mCompressedDecklist.get(i - 1).header == null)) {
+                        && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
+                        && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) {
                     if (cdi.mIsSideboard) {
                         if (!insertHeaderAt(i, cardHeaders[0])){
                             break;
                         }
-                        continue;
-                    }
-                    if (j < cardHeaders.length - 1 /* if j is in range */
+                    } else if (j < cardHeaders.length - 1 /* if j is in range */
                             /* the current card has the selected card type */
                             && cdi.mCard.mType.contains(cardTypes[j])
-                            /* There are at least 1 of this type */
-                            && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) {
-                        if (!insertHeaderAt(i, cardHeaders[j + 1])) {
-                            break;
-                        }
+                            /* There isn't already a header */
+                            && !insertHeaderAt(i, cardHeaders[j + 1])) {
+                        break;
                     } else if (j >= cardHeaders.length - 1
                             && !insertHeaderAt(i, cardHeaders[cardHeaders.length - 1])) {
                         break;
