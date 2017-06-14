@@ -505,14 +505,14 @@ public class DecklistFragment extends FamiliarListFragment {
                 return true;
             }
             case R.id.deck_menu_save: {
-                String deckName = mCurrentDeck;
-                if (deckName == null || deckName.equals("")) {
-                    deckName = AUTOSAVE_NAME;
+                final StringBuilder deckName = new StringBuilder(mCurrentDeck);
+                if (deckName.toString().equals("")) {
+                    deckName.append(DecklistFragment.AUTOSAVE_NAME);
                 }
                 final String savedToast = getString(R.string.decklist_saved_toast, deckName);
-                deckName += DECK_EXTENSION;
+                deckName.append(DecklistFragment.DECK_EXTENSION);
                 DecklistHelpers.WriteCompressedDecklist(getContext(), mCompressedDecklist,
-                        deckName);
+                        deckName.toString());
                 ToastWrapper.makeText(getContext(), savedToast, ToastWrapper.LENGTH_SHORT);
                 return true;
             }
