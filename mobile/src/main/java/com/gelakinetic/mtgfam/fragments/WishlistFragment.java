@@ -77,6 +77,7 @@ public class WishlistFragment extends FamiliarFragment {
     public WishlistArrayAdapter mWishlistAdapter;
     private View mTotalPriceDivider;
     private boolean mCheckboxFoilLocked = false;
+    private int mOrderAddedIndex;
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -252,14 +253,15 @@ public class WishlistFragment extends FamiliarFragment {
                     cwi.add(card);
                 }
             } else {
-                mCompressedWishlist.add(new CompressedWishlistInfo(card));
+                mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIndex++));
             }
 
             /* load the price */
             loadPrice(card.mName, card.setCode, card.mNumber);
 
             /* Sort the wishlist */
-            sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
+            sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder(),
+                    getFamiliarActivity().mPreferenceAdapter.getWishlistDontSort());
 
             /* Save the wishlist */
             WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
@@ -326,6 +328,7 @@ public class WishlistFragment extends FamiliarFragment {
         ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         boolean cardNumberFixed = false;
+        mOrderAddedIndex = 0;
         try {
             /* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
@@ -364,7 +367,7 @@ public class WishlistFragment extends FamiliarFragment {
                     /* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each
                      * other */
                     if (!mCompressedWishlist.contains(card)) {
-                        mCompressedWishlist.add(new CompressedWishlistInfo(card));
+                        mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIndex++));
                     } else {
                         mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
                     }
@@ -388,7 +391,7 @@ public class WishlistFragment extends FamiliarFragment {
             /* Fill extra card data from the database, for displaying full card info */
             CardDbAdapter.fillExtraWishlistData(mCompressedWishlist, database);
 
-            if(cardNumberFixed) {
+            if (cardNumberFixed) {
                 WishlistHelpers.WriteCompressedWishlist(getContext(), mCompressedWishlist);
             }
 
@@ -484,6 +487,8 @@ public class WishlistFragment extends FamiliarFragment {
             Bundle args = new Bundle();
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
+            args.putBoolean(SortOrderDialogFragment.SAVED_DONT_SORT,
+                    getFamiliarActivity().mPreferenceAdapter.getWishlistDontSort());
             newFragment.setArguments(args);
             newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
@@ -570,7 +575,8 @@ public class WishlistFragment extends FamiliarFragment {
                     if (mPriceFetchRequests == 0) {
                         getFamiliarActivity().clearLoading();
                     }
-                    sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
+                    sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder(),
+                            getFamiliarActivity().mPreferenceAdapter.getWishlistDontSort());
                     mWishlistAdapter.notifyDataSetChanged();
                 }
             }
@@ -613,18 +619,20 @@ public class WishlistFragment extends FamiliarFragment {
      * Called when the sorting dialog closes. Sort the wishlist with the new options
      *
      * @param orderByStr The sort order string
+     * @param dontSort   if this is true, don't sort anything
      */
     @Override
-    public void receiveSortOrder(String orderByStr) {
+    public void receiveSortOrder(String orderByStr, boolean dontSort) {
         getFamiliarActivity().mPreferenceAdapter.setWishlistSortOrder(orderByStr);
-        sortWishlist(orderByStr);
+        getFamiliarActivity().mPreferenceAdapter.setWishlistDontSort(dontSort);
+        sortWishlist(orderByStr, dontSort);
     }
 
     /**
      * Sorts the wishlist based on mWishlistSortType and mWishlistSortOrder
      */
-    private void sortWishlist(String orderByStr) {
-        Collections.sort(mCompressedWishlist, new WishlistHelpers.WishlistComparator(orderByStr, mPriceSetting));
+    private void sortWishlist(String orderByStr, boolean dontSort) {
+        Collections.sort(mCompressedWishlist, new WishlistHelpers.WishlistComparator(orderByStr, mPriceSetting, dontSort));
         mWishlistAdapter.notifyDataSetChanged();
     }
 

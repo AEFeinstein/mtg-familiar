@@ -570,4 +570,22 @@ public class PreferenceAdapter {
                         SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
         );
     }
+
+    public synchronized void setTradeDontSort(boolean dontSort) {
+        this.edit.putBoolean(context.getString(R.string.key_trade_dont_sort), dontSort);
+        this.edit.commit();
+    }
+
+    public synchronized boolean getTradeDontSort() {
+        return this.prefs.getBoolean(context.getString(R.string.key_trade_dont_sort), false);
+    }
+
+    public synchronized void setWishlistDontSort(boolean dontSort) {
+        this.edit.putBoolean(context.getString(R.string.key_wishlist_dont_sort), dontSort);
+        this.edit.commit();
+    }
+
+    public synchronized boolean getWishlistDontSort() {
+        return this.prefs.getBoolean(context.getString(R.string.key_wishlist_dont_sort), false);
+    }
 }

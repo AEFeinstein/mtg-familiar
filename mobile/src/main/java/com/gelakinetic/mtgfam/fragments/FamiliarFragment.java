@@ -321,7 +321,8 @@ public abstract class FamiliarFragment extends Fragment {
      * Override this to receive results from ResultListDialogFragments
      *
      * @param orderByStr The sort order string
+     * @param dontSort   if this is true, don't sort anything
      */
-    public void receiveSortOrder(String orderByStr) {
+    public void receiveSortOrder(String orderByStr, boolean dontSort) {
     }
 }

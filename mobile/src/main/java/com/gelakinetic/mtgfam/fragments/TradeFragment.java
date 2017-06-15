@@ -75,6 +75,7 @@ public class TradeFragment extends FamiliarFragment {
     public TradeListAdapter mRightAdapter;
     public ArrayList<MtgCard> mRightList;
     public CheckBox mCheckboxFoil;
+    private int mOrderAddedIndex;
     /* Settings */
     public int mPriceSetting;
     public String mCurrentTrade = "";
@@ -269,6 +270,7 @@ public class TradeFragment extends FamiliarFragment {
             /* Create the card, add it to a list, start a price fetch */
             MtgCard data = new MtgCard(cardName, setName, setCode, numberOf, getString(R.string.wishlist_loading),
                     cardNumber, foil, color, cmc);
+            data.setIndex(mOrderAddedIndex++);
             switch (side) {
                 case LEFT: {
                     mLeftList.add(0, data);
@@ -299,7 +301,8 @@ public class TradeFragment extends FamiliarFragment {
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
         /* Sort the newly added card */
-        sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
+        sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder(),
+                getFamiliarActivity().mPreferenceAdapter.getTradeDontSort());
     }
 
     /**
@@ -345,6 +348,8 @@ public class TradeFragment extends FamiliarFragment {
             Bundle args = new Bundle();
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
+            args.putBoolean(SortOrderDialogFragment.SAVED_DONT_SORT,
+                    getFamiliarActivity().mPreferenceAdapter.getTradeDontSort());
             newFragment.setArguments(args);
             newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
@@ -362,9 +367,9 @@ public class TradeFragment extends FamiliarFragment {
     /**
      * Sort the trades
      */
-    private void sortTrades(String sortOrder) {
+    private void sortTrades(String sortOrder, boolean dontSort) {
         /* If no sort type specified, return */
-        TradeComparator tradeComparator = new TradeComparator(sortOrder);
+        TradeComparator tradeComparator = new TradeComparator(sortOrder, dontSort);
         Collections.sort(mLeftList, tradeComparator);
         Collections.sort(mRightList, tradeComparator);
         mLeftAdapter.notifyDataSetChanged();
@@ -379,6 +384,8 @@ public class TradeFragment extends FamiliarFragment {
     public void SaveTrade(String tradeName) {
         FileOutputStream fos;
 
+        /* Revert to added-order before saving */
+        sortTrades(null, true);
         try {
             /* MODE_PRIVATE will create the file (or replace a file of the same name) */
             fos = this.getActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
@@ -412,6 +419,7 @@ public class TradeFragment extends FamiliarFragment {
             /* Read each card, line by line, load prices along the way */
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getActivity().openFileInput(tradeName)));
             String line;
+            mOrderAddedIndex = 0;
             while ((line = br.readLine()) != null) {
                 MtgCard card = MtgCard.fromTradeString(line, getActivity());
 
@@ -420,11 +428,13 @@ public class TradeFragment extends FamiliarFragment {
                     return;
                 }
                 if (card.mSide == LEFT) {
+                    card.setIndex(mOrderAddedIndex++);
                     mLeftList.add(card);
                     if (!card.customPrice) {
                         loadPrice(card, mLeftAdapter);
                     }
                 } else if (card.mSide == RIGHT) {
+                    card.setIndex(mOrderAddedIndex++);
                     mRightList.add(card);
                     if (!card.customPrice) {
                         loadPrice(card, mRightAdapter);
@@ -462,7 +472,7 @@ public class TradeFragment extends FamiliarFragment {
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
                         ContextCompat.getColor(getContext(), R.color.material_red_500) :
-                        ContextCompat.getColor(getContext(), 
+                        ContextCompat.getColor(getContext(),
                                 getResourceIdFromAttr(R.attr.color_text));
                 mTotalPriceLeft.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100)
                         + " (" + totalCards + ")");
@@ -485,7 +495,7 @@ public class TradeFragment extends FamiliarFragment {
                 /* Set the color whether all values are loaded, and write the text */
                 int color = hasBadValues ?
                         ContextCompat.getColor(getContext(), R.color.material_red_500) :
-                        ContextCompat.getColor(getContext(), 
+                        ContextCompat.getColor(getContext(),
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
                 mTotalPriceRight.setText(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100)
@@ -688,7 +698,8 @@ public class TradeFragment extends FamiliarFragment {
                             if (mPriceFetchRequests == 0 && TradeFragment.this.isAdded()) {
                                 getFamiliarActivity().clearLoading();
                             }
-                            sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
+                            sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder(),
+                                    getFamiliarActivity().mPreferenceAdapter.getTradeDontSort());
                         }
                     }
             );
@@ -699,11 +710,13 @@ public class TradeFragment extends FamiliarFragment {
      * Called when the sorting dialog closes. Sort the trades with the new order
      *
      * @param orderByStr The sort order string
+     * @param dontSort   if this is true, don't sort the results
      */
     @Override
-    public void receiveSortOrder(String orderByStr) {
+    public void receiveSortOrder(String orderByStr, boolean dontSort) {
         getFamiliarActivity().mPreferenceAdapter.setTradeSortOrder(orderByStr);
-        sortTrades(orderByStr);
+        getFamiliarActivity().mPreferenceAdapter.setTradeDontSort(dontSort);
+        sortTrades(orderByStr, dontSort);
     }
 
     /**
@@ -805,14 +818,19 @@ public class TradeFragment extends FamiliarFragment {
          * Constructor. It parses an "order by" string into search options. The first options have
          * higher priority
          *
-         * @param orderByStr The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
+         * @param orderByStr   The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
+         * @param orderByIndex true to order by index, false to order by values. This overrides orderByStr
          */
-        TradeComparator(String orderByStr) {
+        TradeComparator(String orderByStr, boolean orderByIndex) {
             int idx = 0;
-            for (String option : orderByStr.split(",")) {
-                String key = option.split(" ")[0];
-                boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
-                options.add(new SortOrderDialogFragment.SortOption(null, ascending, key, idx++));
+            if (orderByIndex) {
+                options.clear();
+            } else {
+                for (String option : orderByStr.split(",")) {
+                    String key = option.split(" ")[0];
+                    boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
+                    options.add(new SortOrderDialogFragment.SortOption(null, ascending, key, idx++));
+                }
             }
         }
 
@@ -826,6 +844,14 @@ public class TradeFragment extends FamiliarFragment {
         @Override
         public int compare(MtgCard card1, MtgCard card2) {
 
+            if (options.isEmpty()) {
+                if (card1.getIndex() < card2.getIndex()) {
+                    return -1;
+                } else if (card1.getIndex() == card2.getIndex()) {
+                    return 0;
+                }
+                return 1;
+            }
             int retVal = 0;
             /* Iterate over all the sort options, starting with the high priority ones */
             for (SortOrderDialogFragment.SortOption option : options) {

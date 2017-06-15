@@ -432,13 +432,16 @@ public class WishlistHelpers {
      */
     public static class CompressedWishlistInfo extends CardHelpers.CompressedCardInfo {
 
+        int mIndex;
+
         /**
          * Constructor
          *
          * @param card The MtgCard which will be the base for this object
          */
-        public CompressedWishlistInfo(MtgCard card) {
+        public CompressedWishlistInfo(MtgCard card, int index) {
             super(card);
+            mIndex = index;
         }
 
         /**
@@ -497,6 +500,10 @@ public class WishlistHelpers {
             }
             return sumWish;
         }
+
+        public int getIndex() {
+            return mIndex;
+        }
     }
 
     public static class WishlistComparator implements Comparator<CompressedWishlistInfo> {
@@ -510,15 +517,20 @@ public class WishlistHelpers {
          *
          * @param orderByStr   The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
          * @param priceSetting The current price setting (LO/AVG/HIGH) used to sort by prices
+         * @param orderByIndex true to order by index, false to order by values. This overrides orderByStr
          */
-        public WishlistComparator(String orderByStr, int priceSetting) {
-            int idx = 0;
-            for (String option : orderByStr.split(",")) {
-                String key = option.split(" ")[0];
-                boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
-                options.add(new SortOption(null, ascending, key, idx++));
+        public WishlistComparator(String orderByStr, int priceSetting, boolean orderByIndex) {
+            if (orderByIndex) {
+                options.clear();
+            } else {
+                int idx = 0;
+                for (String option : orderByStr.split(",")) {
+                    String key = option.split(" ")[0];
+                    boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
+                    options.add(new SortOption(null, ascending, key, idx++));
+                }
+                mPriceSetting = priceSetting;
             }
-            mPriceSetting = priceSetting;
         }
 
         /**
@@ -530,6 +542,15 @@ public class WishlistHelpers {
          */
         @Override
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
+
+            if (options.isEmpty()) {
+                if (wish1.getIndex() < wish2.getIndex()) {
+                    return -1;
+                } else if (wish1.getIndex() == wish2.getIndex()) {
+                    return 0;
+                }
+                return 1;
+            }
 
             int retVal = 0;
             /* Iterate over all the sort options, starting with the high priority ones */

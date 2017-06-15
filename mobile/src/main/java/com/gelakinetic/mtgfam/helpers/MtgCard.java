@@ -48,6 +48,7 @@ public class MtgCard extends Card {
     public boolean foil = false;
     public int mSide;
     public PriceInfo priceInfo;
+    private int mIndex;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -264,7 +265,7 @@ public class MtgCard extends Card {
      * @return A String representing this card
      */
     public String toWishlistString() {
-        return  this.mName + DELIMITER +
+        return this.mName + DELIMITER +
                 this.setCode + DELIMITER +
                 this.numberOf + DELIMITER +
                 this.mNumber + DELIMITER +
@@ -305,7 +306,7 @@ public class MtgCard extends Card {
             /* This is to fix a bug where the number was saved as the name. Clear it so it gets
              * fixed later
              */
-            if(newCard.mNumber.equals(newCard.mName)) {
+            if (newCard.mNumber.equals(newCard.mName)) {
                 newCard.mNumber = "";
             }
         }
@@ -376,5 +377,13 @@ public class MtgCard extends Card {
             }
             sb.append("\r\n");
         }
+    }
+
+    public void setIndex(int index) {
+        this.mIndex = index;
+    }
+
+    public int getIndex() {
+        return mIndex;
     }
 }
