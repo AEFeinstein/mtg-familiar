@@ -105,6 +105,9 @@
         <!-- to style the hms time picker -->
         <attr name="hms_picker_style" format="reference" />
 
+        <!-- to style the hms time picker -->
+        <attr name="num_picker_style" format="reference" />
+
         <!-- Camera button -->
         <attr name="camera_button" format="reference" />
 

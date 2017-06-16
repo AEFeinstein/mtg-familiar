@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancel"</string>
 <string name="dialog_yes">"Yes"</string>
-<string name="dialog_no">"No"</string>
 <string name="dialog_done">"Done"</string>
 <string name="dialog_both">"Both"</string>
 <string name="dialog_life">"Life"</string>
@@ -111,8 +110,8 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 Program licenced under the &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-&lt;br&gt;
-Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.
+<!--&lt;br&gt;-->
+<!--Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.-->
 "</string>
 <string name="main_drawer_open">"Open navigation drawer"</string>
 <string name="main_drawer_close">"Close navigation drawer"</string>
@@ -215,7 +214,7 @@ Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&
 <string name="card_view_image_saved">"Image saved to "</string>
 <string name="card_view_share_card">"Share Card"</string>
 <string name="card_view_share_text">"Text"</string>
-<string name="card_view_share_image">"Image"</string>
+<string name="card_view_copied_to_clipboard">"Copied to Clipboard"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Announce Life Totals"</string>
@@ -262,9 +261,6 @@ Mana pool will also be cleared."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"heads"</string>
 <string name="dice_tails">"tails"</string>
-<string name="dice_choose_sides">"Choose the number of sides"</string>
-<string name="dice_num_too_large">"The number you entered is too large"</string>
-<string name="dice_postive">"You must enter a positive number"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Mana pool failed to load!"</string>
@@ -311,14 +307,8 @@ Mana pool will also be cleared."</string>
 <string name="wishlist_view_card">"View Card"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Sort Wishlist"</string>
-<string name="wishlist_type_none">"None"</string>
-<string name="wishlist_type_cmc">"Converted Mana Cost"</string>
-<string name="wishlist_type_color">"Color"</string>
-<string name="wishlist_type_name">"Name"</string>
 <string name="wishlist_type_price">"Price"</string>
-<string name="wishlist_type_set">"Set"</string>
 <string name="wishlist_ascending">"Ascending"</string>
-<string name="wishlist_descending">"Descending"</string>
 <string name="wishlist_sort_by">"Sort By"</string>
 
 <!-- Round timer activity -->

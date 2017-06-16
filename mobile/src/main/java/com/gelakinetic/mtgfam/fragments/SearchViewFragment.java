@@ -416,6 +416,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 }
         );
+        myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
         return myFragmentView;
     }
 
