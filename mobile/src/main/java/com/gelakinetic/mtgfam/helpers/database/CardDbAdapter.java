@@ -1235,13 +1235,8 @@ public class CardDbAdapter {
             }
             statement += ")";
         }
-
-        if(criteria.hasManaX) {
-            statement += " AND (";
-
-            statement += DATABASE_TABLE_CARDS + "." + KEY_MANACOST + " LIKE '%{X}%')";
-        }
-
+        statement = criteria.mcLogic.appendToSql(statement,
+                DATABASE_TABLE_CARDS + "." + KEY_MANACOST, criteria.mc);
         if (criteria.cmc != -1) {
             statement += " AND (";
 
