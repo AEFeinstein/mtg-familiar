@@ -128,10 +128,10 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
 <string name="search_cmc">"CMC"</string>
 <string name="search_mc">Mana Cost</string>
 <string name="Equals">Equals</string>
-<string name="DoesNotEqual">Does not Equal</string>
+<string name="DoesNotEqual">Is Not Equal</string>
 <string name="Contains">Contains</string>
-<string name="DoesNotContain">Does not contain</string>
-<string name="NoComparison">No comparison</string>
+<string name="DoesNotContain">Does Not Contain</string>
+<string name="NoComparison">No Comparison</string>
 
 <!-- this has an {X} after it in layout -->
 <string name="search_set">"Set"</string>
