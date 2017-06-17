@@ -44,14 +44,34 @@
         android:layout_height="1dp"
         android:background="?attr/colorPrimary_attr" />
 
-    <Button
-        android:id="@+id/add_card"
-        style="?android:attr/buttonBarButtonStyle"
-
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="@string/wishlist_add_card"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/add_card"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="@string/wishlist_add_card"
+            android:textStyle="bold"
+            android:layout_weight="2"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?attr/colorPrimary_attr"/>
+
+        <Button
+            android:id="@+id/add_card_sideboard"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/decklist_sideboard"/>
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

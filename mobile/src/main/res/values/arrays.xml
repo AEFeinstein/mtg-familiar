@@ -235,20 +235,6 @@
         <item>@string/pref_theme_dark</item>
     </string-array>
 
-    <string-array name="wishlist_sort_type">
-        <item>@string/wishlist_type_none</item>
-        <item>@string/wishlist_type_cmc</item>
-        <item>@string/wishlist_type_color</item>
-        <item>@string/wishlist_type_name</item>
-        <item>@string/wishlist_type_price</item>
-        <item>@string/wishlist_type_set</item>
-    </string-array>
-
-    <string-array name="asc_desc">
-        <item>@string/wishlist_ascending</item>
-        <item>@string/wishlist_descending</item>
-    </string-array>
-
     <string-array name="decklist_card_headers">
         <item>@string/decklist_sideboard</item>
         <item>@string/decklist_creatures</item>
