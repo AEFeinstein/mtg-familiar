@@ -180,6 +180,7 @@ public class TradeFragment extends FamiliarFragment {
                 getFamiliarActivity().startTutorCardsSearch();
             }
         });
+        myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
 
         mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

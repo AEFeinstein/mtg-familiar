@@ -131,13 +131,10 @@ public class DecklistFragment extends FamiliarListFragment {
             }
 
         });
-        myFragmentView.findViewById(R.id.add_card).setOnLongClickListener(
-                new View.OnLongClickListener() {
-
+        myFragmentView.findViewById(R.id.add_card_sideboard).setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(final View view) {
+            public void onClick(View v) {
                 addCardToDeck(true);
-                return true;
             }
 
         });

@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -238,10 +239,9 @@ public class CardHelpers {
                             card.mName = mCardName;
                             card.setCode = potentialSetCodes.get(i);
                             try {
-                                EditText numberInput =
-                                        ((EditText) view.findViewById(R.id.number_input));
+                                Button numberInput = ((Button) view.findViewById(R.id.number_button));
                                 assert numberInput.getText() != null;
-                                card.numberOf = Integer.parseInt(numberInput.getText().toString());
+                                card.numberOf = Integer.valueOf(numberInput.getText().toString());
                             } catch (NumberFormatException e) {
                                 card.numberOf = 0;
                             }
@@ -319,7 +319,15 @@ public class CardHelpers {
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);
         String numberOf = targetCardNumberOf;
         numberOf = numberOf == null ? "0" : numberOf;
-        ((EditText) dialogRow.findViewById(R.id.number_input)).setText(numberOf);
+        final Button numberButton = (Button) dialogRow.findViewById(R.id.number_button);
+        numberButton.setText(numberOf);
+        numberButton.setOnClickListener(new NumberButtonOnClickListener(fragment) {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDialogNumberSet(Integer number) {
+                numberButton.setText(number.toString());
+            }
+        });
         if (isFoil) {
             dialogRow.findViewById(R.id.wishlistDialogFoil).setVisibility(View.VISIBLE);
         } else {
@@ -381,7 +389,7 @@ public class CardHelpers {
 
             isi.mSet = card.setName;
             isi.mSetCode = card.setCode;
-            isi.mNumber = card.mName;
+            isi.mNumber = card.mNumber;
             isi.mIsFoil = card.foil;
             isi.mPrice = null;
             isi.mMessage = card.message;
