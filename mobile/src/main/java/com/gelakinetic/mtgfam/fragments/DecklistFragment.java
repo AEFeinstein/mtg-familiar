@@ -162,9 +162,6 @@ public class DecklistFragment extends FamiliarListFragment {
 
         getTouchHelper().attachToRecyclerView(mListView);
 
-        /* Hopefully things look fancy */
-        // mListView.addItemDecoration(getItemDecorator());
-
         myFragmentView.findViewById(R.id.camera_button).setOnClickListener(
                 new View.OnClickListener() {
 

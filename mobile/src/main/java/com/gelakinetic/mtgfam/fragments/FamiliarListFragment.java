@@ -48,6 +48,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public static final int LOW_PRICE = 0;
     public static final int AVG_PRICE = 1;
     public static final int HIGH_PRICE = 2;
+    public static final int FOIL_PRICE = 3;
 
     /* UI Elements */
     public AutoCompleteTextView mNameField;
@@ -146,11 +147,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 return false;
             }
 
-            /**
-             * The item is swiped
-             * @param viewHolder what is swiped
-             * @param direction direction of what was swiped
-             */
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
@@ -160,16 +156,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
             }
 
-            /**
-             * Upon drawing the item
-             * @param canvas canvas to draw on
-             * @param recyclerView the parent
-             * @param viewHolder what holder is being drawn on
-             * @param dX see super
-             * @param dY see super
-             * @param actionState see super
-             * @param isCurrentlyActive see super
-             */
             @Override
             public void onChildDraw(
                     Canvas canvas,
@@ -234,81 +220,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         return new ItemTouchHelper(simpleItemTouchCallback);
 
-    }
-
-    /**
-     * Create the item decoration for swipe to delete.
-     * @return a pretty animation thing
-     */
-    RecyclerView.ItemDecoration getItemDecorator() {
-
-        return new RecyclerView.ItemDecoration() {
-
-            Drawable background;
-            boolean initiated;
-
-            /**
-             * Setup the drawables.
-             */
-            private void init() {
-
-                background = new ColorDrawable(Color.RED);
-                initiated = true;
-
-            }
-
-            /**
-             * @param canvas the cavas to draw on
-             * @param parent parent of the drawn item
-             * @param state see super
-             */
-            @Override
-            public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
-
-                if (!initiated) {
-                    init();
-                }
-                /* Only do it if the animation is running */
-                if (parent.getItemAnimator().isRunning()) {
-                    View lastViewComingDown = null;
-                    View firstViewComingUp = null;
-                    int left = 0;
-                    int right = parent.getWidth();
-                    int top = 0;
-                    int bottom = 0;
-                    int childCount = parent.getLayoutManager().getChildCount();
-                    /* get the children above and below the removed item */
-                    for (int i = 0; i < childCount; i++) {
-                        View child = parent.getLayoutManager().getChildAt(i);
-                        if (child.getTranslationY() < 0) {
-                            lastViewComingDown = child;
-                        } else if (child.getTranslationY() > 0
-                                && firstViewComingUp == null) {
-                            firstViewComingUp = child;
-                        }
-                    }
-                    /* set the tops and bottoms for the animation */
-                    if (lastViewComingDown != null && firstViewComingUp != null) {
-                        top = lastViewComingDown.getBottom()
-                                + (int) lastViewComingDown.getTranslationY();
-                        bottom = firstViewComingUp.getTop()
-                                + (int) firstViewComingUp.getTranslationY();
-                    } else if (lastViewComingDown != null) {
-                        top = lastViewComingDown.getBottom()
-                                + (int) lastViewComingDown.getTranslationY();
-                        bottom = lastViewComingDown.getBottom();
-                    } else if (firstViewComingUp != null) {
-                        top = firstViewComingUp.getTop();
-                        bottom = firstViewComingUp.getTop()
-                                + (int) firstViewComingUp.getTranslationY();
-                    }
-                    background.setBounds(left, top, right, bottom);
-                    background.draw(canvas);
-                }
-                super.onDraw(canvas, parent, state);
-            }
-
-        };
     }
 
     @Override
