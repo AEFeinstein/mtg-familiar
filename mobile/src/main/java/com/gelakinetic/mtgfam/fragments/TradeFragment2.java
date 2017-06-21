@@ -709,7 +709,7 @@ public class TradeFragment2 extends FamiliarListFragment {
 
             final ViewHolder holder = (ViewHolder) viewHolder;
 
-            if (pendingRunnables.indexOfKey(position) < 0) {
+            if (isItemPendingRemoval(position)) {
                 holder.itemView.findViewById(R.id.trade_row).setVisibility(View.GONE);
             } else {
                 holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
@@ -739,7 +739,7 @@ public class TradeFragment2 extends FamiliarListFragment {
 
             ViewHolder(ViewGroup view) {
 
-                super(view);
+                super(view, R.layout.trader_row);
 
                 mCardSet = (TextView) itemView.findViewById(R.id.traderRowSet);
                 mCardNumberOf = (TextView) itemView.findViewById(R.id.traderNumber);

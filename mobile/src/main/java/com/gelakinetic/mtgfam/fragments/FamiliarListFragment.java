@@ -2,10 +2,12 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
@@ -173,8 +175,9 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
             TextView mCardName;
 
-            ViewHolder(ViewGroup view) {
-                super(view);
+            ViewHolder(ViewGroup view, @LayoutRes final int layoutRowId) {
+                super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));
+                mCardName = (TextView) itemView.findViewById(R.id.card_name);
             }
 
             @Override

@@ -2,12 +2,11 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +120,10 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
         }
     }
 
+    public boolean isItemPendingRemoval(final int position) {
+        return pendingRunnables.indexOfKey(position) > -1;
+    }
+
     public void deselectAll() {
 
         selectedItems.clear();
@@ -145,7 +148,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
 
         private boolean isSwipeable = true;
 
-        public ViewHolder(ViewGroup view) {
+        public ViewHolder(View view) {
             super(view);
         }
 

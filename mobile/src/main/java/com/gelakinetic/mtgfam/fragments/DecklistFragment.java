@@ -109,10 +109,6 @@ public class DecklistFragment extends FamiliarListFragment {
         /* Call to set up our shared UI elements */
         initializeMembers(myFragmentView);
 
-        ItemTouchHelper.SimpleCallback callback = new SelectableItemTouchHelper(mListAdapter, ItemTouchHelper.LEFT);
-        itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(mListView);
-
         /* set the autocomplete for card names */
         mNameField.setAdapter(
                 new AutocompleteCursorAdapter(this,
@@ -176,6 +172,10 @@ public class DecklistFragment extends FamiliarListFragment {
         });
 
         setUpCheckBoxClickListeners();
+
+        ItemTouchHelper.SimpleCallback callback = new SelectableItemTouchHelper(mListAdapter, ItemTouchHelper.LEFT);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(mListView);
 
         mActionModeCallback = new ActionMode.Callback() {
 
@@ -739,8 +739,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         @Override
         public FamiliarListFragment.CardDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.decklist_card_row, parent, false);
-            return new ViewHolder((ViewGroup) view);
+            return new ViewHolder(parent);
         }
 
 
@@ -756,7 +755,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             final DecklistHelpers.CompressedDecklistInfo info = items.get(position);
 
-            if (pendingRunnables.indexOfKey(position) < 0) {
+            if (isItemPendingRemoval(position)) {
                 thisHolder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else { /* if the item IS NOT pending removal */
                 thisHolder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
@@ -824,7 +823,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 final int position = items.indexOf(cdi);
                 /* The card is NOT pending removal */
-                if (pendingRunnables.indexOfKey(position) > -1
+                if (!isItemPendingRemoval(position)
                         /* The type is not above -1 OR is not in the sideboard */
                         && (!(typeIndex > -1) || !cdi.mIsSideboard)
                         /* The type is above -1 OR the card is in the sideboard */
@@ -898,7 +897,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             ViewHolder(ViewGroup view) {
 
-                super(view);
+                super(view, R.layout.decklist_card_row);
 
                 mCardNumberOf = (TextView) itemView.findViewById(R.id.decklistRowNumber);
                 mCardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);

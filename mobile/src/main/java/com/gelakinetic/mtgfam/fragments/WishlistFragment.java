@@ -544,8 +544,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         public FamiliarListFragment.CardDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.result_list_card_row, parent, false);
-            return new ViewHolder((ViewGroup) view);
+            return new ViewHolder(parent);
         }
 
         @Override
@@ -556,7 +555,7 @@ public class WishlistFragment extends FamiliarListFragment {
             /* Get all the wishlist info for this entry */
             final CompressedWishlistInfo info = items.get(position);
 
-            if (pendingRunnables.indexOfKey(position) < 0) {
+            if (isItemPendingRemoval(position)) {
                 thisHolder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else {
 
@@ -740,7 +739,8 @@ public class WishlistFragment extends FamiliarListFragment {
             LinearLayout mWishlistSets;
 
             ViewHolder(ViewGroup view) {
-                super(view);
+                super(view, R.layout.result_list_card_row);
+
                 mCardType = (TextView) itemView.findViewById(R.id.cardtype);
                 mCardText = (TextView) itemView.findViewById(R.id.cardability);
                 mCardPower = (TextView) itemView.findViewById(R.id.cardp);
