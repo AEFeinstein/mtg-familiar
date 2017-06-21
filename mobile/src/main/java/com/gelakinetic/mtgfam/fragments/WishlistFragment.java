@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,6 +31,7 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
@@ -113,9 +114,9 @@ public class WishlistFragment extends FamiliarListFragment {
         mListAdapter = new CardDataAdapter(mCompressedWishlist);
         mListView.setAdapter(mListAdapter);
 
-        getTouchHelper().attachToRecyclerView(mListView);
-
-        // mListView.addItemDecoration(getItemDecorator());
+        ItemTouchHelper.SimpleCallback callback = new SelectableItemTouchHelper(mListAdapter, ItemTouchHelper.LEFT);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(mListView);
 
         myFragmentView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -542,60 +543,59 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(parent);
+        public FamiliarListFragment.CardDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.result_list_card_row, parent, false);
+            return new ViewHolder((ViewGroup) view);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            onBindViewHolder((ViewHolder) holder, position);
-        }
+        public void onBindViewHolder(FamiliarListFragment.CardDataAdapter.ViewHolder holder, int position) {
 
-        private void onBindViewHolder(ViewHolder holder, int position) {
+            ViewHolder thisHolder = (ViewHolder) holder;
 
             /* Get all the wishlist info for this entry */
-            final CompressedWishlistInfo info = mItems.get(position);
+            final CompressedWishlistInfo info = items.get(position);
 
-            if (mItemsPendingRemoval.contains(info)) {
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
+            if (pendingRunnables.indexOfKey(position) < 0) {
+                thisHolder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else {
 
                 /* Make sure the click listener is here */
                 // holder.enableClickListener();
 
                 /* Make sure you can see the item */
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
+                thisHolder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
 
                 /* Clear out the old items in the view */
-                holder.mWishlistSets.removeAllViews();
+                thisHolder.mWishlistSets.removeAllViews();
 
                 /* Set the card name, always */
-                holder.mCardName.setText(info.mCard.mName);
+                thisHolder.mCardName.setText(info.mCard.mName);
 
                 /* Show or hide full card information */
-                holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
+                thisHolder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
                 if (mShowCardInfo) {
                     Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
                     /* make sure everything is showing */
-                    holder.mCardCost.setVisibility(View.VISIBLE);
-                    holder.mCardType.setVisibility(View.VISIBLE);
-                    holder.mCardText.setVisibility(View.VISIBLE);
+                    thisHolder.mCardCost.setVisibility(View.VISIBLE);
+                    thisHolder.mCardType.setVisibility(View.VISIBLE);
+                    thisHolder.mCardText.setVisibility(View.VISIBLE);
                     /* Show the power, toughness, or loyalty if the card has it */
-                    holder.mCardPower.setVisibility(View.GONE);
-                    holder.mCardSlash.setVisibility(View.GONE);
-                    holder.mCardToughness.setVisibility(View.GONE);
+                    thisHolder.mCardPower.setVisibility(View.GONE);
+                    thisHolder.mCardSlash.setVisibility(View.GONE);
+                    thisHolder.mCardToughness.setVisibility(View.GONE);
                     /* Set the type, cost, and ability */
-                    holder.mCardType.setText(info.mCard.mType);
-                    holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imgGetter));
-                    holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mText, imgGetter));
+                    thisHolder.mCardType.setText(info.mCard.mType);
+                    thisHolder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imgGetter));
+                    thisHolder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mText, imgGetter));
                     try {
                         String power = CardHelpers.adaptCardPT(info.mCard.mPower);
                         String toughness = CardHelpers.adaptCardPT(info.mCard.mToughness);
-                        holder.mCardPower.setText(power);
-                        holder.mCardToughness.setText(toughness);
-                        holder.mCardPower.setVisibility(View.VISIBLE);
-                        holder.mCardSlash.setVisibility(View.VISIBLE);
-                        holder.mCardToughness.setVisibility(View.VISIBLE);
+                        thisHolder.mCardPower.setText(power);
+                        thisHolder.mCardToughness.setText(toughness);
+                        thisHolder.mCardPower.setVisibility(View.VISIBLE);
+                        thisHolder.mCardSlash.setVisibility(View.VISIBLE);
+                        thisHolder.mCardToughness.setVisibility(View.VISIBLE);
                     } catch (NumberFormatException nfe) {
                         /* eat it */
                     }
@@ -604,31 +604,31 @@ public class WishlistFragment extends FamiliarListFragment {
                     float loyalty = info.mCard.mLoyalty;
                     if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
                         if (loyalty == CardDbAdapter.X) {
-                            holder.mCardToughness.setText("X");
+                            thisHolder.mCardToughness.setText("X");
                         } else if (loyalty == (int) loyalty) {
-                            holder.mCardToughness.setText(Integer.toString((int) loyalty));
+                            thisHolder.mCardToughness.setText(Integer.toString((int) loyalty));
                         } else {
-                            holder.mCardToughness.setText(Float.toString(loyalty));
+                            thisHolder.mCardToughness.setText(Float.toString(loyalty));
                         }
-                        holder.mCardToughness.setVisibility(View.VISIBLE);
+                        thisHolder.mCardToughness.setVisibility(View.VISIBLE);
                     }
                 } else {
                     /* hide all the extra fields */
-                    holder.mCardCost.setVisibility(View.GONE);
-                    holder.mCardType.setVisibility(View.GONE);
-                    holder.mCardText.setVisibility(View.GONE);
-                    holder.mCardPower.setVisibility(View.GONE);
-                    holder.mCardSlash.setVisibility(View.GONE);
-                    holder.mCardToughness.setVisibility(View.GONE);
+                    thisHolder.mCardCost.setVisibility(View.GONE);
+                    thisHolder.mCardType.setVisibility(View.GONE);
+                    thisHolder.mCardText.setVisibility(View.GONE);
+                    thisHolder.mCardPower.setVisibility(View.GONE);
+                    thisHolder.mCardSlash.setVisibility(View.GONE);
+                    thisHolder.mCardToughness.setVisibility(View.GONE);
                 }
 
                 /* Rarity is displayed on the expansion lines */
-                holder.itemView.findViewById(R.id.rarity).setVisibility(View.GONE);
+                thisHolder.itemView.findViewById(R.id.rarity).setVisibility(View.GONE);
 
                 /* List all the sets and wishlist values for this card */
                 for (IndividualSetInfo isi : info.mInfo) {
                     /* inflate a new row */
-                    View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
+                    View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) thisHolder.itemView.getParent(), false);
                     assert setRow != null;
                     /* Write the set name, color it with the rarity */
                     int color;
@@ -715,7 +715,7 @@ public class WishlistFragment extends FamiliarListFragment {
                         priceText.setText("x" + isi.mNumberOf);
                     }
                     /* Add the view to the linear layout */
-                    holder.mWishlistSets.addView(setRow);
+                    thisHolder.mWishlistSets.addView(setRow);
                 }
             }
         }
@@ -740,7 +740,7 @@ public class WishlistFragment extends FamiliarListFragment {
             LinearLayout mWishlistSets;
 
             ViewHolder(ViewGroup view) {
-                super(view, R.layout.result_list_card_row);
+                super(view);
                 mCardType = (TextView) itemView.findViewById(R.id.cardtype);
                 mCardText = (TextView) itemView.findViewById(R.id.cardability);
                 mCardPower = (TextView) itemView.findViewById(R.id.cardp);

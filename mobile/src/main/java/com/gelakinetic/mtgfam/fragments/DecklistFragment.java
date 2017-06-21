@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -31,6 +31,7 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -108,6 +109,10 @@ public class DecklistFragment extends FamiliarListFragment {
         /* Call to set up our shared UI elements */
         initializeMembers(myFragmentView);
 
+        ItemTouchHelper.SimpleCallback callback = new SelectableItemTouchHelper(mListAdapter, ItemTouchHelper.LEFT);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(mListView);
+
         /* set the autocomplete for card names */
         mNameField.setAdapter(
                 new AutocompleteCursorAdapter(this,
@@ -141,7 +146,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Set up the decklist and adapter, it will be read in onResume() */
         mCompressedDecklist = new ArrayList<>();
-        mListAdapter = new DecklistFragment.CardDataAdapter(mCompressedDecklist);
+        mListAdapter = new CardDataAdapter(mCompressedDecklist);
         mListView.setAdapter(mListAdapter);
 
         /* Decklist information */
@@ -159,8 +164,6 @@ public class DecklistFragment extends FamiliarListFragment {
         mDecklistChain.addComparator(new CardHelpers.CardComparatorCMC());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
-
-        getTouchHelper().attachToRecyclerView(mListView);
 
         myFragmentView.findViewById(R.id.camera_button).setOnClickListener(
                 new View.OnClickListener() {
@@ -214,7 +217,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                mListAdapter.unselectAll();
+                mListAdapter.deselectAll();
             }
 
         };
@@ -595,11 +598,6 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-
-        if (mListAdapter.getSelectMode()) {
-            inflater.inflate(R.menu.decklist_select_menu, menu);
-            return;
-        }
         inflater.inflate(R.menu.decklist_menu, menu);
 
     }
@@ -739,16 +737,12 @@ public class DecklistFragment extends FamiliarListFragment {
             super(values);
         }
 
-        /**
-         * Creating the view holder.
-         * @param parent parent of the to be created
-         * @param viewType see super
-         * @return the created view holder
-         */
         @Override
-        public CardDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(parent);
+        public FamiliarListFragment.CardDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.decklist_card_row, parent, false);
+            return new ViewHolder((ViewGroup) view);
         }
+
 
         /**
          * On binding the view holder.
@@ -756,66 +750,59 @@ public class DecklistFragment extends FamiliarListFragment {
          * @param position where the holder is
          */
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            onBindViewHolder((ViewHolder) holder, position);
-        }
+        public void onBindViewHolder(FamiliarListFragment.CardDataAdapter.ViewHolder holder, int position) {
 
-        /**
-         * On binding the view holder.
-         * @param holder the holder being bound
-         * @param position where the holder is
-         */
-        private void onBindViewHolder(ViewHolder holder, int position) {
+            ViewHolder thisHolder = (ViewHolder) holder;
 
-            final DecklistHelpers.CompressedDecklistInfo info = mItems.get(position);
+            final DecklistHelpers.CompressedDecklistInfo info = items.get(position);
 
-            if (mItemsPendingRemoval.contains(info)) {
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
+            if (pendingRunnables.indexOfKey(position) < 0) {
+                thisHolder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else { /* if the item IS NOT pending removal */
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
+                thisHolder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
                 if (info.header == null) {
 
                     /* Enable the on click listener */
-                    holder.itemView.setOnClickListener(holder);
-                    holder.itemView.setOnLongClickListener(holder);
+                    thisHolder.itemView.setOnClickListener(holder);
+                    thisHolder.itemView.setOnLongClickListener(holder);
 
                     /* Do the selection stuff */
-                    if (mSelectedItems.get(position, false)) {
-                        holder.itemView.setSelected(true);
-                        holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(R.attr.ic_menu_done), 0, 0, 0);
-                        holder.mCardNumberOf.setText("");
+                    if (selectedItems.get(position, false)) {
+                        thisHolder.itemView.setSelected(true);
+                        thisHolder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(R.attr.ic_menu_done), 0, 0, 0);
+                        thisHolder.mCardNumberOf.setText("");
                     } else {
-                        holder.itemView.setSelected(false);
-                        holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                        holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
+                        thisHolder.itemView.setSelected(false);
+                        thisHolder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                        thisHolder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
                     }
 
                     /* set up the card's views */
-                    holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
-                    holder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
-                    View separator = holder.itemView.findViewById(R.id.decklistSeparator);
+                    thisHolder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
+                    thisHolder.itemView.findViewById(R.id.decklistSeparator).setVisibility(View.GONE);
+                    View separator = thisHolder.itemView.findViewById(R.id.decklistSeparator);
                     separator.setVisibility(View.GONE);
                     Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                    holder.mCardName.setText(info.mCard.mName);
-                    holder.mCardCost.setText(ImageGetterHelper
+                    thisHolder.mCardName.setText(info.mCard.mName);
+                    thisHolder.mCardCost.setText(ImageGetterHelper
                             .formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
-                    holder.swipeable = true;
+                    thisHolder.setIsSwipeable(true);
                 } else {
                     /* The header uses the same layout, just set it up */
-                    holder.itemView.setOnClickListener(null);
-                    holder.itemView.setOnLongClickListener(null);
+                    thisHolder.itemView.setOnClickListener(null);
+                    thisHolder.itemView.setOnLongClickListener(null);
                     final int typeIndex = Arrays.asList(
                             getResources().getStringArray(R.array.decklist_card_headers)
                     ).indexOf(info.header) - 1;
-                    holder.itemView.findViewById(R.id.decklistSeparator)
+                    thisHolder.itemView.findViewById(R.id.decklistSeparator)
                             .setVisibility(View.VISIBLE);
-                    holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
-                    ((TextView) holder.itemView.findViewById(R.id.decklistHeaderType))
+                    thisHolder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
+                    ((TextView) thisHolder.itemView.findViewById(R.id.decklistHeaderType))
                             .setText(info.header);
-                    ((TextView) holder.itemView.findViewById(R.id.decklistHeaderNumber)).setText(
+                    ((TextView) thisHolder.itemView.findViewById(R.id.decklistHeaderNumber)).setText(
                             String.valueOf(getTotalNumberOfType(typeIndex))
                     );
-                    holder.swipeable = false;
+                    thisHolder.setIsSwipeable(false);
                 }
             }
 
@@ -831,12 +818,13 @@ public class DecklistFragment extends FamiliarListFragment {
             /* default */ int totalCards = 0;
             String[] types = getResources().getStringArray(R.array.card_types_extra);
 
-            for (DecklistHelpers.CompressedDecklistInfo cdi : mItems) {
+            for (DecklistHelpers.CompressedDecklistInfo cdi : items) {
                 if (cdi.header != null) {
                     continue;
                 }
+                final int position = items.indexOf(cdi);
                 /* The card is NOT pending removal */
-                if (!mItemsPendingRemoval.contains(cdi)
+                if (pendingRunnables.indexOfKey(position) > -1
                         /* The type is not above -1 OR is not in the sideboard */
                         && (!(typeIndex > -1) || !cdi.mIsSideboard)
                         /* The type is above -1 OR the card is in the sideboard */
@@ -870,7 +858,7 @@ public class DecklistFragment extends FamiliarListFragment {
         int getTotalCards() {
 
             int totalCards = 0;
-            for (DecklistHelpers.CompressedDecklistInfo cdi : mItems) {
+            for (DecklistHelpers.CompressedDecklistInfo cdi : items) {
                 totalCards += cdi.getTotalNumber();
             }
             return totalCards;
@@ -878,12 +866,14 @@ public class DecklistFragment extends FamiliarListFragment {
         }
 
         @Override
-        public void pendingRemoval(int position) {
+        public boolean pendingRemoval(int position) {
 
             super.pendingRemoval(position);
 
             clearHeaders();
             setHeaderValues();
+
+            return true;
 
         }
 
@@ -908,7 +898,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             ViewHolder(ViewGroup view) {
 
-                super(view, R.layout.decklist_card_row);
+                super(view);
 
                 mCardNumberOf = (TextView) itemView.findViewById(R.id.decklistRowNumber);
                 mCardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
@@ -918,10 +908,10 @@ public class DecklistFragment extends FamiliarListFragment {
             @Override
             public void onClick(View view) {
 
-                if (!getSelectMode()) {
+                if (!isInSelectMode()) {
                     /* if we aren't in select mode, open a dialog to edit this card */
                     final DecklistHelpers.CompressedDecklistInfo item =
-                            mItems.get(getAdapterPosition());
+                            items.get(getAdapterPosition());
                     showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
                             item.mCard.mName, item.mIsSideboard);
                 }

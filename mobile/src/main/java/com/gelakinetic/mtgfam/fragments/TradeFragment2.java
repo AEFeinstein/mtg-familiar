@@ -35,8 +35,6 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import org.w3c.dom.Text;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -150,8 +148,8 @@ public class TradeFragment2 extends FamiliarListFragment {
             @Override
             public void onDestroyActionMode(ActionMode actionMode) {
 
-                mListAdapterLeft.unselectAll();
-                mListAdapterRight.unselectAll();
+                mListAdapterLeft.deselectAll();
+                mListAdapterRight.deselectAll();
 
             }
 
@@ -700,18 +698,18 @@ public class TradeFragment2 extends FamiliarListFragment {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public FamiliarListFragment.CardDataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             return new ViewHolder(viewGroup);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        public void onBindViewHolder(FamiliarListFragment.CardDataAdapter.ViewHolder viewHolder, int position) {
 
-            final MtgCard item = mItems.get(position);
+            final MtgCard item = items.get(position);
 
             final ViewHolder holder = (ViewHolder) viewHolder;
 
-            if (mItemsPendingRemoval.contains(item)) {
+            if (pendingRunnables.indexOfKey(position) < 0) {
                 holder.itemView.findViewById(R.id.trade_row).setVisibility(View.GONE);
             } else {
                 holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
@@ -741,7 +739,7 @@ public class TradeFragment2 extends FamiliarListFragment {
 
             ViewHolder(ViewGroup view) {
 
-                super(view, R.layout.trader_row);
+                super(view);
 
                 mCardSet = (TextView) itemView.findViewById(R.id.traderRowSet);
                 mCardNumberOf = (TextView) itemView.findViewById(R.id.traderNumber);

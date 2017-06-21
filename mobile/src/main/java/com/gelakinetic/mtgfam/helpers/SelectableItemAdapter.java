@@ -19,13 +19,13 @@ import java.util.List;
 public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.ViewHolder>
         extends RecyclerView.Adapter<VH> {
 
-    private List<T> items;
+    protected List<T> items;
 
     private boolean inSelectMode;
-    private SparseBooleanArray selectedItems;
+    protected SparseBooleanArray selectedItems;
 
-    private Handler handler;
-    private SparseArray<Runnable> pendingRunnables;
+    protected Handler handler;
+    protected SparseArray<Runnable> pendingRunnables;
 
     public SelectableItemAdapter(ArrayList<T> values) {
         items = values;
@@ -134,12 +134,27 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
         return items.size();
     }
 
+    public void onItemDismissed(final int position) {
+        pendingRemoval(position);
+        notifyItemChanged(position);
+    }
+
     public abstract class ViewHolder
             extends RecyclerView.ViewHolder
             implements OnClickListener, OnLongClickListener {
 
-        ViewHolder(ViewGroup view) {
+        private boolean isSwipeable = true;
+
+        public ViewHolder(ViewGroup view) {
             super(view);
+        }
+
+        public boolean getIsSwipeable() {
+            return isSwipeable;
+        }
+
+        public void setIsSwipeable(final boolean isSwipeable) {
+            this.isSwipeable = isSwipeable;
         }
 
     }
