@@ -210,7 +210,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
             criteria.type = type;
             criteria.cmc = cmc;
             criteria.cmcLogic = logic;
-            Cursor permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, database);
+            criteria.moJhoStoFilter = true;
+            Cursor permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
             if (permanents == null) {
                 throw new FamiliarDbException(new Exception("permanents failure"));
@@ -250,7 +251,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
             criteria.type = type;
-            Cursor spells = CardDbAdapter.Search(criteria, false, returnTypes, true, database);
+            Cursor spells = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
             if (spells == null) {
                 throw new FamiliarDbException(new Exception("three spell failure"));

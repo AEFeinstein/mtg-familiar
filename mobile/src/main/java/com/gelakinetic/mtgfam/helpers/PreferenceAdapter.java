@@ -7,6 +7,8 @@ import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -282,6 +284,16 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
+    /* Use sound instead of TTS pref */
+    public synchronized boolean getUseSoundInsteadOfTTSPref() {
+        return this.prefs.getBoolean(context.getString(R.string.key_useSoundInsteadOfTTSPref), false);
+    }
+
+    public synchronized void setUseSoundInsteadOfTTSPref(boolean useSoundPref) {
+        this.edit.putBoolean(context.getString(R.string.key_useSoundInsteadOfTTSPref), useSoundPref);
+        this.edit.commit();
+    }
+
     /* Show total wishlist price */
     public synchronized boolean getShowTotalWishlistPrice() {
         return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceWishlistPref), false);
@@ -364,7 +376,7 @@ public class PreferenceAdapter {
         this.edit.commit();
     }
 
-    /* Date */
+    /* Date, deprecated
     public synchronized String getLegalityDate() {
         return this.prefs.getString(context.getString(R.string.key_date), null);
     }
@@ -373,31 +385,34 @@ public class PreferenceAdapter {
         this.edit.putString(context.getString(R.string.key_date), date);
         this.edit.commit();
     }
+    */
 
+    /* Date */
+    public synchronized long getLegalityTimestamp() {
+        return this.prefs.getLong(context.getString(R.string.key_legality_timestamp), 0);
+    }
+
+    public synchronized void setLegalityTimestamp(long timestamp) {
+        this.edit.putLong(context.getString(R.string.key_legality_timestamp), timestamp);
+        this.edit.commit();
+    }
+
+    /* Deprecated
     public synchronized void setLastUpdate(String lastUpdate) {
         this.edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         this.edit.commit();
     }
+    */
 
-    /* Last TCG name update */
-    public synchronized String getLastTCGNameUpdate() {
-        return this.prefs.getString(context.getString(R.string.key_lastTCGNameUpdate), "");
+    public synchronized long getLastUpdateTimestamp() {
+        return this.prefs.getLong(context.getString(R.string.key_last_update_timestamp), 0);
     }
 
-    public synchronized void setLastTCGNameUpdate(String lastTCGNameUpdate) {
-        this.edit.putString(context.getString(R.string.key_lastTCGNameUpdate), lastTCGNameUpdate);
+    public synchronized void setLastUpdateTimestamp(long timestamp) {
+        this.edit.putLong(context.getString(R.string.key_last_update_timestamp), timestamp);
         this.edit.commit();
     }
 
-    /* Last foilInfo update */
-    public synchronized String getLastFoilInfoUpdate() {
-        return this.prefs.getString(context.getString(R.string.key_lastFoilInfoUpdate), "");
-    }
-
-    public synchronized void setLastFoilInfoUpdate(String lastFoilInfoUpdate) {
-        this.edit.putString(context.getString(R.string.key_lastFoilInfoUpdate), lastFoilInfoUpdate);
-        this.edit.commit();
-    }
 
     /* Life Counter Timer */
     public synchronized String getLifeTimer() {
@@ -470,24 +485,6 @@ public class PreferenceAdapter {
         return this.prefs.getInt(context.getString(R.string.key_imageCacheSize), 12);
     }
 
-    public synchronized int getTradeSortOrder() {
-        return this.prefs.getInt(context.getString(R.string.key_trade_sort_order), 0);
-    }
-
-    public synchronized void setTradeSortOrder(int tradeSortOrder) {
-        this.edit.putInt(context.getString(R.string.key_trade_sort_order), tradeSortOrder);
-        this.edit.commit();
-    }
-
-    public synchronized int getTradeSortType() {
-        return this.prefs.getInt(context.getString(R.string.key_trade_sort_type), 0);
-    }
-
-    public synchronized void setTradeSortType(int tradeSortType) {
-        this.edit.putInt(context.getString(R.string.key_trade_sort_type), tradeSortType);
-        this.edit.commit();
-    }
-
     synchronized int getNumTutorCardsSearches() {
         return this.prefs.getInt(context.getString(R.string.key_num_tutor_cards_searches), 0);
     }
@@ -523,4 +520,54 @@ public class PreferenceAdapter {
         return this.prefs.getInt(context.getString(R.string.key_widgetNumButtons) + widgetID, 100);
     }
 
+    public synchronized void setSearchSortOrder(String searchSortOrder) {
+        this.edit.putString(context.getString(R.string.key_searchSortOrder), searchSortOrder);
+        this.edit.commit();
+    }
+
+    public synchronized String getSearchSortOrder() {
+        return this.prefs.getString(context.getString(R.string.key_searchSortOrder),
+                CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SUPERTYPE + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_CMC + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC
+        );
+    }
+
+    public synchronized void setWishlistSortOrder(String searchSortOrder) {
+        this.edit.putString(context.getString(R.string.key_wishlist_sort_order_2), searchSortOrder);
+        this.edit.commit();
+    }
+
+    public synchronized String getWishlistSortOrder() {
+        return this.prefs.getString(context.getString(R.string.key_wishlist_sort_order_2),
+                CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SUPERTYPE + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_CMC + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
+        );
+    }
+
+    public synchronized void setTradeSortOrder(String searchSortOrder) {
+        this.edit.putString(context.getString(R.string.key_trade_sort_order_2), searchSortOrder);
+        this.edit.commit();
+    }
+
+    public synchronized String getTradeSortOrder() {
+        return this.prefs.getString(context.getString(R.string.key_trade_sort_order_2),
+                CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SET + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_SUPERTYPE + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_CMC + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
+        );
+    }
 }

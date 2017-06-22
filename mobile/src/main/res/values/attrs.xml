@@ -7,12 +7,14 @@
         <attr name="colorPrimary_attr" format="color|reference" />
         <attr name="colorPrimaryDark_attr" format="color|reference" />
         <attr name="colorPrimaryTransparent_attr" format="color|reference" />
+        <attr name="colorAccent_attr" format="color|reference" />
         <attr name="grey_border" format="reference" />
         <attr name="color_text" format="color|reference" />
         <attr name="color_background" format="color|reference" />
         <attr name="glyph_pwk" format="reference" />
         <attr name="glyph_chaos" format="reference" />
         <attr name="glyph_e" format="reference" />
+        <attr name="glyph_p" format="reference" />
         <attr name="button" format="reference" />
 
         <!-- Rarity Colors -->
@@ -48,6 +50,7 @@
         <attr name="ic_drawer_profile" format="reference" />
         <attr name="ic_drawer_save" format="reference" />
         <attr name="ic_drawer_load" format="reference" />
+        <attr name="ic_drawer_deck" format="reference" />
 
         <attr name="ic_menu_search" format="reference" />
         <attr name="ic_menu_card_image" format="reference" />
@@ -72,6 +75,7 @@
         <attr name="ic_menu_volume_up" format="reference" />
         <attr name="ic_menu_warning" format="reference" />
         <attr name="ic_menu_wishlist" format="reference" />
+        <attr name="ic_menu_translate" format="reference" />
 
         <attr name="lc_commander_disabled" format="reference" />
         <attr name="lc_commander_enabled" format="reference" />
@@ -97,6 +101,9 @@
 
         <!-- to style the hms time picker -->
         <attr name="hms_picker_style" format="reference" />
+
+        <!-- to style the hms time picker -->
+        <attr name="num_picker_style" format="reference" />
 
         <!-- Camera button -->
         <attr name="camera_button" format="reference" />

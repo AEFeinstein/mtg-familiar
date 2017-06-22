@@ -30,4 +30,18 @@
         android:layout_height="48dp"
         android:text="@string/pref_five_minutes_title" />
 
+    <CheckBox
+        android:id="@+id/timer_pref_two"
+        style="@style/text.medium"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:text="@string/pref_two_minutes_title" />
+
+    <CheckBox
+        android:id="@+id/timer_use_sound_instead_of_tts"
+        style="@style/text.medium"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:text="@string/pref_use_sound_instead_of_tts" />
+
 </LinearLayout>

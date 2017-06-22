@@ -4,11 +4,13 @@
     <style name="Theme.light" parent="Theme.base.light">
         <item name="android:colorPrimary">@color/colorPrimary_light</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark_light</item>
+        <item name="android:colorAccent">@color/colorAccent_light</item>
     </style>
 
     <style name="Theme.dark" parent="Theme.base.dark">
         <item name="android:colorPrimary">@color/colorPrimary_dark</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark_dark</item>
+        <item name="android:colorAccent">@color/colorAccent_dark</item>
     </style>
 
     <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
@@ -24,6 +26,7 @@
     <style name="Theme.transparent" parent="Theme.AppCompat.Dialog">
         <item name="android:colorPrimary">@color/colorPrimary_light</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark_light</item>
+        <item name="android:colorAccent">@color/colorAccent_light</item>
     </style>
 
 </resources>

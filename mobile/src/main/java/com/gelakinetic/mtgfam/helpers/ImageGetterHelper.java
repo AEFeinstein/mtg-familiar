@@ -153,7 +153,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("pg") || source.equalsIgnoreCase("gp")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_pg);
                 } else if (source.equalsIgnoreCase("p")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_p);
+                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_p));
                 } else if (source.equalsIgnoreCase("+oo")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_inf);
                 } else if (source.equalsIgnoreCase("100")) {

@@ -65,6 +65,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
+import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
@@ -128,6 +129,7 @@ public class FamiliarActivity extends AppCompatActivity {
     public static final String ACTION_JUDGE = "android.intent.action.JUDGE";
     public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
     public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
+    public static final String ACTION_DECKLIST = "android.intent.action.DECKLIST";
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 77;
 
     /* Constants used for saving state */
@@ -155,6 +157,7 @@ public class FamiliarActivity extends AppCompatActivity {
             new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false),
             new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false),
             new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false),
+            new DrawerEntry(R.string.main_decklist, R.attr.ic_drawer_deck, false),
             new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false),
             new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
             new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
@@ -537,10 +540,8 @@ public class FamiliarActivity extends AppCompatActivity {
                                 mPreferenceAdapter.setLastMTRUpdate(0);
                                 mPreferenceAdapter.setLastJARUpdate(0);
                                 mPreferenceAdapter.setLastRulesUpdate(0);
-                                mPreferenceAdapter.setLastTCGNameUpdate("");
-                                mPreferenceAdapter.setLastFoilInfoUpdate("");
-                                mPreferenceAdapter.setLastUpdate("");
-                                mPreferenceAdapter.setLegalityDate("");
+                                mPreferenceAdapter.setLastUpdateTimestamp(0);
+                                mPreferenceAdapter.setLegalityTimestamp(0);
                                 startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
                             } catch (FamiliarDbException e) {
                                 e.printStackTrace();
@@ -580,6 +581,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     case R.string.main_dice:
                     case R.string.main_trade:
                     case R.string.main_wishlist:
+                    case R.string.main_decklist:
                     case R.string.main_timer:
                     case R.string.main_rules:
                     case R.string.main_judges_corner:
@@ -915,6 +917,8 @@ public class FamiliarActivity extends AppCompatActivity {
             selectItem(R.string.main_mojhosto, null, true, false);
         } else if (ACTION_PROFILE.equals(intent.getAction())) {
             selectItem(R.string.main_profile, null, true, false);
+        } else if (ACTION_DECKLIST.equals(intent.getAction())) {
+            selectItem(R.string.main_decklist, null, true, false);
         } else if (Intent.ACTION_MAIN.equals(intent.getAction())) {
             /* App launched as regular, show the default fragment if there isn't one already */
             if (getSupportFragmentManager().getFragments() == null) {
@@ -957,6 +961,8 @@ public class FamiliarActivity extends AppCompatActivity {
             selectItem(R.string.main_mojhosto, null, true, false);
         } else if (defaultFragment.equals(this.getString(R.string.main_profile))) {
             selectItem(R.string.main_profile, null, true, false);
+        } else if (defaultFragment.equals(this.getString(R.string.main_decklist))) {
+            selectItem(R.string.main_decklist, null, true, false);
         } else {
             selectItem(R.string.main_card_search, null, true, false);
         }
@@ -1036,6 +1042,10 @@ public class FamiliarActivity extends AppCompatActivity {
             }
             case R.string.main_wishlist: {
                 newFrag = new WishlistFragment();
+                break;
+            }
+            case R.string.main_decklist: {
+                newFrag = new DecklistFragment();
                 break;
             }
             case R.string.main_timer: {

@@ -33,15 +33,21 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                 final CheckBox chkFifteen = (CheckBox) v.findViewById(R.id.timer_pref_fifteen);
                 final CheckBox chkTen = (CheckBox) v.findViewById(R.id.timer_pref_ten);
                 final CheckBox chkFive = (CheckBox) v.findViewById(R.id.timer_pref_five);
+                final CheckBox chkTwo = (CheckBox) v.findViewById(R.id.timer_pref_two);
+                final CheckBox chkUseSound = (CheckBox) v.findViewById(R.id.timer_use_sound_instead_of_tts);
 
                 boolean fifteen =
                         getFamiliarActivity().mPreferenceAdapter.getFifteenMinutePref();
                 boolean ten = getFamiliarActivity().mPreferenceAdapter.getTenMinutePref();
                 boolean five = getFamiliarActivity().mPreferenceAdapter.getFiveMinutePref();
+                boolean two = getFamiliarActivity().mPreferenceAdapter.getTwoMinutePref();
+                boolean useSound = getFamiliarActivity().mPreferenceAdapter.getUseSoundInsteadOfTTSPref();
 
                 chkFifteen.setChecked(fifteen);
                 chkTen.setChecked(ten);
                 chkFive.setChecked(five);
+                chkTwo.setChecked(two);
+                chkUseSound.setChecked(useSound);
 
                 return new MaterialDialog.Builder(getActivity())
                         .customView(v, false)
@@ -56,6 +62,10 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                                         .setTenMinutePref(chkTen.isChecked());
                                 getFamiliarActivity().mPreferenceAdapter
                                         .setFiveMinutePref(chkFive.isChecked());
+                                getFamiliarActivity().mPreferenceAdapter
+                                        .setTwoMinutePref(chkTwo.isChecked());
+                                getFamiliarActivity().mPreferenceAdapter
+                                        .setUseSoundInsteadOfTTSPref(chkUseSound.isChecked());
                             }
                         })
                         .build();

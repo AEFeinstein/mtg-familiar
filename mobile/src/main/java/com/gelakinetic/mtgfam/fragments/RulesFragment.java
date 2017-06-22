@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -407,7 +408,7 @@ public class RulesFragment extends FamiliarFragment {
         if (mKeywordPattern != null) {
             encodedInput = mKeywordPattern.matcher(encodedInput)
                     .replaceAll("\\<font color=\"" +
-                            String.format("0x%06X", 0xFFFFFF & getResources().getColor(R.color.colorPrimaryDark_light)) +
+                            String.format("0x%06X", 0xFFFFFF & ContextCompat.getColor(getContext(), R.color.colorPrimaryDark_light)) +
                             "\"\\>$1\\</font\\>");
         }
         encodedInput = mHyperlinkPattern.matcher(encodedInput).replaceAll("\\<a href=\"http://$2$3\"\\>$2$3\\</a\\>");

@@ -152,7 +152,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                         try {
                                     /* Get the card ID, and send it to a new CardViewPagerFragment */
-                            Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).name,
+                            Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
                                     lSide.get(positionForDialog).setCode, new String[]{
                                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
 
@@ -179,7 +179,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 });
 
                 return new MaterialDialog.Builder(this.getActivity())
-                        .title(lSide.get(positionForDialog).name)
+                        .title(lSide.get(positionForDialog).mName)
                         .customView(view, false)
                         .positiveText(R.string.dialog_done)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -276,7 +276,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                 try {
                     /* Query the database for all versions of this card */
-                    Cursor cards = CardDbAdapter.fetchCardByName(data.name, new String[]{
+                    Cursor cards = CardDbAdapter.fetchCardByName(data.mName, new String[]{
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, database);
@@ -526,39 +526,6 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             }
                         })
                         .negativeText(R.string.dialog_cancel)
-                        .cancelable(true)
-                        .build();
-            }
-            case DIALOG_SORT: {
-                return new MaterialDialog.Builder(getActivity())
-                        .title(R.string.wishlist_sort_by)
-                        .items(R.array.wishlist_sort_type)
-                        .itemsCallbackSingleChoice(getParentTradeFragment().mSortType, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                /* Figure out the sort type, do the sort */
-                                getParentTradeFragment().mSortType = which;
-                                return true;
-                            }
-                        })
-                        .negativeText(R.string.dialog_cancel)
-                        .neutralText(R.string.wishlist_ascending)
-                        .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentTradeFragment().mSortOrder = TradeFragment.ASCENDING;
-                                getParentTradeFragment().sortTrades(getParentTradeFragment().mSortType, getParentTradeFragment().mSortOrder);
-                            }
-                        })
-                        .positiveText(R.string.wishlist_descending)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentTradeFragment().mSortOrder = TradeFragment.DESCENDING;
-                                getParentTradeFragment().sortTrades(getParentTradeFragment().mSortType, getParentTradeFragment().mSortOrder);
-                            }
-                        })
-                        .alwaysCallSingleChoiceCallback()
                         .cancelable(true)
                         .build();
             }

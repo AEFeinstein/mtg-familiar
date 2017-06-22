@@ -117,7 +117,7 @@ public abstract class FamiliarFragment extends Fragment {
         super.onPause();
         removeDialog(getFragmentManager());
         try {
-            if(getFamiliarActivity().mSpiceManager.getPendingRequestCount() > 0) {
+            if (getFamiliarActivity().mSpiceManager.getPendingRequestCount() > 0) {
                 getFamiliarActivity().mSpiceManager.cancelAllRequests();
             }
         } catch (RejectedExecutionException e) {
@@ -315,5 +315,13 @@ public abstract class FamiliarFragment extends Fragment {
      */
     public void receiveTutorCardsResult(long multiverseId) {
 
+    }
+
+    /**
+     * Override this to receive results from ResultListDialogFragments
+     *
+     * @param orderByStr The sort order string
+     */
+    public void receiveSortOrder(String orderByStr) {
     }
 }

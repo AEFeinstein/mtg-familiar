@@ -3,9 +3,12 @@
 
     <style name="Theme.base.light" parent="Theme.AppCompat.Light.NoActionBar">
 
+        <item name="android:textColorLink">@color/hyperlink_text</item>
+
         <item name="colorPrimary_attr">@color/colorPrimary_light</item>
         <item name="colorPrimaryDark_attr">@color/colorPrimaryDark_light</item>
         <item name="colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_light</item>
+        <item name="colorAccent_attr">@color/colorAccent_light</item>
 
         <item name="android:windowNoTitle">true</item>
 
@@ -56,6 +59,9 @@
         <item name="ic_drawer_profile">
             @drawable/ic_drawer_profile_light
         </item>
+        <item name="ic_drawer_deck">
+            @drawable/ic_drawer_deck_light
+        </item>
 
         <item name="ic_drawer_about">@drawable/ic_drawer_about_light</item>
         <item name="ic_drawer_download">@drawable/ic_drawer_download_light
@@ -98,9 +104,14 @@
             @style/MyCustomBetterPickerTheme.Light
         </item>
 
+        <item name="num_picker_style">
+            @style/BetterPickersDialogFragment.Light
+        </item>
+
         <item name="glyph_pwk">@drawable/glyph_pwk_light</item>
         <item name="glyph_chaos">@drawable/glyph_chaos_light</item>
         <item name="glyph_e">@drawable/glyph_e_light</item>
+        <item name="glyph_p">@drawable/glyph_p_light</item>
 
         <item name="ic_menu_search">@drawable/ic_menu_search_light</item>
         <item name="ic_menu_card_image">@drawable/ic_menu_card_image_light</item>
@@ -125,6 +136,7 @@
         <item name="ic_menu_volume_up">@drawable/ic_menu_volume_up_light</item>
         <item name="ic_menu_warning">@drawable/ic_menu_warning_light</item>
         <item name="ic_menu_wishlist">@drawable/ic_menu_wishlist_light</item>
+        <item name="ic_menu_translate">@drawable/ic_menu_translate_light</item>
 
         <item name="button">@style/button_light</item>
 
@@ -136,9 +148,12 @@
 
     <style name="Theme.base.dark" parent="Theme.AppCompat.NoActionBar">
 
+        <item name="android:textColorLink">@color/hyperlink_text</item>
+
         <item name="colorPrimary_attr">@color/colorPrimary_dark</item>
         <item name="colorPrimaryDark_attr">@color/colorPrimaryDark_dark</item>
         <item name="colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_dark</item>
+        <item name="colorAccent_attr">@color/colorAccent_dark</item>
 
         <item name="android:windowNoTitle">true</item>
 
@@ -188,6 +203,9 @@
         <item name="ic_drawer_profile">
             @drawable/ic_drawer_profile_dark
         </item>
+        <item name="ic_drawer_deck">
+            @drawable/ic_drawer_deck_dark
+        </item>
 
         <item name="ic_drawer_about">@drawable/ic_drawer_about_dark</item>
         <item name="ic_drawer_download">@drawable/ic_drawer_download_dark
@@ -226,10 +244,12 @@
         <item name="btn_check_foil">@drawable/btn_check_dark_foil</item>
 
         <item name="hms_picker_style">@style/MyCustomBetterPickerTheme</item>
+        <item name="num_picker_style">@style/BetterPickersDialogFragment</item>
 
         <item name="glyph_pwk">@drawable/glyph_pwk_dark</item>
         <item name="glyph_chaos">@drawable/glyph_chaos_dark</item>
         <item name="glyph_e">@drawable/glyph_e_dark</item>
+        <item name="glyph_p">@drawable/glyph_p_dark</item>
 
         <item name="ic_menu_search">@drawable/ic_menu_search_dark</item>
         <item name="ic_menu_card_image">@drawable/ic_menu_card_image_dark</item>
@@ -254,6 +274,7 @@
         <item name="ic_menu_volume_up">@drawable/ic_menu_volume_up_dark</item>
         <item name="ic_menu_warning">@drawable/ic_menu_warning_dark</item>
         <item name="ic_menu_wishlist">@drawable/ic_menu_wishlist_dark</item>
+        <item name="ic_menu_translate">@drawable/ic_menu_translate_dark</item>
 
         <item name="button">@style/button_dark</item>
 
@@ -261,16 +282,22 @@
 
         <!-- Use dark theme for dialogs -->
         <item name="md_dark_theme">true</item>
+        <item name="md_positive_color">@android:color/secondary_text_dark</item>
+        <item name="md_neutral_color">@android:color/secondary_text_dark</item>
+        <item name="md_negative_color">@android:color/secondary_text_dark</item>
+
     </style>
 
     <style name="Theme.light" parent="Theme.base.light">
         <item name="colorPrimary">@color/colorPrimary_light</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_light</item>
+        <item name="colorAccent">@color/colorAccent_light</item>
     </style>
 
     <style name="Theme.dark" parent="Theme.base.dark">
         <item name="colorPrimary">@color/colorPrimary_dark</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_dark</item>
+        <item name="colorAccent">@color/colorAccent_dark</item>
     </style>
 
     <style name="MyCustomBetterPickerTheme.Light" parent="@style/BetterPickersDialogFragment.Light">
@@ -287,5 +314,6 @@
         <item name="colorPrimary">@color/colorPrimary_light</item>
         <item name="colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_light</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark_light</item>
+        <item name="colorAccent">@color/colorAccent_light</item>
     </style>
 </resources>

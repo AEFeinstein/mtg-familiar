@@ -35,12 +35,13 @@
         <item>13</item>
         <item>14</item>
         <item>15</item>
+        <item>99</item>
         <item>*</item>
         <item>1+*</item>
         <item>2+*</item>
         <item>7-*</item>
-        <item>99</item>
         <item>*^2</item>
+        <item>X</item>
         <item>0.5</item>
         <item>1.5</item>
         <item>2.5</item>
@@ -154,6 +155,7 @@
         <item>@string/main_dice</item>
         <item>@string/main_trade</item>
         <item>@string/main_wishlist</item>
+        <item>@string/main_decklist</item>
         <item>@string/main_timer</item>
         <item>@string/main_rules</item>
         <item>@string/main_mojhosto</item>
@@ -177,6 +179,8 @@
         <item>@string/pref_German</item>
         <item>@string/pref_Portuguese</item>
         <item>@string/pref_Chinese</item>
+        <item>@string/pref_Chinese_trad</item>
+        <item>@string/pref_Korean</item>
     </string-array>
     <string-array name="card_language_values">
         <item>en</item>
@@ -188,6 +192,8 @@
         <item>de</item>
         <item>pt</item>
         <item>cn</item>
+        <item>tw</item>
+        <item>ko</item>
     </string-array>
     <string-array name="pref_language">
         <item>@string/pref_English</item>
@@ -197,6 +203,7 @@
         <item>@string/pref_Spanish</item>
         <item>@string/pref_Portuguese</item>
         <item>@string/pref_Polish</item>
+        <item>@string/pref_Slovak</item>
     </string-array>
     <string-array name="pref_language_values">
         <item>en</item>
@@ -206,6 +213,7 @@
         <item>es</item>
         <item>pt</item>
         <item>pl</item>
+        <item>sk</item>
     </string-array>
 
     <string-array name="life_timer_array_entries">
@@ -227,12 +235,41 @@
         <item>@string/pref_theme_dark</item>
     </string-array>
 
-    <string-array name="wishlist_sort_type">
-        <item>@string/wishlist_type_none</item>
-        <item>@string/wishlist_type_cmc</item>
-        <item>@string/wishlist_type_color</item>
-        <item>@string/wishlist_type_name</item>
-        <item>@string/wishlist_type_price</item>
-        <item>@string/wishlist_type_set</item>
+    <string-array name="decklist_card_headers">
+        <item>@string/decklist_sideboard</item>
+        <item>@string/decklist_creatures</item>
+        <item>@string/decklist_planeswalkers</item>
+        <item>@string/decklist_instants</item>
+        <item>@string/decklist_sorceries</item>
+        <item>@string/decklist_artifacts</item>
+        <item>@string/decklist_enchantments</item>
+        <item>@string/decklist_lands</item>
+        <item>@string/decklist_others</item>
     </string-array>
+
+    <string-array name="card_types">
+        <item>@string/card_type_creature</item>
+        <item>@string/card_type_planeswalker</item>
+        <item>@string/card_type_instant</item>
+        <item>@string/card_type_sorcery</item>
+        <item>@string/card_type_artifact</item>
+        <item>@string/card_type_enchantment</item>
+        <item>@string/card_type_land</item>
+    </string-array>
+
+    <string-array name="card_types_extra">
+        <item>@string/card_type_creature</item>
+        <item>@string/card_type_planeswalker</item>
+        <item>@string/card_type_instant</item>
+        <item>@string/card_type_sorcery</item>
+        <item>@string/card_type_artifact</item>
+        <item>@string/card_type_enchantment</item>
+        <item>@string/card_type_land</item>
+        <item>@string/card_type_conspiracy</item>
+        <item>@string/card_type_phenomenon</item>
+        <item>@string/card_type_plane</item>
+        <item>@string/card_type_scheme</item>
+        <item>@string/card_type_vanguard</item>
+    </string-array>
+
 </resources>

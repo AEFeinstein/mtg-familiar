@@ -48,8 +48,14 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
         android:icon="?attr/ic_menu_legality"
         android:title="@string/card_view_legality"
         app:showAsAction="ifRoom" />
-    <item android:title="@string/card_view_share_card"
+    <item
+        android:title="@string/card_view_share_card"
         android:id="@+id/sharecard"
         android:icon="?attr/ic_menu_share"
+        app:showAsAction="ifRoom" />
+    <item
+        android:title="@string/card_view_translated_dialog_title"
+        android:id="@+id/translatecard"
+        android:icon="?attr/ic_menu_translate"
         app:showAsAction="ifRoom" />
 </menu>
