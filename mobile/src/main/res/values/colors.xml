@@ -36,15 +36,23 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="drawer_text_unselected_light">#8A000000</color>
     <color name="drawer_divider_item_light">#1A000000</color>
     <color name="drawer_item_selected_light">#0c000000</color>
+    <color name="drawer_item_icon_light">#80000000</color>
 
     <color name="drawer_background_dark">#303030</color>
     <color name="drawer_text_unselected_dark">#B3FFFFFF</color>
     <color name="drawer_divider_item_dark">#26FFFFFF</color>
     <color name="drawer_item_selected_dark">#ABFFFFFF</color>
+    <color name="drawer_item_icon_dark">#B3FFFFFF</color>
 
     <!-- used for life, poison, here and there -->
     <color name="material_red_500">#F44336</color>
     <color name="material_green_500">#4CAF50</color>
+
+    <!-- life counter colors -->
+    <color name="lc_enabled_light">#99343434</color>
+    <color name="lc_disabled_light">#4C323232</color>
+    <color name="lc_enabled_dark">#CCFFFFFF</color>
+    <color name="lc_disabled_dark">#65FAFAFA</color>
 
     <!-- background color for the entire app -->
     <color name="background_light">#EEEEEE</color>

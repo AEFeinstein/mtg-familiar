@@ -151,26 +151,26 @@ public class FamiliarActivity extends AppCompatActivity {
     public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
     /* What the drawer menu will be */
     private final DrawerEntry[] mPageEntries = {
-            new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false),
-            new DrawerEntry(R.string.main_life_counter, R.attr.ic_drawer_life, false),
-            new DrawerEntry(R.string.main_mana_pool, R.attr.ic_drawer_mana, false),
-            new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false),
-            new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false),
-            new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false),
-            new DrawerEntry(R.string.main_decklist, R.attr.ic_drawer_deck, false),
-            new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false),
-            new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
-            new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
-            new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
-            new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false),
+            new DrawerEntry(R.string.main_card_search, R.drawable.ic_drawer_search, false),
+            new DrawerEntry(R.string.main_life_counter, R.drawable.ic_drawer_life, false),
+            new DrawerEntry(R.string.main_mana_pool, R.drawable.ic_drawer_mana, false),
+            new DrawerEntry(R.string.main_dice, R.drawable.ic_drawer_dice, false),
+            new DrawerEntry(R.string.main_trade, R.drawable.ic_drawer_trade, false),
+            new DrawerEntry(R.string.main_wishlist, R.drawable.ic_drawer_wishlist, false),
+            new DrawerEntry(R.string.main_decklist, R.drawable.ic_drawer_wishlist, false),
+            new DrawerEntry(R.string.main_timer, R.drawable.ic_drawer_timer, false),
+            new DrawerEntry(R.string.main_rules, R.drawable.ic_drawer_rules, false),
+            new DrawerEntry(R.string.main_judges_corner, R.drawable.ic_drawer_judge, false),
+            new DrawerEntry(R.string.main_mojhosto, R.drawable.ic_drawer_mojhosto, false),
+            new DrawerEntry(R.string.main_profile, R.drawable.ic_drawer_profile, false),
             new DrawerEntry(0, 0, true),
-            new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
-            new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
-            new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
-            new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
-            new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
-            new DrawerEntry(R.string.main_export_data_title, R.attr.ic_drawer_save, false),
-            new DrawerEntry(R.string.main_import_data_title, R.attr.ic_drawer_load, false),
+            new DrawerEntry(R.string.main_settings_title, R.drawable.ic_drawer_settings, false),
+            new DrawerEntry(R.string.main_force_update_title, R.drawable.ic_drawer_download, false),
+            new DrawerEntry(R.string.main_donate_title, R.drawable.ic_drawer_good, false),
+            new DrawerEntry(R.string.main_about, R.drawable.ic_drawer_about, false),
+            new DrawerEntry(R.string.main_whats_new_title, R.drawable.ic_drawer_help, false),
+            new DrawerEntry(R.string.main_export_data_title, R.drawable.ic_drawer_save, false),
+            new DrawerEntry(R.string.main_import_data_title, R.drawable.ic_drawer_load, false),
     };
     private final Handler mInactivityHandler = new Handler();
     /* Drawer elements */
@@ -1624,7 +1624,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
                 assert convertView != null;
                 ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
-                ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconResource), 0, 0, 0);
+                ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(values[position].mIconResource, 0, 0, 0);
                 /* Color the initial icon */
                 if (mCurrentFrag == position) {
                     colorDrawerEntry(((TextView) convertView.findViewById(R.id.drawer_entry_name)));

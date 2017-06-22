@@ -17,7 +17,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_search_light" />
+        app:srcCompat="@drawable/ic_drawer_search"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_life"
@@ -25,7 +26,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_life_light" />
+        app:srcCompat="@drawable/ic_drawer_life"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_mana"
@@ -33,7 +35,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_mana_light" />
+        app:srcCompat="@drawable/ic_drawer_mana"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_dice"
@@ -41,7 +44,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_dice_light" />
+        app:srcCompat="@drawable/ic_drawer_dice"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_trade"
@@ -49,7 +53,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_trade_light" />
+        app:srcCompat="@drawable/ic_drawer_trade"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_wish"
@@ -57,7 +62,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_wishlist_light" />
+        app:srcCompat="@drawable/ic_drawer_wishlist"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_deck"
@@ -65,7 +71,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:src="@drawable/ic_drawer_deck_light" />
+        android:src="@drawable/ic_drawer_deck_light"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_timer"
@@ -73,7 +80,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_timer_light" />
+        app:srcCompat="@drawable/ic_drawer_timer"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_rules"
@@ -81,7 +89,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_rules_light" />
+        app:srcCompat="@drawable/ic_drawer_rules"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_judge"
@@ -89,7 +98,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_judge_light" />
+        app:srcCompat="@drawable/ic_drawer_judge"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_mojhosto"
@@ -97,7 +107,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_mojhosto_light" />
+        app:srcCompat="@drawable/ic_drawer_mojhosto"
+        android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
         android:id="@+id/widget_profile"
@@ -105,5 +116,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_profile_light" />
+        app:srcCompat="@drawable/ic_drawer_profile"
+        android:tint="@color/drawer_item_icon_light" />
 </LinearLayout>
