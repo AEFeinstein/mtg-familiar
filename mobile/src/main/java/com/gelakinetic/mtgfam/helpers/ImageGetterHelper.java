@@ -167,7 +167,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("c")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_c);
                 } else if (source.equalsIgnoreCase("chaos")) {
-                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_chaos));
+                    d = ContextCompat.getDrawable(context, R.drawable.glyph_chaos);
                 } else if (source.equalsIgnoreCase("z")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_z);
                 } else if (source.equalsIgnoreCase("y")) {
@@ -179,7 +179,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("pwk")) {
                     d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_pwk));
                 } else if (source.equalsIgnoreCase("e")) {
-                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_e));
+                    d = ContextCompat.getDrawable(context, R.drawable.glyph_e);
                 } else {
                     for (int i = 0; i < drawableNumbers.length; i++) {
                         if (source.equals(Integer.valueOf(i).toString())) {

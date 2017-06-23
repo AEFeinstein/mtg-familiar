@@ -29,17 +29,13 @@
         <item name="colorControlNormal">@color/drawer_item_icon_light</item>
         <item name="selector_drawer_text">@drawable/drawer_text_light</item>
 
-        <item name="ic_drawer_deck">@drawable/ic_drawer_deck_light</item>
-
         <item name="lc_enabled">@color/lc_enabled_light</item>
         <item name="lc_disabled">@color/lc_disabled_light</item>
 
         <item name="lc_reset">@drawable/lc_reset_light</item>
         <item name="ic_close">@drawable/ic_close_light</item>
 
-        <item name="drawer_background_indicator">
-            @drawable/drawer_background_indicator_light
-        </item>
+        <item name="drawer_background_indicator">@drawable/drawer_background_indicator_light</item>
 
         <item name="btn_check_w">@drawable/btn_check_light_w</item>
         <item name="btn_check_u">@drawable/btn_check_light_u</item>
@@ -49,17 +45,11 @@
         <item name="btn_check_l">@drawable/btn_check_light_l</item>
         <item name="btn_check_foil">@drawable/btn_check_light_foil</item>
 
-        <item name="hms_picker_style">
-            @style/MyCustomBetterPickerTheme.Light
-        </item>
+        <item name="hms_picker_style">@style/MyCustomBetterPickerTheme.Light</item>
 
-        <item name="num_picker_style">
-            @style/BetterPickersDialogFragment.Light
-        </item>
+        <item name="num_picker_style">@style/BetterPickersDialogFragment.Light</item>
 
         <item name="glyph_pwk">@drawable/glyph_pwk_light</item>
-        <item name="glyph_chaos">@drawable/glyph_chaos_light</item>
-        <item name="glyph_e">@drawable/glyph_e_light</item>
         <item name="glyph_p">@drawable/glyph_p_light</item>
 
         <item name="button">@style/button_light</item>
@@ -92,20 +82,11 @@
         <item name="color_mythic">@color/mythic_dark</item>
         <item name="color_timeshifted">@color/timeshifted_dark</item>
 
-        <item name="color_drawer_background">@color/drawer_background_dark
-        </item>
-        <item name="color_drawer_text_unselected">
-            @color/drawer_text_unselected_dark
-        </item>
-        <item name="color_drawer_divider_item">
-            @color/drawer_divider_item_dark
-        </item>
+        <item name="color_drawer_background">@color/drawer_background_dark</item>
+        <item name="color_drawer_text_unselected">@color/drawer_text_unselected_dark</item>
+        <item name="color_drawer_divider_item">@color/drawer_divider_item_dark</item>
         <item name="colorControlNormal">@color/drawer_item_icon_dark</item>
         <item name="selector_drawer_text">@drawable/drawer_text_dark</item>
-
-        <item name="ic_drawer_deck">
-            @drawable/ic_drawer_deck_dark
-        </item>
 
         <item name="lc_enabled">@color/lc_enabled_dark</item>
         <item name="lc_disabled">@color/lc_disabled_dark</item>
@@ -126,8 +107,6 @@
         <item name="num_picker_style">@style/BetterPickersDialogFragment</item>
 
         <item name="glyph_pwk">@drawable/glyph_pwk_dark</item>
-        <item name="glyph_chaos">@drawable/glyph_chaos_dark</item>
-        <item name="glyph_e">@drawable/glyph_e_dark</item>
         <item name="glyph_p">@drawable/glyph_p_dark</item>
 
         <item name="button">@style/button_dark</item>

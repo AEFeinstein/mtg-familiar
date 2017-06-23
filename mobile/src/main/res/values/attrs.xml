@@ -12,8 +12,6 @@
         <attr name="color_text" format="color|reference" />
         <attr name="color_background" format="color|reference" />
         <attr name="glyph_pwk" format="reference" />
-        <attr name="glyph_chaos" format="reference" />
-        <attr name="glyph_e" format="reference" />
         <attr name="glyph_p" format="reference" />
         <attr name="button" format="reference" />
 
@@ -33,8 +31,6 @@
 
         <!-- Menu & Drawer Icons/Colors -->
         <attr name="ic_drawer" format="reference" />
-
-        <attr name="ic_drawer_deck" format="reference" />
 
         <attr name="lc_enabled" format="reference" />
         <attr name="lc_disabled" format="reference" />

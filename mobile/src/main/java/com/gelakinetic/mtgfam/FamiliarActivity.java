@@ -157,7 +157,7 @@ public class FamiliarActivity extends AppCompatActivity {
             new DrawerEntry(R.string.main_dice, R.drawable.ic_drawer_dice, false),
             new DrawerEntry(R.string.main_trade, R.drawable.ic_drawer_trade, false),
             new DrawerEntry(R.string.main_wishlist, R.drawable.ic_drawer_wishlist, false),
-            new DrawerEntry(R.string.main_decklist, R.drawable.ic_drawer_wishlist, false),
+            new DrawerEntry(R.string.main_decklist, R.drawable.ic_drawer_deck, false),
             new DrawerEntry(R.string.main_timer, R.drawable.ic_drawer_timer, false),
             new DrawerEntry(R.string.main_rules, R.drawable.ic_drawer_rules, false),
             new DrawerEntry(R.string.main_judges_corner, R.drawable.ic_drawer_judge, false),
