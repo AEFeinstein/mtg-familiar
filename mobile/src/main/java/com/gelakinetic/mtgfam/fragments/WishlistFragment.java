@@ -144,8 +144,6 @@ public class WishlistFragment extends FamiliarFragment {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 /* Remove the card */
                 mCompressedWishlist.remove(position);
-                /* Save the wishlist */
-                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
 
                 /* Redraw the new wishlist */
                 mWishlistAdapter.notifyDataSetChanged();
@@ -263,9 +261,6 @@ public class WishlistFragment extends FamiliarFragment {
             sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder(),
                     getFamiliarActivity().mPreferenceAdapter.getWishlistDontSort());
 
-            /* Save the wishlist */
-            WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
-
             /* Clean up for the next add */
             mNumberField.setText("1");
             mNameField.setText("");
@@ -282,6 +277,18 @@ public class WishlistFragment extends FamiliarFragment {
             /* eat it */
         }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+    }
+
+    /**
+     * Save the wishlist whenever the fragment is paused
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        /* Unsort the wishlist, then save it */
+        sortWishlist(null, true);
+        WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
     }
 
     /**
