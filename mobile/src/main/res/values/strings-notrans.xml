@@ -30,9 +30,6 @@
     <string name="deck_counter_3" translatable="false">+3</string>
     <string name="deck_counter_4" translatable="false">+4</string>
 
-    <!-- Dice Fragment -->
-    <string name="dice_num_default_sides" translatable="false">50</string>
-
     <!-- Type checking for special image lookups -->
     <string name="search_Ongoing" translatable="false">Ongoing</string>
     <string name="search_Plane" translatable="false">Plane</string>

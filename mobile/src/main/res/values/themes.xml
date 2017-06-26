@@ -274,7 +274,7 @@
         <item name="ic_menu_volume_up">@drawable/ic_menu_volume_up_dark</item>
         <item name="ic_menu_warning">@drawable/ic_menu_warning_dark</item>
         <item name="ic_menu_wishlist">@drawable/ic_menu_wishlist_dark</item>
-        <item name="ic_menu_translate">@drawable/ic_menu_translate_light</item>
+        <item name="ic_menu_translate">@drawable/ic_menu_translate_dark</item>
 
         <item name="button">@style/button_dark</item>
 

@@ -34,4 +34,5 @@ public class SearchCriteria implements Serializable {
     public int colorIdentityLogic = 0;
     public String mc = null;
     public Comparison mcLogic;
+    public boolean moJhoStoFilter;
 }
