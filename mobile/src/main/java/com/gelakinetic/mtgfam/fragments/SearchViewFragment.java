@@ -912,7 +912,6 @@ public class SearchViewFragment extends FamiliarFragment {
             }
             manaCostTextView.setObjectsFromString(criteria.mc);
             comparisonSpinner.setSelection(criteria.mcLogic.ordinal());
-            comparisonSpinner.setSelection(criteria.mcLogic.ordinal());
             if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
             }

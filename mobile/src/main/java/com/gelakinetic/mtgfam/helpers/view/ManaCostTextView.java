@@ -2,6 +2,8 @@ package com.gelakinetic.mtgfam.helpers.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,8 +21,10 @@ import com.tokenautocomplete.FilteredArrayAdapter;
 
 import java.util.LinkedHashMap;
 
-public class ManaCostTextView extends ATokenTextView {;
+public class ManaCostTextView extends ATokenTextView {
     private final ManaSymbolAdapter manaSymbolAdapter = new ManaSymbolAdapter();
+    private final int BITMAP_HEIGHT = 40;
+    private static final LinkedHashMap<String, BitmapDrawable> MANA_DRAWABLES = new LinkedHashMap<>();
     private static final LinkedHashMap<String, Integer> MANA_SYMBOLS = new LinkedHashMap<>();
     static {
         MANA_SYMBOLS.put("0", R.drawable.glyph_0);
@@ -36,14 +41,8 @@ public class ManaCostTextView extends ATokenTextView {;
         MANA_SYMBOLS.put("11", R.drawable.glyph_11);
         MANA_SYMBOLS.put("12", R.drawable.glyph_12);
         MANA_SYMBOLS.put("13", R.drawable.glyph_13);
-        MANA_SYMBOLS.put("14", R.drawable.glyph_14);
         MANA_SYMBOLS.put("15", R.drawable.glyph_15);
         MANA_SYMBOLS.put("16", R.drawable.glyph_16);
-        MANA_SYMBOLS.put("17", R.drawable.glyph_17);
-        MANA_SYMBOLS.put("18", R.drawable.glyph_18);
-        MANA_SYMBOLS.put("19", R.drawable.glyph_19);
-        MANA_SYMBOLS.put("20", R.drawable.glyph_20);
-        MANA_SYMBOLS.put("100", R.drawable.glyph_100);
         MANA_SYMBOLS.put("1000000", R.drawable.glyph_1000000);
         MANA_SYMBOLS.put("X", R.drawable.glyph_x);
         MANA_SYMBOLS.put("Y", R.drawable.glyph_y);
@@ -54,11 +53,11 @@ public class ManaCostTextView extends ATokenTextView {;
         MANA_SYMBOLS.put("B", R.drawable.glyph_b);
         MANA_SYMBOLS.put("R", R.drawable.glyph_r);
         MANA_SYMBOLS.put("G", R.drawable.glyph_g);
-        MANA_SYMBOLS.put("W2", R.drawable.glyph_w2);
-        MANA_SYMBOLS.put("U2", R.drawable.glyph_u2);
-        MANA_SYMBOLS.put("B2", R.drawable.glyph_b2);
-        MANA_SYMBOLS.put("R2", R.drawable.glyph_r2);
-        MANA_SYMBOLS.put("G2", R.drawable.glyph_g2);
+        MANA_SYMBOLS.put("2W", R.drawable.glyph_w2);
+        MANA_SYMBOLS.put("2U", R.drawable.glyph_u2);
+        MANA_SYMBOLS.put("2B", R.drawable.glyph_b2);
+        MANA_SYMBOLS.put("2R", R.drawable.glyph_r2);
+        MANA_SYMBOLS.put("2G", R.drawable.glyph_g2);
         MANA_SYMBOLS.put("GW", R.drawable.glyph_gw);
         MANA_SYMBOLS.put("WU", R.drawable.glyph_wu);
         MANA_SYMBOLS.put("UB", R.drawable.glyph_ub);
@@ -69,11 +68,12 @@ public class ManaCostTextView extends ATokenTextView {;
         MANA_SYMBOLS.put("RW", R.drawable.glyph_rw);
         MANA_SYMBOLS.put("WB", R.drawable.glyph_wb);
         MANA_SYMBOLS.put("BG", R.drawable.glyph_bg);
-        MANA_SYMBOLS.put("PW", R.drawable.glyph_pw);
-        MANA_SYMBOLS.put("PU", R.drawable.glyph_pu);
-        MANA_SYMBOLS.put("PB", R.drawable.glyph_pb);
-        MANA_SYMBOLS.put("PR", R.drawable.glyph_pr);
-        MANA_SYMBOLS.put("PG", R.drawable.glyph_pg);
+        MANA_SYMBOLS.put("WP", R.drawable.glyph_pw);
+        MANA_SYMBOLS.put("UP", R.drawable.glyph_pu);
+        MANA_SYMBOLS.put("BP", R.drawable.glyph_pb);
+        MANA_SYMBOLS.put("RP", R.drawable.glyph_pr);
+        MANA_SYMBOLS.put("GP", R.drawable.glyph_pg);
+        MANA_SYMBOLS.put("HW", R.drawable.glyph_hw);
     }
 
     public ManaCostTextView(Context context, AttributeSet attrs) {
@@ -86,9 +86,19 @@ public class ManaCostTextView extends ATokenTextView {;
     protected View getViewForObject(String symbol) {
         LayoutInflater l = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         ImageView view = (ImageView) l.inflate(R.layout.mana_token, (ViewGroup) getParent(), false);
-        int resId = MANA_SYMBOLS.get(symbol);
-        final Drawable drawable = ContextCompat.getDrawable(this.getContext(), resId);
-        view.setImageDrawable(drawable);
+        BitmapDrawable bitmapDrawable = MANA_DRAWABLES.get(symbol);
+        if (bitmapDrawable == null) {
+            int resId = MANA_SYMBOLS.get(symbol);
+            final BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(
+                    this.getContext(), resId);
+            final Bitmap bitmap = drawable.getBitmap();
+            int bitmapWidth = bitmap.getWidth() * BITMAP_HEIGHT / bitmap.getHeight();
+            final Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmapWidth,
+                    BITMAP_HEIGHT, false);
+            bitmapDrawable = new BitmapDrawable(this.getResources(), scaledBitmap);
+            MANA_DRAWABLES.put(symbol, bitmapDrawable);
+        }
+        view.setImageDrawable(bitmapDrawable);
         return view;
     }
 

@@ -7,7 +7,7 @@ import com.gelakinetic.mtgfam.R;
 import org.jetbrains.annotations.Contract;
 
 public enum Comparison {
-    EMPTY("≟", R.string.NoComparison),
+    EMPTY(" ", R.string.NoComparison),
     EQ("=", R.string.Equals),
     NE("≠", R.string.DoesNotEqual),
     CT("∋", R.string.Contains),

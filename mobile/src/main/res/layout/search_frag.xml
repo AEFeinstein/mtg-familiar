@@ -452,13 +452,12 @@
                 android:id="@+id/linearLayout20"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner
                     android:id="@+id/comparisonSpinner"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
+                    android:layout_height="match_parent"
                     android:drawSelectorOnTop="false"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
@@ -471,7 +470,7 @@
                     android:hint="@string/search_mc"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_width="0dp" />
             </LinearLayout>
@@ -513,7 +512,6 @@
                 android:id="@+id/linearLayout19"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <com.gelakinetic.mtgfam.helpers.view.CompletionView
