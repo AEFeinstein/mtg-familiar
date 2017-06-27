@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -12,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +20,6 @@ import com.tokenautocomplete.FilteredArrayAdapter;
 import java.util.LinkedHashMap;
 
 public class ManaCostTextView extends ATokenTextView {
-    private final ManaSymbolAdapter manaSymbolAdapter = new ManaSymbolAdapter();
-    private final int BITMAP_HEIGHT = 40;
     private static final LinkedHashMap<String, BitmapDrawable> MANA_DRAWABLES = new LinkedHashMap<>();
     private static final LinkedHashMap<String, Integer> MANA_SYMBOLS = new LinkedHashMap<>();
     static {
@@ -79,6 +75,7 @@ public class ManaCostTextView extends ATokenTextView {
     public ManaCostTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.allowDuplicates(true);
+        ManaSymbolAdapter manaSymbolAdapter = new ManaSymbolAdapter();
         this.setAdapter(manaSymbolAdapter);
     }
 
@@ -92,9 +89,11 @@ public class ManaCostTextView extends ATokenTextView {
             final BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(
                     this.getContext(), resId);
             final Bitmap bitmap = drawable.getBitmap();
-            int bitmapWidth = bitmap.getWidth() * BITMAP_HEIGHT / bitmap.getHeight();
-            final Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmapWidth,
-                    BITMAP_HEIGHT, false);
+            float bitmapHeight = ViewUtil.convertDpToPixel(15, this.getContext());
+            float bitmapWidth = ViewUtil.scaleDimension(bitmap.getHeight(), bitmapHeight,
+                    bitmap.getWidth());
+            final Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) bitmapWidth,
+                    (int) bitmapHeight, false);
             bitmapDrawable = new BitmapDrawable(this.getResources(), scaledBitmap);
             MANA_DRAWABLES.put(symbol, bitmapDrawable);
         }
