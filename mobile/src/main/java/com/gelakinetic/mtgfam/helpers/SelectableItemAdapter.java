@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by xvicarious on 6/18/17.
+ * Adapter that holds whatever, swipes to delete with a undo timeout, and multi-select of items.
+ *
+ * @param <T> type of what is held in the ArrayList
+ * @param <VH> the ViewHolder that is used for the adapter
  */
-
 public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.ViewHolder>
         extends RecyclerView.Adapter<VH> {
 
@@ -26,12 +28,15 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
     protected Handler handler;
     protected SparseArray<Runnable> pendingRunnables;
 
-    public SelectableItemAdapter(ArrayList<T> values) {
+    protected final int pendingTimeout;
+
+    public SelectableItemAdapter(ArrayList<T> values, final int millisPending) {
         items = values;
         selectedItems = new SparseBooleanArray();
         handler = new Handler();
         inSelectMode = false;
         pendingRunnables = new SparseArray<>();
+        pendingTimeout = millisPending;
     }
 
     /**
@@ -68,7 +73,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
                     remove(position);
                 }
             };
-            handler.postDelayed(pendingRunnable, 3000); // todo: configurable
+            handler.postDelayed(pendingRunnable, pendingTimeout);
             pendingRunnables.put(position, pendingRunnable);
             return true;
         }
@@ -89,13 +94,17 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
     }
 
     /**
-     * If we are in select mode
+     * If we are in select mode.
      * @return inSelectMode
      */
     public boolean isInSelectMode() {
         return inSelectMode;
     }
 
+    /**
+     * Set the select mode.
+     * @param inSelectMode if we are in select mode or not
+     */
     public void setInSelectMode(final boolean inSelectMode) {
         this.inSelectMode = inSelectMode;
     }
@@ -142,6 +151,9 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
         notifyItemChanged(position);
     }
 
+    /**
+     * ViewHolder implementing the needed listeners and defining swipeable and its get/setters.
+     */
     public abstract class ViewHolder
             extends RecyclerView.ViewHolder
             implements OnClickListener, OnLongClickListener {

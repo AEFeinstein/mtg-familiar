@@ -23,6 +23,9 @@
     <Match>
         <Class name="~.*\.Manifest\$.*"/>
     </Match>
+    <Match>
+        <Package name="~com\.robobunny.*" />
+    </Match>
     <!-- All bugs in test classes, except for JUnit-specific bugs -->
     <Match>
         <Class name="~.*\.*Test" />
@@ -30,6 +33,5 @@
             <Bug code="IJU" />
         </Not>
     </Match>
-
 
 </FindBugsFilter>

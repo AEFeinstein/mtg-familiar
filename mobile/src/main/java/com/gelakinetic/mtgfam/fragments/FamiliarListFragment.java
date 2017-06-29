@@ -22,6 +22,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -140,10 +142,18 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
     }
 
-    public abstract class CardDataAdapter<T> extends SelectableItemAdapter<T, CardDataAdapter.ViewHolder> {
+    /**
+     * Specific implementation for list-based Familiar Fragments
+     *
+     * @param <T> type that is stored in the ArrayList
+     * @param <VH> ViewHolder that is used by the adapter
+     */
+    public abstract class CardDataAdapter<T, VH extends CardDataAdapter.ViewHolder>
+            extends SelectableItemAdapter<T, VH> {
 
         public CardDataAdapter(ArrayList<T> values) {
-            super(values);
+            super(values, (int) (getFamiliarActivity().mPreferenceAdapter.getUndoTimeout()
+                    * DateUtils.MILLIS_PER_SECOND));
         }
 
         @Override
@@ -152,7 +162,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 Snackbar undoBar = Snackbar.make(
                         getFamiliarActivity().findViewById(R.id.fragment_container),
                         R.string.app_name,
-                        Snackbar.LENGTH_SHORT
+                        pendingTimeout
                 );
                 undoBar.setAction(R.string.cardlist_undo, new View.OnClickListener() {
                     @Override

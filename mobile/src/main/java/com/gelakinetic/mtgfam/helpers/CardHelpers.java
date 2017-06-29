@@ -716,8 +716,12 @@ public class CardHelpers {
             card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
             card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
-            card.mNumber =
-                    cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+            card.mNumber = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_NUMBER));
+            card.mCmc = cardCursor.getInt((cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_CMC)));
+            card.mColor = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_COLOR));
             if (!isTradeFragment) {
                 card.mType = CardDbAdapter.getTypeLine(cardCursor);
                 card.mRarity = (char) cardCursor.getInt(cardCursor
@@ -734,11 +738,8 @@ public class CardHelpers {
                         .getColumnIndex(CardDbAdapter.KEY_ABILITY));
                 card.mFlavor = cardCursor.getString(cardCursor
                         .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-                card.mCmc = cardCursor.getInt((cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_CMC)));
-                card.mColor = cardCursor.getString(cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_COLOR));
             }
+
             /* Override choice is the card can't be foil */
             if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
                 card.foil = false;

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/trade_row">
+    android:id="@+id/trade_row"
+    android:background="?attr/selectable_row">
 
     <LinearLayout
         android:layout_width="match_parent"
