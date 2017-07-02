@@ -152,8 +152,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             extends SelectableItemAdapter<T, VH> {
 
         public CardDataAdapter(ArrayList<T> values) {
-            super(values, (int) (getFamiliarActivity().mPreferenceAdapter.getUndoTimeout()
-                    * DateUtils.MILLIS_PER_SECOND));
+            super(values, getFamiliarActivity().mPreferenceAdapter.getUndoTimeout());
         }
 
         @Override
@@ -169,6 +168,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                     public void onClick(View view) {
                         Runnable pendingRemovalRunnable = pendingRunnables.get(position);
                         pendingRunnables.remove(position);
+                        onUndoDelete(position);
                         if (pendingRemovalRunnable != null) {
                             handler.removeCallbacks(pendingRemovalRunnable);
                         }
@@ -179,6 +179,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 return true;
             }
             return false;
+        }
+
+        public void onUndoDelete(final int position) {
+            // Do nothing by default.
         }
 
         abstract class ViewHolder extends SelectableItemAdapter.ViewHolder {

@@ -118,7 +118,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         /* Initialize the left list and company */
         mListLeft = new ArrayList<>();
-        mListAdapterLeft = new CardDataAdapter(mListLeft, mListAdapterRight);
+        mListAdapterLeft = new CardDataAdapter(mListLeft);
         mListViewLeft = (RecyclerView) myFragmentView.findViewById(R.id.tradeListLeft);
         mListViewLeft.setAdapter(mListAdapterLeft);
         mListViewLeft.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -129,7 +129,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         /* Initialize the right list and company */
         mListRight = new ArrayList<>();
-        mListAdapterRight = new CardDataAdapter(mListRight, mListAdapterLeft);
+        mListAdapterRight = new CardDataAdapter(mListRight);
         mListViewRight = (RecyclerView) myFragmentView.findViewById(R.id.tradeListRight);
         mListViewRight.setAdapter(mListAdapterRight);
         mListViewRight.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -137,6 +137,10 @@ public class TradeFragment extends FamiliarListFragment {
                 new SelectableItemTouchHelper(mListAdapterRight, ItemTouchHelper.LEFT);
         rightItemTouchHelper = new ItemTouchHelper(rightCallback);
         rightItemTouchHelper.attachToRecyclerView(mListViewRight);
+
+        /* Set up the adapters so they know each other */
+        mListAdapterLeft.setOtherAdapter(mListAdapterRight);
+        mListAdapterRight.setOtherAdapter(mListAdapterLeft);
 
         /* Total price fields */
         mTotalPriceLeft = (TextView) myFragmentView.findViewById(R.id.priceTextLeft);
@@ -631,11 +635,13 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as
                    "bad," (incomplete) */
                 for (MtgCard data : mListLeft) {
-                    if (data.hasPrice()) {
-                        totalCards += data.numberOf;
-                        totalPrice += data.numberOf * data.price;
-                    } else {
-                        hasBadValues = true;
+                    if (!mListAdapterLeft.isItemPendingRemoval(mListLeft.indexOf(data))) {
+                        if (data.hasPrice()) {
+                            totalCards += data.numberOf;
+                            totalPrice += data.numberOf * data.price;
+                        } else {
+                            hasBadValues = true;
+                        }
                     }
                 }
 
@@ -657,11 +663,13 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as "bad,"
                    (incomplete) */
                 for (MtgCard data : mListRight) {
-                    if (data.hasPrice()) {
-                        totalCards += data.numberOf;
-                        totalPrice += data.numberOf * data.price;
-                    } else {
-                        hasBadValues = true;
+                    if (!mListAdapterRight.isItemPendingRemoval(mListRight.indexOf(data))) {
+                        if (data.hasPrice()) {
+                            totalCards += data.numberOf;
+                            totalPrice += data.numberOf * data.price;
+                        } else {
+                            hasBadValues = true;
+                        }
                     }
                 }
 
@@ -786,7 +794,7 @@ public class TradeFragment extends FamiliarListFragment {
                 }
 
                 /* If these two entries aren't equal, return. Otherwise continue and compare the
-                 * next value
+                 * next value.
                  */
                 if (retVal != 0) {
                     return retVal;
@@ -807,9 +815,12 @@ public class TradeFragment extends FamiliarListFragment {
 
         private CardDataAdapter otherAdapter;
 
-        CardDataAdapter(ArrayList<MtgCard> values, CardDataAdapter otherAdapter) {
+        CardDataAdapter(ArrayList<MtgCard> values) {
             super(values);
-            this.otherAdapter = otherAdapter;
+        }
+
+        void setOtherAdapter(CardDataAdapter adapter) {
+            otherAdapter = adapter;
         }
 
         @Override
@@ -825,11 +836,13 @@ public class TradeFragment extends FamiliarListFragment {
             if (isItemPendingRemoval(position)) {
                 holder.itemView.findViewById(R.id.trade_row).setVisibility(View.GONE);
             } else {
+                holder.itemView.setSelected(selectedItems.get(position, false));
                 holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
                 holder.mCardName.setText(item.mName);
                 holder.mCardSet.setText(item.setName);
                 holder.mCardNumberOf.setText(item.hasPrice() ? item.numberOf + "x" : "");
                 holder.mCardFoil.setVisibility(item.foil ? View.VISIBLE : View.GONE);
+                holder.mCardPrice.setText(item.hasPrice() ? item.getPriceString() : item.message);
                 if (item.hasPrice()) {
                     if (item.customPrice) {
                         holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
@@ -844,6 +857,17 @@ public class TradeFragment extends FamiliarListFragment {
                 }
             }
 
+        }
+
+        @Override
+        public void onItemDismissed(final int position) {
+            super.onItemDismissed(position);
+            updateTotalPrices(BOTH);
+        }
+
+        @Override
+        public void onUndoDelete(final int position) {
+            updateTotalPrices(BOTH);
         }
 
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
