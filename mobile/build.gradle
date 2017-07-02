@@ -4,6 +4,9 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 
 check.dependsOn 'pmd', 'checkstyle', 'findbugs'
+afterEvaluate {
+    assembleRelease.dependsOn 'findbugs'
+}
 
 repositories {
     mavenCentral()
