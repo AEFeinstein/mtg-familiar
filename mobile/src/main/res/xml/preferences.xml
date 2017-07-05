@@ -74,6 +74,17 @@
                 android:key="@string/key_theme"
                 android:summary="@string/pref_theme_summary"
                 android:title="@string/pref_theme_title" />
+
+            <ListPreference
+                android:defaultValue="@drawable/glyph_tap"
+                android:dialogTitle="@string/pref_tap_symbol_title"
+                android:entries="@array/pref_tap_symbols"
+                android:entryValues="@array/pref_tap_symbols_drawable"
+                android:key="@string/key_tap_symbol"
+                android:summary="@string/pref_tap_symbol_summary"
+                android:title="@string/pref_tap_symbol_title"
+                android:enabled="false" />
+
         </PreferenceCategory>
 
     </PreferenceScreen>

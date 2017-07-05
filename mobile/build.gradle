@@ -13,6 +13,7 @@ android {
         targetSdkVersion 25
         versionCode 49
         versionName "3.4.2"
+        vectorDrawables.useSupportLibrary = true
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'

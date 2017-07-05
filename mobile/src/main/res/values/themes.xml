@@ -10,6 +10,8 @@
         <item name="colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_light</item>
         <item name="colorAccent_attr">@color/colorAccent_light</item>
 
+        <item name="colorCheckbox">@color/colorCheckbox_light</item>
+
         <item name="android:windowNoTitle">true</item>
 
         <item name="color_background">@color/background_light</item>
@@ -32,24 +34,13 @@
         <item name="lc_enabled">@color/lc_enabled_light</item>
         <item name="lc_disabled">@color/lc_disabled_light</item>
 
-        <item name="lc_reset">@drawable/lc_reset_light</item>
-        <item name="ic_close">@drawable/ic_close_light</item>
-
         <item name="drawer_background_indicator">@drawable/drawer_background_indicator_light</item>
 
-        <item name="btn_check_w">@drawable/btn_check_light_w</item>
-        <item name="btn_check_u">@drawable/btn_check_light_u</item>
-        <item name="btn_check_b">@drawable/btn_check_light_b</item>
-        <item name="btn_check_r">@drawable/btn_check_light_r</item>
-        <item name="btn_check_g">@drawable/btn_check_light_g</item>
-        <item name="btn_check_l">@drawable/btn_check_light_l</item>
         <item name="btn_check_foil">@drawable/btn_check_light_foil</item>
 
         <item name="hms_picker_style">@style/MyCustomBetterPickerTheme.Light</item>
 
         <item name="num_picker_style">@style/BetterPickersDialogFragment.Light</item>
-
-        <item name="glyph_pwk">@drawable/glyph_pwk_light</item>
 
         <item name="button">@style/button_light</item>
 
@@ -67,6 +58,8 @@
         <item name="colorPrimaryDark_attr">@color/colorPrimaryDark_dark</item>
         <item name="colorPrimaryTransparent_attr">@color/colorPrimaryTransparent_dark</item>
         <item name="colorAccent_attr">@color/colorAccent_dark</item>
+
+        <item name="colorCheckbox">@color/colorCheckbox_dark</item>
 
         <item name="android:windowNoTitle">true</item>
 
@@ -90,22 +83,12 @@
         <item name="lc_enabled">@color/lc_enabled_dark</item>
         <item name="lc_disabled">@color/lc_disabled_dark</item>
 
-        <item name="lc_reset">@drawable/lc_reset_dark</item>
-        <item name="ic_close">@drawable/ic_close_dark</item>
         <item name="drawer_background_indicator">@drawable/drawer_background_indicator_dark</item>
 
-        <item name="btn_check_w">@drawable/btn_check_dark_w</item>
-        <item name="btn_check_u">@drawable/btn_check_dark_u</item>
-        <item name="btn_check_b">@drawable/btn_check_dark_b</item>
-        <item name="btn_check_r">@drawable/btn_check_dark_r</item>
-        <item name="btn_check_g">@drawable/btn_check_dark_g</item>
-        <item name="btn_check_l">@drawable/btn_check_dark_l</item>
         <item name="btn_check_foil">@drawable/btn_check_dark_foil</item>
 
         <item name="hms_picker_style">@style/MyCustomBetterPickerTheme</item>
         <item name="num_picker_style">@style/BetterPickersDialogFragment</item>
-
-        <item name="glyph_pwk">@drawable/glyph_pwk_dark</item>
 
         <item name="button">@style/button_dark</item>
 

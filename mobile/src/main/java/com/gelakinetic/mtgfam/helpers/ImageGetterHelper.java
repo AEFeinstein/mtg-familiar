@@ -177,7 +177,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("h")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_half);
                 } else if (source.equalsIgnoreCase("pwk")) {
-                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_pwk));
+                    d = ContextCompat.getDrawable(context, R.drawable.glyph_pwk);
                 } else if (source.equalsIgnoreCase("e")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_e);
                 } else {
@@ -196,19 +196,5 @@ public class ImageGetterHelper {
                 return d;
             }
         };
-    }
-
-    /**
-     * This helper function translates an attribute into a resource ID
-     *
-     * @param attr The attribute ID
-     * @return the resource ID
-     */
-    private static int getResourceIdFromAttr(Resources.Theme theme, int attr) {
-        TypedArray ta = theme.obtainStyledAttributes(new int[]{attr});
-        assert ta != null;
-        int resId = ta.getResourceId(0, 0);
-        ta.recycle();
-        return resId;
     }
 }

@@ -272,4 +272,15 @@
         <item>@string/card_type_vanguard</item>
     </string-array>
 
+    <string-array name="pref_tap_symbols">
+        <item>@string/pref_tap_symbol_modern</item>
+        <item>@string/pref_tap_symbol_old</item>
+        <!--<item>@string/pref_tap_symbol_older</item>-->
+    </string-array>
+
+    <string-array name="pref_tap_symbols_drawable">
+        <item>@drawable/glyph_tap</item>
+        <item>@drawable/glyph_tap_old</item>
+    </string-array>
+
 </resources>

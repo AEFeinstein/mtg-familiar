@@ -8,10 +8,10 @@
         <attr name="colorPrimaryDark_attr" format="color|reference" />
         <attr name="colorPrimaryTransparent_attr" format="color|reference" />
         <attr name="colorAccent_attr" format="color|reference" />
+        <attr name="colorCheckbox" format="color|reference" />
         <attr name="grey_border" format="reference" />
         <attr name="color_text" format="color|reference" />
         <attr name="color_background" format="color|reference" />
-        <attr name="glyph_pwk" format="reference" />
         <attr name="button" format="reference" />
 
         <!-- Rarity Colors -->
@@ -34,20 +34,9 @@
         <attr name="lc_enabled" format="reference" />
         <attr name="lc_disabled" format="reference" />
 
-        <attr name="lc_reset" format="reference" />
-
         <attr name="drawer_background_indicator" format="reference" />
 
-        <!-- close button -->
-        <attr name="ic_close" format="reference" />
-
         <!-- checkboxes -->
-        <attr name="btn_check_w" format="reference" />
-        <attr name="btn_check_u" format="reference" />
-        <attr name="btn_check_b" format="reference" />
-        <attr name="btn_check_r" format="reference" />
-        <attr name="btn_check_g" format="reference" />
-        <attr name="btn_check_l" format="reference" />
         <attr name="btn_check_foil" format="reference" />
 
         <!-- to style the hms time picker -->

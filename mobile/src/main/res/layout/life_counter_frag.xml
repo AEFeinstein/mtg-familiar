@@ -98,7 +98,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_weight="1"
             android:padding="15dp"
             android:scaleType="center"
-            android:src="@drawable/lc_reset" />
+            app:srcCompat="@drawable/lc_reset" />
     </LinearLayout>
 
 </LinearLayout>

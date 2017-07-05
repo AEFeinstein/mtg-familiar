@@ -70,6 +70,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="colorPrimaryDark_light">#FF546E7A</color>
     <!-- material_blue_grey_800 -->
     <color name="colorAccent_light">#37474F</color>
+    <color name="colorCheckbox_light">#009688</color>
 
     <!-- material_blue_grey_800 -->
     <color name="colorPrimary_dark">#37474F</color>
@@ -78,6 +79,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="colorPrimaryDark_dark">#FF263238</color>
     <!-- material_blue_grey_400 -->
     <color name="colorAccent_dark">#78909C</color>
+    <color name="colorCheckbox_dark">#80cbc4</color>
 
     <!-- the colors of magic -->
     <color name="icon_white">#fffafafa</color>
@@ -85,6 +87,17 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="icon_black">#ff616161</color>
     <color name="icon_red">#fff44336</color>
     <color name="icon_green">#ff4caf50</color>
+    <color name="icon_colorless">#ff9c948a</color>
+
+    <!-- magic glyph colors -->
+    <color name="glyph_white">#fff8f6d8</color>
+    <color name="glyph_blue">#ffc1d7e9</color>
+    <color name="glyph_black">#ffbab1ab</color>
+    <color name="glyph_red">#ffe49977</color>
+    <color name="glyph_green">#ffa3c095</color>
+    <color name="glyph_grey">#ffcac5c0</color>
+    <color name="glyph_foreground">#ff0d0f0f</color>
 
     <color name="hyperlink_text">#0077CC</color>
+
 </resources>
