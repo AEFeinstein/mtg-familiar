@@ -50,7 +50,6 @@
         <item name="num_picker_style">@style/BetterPickersDialogFragment.Light</item>
 
         <item name="glyph_pwk">@drawable/glyph_pwk_light</item>
-        <item name="glyph_p">@drawable/glyph_p_light</item>
 
         <item name="button">@style/button_light</item>
 
@@ -107,7 +106,6 @@
         <item name="num_picker_style">@style/BetterPickersDialogFragment</item>
 
         <item name="glyph_pwk">@drawable/glyph_pwk_dark</item>
-        <item name="glyph_p">@drawable/glyph_p_dark</item>
 
         <item name="button">@style/button_dark</item>
 
