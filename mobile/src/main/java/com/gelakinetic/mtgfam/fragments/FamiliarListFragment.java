@@ -160,7 +160,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             if (super.pendingRemoval(position)) {
                 Snackbar undoBar = Snackbar.make(
                         getFamiliarActivity().findViewById(R.id.fragment_container),
-                        R.string.app_name,
+                        getString(R.string.cardlist_item_deleted) + " " + getItemName(position),
                         pendingTimeout
                 );
                 undoBar.setAction(R.string.cardlist_undo, new View.OnClickListener() {
@@ -184,6 +184,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         public void onUndoDelete(final int position) {
             // Do nothing by default.
         }
+
+        public abstract String getItemName(final int position);
 
         abstract class ViewHolder extends SelectableItemAdapter.ViewHolder {
 

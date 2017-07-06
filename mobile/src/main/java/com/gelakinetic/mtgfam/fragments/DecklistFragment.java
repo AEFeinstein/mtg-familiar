@@ -887,6 +887,11 @@ public class DecklistFragment extends FamiliarListFragment {
         }
 
         @Override
+        public String getItemName(int position) {
+            return items.get(position).mCard.mName;
+        }
+
+        @Override
         public void remove(int position) {
 
             super.remove(position);

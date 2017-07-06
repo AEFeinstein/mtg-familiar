@@ -293,7 +293,7 @@ Mana pool will also be cleared."</string>
 <string name="trader_share">"Share Trade"</string>
 <string name="trade_share_title">"Trade"</string>
 
-<!-- Wishlist activity -->
+    <!-- Wishlist activity -->
 <string name="wishlist_name">"Name"</string>
 <string name="wishlist_add_card">"Add"</string>
 <string name="wishlist_clear_fields">"Clear Fields"</string>
@@ -311,7 +311,7 @@ Mana pool will also be cleared."</string>
 <string name="wishlist_ascending">"Ascending"</string>
 <string name="wishlist_sort_by">"Sort By"</string>
 
-<!-- Round timer activity -->
+    <!-- Round timer activity -->
 <string name="timer_how_long">"How long is the round?"</string>
 <string name="timer_start">"Start Timer"</string>
 <string name="timer_cancel">"Cancel Timer"</string>
@@ -496,6 +496,7 @@ Good luck, and have fun!
 <!-- General Card List -->
 <string name="cardlist_undo">"undo"</string>
 <string name="cardlist_delete_selected">"Delete Selected Items"</string>
+<string name="cardlist_item_deleted">"Removed"</string>
 
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Sideboard"</string>

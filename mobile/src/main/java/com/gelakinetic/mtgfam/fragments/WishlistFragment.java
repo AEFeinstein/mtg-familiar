@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
@@ -118,6 +119,38 @@ public class WishlistFragment extends FamiliarListFragment {
                 new SelectableItemTouchHelper(mListAdapter, ItemTouchHelper.LEFT);
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(mListView);
+
+        mActionModeCallback = new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.action_mode_menu, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.deck_delete_selected: {
+                        mListAdapter.deleteSelectedItems();
+                        mActionMode.finish();
+                    }
+                    default: {
+                        return false;
+                    }
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                mListAdapter.deselectAll();
+            }
+        };
 
         myFragmentView.findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -547,6 +580,11 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         @Override
+        public String getItemName(int position) {
+            return items.get(position).mCard.mName;
+        }
+
+        @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ViewHolder(parent);
         }
@@ -557,12 +595,14 @@ public class WishlistFragment extends FamiliarListFragment {
             /* Get all the wishlist info for this entry */
             final CompressedWishlistInfo info = items.get(position);
 
+            if (!isInSelectMode()) {
+                /* Sometimes an item will be selected after we exit select mode */
+                holder.itemView.setSelected(false);
+            }
+
             if (isItemPendingRemoval(position)) {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
             } else {
-
-                /* Make sure the click listener is here */
-                // holder.enableClickListener();
 
                 /* Make sure you can see the item */
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
@@ -751,11 +791,16 @@ public class WishlistFragment extends FamiliarListFragment {
                 mCardCost = (TextView) itemView.findViewById(R.id.cardcost);
                 mWishlistSets = ((LinearLayout) itemView.findViewById(R.id.wishlist_sets));
                 itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
             }
 
             @Override
             public void onClick(View view) {
-                showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD, mCardName.getText().toString());
+                if (!isInSelectMode()) {
+                    showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD,
+                            mCardName.getText().toString());
+                }
+                super.onClick(view);
             }
 
         }

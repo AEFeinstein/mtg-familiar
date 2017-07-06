@@ -870,6 +870,11 @@ public class TradeFragment extends FamiliarListFragment {
             updateTotalPrices(BOTH);
         }
 
+        @Override
+        public String getItemName(int position) {
+            return items.get(position).mName;
+        }
+
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
 
             private TextView mCardSet;
