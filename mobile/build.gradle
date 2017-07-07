@@ -10,7 +10,7 @@ check.dependsOn 'pmd', 'checkstyle', 'findbugs'
 
 repositories {
     mavenCentral()
-    google()
+    //google() // Gradle 4.0 adds this
 }
 
 def configDir = "${project.rootDir}/config"
