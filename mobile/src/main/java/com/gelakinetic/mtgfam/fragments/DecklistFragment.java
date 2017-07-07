@@ -172,6 +172,7 @@ public class DecklistFragment extends FamiliarListFragment {
             }
 
         });
+        myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
 
         setUpCheckBoxClickListeners();
 
@@ -307,7 +308,8 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        final String totalCards = ((CardDataAdapter) mListAdapter).getTotalCards() + " ";
+        final String totalCards =
+                Integer.toString(((CardDataAdapter) mListAdapter).getTotalCards()) + " ";
         mDeckCards.setText(totalCards);
         mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
         mShowTotalDecklistPrice = getFamiliarActivity().mPreferenceAdapter
@@ -788,8 +790,6 @@ public class DecklistFragment extends FamiliarListFragment {
 
                     /* set up the card's views */
                     holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
-                    holder.itemView.findViewById(R.id.decklistSeparator)
-                            .setVisibility(View.GONE);
                     View separator = holder.itemView.findViewById(R.id.decklistSeparator);
                     separator.setVisibility(View.GONE);
                     Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
