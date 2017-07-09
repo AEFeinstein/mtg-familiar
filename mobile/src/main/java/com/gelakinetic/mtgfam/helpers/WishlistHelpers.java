@@ -149,9 +149,13 @@ public class WishlistHelpers {
         try {
             String line;
             BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(WISHLIST_NAME)));
-            /* Read each line as a card, and add them to the ArrayList */
-            while ((line = br.readLine()) != null) {
-                lWishlist.add(MtgCard.fromWishlistString(line, mCtx));
+            try {
+                /* Read each line as a card, and add them to the ArrayList */
+                while ((line = br.readLine()) != null) {
+                    lWishlist.add(MtgCard.fromWishlistString(line, mCtx));
+                }
+            } finally {
+                br.close();
             }
         } catch (NumberFormatException e) {
             ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();

@@ -18,6 +18,9 @@
 <FindBugsFilter>
     <!-- http://stackoverflow.com/questions/7568579/eclipsefindbugs-exclude-filter-files-doesnt-work -->
     <Match>
+        <Bug pattern="DM_DEFAULT_ENCODING" />
+    </Match>
+    <Match>
         <Class name="~.*\.R\$.*"/>
     </Match>
     <Match>

@@ -8,6 +8,8 @@ import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -120,23 +122,24 @@ public class DecklistHelpers {
         ArrayList<Pair<MtgCard, Boolean>> lDecklist = new ArrayList<>();
 
         try {
-
             String line;
-            BufferedReader br =
-                    new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)));
-            boolean isSideboard;
-
-            /* Read each line as a card, and add them to the ArrayList */
-            while ((line = br.readLine()) != null) {
-                isSideboard = false;
-                String sideboard = line.substring(0, 3);
-                // If the card has the markings of a sideboard card,
-                // mark it as such and remove the mark
-                if (sideboard.equals("SB:")) {
-                    isSideboard = true;
-                    line = line.substring(3);
+            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)));
+            try {
+                boolean isSideboard;
+                /* Read each line as a card, and add them to the ArrayList */
+                while ((line = br.readLine()) != null) {
+                    isSideboard = false;
+                    String sideboard = line.substring(0, 3);
+                    // If the card has the markings of a sideboard card,
+                    // mark it as such and remove the mark
+                    if (sideboard.equals("SB:")) {
+                        isSideboard = true;
+                        line = line.substring(3);
+                    }
+                    lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
                 }
-                lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
+            } finally {
+                br.close();
             }
         } catch (NumberFormatException nfe) {
             ToastWrapper.makeText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();

@@ -28,6 +28,7 @@ import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.util.FragmentHelpers;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
@@ -241,7 +242,7 @@ public class CardHelpers {
                             try {
                                 Button numberInput = ((Button) view.findViewById(R.id.number_button));
                                 assert numberInput.getText() != null;
-                                card.numberOf = Integer.valueOf(numberInput.getText().toString());
+                                card.numberOf = Integer.parseInt(numberInput.getText().toString());
                             } catch (NumberFormatException e) {
                                 card.numberOf = 0;
                             }
@@ -426,7 +427,8 @@ public class CardHelpers {
     /**
      *  Comparator based on name.
      */
-    public static class CardComparatorName implements Comparator<CompressedDecklistInfo> {
+    public static class CardComparatorName
+            implements Comparator<CompressedDecklistInfo>, Serializable {
 
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
@@ -438,7 +440,8 @@ public class CardHelpers {
     /**
      * Comparator based on CMC.
      */
-    public static class CardComparatorCMC implements Comparator<CompressedDecklistInfo> {
+    public static class CardComparatorCMC
+            implements Comparator<CompressedDecklistInfo>, Serializable {
 
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
@@ -457,7 +460,8 @@ public class CardHelpers {
     /**
      * Comparator based on color.
      */
-    public static class CardComparatorColor implements Comparator<CompressedDecklistInfo> {
+    public static class CardComparatorColor
+            implements Comparator<CompressedDecklistInfo>, Serializable {
 
         private static final String COLORS = "WUBRG";
         private static final String NON_COLORS = "LAC";
@@ -470,7 +474,7 @@ public class CardHelpers {
          */
         private String getColors(String c) {
 
-            String validColors = "";
+            StringBuilder validColors = new StringBuilder();
             //1. catch null/empty string
             if (c == null || c.isEmpty()) {
                 return "";
@@ -478,10 +482,10 @@ public class CardHelpers {
             //2. For each char, if a valid color, add to return String
             for (int i = 0; i < c.length(); i++) {
                 if (COLORS.indexOf(c.charAt(i)) > -1) {
-                    validColors += c.charAt(i);
+                    validColors.append(c.charAt(i));
                 }
             }
-            return validColors;
+            return validColors.toString();
 
         }
 
@@ -527,14 +531,15 @@ public class CardHelpers {
     /**
      * Comparator based on sideboard.
      */
-    public static class CardComparatorSideboard implements Comparator<CompressedDecklistInfo> {
+    public static class CardComparatorSideboard
+            implements Comparator<CompressedDecklistInfo>, Serializable {
 
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
             if (card1.mIsSideboard == card2.mIsSideboard) {
                 return 0;
-            } else if (card1.mIsSideboard && !card2.mIsSideboard) {
+            } else if (card1.mIsSideboard) {
                 return 1;
             }
             return -1;
@@ -546,12 +551,13 @@ public class CardHelpers {
     /**
      * Comparator based on card supertype, an array of types must be passed in the order to sort.
      */
-    public static class CardComparatorSupertype implements Comparator<CompressedDecklistInfo> {
+    public static class CardComparatorSupertype
+            implements Comparator<CompressedDecklistInfo>, Serializable {
 
         final String[] mTypes;
 
         public CardComparatorSupertype(String[] superTypes) {
-            mTypes = superTypes;
+            mTypes = superTypes.clone();
         }
 
         @Override
@@ -577,7 +583,8 @@ public class CardHelpers {
     /**
      * Comparator based on price.
      */
-    public static class CardComparatorPrice implements Comparator<CompressedCardInfo> {
+    public static class CardComparatorPrice
+            implements Comparator<CompressedCardInfo>, Serializable {
 
         /* Price setting constants */
         private static final int LOW_PRICE = 0;
@@ -611,6 +618,8 @@ public class CardHelpers {
                             case HIGH_PRICE:
                                 sumWish1 += (isi.mPrice.mHigh * isi.mNumberOf);
                                 break;
+                            default:
+                                break;
                         }
                     }
                 } catch (NullPointerException e) {
@@ -632,6 +641,8 @@ public class CardHelpers {
                                 break;
                             case HIGH_PRICE:
                                 sumWish2 += (isi.mPrice.mHigh * isi.mNumberOf);
+                                break;
+                            default:
                                 break;
                         }
                     }
@@ -655,7 +666,8 @@ public class CardHelpers {
     /**
      * Comparator based on the first set of a card.
      */
-    private static class CardComparatorSet implements Comparator<CompressedCardInfo> {
+    private static class CardComparatorSet
+            implements Comparator<CompressedCardInfo>, Serializable {
 
         @Override
         public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {

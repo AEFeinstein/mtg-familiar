@@ -139,6 +139,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     case R.id.deck_delete_selected: {
                         mListAdapter.deleteSelectedItems();
                         mActionMode.finish();
+                        return true;
                     }
                     default: {
                         return false;
@@ -539,6 +540,8 @@ public class WishlistFragment extends FamiliarListFragment {
                                 case HIGH_PRICE:
                                     totalPrice += (isi.mPrice.mHigh * isi.mNumberOf);
                                     break;
+                                default:
+                                    break;
                             }
                         }
                     }
@@ -741,6 +744,8 @@ public class WishlistFragment extends FamiliarListFragment {
                                             priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mHigh));
                                             priceFound = true;
                                         }
+                                        break;
+                                    default:
                                         break;
                                 }
                                 priceText.setTextColor(ContextCompat.getColor(getContext(),

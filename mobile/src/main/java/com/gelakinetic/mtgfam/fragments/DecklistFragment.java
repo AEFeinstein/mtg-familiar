@@ -718,6 +718,8 @@ public class DecklistFragment extends FamiliarListFragment {
                                 case HIGH_PRICE:
                                     totalPrice += isi.mPrice.mHigh * isi.mNumberOf;
                                     break;
+                                default:
+                                    break;
                             }
                         }
                     }
