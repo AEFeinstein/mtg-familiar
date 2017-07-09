@@ -37,7 +37,7 @@
         <LinearLayout
             android:id="@+id/card_row"
             android:layout_width="match_parent"
-            android:layout_height="48sp"
+            android:layout_height="48dp"
             android:orientation="horizontal">
 
             <TextView
@@ -72,6 +72,7 @@
                 android:layout_gravity="center_vertical"
                 android:paddingEnd="16dp"
                 android:paddingRight="16dp" />
+
         </LinearLayout>
 
     </LinearLayout>

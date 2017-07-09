@@ -313,7 +313,7 @@ public class DecklistFragment extends FamiliarListFragment {
         mDeckCards.setText(totalCards);
         mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
         mShowTotalDecklistPrice = getFamiliarActivity().mPreferenceAdapter
-                .getShowtotalDecklistPrice();
+                .getShowTotalDecklistPrice();
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
         mListAdapter.notifyDataSetChanged();

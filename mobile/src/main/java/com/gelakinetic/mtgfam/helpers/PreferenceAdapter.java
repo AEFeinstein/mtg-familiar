@@ -576,7 +576,7 @@ public class PreferenceAdapter {
         return this.prefs.getInt(context.getString(R.string.key_undoTimeout), 3) * 1000;
     }
 
-    public boolean getShowtotalDecklistPrice() {
+    public boolean getShowTotalDecklistPrice() {
         return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceDecklistPref), false);
     }
 }
