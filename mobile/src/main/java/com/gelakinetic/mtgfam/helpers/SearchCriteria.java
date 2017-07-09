@@ -1,6 +1,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.model.Comparison;
 
 import java.io.Serializable;
 
@@ -20,7 +21,6 @@ public class SearchCriteria implements Serializable {
     public Float touChoice = (float) CardDbAdapter.NO_ONE_CARES;
     public String touLogic = null;
     public int cmc = -1;
-    public Boolean hasManaX = false;
     public String cmcLogic = null;
     public String format = null;
     public String rarity = null;
@@ -32,5 +32,7 @@ public class SearchCriteria implements Serializable {
     public String collectorsNumber = null;
     public String colorIdentity = "wubrgl";
     public int colorIdentityLogic = 0;
+    public String mc = null;
+    public Comparison mcLogic;
     public boolean moJhoStoFilter;
 }

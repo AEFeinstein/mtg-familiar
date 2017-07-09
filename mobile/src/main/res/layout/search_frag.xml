@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.gelakinetic.mtgfam.helpers.autocomplete.CompletionView
+                <com.gelakinetic.mtgfam.helpers.view.CompletionView
                     android:id="@+id/supertypesearch"
                     style="@style/Widget.AppCompat.AutoCompleteTextView"
                     android:layout_width="0dp"
@@ -75,7 +75,7 @@
                     android:imeOptions="actionSearch"
                     android:inputType="text" />
 
-                <com.gelakinetic.mtgfam.helpers.autocomplete.CompletionView
+                <com.gelakinetic.mtgfam.helpers.view.CompletionView
                     android:id="@+id/subtypesearch"
                     style="@style/Widget.AppCompat.AutoCompleteTextView"
                     android:layout_width="0dp"
@@ -243,6 +243,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/textView"
                     style="@style/text.medium"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -445,38 +446,33 @@
                     android:entries="@array/cmc_spinner"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal" />
-
             </android.support.v7.widget.GridLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayout20"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:baselineAligned="false"
                 android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/checkBoxHasManaX"
+                <com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner
+                    android:id="@+id/comparisonSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical" />
+                    android:drawSelectorOnTop="false"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill_horizontal" />
 
-                <TextView
-                    android:id="@+id/textViewHasManaX"
-                    style="@style/text.medium"
-                    android:layout_width="wrap_content"
+                <com.gelakinetic.mtgfam.helpers.view.ManaCostTextView
+                    android:id="@+id/manaCostTextView"
+                    style="@style/Widget.AppCompat.AutoCompleteTextView"
+                    android:dropDownAnchor="@+id/linearLayout20"
+                    android:dropDownWidth="wrap_content"
+                    android:hint="@string/search_mc"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="4sp"
-                    android:layout_marginRight="4sp"
-                    android:gravity="center_vertical"
-                    android:text="@string/search_hasManaX" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
-                    android:src="@drawable/glyph_x" />
-
+                    android:layout_weight="1"
+                    android:layout_width="0dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -516,10 +512,9 @@
                 android:id="@+id/linearLayout19"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.gelakinetic.mtgfam.helpers.autocomplete.CompletionView
+                <com.gelakinetic.mtgfam.helpers.view.CompletionView
                     android:id="@+id/setsearch"
                     style="@style/Widget.AppCompat.AutoCompleteTextView"
                     android:layout_width="0dp"
