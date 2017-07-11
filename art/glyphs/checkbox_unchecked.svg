@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="102.4"
+   height="102.4"
+   viewBox="0 0 27.093334 27.093334"
+   version="1.1"
+   id="svg1301"
+   inkscape:version="0.92.1 r"
+   sodipodi:docname="checkbox_unchecked.svg">
+  <defs
+     id="defs1295" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="8"
+     inkscape:cx="48.672576"
+     inkscape:cy="48.485136"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="956"
+     inkscape:window-height="1041"
+     inkscape:window-x="960"
+     inkscape:window-y="18"
+     inkscape:window-maximized="0"
+     fit-margin-top="22.4"
+     fit-margin-left="22.4"
+     fit-margin-right="22.4"
+     fit-margin-bottom="22.4"
+     units="px" />
+  <metadata
+     id="metadata1298">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-145.20333,-127.72714)">
+    <path
+       id="path3128-7-4"
+       d="m 164.67667,135.34714 v 11.85334 h -11.85334 v -11.85334 h 11.85334 m 0,-1.69333 h -11.85334 c -0.93556,0 -1.69333,0.75776 -1.69333,1.69333 v 11.85334 c 0,0.93556 0.75777,1.69333 1.69333,1.69333 h 11.85334 c 0.93556,0 1.69333,-0.75777 1.69333,-1.69333 v -11.85334 c 0,-0.93557 -0.75777,-1.69333 -1.69333,-1.69333 z"
+       inkscape:connector-curvature="0"
+       style="fill:#80cbc4;fill-opacity:1;stroke-width:0.28222224" />
+    <rect
+       style="fill:#800000;fill-opacity:1;stroke-width:0.26458332"
+       id="rect1318"
+       width="11.85334"
+       height="11.85334"
+       x="152.82332"
+       y="135.34714" />
+  </g>
+</svg>

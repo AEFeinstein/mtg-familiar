@@ -574,41 +574,49 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     private void setStatDisplaying(int statMode) {
         mStatDisplaying = statMode;
 
-        Drawable lifeButton = ContextCompat.getDrawable(getContext(), R.drawable.lc_life);
-        Drawable poisonButton = ContextCompat.getDrawable(getContext(), R.drawable.lc_poison);
-        Drawable commanderButton = ContextCompat.getDrawable(getContext(), R.drawable.lc_commander);
+        Drawable lifeButton = DrawableCompat.wrap(
+                ContextCompat.getDrawable(getContext(), R.drawable.lc_life));
+        Drawable poisonButton = DrawableCompat.wrap(
+                ContextCompat.getDrawable(getContext(), R.drawable.lc_poison));
+        Drawable commanderButton = DrawableCompat.wrap(
+                ContextCompat.getDrawable(getContext(), R.drawable.lc_commander));
+
+        int disabledColor = ContextCompat.getColor(getContext(),
+                getFamiliarActivity().getResourceIdFromAttr(R.attr.lc_disabled));
+        int enabledColor = ContextCompat.getColor(getContext(),
+                getFamiliarActivity().getResourceIdFromAttr(R.attr.lc_enabled));
 
         switch (statMode) {
             case STAT_LIFE:
-                DrawableCompat.setTint(lifeButton, R.attr.lc_enabled);
+                DrawableCompat.setTint(lifeButton, enabledColor);
                 DrawableCompat.setTintMode(lifeButton, PorterDuff.Mode.DST);
                 mLifeButton.setImageDrawable(lifeButton);
-                DrawableCompat.setTint(poisonButton, R.attr.lc_disabled);
+                DrawableCompat.setTint(poisonButton, disabledColor);
                 DrawableCompat.setTintMode(poisonButton, PorterDuff.Mode.DST);
                 mPoisonButton.setImageDrawable(poisonButton);
-                DrawableCompat.setTint(commanderButton, R.attr.lc_disabled);
+                DrawableCompat.setTint(commanderButton, disabledColor);
                 DrawableCompat.setTintMode(commanderButton, PorterDuff.Mode.DST);
                 mCommanderButton.setImageDrawable(commanderButton);
                 break;
             case STAT_POISON:
-                DrawableCompat.setTint(mLifeButton.getDrawable(), R.attr.lc_disabled);
+                DrawableCompat.setTint(mLifeButton.getDrawable(), disabledColor);
                 DrawableCompat.setTintMode(mLifeButton.getDrawable(), PorterDuff.Mode.DST);
                 mLifeButton.setImageDrawable(lifeButton);
-                DrawableCompat.setTint(poisonButton, R.attr.lc_enabled);
+                DrawableCompat.setTint(poisonButton, enabledColor);
                 DrawableCompat.setTintMode(poisonButton, PorterDuff.Mode.DST);
                 mPoisonButton.setImageDrawable(poisonButton);
-                DrawableCompat.setTint(commanderButton, R.attr.lc_disabled);
+                DrawableCompat.setTint(commanderButton, disabledColor);
                 DrawableCompat.setTintMode(commanderButton, PorterDuff.Mode.DST);
                 mCommanderButton.setImageDrawable(commanderButton);
                 break;
             case STAT_COMMANDER:
-                DrawableCompat.setTint(lifeButton, R.attr.lc_disabled);
+                DrawableCompat.setTint(lifeButton, disabledColor);
                 DrawableCompat.setTintMode(lifeButton, PorterDuff.Mode.DST);
                 mLifeButton.setImageDrawable(lifeButton);
-                DrawableCompat.setTint(poisonButton, R.attr.lc_disabled);
+                DrawableCompat.setTint(poisonButton, disabledColor);
                 DrawableCompat.setTintMode(poisonButton, PorterDuff.Mode.DST);
                 mPoisonButton.setImageDrawable(poisonButton);
-                DrawableCompat.setTint(commanderButton, R.attr.lc_enabled);
+                DrawableCompat.setTint(commanderButton, enabledColor);
                 DrawableCompat.setTintMode(commanderButton, PorterDuff.Mode.DST);
                 mCommanderButton.setImageDrawable(commanderButton);
                 break;
