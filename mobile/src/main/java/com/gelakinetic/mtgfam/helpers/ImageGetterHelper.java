@@ -96,8 +96,12 @@ public class ImageGetterHelper {
                 Drawable d = null;
                 source = source.replace("/", "");
 
+                PreferenceAdapter pa = new PreferenceAdapter(context);
+                final int tapRes = pa.getTapSymbol();
+                final int wRes = pa.getWhiteSymbol();
+
                 if (source.equalsIgnoreCase("w")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_w);//ContextCompat.getDrawable(context, R.drawable.glyph_w, null);
+                    d = ContextCompat.getDrawable(context, wRes);//ContextCompat.getDrawable(context, R.drawable.glyph_w, null);
                 } else if (source.equalsIgnoreCase("u")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_u);
                 } else if (source.equalsIgnoreCase("b")) {
@@ -107,7 +111,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("g")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_g);
                 } else if (source.equalsIgnoreCase("t")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_tap);
+                    d = ContextCompat.getDrawable(context, tapRes);
                 } else if (source.equalsIgnoreCase("q")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_untap);
                 } else if (source.equalsIgnoreCase("wu") || source.equalsIgnoreCase("uw")) {

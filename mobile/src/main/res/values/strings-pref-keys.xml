@@ -64,5 +64,6 @@
     <string name="key_legality_timestamp" translatable="false">legality_timestamp</string>
     <string name="key_last_update_timestamp" translatable="false">last_update_timestamp</string>
     <string name="key_tap_symbol" translatable="false">tapSymbol</string>
+    <string name="key_white_symbol" translatable="false">whiteSymbol</string>
 
 </resources>
