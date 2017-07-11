@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.woxthebox.draglistview.DragListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sort_list_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.woxthebox.draglistview.DragListView
-        android:id="@+id/sort_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </com.woxthebox.draglistview.DragListView>
-
-    <CheckBox
-        android:id="@+id/dont_sort_checkbox"
-        style="@style/forty_eight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/wishlist_dont_sort" />
-</android.support.v7.widget.LinearLayoutCompat>
+    android:layout_height="match_parent" />

@@ -517,20 +517,15 @@ public class WishlistHelpers {
          *
          * @param orderByStr   The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
          * @param priceSetting The current price setting (LO/AVG/HIGH) used to sort by prices
-         * @param orderByIndex true to order by index, false to order by values. This overrides orderByStr
          */
-        public WishlistComparator(String orderByStr, int priceSetting, boolean orderByIndex) {
-            if (orderByIndex) {
-                options.clear();
-            } else {
-                int idx = 0;
-                for (String option : orderByStr.split(",")) {
-                    String key = option.split(" ")[0];
-                    boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
-                    options.add(new SortOption(null, ascending, key, idx++));
-                }
-                mPriceSetting = priceSetting;
+        public WishlistComparator(String orderByStr, int priceSetting) {
+            int idx = 0;
+            for (String option : orderByStr.split(",")) {
+                String key = option.split(" ")[0];
+                boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
+                options.add(new SortOption(null, ascending, key, idx++));
             }
+            mPriceSetting = priceSetting;
         }
 
         /**

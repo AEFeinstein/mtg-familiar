@@ -310,7 +310,6 @@ Mana pool will also be cleared."</string>
 <string name="wishlist_type_price">"Price"</string>
 <string name="wishlist_ascending">"Ascending"</string>
 <string name="wishlist_sort_by">"Sort By"</string>
-<string name="wishlist_dont_sort">"Don't Sort"</string>
 
 <!-- Round timer activity -->
 <string name="timer_how_long">"How long is the round?"</string>

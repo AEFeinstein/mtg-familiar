@@ -31,7 +31,6 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
     public static final String SQL_ASC = "asc";
     private static final String SQL_DESC = "desc";
     public static final String SAVED_SORT_ORDER = "saved_sort_order";
-    public static final String SAVED_DONT_SORT = "saved_should_sort";
     public static final String KEY_PRICE = "key_price";
 
     @NotNull
@@ -48,13 +47,6 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         /* Create an arraylist of all the sorting options */
         final ArrayList<SortOption> options = new ArrayList<>(6);
         String searchSortOrder = getArguments().getString(SAVED_SORT_ORDER);
-
-        final CheckBox dontSortCheckbox = ((CheckBox) view.findViewById(R.id.dont_sort_checkbox));
-        if (getArguments().containsKey(SAVED_DONT_SORT)) {
-            dontSortCheckbox.setChecked(getArguments().getBoolean(SAVED_DONT_SORT));
-        } else {
-            dontSortCheckbox.setVisibility(View.GONE);
-        }
 
         int idx = 0;
 
@@ -132,7 +124,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     first = false;
                 }
-                getFamiliarFragment().receiveSortOrder(orderByStr, dontSortCheckbox.isChecked());
+                getFamiliarFragment().receiveSortOrder(orderByStr);
                 dismiss();
             }
         });

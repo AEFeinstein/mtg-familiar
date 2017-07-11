@@ -301,8 +301,7 @@ public class TradeFragment extends FamiliarFragment {
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
         /* Sort the newly added card */
-        sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder(),
-                getFamiliarActivity().mPreferenceAdapter.getTradeDontSort());
+        sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
     }
 
     /**
@@ -348,8 +347,6 @@ public class TradeFragment extends FamiliarFragment {
             Bundle args = new Bundle();
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
                     getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
-            args.putBoolean(SortOrderDialogFragment.SAVED_DONT_SORT,
-                    getFamiliarActivity().mPreferenceAdapter.getTradeDontSort());
             newFragment.setArguments(args);
             newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
@@ -367,9 +364,9 @@ public class TradeFragment extends FamiliarFragment {
     /**
      * Sort the trades
      */
-    private void sortTrades(String sortOrder, boolean dontSort) {
+    private void sortTrades(String sortOrder) {
         /* If no sort type specified, return */
-        TradeComparator tradeComparator = new TradeComparator(sortOrder, dontSort);
+        TradeComparator tradeComparator = new TradeComparator(sortOrder);
         Collections.sort(mLeftList, tradeComparator);
         Collections.sort(mRightList, tradeComparator);
         mLeftAdapter.notifyDataSetChanged();
@@ -384,8 +381,8 @@ public class TradeFragment extends FamiliarFragment {
     public void SaveTrade(String tradeName) {
         FileOutputStream fos;
 
-        /* Revert to added-order before saving */
-        sortTrades(null, true);
+        /* TODO Revert to added-order before saving */
+        sortTrades(null);
         try {
             /* MODE_PRIVATE will create the file (or replace a file of the same name) */
             fos = this.getActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
@@ -698,8 +695,7 @@ public class TradeFragment extends FamiliarFragment {
                             if (mPriceFetchRequests == 0 && TradeFragment.this.isAdded()) {
                                 getFamiliarActivity().clearLoading();
                             }
-                            sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder(),
-                                    getFamiliarActivity().mPreferenceAdapter.getTradeDontSort());
+                            sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
                         }
                     }
             );
@@ -710,13 +706,10 @@ public class TradeFragment extends FamiliarFragment {
      * Called when the sorting dialog closes. Sort the trades with the new order
      *
      * @param orderByStr The sort order string
-     * @param dontSort   if this is true, don't sort the results
      */
     @Override
-    public void receiveSortOrder(String orderByStr, boolean dontSort) {
+    public void receiveSortOrder(String orderByStr) {
         getFamiliarActivity().mPreferenceAdapter.setTradeSortOrder(orderByStr);
-        getFamiliarActivity().mPreferenceAdapter.setTradeDontSort(dontSort);
-        sortTrades(orderByStr, dontSort);
     }
 
     /**
@@ -819,18 +812,13 @@ public class TradeFragment extends FamiliarFragment {
          * higher priority
          *
          * @param orderByStr   The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
-         * @param orderByIndex true to order by index, false to order by values. This overrides orderByStr
          */
-        TradeComparator(String orderByStr, boolean orderByIndex) {
+        TradeComparator(String orderByStr) {
             int idx = 0;
-            if (orderByIndex) {
-                options.clear();
-            } else {
-                for (String option : orderByStr.split(",")) {
-                    String key = option.split(" ")[0];
-                    boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
-                    options.add(new SortOrderDialogFragment.SortOption(null, ascending, key, idx++));
-                }
+            for (String option : orderByStr.split(",")) {
+                String key = option.split(" ")[0];
+                boolean ascending = option.split(" ")[1].equalsIgnoreCase(SortOrderDialogFragment.SQL_ASC);
+                options.add(new SortOrderDialogFragment.SortOption(null, ascending, key, idx++));
             }
         }
 

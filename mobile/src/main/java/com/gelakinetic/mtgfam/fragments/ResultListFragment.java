@@ -440,9 +440,8 @@ public class ResultListFragment extends FamiliarFragment {
      * Called when the sort dialog closes. Sort the cards according to the new options.
      *
      * @param orderByStr The sort order string
-     * @param dontSort   ignored
      */
-    public void receiveSortOrder(String orderByStr, boolean dontSort) {
+    public void receiveSortOrder(String orderByStr) {
 
         getFamiliarActivity().mPreferenceAdapter.setSearchSortOrder(orderByStr);
 
