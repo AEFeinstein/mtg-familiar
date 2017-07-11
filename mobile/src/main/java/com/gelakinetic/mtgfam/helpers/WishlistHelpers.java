@@ -538,15 +538,6 @@ public class WishlistHelpers {
         @Override
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
 
-            if (options.isEmpty()) {
-                if (wish1.getIndex() < wish2.getIndex()) {
-                    return -1;
-                } else if (wish1.getIndex() == wish2.getIndex()) {
-                    return 0;
-                }
-                return 1;
-            }
-
             int retVal = 0;
             /* Iterate over all the sort options, starting with the high priority ones */
             for (SortOption option : options) {
@@ -583,6 +574,10 @@ public class WishlistHelpers {
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
                             retVal = Double.compare(wish1.getTotalPrice(mPriceSetting), wish2.getTotalPrice(mPriceSetting));
+                            break;
+                        }
+                        case SortOrderDialogFragment.KEY_ORDER: {
+                            retVal = SortOrderDialogFragment.compareInt(wish1.getIndex(), wish2.getIndex());
                             break;
                         }
                     }

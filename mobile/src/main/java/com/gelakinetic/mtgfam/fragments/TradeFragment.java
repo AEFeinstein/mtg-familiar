@@ -381,8 +381,8 @@ public class TradeFragment extends FamiliarFragment {
     public void SaveTrade(String tradeName) {
         FileOutputStream fos;
 
-        /* TODO Revert to added-order before saving */
-        sortTrades(null);
+        /* Revert to added-order before saving */
+        sortTrades(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
         try {
             /* MODE_PRIVATE will create the file (or replace a file of the same name) */
             fos = this.getActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
@@ -710,6 +710,7 @@ public class TradeFragment extends FamiliarFragment {
     @Override
     public void receiveSortOrder(String orderByStr) {
         getFamiliarActivity().mPreferenceAdapter.setTradeSortOrder(orderByStr);
+        sortTrades(orderByStr);
     }
 
     /**
@@ -832,14 +833,6 @@ public class TradeFragment extends FamiliarFragment {
         @Override
         public int compare(MtgCard card1, MtgCard card2) {
 
-            if (options.isEmpty()) {
-                if (card1.getIndex() < card2.getIndex()) {
-                    return -1;
-                } else if (card1.getIndex() == card2.getIndex()) {
-                    return 0;
-                }
-                return 1;
-            }
             int retVal = 0;
             /* Iterate over all the sort options, starting with the high priority ones */
             for (SortOrderDialogFragment.SortOption option : options) {
@@ -876,6 +869,10 @@ public class TradeFragment extends FamiliarFragment {
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
                             retVal = Double.compare(card1.price, card2.price);
+                            break;
+                        }
+                        case SortOrderDialogFragment.KEY_ORDER: {
+                            retVal = SortOrderDialogFragment.compareInt(card1.getIndex(), card2.getIndex());
                             break;
                         }
                     }

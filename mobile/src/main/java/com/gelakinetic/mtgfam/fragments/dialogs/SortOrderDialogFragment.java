@@ -29,9 +29,10 @@ import java.util.List;
 public class SortOrderDialogFragment extends FamiliarDialogFragment {
 
     public static final String SQL_ASC = "asc";
-    private static final String SQL_DESC = "desc";
+    public static final String SQL_DESC = "desc";
     public static final String SAVED_SORT_ORDER = "saved_sort_order";
     public static final String KEY_PRICE = "key_price";
+    public static final String KEY_ORDER = "key_order";
 
     @NotNull
     @Override
@@ -51,6 +52,8 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         int idx = 0;
 
         if (searchSortOrder != null) {
+            boolean orderAdded = false;
+            boolean priceAdded = false;
             for (String option : searchSortOrder.split(",")) {
                 String key = option.split(" ")[0];
                 boolean ascending = option.split(" ")[1].equalsIgnoreCase(SQL_ASC);
@@ -87,9 +90,24 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     case KEY_PRICE: {
                         name = getResources().getString(R.string.wishlist_type_price);
+                        priceAdded = true;
+                        break;
+                    }
+                    case KEY_ORDER: {
+                        name = getResources().getString(R.string.wishlist_type_order);
+                        orderAdded = true;
+                        break;
                     }
                 }
                 options.add(new SortOption(name, ascending, key, idx++));
+            }
+
+            /* Sorting by order was added later, so if it's not in the given string and price is,
+             * which it is for wishlist and trade list, add order too.
+             */
+            if (priceAdded && !orderAdded) {
+                options.add(new SortOption(getResources().getString(R.string.wishlist_type_order),
+                        false, KEY_ORDER, idx++));
             }
         }
 
@@ -130,6 +148,20 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         });
 
         return adb.build();
+    }
+
+    /**
+     * Compare two integers. Usually this is a built in function,
+     * but it isn't support in this API level.
+     *
+     * @param x An integer to compare
+     * @param y Another integer to compare
+     * @return -1 if x <  y
+     *         +1 if x >  y
+     *          0 if x == y
+     */
+    public static int compareInt(int x, int y) {
+        return (x < y) ? -1 : ((x == y) ? 0 : 1);
     }
 
     private class sortItemAdapter extends DragItemAdapter<SortOption, sortItemAdapter.sortItemViewHolder> {

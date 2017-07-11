@@ -549,7 +549,8 @@ public class PreferenceAdapter {
                         CardDbAdapter.KEY_CMC + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC + "," +
-                        SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
+                        SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_DESC
         );
     }
 
@@ -567,7 +568,8 @@ public class PreferenceAdapter {
                         CardDbAdapter.KEY_CMC + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC + "," +
-                        SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
+                        SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC + "," +
+                        SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_DESC
         );
     }
 

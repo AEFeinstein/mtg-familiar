@@ -285,8 +285,8 @@ public class WishlistFragment extends FamiliarFragment {
     public void onPause() {
         super.onPause();
 
-        /* TODO Unsort the wishlist, then save it */
-        sortWishlist(null);
+        /* Unsort the wishlist, then save it */
+        sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
         WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
     }
 
@@ -626,6 +626,7 @@ public class WishlistFragment extends FamiliarFragment {
     @Override
     public void receiveSortOrder(String orderByStr) {
         getFamiliarActivity().mPreferenceAdapter.setWishlistSortOrder(orderByStr);
+        sortWishlist(orderByStr);
     }
 
     /**
