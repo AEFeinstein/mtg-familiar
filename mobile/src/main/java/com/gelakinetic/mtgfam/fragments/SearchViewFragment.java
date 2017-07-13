@@ -35,7 +35,10 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.autocomplete.CompletionView;
+import com.gelakinetic.mtgfam.helpers.model.Comparison;
+import com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner;
+import com.gelakinetic.mtgfam.helpers.view.CompletionView;
+import com.gelakinetic.mtgfam.helpers.view.ManaCostTextView;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -112,7 +115,8 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mTouChoice;
     private Spinner mCmcLogic;
     private Spinner mCmcChoice;
-    private CheckBox mCheckboxHasManaX;
+    private ComparisonSpinner comparisonSpinner;
+    private ManaCostTextView manaCostTextView;
 
     public Dialog mFormatDialog;
     public Dialog mRarityDialog;
@@ -219,8 +223,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mTouChoice = (Spinner) myFragmentView.findViewById(R.id.touChoice);
         mCmcLogic = (Spinner) myFragmentView.findViewById(R.id.cmcLogic);
         mCmcChoice = (Spinner) myFragmentView.findViewById(R.id.cmcChoice);
-
-        mCheckboxHasManaX = (CheckBox) myFragmentView.findViewById(R.id.checkBoxHasManaX);
+        manaCostTextView = (ManaCostTextView) myFragmentView.findViewById(R.id.manaCostTextView);
+        comparisonSpinner = (ComparisonSpinner) myFragmentView.findViewById(R.id.comparisonSpinner);
 
         /* Now we need to apply a different TextView to our Spinners to center the items */
         ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
@@ -269,6 +273,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mSupertypeField.setOnEditorActionListener(doSearchListener);
         mSubtypeField.setOnEditorActionListener(doSearchListener);
         mSetField.setOnEditorActionListener(doSearchListener);
+        manaCostTextView.setOnEditorActionListener(doSearchListener);
         mFlavorField.setOnEditorActionListener(doSearchListener);
         mArtistField.setOnEditorActionListener(doSearchListener);
         mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
@@ -504,6 +509,7 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mArtistField.getText() != null;
         assert mSetField.getText() != null;
         assert mCollectorsNumberField.getText() != null;
+        assert manaCostTextView.getText() != null;
 
         /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString().trim();
@@ -537,6 +543,8 @@ public class SearchViewFragment extends FamiliarFragment {
         searchCriteria.artist = mArtistField.getText().toString().trim();
         searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString().trim();
         searchCriteria.set = sets;
+        searchCriteria.mc = manaCostTextView.getStringFromObjects();
+        searchCriteria.mcLogic = (Comparison) comparisonSpinner.getSelectedItem();
 
         if (searchCriteria.name.length() == 0) {
             searchCriteria.name = null;
@@ -712,8 +720,6 @@ public class SearchViewFragment extends FamiliarFragment {
         searchCriteria.cmc = cmc;
         searchCriteria.cmcLogic = logicChoices[mCmcLogic.getSelectedItemPosition()];
 
-        searchCriteria.hasManaX = mCheckboxHasManaX.isChecked();
-
         searchCriteria.typeLogic = mTypeSpinner.getSelectedItemPosition();
         searchCriteria.textLogic = mTextSpinner.getSelectedItemPosition();
         searchCriteria.setLogic = mSetSpinner.getSelectedItemPosition();
@@ -761,7 +767,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(0);
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
-        mCheckboxHasManaX.setChecked(false);
+        manaCostTextView.clear();
+        comparisonSpinner.setSelection(Comparison.EMPTY.ordinal());
 
         if (mSetCheckedIndices != null) {
             mSetCheckedIndices = new int[0];
@@ -840,8 +847,6 @@ public class SearchViewFragment extends FamiliarFragment {
             }
             mColorIdentitySpinner.setSelection(criteria.colorIdentityLogic);
 
-            mCheckboxHasManaX.setChecked(criteria.hasManaX);
-
             mTextSpinner.setSelection(criteria.textLogic);
             mTypeSpinner.setSelection(criteria.typeLogic);
             mSetSpinner.setSelection(criteria.setLogic);
@@ -906,7 +911,8 @@ public class SearchViewFragment extends FamiliarFragment {
             } else {
                 mSetField.clear();
             }
-
+            manaCostTextView.setObjectsFromString(criteria.mc);
+            comparisonSpinner.setSelection(criteria.mcLogic.ordinal());
             if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
             }
