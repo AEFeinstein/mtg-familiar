@@ -35,6 +35,9 @@ android {
             versionName "3.4.2-foss"
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
