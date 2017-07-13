@@ -872,7 +872,7 @@ public class TradeFragment extends FamiliarFragment {
                             break;
                         }
                         case SortOrderDialogFragment.KEY_ORDER: {
-                            retVal = SortOrderDialogFragment.compareInt(card1.getIndex(), card2.getIndex());
+                            retVal = Integer.valueOf(card1.getIndex()).compareTo(card2.getIndex());
                             break;
                         }
                     }

@@ -150,20 +150,6 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         return adb.build();
     }
 
-    /**
-     * Compare two integers. Usually this is a built in function,
-     * but it isn't support in this API level.
-     *
-     * @param x An integer to compare
-     * @param y Another integer to compare
-     * @return -1 if x <  y
-     *         +1 if x >  y
-     *          0 if x == y
-     */
-    public static int compareInt(int x, int y) {
-        return (x < y) ? -1 : ((x == y) ? 0 : 1);
-    }
-
     private class sortItemAdapter extends DragItemAdapter<SortOption, sortItemAdapter.sortItemViewHolder> {
 
         /**

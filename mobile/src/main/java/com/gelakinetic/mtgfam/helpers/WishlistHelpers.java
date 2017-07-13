@@ -577,7 +577,7 @@ public class WishlistHelpers {
                             break;
                         }
                         case SortOrderDialogFragment.KEY_ORDER: {
-                            retVal = SortOrderDialogFragment.compareInt(wish1.getIndex(), wish2.getIndex());
+                            retVal = Integer.valueOf(wish1.getIndex()).compareTo(wish2.getIndex());
                             break;
                         }
                     }
