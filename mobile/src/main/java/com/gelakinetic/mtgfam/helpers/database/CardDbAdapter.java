@@ -949,7 +949,8 @@ public class CardDbAdapter {
             }
         }
 
-        if (supertypes != null) {
+        // supertypes can be "" if user only selects a subtype
+        if (supertypes != null && !supertypes.isEmpty()) {
             /* Separate each individual */
             String[] supertypesParts = supertypes.split(" ");
 
