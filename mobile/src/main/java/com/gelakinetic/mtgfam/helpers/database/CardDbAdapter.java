@@ -624,7 +624,7 @@ public class CardDbAdapter {
      * the database
      *
      * @param mCompressedCard An ArrayList of CompressedWishlistInfo to fill in
-     * @param mDb                 The database to query
+     * @param mDb             The database to query
      * @throws FamiliarDbException If something goes wrong
      */
     public static void fillExtraWishlistData(ArrayList<? extends CompressedCardInfo> mCompressedCard,
@@ -961,8 +961,7 @@ public class CardDbAdapter {
                         if (s.contains(EXCLUDE_TOKEN)) {
                             statement += " AND (" + supertypeInDb + " NOT LIKE " +
                                     sanitizeString("% " + s.substring(1) + " %", false) + ")";
-                        }
-                        else
+                        } else
                             statement += " AND (" + supertypeInDb + " LIKE " +
                                     sanitizeString("% " + s + " %", false) + ")";
                     }
@@ -1012,8 +1011,7 @@ public class CardDbAdapter {
                         if (s.contains(EXCLUDE_TOKEN)) {
                             statement += " AND (" + subtypeInDb + " NOT LIKE " +
                                     sanitizeString("% " + s.substring(1) + " %", false) + ")";
-                        }
-                        else {
+                        } else {
                             statement += " AND (" + subtypeInDb + " LIKE " +
                                     sanitizeString("% " + s + " %", false) + ")";
                         }
@@ -1074,7 +1072,9 @@ public class CardDbAdapter {
          * matching. In addition, original programming only provided exclusive
          * results.
          */
-        if (!(criteria.color.equals("wubrgl") || (criteria.color.equals("WUBRGL") && criteria.colorLogic == 0))) {
+        if (null != criteria.color &&
+                !(criteria.color.equals("wubrgl") || (criteria.color.equals("WUBRGL") &&
+                        criteria.colorLogic == 0))) {
             boolean firstPrint = true;
 
             /* Can't contain these colors
@@ -1143,7 +1143,7 @@ public class CardDbAdapter {
          * Color Identity Filter
          * If a color is selected, it's upper case. Otherwise it's lower case
          */
-        if (!(criteria.colorIdentity.equals("wubrgl"))) {
+        if (null != criteria.colorIdentity && !(criteria.colorIdentity.equals("wubrgl"))) {
             switch (criteria.colorIdentityLogic) {
                 case 0: {
                     /* search_May_include_any_colors */
@@ -1238,8 +1238,12 @@ public class CardDbAdapter {
             }
             statement += ")";
         }
-        statement = criteria.mcLogic.appendToSql(statement,
-                DATABASE_TABLE_CARDS + "." + KEY_MANACOST, criteria.mc);
+
+        if (null != criteria.mcLogic) {
+            statement = criteria.mcLogic.appendToSql(statement,
+                    DATABASE_TABLE_CARDS + "." + KEY_MANACOST, criteria.mc);
+        }
+
         if (criteria.cmc != -1) {
             statement += " AND (";
 
@@ -1640,7 +1644,7 @@ public class CardDbAdapter {
         initialValues.put(KEY_NAME_NO_ACCENT, removeAccentMarks(card.mName));
         initialValues.put(KEY_WATERMARK, card.mWatermark);
 
-        for(Card.ForeignPrinting fp : card.mForeignPrintings) {
+        for (Card.ForeignPrinting fp : card.mForeignPrintings) {
             switch (fp.mLanguageCode) {
                 case Language.Chinese_Traditional: {
                     initialValues.put(KEY_NAME_CHINESE_TRADITIONAL, fp.mName);
@@ -2496,7 +2500,7 @@ public class CardDbAdapter {
      * @return The sanitized String
      */
     private static String sanitizeString(String input, boolean removeAccentMarks) {
-        if(removeAccentMarks) {
+        if (removeAccentMarks) {
             return DatabaseUtils.sqlEscapeString(removeAccentMarks(input).trim());
         }
         return DatabaseUtils.sqlEscapeString(input.trim());
