@@ -118,7 +118,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         /* Initialize the left list and company */
         mListLeft = new ArrayList<>();
-        mListAdapterLeft = new CardDataAdapter(mListLeft);
+        mListAdapterLeft = new CardDataAdapter(mListLeft, LEFT);
         mListViewLeft = (RecyclerView) myFragmentView.findViewById(R.id.tradeListLeft);
         mListViewLeft.setAdapter(mListAdapterLeft);
         mListViewLeft.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -129,7 +129,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         /* Initialize the right list and company */
         mListRight = new ArrayList<>();
-        mListAdapterRight = new CardDataAdapter(mListRight);
+        mListAdapterRight = new CardDataAdapter(mListRight, RIGHT);
         mListViewRight = (RecyclerView) myFragmentView.findViewById(R.id.tradeListRight);
         mListViewRight.setAdapter(mListAdapterRight);
         mListViewRight.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -815,8 +815,11 @@ public class TradeFragment extends FamiliarListFragment {
 
         private CardDataAdapter otherAdapter;
 
-        CardDataAdapter(ArrayList<MtgCard> values) {
+        private final int side;
+
+        CardDataAdapter(ArrayList<MtgCard> values, int side) {
             super(values);
+            this.side = side;
         }
 
         void setOtherAdapter(CardDataAdapter adapter) {
@@ -893,6 +896,19 @@ public class TradeFragment extends FamiliarListFragment {
 
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
+
+            }
+
+            @Override
+            public void onClick(View view) {
+
+                if (!isInSelectMode() && !otherAdapter.isInSelectMode()) {
+                    showDialog(
+                            TradeDialogFragment.DIALOG_UPDATE_CARD,
+                            side,
+                            getAdapterPosition()
+                    );
+                }
 
             }
 
