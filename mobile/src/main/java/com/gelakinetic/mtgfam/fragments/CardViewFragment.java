@@ -1714,8 +1714,6 @@ public class CardViewFragment extends FamiliarFragment {
                 return getString(R.string.card_view_unable_to_create_file);
             }
 
-            FileOutputStream fStream = new FileOutputStream(fPath);
-
             /* If the card is displayed, there's a real good chance it's cached */
             String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
             if (cardLanguage == null) {
@@ -1743,6 +1741,8 @@ public class CardViewFragment extends FamiliarFragment {
             if (bmpImage == null) {
                 return getString(R.string.card_view_no_image);
             }
+
+            FileOutputStream fStream = new FileOutputStream(fPath);
 
             boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 90, fStream);
             fStream.flush();

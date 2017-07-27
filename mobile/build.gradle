@@ -1,7 +1,57 @@
 apply plugin: 'com.android.application'
+apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+
+check.dependsOn 'pmd', 'checkstyle', 'findbugs'
 
 repositories {
     mavenCentral()
+    //google() // Gradle 4.0 adds this
+}
+
+def configDir = "${project.rootDir}/config"
+
+task checkstyle(type: Checkstyle) {
+    configFile file("$configDir/checkstyle.xml")
+    configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle.suppressions.xml").absolutePath
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    classpath = files()
+}
+
+task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+    ignoreFailures = false
+    effort = "max"
+    reportLevel = "high"
+    excludeFilter = new File("$configDir/findbugs.filter.xml")
+    classes = files("${project.rootDir}/mobile/build/intermediates/classes")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html {
+            destination "$project.buildDir/reports/findbugs.html"
+        }
+    }
+    classpath = files()
+}
+
+task pmd(type: Pmd) {
+    ignoreFailures = true
+    ruleSetFiles = files("$configDir/pmd.xml")
+    reports {
+        html.enabled = true
+        html {
+            destination "$project.buildDir/reports/pmd.html"
+        }
+    }
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
 }
 
 android {
@@ -23,16 +73,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.txt'
+            findbugs
         }
     }
+    flavorDimensions "license"
     productFlavors {
         standard {
             dependencies {
-                compile 'com.google.firebase:firebase-appindexing:10.2.6'
+                compile 'com.google.firebase:firebase-appindexing:11.0.2'
             }
+            dimension "license"
         }
         foss {
             versionName "3.4.2-foss"
+            dimension "license"
         }
     }
     lintOptions {
@@ -47,11 +101,12 @@ dependencies {
     compile 'cz.msebera.android:httpclient:4.4.1.2'
     compile 'com.octo.android.robospice:robospice:1.4.14'
     compile 'com.octo.android.robospice:robospice-cache:1.4.14'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:gridlayout-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.4.0'
+    compile 'com.android.support:support-v13:25.4.0'
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:cardview-v7:25.4.0'
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:gridlayout-v7:25.4.0'
     compile 'com.github.woxthebox:draglistview:1.4.4' // This includes support recyclerview
     compile 'org.jetbrains:annotations:13.0'
     compile 'com.google.code.gson:gson:2.8.0'

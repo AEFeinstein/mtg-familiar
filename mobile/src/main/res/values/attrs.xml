@@ -11,6 +11,8 @@
         <attr name="grey_border" format="reference" />
         <attr name="color_text" format="color|reference" />
         <attr name="color_background" format="color|reference" />
+        <attr name="color_background_selected" format="color|reference" />
+        <attr name="selectable_row" format="reference" />
         <attr name="glyph_pwk" format="reference" />
         <attr name="glyph_chaos" format="reference" />
         <attr name="glyph_e" format="reference" />
@@ -76,6 +78,7 @@
         <attr name="ic_menu_warning" format="reference" />
         <attr name="ic_menu_wishlist" format="reference" />
         <attr name="ic_menu_translate" format="reference" />
+        <attr name="ic_menu_done" format="reference" />
 
         <attr name="lc_commander_disabled" format="reference" />
         <attr name="lc_commander_enabled" format="reference" />

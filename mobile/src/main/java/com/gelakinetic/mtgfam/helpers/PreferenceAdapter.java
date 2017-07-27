@@ -570,4 +570,13 @@ public class PreferenceAdapter {
                         SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
         );
     }
+
+    /* General list settings (trades, wishlist, decklist) */
+    public synchronized int getUndoTimeout() {
+        return this.prefs.getInt(context.getString(R.string.key_undoTimeout), 3) * 1000;
+    }
+
+    public boolean getShowTotalDecklistPrice() {
+        return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceDecklistPref), false);
+    }
 }

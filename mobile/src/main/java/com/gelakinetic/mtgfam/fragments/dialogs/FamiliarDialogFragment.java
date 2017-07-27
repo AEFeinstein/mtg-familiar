@@ -8,6 +8,8 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 
+import java.util.ArrayList;
+
 /**
  * This is a superclass for all dialog fragments. It fixes some bugs and handles rotations nicely
  * <p/>
@@ -79,5 +81,26 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     FamiliarActivity getFamiliarActivity() {
         return (FamiliarActivity) getActivity();
+    }
+
+    /**
+     * Gets all files of the given extension
+     * @param fileExtension kind of files to get
+     * @return array of string file names, without the extension
+     */
+    String[] getFiles(String fileExtension) {
+        String[] files = this.getActivity().fileList();
+        ArrayList<String> validFiles = new ArrayList<>();
+        for (String fileName : files) {
+            if (fileName.endsWith(fileExtension)) {
+                validFiles.add(fileName.substring(0, fileName.indexOf(fileExtension)));
+            }
+        }
+        if (validFiles.size() == 0) {
+            return new String[]{};
+        }
+        final String[] tradeNames = new String[validFiles.size()];
+        validFiles.toArray(tradeNames);
+        return tradeNames;
     }
 }

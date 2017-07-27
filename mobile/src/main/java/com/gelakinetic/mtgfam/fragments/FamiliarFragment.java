@@ -324,4 +324,5 @@ public abstract class FamiliarFragment extends Fragment {
      */
     public void receiveSortOrder(String orderByStr) {
     }
+
 }

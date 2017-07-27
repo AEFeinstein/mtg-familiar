@@ -218,7 +218,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
                 history.append(aSequence).append("  ");
             }
             mDeckCountHistory.setText(history.toString());
-            mDeckCountText.setText("" + mDeckCount);
+            mDeckCountText.setText(String.valueOf(mDeckCount));
         }
     }
 }
