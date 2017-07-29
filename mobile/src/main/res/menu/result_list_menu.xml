@@ -20,13 +20,13 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search_menu_random_search"
-        android:icon="@drawable/ic_menu_random"
+        android:icon="?attr/ic_menu_random"
         android:title="@string/search_randomize"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/search_menu_sort"
-        android:icon="@drawable/ic_menu_sort"
+        android:icon="?attr/ic_menu_sort"
         android:title="@string/wishlist_sort_by"
         app:showAsAction="ifRoom" />
 
