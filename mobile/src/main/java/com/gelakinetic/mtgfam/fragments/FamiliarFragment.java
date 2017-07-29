@@ -140,7 +140,7 @@ public abstract class FamiliarFragment extends Fragment {
         if (getActivity() != null) {
             if (canInterceptSearchKey()) {
                 menu.add(R.string.search_search)
-                        .setIcon(R.drawable.ic_menu_search)
+                        .setIcon(getResourceIdFromAttr(R.attr.ic_menu_search))
                         .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
@@ -157,7 +157,7 @@ public abstract class FamiliarFragment extends Fragment {
                             new ComponentName(getContext().getPackageName(), "com.gelakinetic.mtgfam.FamiliarActivity")));
 
                     MenuItem mi = menu.add(R.string.name_search_hint)
-                            .setIcon(R.drawable.ic_menu_search);
+                            .setIcon(getResourceIdFromAttr(R.attr.ic_menu_search));
                     MenuItemCompat.setActionView(mi, sv);
                     MenuItemCompat.setOnActionExpandListener(mi, new MenuItemCompat.OnActionExpandListener() {
                         @Override

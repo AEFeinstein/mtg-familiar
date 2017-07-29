@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/deck_menu_clear"
-        android:icon="@drawable/ic_menu_close"
+        android:icon="?attr/ic_menu_close"
         android:title="@string/decklist_clear"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/deck_menu_save"
-        android:icon="@drawable/ic_menu_save"
+        android:icon="?attr/ic_menu_save"
         android:title="@string/decklist_save"
         app:showAsAction="ifRoom" />
     <!-- todo: icon for save as -->
@@ -20,17 +20,17 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/deck_menu_load"
-        android:icon="@drawable/ic_menu_folder_open"
+        android:icon="?attr/ic_menu_folder_open"
         android:title="@string/decklist_load"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/deck_menu_delete"
-        android:icon="@drawable/ic_menu_delete"
+        android:icon="?attr/ic_menu_delete"
         android:title="@string/decklist_delete"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/deck_menu_share"
-        android:icon="@drawable/ic_menu_share"
+        android:icon="?attr/ic_menu_share"
         android:title="@string/decklist_share"
         app:showAsAction="ifRoom" />
 </menu>

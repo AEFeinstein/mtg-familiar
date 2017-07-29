@@ -74,25 +74,6 @@
                 android:key="@string/key_theme"
                 android:summary="@string/pref_theme_summary"
                 android:title="@string/pref_theme_title" />
-
-            <ListPreference
-                android:defaultValue="glyph_tap"
-                android:dialogTitle="@string/pref_tap_symbol_title"
-                android:entries="@array/pref_tap_symbols"
-                android:entryValues="@array/pref_tap_symbols_drawable"
-                android:key="@string/key_tap_symbol"
-                android:summary="@string/pref_tap_symbol_summary"
-                android:title="@string/pref_tap_symbol_title" />
-
-            <ListPreference
-                android:defaultValue="glyph_w"
-                android:dialogTitle="@string/pref_white_symbol_title"
-                android:entries="@array/pref_white_mana_symbols"
-                android:entryValues="@array/pref_white_mana_symbols_drawable"
-                android:key="@string/key_white_symbol"
-                android:summary="@string/pref_white_symbol_summary"
-                android:title="@string/pref_white_symbol_title" />
-
         </PreferenceCategory>
 
     </PreferenceScreen>

@@ -21,13 +21,13 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/set_timer_ringtone"
-        android:icon="@drawable/ic_menu_notifications_on"
+        android:icon="?attr/ic_menu_notifications_on"
         android:title="@string/timer_set_ringtone"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/set_timer_warnings"
-        android:icon="@drawable/ic_menu_warning"
+        android:icon="?attr/ic_menu_warning"
         android:title="@string/timer_set_warnings"
         app:showAsAction="ifRoom" />
 </menu>
