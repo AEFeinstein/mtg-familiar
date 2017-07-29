@@ -1,0 +1,1 @@
+convert material_menu_icons.png -crop 96x96 +repage ic_menu_%d.png
