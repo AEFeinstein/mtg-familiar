@@ -504,8 +504,7 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="decklist_artifacts">"Artefakty"</string>
 <string name="decklist_lands">"Landy"</string>
 <string name="decklist_edit_dialog_title_end">"v balíku"</string>
-<string name="deck_save_dialog_title">"Uložiť balík"</string>
-<string name="decklist_delete">"Zmazať balík"</string>
+    <string name="decklist_delete">"Zmazať balík"</string>
 <string name="decklist_save">"Uložiť balík"</string>
 <string name="decklist_load">"Načítať balík"</string>
 <string name="decklist_clear">"Vymazať balík"</string>

@@ -690,7 +690,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
             }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -921,7 +921,8 @@ public class FamiliarActivity extends AppCompatActivity {
             selectItem(R.string.main_decklist, null, true, false);
         } else if (Intent.ACTION_MAIN.equals(intent.getAction())) {
             /* App launched as regular, show the default fragment if there isn't one already */
-            if (getSupportFragmentManager().getFragments() == null) {
+            if (getSupportFragmentManager().getFragments() == null ||
+                    getSupportFragmentManager().getFragments().isEmpty()) {
                 launchHomeScreen();
             }
         } else {

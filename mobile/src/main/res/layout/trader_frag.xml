@@ -5,53 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        style="@style/forty_eight"
-        android:layout_width="match_parent"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/numberInput"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:ems="10"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="2"
-            android:selectAllOnFocus="true" />
-
-        <AutoCompleteTextView
-            android:id="@+id/namesearch"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:hint="@string/search_name"
-            android:inputType="text">
-
-            <requestFocus />
-        </AutoCompleteTextView>
-
-        <LinearLayout
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <CheckBox
-                android:id="@+id/trader_foil"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:button="?attr/btn_check_foil"
-                android:gravity="center" />
-        </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/camera_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="?attr/camera_button" />
-    </LinearLayout>
+    <include layout="@layout/list_add_card" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,7 +53,7 @@
                 android:layout_height="1dp"
                 android:background="?attr/color_drawer_divider_item" />
 
-            <ListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/tradeListLeft"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -156,7 +110,7 @@
                 android:layout_height="1dp"
                 android:background="?attr/color_drawer_divider_item" />
 
-            <ListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/tradeListRight"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

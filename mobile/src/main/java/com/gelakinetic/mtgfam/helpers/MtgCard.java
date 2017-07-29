@@ -25,10 +25,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 
 import java.util.Locale;
 
@@ -334,9 +334,18 @@ public class MtgCard extends Card {
         if (o instanceof MtgCard) {
             return this.mName.equals(((MtgCard) o).mName);
         } else if (o instanceof CompressedCardInfo) {
-            return this.mName.equals(((CompressedCardInfo) o).mCard.mName);
+            if (((CompressedCardInfo) o).mCard != null) {
+                return this.mName.equals(((CompressedCardInfo) o).mCard.mName);
+            }
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 23;
+        hash = hash * 31 + mName.hashCode();
+        return hash;
     }
 
     /**
