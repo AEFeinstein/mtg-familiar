@@ -96,8 +96,12 @@ public class ImageGetterHelper {
                 Drawable d = null;
                 source = source.replace("/", "");
 
+                PreferenceAdapter pa = new PreferenceAdapter(context);
+                final int tapRes = pa.getTapSymbol();
+                final int wRes = pa.getWhiteSymbol();
+
                 if (source.equalsIgnoreCase("w")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_w);//ContextCompat.getDrawable(context, R.drawable.glyph_w, null);
+                    d = ContextCompat.getDrawable(context, wRes);//ContextCompat.getDrawable(context, R.drawable.glyph_w, null);
                 } else if (source.equalsIgnoreCase("u")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_u);
                 } else if (source.equalsIgnoreCase("b")) {
@@ -107,7 +111,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("g")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_g);
                 } else if (source.equalsIgnoreCase("t")) {
-                    d = ContextCompat.getDrawable(context, R.drawable.glyph_tap);
+                    d = ContextCompat.getDrawable(context, tapRes);
                 } else if (source.equalsIgnoreCase("q")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_untap);
                 } else if (source.equalsIgnoreCase("wu") || source.equalsIgnoreCase("uw")) {
@@ -153,7 +157,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("pg") || source.equalsIgnoreCase("gp")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_pg);
                 } else if (source.equalsIgnoreCase("p")) {
-                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_p));
+                    d = ContextCompat.getDrawable(context, R.drawable.glyph_p);
                 } else if (source.equalsIgnoreCase("+oo")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_inf);
                 } else if (source.equalsIgnoreCase("100")) {
@@ -167,7 +171,7 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("c")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_c);
                 } else if (source.equalsIgnoreCase("chaos")) {
-                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_chaos));
+                    d = ContextCompat.getDrawable(context, R.drawable.glyph_chaos);
                 } else if (source.equalsIgnoreCase("z")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_z);
                 } else if (source.equalsIgnoreCase("y")) {
@@ -177,9 +181,9 @@ public class ImageGetterHelper {
                 } else if (source.equalsIgnoreCase("h")) {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_half);
                 } else if (source.equalsIgnoreCase("pwk")) {
-                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_pwk));
+                    d = ContextCompat.getDrawable(context, R.drawable.glyph_pwk);
                 } else if (source.equalsIgnoreCase("e")) {
-                    d = ContextCompat.getDrawable(context, getResourceIdFromAttr(context.getTheme(), R.attr.glyph_e));
+                    d = ContextCompat.getDrawable(context, R.drawable.glyph_e);
                 } else {
                     for (int i = 0; i < drawableNumbers.length; i++) {
                         if (source.equals(Integer.valueOf(i).toString())) {
@@ -196,19 +200,5 @@ public class ImageGetterHelper {
                 return d;
             }
         };
-    }
-
-    /**
-     * This helper function translates an attribute into a resource ID
-     *
-     * @param attr The attribute ID
-     * @return the resource ID
-     */
-    private static int getResourceIdFromAttr(Resources.Theme theme, int attr) {
-        TypedArray ta = theme.obtainStyledAttributes(new int[]{attr});
-        assert ta != null;
-        int resId = ta.getResourceId(0, 0);
-        ta.recycle();
-        return resId;
     }
 }

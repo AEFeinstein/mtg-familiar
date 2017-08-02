@@ -3,8 +3,11 @@ package com.gelakinetic.mtgfam.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
+import android.util.Log;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
@@ -568,6 +571,22 @@ public class PreferenceAdapter {
                         CardDbAdapter.KEY_POWER + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_TOUGHNESS + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC
+        );
+    }
+
+    public synchronized @DrawableRes int getTapSymbol() {
+        return context.getResources().getIdentifier(
+                this.prefs.getString(context.getString(R.string.key_tap_symbol), "glyph_tap"),
+                "drawable",
+                context.getPackageName()
+        );
+    }
+
+    public synchronized @DrawableRes int getWhiteSymbol() {
+        return context.getResources().getIdentifier(
+                this.prefs.getString(context.getString(R.string.key_white_symbol), "glyph_w"),
+                "drawable",
+                context.getPackageName()
         );
     }
 
