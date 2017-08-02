@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/deck_delete_selected"
-        android:icon="?attr/ic_menu_delete"
+        android:icon="@drawable/ic_menu_delete"
         android:title="@string/cardlist_delete_selected"
         app:showAsAction="ifRoom" />
 
