@@ -781,7 +781,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     if (selectedItems.get(position, false)) {
                         holder.itemView.setSelected(true);
                         holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(
-                                getResourceIdFromAttr(R.attr.ic_menu_done), 0, 0, 0);
+                                R.drawable.ic_menu_done, 0, 0, 0);
                         holder.mCardNumberOf.setText("");
                     } else {
                         holder.itemView.setSelected(false);
