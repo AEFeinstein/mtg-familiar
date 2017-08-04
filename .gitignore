@@ -12,6 +12,7 @@
 bin/
 gen/
 build/
+reports/
 
 # Local configuration file (sdk path, etc)
 local.properties

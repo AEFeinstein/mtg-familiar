@@ -26,8 +26,8 @@ import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
+import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -217,7 +217,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return builder.build();
             }
             case WISH_LIST_COUNTS: {
-                Dialog dialog = WishlistHelpers.getDialog(getCardViewFragment().mCardName, getCardViewFragment(), false);
+                Dialog dialog = CardHelpers.getDialog(getCardViewFragment().mCardName, getCardViewFragment(), false, false);
                 if (dialog == null) {
                     getCardViewFragment().handleFamiliarDbException(false);
                     return DontShowDialog();

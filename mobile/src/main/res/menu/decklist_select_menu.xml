@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/deck_import_selected"
+        android:icon="@drawable/ic_menu_wishlist"
+        android:title="@string/decklist_import_to_wishlist"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/deck_delete_selected"
+        android:icon="@drawable/ic_menu_delete"
+        android:title="@string/cardlist_delete_selected"
+        app:showAsAction="ifRoom" />
+
+</menu>

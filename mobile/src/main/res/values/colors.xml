@@ -36,19 +36,31 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="drawer_text_unselected_light">#8A000000</color>
     <color name="drawer_divider_item_light">#1A000000</color>
     <color name="drawer_item_selected_light">#0c000000</color>
+    <color name="drawer_item_icon_light">#80000000</color>
 
     <color name="drawer_background_dark">#303030</color>
     <color name="drawer_text_unselected_dark">#B3FFFFFF</color>
     <color name="drawer_divider_item_dark">#26FFFFFF</color>
     <color name="drawer_item_selected_dark">#ABFFFFFF</color>
+    <color name="drawer_item_icon_dark">#B3FFFFFF</color>
 
     <!-- used for life, poison, here and there -->
     <color name="material_red_500">#F44336</color>
     <color name="material_green_500">#4CAF50</color>
 
+    <!-- life counter colors -->
+    <color name="lc_enabled_light">#99343434</color>
+    <color name="lc_disabled_light">#4C323232</color>
+    <color name="lc_enabled_dark">#CCFFFFFF</color>
+    <color name="lc_disabled_dark">#65FAFAFA</color>
+
     <!-- background color for the entire app -->
     <color name="background_light">#EEEEEE</color>
     <color name="background_dark">#000000</color>
+
+    <!-- background color for selected items -->
+    <color name="background_light_selected">#CFD8DC</color>
+    <color name="background_dark_selected">#424242</color>
 
     <!-- used in btn_default_custom.xml -->
     <color name="light_grey">#D7D7D7</color>
@@ -62,6 +74,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="colorPrimaryDark_light">#FF546E7A</color>
     <!-- material_blue_grey_800 -->
     <color name="colorAccent_light">#37474F</color>
+    <color name="colorCheckbox_light">#009688</color>
 
     <!-- material_blue_grey_800 -->
     <color name="colorPrimary_dark">#37474F</color>
@@ -70,6 +83,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="colorPrimaryDark_dark">#FF263238</color>
     <!-- material_blue_grey_400 -->
     <color name="colorAccent_dark">#78909C</color>
+    <color name="colorCheckbox_dark">#80cbc4</color>
 
     <!-- the colors of magic -->
     <color name="icon_white">#fffafafa</color>
@@ -77,6 +91,17 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="icon_black">#ff616161</color>
     <color name="icon_red">#fff44336</color>
     <color name="icon_green">#ff4caf50</color>
+    <color name="icon_colorless">#ff9c948a</color>
+
+    <!-- magic glyph colors -->
+    <color name="glyph_white">#fff8f6d8</color>
+    <color name="glyph_blue">#ffc1d7e9</color>
+    <color name="glyph_black">#ffbab1ab</color>
+    <color name="glyph_red">#ffe49977</color>
+    <color name="glyph_green">#ffa3c095</color>
+    <color name="glyph_grey">#ffcac5c0</color>
+    <color name="glyph_foreground">#ff0d0f0f</color>
 
     <color name="hyperlink_text">#0077CC</color>
+
 </resources>

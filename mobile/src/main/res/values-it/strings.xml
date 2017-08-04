@@ -495,8 +495,7 @@ Buona fortuna, e divertiti!
 <string name="decklist_artifacts">"Artefatti"</string>
 <string name="decklist_lands">"Terre"</string>
 <string name="decklist_edit_dialog_title_end">"Nel grimorio"</string>
-<string name="deck_save_dialog_title">"Salva grimorio"</string>
-<string name="decklist_delete">"Elimina grimorio"</string>
+    <string name="decklist_delete">"Elimina grimorio"</string>
 <string name="decklist_save">"Salva grimorio"</string>
 <string name="decklist_load">"Carica grimorio"</string>
 <string name="decklist_clear">"Azzera grimorio"</string>

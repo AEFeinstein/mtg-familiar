@@ -20,37 +20,37 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/trader_menu_clear"
-        android:icon="?attr/ic_menu_close"
+        android:icon="@drawable/ic_menu_close"
         android:title="@string/trader_clear_fields"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_settings"
-        android:icon="?attr/ic_menu_import_export"
+        android:icon="@drawable/ic_menu_import_export"
         android:title="@string/trader_set_pricing"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_save"
-        android:icon="?attr/ic_menu_save"
+        android:icon="@drawable/ic_menu_save"
         android:title="@string/trader_save"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_load"
-        android:icon="?attr/ic_menu_folder_open"
+        android:icon="@drawable/ic_menu_folder_open"
         android:title="@string/trader_load"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_delete"
-        android:icon="?attr/ic_menu_delete"
+        android:icon="@drawable/ic_menu_delete"
         android:title="@string/trader_delete"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_sort"
-        android:icon="?attr/ic_menu_sort"
+        android:icon="@drawable/ic_menu_sort"
         android:title="@string/trader_sort"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/trader_menu_share"
-        android:icon="?attr/ic_menu_share"
+        android:icon="@drawable/ic_menu_share"
         android:title="@string/trader_share"
         app:showAsAction="ifRoom" />
 

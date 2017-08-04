@@ -299,7 +299,7 @@ Mana pool will also be cleared."</string>
 <string name="trader_share">"Share Trade"</string>
 <string name="trade_share_title">"Trade"</string>
 
-<!-- Wishlist activity -->
+    <!-- Wishlist activity -->
 <string name="wishlist_name">"Name"</string>
 <string name="wishlist_add_card">"Add"</string>
 <string name="wishlist_clear_fields">"Clear Fields"</string>
@@ -318,7 +318,7 @@ Mana pool will also be cleared."</string>
 <string name="wishlist_ascending">"Ascending"</string>
 <string name="wishlist_sort_by">"Sort By"</string>
 
-<!-- Round timer activity -->
+    <!-- Round timer activity -->
 <string name="timer_how_long">"How long is the round?"</string>
 <string name="timer_start">"Start Timer"</string>
 <string name="timer_cancel">"Cancel Timer"</string>
@@ -447,6 +447,8 @@ Good luck, and have fun!
 <string name="pref_wishlist_totals_summary">"Display total price summary in the wishlist"</string>
 <string name="pref_wishlist_prices_title">"Show Card Prices"</string>
 <string name="pref_wishlist_prices_summary">"Display each card price in the wishlist"</string>
+<string name="pref_cat_decklist">"Decklist"</string>
+<string name="pref_decklist_totals_summary">"Display total price in the deck editor"</string>
 <string name="pref_English">"English"</string>
 <string name="pref_French">"French"</string>
 <string name="pref_Italian">"Italian"</string>
@@ -455,6 +457,15 @@ Good luck, and have fun!
 <string name="pref_Russian">"Russian"</string>
 <string name="pref_German">"German"</string>
 <string name="pref_Polish">"Polish"</string>
+<string name="pref_tap_symbol_title">"Tap Symbol"</string>
+<string name="pref_tap_symbol_summary">"Which tap symbol to use in display"</string>
+<string name="pref_tap_symbol_modern">"Eighth Edition"</string>
+<string name="pref_tap_symbol_old">"Fourth Edition"</string>
+<string name="pref_tap_symbol_older">"Revised Edition"</string>
+<string name="pref_white_symbol_title">"White Mana Symbol"</string>
+<string name="pref_white_symbol_summary">"Which white mana symbol to use in display"</string>
+<string name="pref_white_symbol_modern">"Ice Age"</string>
+<string name="pref_white_symbol_old">"Limited Edition Alpha"</string>
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_1_day">"1 day"</string>
@@ -484,6 +495,9 @@ Good luck, and have fun!
 <string name="pref_language">"Language"</string>
 <string name="pref_set_language">"Set a different language"</string>
 <string name="pref_use_sound_instead_of_tts">Use sound instead of TTS</string>
+<string name="pref_cat_list_general">General Lists</string>
+<string name="pref_undo_timeout_seconds_summary">The number of seconds an item will stay in the undo state before it is deleted</string>
+<string name="pref_undo_timeout_seconds_title">Undo Timeout</string>
 
 <!-- Judge's Corner -->
 <string name="judges_corner_MTR">"MTR"</string>
@@ -495,6 +509,11 @@ Good luck, and have fun!
 <string name="deck_counter_reset">"Reset"</string>
 <string name="deck_counter_undo">"Undo"</string>
 
+<!-- General Card List -->
+<string name="cardlist_undo">"undo"</string>
+<string name="cardlist_delete_selected">"Delete Selected Items"</string>
+<string name="cardlist_item_deleted">"Removed"</string>
+
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Sideboard"</string>
 <string name="decklist_creatures">"Creatures"</string>
@@ -503,7 +522,6 @@ Good luck, and have fun!
 <string name="decklist_artifacts">"Artifacts"</string>
 <string name="decklist_lands">"Lands"</string>
 <string name="decklist_edit_dialog_title_end">"in the deck"</string>
-<string name="deck_save_dialog_title">"Save Deck"</string>
 <string name="decklist_delete">"Delete Deck"</string>
 <string name="decklist_save">"Save Deck"</string>
 <string name="decklist_load">"Load Deck"</string>
@@ -519,6 +537,9 @@ Good luck, and have fun!
 <string name="decklist_others">"Others"</string>
 <string name="decklist_unnamed_deck">"Unnamed Deck"</string>
 <string name="decklist_cards">"cards"</string>
+<string name="decklist_import_to_wishlist">"Import Selected to Wishlist"</string>
+<string name="decklist_save_as">"Save Deck As"</string>
+<string name="decklist_saved_toast">"Deck %1$s saved!"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Added a deckbuilder&lt;br&gt;
@@ -539,4 +560,5 @@ Good luck, and have fun!
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovak"</string>
+
 </resources>

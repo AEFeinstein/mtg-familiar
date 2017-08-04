@@ -3,8 +3,10 @@ package com.gelakinetic.mtgfam.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
+import android.support.annotation.DrawableRes;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
@@ -571,6 +573,31 @@ public class PreferenceAdapter {
                         SortOrderDialogFragment.KEY_PRICE + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_DESC
         );
+    }
+
+    public synchronized @DrawableRes int getTapSymbol() {
+        return context.getResources().getIdentifier(
+                this.prefs.getString(context.getString(R.string.key_tap_symbol), "glyph_tap"),
+                "drawable",
+                context.getPackageName()
+        );
+    }
+
+    public synchronized @DrawableRes int getWhiteSymbol() {
+        return context.getResources().getIdentifier(
+                this.prefs.getString(context.getString(R.string.key_white_symbol), "glyph_w"),
+                "drawable",
+                context.getPackageName()
+        );
+    }
+
+    /* General list settings (trades, wishlist, decklist) */
+    public synchronized int getUndoTimeout() {
+        return this.prefs.getInt(context.getString(R.string.key_undoTimeout), 3) * 1000;
+    }
+
+    public boolean getShowTotalDecklistPrice() {
+        return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceDecklistPref), false);
     }
 
 }

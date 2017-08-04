@@ -20,32 +20,32 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/add_player"
-        android:icon="?attr/ic_menu_person_add"
+        android:icon="@drawable/ic_menu_person_add"
         android:title="@string/life_counter_add_player"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/remove_player"
-        android:icon="?attr/ic_menu_person_remove"
+        android:icon="@drawable/ic_menu_person_remove"
         android:title="@string/life_counter_remove_player"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/display_mode"
-        android:icon="?attr/ic_menu_grid"
+        android:icon="@drawable/ic_menu_grid"
         android:title="@string/life_counter_change_display"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/set_gathering"
-        android:icon="?attr/ic_menu_group"
+        android:icon="@drawable/ic_menu_group"
         android:title="@string/life_counter_set_gathering"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/edit_gatherings"
-        android:icon="?attr/ic_menu_group_add"
+        android:icon="@drawable/ic_menu_group_add"
         android:title="@string/life_counter_change_default_gathering"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/announce_life"
-        android:icon="?attr/ic_menu_volume_up"
+        android:icon="@drawable/ic_menu_volume_up"
         android:title="@string/life_counter_announce_life"
         app:showAsAction="ifRoom" />
 
