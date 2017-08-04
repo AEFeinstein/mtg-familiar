@@ -60,6 +60,7 @@ public class WishlistFragment extends FamiliarListFragment {
     /* The wishlist and adapter */
     public ArrayList<CompressedWishlistInfo> mCompressedWishlist;
     private View mTotalPriceDivider;
+    private int mOrderAddedIdx = 0;
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button
@@ -166,6 +167,14 @@ public class WishlistFragment extends FamiliarListFragment {
         return myFragmentView;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        /* unsort, then save the wishlist */
+        sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+        WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+    }
+
     /**
      * This function takes care of adding a card to the wishlist from this fragment. It makes sure that fields are
      * not null or have bad information.
@@ -197,7 +206,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 cwi.add(card);
             }
         } else {
-            mCompressedWishlist.add(new CompressedWishlistInfo(card));
+            mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
         }
 
         /* load the price */
@@ -205,9 +214,6 @@ public class WishlistFragment extends FamiliarListFragment {
 
         /* Sort the wishlist */
         sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
-
-        /* Save the wishlist */
-        WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
 
         /* Clean up for the next add */
         mNumberOfField.setText("1");
@@ -306,7 +312,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     if (mCompressedWishlist.contains(card)) {
                         mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
                     } else {
-                        mCompressedWishlist.add(new CompressedWishlistInfo(card));
+                        mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
                     }
                     /* Look up the new price */
                     if (mShowIndividualPrices || mShowTotalWishlistPrice) {
@@ -329,7 +335,9 @@ public class WishlistFragment extends FamiliarListFragment {
             CardDbAdapter.fillExtraWishlistData(mCompressedWishlist, database);
 
             if(cardNumberFixed) {
+                sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
                 WishlistHelpers.WriteCompressedWishlist(getContext(), mCompressedWishlist);
+                sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
             }
 
         } catch (FamiliarDbException e) {
@@ -764,12 +772,6 @@ public class WishlistFragment extends FamiliarListFragment {
                     holder.mWishlistSets.addView(setRow);
                 }
             }
-        }
-
-        @Override
-        public void remove(int position) {
-            super.remove(position);
-            WishlistHelpers.WriteCompressedWishlist(getContext(), mCompressedWishlist);
         }
 
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {

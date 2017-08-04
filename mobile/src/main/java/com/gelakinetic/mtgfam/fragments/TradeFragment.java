@@ -81,6 +81,8 @@ public class TradeFragment extends FamiliarListFragment {
 
     public String mCurrentTrade;
 
+    private int mOrderAddedIdx = 0;
+
     /**
      * Initialize the view and set up the button actions.
      *
@@ -153,22 +155,22 @@ public class TradeFragment extends FamiliarListFragment {
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(
                 new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                addCardToTrade(LEFT);
-            }
+                    @Override
+                    public void onClick(View v) {
+                        addCardToTrade(LEFT);
+                    }
 
-        });
+                });
 
         myFragmentView.findViewById(R.id.addCardRight).setOnClickListener(
                 new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                addCardToTrade(RIGHT);
-            }
+                    @Override
+                    public void onClick(View v) {
+                        addCardToTrade(RIGHT);
+                    }
 
-        });
+                });
 
         setUpCheckBoxClickListeners();
 
@@ -230,6 +232,7 @@ public class TradeFragment extends FamiliarListFragment {
         final boolean isFoil = mCheckboxFoil.isChecked();
 
         final MtgCard card = CardHelpers.makeMtgCard(getContext(), cardName, isFoil, numberOf);
+        card.setIndex(mOrderAddedIdx++);
 
         switch (side) {
             case LEFT: {
@@ -311,6 +314,9 @@ public class TradeFragment extends FamiliarListFragment {
     public void saveTrade(String tradeName) {
         FileOutputStream fos;
 
+        /* Revert to added-order before saving */
+        sortTrades(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+
         try {
             /* MODE_PRIVATE will create the file (or replace a file of the same name) */
             fos = this.getActivity().openFileOutput(tradeName, Context.MODE_PRIVATE);
@@ -330,6 +336,9 @@ public class TradeFragment extends FamiliarListFragment {
             ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_invalid_chars,
                     ToastWrapper.LENGTH_LONG).show();
         }
+
+        /* And resort to the expected order after saving */
+        sortTrades(getFamiliarActivity().mPreferenceAdapter.getTradeSortOrder());
     }
 
     /**
@@ -351,6 +360,7 @@ public class TradeFragment extends FamiliarListFragment {
             String line;
             while ((line = br.readLine()) != null) {
                 MtgCard card = MtgCard.fromTradeString(line, getActivity());
+                card.setIndex(mOrderAddedIdx++);
 
                 if (card.setName == null) {
                     handleFamiliarDbException(false);
@@ -737,7 +747,7 @@ public class TradeFragment extends FamiliarListFragment {
          * @param card1 One card to compare
          * @param card2 The other card to compare
          * @return an integer < 0 if card1 is less than card2, 0 if they are equal, and > 0 if card1
-         *         is greater than card2.
+         * is greater than card2.
          */
         @Override
         public int compare(MtgCard card1, MtgCard card2) {
@@ -778,6 +788,10 @@ public class TradeFragment extends FamiliarListFragment {
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
                             retVal = Double.compare(card1.price, card2.price);
+                            break;
+                        }
+                        case SortOrderDialogFragment.KEY_ORDER: {
+                            retVal = Double.compare(card1.getIndex(), card2.getIndex());
                             break;
                         }
                         default: {
