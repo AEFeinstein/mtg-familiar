@@ -29,9 +29,10 @@ import java.util.List;
 public class SortOrderDialogFragment extends FamiliarDialogFragment {
 
     public static final String SQL_ASC = "asc";
-    private static final String SQL_DESC = "desc";
+    public static final String SQL_DESC = "desc";
     public static final String SAVED_SORT_ORDER = "saved_sort_order";
     public static final String KEY_PRICE = "key_price";
+    public static final String KEY_ORDER = "key_order";
 
     @NotNull
     @Override
@@ -47,9 +48,12 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         /* Create an arraylist of all the sorting options */
         final ArrayList<SortOption> options = new ArrayList<>(6);
         String searchSortOrder = getArguments().getString(SAVED_SORT_ORDER);
+
         int idx = 0;
 
         if (searchSortOrder != null) {
+            boolean orderAdded = false;
+            boolean priceAdded = false;
             for (String option : searchSortOrder.split(",")) {
                 String key = option.split(" ")[0];
                 boolean ascending = option.split(" ")[1].equalsIgnoreCase(SQL_ASC);
@@ -86,9 +90,24 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     case KEY_PRICE: {
                         name = getResources().getString(R.string.wishlist_type_price);
+                        priceAdded = true;
+                        break;
+                    }
+                    case KEY_ORDER: {
+                        name = getResources().getString(R.string.wishlist_type_order);
+                        orderAdded = true;
+                        break;
                     }
                 }
                 options.add(new SortOption(name, ascending, key, idx++));
+            }
+
+            /* Sorting by order was added later, so if it's not in the given string and price is,
+             * which it is for wishlist and trade list, add order too.
+             */
+            if (priceAdded && !orderAdded) {
+                options.add(new SortOption(getResources().getString(R.string.wishlist_type_order),
+                        false, KEY_ORDER, idx++));
             }
         }
 

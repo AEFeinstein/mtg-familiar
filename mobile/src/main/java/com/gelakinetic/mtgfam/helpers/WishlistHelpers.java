@@ -1,29 +1,13 @@
 package com.gelakinetic.mtgfam.helpers;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.View;
 import android.util.Pair;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
-import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -34,7 +18,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.AVG_PRICE;
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.HIGH_PRICE;
@@ -99,7 +82,8 @@ public class WishlistHelpers {
 
     /**
      * Adds an item as a CompressedWishlistInfo to the wishlist
-     * @param context context that this is being called from
+     *
+     * @param context      context that this is being called from
      * @param wishlistInfo the CompressedWishlistInfo to add to the wishlist
      */
     public static void addItemToWishlist(final Context context, final CompressedWishlistInfo wishlistInfo) {
@@ -145,6 +129,7 @@ public class WishlistHelpers {
     public static ArrayList<MtgCard> ReadWishlist(Context mCtx) {
 
         ArrayList<MtgCard> lWishlist = new ArrayList<>();
+        int orderAddedIdx = 0;
 
         try {
             String line;
@@ -152,7 +137,9 @@ public class WishlistHelpers {
             try {
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
-                    lWishlist.add(MtgCard.fromWishlistString(line, mCtx));
+                    MtgCard card = MtgCard.fromWishlistString(line, mCtx);
+                    card.setIndex(orderAddedIdx++);
+                    lWishlist.add(card);
                 }
             } finally {
                 br.close();
@@ -260,13 +247,16 @@ public class WishlistHelpers {
      */
     public static class CompressedWishlistInfo extends CardHelpers.CompressedCardInfo {
 
+        int mIndex;
+
         /**
          * Constructor
          *
          * @param card The MtgCard which will be the base for this object
          */
-        public CompressedWishlistInfo(MtgCard card) {
+        public CompressedWishlistInfo(MtgCard card, int index) {
             super(card);
+            mIndex = index;
         }
 
         /**
@@ -324,6 +314,10 @@ public class WishlistHelpers {
                 }
             }
             return sumWish;
+        }
+
+        public int getIndex() {
+            return mIndex;
         }
     }
 
@@ -395,6 +389,10 @@ public class WishlistHelpers {
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
                             retVal = Double.compare(wish1.getTotalPrice(mPriceSetting), wish2.getTotalPrice(mPriceSetting));
+                            break;
+                        }
+                        case SortOrderDialogFragment.KEY_ORDER: {
+                            retVal = Integer.valueOf(wish1.getIndex()).compareTo(wish2.getIndex());
                             break;
                         }
                     }

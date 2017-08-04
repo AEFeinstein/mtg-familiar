@@ -314,6 +314,7 @@ Mana pool will also be cleared."</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Sort Wishlist"</string>
 <string name="wishlist_type_price">"Price"</string>
+<string name="wishlist_type_order">Order Added</string>
 <string name="wishlist_ascending">"Ascending"</string>
 <string name="wishlist_sort_by">"Sort By"</string>
 

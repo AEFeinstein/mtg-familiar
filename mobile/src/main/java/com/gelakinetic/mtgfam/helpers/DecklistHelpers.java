@@ -8,8 +8,6 @@ import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,7 +55,7 @@ public class DecklistHelpers {
      *
      * @param mCtx                A context to open the file and pop toasts with
      * @param mCompressedDecklist The decklist to write to the file
-     * @param fileName the filename for the decklist
+     * @param fileName            the filename for the decklist
      */
     public static void WriteCompressedDecklist(
             Context mCtx,
@@ -115,7 +113,7 @@ public class DecklistHelpers {
      * Read the decklist from a file and return it as an ArrayList<Pair<MtgCard, Boolean>>.
      *
      * @param mCtx A context to open the file and pop toasts with
-     * @return     The decklist in ArrayList<Pair> form
+     * @return The decklist in ArrayList<Pair> form
      */
     public static ArrayList<Pair<MtgCard, Boolean>> ReadDecklist(Context mCtx, String deckName) {
 
@@ -211,7 +209,8 @@ public class DecklistHelpers {
 
         /**
          * Constructor.
-         * @param card The MtgCard which will be the base for this object
+         *
+         * @param card        The MtgCard which will be the base for this object
          * @param isSideboard If the card is part of the sideboard or not
          */
         public CompressedDecklistInfo(MtgCard card, boolean isSideboard) {
@@ -220,7 +219,7 @@ public class DecklistHelpers {
         }
 
         public CompressedWishlistInfo convertToWishlist() {
-            final CompressedWishlistInfo wishlist = new CompressedWishlistInfo(this.mCard);
+            final CompressedWishlistInfo wishlist = new CompressedWishlistInfo(this.mCard, 0);
             wishlist.mInfo.clear();
             wishlist.mInfo.addAll(this.mInfo);
             return wishlist;
@@ -229,8 +228,9 @@ public class DecklistHelpers {
         /**
          * Check to see if two CompressedDecklistInfo objects are equivalent, or if this is
          * equivalent to an MtgCard object. The comparison is done based on the MtgCard's name.
+         *
          * @param o The object to compare to this one
-         * @return  true if the specified object is equal to this string, false otherwise
+         * @return true if the specified object is equal to this string, false otherwise
          */
         @Override
         public boolean equals(Object o) {
@@ -241,11 +241,11 @@ public class DecklistHelpers {
                         /* or is this card not null? */
                         || (mCard != null
                             /* and is that card not null? */
-                            && cdi.mCard != null
+                        && cdi.mCard != null
                             /* Are their names equal? */
-                            && mCard.mName.equals(cdi.mCard.mName)
+                        && mCard.mName.equals(cdi.mCard.mName)
                             /* Both have same sideboard status? */
-                            && mIsSideboard == cdi.mIsSideboard);
+                        && mIsSideboard == cdi.mIsSideboard);
             } else if (o instanceof MtgCard && mCard != null) {
                 return mCard.mName.equals(((MtgCard) o).mName);
             }
