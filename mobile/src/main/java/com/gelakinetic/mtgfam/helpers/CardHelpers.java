@@ -106,12 +106,14 @@ public class CardHelpers {
         final Map<String, String> targetCardNumberOfs;
         final Map<String, String> targetFoilCardNumberOfs;
 
+        // The wishlist dialog is shown both in the card view and the wishlist fragments
         final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(ctx, WishlistFragment.class);
+        final boolean isCardViewDialog = FragmentHelpers.isInstanceOf(ctx, CardViewPagerFragment.class);
 
         final String deckName;
         final String dialogText;
 
-        if (isWishlistDialog) {
+        if (isWishlistDialog || isCardViewDialog) {
             /* Read the wishlist */
             ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
             targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
@@ -216,7 +218,7 @@ public class CardHelpers {
 
                         ArrayList<Pair<MtgCard, Boolean>> list;
 
-                        if (isWishlistDialog) {
+                        if (isWishlistDialog || isCardViewDialog) {
                             /* Read the wishlist */
                             list = new ArrayList<>();
                             ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
@@ -274,7 +276,7 @@ public class CardHelpers {
 
                         }
 
-                        if (isWishlistDialog) {
+                        if (isWishlistDialog || isCardViewDialog) {
                             ArrayList<MtgCard> wishlist = new ArrayList<>();
                             /* Turn it back in to a plain ArrayList */
                             for (Pair<MtgCard, Boolean> card : list) {
