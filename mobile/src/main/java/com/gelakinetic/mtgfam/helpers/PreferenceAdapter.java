@@ -3,7 +3,6 @@ package com.gelakinetic.mtgfam.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
@@ -576,19 +575,31 @@ public class PreferenceAdapter {
     }
 
     public synchronized @DrawableRes int getTapSymbol() {
-        return context.getResources().getIdentifier(
-                this.prefs.getString(context.getString(R.string.key_tap_symbol), "glyph_tap"),
-                "drawable",
-                context.getPackageName()
-        );
+        String symbolResName = this.prefs.getString(context.getString(R.string.key_tap_symbol), null);
+        if(symbolResName == null) {
+            return R.drawable.glyph_tap;
+        }
+        else {
+            symbolResName = symbolResName.substring(symbolResName.lastIndexOf('/') + 1, symbolResName.lastIndexOf('.'));
+            return context.getResources().getIdentifier(
+                    symbolResName,
+                    "drawable",
+                    context.getPackageName());
+        }
     }
 
     public synchronized @DrawableRes int getWhiteSymbol() {
-        return context.getResources().getIdentifier(
-                this.prefs.getString(context.getString(R.string.key_white_symbol), "glyph_w"),
-                "drawable",
-                context.getPackageName()
-        );
+        String symbolResName = this.prefs.getString(context.getString(R.string.key_white_symbol), null);
+        if(symbolResName == null) {
+            return R.drawable.glyph_w;
+        }
+        else {
+            symbolResName = symbolResName.substring(symbolResName.lastIndexOf('/') + 1, symbolResName.lastIndexOf('.'));
+            return context.getResources().getIdentifier(
+                    symbolResName,
+                    "drawable",
+                    context.getPackageName());
+        }
     }
 
     /* General list settings (trades, wishlist, decklist) */

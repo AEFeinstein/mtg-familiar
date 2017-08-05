@@ -278,20 +278,20 @@
         <item>@string/pref_tap_symbol_older</item>
     </string-array>
 
-    <string-array name="pref_tap_symbols_drawable">
-        <item>glyph_tap</item>
-        <item>glyph_tap_old</item>
-        <item>glyph_tap_older</item>
-    </string-array>
+    <integer-array name="pref_tap_symbols_drawable">
+        <item>@drawable/glyph_tap</item>
+        <item>@drawable/glyph_tap_old</item>
+        <item>@drawable/glyph_tap_older</item>
+    </integer-array>
 
     <string-array name="pref_white_mana_symbols">
         <item>@string/pref_white_symbol_modern</item>
         <item>@string/pref_white_symbol_old</item>
     </string-array>
 
-    <string-array name="pref_white_mana_symbols_drawable">
-        <item>glyph_w</item>
-        <item>glyph_w_old</item>
-    </string-array>
+    <integer-array name="pref_white_mana_symbols_drawable">
+        <item>@drawable/glyph_w</item>
+        <item>@drawable/glyph_w_old</item>
+    </integer-array>
 
 </resources>

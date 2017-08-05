@@ -76,7 +76,7 @@
                 android:title="@string/pref_theme_title" />
 
             <ListPreference
-                android:defaultValue="glyph_tap"
+                android:defaultValue="@drawable/glyph_tap"
                 android:dialogTitle="@string/pref_tap_symbol_title"
                 android:entries="@array/pref_tap_symbols"
                 android:entryValues="@array/pref_tap_symbols_drawable"
@@ -85,7 +85,7 @@
                 android:title="@string/pref_tap_symbol_title" />
 
             <ListPreference
-                android:defaultValue="glyph_w"
+                android:defaultValue="@drawable/glyph_w"
                 android:dialogTitle="@string/pref_white_symbol_title"
                 android:entries="@array/pref_white_mana_symbols"
                 android:entryValues="@array/pref_white_mana_symbols_drawable"
