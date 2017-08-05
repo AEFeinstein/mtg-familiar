@@ -446,7 +446,7 @@ public class DecklistFragment extends FamiliarListFragment {
      * @param isSideboard if the card is in the sideboard
      * @throws IllegalStateException
      */
-    void showDialog(final int id, final String cardName, final boolean isSideboard)
+    private void showDialog(final int id, final String cardName, final boolean isSideboard)
             throws IllegalStateException {
 
         if (!this.isVisible()) {
@@ -697,7 +697,7 @@ public class DecklistFragment extends FamiliarListFragment {
     /**
      * Add together the price of all the cards in the wishlist and display it.
      */
-    public void sumTotalPrice() {
+    private void sumTotalPrice() {
 
         /* default */ float totalPrice = 0;
 
@@ -909,8 +909,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
 
-            private TextView mCardNumberOf;
-            private TextView mCardCost;
+            private final TextView mCardNumberOf;
+            private final TextView mCardCost;
 
             ViewHolder(ViewGroup view) {
 

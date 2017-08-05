@@ -57,23 +57,19 @@ public class TradeFragment extends FamiliarListFragment {
 
     /* Side constants */
     public static final int LEFT = 0;
-    public static final int RIGHT = 1;
+    private static final int RIGHT = 1;
     public static final int BOTH = 2;
 
     public static final String TRADE_EXTENSION = ".trade";
-    public static final String AUTOSAVE_NAME = "autosave";
+    private static final String AUTOSAVE_NAME = "autosave";
 
     /* Left List and Company */
     public ArrayList<MtgCard> mListLeft;
-    private RecyclerView mListViewLeft;
     public CardDataAdapter mListAdapterLeft;
-    private ItemTouchHelper leftItemTouchHelper;
 
     /* Right List and Company */
     public ArrayList<MtgCard> mListRight;
-    private RecyclerView mListViewRight;
     public CardDataAdapter mListAdapterRight;
-    private ItemTouchHelper rightItemTouchHelper;
 
     /* Total Price Views */
     private TextView mTotalPriceLeft;
@@ -121,23 +117,23 @@ public class TradeFragment extends FamiliarListFragment {
         /* Initialize the left list and company */
         mListLeft = new ArrayList<>();
         mListAdapterLeft = new CardDataAdapter(mListLeft, LEFT);
-        mListViewLeft = (RecyclerView) myFragmentView.findViewById(R.id.tradeListLeft);
+        RecyclerView mListViewLeft = (RecyclerView) myFragmentView.findViewById(R.id.tradeListLeft);
         mListViewLeft.setAdapter(mListAdapterLeft);
         mListViewLeft.setLayoutManager(new LinearLayoutManager(getContext()));
         ItemTouchHelper.SimpleCallback leftCallback =
                 new SelectableItemTouchHelper(mListAdapterLeft, ItemTouchHelper.LEFT);
-        leftItemTouchHelper = new ItemTouchHelper(leftCallback);
+        ItemTouchHelper leftItemTouchHelper = new ItemTouchHelper(leftCallback);
         leftItemTouchHelper.attachToRecyclerView(mListViewLeft);
 
         /* Initialize the right list and company */
         mListRight = new ArrayList<>();
         mListAdapterRight = new CardDataAdapter(mListRight, RIGHT);
-        mListViewRight = (RecyclerView) myFragmentView.findViewById(R.id.tradeListRight);
+        RecyclerView mListViewRight = (RecyclerView) myFragmentView.findViewById(R.id.tradeListRight);
         mListViewRight.setAdapter(mListAdapterRight);
         mListViewRight.setLayoutManager(new LinearLayoutManager(getContext()));
         ItemTouchHelper.SimpleCallback rightCallback =
                 new SelectableItemTouchHelper(mListAdapterRight, ItemTouchHelper.LEFT);
-        rightItemTouchHelper = new ItemTouchHelper(rightCallback);
+        ItemTouchHelper rightItemTouchHelper = new ItemTouchHelper(rightCallback);
         rightItemTouchHelper.attachToRecyclerView(mListViewRight);
 
         /* Set up the adapters so they know each other */
@@ -894,10 +890,10 @@ public class TradeFragment extends FamiliarListFragment {
 
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
 
-            private TextView mCardSet;
-            private TextView mCardNumberOf;
-            private ImageView mCardFoil;
-            private TextView mCardPrice;
+            private final TextView mCardSet;
+            private final TextView mCardNumberOf;
+            private final ImageView mCardFoil;
+            private final TextView mCardPrice;
 
             ViewHolder(ViewGroup view) {
 

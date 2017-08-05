@@ -46,7 +46,7 @@ public abstract class NumberButtonOnClickListener implements View.OnClickListene
         return null;
     }
 
-    public String getLabelText() {
+    private String getLabelText() {
         return "";
     }
 

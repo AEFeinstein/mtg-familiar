@@ -22,8 +22,6 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
-import org.apache.commons.lang3.time.DateUtils;
-
 import java.util.ArrayList;
 
 /**
@@ -189,7 +187,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         abstract class ViewHolder extends SelectableItemAdapter.ViewHolder {
 
-            TextView mCardName;
+            final TextView mCardName;
 
             ViewHolder(ViewGroup view, @LayoutRes final int layoutRowId) {
                 super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));

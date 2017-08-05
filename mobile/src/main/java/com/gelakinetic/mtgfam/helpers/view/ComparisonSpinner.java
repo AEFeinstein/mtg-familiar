@@ -14,10 +14,10 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
 
 public class ComparisonSpinner extends android.support.v7.widget.AppCompatSpinner {
-    private final ComparisonAdapter adapter = new ComparisonAdapter();
 
     public ComparisonSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
+        ComparisonAdapter adapter = new ComparisonAdapter();
         this.setAdapter(adapter);
     }
 

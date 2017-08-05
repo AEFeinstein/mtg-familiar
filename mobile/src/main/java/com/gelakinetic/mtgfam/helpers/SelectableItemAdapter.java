@@ -20,13 +20,13 @@ import java.util.List;
 public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.ViewHolder>
         extends RecyclerView.Adapter<VH> {
 
-    protected List<T> items;
+    protected final List<T> items;
 
     private boolean inSelectMode;
-    protected SparseBooleanArray selectedItems;
+    protected final SparseBooleanArray selectedItems;
 
-    protected Handler handler;
-    protected SparseArray<Runnable> pendingRunnables;
+    protected final Handler handler;
+    protected final SparseArray<Runnable> pendingRunnables;
 
     protected final int pendingTimeout;
 

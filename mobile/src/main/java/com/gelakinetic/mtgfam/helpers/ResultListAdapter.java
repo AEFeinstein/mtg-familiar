@@ -45,7 +45,6 @@ public class ResultListAdapter extends SimpleCursorAdapter {
     private final int[] mTo;
     private final ImageGetter mImgGetter;
     private final Resources.Theme mTheme;
-    private final Resources mResources;
 
     /**
      * Standard Constructor.
@@ -62,7 +61,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
         super(context, R.layout.result_list_card_row, cursor, from, to, 0);
         this.mFrom = from;
         this.mTo = to;
-        this.mResources = context.getResources();
+        Resources mResources = context.getResources();
         this.mTheme = context.getTheme();
         this.mImgGetter = ImageGetterHelper.GlyphGetter(context);
     }

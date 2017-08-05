@@ -247,7 +247,7 @@ public class WishlistHelpers {
      */
     public static class CompressedWishlistInfo extends CardHelpers.CompressedCardInfo {
 
-        int mIndex;
+        final int mIndex;
 
         /**
          * Constructor

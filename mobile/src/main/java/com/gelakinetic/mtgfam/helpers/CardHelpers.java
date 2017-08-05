@@ -762,10 +762,8 @@ public class CardHelpers {
             cardCursor.close();
             /* return our made card! */
             return card;
-        } catch (FamiliarDbException fde) {
+        } catch (FamiliarDbException | NumberFormatException fde) {
             /* todo: handle this */
-        } catch (NumberFormatException nfe) {
-            /* eat it */
         }
         DatabaseManager.getInstance(activity, false).closeDatabase(false);
         return null;

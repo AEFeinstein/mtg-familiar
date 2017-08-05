@@ -72,8 +72,8 @@ public class SearchViewFragment extends FamiliarFragment {
     private static final String SAVED_FORMAT_KEY = "SAVED_FORMAT_KEY";
 
     /* Spinner Data Structures */
-    public String[] mSetNames;
-    public int[] mSetCheckedIndices;
+    private String[] mSetNames;
+    private int[] mSetCheckedIndices;
     private String[] mSetSymbols;
     public String[] mFormatNames;
     private char[] mRarityCodes;

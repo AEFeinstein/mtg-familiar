@@ -168,7 +168,7 @@ public class CardViewFragment extends FamiliarFragment {
     public String mSetName;
 
     /* Foreign name translations */
-    public ArrayList<Card.ForeignPrinting> mTranslatedNames = new ArrayList<>();
+    public final ArrayList<Card.ForeignPrinting> mTranslatedNames = new ArrayList<>();
 
     /**
      * Kill any AsyncTask if it is still running

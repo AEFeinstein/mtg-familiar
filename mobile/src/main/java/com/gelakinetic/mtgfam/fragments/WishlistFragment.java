@@ -777,15 +777,15 @@ public class WishlistFragment extends FamiliarListFragment {
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
 
             /* Card Information */
-            TextView mCardType;
-            TextView mCardText;
-            TextView mCardPower;
-            TextView mCardSlash;
-            TextView mCardToughness;
-            TextView mCardCost;
+            final TextView mCardType;
+            final TextView mCardText;
+            final TextView mCardPower;
+            final TextView mCardSlash;
+            final TextView mCardToughness;
+            final TextView mCardCost;
 
             /* For adding individual wishlist sets */
-            LinearLayout mWishlistSets;
+            final LinearLayout mWishlistSets;
 
             ViewHolder(ViewGroup view) {
                 super(view, R.layout.result_list_card_row);
