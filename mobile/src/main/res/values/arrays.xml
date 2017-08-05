@@ -247,16 +247,6 @@
         <item>@string/decklist_others</item>
     </string-array>
 
-    <string-array name="card_types">
-        <item>@string/card_type_creature</item>
-        <item>@string/card_type_planeswalker</item>
-        <item>@string/card_type_instant</item>
-        <item>@string/card_type_sorcery</item>
-        <item>@string/card_type_artifact</item>
-        <item>@string/card_type_enchantment</item>
-        <item>@string/card_type_land</item>
-    </string-array>
-
     <string-array name="card_types_extra">
         <item>@string/card_type_creature</item>
         <item>@string/card_type_planeswalker</item>

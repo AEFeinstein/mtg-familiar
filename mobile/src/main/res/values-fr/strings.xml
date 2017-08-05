@@ -529,9 +529,6 @@ Bonne chance, et bon jeu!
 <string name="pref_Chinese_trad">"Chinois Traditionnel"</string>
 <string name="pref_Korean">"Coréen"</string>
 
-<!-- There is an {x} mana symbol after this phrase, so the English reads as "Cost contains {x}" -->
-<string name="search_hasManaX">"Coût contient "</string>
-
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovaque"</string>
 </resources>
