@@ -100,7 +100,8 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <color name="glyph_red">#ffe49977</color>
     <color name="glyph_green">#ffa3c095</color>
     <color name="glyph_grey">#ffcac5c0</color>
-    <color name="glyph_foreground">#ff0d0f0f</color>
+    <color name="glyph_foreground">#ff000000</color>
+    <color name="glyph_orange">#ffd28a5a</color>
 
     <color name="hyperlink_text">#0077CC</color>
 
