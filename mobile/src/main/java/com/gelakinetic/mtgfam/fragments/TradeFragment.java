@@ -79,7 +79,7 @@ public class TradeFragment extends FamiliarListFragment {
     private TextView mTotalPriceLeft;
     private TextView mTotalPriceRight;
 
-    public String mCurrentTrade;
+    public String mCurrentTrade = "";
 
     private int mOrderAddedIdx = 0;
 
