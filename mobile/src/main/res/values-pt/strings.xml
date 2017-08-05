@@ -231,10 +231,14 @@ Reserva de mana também serão apagados."</string>
 <string name="life_counter_Normal">"Normal"</string>
 <string name="life_counter_commander_cast">"Custo do Commander"</string>
 <string name="life_counter_default_name">"Jogador"</string>
-<string name="life_counter_spoken_life">"%1$s tem %2$d de vida."</string>
-<string name="life_counter_spoken_poison">"%1$s tem %2$d contadores de veneno."</string>
-<string name="life_counter_spoken_life_singular">"%1$s tem %2$d de vida."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s tem %2$d contador de veneno."</string>
+<plurals name="life_counter_spoken_life">
+    <item quantity="one">"%1$s tem %2$d de vida."</item>
+    <item quantity="other">"%1$s tem %2$d de vida."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+    <item quantity="one">"%1$s tem %2$d contador de veneno."</item>
+    <item quantity="other">"%1$s tem %2$d contadores de veneno."</item>
+</plurals>
 <string name="life_counter_over_9000">"acima de 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Nenhum tipo de jogo."</string>
 <string name="life_counter_edh_dialog_title">"%1$s's de dano Commander"</string>

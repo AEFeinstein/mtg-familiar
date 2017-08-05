@@ -851,30 +851,17 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                         if (p.mLife > 9000) {
                             /* If the life is over 9000, split the string on an IMPROBABLE_NUMBER, and insert a call to
                                the m9000Player */
-                            String tmp = String
-                                    .format(getString(R.string.life_counter_spoken_life), p.mName, IMPROBABLE_NUMBER);
+                            String tmp = getResources().getQuantityString(R.plurals.life_counter_spoken_life, IMPROBABLE_NUMBER, p.mName, IMPROBABLE_NUMBER);
                             String parts[] = tmp.split(Integer.toString(IMPROBABLE_NUMBER));
                             mVocalizations.add(parts[0]);
                             mVocalizations.add(OVER_9000_KEY);
                             mVocalizations.add(parts[1]);
                         } else {
-                            if (p.mLife == 1) {
-                                mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life_singular),
-                                        p.mName, p.mLife));
-                            } else {
-                                mVocalizations.add(String.format(getString(R.string.life_counter_spoken_life),
-                                        p.mName, p.mLife));
-                            }
+                            mVocalizations.add(getResources().getQuantityString(R.plurals.life_counter_spoken_life, p.mLife, p.mName, p.mLife));
                         }
                         break;
                     case STAT_POISON:
-                        if (p.mPoison == 1) {
-                            mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison_singular),
-                                    p.mName, p.mPoison));
-                        } else {
-                            mVocalizations.add(String.format(getString(R.string.life_counter_spoken_poison),
-                                    p.mName, p.mPoison));
-                        }
+                        mVocalizations.add(getResources().getQuantityString(R.plurals.life_counter_spoken_poison, p.mPoison, p.mName, p.mPoison));
                         break;
                 }
 

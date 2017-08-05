@@ -146,6 +146,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <plurals name="search_toast_results">
 <item quantity="one">"Znaleziono %1$d wynik wyszukiwania."</item>
 <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
+<item quantity="many">"Znaleziono %1$d wyników wyszukiwania."</item>
 <item quantity="other">"Znaleziono %1$d wyników wyszukiwania."</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
@@ -233,10 +234,18 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="life_counter_Normal">"Zwykły"</string>
 <string name="life_counter_commander_cast">"Wywołania Commandera"</string>
 <string name="life_counter_default_name">"Gracz"</string>
-<string name="life_counter_spoken_life">"%1$s ma %2$d życia."</string>
-<string name="life_counter_spoken_poison">"%1$s ma %2$d znaczników trucizny."</string>
-<string name="life_counter_spoken_life_singular">"%1$s ma %2$d życia."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s ma %2$d znacznik trucizny."</string>
+<plurals name="life_counter_spoken_life">
+    <item quantity="one">"%1$s ma %2$d życia."</item>
+    <item quantity="few">"%1$s ma %2$d życia."</item>
+    <item quantity="many">"%1$s ma %2$d życia."</item>
+    <item quantity="other">"%1$s ma %2$d życia."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+    <item quantity="one">"%1$s ma %2$d znacznik trucizny."</item>
+    <item quantity="few">"%1$s ma %2$d znaczników trucizny."</item>
+    <item quantity="many">"%1$s ma %2$d znaczników trucizny."</item>
+    <item quantity="other">"%1$s ma %2$d znaczników trucizny."</item>
+</plurals>
 <string name="life_counter_over_9000">"ponad 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Takie pojedynki nie istnieją."</string>
 <string name="life_counter_edh_dialog_title">"Obrażenia od %s Commandera"</string>

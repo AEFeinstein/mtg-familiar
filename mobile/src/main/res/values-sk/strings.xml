@@ -153,7 +153,6 @@ For 2-4:   %1$d nájdené karty. -->
 <plurals name="search_toast_results">
 <item quantity="one">"%1$d nájdená karta"</item>
 <item quantity="few">"%1$d nájdené karty"</item>
-<item quantity="many">"%1$d nájdených kariet"</item>
 <item quantity="other">"%1$d nájdených kariet"</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nepodarilo sa uložiť možnosti vyhľadávania."</string>
@@ -241,10 +240,16 @@ Manapool bude tiež vymazaný."</string>
 <string name="life_counter_Normal">"Normálny"</string>
 <string name="life_counter_commander_cast">"Počet zahraní generála"</string>
 <string name="life_counter_default_name">"Hráč"</string>
-<string name="life_counter_spoken_life">"%1$s má %2$d životov.␣"</string>
-<string name="life_counter_spoken_poison">"%1$s má %2$d poison žetónov.␣"</string>
-<string name="life_counter_spoken_life_singular">"%1$s má %2$d životov.␣"</string>
-<string name="life_counter_spoken_poison_singular">"%1$s má %2$d poison žetónov.␣"</string>
+<plurals name="life_counter_spoken_life">
+    <item quantity="one">"%1$s má %2$d životov."</item>
+    <item quantity="few">"%1$s má %2$d životov."</item>
+    <item quantity="other">"%1$s má %2$d životov."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+    <item quantity="one">"%1$s má %2$d poison žetónov."</item>
+    <item quantity="few">"%1$s má %2$d poison žetónov."</item>
+    <item quantity="other">"%1$s má %2$d poison žetónov."</item>
+</plurals>
 <string name="life_counter_over_9000">"nad 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Žiadne stretnutia neexistujú."</string>
 <string name="life_counter_edh_dialog_title">"Zranenie generálom od hráča %1$s"</string>

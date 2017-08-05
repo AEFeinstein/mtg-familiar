@@ -248,10 +248,14 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="life_counter_Normal">"Normal"</string>
 <string name="life_counter_commander_cast">"Commander-Kosten"</string>
 <string name="life_counter_default_name">"Spieler"</string>
-<string name="life_counter_spoken_life">"%1$s hat %2$d Lebenspunkte."</string>
-<string name="life_counter_spoken_poison">"%1$s hat %2$d Giftmarken."</string>
-<string name="life_counter_spoken_life_singular">"%1$s hat %2$d Lebenspunkt."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s hat %2$d Giftmarke."</string>
+<plurals name="life_counter_spoken_life">
+    <item quantity="one">"%1$s hat %2$d Lebenspunkt."</item>
+    <item quantity="other">"%1$s hat %2$d Lebenspunkte."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+    <item quantity="one">"%1$s hat %2$d Giftmarke."</item>
+    <item quantity="other">"%1$s hat %2$d Giftmarken."</item>
+</plurals>
 <string name="life_counter_over_9000">"über 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Keine Spiele vorhanden."</string>
 <string name="life_counter_edh_dialog_title">"Schaden von %1$ss Commander"</string>

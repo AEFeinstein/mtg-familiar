@@ -231,10 +231,14 @@ La réserve de mana sera aussi vidée."</string>
 <string name="life_counter_Normal">"Normal"</string>
 <string name="life_counter_commander_cast">"Coût du Commander"</string>
 <string name="life_counter_default_name">"Joueur"</string>
-<string name="life_counter_spoken_life">"%1$s a %2$d points de vie."</string>
-<string name="life_counter_spoken_poison">"%1$s a %2$d marqueurs poison."</string>
-<string name="life_counter_spoken_life_singular">"%1$s a %2$d point de vie."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s a %2$d marqueur poison."</string>
+<plurals name="life_counter_spoken_life">
+    <item quantity="one">"%1$s a %2$d point de vie."</item>
+    <item quantity="other">"%1$s a %2$d points de vie."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+    <item quantity="one">"%1$s a %2$d marqueur poison."</item>
+    <item quantity="other">"%1$s a %2$d marqueurs poison."</item>
+</plurals>
 <string name="life_counter_over_9000">"plus de 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Aucun type de match n'existe."</string>
 <string name="life_counter_edh_dialog_title">"Dégâts du Commander de %s"</string>

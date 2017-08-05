@@ -231,10 +231,14 @@ La reserva de maná también será vaciada."</string>
 <string name="life_counter_Normal">"Normal"</string>
 <string name="life_counter_commander_cast">"Coste de Commander"</string>
 <string name="life_counter_default_name">"Jugador"</string>
-<string name="life_counter_spoken_life">"%1$s tiene %2$d vidas."</string>
-<string name="life_counter_spoken_poison">"%1$s tiene %2$d contadores de veneno."</string>
-<string name="life_counter_spoken_life_singular">"%1$s tiene %2$d vida."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s tiene %2$d contador de veneno."</string>
+<plurals name="life_counter_spoken_life">
+    <item quantity="one">"%1$s tiene %2$d vida."</item>
+    <item quantity="other">"%1$s tiene %2$d vidas."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+    <item quantity="one">"%1$s tiene %2$d contador de veneno."</item>
+    <item quantity="other">"%1$s tiene %2$d contadores de veneno."</item>
+</plurals>
 <string name="life_counter_over_9000">"más de 9000"</string>
 <string name="life_counter_no_gatherings_exist">"No existen tipos de partida."</string>
 <string name="life_counter_edh_dialog_title">"Daño del Commander de %s"</string>

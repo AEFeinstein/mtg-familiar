@@ -233,10 +233,14 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="life_counter_Normal">"Normale"</string>
 <string name="life_counter_commander_cast">"Costo del Comandante"</string>
 <string name="life_counter_default_name">"Giocatore"</string>
-<string name="life_counter_spoken_life">"%1$s ha %2$d punti vita."</string>
-<string name="life_counter_spoken_poison">"%1$s ha %2$d contatori veleno."</string>
-<string name="life_counter_spoken_life_singular">"%1$s ha %2$d punti vita."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s ha %2$d contatori veleno."</string>
+<plurals name="life_counter_spoken_life">
+    <item quantity="one">"%1$s ha %2$d punti vita."</item>
+    <item quantity="other">"%1$s ha %2$d punti vita."</item>
+</plurals>
+<plurals name="life_counter_spoken_poison">
+    <item quantity="one">"%1$s ha %2$d contatori veleno."</item>
+    <item quantity="other">"%1$s ha %2$d contatori veleno."</item>
+</plurals>
 <string name="life_counter_over_9000">"più di 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Non ci sono modalità di gioco."</string>
 <string name="life_counter_edh_dialog_title">"Danno dal comandante di %1$s"</string>
