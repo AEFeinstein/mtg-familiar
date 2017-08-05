@@ -42,7 +42,7 @@
                     android:hint="@string/search_name"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:singleLine="true">
+                    android:maxLines="1">
 
                     <requestFocus />
                 </AutoCompleteTextView>
@@ -106,7 +106,7 @@
                 android:hint="@string/search_text"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:singleLine="true" />
+                android:maxLines="1" />
 
             <!-- Spinner below by Reuben Kriegel -->
 

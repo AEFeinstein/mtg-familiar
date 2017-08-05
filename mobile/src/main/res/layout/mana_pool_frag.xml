@@ -13,7 +13,8 @@
 --><!-- Not useless, it centers the view vertically --><!--suppress AndroidLintUselessParent -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -47,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/glyph_w" />
+                    app:srcCompat="@drawable/glyph_w" />
 
                 <TextView
                     android:id="@+id/white_readout"
@@ -87,7 +88,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
 
-                    android:src="@drawable/glyph_u" />
+                    app:srcCompat="@drawable/glyph_u" />
 
                 <TextView
                     android:id="@+id/blue_readout"
@@ -126,7 +127,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/glyph_b" />
+                    app:srcCompat="@drawable/glyph_b" />
 
                 <TextView
                     android:id="@+id/black_readout"
@@ -165,7 +166,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/glyph_r" />
+                    app:srcCompat="@drawable/glyph_r" />
 
                 <TextView
                     android:id="@+id/red_readout"
@@ -204,7 +205,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/glyph_g" />
+                    app:srcCompat="@drawable/glyph_g" />
 
                 <TextView
                     android:id="@+id/green_readout"
@@ -243,7 +244,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/glyph_x" />
+                    app:srcCompat="@drawable/glyph_c" />
 
                 <TextView
                     android:id="@+id/colorless_readout"
@@ -281,7 +282,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/glyph_spell" />
+                    app:srcCompat="@drawable/glyph_spell" />
 
                 <TextView
                     android:id="@+id/spell_readout"

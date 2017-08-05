@@ -71,7 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:src="@drawable/ic_drawer_deck"
+        app:srcCompat="@drawable/ic_drawer_deck"
         android:tint="@color/drawer_item_icon_light" />
 
     <ImageButton
