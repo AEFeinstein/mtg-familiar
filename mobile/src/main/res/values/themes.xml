@@ -47,8 +47,6 @@
 
         <item name="button">@style/button_light</item>
 
-        <item name="camera_button">@drawable/camera_button_light</item>
-
         <!-- Use light theme for dialogs -->
         <item name="md_dark_theme">false</item>
     </style>
@@ -97,8 +95,6 @@
         <item name="num_picker_style">@style/BetterPickersDialogFragment</item>
 
         <item name="button">@style/button_dark</item>
-
-        <item name="camera_button">@drawable/camera_button_dark</item>
 
         <!-- Use dark theme for dialogs -->
         <item name="md_dark_theme">true</item>

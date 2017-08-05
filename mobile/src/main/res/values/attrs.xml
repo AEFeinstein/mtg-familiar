@@ -47,9 +47,6 @@
         <!-- to style the hms time picker -->
         <attr name="num_picker_style" format="reference" />
 
-        <!-- Camera button -->
-        <attr name="camera_button" format="reference" />
-
     </declare-styleable>
 
 </resources>
