@@ -111,13 +111,13 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
 
     public ArrayList<T> getSelectedItems() {
 
-        final ArrayList<T> selectedItems = new ArrayList<>();
-        for (int i = 0; i < selectedItems.size(); i++) {
+        ArrayList<T> selectedItemsLocal = new ArrayList<>();
+        for (int i = 0; i < this.selectedItems.size(); i++) {
             if (this.selectedItems.valueAt(i)) {
-                selectedItems.add(items.get(this.selectedItems.keyAt(i)));
+                selectedItemsLocal.add(items.get(this.selectedItems.keyAt(i)));
             }
         }
-        return selectedItems;
+        return selectedItemsLocal;
 
     }
 
