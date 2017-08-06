@@ -147,7 +147,7 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-    <!-- MAKE SURE THAT IF YOU ADD A FRAGMENT HERE, ALSO ADD IT TO THE WIDGET buttonResources and intents -->
+    <!-- MAKE SURE THAT IF YOU ADD A FRAGMENT HERE, ALSO ADD IT TO THE widgetEntries[] in MTGFamiliarAppWidgetProvider.java -->
     <string-array name="default_fragment_array_entries">
         <item>@string/main_card_search</item>
         <item>@string/main_life_counter</item>

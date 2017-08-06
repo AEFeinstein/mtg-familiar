@@ -6,8 +6,12 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -21,37 +25,33 @@ import java.util.Set;
  */
 public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
-    /* An array of resource IDs for the buttons in the widget. Must stay in order with intents[] below, and
-       R.array.default_fragment_array_entries in arrays.xml */
-    private static final int[] buttonResources = {
-            R.id.widget_search,
-            R.id.widget_life,
-            R.id.widget_mana,
-            R.id.widget_dice,
-            R.id.widget_trade,
-            R.id.widget_wish,
-            R.id.widget_deck,
-            R.id.widget_timer,
-            R.id.widget_rules,
-            R.id.widget_mojhosto,
-            R.id.widget_judge,
-            R.id.widget_profile};
+    private static class WidgetEntry {
+        int buttonResource;
+        int vectorResource;
+        String intentAction;
 
-    /* An array of String intents for the buttons in the widget. Must stay in order with buttonResources[] above, and
-       R.array.default_fragment_array_entries in arrays.xml */
-    private static final String intents[] = {
-            FamiliarActivity.ACTION_CARD_SEARCH,
-            FamiliarActivity.ACTION_LIFE,
-            FamiliarActivity.ACTION_MANA,
-            FamiliarActivity.ACTION_DICE,
-            FamiliarActivity.ACTION_TRADE,
-            FamiliarActivity.ACTION_WISH,
-            FamiliarActivity.ACTION_DECKLIST,
-            FamiliarActivity.ACTION_ROUND_TIMER,
-            FamiliarActivity.ACTION_RULES,
-            FamiliarActivity.ACTION_MOJHOSTO,
-            FamiliarActivity.ACTION_JUDGE,
-            FamiliarActivity.ACTION_PROFILE};
+        WidgetEntry(int btnRes, int vecRes, String intent) {
+            this.buttonResource = btnRes;
+            this.vectorResource = vecRes;
+            this.intentAction = intent;
+        }
+    }
+
+    private static final WidgetEntry[] widgetEntries = {
+            new WidgetEntry(R.id.widget_search, R.drawable.ic_drawer_search, FamiliarActivity.ACTION_CARD_SEARCH),
+            new WidgetEntry(R.id.widget_life, R.drawable.ic_drawer_life, FamiliarActivity.ACTION_LIFE),
+            new WidgetEntry(R.id.widget_mana, R.drawable.ic_drawer_mana, FamiliarActivity.ACTION_MANA),
+            new WidgetEntry(R.id.widget_dice, R.drawable.ic_drawer_dice, FamiliarActivity.ACTION_DICE),
+            new WidgetEntry(R.id.widget_trade, R.drawable.ic_drawer_trade, FamiliarActivity.ACTION_TRADE),
+            new WidgetEntry(R.id.widget_wish, R.drawable.ic_drawer_wishlist, FamiliarActivity.ACTION_WISH),
+            new WidgetEntry(R.id.widget_deck, R.drawable.ic_drawer_deck, FamiliarActivity.ACTION_DECKLIST),
+            new WidgetEntry(R.id.widget_timer, R.drawable.ic_drawer_timer, FamiliarActivity.ACTION_ROUND_TIMER),
+            new WidgetEntry(R.id.widget_rules, R.drawable.ic_drawer_rules, FamiliarActivity.ACTION_RULES),
+            new WidgetEntry(R.id.widget_mojhosto, R.drawable.ic_drawer_mojhosto, FamiliarActivity.ACTION_MOJHOSTO),
+            new WidgetEntry(R.id.widget_judge, R.drawable.ic_drawer_judge, FamiliarActivity.ACTION_JUDGE),
+            new WidgetEntry(R.id.widget_profile, R.drawable.ic_drawer_profile, FamiliarActivity.ACTION_PROFILE)
+    };
+
     int mLayout;
 
     protected abstract void setLayout();
@@ -94,11 +94,27 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
      */
     private void bindButtons(Context context, RemoteViews views) {
         /* Attach all the intents to all the buttons */
-        for (int i = 0; i < buttonResources.length; i++) {
+        for (WidgetEntry entry : widgetEntries) {
+
+            /* Draw the vector image */
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                views.setImageViewResource(entry.buttonResource, entry.vectorResource);
+            } else {
+                Drawable d = AppCompatDrawableManager.get().getDrawable(context, entry.vectorResource);
+                Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
+                        d.getIntrinsicHeight(),
+                        Bitmap.Config.ARGB_8888);
+                Canvas c = new Canvas(b);
+                d.setBounds(0, 0, c.getWidth(), c.getHeight());
+                d.draw(c);
+                views.setImageViewBitmap(entry.buttonResource, b);
+            }
+
+            /* Set the listener */
             Intent intentQuick = new Intent(context, FamiliarActivity.class);
-            intentQuick.setAction(intents[i]);
+            intentQuick.setAction(entry.intentAction);
             PendingIntent pendingIntentQuick = PendingIntent.getActivity(context, 0, intentQuick, 0);
-            views.setOnClickPendingIntent(buttonResources[i], pendingIntentQuick);
+            views.setOnClickPendingIntent(entry.buttonResource, pendingIntentQuick);
         }
     }
 
@@ -119,14 +135,14 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
         }
 
         /* Set all the buttons as gone */
-        for (int resource : buttonResources) {
-            views.setViewVisibility(resource, View.GONE);
+        for (WidgetEntry entry : widgetEntries) {
+            views.setViewVisibility(entry.buttonResource, View.GONE);
         }
 
         /* Show the buttons selected in preferences */
         for (int i = 0; i < entries.length; i++) {
             if (buttons.contains(entries[i])) {
-                views.setViewVisibility(buttonResources[i], View.VISIBLE);
+                views.setViewVisibility(widgetEntries[i].buttonResource, View.VISIBLE);
                 buttonsVisible++;
                 if (buttonsVisible == maxNumButtons) {
                     return;

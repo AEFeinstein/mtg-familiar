@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:background="@drawable/widget_bg_dark"
     android:dividerPadding="4dp"
     android:gravity="center"
     android:orientation="horizontal"
-    android:showDividers="middle">
+    android:showDividers="middle"
+    android:theme="@style/Theme.dark">
 
     <ImageButton
         android:id="@+id/widget_search"
@@ -17,8 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_search"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_search" />
 
     <ImageButton
         android:id="@+id/widget_life"
@@ -26,8 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_life"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_life" />
 
     <ImageButton
         android:id="@+id/widget_mana"
@@ -35,8 +34,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_mana"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_mana" />
 
     <ImageButton
         android:id="@+id/widget_dice"
@@ -44,8 +42,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_dice"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_dice" />
 
     <ImageButton
         android:id="@+id/widget_trade"
@@ -53,8 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_trade"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_trade" />
 
     <ImageButton
         android:id="@+id/widget_wish"
@@ -62,8 +58,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_wishlist"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_wishlist" />
 
     <ImageButton
         android:id="@+id/widget_deck"
@@ -71,8 +66,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_deck"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_deck" />
 
     <ImageButton
         android:id="@+id/widget_timer"
@@ -80,8 +74,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_timer"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_timer" />
 
     <ImageButton
         android:id="@+id/widget_rules"
@@ -89,8 +82,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_rules"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_rules" />
 
     <ImageButton
         android:id="@+id/widget_judge"
@@ -98,8 +90,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_judge"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_judge" />
 
     <ImageButton
         android:id="@+id/widget_mojhosto"
@@ -107,8 +98,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_mojhosto"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_mojhosto" />
 
     <ImageButton
         android:id="@+id/widget_profile"
@@ -116,7 +106,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_drawer_profile"
-        android:tint="@color/drawer_item_icon_dark" />
+        app:srcCompat="@drawable/ic_drawer_profile" />
 
 </LinearLayout>

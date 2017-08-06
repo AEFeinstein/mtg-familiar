@@ -23,7 +23,7 @@
         <item name="bpButtonBackground">@drawable/btn_ripple_borderless_dark</item>
     </style>
 
-    <style name="Theme.transparent" parent="Theme.AppCompat.Dialog">
+    <style name="Theme.transparent" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:colorPrimary">@color/colorPrimary_light</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark_light</item>
         <item name="android:colorAccent">@color/colorAccent_light</item>
