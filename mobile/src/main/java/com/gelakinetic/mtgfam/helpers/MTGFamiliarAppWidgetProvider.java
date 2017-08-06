@@ -27,29 +27,31 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
     private static class WidgetEntry {
         int buttonResource;
-        int vectorResource;
+        int vectorResourceLight;
+        int vectorResourceDark;
         String intentAction;
 
-        WidgetEntry(int btnRes, int vecRes, String intent) {
+        WidgetEntry(int btnRes, int imgResLight, int imgResDark, String intent) {
             this.buttonResource = btnRes;
-            this.vectorResource = vecRes;
+            this.vectorResourceLight = imgResLight;
+            this.vectorResourceDark = imgResDark;
             this.intentAction = intent;
         }
     }
 
     private static final WidgetEntry[] widgetEntries = {
-            new WidgetEntry(R.id.widget_search, R.drawable.ic_drawer_search, FamiliarActivity.ACTION_CARD_SEARCH),
-            new WidgetEntry(R.id.widget_life, R.drawable.ic_drawer_life, FamiliarActivity.ACTION_LIFE),
-            new WidgetEntry(R.id.widget_mana, R.drawable.ic_drawer_mana, FamiliarActivity.ACTION_MANA),
-            new WidgetEntry(R.id.widget_dice, R.drawable.ic_drawer_dice, FamiliarActivity.ACTION_DICE),
-            new WidgetEntry(R.id.widget_trade, R.drawable.ic_drawer_trade, FamiliarActivity.ACTION_TRADE),
-            new WidgetEntry(R.id.widget_wish, R.drawable.ic_drawer_wishlist, FamiliarActivity.ACTION_WISH),
-            new WidgetEntry(R.id.widget_deck, R.drawable.ic_drawer_deck, FamiliarActivity.ACTION_DECKLIST),
-            new WidgetEntry(R.id.widget_timer, R.drawable.ic_drawer_timer, FamiliarActivity.ACTION_ROUND_TIMER),
-            new WidgetEntry(R.id.widget_rules, R.drawable.ic_drawer_rules, FamiliarActivity.ACTION_RULES),
-            new WidgetEntry(R.id.widget_mojhosto, R.drawable.ic_drawer_mojhosto, FamiliarActivity.ACTION_MOJHOSTO),
-            new WidgetEntry(R.id.widget_judge, R.drawable.ic_drawer_judge, FamiliarActivity.ACTION_JUDGE),
-            new WidgetEntry(R.id.widget_profile, R.drawable.ic_drawer_profile, FamiliarActivity.ACTION_PROFILE)
+            new WidgetEntry(R.id.widget_search, R.drawable.ic_drawer_search_light, R.drawable.ic_drawer_search_dark, FamiliarActivity.ACTION_CARD_SEARCH),
+            new WidgetEntry(R.id.widget_life, R.drawable.ic_drawer_life_light, R.drawable.ic_drawer_life_dark, FamiliarActivity.ACTION_LIFE),
+            new WidgetEntry(R.id.widget_mana, R.drawable.ic_drawer_mana_light, R.drawable.ic_drawer_mana_dark, FamiliarActivity.ACTION_MANA),
+            new WidgetEntry(R.id.widget_dice, R.drawable.ic_drawer_dice_light, R.drawable.ic_drawer_dice_dark, FamiliarActivity.ACTION_DICE),
+            new WidgetEntry(R.id.widget_trade, R.drawable.ic_drawer_trade_light, R.drawable.ic_drawer_trade_dark, FamiliarActivity.ACTION_TRADE),
+            new WidgetEntry(R.id.widget_wish, R.drawable.ic_drawer_wishlist_light, R.drawable.ic_drawer_wishlist_dark, FamiliarActivity.ACTION_WISH),
+            new WidgetEntry(R.id.widget_deck, R.drawable.ic_drawer_deck_light, R.drawable.ic_drawer_deck_dark, FamiliarActivity.ACTION_DECKLIST),
+            new WidgetEntry(R.id.widget_timer, R.drawable.ic_drawer_timer_light, R.drawable.ic_drawer_timer_dark, FamiliarActivity.ACTION_ROUND_TIMER),
+            new WidgetEntry(R.id.widget_rules, R.drawable.ic_drawer_rules_light, R.drawable.ic_drawer_rules_dark, FamiliarActivity.ACTION_RULES),
+            new WidgetEntry(R.id.widget_mojhosto, R.drawable.ic_drawer_mojhosto_light, R.drawable.ic_drawer_mojhosto_dark, FamiliarActivity.ACTION_MOJHOSTO),
+            new WidgetEntry(R.id.widget_judge, R.drawable.ic_drawer_judge_light, R.drawable.ic_drawer_judge_dark, FamiliarActivity.ACTION_JUDGE),
+            new WidgetEntry(R.id.widget_profile, R.drawable.ic_drawer_profile_light, R.drawable.ic_drawer_profile_dark, FamiliarActivity.ACTION_PROFILE)
     };
 
     int mLayout;
@@ -96,11 +98,19 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
         /* Attach all the intents to all the buttons */
         for (WidgetEntry entry : widgetEntries) {
 
+            int vectorResource;
+            if(mLayout == R.layout.mtgfamiliar_appwidget_dark) {
+                vectorResource = entry.vectorResourceDark;
+            }
+            else {
+                vectorResource = entry.vectorResourceLight;
+            }
+
             /* Draw the vector image */
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                views.setImageViewResource(entry.buttonResource, entry.vectorResource);
+                views.setImageViewResource(entry.buttonResource, vectorResource);
             } else {
-                Drawable d = AppCompatDrawableManager.get().getDrawable(context, entry.vectorResource);
+                Drawable d = AppCompatDrawableManager.get().getDrawable(context, vectorResource);
                 Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
                         d.getIntrinsicHeight(),
                         Bitmap.Config.ARGB_8888);

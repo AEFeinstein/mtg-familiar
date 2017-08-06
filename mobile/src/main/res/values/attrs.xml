@@ -48,6 +48,27 @@
         <!-- to style the hms time picker -->
         <attr name="num_picker_style" format="reference" />
 
+        <!--Drawer References, mostly for the widget-->
+        <attr name="ic_drawer_about" format="reference" />
+        <attr name="ic_drawer_deck" format="reference" />
+        <attr name="ic_drawer_dice" format="reference" />
+        <attr name="ic_drawer_download" format="reference" />
+        <attr name="ic_drawer_good" format="reference" />
+        <attr name="ic_drawer_help" format="reference" />
+        <attr name="ic_drawer_judge" format="reference" />
+        <attr name="ic_drawer_life" format="reference" />
+        <attr name="ic_drawer_load" format="reference" />
+        <attr name="ic_drawer_mana" format="reference" />
+        <attr name="ic_drawer_mojhosto" format="reference" />
+        <attr name="ic_drawer_profile" format="reference" />
+        <attr name="ic_drawer_rules" format="reference" />
+        <attr name="ic_drawer_save" format="reference" />
+        <attr name="ic_drawer_search" format="reference" />
+        <attr name="ic_drawer_settings" format="reference" />
+        <attr name="ic_drawer_timer" format="reference" />
+        <attr name="ic_drawer_trade" format="reference" />
+        <attr name="ic_drawer_wishlist" format="reference" />
+
     </declare-styleable>
 
 </resources>
