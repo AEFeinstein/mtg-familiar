@@ -15,6 +15,7 @@
         <attr name="color_background_selected" format="color|reference" />
         <attr name="button" format="reference" />
         <attr name="selectable_row" format="reference" />
+        <attr name="token_background" format="reference" />
 
         <!-- Rarity Colors -->
         <attr name="color_common" format="color|reference" />
