@@ -3,10 +3,14 @@ package com.gelakinetic.mtgfam.helpers.view;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,9 +90,7 @@ public class ManaCostTextView extends ATokenTextView {
         BitmapDrawable bitmapDrawable = MANA_DRAWABLES.get(symbol);
         if (bitmapDrawable == null) {
             int resId = MANA_SYMBOLS.get(symbol);
-            final BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(
-                    this.getContext(), resId);
-            final Bitmap bitmap = drawable.getBitmap();
+            final Bitmap bitmap = getBitmapFromVectorDrawable(getContext(), resId);
             float bitmapHeight = ViewUtil.convertDpToPixel(15, this.getContext());
             float bitmapWidth = ViewUtil.scaleDimension(bitmap.getHeight(), bitmapHeight,
                     bitmap.getWidth());
@@ -147,5 +149,20 @@ public class ManaCostTextView extends ATokenTextView {
                 this.addObject(symbol + "}");
             }
         }
+    }
+
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 }
