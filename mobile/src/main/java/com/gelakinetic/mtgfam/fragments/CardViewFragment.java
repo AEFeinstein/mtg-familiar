@@ -100,8 +100,9 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 
 /**
- * This class handles displaying card info
- * WARNING! Because this fragment is nested in a CardViewPagerFragment, always get the parent fragment's activity
+ * This class handles displaying card info.
+ * WARNING! Because this fragment is nested in a CardViewPagerFragment, always get the parent
+ * fragment's activity.
  */
 public class CardViewFragment extends FamiliarFragment {
 
@@ -171,14 +172,14 @@ public class CardViewFragment extends FamiliarFragment {
     public final ArrayList<Card.ForeignPrinting> mTranslatedNames = new ArrayList<>();
 
     /**
-     * Kill any AsyncTask if it is still running
+     * Kill any AsyncTask if it is still running.
      */
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        /* Pass a non-null bundle to the ResultListFragment so it knows to exit if there was a list of 1 card
-         * If this wasn't launched by a ResultListFragment, it'll get eaten */
+        /* Pass a non-null bundle to the ResultListFragment so it knows to exit if there was a list
+         * of 1 card. If this wasn't launched by a ResultListFragment, it'll get eaten */
         Bundle args = new Bundle();
         if (mActivity != null) {
             mActivity.setFragmentResult(args);
@@ -186,7 +187,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Called when the Fragment is no longer resumed. Clear the loading bar just in case
+     * Called when the Fragment is no longer resumed. Clear the loading bar just in case.
      */
     @Override
     public void onPause() {
@@ -200,7 +201,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Called when the fragment stops, attempt to report the close
+     * Called when the fragment stops, attempt to report the close.
      */
     @Override
     public void onStop() {
@@ -209,7 +210,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Reports this view to the Google app indexing API, once, when the fragment is viewed
+     * Reports this view to the Google app indexing API, once, when the fragment is viewed.
      */
     private void reportAppIndexViewIfAble() {
         /* If this view hasn't been reported yet, and the name exists */
@@ -217,7 +218,8 @@ public class CardViewFragment extends FamiliarFragment {
             if (mCardName != null) {
                 /* Connect your client */
                 getFamiliarActivity().mAppIndexingWrapper.connect();
-                AppIndexingWrapper.startAppIndexing(getFamiliarActivity().mAppIndexingWrapper, this);
+                AppIndexingWrapper
+                        .startAppIndexing(getFamiliarActivity().mAppIndexingWrapper, this);
 
                 /* Manage state */
                 mHasReportedView = true;
@@ -229,7 +231,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Ends the report to the Google app indexing API, once, when the fragment is no longer viewed
+     * Ends the report to the Google app indexing API, once, when the fragment is no longer viewed.
      */
     private void reportAppIndexEndIfAble() {
         /* If the view was previously reported, and the name exists */
@@ -251,7 +253,7 @@ public class CardViewFragment extends FamiliarFragment {
      * or is otherwise not directly visible to the user. This may be used by the system to
      * prioritize operations such as fragment lifecycle updates or loader ordering behavior.
      * <p/>
-     * In this case, it's used to report fragment views to Google app indexing
+     * In this case, it's used to report fragment views to Google app indexing.
      *
      * @param isVisibleToUser true if this fragment's UI is currently visible to the user (default),
      *                        false if it is not.
@@ -271,12 +273,13 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Inflates the view and saves references to UI elements for later filling
      *
-     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given
-     *                           here.
-     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment,
-     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to. The
-     *                           fragment should not add the view itself, but this can be used to generate the
-     *                           LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
+     *                           saved state as given here.
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in
+     *                           the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should
+     *                           be attached to. The fragment should not add the view itself, but
+     *                           this can be used to generate the LayoutParams of the view.
      * @return The inflated view
      */
     @Override
@@ -348,7 +351,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * When the view is destroyed, release any memory used to display card images
+     * When the view is destroyed, release any memory used to display card images.
      */
     @Override
     public void onDestroyView() {
@@ -357,7 +360,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Release all image resources and invoke the garbage collector
+     * Release all image resources and invoke the garbage collector.
      */
     private void releaseImageResources(boolean isSplit) {
 
@@ -410,7 +413,8 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * This will fill the UI elements with database information about the card specified in the given bundle
+     * This will fill the UI elements with database information about the card specified in the
+     * given bundle.
      *
      * @param extras The bundle passed to this fragment
      */
@@ -436,11 +440,10 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * This will fill the UI elements with information from the database
-     * It also saves information for AsyncTasks to use later and manages the transform/flip button
+     * This will fill the UI elements with information from the database.
+     * It also saves information for AsyncTasks to use later and manages the transform/flip button.
      *
      * @param id the ID of the the card to be displayed
-     * @return true if the UI was filled in, false otherwise
      */
     public void setInfoFromID(final long id) {
 
@@ -678,7 +681,8 @@ public class CardViewFragment extends FamiliarFragment {
             mTextScrollView.setVisibility(View.VISIBLE);
         }
 
-        /* Figure out how large the color indicator should be. Medium text is 18sp, with a border its 22sp */
+        /* Figure out how large the color indicator should be. Medium text is 18sp, with a border
+         * its 22sp */
         int dimension = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_SP, 22, getResources().getDisplayMetrics());
 
@@ -727,8 +731,8 @@ public class CardViewFragment extends FamiliarFragment {
 
         cCardById.close();
 
-        /* Find the other sets this card is in ahead of time, so that it can be remove from the menu if there is only
-           one set */
+        /* Find the other sets this card is in ahead of time, so that it can be remove from the menu
+         * if there is only one set */
         Cursor cCardByName;
         try {
             cCardByName = CardDbAdapter.fetchCardByName(mCardName,
@@ -776,7 +780,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Used to build a meta description of this card, for app indexing
+     * Used to build a meta description of this card, for app indexing.
      *
      * @param tag  A tag for this data
      * @param data The data to add to the description
@@ -790,13 +794,14 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Remove any showing dialogs, and show the requested one
+     * Remove any showing dialogs, and show the requested one.
      *
      * @param id the ID of the dialog to show
      */
     private void showDialog(final int id) throws IllegalStateException {
-        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
-        currently showing dialog, so make our own transaction and take care of that here. */
+        /* DialogFragment.show() will take care of adding the fragment in a transaction. We also
+         * want to remove any currently showing dialog, so make our own transaction and take care of
+         * that here. */
 
         /* If the fragment isn't visible (maybe being loaded by the pager), don't show dialogs */
         if (!this.isVisible()) {
@@ -814,12 +819,13 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Called when a registered view is long-pressed. The menu inflated will give different options based on the view class
+     * Called when a registered view is long-pressed. The menu inflated will give different options
+     * based on the view class.
      *
      * @param menu     The context menu that is being built
      * @param v        The view for which the context menu is being built
-     * @param menuInfo Extra information about the item for which the context menu should be shown. This information
-     *                 will vary depending on the class of v.
+     * @param menuInfo Extra information about the item for which the context menu should be shown.
+     *                 This information will vary depending on the class of v.
      */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -837,10 +843,11 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Copies text to the clipboard
+     * Copies text to the clipboard.
      *
      * @param item The context menu item that was selected.
-     * @return boolean Return false to allow normal context menu processing to proceed, true to consume it here.
+     * @return boolean Return false to allow normal context menu processing to proceed, true to
+     *         consume it here.
      */
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
@@ -895,7 +902,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Converts some html to plain text, replacing images with their textual counterparts
+     * Converts some html to plain text, replacing images with their textual counterparts.
      *
      * @param html html to be converted
      * @return plain text representation of the input
@@ -910,7 +917,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Handles clicks from the ActionBar
+     * Handles clicks from the ActionBar.
      *
      * @param item the item clicked
      * @return true if acted upon, false if otherwise
@@ -1018,7 +1025,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Inflate the ActionBar items
+     * Inflate the ActionBar items.
      *
      * @param menu     The options menu in which you place your items.
      * @param inflater The inflater to use to inflate the menu
@@ -1030,13 +1037,11 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Prepare the Screen's standard options menu to be displayed.  This is
-     * called right before the menu is shown, every time it is shown.  You can
-     * use this method to efficiently enable/disable items or otherwise
-     * dynamically modify the contents.
+     * Prepare the Screen's standard options menu to be displayed.  This is called right before the
+     * menu is shown, every time it is shown.  You can use this method to efficiently enable/disable
+     * items or otherwise dynamically modify the contents.
      *
-     * @param menu The options menu as last shown or first initialized by
-     *             onCreateOptionsMenu().
+     * @param menu The options menu as last shown or first initialized by onCreateOptionsMenu().
      * @see #setHasOptionsMenu
      * @see #onCreateOptionsMenu
      */
@@ -1066,7 +1071,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Called from the share dialog to load and share this card's image
+     * Called from the share dialog to load and share this card's image.
      */
     public void runShareImageTask() {
         mActivity.setLoading();
@@ -1078,7 +1083,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * This inner class encapsulates a ruling and the date it was made
+     * This inner class encapsulates a ruling and the date it was made.
      */
     public static class Ruling {
         public final String date;
@@ -1152,13 +1157,13 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * This private class handles asking the database about the legality of a card, and will eventually show the
-     * information in a Dialog
+     * This private class handles asking the database about the legality of a card, and will
+     * eventually show the information in a Dialog.
      */
     private class FetchLegalityTask extends AsyncTask<Void, Void, Void> {
 
         /**
-         * Queries the data in the database to see what sets this card is legal in
+         * Queries the data in the database to see what sets this card is legal in.
          *
          * @param params unused
          * @return unused
@@ -1180,11 +1185,10 @@ public class CardViewFragment extends FamiliarFragment {
                             mLegalities[i] = getString(R.string.card_view_legal);
                             break;
                         case CardDbAdapter.RESTRICTED:
-                            /* For backwards compatibility, we list cards that are legal
-                             * in commander, but can't be the commander as Restricted in
-                             * the legality file.  This prevents older version of the app
-                             * from throwing an IllegalStateException if we try including
-                             * a new legality. */
+                            /* For backwards compatibility, we list cards that are legal in
+                             * commander, but can't be the commander as Restricted in the legality
+                             * file.  This prevents older version of the app from throwing an
+                             * IllegalStateException if we try including a new legality. */
                             if (mFormats[i].equalsIgnoreCase("Commander")) {
                                 mLegalities[i] = getString(R.string.card_view_no_commander);
                             } else {
@@ -1211,7 +1215,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         /**
-         * After the query, remove the progress dialog and show the legalities
+         * After the query, remove the progress dialog and show the legalities.
          *
          * @param result unused
          */
@@ -1227,7 +1231,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * This private class retrieves a picture of the card from the internet
+     * This private class retrieves a picture of the card from the internet.
      */
     private class FetchPictureTask extends AsyncTask<Integer, Void, Void> {
 
@@ -1257,14 +1261,15 @@ public class CardViewFragment extends FamiliarFragment {
         };
 
         /**
-         * If the preferred langauge is English, get the card image from Scryfall
-         * If that fails, check www.MagicCards.info for the card image in the user's preferred language
-         * If that fails, try Scryfall again in English
-         * If that fails, check www.MagicCards.info for the card image in English
-         * If that fails, check www.gatherer.wizards.com for the card image
-         * If that fials, give up
-         * There is a non-standard URL building for planes and schemes for www.MagicCards.info
-         * It also re-sizes the image
+         * If the preferred langauge is English, get the card image from Scryfall.
+         * If that fails, check www.MagicCards.info for the card image in the user's preferred
+         * language.
+         * If that fails, try Scryfall again in English.
+         * If that fails, check www.MagicCards.info for the card image in English.
+         * If that fails, check www.gatherer.wizards.com for the card image.
+         * If that fails, give up.
+         * There is a non-standard URL building for planes and schemes for www.MagicCards.info.
+         * It also re-sizes the image.
          *
          * @param params unused
          * @return unused
@@ -1415,7 +1420,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         /**
-         * Jumps through hoops and returns a correctly formatted URL for magiccards.info's image
+         * Jumps through hoops and returns a correctly formatted URL for magiccards.info's image.
          *
          * @param cardName              The name of the card
          * @param magicCardsInfoSetCode The set of the card
@@ -1467,7 +1472,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         /**
-         * Easily gets the uri for the image for a card by multiverseid
+         * Easily gets the uri for the image for a card by multiverseid.
          *
          * @param multiverseId the multiverse id of the card
          * @return uri of the card image
@@ -1477,8 +1482,9 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         /**
-         * When the task has finished, if there was no error, remove the progress dialog and show the image
-         * If the image was supposed to load to the main screen, and it failed to load, fall back to text view
+         * When the task has finished, if there was no error, remove the progress dialog and show
+         * the image. If the image was supposed to load to the main screen, and it failed to load,
+         * fall back to text view
          *
          * @param result unused
          */
@@ -1519,7 +1525,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         /**
-         * If the task is canceled, fall back to text view
+         * If the task is canceled, fall back to text view.
          */
         @Override
         protected void onCancelled() {
@@ -1531,14 +1537,15 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * This private class fetches rulings about this card from gatherer.wizards.com
+     * This private class fetches rulings about this card from gatherer.wizards.com.
      */
     private class FetchRulingsTask extends AsyncTask<Void, Void, Void> {
 
         String mErrorMessage = null;
 
         /**
-         * This function downloads the source of the gatherer page, scans it for rulings, and stores them for display
+         * This function downloads the source of the gatherer page, scans it for rulings, and stores
+         * them for display.
          *
          * @param params unused
          * @return unused
@@ -1594,7 +1601,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         /**
-         * Hide the progress dialog and show the rulings, if there are no errors
+         * Hide the progress dialog and show the rulings, if there are no errors.
          *
          * @param result unused
          */
@@ -1616,7 +1623,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Callback for when a permission is requested
+     * Callback for when a permission is requested.
      *
      * @param requestCode  The request code passed in requestPermissions(String[], int).
      * @param permissions  The requested permissions. Never null.
@@ -1649,7 +1656,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Returns the File used to save this card's image
+     * Returns the File used to save this card's image.
      *
      * @param shouldDelete true if the file should be deleted before returned, false otherwise
      * @return A File, either with the image already or blank
@@ -1691,7 +1698,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Saves the current card image to external storage
+     * Saves the current card image to external storage.
      *
      * @return A status string, to be displayed in a toast on the UI thread
      */
