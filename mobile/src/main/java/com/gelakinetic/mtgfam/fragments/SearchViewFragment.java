@@ -733,12 +733,15 @@ public class SearchViewFragment extends FamiliarFragment {
     private void clear() {
         mNameField.setText("");
         mSupertypeField.clear();
+        mSupertypeField.setText("");
         mSubtypeField.clear();
+        mSubtypeField.setText("");
         mTextField.setText("");
         mArtistField.setText("");
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
         mSetField.clear();
+        mSetField.setText("");
 
         mCheckboxW.setChecked(false);
         mCheckboxU.setChecked(false);

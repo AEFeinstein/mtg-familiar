@@ -513,6 +513,7 @@
                 android:id="@+id/linearLayout19"
                 style="@style/forty_eight"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <com.gelakinetic.mtgfam.helpers.view.CompletionView
