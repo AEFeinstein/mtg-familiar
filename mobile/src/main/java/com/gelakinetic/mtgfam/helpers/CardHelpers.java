@@ -20,6 +20,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
@@ -109,11 +110,12 @@ public class CardHelpers {
         // The wishlist dialog is shown both in the card view and the wishlist fragments
         final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(ctx, WishlistFragment.class);
         final boolean isCardViewDialog = FragmentHelpers.isInstanceOf(ctx, CardViewPagerFragment.class);
+        final boolean isResultListDialog = FragmentHelpers.isInstanceOf(ctx, ResultListFragment.class);
 
         final String deckName;
         final String dialogText;
 
-        if (isWishlistDialog || isCardViewDialog) {
+        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
             /* Read the wishlist */
             ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
             targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
@@ -218,7 +220,7 @@ public class CardHelpers {
 
                         ArrayList<Pair<MtgCard, Boolean>> list;
 
-                        if (isWishlistDialog || isCardViewDialog) {
+                        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                             /* Read the wishlist */
                             list = new ArrayList<>();
                             ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
@@ -276,7 +278,7 @@ public class CardHelpers {
 
                         }
 
-                        if (isWishlistDialog || isCardViewDialog) {
+                        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                             ArrayList<MtgCard> wishlist = new ArrayList<>();
                             /* Turn it back in to a plain ArrayList */
                             for (Pair<MtgCard, Boolean> card : list) {

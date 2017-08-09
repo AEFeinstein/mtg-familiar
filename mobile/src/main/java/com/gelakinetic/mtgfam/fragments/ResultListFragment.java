@@ -14,9 +14,12 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -209,6 +212,15 @@ public class ResultListFragment extends FamiliarFragment {
                 } catch (FamiliarDbException e) {
                     handleFamiliarDbException(true);
                 }
+            }
+        });
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String cardName = ((TextView)view.findViewById(R.id.card_name)).getText().toString();
+                showDialog(ResultListDialogFragment.WISH_LIST_COUNTS, cardName);
+                return true;
             }
         });
 
@@ -405,7 +417,7 @@ public class ResultListFragment extends FamiliarFragment {
                 }
                 return true;
             case R.id.search_menu_sort: {
-                showDialog();
+                showDialog(ResultListDialogFragment.DIALOG_SORT, null);
                 return true;
             }
             default:
@@ -416,7 +428,7 @@ public class ResultListFragment extends FamiliarFragment {
     /**
      * Remove any showing dialogs, and show the requested one
      */
-    private void showDialog() throws IllegalStateException {
+    private void showDialog(int dialogId, String cardName) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -427,13 +439,21 @@ public class ResultListFragment extends FamiliarFragment {
 
         removeDialog(getFragmentManager());
 
-        /* Create and show the dialog. */
-        SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
-        Bundle args = new Bundle();
-        args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
-                getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder());
-        newFragment.setArguments(args);
-        newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        if (dialogId == ResultListDialogFragment.DIALOG_SORT) {
+            SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
+            Bundle args = new Bundle();
+            args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
+                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder());
+            newFragment.setArguments(args);
+            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        } else {
+            ResultListDialogFragment newFragment = new ResultListDialogFragment();
+            Bundle arguments = new Bundle();
+            arguments.putInt(FamiliarDialogFragment.ID_KEY, dialogId);
+            arguments.putString(ResultListDialogFragment.NAME_KEY, cardName);
+            newFragment.setArguments(arguments);
+            newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
+        }
     }
 
     /**
