@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="98"
+   height="84"
+   viewBox="0 0 25.92916621 22.22499992"
+   version="1.1"
+   id="svg5584"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="die_10.svg">
+  <defs
+     id="defs5578" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.959797967"
+     inkscape:cx="49.71814469"
+     inkscape:cy="95.2097379"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="927"
+     inkscape:window-height="1168"
+     inkscape:window-x="984"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5581">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-274.7750006)">
+    <g
+       transform="matrix(0.2645833333,0,0,0.2645833333,-4.812608977,139.0815295)"
+       id="g5535">
+      <path
+         inkscape:export-ydpi="110.96032"
+         inkscape:export-xdpi="110.96032"
+         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d10.png"
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path2993"
+         d="M 66.80046373,513.5897393 27.50779063,576.3306641 C 41.10051981,582.2168985 54.37557495,589.737765 67.54711566,596.4982774 L 106.8397887,576.3306641 C 91.96464811,557.143904 79.75824461,534.2801892 66.80046373,513.5897393 Z"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.9831051826;stroke-miterlimit:4;stroke-dasharray:none" />
+      <g
+         id="text4011"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.9324204922px;line-height:0%;font-family:Roboto;-inkscape-font-specification:Roboto;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3277017176"
+         aria-label="1">
+        <path
+           inkscape:connector-curvature="0"
+           id="path5469"
+           style="font-size:48.2376441956px;line-height:1.25;stroke-width:0.3277017176"
+           d="M 59.38956472,582.4940796 H 55.0086068 V 553.4525682 L 46.22313743,556.6794028 V 552.7224086 L 58.70651215,548.0352547 H 59.38956472 Z" />
+      </g>
+      <g
+         id="text4015"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.9324204922px;line-height:0%;font-family:Roboto;-inkscape-font-specification:Roboto;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3277017176"
+         aria-label="0">
+        <path
+           inkscape:connector-curvature="0"
+           id="path5472"
+           style="font-size:48.2376441956px;line-height:1.25;stroke-width:0.3277017176"
+           d="M 86.33462404,567.867333 Q 86.33462404,575.5222326 83.72018141,579.2436915 81.10573878,582.9651503 75.547104,582.9651503 70.05912983,582.9651503 67.42113367,579.3379056 64.7831375,575.6871073 64.68892335,568.4561714 V 562.6384477 Q 64.68892335,555.0777623 67.30336598,551.4034105 69.91780861,547.7290587 75.49999693,547.7290587 81.03507817,547.7290587 83.6495208,551.2856428 86.26396343,554.8186734 86.33462404,562.2144841 Z M 81.97721966,561.9082881 Q 81.97721966,556.3732068 80.4226862,553.8529783 78.86815275,551.3091963 75.49999693,551.3091963 72.15539464,551.3091963 70.62441473,553.8294248 69.09343481,556.3496533 69.04632773,561.5785386 V 568.5503856 Q 69.04632773,574.1090203 70.64796826,576.77057 72.27316233,579.4085662 75.547104,579.4085662 78.7739386,579.4085662 80.32847205,576.9118913 81.90655905,574.4152163 81.97721966,569.0450098 Z" />
+      </g>
+    </g>
+  </g>
+</svg>
