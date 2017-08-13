@@ -40,8 +40,6 @@
 
         <item name="drawer_background_indicator">@drawable/drawer_background_indicator_light</item>
 
-        <item name="btn_check_foil">@drawable/btn_check_light_foil</item>
-
         <item name="hms_picker_style">@style/MyCustomBetterPickerTheme.Light</item>
 
         <item name="num_picker_style">@style/BetterPickersDialogFragment.Light</item>
@@ -110,8 +108,6 @@
         <item name="lc_disabled">@color/lc_disabled_dark</item>
 
         <item name="drawer_background_indicator">@drawable/drawer_background_indicator_dark</item>
-
-        <item name="btn_check_foil">@drawable/btn_check_dark_foil</item>
 
         <item name="hms_picker_style">@style/MyCustomBetterPickerTheme</item>
         <item name="num_picker_style">@style/BetterPickersDialogFragment</item>

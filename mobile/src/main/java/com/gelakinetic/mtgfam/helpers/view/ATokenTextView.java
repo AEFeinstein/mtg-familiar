@@ -27,9 +27,13 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
 
     @Override
     public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        if (focused && this.getAdapter() != null) {
-            performFiltering(getText(), 0);
+        try {
+            super.onFocusChanged(focused, direction, previouslyFocusedRect);
+            if (focused && this.getAdapter() != null) {
+                performFiltering(getText(), 0);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            // Ignore it
         }
     }
 

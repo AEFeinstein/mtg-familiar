@@ -16,6 +16,7 @@
 
 package com.gelakinetic.mtgfam;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -130,7 +131,11 @@ public class FamiliarActivity extends AppCompatActivity {
     public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
     public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
     public static final String ACTION_DECKLIST = "android.intent.action.DECKLIST";
-    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 77;
+
+    /* Used to request permissions */
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE = 77;
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP = 78;
+    public static final int REQUEST_READ_EXTERNAL_STORAGE_BACKUP = 79;
 
     /* Constants used for saving state */
     private static final String CURRENT_FRAG = "CURRENT_FRAG";
@@ -1522,8 +1527,27 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        getSupportFragmentManager().findFragmentById(R.id.fragment_container)
-                .onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_READ_EXTERNAL_STORAGE_BACKUP: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    ZipUtils.importData(this);
+                }
+                break;
+            }
+            case REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    ZipUtils.exportData(this);
+                }
+                break;
+            default:
+                getSupportFragmentManager().findFragmentById(R.id.fragment_container)
+                        .onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+        }
     }
 
     /**
