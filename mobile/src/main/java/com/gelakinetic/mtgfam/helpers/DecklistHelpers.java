@@ -246,8 +246,6 @@ public class DecklistHelpers {
                         && mCard.mName.equals(cdi.mCard.mName)
                             /* Both have same sideboard status? */
                         && mIsSideboard == cdi.mIsSideboard);
-            } else if (o instanceof MtgCard && mCard != null) {
-                return mCard.mName.equals(((MtgCard) o).mName);
             }
             return false;
         }
@@ -256,8 +254,7 @@ public class DecklistHelpers {
         public int hashCode() {
             int hash = 23;
             hash = hash * 31 + mCard.hashCode();
-            hash = hash * 31 + ((Boolean) mIsSideboard).hashCode();
-            return hash;
+            return hash * 31 + ((Boolean) mIsSideboard).hashCode();
         }
 
     }

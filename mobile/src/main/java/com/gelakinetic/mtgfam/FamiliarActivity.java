@@ -756,7 +756,7 @@ public class FamiliarActivity extends AppCompatActivity {
         if (getNetworkState(FamiliarActivity.this, false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
             /* Only update the banning list if it hasn't been updated recently */
             long curTime = System.currentTimeMillis();
-            int updateFrequency = Integer.valueOf(mPreferenceAdapter.getUpdateFrequency());
+            int updateFrequency = Integer.parseInt(mPreferenceAdapter.getUpdateFrequency());
             int lastLegalityUpdate = mPreferenceAdapter.getLastLegalityUpdate();
             /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > (updateFrequency * 24 * 60 * 60)) {

@@ -137,7 +137,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         assert myFragmentView != null;
         mGridLayout = (GridLayout) myFragmentView.findViewById(R.id.playerList);
 
-        mDisplayMode = Integer.valueOf(getFamiliarActivity().mPreferenceAdapter.getDisplayMode());
+        mDisplayMode = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getDisplayMode());
 
         mCommanderPlayerView = (LinearLayout) myFragmentView.findViewById(R.id.commander_player);
 

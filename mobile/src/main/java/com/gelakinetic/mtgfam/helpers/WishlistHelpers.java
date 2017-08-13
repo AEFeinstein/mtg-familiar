@@ -242,8 +242,8 @@ public class WishlistHelpers {
     }
 
     /**
-     * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for different printings
-     * of that card
+     * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for
+     * different printings of that card.
      */
     public static class CompressedWishlistInfo extends CardHelpers.CompressedCardInfo {
 
@@ -260,20 +260,23 @@ public class WishlistHelpers {
         }
 
         /**
-         * Check to see if two CompressedWishlistInfo objects are equivalent, or if this is equivalent to a MtgCard
-         * object. The comparison is done on the MtgCard's name
+         * Check to see if two CompressedWishlistInfo objects are equivalent, or if this is
+         * equivalent to a MtgCard object. The comparison is done on the MtgCard's name.
          *
          * @param o The object to compare to this one
          * @return true if the specified object is equal to this string, false otherwise.
          */
         @Override
         public boolean equals(Object o) {
-            if (o instanceof CompressedWishlistInfo) {
-                return mCard.mName.equals(((CompressedWishlistInfo) o).mCard.mName);
-            } else if (o instanceof MtgCard) {
-                return mCard.mName.equals(((MtgCard) o).mName);
-            }
-            return false;
+            return o instanceof CompressedWishlistInfo
+                    && mCard.mName.equals(((CompressedWishlistInfo) o).mCard.mName);
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 23;
+            hash = hash * 31 + mCard.hashCode();
+            return hash * 31 + mIndex;
         }
 
         /**

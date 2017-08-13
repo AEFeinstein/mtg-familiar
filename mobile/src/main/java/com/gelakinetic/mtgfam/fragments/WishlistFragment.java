@@ -191,10 +191,11 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         MtgCard card = CardHelpers.makeMtgCard(getContext(), name, mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
+        CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
 
         /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
-        if (mCompressedWishlist.contains(card)) {
-            CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(card));
+        if (mCompressedWishlist.contains(wrapped)) {
+            CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped));
             boolean added = false;
             for (IndividualSetInfo isi : cwi.mInfo) {
                 if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
@@ -309,8 +310,9 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (changedCardName == null || changedCardName.equals(card.mName)) {
                     /* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each
                      * other */
-                    if (mCompressedWishlist.contains(card)) {
-                        mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
+                    CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
+                    if (mCompressedWishlist.contains(wrapped)) {
+                        mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped)).add(card);
                     } else {
                         mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
                     }

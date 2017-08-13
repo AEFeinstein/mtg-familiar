@@ -332,14 +332,7 @@ public class MtgCard extends Card {
      */
     @Override
     public boolean equals(Object o) {
-        if (o instanceof MtgCard) {
-            return this.mName.equals(((MtgCard) o).mName);
-        } else if (o instanceof CompressedCardInfo) {
-            if (((CompressedCardInfo) o).mCard != null) {
-                return this.mName.equals(((CompressedCardInfo) o).mCard.mName);
-            }
-        }
-        return false;
+        return o instanceof MtgCard && this.mName.equals(((MtgCard) o).mName);
     }
 
     @Override

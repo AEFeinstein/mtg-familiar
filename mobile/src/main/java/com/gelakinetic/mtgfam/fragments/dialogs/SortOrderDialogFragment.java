@@ -20,6 +20,7 @@ import com.woxthebox.draglistview.DragListView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -234,7 +235,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         }
     }
 
-    public static class SortOption {
+    public static class SortOption implements Serializable {
         final String mName;
         boolean mAscending = true;
         final String mDatabaseKey;

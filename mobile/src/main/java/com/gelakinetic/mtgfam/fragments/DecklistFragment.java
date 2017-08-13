@@ -27,6 +27,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
@@ -61,8 +62,8 @@ public class DecklistFragment extends FamiliarListFragment {
     public TextView mDeckCards;
 
     /* Decklist and adapters */
-    public ArrayList<DecklistHelpers.CompressedDecklistInfo> mCompressedDecklist;
-    private ComparatorChain<DecklistHelpers.CompressedDecklistInfo> mDecklistChain;
+    public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
+    private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
     public String mCurrentDeck = "";
@@ -199,9 +200,9 @@ public class DecklistFragment extends FamiliarListFragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.deck_import_selected: {
-                        ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
+                        ArrayList<CompressedDecklistInfo> selectedItems =
                                 mListAdapter.getSelectedItems();
-                        for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
+                        for (CompressedDecklistInfo info : selectedItems) {
                             WishlistHelpers.addItemToWishlist(getContext(),
                                     info.convertToWishlist());
                         }
@@ -248,14 +249,14 @@ public class DecklistFragment extends FamiliarListFragment {
             return;
         }
 
-        final DecklistHelpers.CompressedDecklistInfo decklistInfo =
-                new DecklistHelpers.CompressedDecklistInfo(card, isSideboard);
+        final CompressedDecklistInfo decklistInfo =
+                new CompressedDecklistInfo(card, isSideboard);
 
         /* Add it to the decklist, either as a new CompressedDecklistInfo, or to an existing one */
         if (mCompressedDecklist.contains(decklistInfo)) {
             boolean added = false;
             final int firstIndex = mCompressedDecklist.indexOf(decklistInfo);
-            final DecklistHelpers.CompressedDecklistInfo firstCard =
+            final CompressedDecklistInfo firstCard =
                     mCompressedDecklist.get(firstIndex);
             for (int i = 0; i < firstCard.mInfo.size(); i++) {
                 CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
@@ -269,7 +270,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 firstCard.add(card);
             }
         } else {
-            mCompressedDecklist.add(new DecklistHelpers.CompressedDecklistInfo(card, isSideboard));
+            mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
         }
 
         /* The headers shouldn't (and can't) be sorted */
@@ -349,7 +350,7 @@ public class DecklistFragment extends FamiliarListFragment {
             mCompressedDecklist.clear();
             return;
         }
-        for (final DecklistHelpers.CompressedDecklistInfo cdi : mCompressedDecklist) {
+        for (final CompressedDecklistInfo cdi : mCompressedDecklist) {
             if (cdi.mCard != null && cdi.mCard.mName.equals(cardChanged)) {
                 cdi.clearCompressedInfo();
             }
@@ -384,19 +385,19 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* Translate the set code to TCG name of course it's not saved */
                 card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
                 if (changedCardName == null || changedCardName.equals(card.first.mName)) {
-                    if (mCompressedDecklist.contains(card.first)) {
-                        DecklistHelpers.CompressedDecklistInfo existingCard =
-                                mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first));
+                    CompressedDecklistInfo wrapped =
+                            new CompressedDecklistInfo(card.first, card.second);
+                    if (mCompressedDecklist.contains(wrapped)) {
+                        CompressedDecklistInfo existingCard =
+                                mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped));
                         if (existingCard.mIsSideboard == card.second) {
-                            mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first))
+                            mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
                                     .add(card.first);
                         } else {
-                            mCompressedDecklist.add(new DecklistHelpers
-                                    .CompressedDecklistInfo(card.first, card.second));
+                            mCompressedDecklist.add(wrapped);
                         }
                     } else {
-                        mCompressedDecklist.add(new DecklistHelpers
-                                .CompressedDecklistInfo(card.first, card.second));
+                        mCompressedDecklist.add(wrapped);
                     }
                     if (mShowTotalDecklistPrice) {
                         loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
@@ -549,8 +550,8 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     private boolean insertHeaderAt(final int position, final String headerText) {
 
-        final DecklistHelpers.CompressedDecklistInfo header =
-                new DecklistHelpers.CompressedDecklistInfo(null, false);
+        final CompressedDecklistInfo header =
+                new CompressedDecklistInfo(null, false);
         header.header = headerText;
         if (!mCompressedDecklist.contains(header)) {
             mCompressedDecklist.add(position, header);
@@ -571,7 +572,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         for (int i = 0; i < mCompressedDecklist.size(); i++) {
             for (int j = 0; j < cardTypes.length; j++) {
-                final DecklistHelpers.CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
+                final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
                 if (cdi.mCard != null /* We only want entries that have a card attached */
                         && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
                         && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) {
@@ -634,7 +635,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* because this can return when the fragment is in the background */
                 if (DecklistFragment.this.isAdded()) {
                     /* Find the compressed wishlist info for this card */
-                    for (DecklistHelpers.CompressedDecklistInfo cdi : mCompressedDecklist) {
+                    for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                         if (cdi.header == null && cdi.mCard.mName.equals(mCardName)) {
                             /* Find all foil and non foil compressed items with the same set code */
                             for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
@@ -666,7 +667,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* because this can return when the fragment is in the background */
                 if (DecklistFragment.this.isAdded()) {
                     /* Find the compressed wishlist info for this card */
-                    for (DecklistHelpers.CompressedDecklistInfo cdi : mCompressedDecklist) {
+                    for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                         if (cdi.header == null && cdi.mCard.mName.equals(mCardName)) {
                             /* Find all foil and non foil compressed items with the same set code */
                             for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
@@ -701,7 +702,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* default */ float totalPrice = 0;
 
-        for (DecklistHelpers.CompressedDecklistInfo cdi : mCompressedDecklist) {
+        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             if (cdi.header == null) {
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     if (isi.mPrice != null) {
@@ -734,13 +735,13 @@ public class DecklistFragment extends FamiliarListFragment {
      * The adapter that drives the deck list.
      */
     public class CardDataAdapter
-            extends FamiliarListFragment.CardDataAdapter<DecklistHelpers.CompressedDecklistInfo, CardDataAdapter.ViewHolder> {
+            extends FamiliarListFragment.CardDataAdapter<CompressedDecklistInfo, CardDataAdapter.ViewHolder> {
 
         /**
          * Create the adapter.
          * @param values the data set
          */
-        CardDataAdapter(ArrayList<DecklistHelpers.CompressedDecklistInfo> values) {
+        CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
             super(values);
         }
 
@@ -765,7 +766,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 holder.itemView.setSelected(false);
             }
 
-            final DecklistHelpers.CompressedDecklistInfo info = items.get(position);
+            final CompressedDecklistInfo info = items.get(position);
 
             if (isItemPendingRemoval(position)) {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
@@ -829,7 +830,7 @@ public class DecklistFragment extends FamiliarListFragment {
             /* default */ int totalCards = 0;
             String[] types = getResources().getStringArray(R.array.card_types_extra);
 
-            for (DecklistHelpers.CompressedDecklistInfo cdi : items) {
+            for (CompressedDecklistInfo cdi : items) {
                 if (cdi.header != null) {
                     continue;
                 }
@@ -869,7 +870,7 @@ public class DecklistFragment extends FamiliarListFragment {
         int getTotalCards() {
 
             int totalCards = 0;
-            for (DecklistHelpers.CompressedDecklistInfo cdi : items) {
+            for (CompressedDecklistInfo cdi : items) {
                 totalCards += cdi.getTotalNumber();
             }
             return totalCards;
@@ -926,7 +927,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 if (!isInSelectMode()) {
                     /* if we aren't in select mode, open a dialog to edit this card */
-                    final DecklistHelpers.CompressedDecklistInfo item =
+                    final CompressedDecklistInfo item =
                             items.get(getAdapterPosition());
                     showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
                             item.mCard.mName, item.mIsSideboard);

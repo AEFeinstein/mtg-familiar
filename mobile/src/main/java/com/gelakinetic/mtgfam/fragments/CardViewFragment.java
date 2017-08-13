@@ -553,7 +553,7 @@ public class CardViewFragment extends FamiliarFragment {
             if (loyalty == CardDbAdapter.X) {
                 mPowTouTextView.setText("X");
             } else {
-                mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
+                mPowTouTextView.setText(Integer.toString(loyalty));
             }
         } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
