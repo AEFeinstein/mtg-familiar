@@ -42,6 +42,7 @@ import com.gelakinetic.mtgfam.helpers.view.ManaCostTextView;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -277,6 +278,49 @@ public class SearchViewFragment extends FamiliarFragment {
         mFlavorField.setOnEditorActionListener(doSearchListener);
         mArtistField.setOnEditorActionListener(doSearchListener);
         mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
+
+        mSupertypeField.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+            @Override
+            public void onTokenAdded(String token) {
+
+            }
+
+            @Override
+            public void onTokenRemoved(String token) {
+                // If there are no tokens, clear out any stray text
+                if (mSupertypeField.getObjects().size() == 0) {
+                    mSupertypeField.setText("");
+                }
+            }
+        });
+        mSubtypeField.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+            @Override
+            public void onTokenAdded(String token) {
+
+            }
+
+            @Override
+            public void onTokenRemoved(String token) {
+                // If there are no tokens, clear out any stray text
+                if (mSubtypeField.getObjects().size() == 0) {
+                    mSubtypeField.setText("");
+                }
+            }
+        });
+        mSetField.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+            @Override
+            public void onTokenAdded(String token) {
+
+            }
+
+            @Override
+            public void onTokenRemoved(String token) {
+                // If there are no tokens, clear out any stray text
+                if (mSetField.getObjects().size() == 0) {
+                    mSetField.setText("");
+                }
+            }
+        });
 
         /* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, true));
@@ -732,16 +776,13 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void clear() {
         mNameField.setText("");
-        mSupertypeField.clear();
-        mSupertypeField.setText("");
-        mSubtypeField.clear();
-        mSubtypeField.setText("");
+        clearCompletionView(mSupertypeField);
+        clearCompletionView(mSubtypeField);
         mTextField.setText("");
         mArtistField.setText("");
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
-        mSetField.clear();
-        mSetField.setText("");
+        clearCompletionView(mSetField);
 
         mCheckboxW.setChecked(false);
         mCheckboxU.setChecked(false);
@@ -781,6 +822,17 @@ public class SearchViewFragment extends FamiliarFragment {
         this.removeDialog(getFragmentManager());
 
         checkDialogButtonColors();
+    }
+
+    private void clearCompletionView(CompletionView completionView) {
+        if (completionView.getObjects().size() == 0) {
+            // If there are no tokens, its safe to clear the whole text view
+            completionView.setText("");
+        } else {
+            // Otherwise, clear the tokens. This is asynchronous. Any stray text
+            // will be cleared after the tokens are removed via a listener
+            completionView.clear();
+        }
     }
 
     /**
