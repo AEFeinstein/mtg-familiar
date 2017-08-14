@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -153,8 +154,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         try {
                                     /* Get the card ID, and send it to a new CardViewPagerFragment */
                             Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
-                                    lSide.get(positionForDialog).setCode, new String[]{
-                                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
+                                    lSide.get(positionForDialog).setCode, Arrays.asList(
+                                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
 
                             Bundle args = new Bundle();
                             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
@@ -276,10 +277,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                 try {
                     /* Query the database for all versions of this card */
-                    Cursor cards = CardDbAdapter.fetchCardByName(data.mName, new String[]{
+                    Cursor cards = CardDbAdapter.fetchCardByName(data.mName, Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                            CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, database);
+                            CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, database);
                     /* Build set names and set codes */
                     Set<String> sets = new LinkedHashSet<>();
                     Set<String> setCodes = new LinkedHashSet<>();

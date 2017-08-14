@@ -96,6 +96,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
@@ -736,10 +737,10 @@ public class CardViewFragment extends FamiliarFragment {
         Cursor cCardByName;
         try {
             cCardByName = CardDbAdapter.fetchCardByName(mCardName,
-                    new String[]{
+                    Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER}, false, database
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, database
             );
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);

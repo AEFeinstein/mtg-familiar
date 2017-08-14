@@ -30,7 +30,9 @@ import com.gelakinetic.mtgfam.helpers.util.FragmentHelpers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,12 +151,12 @@ public class CardHelpers {
         /* Get all the cards with relevant info from the database */
         Cursor cards;
         try {
-            cards = CardDbAdapter.fetchCardByName(mCardName, new String[]{
+            cards = CardDbAdapter.fetchCardByName(mCardName, Arrays.asList(
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, db);
+                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, db);
         } catch (FamiliarDbException e) {
             DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
             return null;
@@ -702,10 +704,10 @@ public class CardHelpers {
             card.numberOf = numberOf;
             /* Find out what kind of fragment we are in, so we can pull less stuff if we can */
             /* trade, wishlist, and decklist all use "name_search" */
-            String[] fields;
+            List<String> fields;
             boolean isTradeFragment = FragmentHelpers.isInstanceOf(context, TradeFragment.class);
             if (isTradeFragment) {
-                fields = new String[]{
+                fields = Arrays.asList(
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
@@ -713,9 +715,9 @@ public class CardHelpers {
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR,
                         /* Don't trust the user */
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME, };
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME);
             } else {
-                fields = CardDbAdapter.allCardDataKeys;
+                fields = CardDbAdapter.ALL_CARD_DATA_KEYS;
                 card.message = activity.getString(R.string.wishlist_loading);
             }
             /* Get extra information from the database */

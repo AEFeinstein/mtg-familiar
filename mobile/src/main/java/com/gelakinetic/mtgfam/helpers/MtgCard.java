@@ -25,11 +25,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -204,9 +204,9 @@ public class MtgCard extends Card {
         } else {
             /* Pull from db */
             try {
-                Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, new String[]{
+                Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR}, true, database);
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR), true, database);
                 card.mCmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
                 card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
             } catch (FamiliarDbException e) {

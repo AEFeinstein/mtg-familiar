@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -134,7 +135,7 @@ public class CardDbAdapter {
     private static final String KEY_WATERMARK = "WATERMARK";
 
     /* All the columns in DATABASE_TABLE_CARDS */
-    public static final String[] allCardDataKeys = {
+    public static final List<String> ALL_CARD_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
             DATABASE_TABLE_CARDS + "." + KEY_ID,
             DATABASE_TABLE_CARDS + "." + KEY_NAME,
             DATABASE_TABLE_CARDS + "." + KEY_SET,
@@ -176,10 +177,10 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_WATERMARK
-    };
+    ));
 
     /* All the columns in DATABASE_CREATE_SETS */
-    private static final String[] allSetDataKeys = {
+    public static final List<String> ALL_SET_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
             DATABASE_TABLE_SETS + "." + KEY_ID,
             DATABASE_TABLE_SETS + "." + KEY_NAME,
             DATABASE_TABLE_SETS + "." + KEY_CODE,
@@ -188,7 +189,7 @@ public class CardDbAdapter {
             DATABASE_TABLE_SETS + "." + KEY_DIGEST,
             DATABASE_TABLE_SETS + "." + KEY_DATE,
             DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL
-    };
+    ));
 
     /* SQL Strings used to create the database tables */
     private static final String DATABASE_CREATE_FORMATS =
@@ -215,7 +216,7 @@ public class CardDbAdapter {
                     KEY_TERM + " text not null, " +
                     KEY_DEFINITION + " text not null);";
 
-    public static final String DATABASE_CREATE_CARDS =
+    static final String DATABASE_CREATE_CARDS =
             "create table " + DATABASE_TABLE_CARDS + "(" +
                     KEY_ID + " integer primary key autoincrement, " +
                     KEY_NAME + " text not null, " +
@@ -259,7 +260,7 @@ public class CardDbAdapter {
                     KEY_NAME_KOREAN + " text, " +
                     KEY_MULTIVERSEID_KOREAN + " integer);";
 
-    public static final String DATABASE_CREATE_SETS =
+    static final String DATABASE_CREATE_SETS =
             "create table " + DATABASE_TABLE_SETS + "(" +
                     KEY_ID + " integer primary key autoincrement, " +
                     KEY_NAME + " text not null, " +
@@ -518,6 +519,8 @@ public class CardDbAdapter {
                 }
                 selectionStr += KEY_ID + "=" + id;
             }
+            String[] allCardDataKeys = new String[ALL_CARD_DATA_KEYS.size()];
+            ALL_CARD_DATA_KEYS.toArray(allCardDataKeys);
             cursor = database.query(true, DATABASE_TABLE_CARDS, allCardDataKeys, selectionStr, null,
                     null, null, orderByStr, null);
         } catch (SQLiteException | IllegalStateException e) {
@@ -541,7 +544,7 @@ public class CardDbAdapter {
      * @return A cursor with the requested information about the card
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchCardByName(String name, String[] fields, boolean shouldGroup,
+    public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
                                          SQLiteDatabase mDb)
             throws FamiliarDbException {
         /* Sanitize the string and remove accent marks */
@@ -632,7 +635,7 @@ public class CardDbAdapter {
         String sql = "SELECT ";
 
         boolean first = true;
-        for (String field : CardDbAdapter.allCardDataKeys) {
+        for (String field : CardDbAdapter.ALL_CARD_DATA_KEYS) {
             if (first) {
                 first = false;
             } else {
@@ -735,7 +738,7 @@ public class CardDbAdapter {
      * @return A Cursor with the requested information
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchCardByNameAndSet(String name, String setCode, String[] fields,
+    public static Cursor fetchCardByNameAndSet(String name, String setCode, List<String> fields,
                                                SQLiteDatabase mDb)
             throws FamiliarDbException {
         /* Sanitize the string and remove accent marks */
@@ -1937,6 +1940,8 @@ public class CardDbAdapter {
 
         Cursor c;
         try {
+            String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
+            ALL_CARD_DATA_KEYS.toArray(allSetDataKeys);
             c = sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | IllegalStateException | NullPointerException e) {
