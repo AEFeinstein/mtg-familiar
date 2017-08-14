@@ -652,21 +652,21 @@ public class CardDbAdapter {
         first = true;
         boolean doSql = false;
         for (CompressedCardInfo cwi : mCompressedCard) {
-            if (cwi.mCard.mType == null || cwi.mCard.mType.equals("")) {
+            if (cwi.mType == null || cwi.mType.equals("")) {
                 doSql = true;
                 if (first) {
                     first = false;
                 } else {
                     sql += " OR ";
                 }
-                if (cwi.mCard.setCode != null && !cwi.mCard.setCode.equals("")) {
+                if (cwi.setCode != null && !cwi.setCode.equals("")) {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mCard.mName, false) +
+                            sanitizeString(cwi.mName, false) +
                             " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" +
-                            cwi.mCard.setCode + "')";
+                            cwi.setCode + "')";
                 } else {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " +
-                            sanitizeString(cwi.mCard.mName, true) + ")";
+                            sanitizeString(cwi.mName, true) + ")";
                 }
             }
         }
@@ -695,28 +695,28 @@ public class CardDbAdapter {
             /* Do stuff */
             String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             for (CompressedCardInfo cwi : mCompressedCard) {
-                if (name != null && name.equals(cwi.mCard.mName)) {
-                    cwi.mCard.mType =
+                if (name != null && name.equals(cwi.mName)) {
+                    cwi.mType =
                             getTypeLine(cursor);
-                    cwi.mCard.mRarity =
+                    cwi.mRarity =
                             (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                    cwi.mCard.mManaCost =
+                    cwi.mManaCost =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-                    cwi.mCard.mPower =
+                    cwi.mPower =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-                    cwi.mCard.mToughness =
+                    cwi.mToughness =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-                    cwi.mCard.mLoyalty =
+                    cwi.mLoyalty =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-                    cwi.mCard.mText =
+                    cwi.mText =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-                    cwi.mCard.mFlavor =
+                    cwi.mFlavor =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-                    cwi.mCard.mNumber =
+                    cwi.mNumber =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-                    cwi.mCard.mCmc =
+                    cwi.mCmc =
                             cursor.getInt((cursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
-                    cwi.mCard.mColor =
+                    cwi.mColor =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
                 }
             }

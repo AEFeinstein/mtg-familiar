@@ -100,6 +100,8 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
+//import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * This class handles displaying card info.
  * WARNING! Because this fragment is nested in a CardViewPagerFragment, always get the parent
@@ -363,6 +365,7 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Release all image resources and invoke the garbage collector.
      */
+    //@SuppressFBWarnings(value = "DM_GC", justification = "Memory Leak without this")
     private void releaseImageResources(boolean isSplit) {
 
         if (mCardImageView != null) {
@@ -1276,6 +1279,7 @@ public class CardViewFragment extends FamiliarFragment {
          * @return unused
          */
         @SuppressWarnings("SpellCheckingInspection")
+        //@SuppressFBWarnings(value = "DM_GC", justification = "Memory leak without the GC")
         @Override
         protected Void doInBackground(Integer... params) {
 
@@ -1410,7 +1414,7 @@ public class CardViewFragment extends FamiliarFragment {
 
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
                 mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 /* Some error resizing. Out of memory? */
             }
 

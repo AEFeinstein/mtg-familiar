@@ -300,7 +300,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 mCompressedWishlist.clear();
             } else {
                 for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                    if (cwi.mCard.mName.equals(changedCardName)) {
+                    if (cwi.mName.equals(changedCardName)) {
                         cwi.clearCompressedInfo();
                     }
                 }
@@ -472,7 +472,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (WishlistFragment.this.isAdded()) {
                     /* Find the compressed wishlist info for this card */
                     for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                        if (cwi.mCard.mName.equals(mCardName)) {
+                        if (cwi.mName.equals(mCardName)) {
                             /* Find all foil and non foil compressed items with the same set code */
                             for (IndividualSetInfo isi : cwi.mInfo) {
                                 if (isi.mSetCode.equals(mSetCode)) {
@@ -502,7 +502,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (WishlistFragment.this.isAdded()) {
                     /* Find the compressed wishlist info for this card */
                     for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                        if (cwi.mCard.mName.equals(mCardName)) {
+                        if (cwi.mName.equals(mCardName)) {
                             /* Find all foil and non foil compressed items with the same set code */
                             for (IndividualSetInfo isi : cwi.mInfo) {
                                 if (isi.mSetCode.equals(mSetCode)) {
@@ -595,7 +595,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         public String getItemName(int position) {
-            return items.get(position).mCard.mName;
+            return items.get(position).mName;
         }
 
         @Override
@@ -625,7 +625,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 holder.mWishlistSets.removeAllViews();
 
                 /* Set the card name, always */
-                holder.mCardName.setText(info.mCard.mName);
+                holder.mCardName.setText(info.mName);
 
                 /* Show or hide full card information */
                 holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
@@ -640,12 +640,12 @@ public class WishlistFragment extends FamiliarListFragment {
                     holder.mCardSlash.setVisibility(View.GONE);
                     holder.mCardToughness.setVisibility(View.GONE);
                     /* Set the type, cost, and ability */
-                    holder.mCardType.setText(info.mCard.mType);
-                    holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imgGetter));
-                    holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mText, imgGetter));
+                    holder.mCardType.setText(info.mType);
+                    holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mManaCost, imgGetter));
+                    holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mText, imgGetter));
                     try {
-                        String power = CardHelpers.adaptCardPT(info.mCard.mPower);
-                        String toughness = CardHelpers.adaptCardPT(info.mCard.mToughness);
+                        String power = CardHelpers.adaptCardPT(info.mPower);
+                        String toughness = CardHelpers.adaptCardPT(info.mToughness);
                         holder.mCardPower.setText(power);
                         holder.mCardToughness.setText(toughness);
                         holder.mCardPower.setVisibility(View.VISIBLE);
@@ -656,7 +656,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
 
                     /* Show the loyalty, if the card has any (traitor...) */
-                    float loyalty = info.mCard.mLoyalty;
+                    float loyalty = info.mLoyalty;
                     if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
                         if (loyalty == CardDbAdapter.X) {
                             holder.mCardToughness.setText("X");

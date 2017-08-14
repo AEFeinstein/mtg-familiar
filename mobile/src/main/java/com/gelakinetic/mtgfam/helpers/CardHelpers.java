@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -363,9 +364,8 @@ public class CardHelpers {
      * Parent class of CompressedDecklistInfo and CompressedWishlistInfo.
      * It contains the common code shared between the two.
      */
-    public static class CompressedCardInfo {
+    public static class CompressedCardInfo extends MtgCard {
 
-        public final MtgCard mCard;
         public final ArrayList<IndividualSetInfo> mInfo;
 
         /**
@@ -375,9 +375,9 @@ public class CardHelpers {
          */
         public CompressedCardInfo(MtgCard card) {
 
+            super(card);
             mInfo = new ArrayList<>();
-            mCard = card;
-            if (mCard != null) {
+            if (mName != null) {
                 add(card);
             }
 
@@ -436,7 +436,7 @@ public class CardHelpers {
 
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
-            return card1.mCard.mName.compareTo(card2.mCard.mName);
+            return card1.mName.compareTo(card2.mName);
         }
 
     }
@@ -450,9 +450,9 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            if (card1.mCard.mCmc == card2.mCard.mCmc) {
+            if (card1.mCmc == card2.mCmc) {
                 return 0;
-            } else if (card1.mCard.mCmc > card2.mCard.mCmc) {
+            } else if (card1.mCmc > card2.mCmc) {
                 return 1;
             }
             return -1;
@@ -496,14 +496,14 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            String cardColors1 = getColors(card1.mCard.mColor);
-            String cardColors2 = getColors(card2.mCard.mColor);
+            String cardColors1 = getColors(card1.mColor);
+            String cardColors2 = getColors(card2.mColor);
             int priority1;
             int priority2;
             //1. If colorless, perform colorless comparison
             if (cardColors1.length() + cardColors2.length() == 0) {
-                cardColors1 = card1.mCard.mColor;
-                cardColors2 = card2.mCard.mColor;
+                cardColors1 = card1.mColor;
+                cardColors2 = card2.mColor;
                 for (int i = 0; i < Math.min(cardColors1.length(), cardColors2.length()); i++) {
                     priority1 = NON_COLORS.indexOf(cardColors1.charAt(i));
                     priority2 = NON_COLORS.indexOf(cardColors2.charAt(i));
@@ -567,8 +567,8 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            String card1Type = card1.mCard.mType;
-            String card2Type = card2.mCard.mType;
+            String card1Type = card1.mType;
+            String card2Type = card2.mType;
             for (String type : mTypes) {
                 if (card1Type.contains(type) && card2Type.contains(type)) {
                     return 0;
@@ -657,7 +657,7 @@ public class CardHelpers {
 
             /* If the price difference is less than a penny */
             if (Math.abs(sumWish1 - sumWish2) < 0.01) {
-                return card1.mCard.mName.compareTo(card2.mCard.mName);
+                return card1.mName.compareTo(card2.mName);
             } else if (sumWish1 > sumWish2) {
                 return 1;
             }
