@@ -36,6 +36,7 @@ import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
+import com.gelakinetic.mtgfam.helpers.view.ATokenTextView;
 import com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner;
 import com.gelakinetic.mtgfam.helpers.view.CompletionView;
 import com.gelakinetic.mtgfam.helpers.view.ManaCostTextView;
@@ -289,7 +290,7 @@ public class SearchViewFragment extends FamiliarFragment {
             public void onTokenRemoved(String token) {
                 // If there are no tokens, clear out any stray text
                 if (mSupertypeField.getObjects().size() == 0) {
-                    mSupertypeField.setText("");
+                    removeNonTokens(mSupertypeField);
                 }
             }
         });
@@ -303,7 +304,7 @@ public class SearchViewFragment extends FamiliarFragment {
             public void onTokenRemoved(String token) {
                 // If there are no tokens, clear out any stray text
                 if (mSubtypeField.getObjects().size() == 0) {
-                    mSubtypeField.setText("");
+                    removeNonTokens(mSubtypeField);
                 }
             }
         });
@@ -317,7 +318,20 @@ public class SearchViewFragment extends FamiliarFragment {
             public void onTokenRemoved(String token) {
                 // If there are no tokens, clear out any stray text
                 if (mSetField.getObjects().size() == 0) {
-                    mSetField.setText("");
+                    removeNonTokens(mSetField);
+                }
+            }
+        });
+        manaCostTextView.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+            @Override
+            public void onTokenAdded(String token) {
+
+            }
+
+            @Override
+            public void onTokenRemoved(String token) {
+                if (manaCostTextView.getObjects().size() == 0) {
+                    removeNonTokens(manaCostTextView);
                 }
             }
         });
@@ -776,13 +790,13 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void clear() {
         mNameField.setText("");
-        clearCompletionView(mSupertypeField);
-        clearCompletionView(mSubtypeField);
+        clearATokenTextView(mSupertypeField);
+        clearATokenTextView(mSubtypeField);
         mTextField.setText("");
         mArtistField.setText("");
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
-        clearCompletionView(mSetField);
+        clearATokenTextView(mSetField);
 
         mCheckboxW.setChecked(false);
         mCheckboxU.setChecked(false);
@@ -811,7 +825,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(0);
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
-        manaCostTextView.clear();
+        clearATokenTextView(manaCostTextView);
         comparisonSpinner.setSelection(Comparison.EMPTY.ordinal());
 
         if (mSetCheckedIndices != null) {
@@ -824,15 +838,21 @@ public class SearchViewFragment extends FamiliarFragment {
         checkDialogButtonColors();
     }
 
-    private void clearCompletionView(CompletionView completionView) {
+    private void clearATokenTextView(ATokenTextView completionView) {
         if (completionView.getObjects().size() == 0) {
             // If there are no tokens, its safe to clear the whole text view
-            completionView.setText("");
+            removeNonTokens(completionView);
         } else {
             // Otherwise, clear the tokens. This is asynchronous. Any stray text
             // will be cleared after the tokens are removed via a listener
-            completionView.clear();
+            for (String token : completionView.getObjects()) {
+                completionView.removeObject((token));
+            }
         }
+    }
+
+    public void removeNonTokens(ATokenTextView textView) {
+        textView.onRestoreInstanceState(textView.onSaveInstanceState());
     }
 
     /**
@@ -964,9 +984,13 @@ public class SearchViewFragment extends FamiliarFragment {
                     mSetField.addObject(set);
                 }
             } else {
-                mSetField.clear();
+                clearATokenTextView(mSetField);
             }
-            manaCostTextView.setObjectsFromString(criteria.mc);
+            if (criteria.mc != null) {
+                manaCostTextView.setObjectsFromString(criteria.mc);
+            } else {
+                clearATokenTextView(manaCostTextView);
+            }
             comparisonSpinner.setSelection(criteria.mcLogic.ordinal());
             if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
