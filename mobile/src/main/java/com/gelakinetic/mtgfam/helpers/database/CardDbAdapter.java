@@ -1941,7 +1941,7 @@ public class CardDbAdapter {
         Cursor c;
         try {
             String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
-            ALL_CARD_DATA_KEYS.toArray(allSetDataKeys);
+            ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
             c = sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | IllegalStateException | NullPointerException e) {
