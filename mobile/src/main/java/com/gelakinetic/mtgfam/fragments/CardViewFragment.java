@@ -100,7 +100,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
-//import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * This class handles displaying card info.
@@ -365,7 +365,7 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Release all image resources and invoke the garbage collector.
      */
-    //@SuppressFBWarnings(value = "DM_GC", justification = "Memory Leak without this")
+    @SuppressFBWarnings(value = "DM_GC", justification = "Memory Leak without this")
     private void releaseImageResources(boolean isSplit) {
 
         if (mCardImageView != null) {
@@ -1279,7 +1279,7 @@ public class CardViewFragment extends FamiliarFragment {
          * @return unused
          */
         @SuppressWarnings("SpellCheckingInspection")
-        //@SuppressFBWarnings(value = "DM_GC", justification = "Memory leak without the GC")
+        @SuppressFBWarnings(value = "DM_GC", justification = "Memory leak without the GC")
         @Override
         protected Void doInBackground(Integer... params) {
 

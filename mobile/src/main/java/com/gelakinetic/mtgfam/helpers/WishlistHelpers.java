@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-//import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.AVG_PRICE;
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.HIGH_PRICE;
@@ -356,7 +356,7 @@ public class WishlistHelpers {
          * @return an integer < 0 if wish1 is less than wish2, 0 if they are equal, and > 0 if wish1 is greater than wish2.
          */
         @Override
-        //@SuppressFBWarnings(value = "DM_BOXED_PRIMITIVE_FOR_COMPARE", justification = "Minimum API Level not high enough")
+        @SuppressFBWarnings(value = "DM_BOXED_PRIMITIVE_FOR_COMPARE", justification = "Minimum API Level not high enough")
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
 
             int retVal = 0;
