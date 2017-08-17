@@ -47,7 +47,7 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
 
     @Override
     protected String defaultObject(String completionText) {
-        return " ";
+        return "";
     }
 
     @Override
