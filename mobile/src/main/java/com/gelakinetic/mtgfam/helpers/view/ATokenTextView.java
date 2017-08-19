@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.helpers.view;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 
@@ -21,8 +22,10 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
         @Override
         public void onTokenRemoved(String token) {
             if (ATokenTextView.this.getObjects().isEmpty()) {
-                ATokenTextView.this.onRestoreInstanceState(
-                        ATokenTextView.this.onSaveInstanceState());
+                String value = ATokenTextView.this.getText().toString();
+                if (hasNonSplitChar(value)) {
+                    ATokenTextView.this.clearText();
+                }
             }
             if (this.tokenListener != null) {
                 tokenListener.onTokenRemoved(token);
@@ -100,11 +103,27 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
 
     public void clearTextAndTokens() {
         if (this.getObjects().isEmpty()) {
-            this.onRestoreInstanceState(this.onSaveInstanceState());
+            this.clearText();
         } else {
             for (String token : this.getObjects()) {
                 this.removeObject(token);
             }
         }
+    }
+
+    private boolean hasNonSplitChar(String s) {
+        for(char c : s.toCharArray()){
+            // These two chars are used for splitting tokens in TokenCompleteTextView
+            // Unfortunately the array splitChar[] is private there.
+            if(c != ',' && c != ';') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void clearText() {
+        final Parcelable state = this.onSaveInstanceState();
+        this.onRestoreInstanceState(state);
     }
 }
