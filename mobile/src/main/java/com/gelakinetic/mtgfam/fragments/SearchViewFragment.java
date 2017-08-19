@@ -117,8 +117,8 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mTouChoice;
     private Spinner mCmcLogic;
     private Spinner mCmcChoice;
-    private ComparisonSpinner comparisonSpinner;
-    private ManaCostTextView manaCostTextView;
+    private ComparisonSpinner mManaComparisonSpinner;
+    private ManaCostTextView mManaCostTextView;
 
     public Dialog mFormatDialog;
     public Dialog mRarityDialog;
@@ -225,8 +225,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mTouChoice = (Spinner) myFragmentView.findViewById(R.id.touChoice);
         mCmcLogic = (Spinner) myFragmentView.findViewById(R.id.cmcLogic);
         mCmcChoice = (Spinner) myFragmentView.findViewById(R.id.cmcChoice);
-        manaCostTextView = (ManaCostTextView) myFragmentView.findViewById(R.id.manaCostTextView);
-        comparisonSpinner = (ComparisonSpinner) myFragmentView.findViewById(R.id.comparisonSpinner);
+        mManaCostTextView = (ManaCostTextView) myFragmentView.findViewById(R.id.manaCostTextView);
+        mManaComparisonSpinner = (ComparisonSpinner) myFragmentView.findViewById(R.id.comparisonSpinner);
 
         /* Now we need to apply a different TextView to our Spinners to center the items */
         ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
@@ -275,7 +275,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mSupertypeField.setOnEditorActionListener(doSearchListener);
         mSubtypeField.setOnEditorActionListener(doSearchListener);
         mSetField.setOnEditorActionListener(doSearchListener);
-        manaCostTextView.setOnEditorActionListener(doSearchListener);
+        mManaCostTextView.setOnEditorActionListener(doSearchListener);
         mFlavorField.setOnEditorActionListener(doSearchListener);
         mArtistField.setOnEditorActionListener(doSearchListener);
         mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
@@ -322,7 +322,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 }
             }
         });
-        manaCostTextView.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+        mManaCostTextView.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
             @Override
             public void onTokenAdded(String token) {
 
@@ -330,8 +330,8 @@ public class SearchViewFragment extends FamiliarFragment {
 
             @Override
             public void onTokenRemoved(String token) {
-                if (manaCostTextView.getObjects().size() == 0  && hasNonSplitChar(manaCostTextView.getText().toString())) {
-                    removeNonTokens(manaCostTextView);
+                if (mManaCostTextView.getObjects().size() == 0  && hasNonSplitChar(mManaCostTextView.getText().toString())) {
+                    removeNonTokens(mManaCostTextView);
                 }
             }
         });
@@ -578,7 +578,7 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mArtistField.getText() != null;
         assert mSetField.getText() != null;
         assert mCollectorsNumberField.getText() != null;
-        assert manaCostTextView.getText() != null;
+        assert mManaCostTextView.getText() != null;
 
         /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString().trim();
@@ -612,8 +612,8 @@ public class SearchViewFragment extends FamiliarFragment {
         searchCriteria.artist = mArtistField.getText().toString().trim();
         searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString().trim();
         searchCriteria.set = sets;
-        searchCriteria.mc = manaCostTextView.getStringFromObjects();
-        searchCriteria.mcLogic = (Comparison) comparisonSpinner.getSelectedItem();
+        searchCriteria.mc = mManaCostTextView.getStringFromObjects();
+        searchCriteria.mcLogic = (Comparison) mManaComparisonSpinner.getSelectedItem();
 
         if (searchCriteria.name.length() == 0) {
             searchCriteria.name = null;
@@ -836,8 +836,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(0);
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
-        clearATokenTextView(manaCostTextView);
-        comparisonSpinner.setSelection(Comparison.EMPTY.ordinal());
+        clearATokenTextView(mManaCostTextView);
+        mManaComparisonSpinner.setSelection(Comparison.EMPTY.ordinal());
 
         if (mSetCheckedIndices != null) {
             mSetCheckedIndices = new int[0];
@@ -998,11 +998,11 @@ public class SearchViewFragment extends FamiliarFragment {
                 clearATokenTextView(mSetField);
             }
             if (criteria.mc != null) {
-                manaCostTextView.setObjectsFromString(criteria.mc);
+                mManaCostTextView.setObjectsFromString(criteria.mc);
             } else {
-                clearATokenTextView(manaCostTextView);
+                clearATokenTextView(mManaCostTextView);
             }
-            comparisonSpinner.setSelection(criteria.mcLogic.ordinal());
+            mManaComparisonSpinner.setSelection(criteria.mcLogic.ordinal());
             if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
             }
