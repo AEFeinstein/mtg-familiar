@@ -289,7 +289,7 @@ public class SearchViewFragment extends FamiliarFragment {
             @Override
             public void onTokenRemoved(String token) {
                 // If there are no tokens, clear out any stray text
-                if (mSupertypeField.getObjects().size() == 0) {
+                if (mSupertypeField.getObjects().size() == 0 && hasNonSplitChar(mSupertypeField.getText().toString())) {
                     removeNonTokens(mSupertypeField);
                 }
             }
@@ -303,7 +303,7 @@ public class SearchViewFragment extends FamiliarFragment {
             @Override
             public void onTokenRemoved(String token) {
                 // If there are no tokens, clear out any stray text
-                if (mSubtypeField.getObjects().size() == 0) {
+                if (mSubtypeField.getObjects().size() == 0 && hasNonSplitChar(mSubtypeField.getText().toString())) {
                     removeNonTokens(mSubtypeField);
                 }
             }
@@ -317,7 +317,7 @@ public class SearchViewFragment extends FamiliarFragment {
             @Override
             public void onTokenRemoved(String token) {
                 // If there are no tokens, clear out any stray text
-                if (mSetField.getObjects().size() == 0) {
+                if (mSetField.getObjects().size() == 0  && hasNonSplitChar(mSetField.getText().toString())) {
                     removeNonTokens(mSetField);
                 }
             }
@@ -330,7 +330,7 @@ public class SearchViewFragment extends FamiliarFragment {
 
             @Override
             public void onTokenRemoved(String token) {
-                if (manaCostTextView.getObjects().size() == 0) {
+                if (manaCostTextView.getObjects().size() == 0  && hasNonSplitChar(manaCostTextView.getText().toString())) {
                     removeNonTokens(manaCostTextView);
                 }
             }
@@ -481,6 +481,17 @@ public class SearchViewFragment extends FamiliarFragment {
         );
         myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
         return myFragmentView;
+    }
+
+    private boolean hasNonSplitChar(String s) {
+        for(char c : s.toCharArray()){
+            // These two chars are used for splitting tokens in TokenCompleteTextView
+            // Unfortunately the array splitChar[] is private there.
+            if(c != ',' && c != ';') {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class SetAdapter extends ArrayAdapter<String> {
