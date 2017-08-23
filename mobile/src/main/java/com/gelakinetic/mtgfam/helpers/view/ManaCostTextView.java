@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.gelakinetic.mtgfam.R;
 import com.tokenautocomplete.FilteredArrayAdapter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.LinkedHashMap;
 
 public class ManaCostTextView extends ATokenTextView {
@@ -140,14 +142,10 @@ public class ManaCostTextView extends ATokenTextView {
         return value;
     }
 
-    public void setObjectsFromString(@Nullable String value) {
-        if (value == null) {
-            this.clear();
-        } else {
-            /* Get a list of the persisted mana symbols */
-            for (String symbol : value.split("}")) {
-                this.addObject(symbol + "}");
-            }
+    public void setObjectsFromString(@NotNull String value) {
+        /* Get a list of the persisted mana symbols */
+        for (String symbol : value.split("}")) {
+            this.addObject(symbol + "}");
         }
     }
 

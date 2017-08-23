@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -46,20 +46,20 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
         mRandom = new Random();
 
         assert myFragmentView != null;
-        mDieOutput = (TextSwitcher) myFragmentView.findViewById(R.id.die_output);
+        mDieOutput = myFragmentView.findViewById(R.id.die_output);
         mDieOutput.setInAnimation(AnimationUtils.loadAnimation(this.getActivity(), android.R.anim.slide_in_left));
         mDieOutput.setOutAnimation(AnimationUtils.loadAnimation(this.getActivity(), android.R.anim.slide_out_right));
         mDieOutput.setFactory(this);
 
-        ImageView d2 = (ImageView) myFragmentView.findViewById(R.id.d2);
-        ImageView d4 = (ImageView) myFragmentView.findViewById(R.id.d4);
-        ImageView d6 = (ImageView) myFragmentView.findViewById(R.id.d6);
-        ImageView d8 = (ImageView) myFragmentView.findViewById(R.id.d8);
-        ImageView d10 = (ImageView) myFragmentView.findViewById(R.id.d10);
-        ImageView d12 = (ImageView) myFragmentView.findViewById(R.id.d12);
-        ImageView d20 = (ImageView) myFragmentView.findViewById(R.id.d20);
-        ImageView d100 = (ImageView) myFragmentView.findViewById(R.id.d100);
-        ImageView dN = (ImageView) myFragmentView.findViewById(R.id.dN);
+        ImageButton d2 = myFragmentView.findViewById(R.id.d2);
+        ImageButton d4 = myFragmentView.findViewById(R.id.d4);
+        ImageButton d6 = myFragmentView.findViewById(R.id.d6);
+        ImageButton d8 = myFragmentView.findViewById(R.id.d8);
+        ImageButton d10 = myFragmentView.findViewById(R.id.d10);
+        ImageButton d12 = myFragmentView.findViewById(R.id.d12);
+        ImageButton d20 = myFragmentView.findViewById(R.id.d20);
+        ImageButton d100 = myFragmentView.findViewById(R.id.d100);
+        ImageButton dN = myFragmentView.findViewById(R.id.dN);
 
         /* Color the die faces */
         int color = ContextCompat.getColor(getContext(), R.color.colorPrimary_light);
