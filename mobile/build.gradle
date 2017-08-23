@@ -91,6 +91,7 @@ android {
         }
     }
     lintOptions {
+        abortOnError false
         disable 'MissingTranslation'
     }
 }
@@ -118,4 +119,16 @@ dependencies {
     compile 'com.github.machinarius:preferencefragment:0.1.2'
     compile 'org.jsoup:jsoup:1.10.3'
     compile "com.splitwise:tokenautocomplete:2.0.8"
+}
+
+if (System.env.TRAVIS == 'true') {
+    allprojects {
+        tasks.withType(GroovyCompile) {
+            groovyOptions.fork = false
+        }
+        tasks.withType(Test) {
+            maxParallelForks = 2
+            minHeapSize = '128m'
+        }
+    }
 }
