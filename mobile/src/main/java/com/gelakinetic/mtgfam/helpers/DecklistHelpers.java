@@ -1,7 +1,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
@@ -238,11 +237,10 @@ public class DecklistHelpers {
             if (o instanceof CompressedDecklistInfo) {
                 final CompressedDecklistInfo cdi = (CompressedDecklistInfo) o;
                 /* Are the headers equal? */
-                return cdi.header != null
-                        && cdi.header.equals(header)
-                        || mName != null
-                        && mName.equals(cdi.mName)
-                        && mIsSideboard == cdi.mIsSideboard;
+                return (header != null && !header.isEmpty() &&
+                        header.equals(cdi.header)) ||
+                        (mName != null && !mName.isEmpty() &&
+                                mName.equals(cdi.mName) && (mIsSideboard == cdi.mIsSideboard));
             }
             return false;
         }

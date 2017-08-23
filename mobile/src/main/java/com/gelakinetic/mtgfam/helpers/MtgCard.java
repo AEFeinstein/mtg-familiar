@@ -76,24 +76,26 @@ public class MtgCard extends Card {
     }
 
     public MtgCard(Card card) {
-        this.mName = card.mName;
-        this.mExpansion = card.mExpansion;
-        this.mType = card.mType;
-        this.mRarity = card.mRarity;
-        this.mManaCost = card.mManaCost;
-        this.mCmc = card.mCmc;
-        this.mPower = card.mPower;
-        this.mToughness = card.mToughness;
-        this.mLoyalty = card.mLoyalty;
-        this.mText = card.mText;
-        this.mFlavor = card.mFlavor;
-        this.mArtist = card.mArtist;
-        this.mNumber = card.mNumber;
-        this.mColor = card.mColor;
-        this.mMultiverseId = card.mMultiverseId;
-        this.mColorIdentity = card.mColorIdentity;
-        this.mWatermark = card.mWatermark;
-        this.mForeignPrintings.addAll(card.mForeignPrintings);
+        if(card != null) {
+            this.mName = card.mName;
+            this.mExpansion = card.mExpansion;
+            this.mType = card.mType;
+            this.mRarity = card.mRarity;
+            this.mManaCost = card.mManaCost;
+            this.mCmc = card.mCmc;
+            this.mPower = card.mPower;
+            this.mToughness = card.mToughness;
+            this.mLoyalty = card.mLoyalty;
+            this.mText = card.mText;
+            this.mFlavor = card.mFlavor;
+            this.mArtist = card.mArtist;
+            this.mNumber = card.mNumber;
+            this.mColor = card.mColor;
+            this.mMultiverseId = card.mMultiverseId;
+            this.mColorIdentity = card.mColorIdentity;
+            this.mWatermark = card.mWatermark;
+            this.mForeignPrintings.addAll(card.mForeignPrintings);
+        }
     }
 
     /**

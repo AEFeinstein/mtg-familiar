@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -392,14 +391,16 @@ public class CardHelpers {
 
             IndividualSetInfo isi = new IndividualSetInfo();
 
-            isi.mSet = card.setName;
-            isi.mSetCode = card.setCode;
-            isi.mNumber = card.mNumber;
-            isi.mIsFoil = card.foil;
-            isi.mPrice = null;
-            isi.mMessage = card.message;
-            isi.mNumberOf = card.numberOf;
-            isi.mRarity = card.mRarity;
+            if(card != null) {
+                isi.mSet = card.setName;
+                isi.mSetCode = card.setCode;
+                isi.mNumber = card.mNumber;
+                isi.mIsFoil = card.foil;
+                isi.mPrice = null;
+                isi.mMessage = card.message;
+                isi.mNumberOf = card.numberOf;
+                isi.mRarity = card.mRarity;
+            }
 
             mInfo.add(isi);
 
