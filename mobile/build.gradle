@@ -13,11 +13,11 @@ repositories {
 def configDir = "${project.rootDir}/config"
 
 task checkstyle(type: Checkstyle, group: "verification") {
-    configFile file("$configDir/checkstyle.xml")
+    configFile file("$configDir/checkstyle/checkstyle.xml")
     configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle.suppressions.xml").absolutePath
     source 'src'
     include '**/*.java'
-    exclude '**/gen/**'
+    excludes = ['**/gen/**', '**/robobunny/**']
     classpath = files()
 }
 
@@ -124,5 +124,17 @@ dependencies {
         //   com.android.dex.DexException: Multiple dex files define Ljavax/annotation/CheckForNull
         exclude module: 'jsr305'
         exclude module: 'jcip-annotations'
+    }
+}
+
+if (System.env.TRAVIS == 'true') {
+    allprojects {
+        tasks.withType(GroovyCompile) {
+            groovyOptions.fork = false
+        }
+        tasks.withType(Test) {
+            maxParallelForks = 2
+            minHeapSize = '128m'
+        }
     }
 }

@@ -1,5 +1,9 @@
 language: android
 
+env:
+  global:
+    - GRADLE_OPTS="-Xms128m"
+
 jdk:
   - oraclejdk8
 
@@ -33,4 +37,4 @@ android:
     - addon-google_apis-google-19
 
 script:
-    - ./gradlew build --stacktrace --parallel
+    - ./gradlew build --stacktrace
