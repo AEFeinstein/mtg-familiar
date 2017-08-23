@@ -388,14 +388,8 @@ public class DecklistFragment extends FamiliarListFragment {
                     CompressedDecklistInfo wrapped =
                             new CompressedDecklistInfo(card.first, card.second);
                     if (mCompressedDecklist.contains(wrapped)) {
-                        CompressedDecklistInfo existingCard =
-                                mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped));
-                        if (existingCard.mIsSideboard == card.second) {
-                            mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
-                                    .add(card.first);
-                        } else {
-                            mCompressedDecklist.add(wrapped);
-                        }
+                        mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
+                                .add(card.first);
                     } else {
                         mCompressedDecklist.add(wrapped);
                     }
@@ -550,8 +544,7 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     private boolean insertHeaderAt(final int position, final String headerText) {
 
-        final CompressedDecklistInfo header =
-                new CompressedDecklistInfo(null, false);
+        final CompressedDecklistInfo header = new CompressedDecklistInfo(new MtgCard(), false);
         header.header = headerText;
         if (!mCompressedDecklist.contains(header)) {
             mCompressedDecklist.add(position, header);
@@ -573,7 +566,7 @@ public class DecklistFragment extends FamiliarListFragment {
         for (int i = 0; i < mCompressedDecklist.size(); i++) {
             for (int j = 0; j < cardTypes.length; j++) {
                 final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
-                if (cdi != null /* We only want entries that have a card attached */
+                if (!cdi.mName.equals("") /* We only want entries that have a card attached */
                         && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
                         && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) {
                     if (cdi.mIsSideboard /* it is in the sideboard */
@@ -627,7 +620,7 @@ public class DecklistFragment extends FamiliarListFragment {
             /**
              * Loading the price for this card failed and threw a spiceException.
              *
-             * @param spiceException The exception thrown when trying to load this card's price
+`             * @param spiceException The exception thrown when trying to load this card's price
              */
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -927,8 +920,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 if (!isInSelectMode()) {
                     /* if we aren't in select mode, open a dialog to edit this card */
-                    final CompressedDecklistInfo item =
-                            items.get(getAdapterPosition());
+                    final CompressedDecklistInfo item = items.get(getAdapterPosition());
                     showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
                             item.mName, item.mIsSideboard);
                 }

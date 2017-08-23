@@ -242,7 +242,7 @@ public class DecklistHelpers {
                         (mName != null && !mName.isEmpty() &&
                                 mName.equals(cdi.mName) && (mIsSideboard == cdi.mIsSideboard));
             }
-            return false;
+            return super.equals(o);
         }
 
         @Override

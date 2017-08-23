@@ -270,8 +270,10 @@ public class WishlistHelpers {
          */
         @Override
         public boolean equals(Object o) {
-            return o instanceof CompressedWishlistInfo
-                    && mName.equals(((CompressedWishlistInfo) o).mName);
+            if (o instanceof CompressedWishlistInfo) {
+                return mName.equals(((CompressedWishlistInfo) o).mName);
+            }
+            return super.equals(o);
         }
 
         @Override
