@@ -351,7 +351,7 @@ public class DecklistFragment extends FamiliarListFragment {
             return;
         }
         for (final CompressedDecklistInfo cdi : mCompressedDecklist) {
-            if (cdi.mCard != null && cdi.mCard.mName.equals(cardChanged)) {
+            if (!cdi.mName.isEmpty() && cdi.mName.equals(cardChanged)) {
                 cdi.clearCompressedInfo();
             }
         }
