@@ -52,9 +52,8 @@ import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Simple Cards database access helper class. Defines the basic CRUD operations
- * and gives the ability to list all Cards as well as retrieve or modify a
- * specific Card.
+ * Simple Cards database access helper class. Defines the basic CRUD operations and gives the
+ * ability to list all Cards as well as retrieve or modify a Specific Card.
  */
 public class CardDbAdapter {
 
@@ -320,7 +319,7 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Drop all of the tables, then create fresh copies of all of the tables
+     * Drop all of the tables, then create fresh copies of all of the tables.
      *
      * @param sqLiteDatabase The database to remake tables in
      * @throws FamiliarDbException If something goes wrong
@@ -348,7 +347,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Copy the internally packaged gzipped database to where Android can access it
+     * Copy the internally packaged gzipped database to where Android can access it.
      *
      * @param context The Context to get the packaged gzipped database from
      */
@@ -401,7 +400,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Helper function to check if the database is up to date
+     * Helper function to check if the database is up to date.
      *
      * @param context The context used to get the database file
      * @return true if the database does not exist, is too small, or has a lower version than
@@ -417,11 +416,10 @@ public class CardDbAdapter {
     }
 
     /**
-     * Builds a map for all columns that may be requested, which will be given
-     * to the SQLiteQueryBuilder. This is a good way to define aliases for
-     * column names, but must include all columns, even if the value is the key.
-     * This allows the ContentProvider to request columns w/o the need to know
-     * real column names and create the alias itself.
+     * Builds a map for all columns that may be requested, which will be given to the
+     * SQLiteQueryBuilder. This is a good way to define aliases for column names, but must include
+     * all columns, even if the value is the key. This allows the ContentProvider to request columns
+     * w/o the need to know real column names and create the alias itself.
      *
      * @return A column map
      */
@@ -443,7 +441,7 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Return a String array of all the unique values in a given column in DATABASE_TABLE_CARDS
+     * Return a String array of all the unique values in a given column in DATABASE_TABLE_CARDS.
      *
      * @param colKey      The column to return unique values from
      * @param shouldSplit Whether or not each individual word from the column should be considered
@@ -496,7 +494,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a list of KEY_ID values, return a cursor with all of a cards' information
+     * Given a list of KEY_ID values, return a cursor with all of a cards' information.
      *
      * @param ids        A list of ids for cards to fetch
      * @param orderByStr A string of keys and directions to order this query by
@@ -532,7 +530,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a card's name, return a cursor with all of that card's requested information
+     * Given a card's name, return a cursor with all of that card's requested information.
      *
      * @param name        The name of the card to query
      * @param fields      The requested information about the card
@@ -578,7 +576,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a multiverse ID, return a cursor with all of that card's requested information
+     * Given a multiverse ID, return a cursor with all of that card's requested information.
      *
      * @param multiverseId The card's multivers ID
      * @param fields       The requested information about the card
@@ -621,7 +619,7 @@ public class CardDbAdapter {
 
     /**
      * Given an ArrayList of CompressedWishlistInfo, fill in all the missing information by querying
-     * the database
+     * the database.
      *
      * @param mCompressedCard An ArrayList of CompressedWishlistInfo to fill in
      * @param mDb             The database to query
@@ -726,7 +724,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a card name and set code, return a cursor with that card's requested data
+     * Given a card name and set code, return a cursor with that card's requested data.
      *
      * @param name    The card's name
      * @param setCode The card's set code
@@ -776,7 +774,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a card name, return the KEY_ID for that card
+     * Given a card name, return the KEY_ID for that card.
      *
      * @param name The name of the card
      * @param mDb  The database to query
@@ -815,14 +813,15 @@ public class CardDbAdapter {
 
     /**
      * This function will query the database with the information in criteria and return a cursor
-     * with the requested data
+     * with the requested data.
      *
      * @param criteria    The criteria used to build the query
      * @param backface    Whether or not the results should include the 'b' side of multicards
      * @param returnTypes The columns which should be returned in the cursor
      * @param consolidate true to not include multiple printings of the same card, false otherwise
      * @param orderByStr  A string used to order the results
-     * @param mDb         The database to query  @return A cursor with the requested information about the queried cards
+     * @param mDb         The database to query  @return A cursor with the requested information
+     *                    about the queried cards
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
@@ -840,30 +839,26 @@ public class CardDbAdapter {
             }
         }
 
-        /************************************************************************************
-         **
-         * Reuben's version Differences: Original code is verbose only, but mine
-         * allows for matching exact text, all words, or just any one word.
+        /*
+         * Reuben's version Differences: Original code is verbose only, but mine allows for matching
+         * exact text, all words, or just any one word.
          */
         if (criteria.text != null) {
             /* Separate each individual */
             String[] cardTextParts = criteria.text.split(" ");
 
-            /**
-             * The following switch statement tests to see which text search
-             * logic was chosen by the user. If they chose the first option (0),
-             * then look for cards with text that includes all words, but not
-             * necessarily the exact phrase. The second option (1) finds cards
-             * that have 1 or more of the chosen words in their text. The third
-             * option (2) searches for the exact phrase as entered by the user.
-             * The 'default' option is impossible via the way the code is
-             * written, but I believe it's also mandatory to include it in case
-             * someone else is perhaps fussing with the code and breaks it. The
-             * if statement at the end is theoretically unnecessary, because
-             * once we've entered the current if statement, there is no way to
-             * NOT change the statement variable. However, you never really know
-             * who's going to break open your code and fuss around with it, so
-             * it's always good to leave some small safety measures.
+            /*
+             * The following switch statement tests to see which text search logic was chosen by the
+             * user. If they chose the first option (0), then look for cards with text that includes
+             * all words, but not necessarily the exact phrase. The second option (1) finds cards
+             * that have 1 or more of the chosen words in their text. The third option (2) searches
+             * for the exact phrase as entered by the user. The 'default' option is impossible via
+             * the way the code is written, but I believe it's also mandatory to include it in case
+             * someone else is perhaps fussing with the code and breaks it. The if statement at the
+             * end is theoretically unnecessary, because once we've entered the current if
+             * statement, there is no way to NOT change the statement variable. However, you never
+             * really know who's going to break open your code and fuss around with it, so it's
+             * always good to leave some small safety measures.
              */
             switch (criteria.textLogic) {
                 case 0:
@@ -909,9 +904,8 @@ public class CardDbAdapter {
                     break;
             }
         }
-        /** End Reuben's version
-
-         **
+        /*
+         * End Reuben's version
          * Reuben's version Differences: Original version only allowed for
          * including all types, not any of the types or excluding the given
          * types.
@@ -1047,7 +1041,7 @@ public class CardDbAdapter {
                     break;
             }
         }
-        /** End Reuben's version
+        /* End Reuben's version
          *************************************************************************************/
 
         if (criteria.flavor != null) {
@@ -1065,12 +1059,10 @@ public class CardDbAdapter {
                     + " = " + sanitizeString(criteria.collectorsNumber, false) + ")";
         }
 
-        /************************************************************************************
-         **
-         * Code below added/modified by Reuben. Differences: Original version
-         * only had 'Any' and 'All' options and lacked 'Exclusive' and 'Exact'
-         * matching. In addition, original programming only provided exclusive
-         * results.
+        /*
+         * Code below added/modified by Reuben. Differences: Original version only had 'Any' and
+         * 'All' options and lacked 'Exclusive' and 'Exact' matching. In addition, original
+         * programming only provided exclusive results.
          */
         if (null != criteria.color &&
                 !(criteria.color.equals("wubrgl") || (criteria.color.equals("WUBRGL") &&
@@ -1079,8 +1071,7 @@ public class CardDbAdapter {
 
             /* Can't contain these colors
              **
-             * ...if the chosen color logic was exactly (2) or none (3) of the
-             * selected colors
+             * ...if the chosen color logic was exactly (2) or none (3) of the selected colors.
              */
             if (criteria.colorLogic > 1) {
                 statement += " AND ((";
@@ -1136,12 +1127,12 @@ public class CardDbAdapter {
             else
                 statement += ")";
         }
-        /** End of addition
+        /* End of addition
          *************************************************************************************/
 
         /*
          * Color Identity Filter
-         * If a color is selected, it's upper case. Otherwise it's lower case
+         * If a color is selected, it's upper case. Otherwise it's lower case.
          */
         if (null != criteria.colorIdentity && !(criteria.colorIdentity.equals("wubrgl"))) {
             switch (criteria.colorIdentityLogic) {
@@ -1382,7 +1373,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a set and a card number, return the KEY_ID for that card
+     * Given a set and a card number, return the KEY_ID for that card.
      *
      * @param set    The set code
      * @param number The number to look up
@@ -1411,7 +1402,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Returns a card name queried by set and collector's number
+     * Returns a card name queried by set and collector's number.
      *
      * @param set    The set code
      * @param number The number to look up
@@ -1440,7 +1431,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Returns a Cursor positioned at the word specified by rowId
+     * Returns a Cursor positioned at the word specified by rowId.
      *
      * @param rowId   id of word to retrieve
      * @param columns The columns to include, if null then all are included
@@ -1451,10 +1442,9 @@ public class CardDbAdapter {
     public static Cursor getCardByRowId(String rowId, String[] columns, SQLiteDatabase mDb)
             throws FamiliarDbException {
         /*
-         * The SQLiteBuilder provides a map for all possible columns requested
-         * to actual columns in the database, creating a simple column alias
-         * mechanism by which the ContentProvider does not need to know the real
-         * column names
+         * The SQLiteBuilder provides a map for all possible columns requested to actual columns in
+         * the database, creating a simple column alias mechanism by which the ContentProvider does
+         * not need to know the real column names.
          */
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(DATABASE_TABLE_CARDS);
@@ -1481,7 +1471,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Returns a Cursor over all words that match the given query
+     * Returns a Cursor over all words that match the given query.
      *
      * @param query The string to search for
      * @param mDb   The database to query
@@ -1518,7 +1508,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a card name and the set it's from, return the card's multiverse ID
+     * Given a card name and the set it's from, return the card's multiverse ID.
      *
      * @param name    The card's name
      * @param setCode The set code for this card
@@ -1550,8 +1540,8 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a multiverseId for a multicard, return the full card name, which has each half
-     * of the card separated by "//"
+     * Given a multiverseId for a multicard, return the full card name, which has each half of the
+     * card separated by "//".
      *
      * @param multiverseId The multiverse id to search for
      * @param isAscending  Whether the query should be sorted in ascending or descending order
@@ -1594,7 +1584,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Add a MtgCard to DATABASE_TABLE_CARDS
+     * Add a MtgCard to DATABASE_TABLE_CARDS.
      *
      * @param card The card to add to DATABASE_TABLE_CARDS
      * @param mDb  The database to add the card to
@@ -1703,8 +1693,8 @@ public class CardDbAdapter {
     }
 
     /**
-     * I messed up with Duel Deck Anthologies. Each deck should have had its own set code,
-     * rather than grouping them all together. This function fixes any saved cards when loaded
+     * I messed up with Duel Deck Anthologies. Each deck should have had its own set code, rather
+     * than grouping them all together. This function fixes any saved cards when loaded.
      *
      * @param name     The name of the card to get the correct set code for
      * @param setCode  The incorrect set code (i.e. DD3)
@@ -1740,7 +1730,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Drop an expansion and all of its cards
+     * Drop an expansion and all of its cards.
      *
      * @param setCode  The expansion to drop
      * @param database The database to drop from
@@ -1758,7 +1748,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a Cursor pointed at a card, return the full type line (sub - super) for that card
+     * Given a Cursor pointed at a card, return the full type line (sub - super) for that card.
      *
      * @param cCardById The cursor pointing to a card
      * @return A String with the full type line
@@ -1783,7 +1773,7 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Add a card to the table of banned & restricted cards
+     * Add a card to the table of banned & restricted cards.
      *
      * @param card   The name of the card to add to the banned cards table
      * @param format The format the card is banned in
@@ -1799,7 +1789,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a format, return a cursor pointing to all the cards banned in that format
+     * Given a format, return a cursor pointing to all the cards banned in that format.
      *
      * @param mDb    The database to query
      * @param format The format to return banned cards for
@@ -1820,7 +1810,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a card and a format, check if that card is legal to play in that format
+     * Given a card and a format, check if that card is legal to play in that format.
      *
      * @param mCardName The card to check legality for
      * @param format    The format to check legality in
@@ -1878,7 +1868,7 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Add a MtgSet to DATABASE_TABLE_SETS
+     * Add a MtgSet to DATABASE_TABLE_SETS.
      *
      * @param set The set to add to DATABASE_TABLE_SETS
      * @param mDb The database to add the set to
@@ -1897,7 +1887,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Add a TcgPlayer.com set name to DATABASE_TABLE_SETS
+     * Add a TcgPlayer.com set name to DATABASE_TABLE_SETS.
      *
      * @param name The TcgPlayer.com name
      * @param code The set code to add the TcgPlayer.com name to
@@ -1912,7 +1902,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Add "can be foil" information to DATABASE_TABLE_SETS
+     * Add "can be foil" information to DATABASE_TABLE_SETS.
      *
      * @param canBeFoil "true" or "false", whether or not this set has foil cards
      * @param code      The set code to add the info to
@@ -1927,7 +1917,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Returns a cursor with all the information about all of the sets
+     * Returns a cursor with all the information about all of the sets.
      *
      * @param sqLiteDatabase The database to query
      * @return a Cursor with all of the information about all of the sets
@@ -1947,7 +1937,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a standard set code, return the Magiccards.info set code
+     * Given a standard set code, return the Magiccards.info set code.
      *
      * @param code The standard set code
      * @param mDb  The database to query
@@ -1970,7 +1960,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a set code, return the full set name
+     * Given a set code, return the full set name.
      *
      * @param setCode  The set code to look up
      * @param database The database to query
@@ -2000,7 +1990,7 @@ public class CardDbAdapter {
 
 
     /**
-     * Given a set code, return a String with the set name that TCGPlayer.com uses
+     * Given a set code, return a String with the set name that TCGPlayer.com uses.
      *
      * @param setCode The set code to search for
      * @param mDb     The database to query
@@ -2029,7 +2019,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Helper function to determine what kind of multicard a card is based on set and number
+     * Helper function to determine what kind of multicard a card is based on set and number.
      *
      * @param number  The card number
      * @param setCode The set the card is in
@@ -2059,7 +2049,7 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Add a set and format pair to the table of legal sets
+     * Add a set and format pair to the table of legal sets.
      *
      * @param set    The set to add
      * @param format The format the set is legal in
@@ -2073,7 +2063,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Helper function to determine if a set contains foil cards
+     * Helper function to determine if a set contains foil cards.
      *
      * @param setCode The set code
      * @param mDb     The database to query
@@ -2129,7 +2119,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a format, return a cursor pointing to all sets legal in that format
+     * Given a format, return a cursor pointing to all sets legal in that format.
      *
      * @param mDb    The database to query
      * @param format The format to return legal sets for
@@ -2158,7 +2148,7 @@ public class CardDbAdapter {
     /**
      * DATABASE_TABLE_FORMATS
      * <p/>
-     * Create a format in the database
+     * Create a format in the database.
      *
      * @param name The name of the format to create
      * @param mDb  The database to create a format in
@@ -2170,7 +2160,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Create all tables relating to card legality
+     * Create all tables relating to card legality.
      *
      * @param mDb The database to create tables in
      * @throws FamiliarDbException If something goes wrong
@@ -2186,7 +2176,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Drop all tables relating to legality
+     * Drop all tables relating to legality.
      *
      * @param mDb The database to drop tables from
      * @throws FamiliarDbException If something goes wrong
@@ -2202,7 +2192,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Fetch all formats that cards can be legal in
+     * Fetch all formats that cards can be legal in.
      *
      * @param mDb The database to query
      * @return A cursor pointing to all formats
@@ -2226,7 +2216,7 @@ public class CardDbAdapter {
     /**
      * TABLE DATABASE_CREATE_RULES
      * <p/>
-     * Drop the rules and glossary tables
+     * Drop the rules and glossary tables.
      *
      * @param mDb The database to drop tables from
      * @throws FamiliarDbException If something goes wrong
@@ -2243,7 +2233,7 @@ public class CardDbAdapter {
     /**
      * TABLE DATABASE_CREATE_RULES
      * <p/>
-     * Create the rules and glossary tables
+     * Create the rules and glossary tables.
      *
      * @param mDb The database to add tables to
      * @throws FamiliarDbException If something goes wrong
@@ -2258,7 +2248,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a category and subcategory, return a Cursor pointing to all rules in that subcategory
+     * Given a category and subcategory, return a Cursor pointing to all rules in that subcategory.
      *
      * @param category    The integer category, or -1 for the main categories
      * @param subcategory The integer subcategory, or -1 for no subcategory
@@ -2296,13 +2286,14 @@ public class CardDbAdapter {
 
     /**
      * Given a keyword, category, and subcategory, return a Cursor pointing to all rules which
-     * match that keyword in that category & subcategory
+     * match that keyword in that category & subcategory.
      *
      * @param keyword     A keyword to look for in the rule
      * @param category    The integer category, or -1 for the main categories
      * @param subcategory The integer subcategory, or -1 for no subcategory
      * @param mDb         The database to query
-     * @return A Cursor pointing to all rules which match that keyword in that category & subcategory
+     * @return A Cursor pointing to all rules which match that keyword in that category &
+     *         subcategory
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor getRulesByKeyword(String keyword, int category, int subcategory,
@@ -2344,7 +2335,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a rule's category, subcategory, and entry, return that rule's position
+     * Given a rule's category, subcategory, and entry, return that rule's position.
      *
      * @param category    The rule's category
      * @param subcategory The rule's subcategory
@@ -2377,7 +2368,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Given a rule's category and subcategory, return the name of the category
+     * Given a rule's category and subcategory, return the name of the category.
      *
      * @param category    The rule's category
      * @param subcategory The rule's subcategory
@@ -2407,7 +2398,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Insert a rule's title & text into the database with it's category, subcategory, and position
+     * Insert a rule's title & text into the database with it's category, subcategory, and position.
      *
      * @param category    The integer category
      * @param subcategory The integer subcategory
@@ -2450,7 +2441,7 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Insert a glossary term into DATABASE_TABLE_GLOSSARY
+     * Insert a glossary term into DATABASE_TABLE_GLOSSARY.
      *
      * @param term       The term to insert
      * @param definition The definition for the glossary term
@@ -2472,7 +2463,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Return a cursor to all glossary terms for the rules
+     * Return a cursor to all glossary terms for the rules.
      *
      * @param mDb The database to query
      * @return A Cursor pointing to all glossary terms in the database
@@ -2494,7 +2485,8 @@ public class CardDbAdapter {
      **********************************************************************************************/
 
     /**
-     * Helper function to sanitize a string for SQL queries, remove accent marks, and trim whitespace
+     * Helper function to sanitize a string for SQL queries, remove accent marks, and trim
+     * whitespace.
      *
      * @param input A string to sanitize
      * @return The sanitized String
@@ -2507,7 +2499,7 @@ public class CardDbAdapter {
     }
 
     /**
-     * Helper function to remove all non-ascii characters with accent marks from a String
+     * Helper function to remove all non-ascii characters with accent marks from a String.
      *
      * @param s The String to remove accent marks from
      * @return The accent-less String

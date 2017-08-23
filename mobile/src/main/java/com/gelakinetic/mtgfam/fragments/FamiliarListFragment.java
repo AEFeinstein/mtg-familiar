@@ -141,7 +141,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     }
 
     /**
-     * Specific implementation for list-based Familiar Fragments
+     * Specific implementation for list-based Familiar Fragments.
      *
      * @param <T> type that is stored in the ArrayList
      * @param <VH> ViewHolder that is used by the adapter
