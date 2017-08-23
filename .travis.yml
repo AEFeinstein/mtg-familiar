@@ -33,4 +33,4 @@ android:
     - addon-google_apis-google-19
 
 script:
-    - ./gradlew build
+    - ./gradlew build --stacktrace
