@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="98"
+   height="84"
+   viewBox="0 0 25.92916607 22.22500063"
+   version="1.1"
+   id="svg7929"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="die_6.svg">
+  <defs
+     id="defs7923" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.799999996"
+     inkscape:cx="54.48319907"
+     inkscape:cy="148.5526436"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1858"
+     inkscape:window-height="1177"
+     inkscape:window-x="54"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7926">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-274.7749832)">
+    <g
+       transform="matrix(0.2645833333,0,0,0.2645833333,-30.7770337,116.8357864)"
+       id="g5523">
+      <path
+         inkscape:export-ydpi="115.77889"
+         inkscape:export-xdpi="115.77889"
+         inkscape:export-filename="/home/mfshick/Documents/Code/Android/mtg-familiar/MTGFamiliar/res/drawable/d6.png"
+         d="M 206.7769118,680.3898113 123.8683827,680.3898115 123.8683824,597.4812825 206.7769115,597.4812822 Z"
+         inkscape:randomized="0"
+         inkscape:rounded="0"
+         inkscape:flatsided="true"
+         sodipodi:arg2="1.5707963"
+         sodipodi:arg1="0.78539816"
+         sodipodi:r2="41.45426559"
+         sodipodi:r1="58.62518311"
+         sodipodi:cy="638.9355469"
+         sodipodi:cx="165.3226471"
+         sodipodi:sides="4"
+         id="path2989"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.9831050634;stroke-miterlimit:4;stroke-dasharray:none"
+         sodipodi:type="star" />
+      <g
+         id="text3058"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.9324204922px;line-height:0%;font-family:Roboto;-inkscape-font-specification:Roboto;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3277017176"
+         aria-label="6">
+        <path
+           inkscape:connector-curvature="0"
+           id="path5463"
+           style="font-size:48.2376976013px;line-height:1.25;stroke-width:0.3277017176"
+           d="M 171.0226067,621.7649778 V 625.4628873 H 170.2217856 Q 165.1342159,625.5571015 162.1193598,628.4777434 159.1045037,631.3983852 158.6334325,636.697937 161.3420922,633.5888666 166.0292513,633.5888666 170.5044284,633.5888666 173.165981,636.7450441 175.8510872,639.9012216 175.8510872,644.894577 175.8510872,650.1941287 172.9539989,653.3738598 170.0804642,656.5535908 165.2284302,656.5535908 160.3057355,656.5535908 157.2437722,652.7850207 154.181809,648.992897 154.181809,643.0338455 V 641.3615425 Q 154.181809,631.89301 158.2094683,626.8996546 162.2606812,621.8827456 170.2453392,621.7649778 Z M 165.2990909,637.2161153 Q 163.0615024,637.2161153 161.1772173,638.5586684 159.2929322,639.9012216 158.5627718,641.926828 V 643.5284703 Q 158.5627718,647.7681117 160.4706104,650.3590037 162.378449,652.9498956 165.2284302,652.9498956 168.1726256,652.9498956 169.8449286,650.7829678 171.5407851,648.61604 171.5407851,645.106559 171.5407851,641.5735245 169.821375,639.4065967 168.1255185,637.2161153 165.2990909,637.2161153 Z" />
+      </g>
+    </g>
+  </g>
+</svg>

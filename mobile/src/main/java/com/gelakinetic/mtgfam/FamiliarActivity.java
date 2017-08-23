@@ -16,6 +16,7 @@
 
 package com.gelakinetic.mtgfam;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -131,7 +132,11 @@ public class FamiliarActivity extends AppCompatActivity {
     public static final String ACTION_MOJHOSTO = "android.intent.action.MOJHOSTO";
     public static final String ACTION_PROFILE = "android.intent.action.PROFILE";
     public static final String ACTION_DECKLIST = "android.intent.action.DECKLIST";
-    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 77;
+
+    /* Used to request permissions */
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE = 77;
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP = 78;
+    public static final int REQUEST_READ_EXTERNAL_STORAGE_BACKUP = 79;
 
     /* Constants used for saving state */
     private static final String CURRENT_FRAG = "CURRENT_FRAG";
@@ -231,8 +236,9 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * This runnable is posted with a handler every second. It displays the time left in the action bar as the title
-     * If the time runs out, it will stop updating the display and notify the fragment, if it is a RoundTimerFragment
+     * This runnable is posted with a handler every second. It displays the time left in the action
+     * bar as the title. If the time runs out, it will stop updating the display and notify the
+     * fragment, if it is a RoundTimerFragment.
      */
     private final Runnable timerUpdate = new Runnable() {
 
@@ -245,8 +251,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 if (timeLeftSeconds <= 0) {
                     timeLeftStr = "00:00:00";
                 } else {
-                    /* This is a slight hack to handle the fact that it always rounds down. It will start the timer at
-                       50:00 instead of 49:59, or whatever */
+                    /* This is a slight hack to handle the fact that it always rounds down. It will
+                       start the timer at 50:00 instead of 49:59, or whatever */
                     timeLeftSeconds++;
                     timeLeftStr = String.format(Locale.US, "%02d:%02d:%02d",
                             timeLeftSeconds / 3600,
@@ -287,7 +293,7 @@ public class FamiliarActivity extends AppCompatActivity {
     private final TutorCards mTutorCards = new TutorCards(this);
 
     /**
-     * Open an inputStream to the HTML content at the given URL
+     * Open an inputStream to the HTML content at the given URL.
      *
      * @param stringUrl The URL to open a stream to, in String form
      * @param logWriter A PrintWriter to log debug info to. Can be null
@@ -301,7 +307,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Open an inputStream to the HTML content at the given URL
+     * Open an inputStream to the HTML content at the given URL.
      *
      * @param url       The URL to open a stream to
      * @param logWriter A PrintWriter to log debug info to. Can be null
@@ -406,7 +412,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Start the Spice Manager when the activity starts
+     * Start the Spice Manager when the activity starts.
      */
     @Override
     protected void onStart() {
@@ -415,7 +421,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Stop the Spice Manager when the activity stops
+     * Stop the Spice Manager when the activity stops.
      */
     @Override
     protected void onStop() {
@@ -434,7 +440,8 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Called whenever we call supportInvalidateOptionsMenu(). This hides action bar items when the drawer is open
+     * Called whenever we call supportInvalidateOptionsMenu(). This hides action bar items when the
+     * drawer is open.
      *
      * @param menu The menu to hide or show items in
      * @return True if the menu is to be displayed, false otherwise
@@ -450,13 +457,14 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Set up drawer menu
-     * Run updater service
-     * Check for, and potentially start, round timer
-     * Check for TTS support
+     * Set up drawer menu.
+     * Run updater service.
+     * Check for, and potentially start, round timer.
+     * Check for TTS support.
      *
-     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this
-     *                           Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     *                           down then this Bundle contains the data it most recently supplied
+     *                           in onSaveInstanceState(Bundle).
      *                           Note: Otherwise it is null.
      */
     @Override
@@ -501,7 +509,8 @@ public class FamiliarActivity extends AppCompatActivity {
         /* Set default preferences manually so that the listener doesn't do weird things on init */
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        /* Set up a listener to update the home screen widget whenever the user changes the preference */
+        /* Set up a listener to update the home screen widget whenever the user changes the
+           preference */
         mPreferenceAdapter.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
 
         /* Create the handler to update the timer in the action bar */
@@ -569,8 +578,9 @@ public class FamiliarActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                /* FamiliarFragments will automatically close the drawer when they hit onResume(). It's more precise
-                   than a delayed handler. Other options have to close the drawer themselves */
+                /* FamiliarFragments will automatically close the drawer when they hit onResume().
+                   It's more precise than a delayed handler. Other options have to close the drawer
+                   themselves */
                 boolean shouldCloseDrawer = false;
                 switch (mPageEntries[i].mNameResource) {
                     case R.string.main_extras:
@@ -677,8 +687,9 @@ public class FamiliarActivity extends AppCompatActivity {
             }
 
             /**
-             * If the menu is visible and the menu is open(ing), or the menu is not visible and the drawer is closed,
-             * invalidate the options menu to either hide or show the action bar icons
+             * If the menu is visible and the menu is open(ing), or the menu is not visible and the
+             * drawer is closed, invalidate the options menu to either hide or show the action bar
+             * icons.
              *
              * @param drawerView The drawer view, ignored
              * @param slideOffset How open the sliding menu is, between 0 and 1
@@ -700,8 +711,10 @@ public class FamiliarActivity extends AppCompatActivity {
 
         boolean isDeepLink = false;
 
-        /* The activity can be launched a few different ways. Check the intent and show the appropriate fragment */
-        /* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is null */
+        /* The activity can be launched a few different ways. Check the intent and show the
+         * appropriate fragment */
+        /* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is
+         * null */
         if (savedInstanceState == null) {
             isDeepLink = processIntent(getIntent());
         }
@@ -715,7 +728,8 @@ public class FamiliarActivity extends AppCompatActivity {
 
                 int lastVersion = mPreferenceAdapter.getLastVersion();
                 if (pInfo.versionCode != lastVersion) {
-                    /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices will exist*/
+                    /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices
+                     * will exist*/
                     try {
                         mSpiceManager.removeAllDataFromCache();
                     } catch (NullPointerException e) {
@@ -726,8 +740,8 @@ public class FamiliarActivity extends AppCompatActivity {
                     }
                     mPreferenceAdapter.setLastVersion(pInfo.versionCode);
 
-                    /* Clear the mtr and ipg on update, to replace them with the newly colored versions, but only if we're
-                     * updating to 3.0.1 (v24) */
+                    /* Clear the mtr and ipg on update, to replace them with the newly colored
+                     *  versions, but only if we're updating to 3.0.1 (v24) */
                     if (pInfo.versionCode <= 24) {
                         File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
                         File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
@@ -858,7 +872,8 @@ public class FamiliarActivity extends AppCompatActivity {
                             shouldSelectItem = false;
                         } else {
                             try {
-                                /* Don't clear the fragment stack for internal links (thanks Meld cards) */
+                                /* Don't clear the fragment stack for internal links (thanks Meld
+                                 * cards) */
                                 if (data.getPathSegments().contains("internal")) {
                                     shouldClearFragmentStack = false;
                                 }
@@ -936,7 +951,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Launch the home fragment, based on a preference
+     * Launch the home fragment, based on a preference.
      */
     private void launchHomeScreen() {
         String defaultFragment = mPreferenceAdapter.getDefaultFragment();
@@ -972,7 +987,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
     /**
      * Instead of starting a new Activity, any intents to start a new Familiar Activity will be
-     * received here, and this Activity should react properly
+     * received here, and this Activity should react properly.
      *
      * @param intent The intent used to "start" this Activity
      */
@@ -983,7 +998,8 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Check to see if we should display the round timer in the actionbar, and start the inactivity timer
+     * Check to see if we should display the round timer in the actionbar, and start the inactivity
+     * timer.
      */
     @Override
     protected void onResume() {
@@ -997,7 +1013,8 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Select an item from the drawer menu. This will highlight the entry and manage fragment transactions.
+     * Select an item from the drawer menu. This will highlight the entry and manage fragment
+     * transactions.
      *
      * @param resId The string resource ID of the entry
      */
@@ -1016,7 +1033,8 @@ public class FamiliarActivity extends AppCompatActivity {
         /* Pick the new fragment */
         switch (resId) {
             case R.string.main_card_search: {
-                /* If this is a quick search intent, launch either the card view or result list directly */
+                /* If this is a quick search intent, launch either the card view or result list
+                 * directly */
                 if (args != null && args.containsKey(CardViewPagerFragment.CARD_ID_ARRAY)) {
                     newFrag = new CardViewPagerFragment();
                 } else if (args != null && args.containsKey(SearchViewFragment.CRITERIA)) {
@@ -1120,10 +1138,11 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * mDrawerToggle.syncState() must be called during onPostCreate()
+     * mDrawerToggle.syncState() must be called during onPostCreate().
      *
-     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this
-     *                           Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut
+     *                           down then this Bundle contains the data it most recently supplied
+     *                           in onSaveInstanceState(Bundle).
      *                           Note: Otherwise it is null.
      */
     @Override
@@ -1134,7 +1153,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * The drawer toggle should be notified of any configuration changes
+     * The drawer toggle should be notified of any configuration changes.
      *
      * @param newConfig The new device configuration.
      */
@@ -1146,9 +1165,9 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * If a fragment has a result when it pops off the back stack, store it in the activity
-     * It can be checked by the next FamiliarFragment to be displayed with getFragmentResults
-     * The Bundle is cleared in the fragment's onResume() if it isn't accessed
+     * If a fragment has a result when it pops off the back stack, store it in the activity.
+     * It can be checked by the next FamiliarFragment to be displayed with getFragmentResults.
+     * The Bundle is cleared in the fragment's onResume() if it isn't accessed.
      *
      * @param result The bundle of results to save
      */
@@ -1157,8 +1176,8 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * This will return a Bundle which a fragment has stored in the activity, and then
-     * null the Bundle immediately
+     * This will return a Bundle which a fragment has stored in the activity, and then null the
+     * Bundle immediately.
      *
      * @return a Bundle stored by the prior fragment
      */
@@ -1172,8 +1191,8 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when a key down event has occurred. Checks if the fragment should handle the key event or if the
-     * activity should
+     * Called when a key down event has occurred. Checks if the fragment should handle the key event
+     * or if the activity should.
      *
      * @param keyCode The key type for the event. We only care about KEYCODE_SEARCH
      * @param event   description of the key event
@@ -1206,7 +1225,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param keyCode The value in event.getKeyCode().
      * @param event   Description of the key event.
      * @return If you handled the event, return true. If you want to allow the event to be handled
-     * by the next receiver, return false.
+     *         by the next receiver, return false.
      */
     @Override
     public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
@@ -1225,7 +1244,8 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * This function hides the soft keyboard if it is being displayed. It's nice for switching fragments
+     * This function hides the soft keyboard if it is being displayed. It's nice for switching
+     * fragments.
      */
     public void hideKeyboard() {
         try {
@@ -1239,7 +1259,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * A friendly reminder to not use the regular FragmentManager, ever
+     * A friendly reminder to not use the regular FragmentManager, ever.
      *
      * @return Return? How about an exception!
      */
@@ -1250,7 +1270,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * If TTS couldn't init, show this dialog. It will only display once as to not annoy people
+     * If TTS couldn't init, show this dialog. It will only display once as to not annoy people.
      */
     public void showTtsDialog() {
         if (mPreferenceAdapter != null && mPreferenceAdapter.getTtsShowDialog()) {
@@ -1260,8 +1280,8 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Removes a fragment with the DIALOG_TAG. The FragmentManager is a parameter so that it plays nice with nested
-     * fragments and getChildFragmentManager()
+     * Removes a fragment with the DIALOG_TAG. The FragmentManager is a parameter so that it plays
+     * nice with nested fragments and getChildFragmentManager().
      *
      * @param fragmentManager The FragmentManager to use for this transaction
      */
@@ -1299,7 +1319,8 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Show the timer in the action bar, set up the handler to update the displayed time every second.
+     * Show the timer in the action bar, set up the handler to update the displayed time every
+     * second.
      */
     public void startUpdatingDisplay() {
         mRoundEndTime = mPreferenceAdapter.getRoundTimerEnd();
@@ -1325,22 +1346,25 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when another activity returns and this one is displayed. Since the app is fragment based, this is only
-     * called when querying for TTS support, or when returning from a ringtone picker. The preference fragment does
-     * not handle the ringtone result correctly, so it must be caught here.
+     * Called when another activity returns and this one is displayed. Since the app is fragment
+     * based, this is only called when querying for TTS support, or when returning from a ringtone
+     * picker. The preference fragment does not handle the ringtone result correctly, so it must be
+     * caught here.
      *
-     * @param requestCode The integer request code originally supplied to startActivityForResult(), allowing you to
-     *                    identify who this result came from.
-     * @param resultCode  The integer result code returned by the child activity through its setResult().
-     * @param data        An Intent, which can return result data to the caller (various data can be attached to Intent
-     *                    "extras").
+     * @param requestCode The integer request code originally supplied to startActivityForResult(),
+     *                    allowing you to identify who this result came from.
+     * @param resultCode  The integer result code returned by the child activity through its
+     *                    setResult().
+     * @param data        An Intent, which can return result data to the caller (various data can be
+     *                    attached to Intent "extras").
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         mTutorCards.onActivityResult(requestCode, resultCode);
 
-        /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result here */
+        /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result
+         * here */
         if (data != null && data.getExtras() != null) {
             if (data.getExtras().keySet().contains(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)) {
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
@@ -1352,7 +1376,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Handle options item presses. In this case, the home button opens and closes the drawer
+     * Handle options item presses. In this case, the home button opens and closes the drawer.
      *
      * @param item The item selected
      * @return True if the click was acted upon, false otherwise
@@ -1373,8 +1397,9 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Called whenever the user does anything. On an interaction, reset the inactivity timer and notifies the
-     * FamiliarFragment if it was inactive. The inactivity timer will notify the FamiliarFragment of inactivity
+     * Called whenever the user does anything. On an interaction, reset the inactivity timer and
+     * notifies the FamiliarFragment if it was inactive. The inactivity timer will notify the
+     * FamiliarFragment of inactivity
      */
     @Override
     public void onUserInteraction() {
@@ -1405,7 +1430,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Restore the current fragment, and highlight it
+     * Restore the current fragment, and highlight it.
      *
      * @param savedInstanceState a Bundle which contains the saved state
      */
@@ -1421,21 +1446,21 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Show the indeterminate loading bar
+     * Show the indeterminate loading bar.
      */
     public void setLoading() {
         mRefreshLayout.setRefreshing(true);
     }
 
     /**
-     * Hide the indeterminate loading bar
+     * Hide the indeterminate loading bar.
      */
     public void clearLoading() {
         mRefreshLayout.setRefreshing(false);
     }
 
     /**
-     * This helper function translates an attribute into a resource ID
+     * This helper function translates an attribute into a resource ID.
      *
      * @param attr The attribute ID
      * @return the resource ID
@@ -1450,11 +1475,12 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Checks the networks state
+     * Checks the networks state.
      *
      * @param context         the context where this is being called
      * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
-     * @return -1 if there is no network connection, or the type of network, like ConnectivityManager.TYPE_WIFI
+     * @return -1 if there is no network connection, or the type of network, like
+     *         ConnectivityManager.TYPE_WIFI
      */
     public static int getNetworkState(Context context, boolean shouldShowToast) {
         try {
@@ -1512,7 +1538,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Callback for when a permission is requested
+     * Callback for when a permission is requested.
      *
      * @param requestCode  The request code passed in requestPermissions(String[], int).
      * @param permissions  The requested permissions. Never null.
@@ -1523,13 +1549,32 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        getSupportFragmentManager().findFragmentById(R.id.fragment_container)
-                .onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_READ_EXTERNAL_STORAGE_BACKUP: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    ZipUtils.importData(this);
+                }
+                break;
+            }
+            case REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    ZipUtils.exportData(this);
+                }
+                break;
+            default:
+                getSupportFragmentManager().findFragmentById(R.id.fragment_container)
+                        .onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+        }
     }
 
     /**
      * Checks to see if there is network connectivity, and if there is, starts the visual
-     * search process
+     * search process.
      */
     public void startTutorCardsSearch() {
         if (getNetworkState(FamiliarActivity.this, true) != -1) {
@@ -1539,7 +1584,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
     /**
      * When TutorCards returns a response over the network to a query, this function is called
-     * with the multiverse ID of the card in the image as a parameter
+     * with the multiverse ID of the card in the image as a parameter.
      *
      * @param multiverseId The multiverse ID returned by the TutorCards query
      */
@@ -1554,7 +1599,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * This nested class encapsulates the necessary information for an entry in the drawer menu
+     * This nested class encapsulates the necessary information for an entry in the drawer menu.
      */
     public class DrawerEntry {
         final int mNameResource;
@@ -1569,16 +1614,16 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * This nested class is the adapter which populates the listView in the drawer menu. It handles both entries and
-     * headers
+     * This nested class is the adapter which populates the listView in the drawer menu. It handles
+     * both entries and headers.
      */
     public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
         private final DrawerEntry[] values;
         private Drawable mHighlightedDrawable;
 
         /**
-         * Constructor. The context will be used to inflate views later. The array of values will be used to populate
-         * the views
+         * Constructor. The context will be used to inflate views later. The array of values will be
+         * used to populate the views.
          *
          * @param context The application's context, used to inflate views later.
          * @param values  An array of DrawerEntries which will populate the list
@@ -1589,11 +1634,11 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         /**
-         * Called to get a view for an entry in the listView
+         * Called to get a view for an entry in the listView.
          *
          * @param position    The position of the listView to populate
-         * @param convertView The old view to reuse, if possible. Since the layouts for entries and headers are
-         *                    different, this will be ignored
+         * @param convertView The old view to reuse, if possible. Since the layouts for entries and
+         *                    headers are different, this will be ignored
          * @param parent      The parent this view will eventually be attached to
          * @return The view for the data at this position
          */
@@ -1639,7 +1684,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         /**
-         * Applies the primary color to the selected icon in the drawer
+         * Applies the primary color to the selected icon in the drawer.
          *
          * @param textView The TextView to color
          */

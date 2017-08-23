@@ -1127,7 +1127,7 @@ public class CardViewFragment extends FamiliarFragment {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 /* Request the permission */
                 ActivityCompat.requestPermissions(CardViewFragment.this.mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        FamiliarActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                        FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE);
             } else {
                 /* Permission already granted */
                 mToastString = saveImage();
@@ -1639,7 +1639,7 @@ public class CardViewFragment extends FamiliarFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case FamiliarActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+            case FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED

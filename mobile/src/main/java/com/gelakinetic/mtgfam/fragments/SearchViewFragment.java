@@ -36,12 +36,14 @@ import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
+import com.gelakinetic.mtgfam.helpers.view.ATokenTextView;
 import com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner;
 import com.gelakinetic.mtgfam.helpers.view.CompletionView;
 import com.gelakinetic.mtgfam.helpers.view.ManaCostTextView;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -115,8 +117,8 @@ public class SearchViewFragment extends FamiliarFragment {
     private Spinner mTouChoice;
     private Spinner mCmcLogic;
     private Spinner mCmcChoice;
-    private ComparisonSpinner comparisonSpinner;
-    private ManaCostTextView manaCostTextView;
+    private ComparisonSpinner mManaComparisonSpinner;
+    private ManaCostTextView mManaCostTextView;
 
     public Dialog mFormatDialog;
     public Dialog mRarityDialog;
@@ -223,8 +225,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mTouChoice = (Spinner) myFragmentView.findViewById(R.id.touChoice);
         mCmcLogic = (Spinner) myFragmentView.findViewById(R.id.cmcLogic);
         mCmcChoice = (Spinner) myFragmentView.findViewById(R.id.cmcChoice);
-        manaCostTextView = (ManaCostTextView) myFragmentView.findViewById(R.id.manaCostTextView);
-        comparisonSpinner = (ComparisonSpinner) myFragmentView.findViewById(R.id.comparisonSpinner);
+        mManaCostTextView = (ManaCostTextView) myFragmentView.findViewById(R.id.manaCostTextView);
+        mManaComparisonSpinner = (ComparisonSpinner) myFragmentView.findViewById(R.id.comparisonSpinner);
 
         /* Now we need to apply a different TextView to our Spinners to center the items */
         ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
@@ -273,10 +275,66 @@ public class SearchViewFragment extends FamiliarFragment {
         mSupertypeField.setOnEditorActionListener(doSearchListener);
         mSubtypeField.setOnEditorActionListener(doSearchListener);
         mSetField.setOnEditorActionListener(doSearchListener);
-        manaCostTextView.setOnEditorActionListener(doSearchListener);
+        mManaCostTextView.setOnEditorActionListener(doSearchListener);
         mFlavorField.setOnEditorActionListener(doSearchListener);
         mArtistField.setOnEditorActionListener(doSearchListener);
         mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
+
+        mSupertypeField.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+            @Override
+            public void onTokenAdded(String token) {
+
+            }
+
+            @Override
+            public void onTokenRemoved(String token) {
+                // If there are no tokens, clear out any stray text
+                if (mSupertypeField.getObjects().size() == 0 && hasNonSplitChar(mSupertypeField.getText().toString())) {
+                    removeNonTokens(mSupertypeField);
+                }
+            }
+        });
+        mSubtypeField.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+            @Override
+            public void onTokenAdded(String token) {
+
+            }
+
+            @Override
+            public void onTokenRemoved(String token) {
+                // If there are no tokens, clear out any stray text
+                if (mSubtypeField.getObjects().size() == 0 && hasNonSplitChar(mSubtypeField.getText().toString())) {
+                    removeNonTokens(mSubtypeField);
+                }
+            }
+        });
+        mSetField.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+            @Override
+            public void onTokenAdded(String token) {
+
+            }
+
+            @Override
+            public void onTokenRemoved(String token) {
+                // If there are no tokens, clear out any stray text
+                if (mSetField.getObjects().size() == 0  && hasNonSplitChar(mSetField.getText().toString())) {
+                    removeNonTokens(mSetField);
+                }
+            }
+        });
+        mManaCostTextView.setTokenListener(new TokenCompleteTextView.TokenListener<String>() {
+            @Override
+            public void onTokenAdded(String token) {
+
+            }
+
+            @Override
+            public void onTokenRemoved(String token) {
+                if (mManaCostTextView.getObjects().size() == 0  && hasNonSplitChar(mManaCostTextView.getText().toString())) {
+                    removeNonTokens(mManaCostTextView);
+                }
+            }
+        });
 
         /* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, true));
@@ -425,6 +483,17 @@ public class SearchViewFragment extends FamiliarFragment {
         return myFragmentView;
     }
 
+    private boolean hasNonSplitChar(String s) {
+        for(char c : s.toCharArray()){
+            // These two chars are used for splitting tokens in TokenCompleteTextView
+            // Unfortunately the array splitChar[] is private there.
+            if(c != ',' && c != ';') {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private class SetAdapter extends ArrayAdapter<String> {
         final Map<String, String> symbolsByAutocomplete = new LinkedHashMap<>();
 
@@ -509,7 +578,7 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mArtistField.getText() != null;
         assert mSetField.getText() != null;
         assert mCollectorsNumberField.getText() != null;
-        assert manaCostTextView.getText() != null;
+        assert mManaCostTextView.getText() != null;
 
         /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString().trim();
@@ -543,8 +612,8 @@ public class SearchViewFragment extends FamiliarFragment {
         searchCriteria.artist = mArtistField.getText().toString().trim();
         searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString().trim();
         searchCriteria.set = sets;
-        searchCriteria.mc = manaCostTextView.getStringFromObjects();
-        searchCriteria.mcLogic = (Comparison) comparisonSpinner.getSelectedItem();
+        searchCriteria.mc = mManaCostTextView.getStringFromObjects();
+        searchCriteria.mcLogic = (Comparison) mManaComparisonSpinner.getSelectedItem();
 
         if (searchCriteria.name.length() == 0) {
             searchCriteria.name = null;
@@ -732,13 +801,13 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void clear() {
         mNameField.setText("");
-        mSupertypeField.clear();
-        mSubtypeField.clear();
+        clearATokenTextView(mSupertypeField);
+        clearATokenTextView(mSubtypeField);
         mTextField.setText("");
         mArtistField.setText("");
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
-        mSetField.clear();
+        clearATokenTextView(mSetField);
 
         mCheckboxW.setChecked(false);
         mCheckboxU.setChecked(false);
@@ -767,8 +836,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcLogic.setSelection(0);
         mCmcLogic.setSelection(1); /* CMC should default to < */
         mCmcChoice.setSelection(0);
-        manaCostTextView.clear();
-        comparisonSpinner.setSelection(Comparison.EMPTY.ordinal());
+        clearATokenTextView(mManaCostTextView);
+        mManaComparisonSpinner.setSelection(Comparison.EMPTY.ordinal());
 
         if (mSetCheckedIndices != null) {
             mSetCheckedIndices = new int[0];
@@ -778,6 +847,23 @@ public class SearchViewFragment extends FamiliarFragment {
         this.removeDialog(getFragmentManager());
 
         checkDialogButtonColors();
+    }
+
+    private void clearATokenTextView(ATokenTextView completionView) {
+        if (completionView.getObjects().size() == 0) {
+            // If there are no tokens, its safe to clear the whole text view
+            removeNonTokens(completionView);
+        } else {
+            // Otherwise, clear the tokens. This is asynchronous. Any stray text
+            // will be cleared after the tokens are removed via a listener
+            for (String token : completionView.getObjects()) {
+                completionView.removeObject((token));
+            }
+        }
+    }
+
+    public void removeNonTokens(ATokenTextView textView) {
+        textView.onRestoreInstanceState(textView.onSaveInstanceState());
     }
 
     /**
@@ -909,10 +995,14 @@ public class SearchViewFragment extends FamiliarFragment {
                     mSetField.addObject(set);
                 }
             } else {
-                mSetField.clear();
+                clearATokenTextView(mSetField);
             }
-            manaCostTextView.setObjectsFromString(criteria.mc);
-            comparisonSpinner.setSelection(criteria.mcLogic.ordinal());
+            if (criteria.mc != null) {
+                mManaCostTextView.setObjectsFromString(criteria.mc);
+            } else {
+                clearATokenTextView(mManaCostTextView);
+            }
+            mManaComparisonSpinner.setSelection(criteria.mcLogic.ordinal());
             if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
             }

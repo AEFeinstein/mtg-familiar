@@ -200,11 +200,11 @@ public class DecklistFragment extends FamiliarListFragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.deck_import_selected: {
-                        ArrayList selectedItems =
+                        ArrayList<CompressedDecklistInfo> selectedItems =
                                 mListAdapter.getSelectedItems();
-                        for (Object info : selectedItems) {
+                        for (CompressedDecklistInfo info : selectedItems) {
                             WishlistHelpers.addItemToWishlist(getContext(),
-                                    ((CompressedDecklistInfo)info).convertToWishlist());
+                                    info.convertToWishlist());
                         }
                         mActionMode.finish();
                         return true;
@@ -351,7 +351,7 @@ public class DecklistFragment extends FamiliarListFragment {
             return;
         }
         for (final CompressedDecklistInfo cdi : mCompressedDecklist) {
-            if (cdi != null && cdi.mName.equals(cardChanged)) {
+            if (cdi.mCard != null && cdi.mCard.mName.equals(cardChanged)) {
                 cdi.clearCompressedInfo();
             }
         }

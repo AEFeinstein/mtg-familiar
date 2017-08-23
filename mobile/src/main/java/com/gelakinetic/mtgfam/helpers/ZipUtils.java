@@ -1,7 +1,15 @@
 package com.gelakinetic.mtgfam.helpers;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 
 import java.io.BufferedOutputStream;
@@ -21,23 +29,38 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 
     private static final String BACKUP_FILE_NAME = "MTGFamiliarBackup.zip";
-//	private static final String SHARED_PREF_DIR = "/data/data/com.gelakinetic.mtgfam/shared_prefs/";
 
     /**
      * This method exports any data in this application's getFilesDir() into a zip file on external storage
      *
-     * @param context The application context, for getting files and the like
+     * @param activity The application activity, for getting files and the like
      */
-    public static void exportData(Context context) {
-        assert context.getFilesDir() != null;
+    public static void exportData(Activity activity) {
 
-        String sharedPrefsDir = context.getFilesDir().getPath();
+        /* Make sure external storage exists */
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            ToastWrapper.makeText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG).show();
+            return;
+        }
+
+        /* Check if permission is granted */
+        if (ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            /* Request the permission */
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_BACKUP);
+            return;
+        }
+
+        assert activity.getFilesDir() != null;
+
+        String sharedPrefsDir = activity.getFilesDir().getPath();
         sharedPrefsDir = sharedPrefsDir.substring(0, sharedPrefsDir.lastIndexOf("/")) + "/shared_prefs/";
 
-        ArrayList<File> files = findAllFiles(context.getFilesDir(),
+        ArrayList<File> files = findAllFiles(activity.getFilesDir(),
                 new File(sharedPrefsDir));
 
-        File sdCard = context.getExternalFilesDir(null);
+        File sdCard = Environment.getExternalStorageDirectory();
         File zipOut = new File(sdCard, BACKUP_FILE_NAME);
         if (zipOut.exists()) {
             if (!zipOut.delete()) {
@@ -45,33 +68,52 @@ public class ZipUtils {
             }
         }
         try {
-            zipIt(zipOut, files, context);
-            ToastWrapper.makeText(context, context.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
+            zipIt(zipOut, files, activity);
+            ToastWrapper.makeText(activity, activity.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
                     ToastWrapper.LENGTH_SHORT).show();
         } catch (ZipException e) {
             if (e.getMessage().equals("No entries")) {
-                ToastWrapper.makeText(context, context.getString(R.string.main_export_no_data), ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeText(activity, activity.getString(R.string.main_export_no_data), ToastWrapper.LENGTH_SHORT).show();
             } else {
-                ToastWrapper.makeText(context, context.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeText(activity, activity.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
-            ToastWrapper.makeText(context, context.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeText(activity, activity.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
         }
     }
 
     /**
      * This method imports all data in a zip file on external storage into this application's getFilesDir()
      *
-     * @param context The application context, for getting files and the like
+     * @param activity The application activity, for getting files and the like
      */
-    public static void importData(Context context) {
-        File sdCard = context.getExternalFilesDir(null);
+    public static void importData(Activity activity) {
+
+        /* Make sure external storage exists */
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            ToastWrapper.makeText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG).show();
+            return;
+        }
+
+        /* Only check permissions after Jelly Bean */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            /* Check if permission is granted */
+            if (ContextCompat.checkSelfPermission(activity,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                /* Request the permission */
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        FamiliarActivity.REQUEST_READ_EXTERNAL_STORAGE_BACKUP);
+                return;
+            }
+        }
+
+        File sdCard = Environment.getExternalStorageDirectory();
         File zipIn = new File(sdCard, BACKUP_FILE_NAME);
         try {
-            unZipIt(new ZipFile(zipIn), context);
-            ToastWrapper.makeText(context, context.getString(R.string.main_import_success), ToastWrapper.LENGTH_SHORT).show();
+            unZipIt(new ZipFile(zipIn), activity);
+            ToastWrapper.makeText(activity, activity.getString(R.string.main_import_success), ToastWrapper.LENGTH_SHORT).show();
         } catch (IOException e) {
-            ToastWrapper.makeText(context, context.getString(R.string.main_import_fail), ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeText(activity, activity.getString(R.string.main_import_fail), ToastWrapper.LENGTH_SHORT).show();
         }
     }
 
