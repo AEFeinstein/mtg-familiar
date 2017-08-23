@@ -392,10 +392,12 @@ public class DecklistFragment extends FamiliarListFragment {
                             mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first))
                                     .add(card.first);
                         } else {
-                            mCompressedDecklist.add(newCompressedDecklistInfo(card.first, card.second));
+                            mCompressedDecklist
+                                    .add(new CompressedDecklistInfo(card.first, card.second));
                         }
                     } else {
-                        mCompressedDecklist.add(newCompressedDecklistInfo(card.first, card.second));
+                        mCompressedDecklist
+                                .add(new CompressedDecklistInfo(card.first, card.second));
                     }
                     if (mShowTotalDecklistPrice) {
                         loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
