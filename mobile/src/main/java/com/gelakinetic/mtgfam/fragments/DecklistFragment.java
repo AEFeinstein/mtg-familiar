@@ -200,11 +200,11 @@ public class DecklistFragment extends FamiliarListFragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.deck_import_selected: {
-                        ArrayList<CompressedDecklistInfo> selectedItems =
+                        ArrayList selectedItems =
                                 mListAdapter.getSelectedItems();
-                        for (CompressedDecklistInfo info : selectedItems) {
+                        for (Object info : selectedItems) {
                             WishlistHelpers.addItemToWishlist(getContext(),
-                                    info.convertToWishlist());
+                                    ((CompressedDecklistInfo)info).convertToWishlist());
                         }
                         mActionMode.finish();
                         return true;
