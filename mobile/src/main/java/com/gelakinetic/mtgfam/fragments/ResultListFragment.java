@@ -219,7 +219,8 @@ public class ResultListFragment extends FamiliarFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String cardName = ((TextView)view.findViewById(R.id.card_name)).getText().toString();
-                showDialog(ResultListDialogFragment.WISH_LIST_COUNTS, cardName);
+                String cardSet = ((TextView)view.findViewById(R.id.cardset)).getText().toString();
+                showDialog(ResultListDialogFragment.QUICK_ADD, cardName, cardSet);
                 return true;
             }
         });
@@ -417,7 +418,7 @@ public class ResultListFragment extends FamiliarFragment {
                 }
                 return true;
             case R.id.search_menu_sort: {
-                showDialog(ResultListDialogFragment.DIALOG_SORT, null);
+                showDialog(ResultListDialogFragment.DIALOG_SORT, null, null);
                 return true;
             }
             default:
@@ -428,7 +429,7 @@ public class ResultListFragment extends FamiliarFragment {
     /**
      * Remove any showing dialogs, and show the requested one
      */
-    private void showDialog(int dialogId, String cardName) throws IllegalStateException {
+    public void showDialog(int dialogId, String cardName, String cardSet) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also want to remove any
         currently showing dialog, so make our own transaction and take care of that here. */
 
@@ -451,6 +452,7 @@ public class ResultListFragment extends FamiliarFragment {
             Bundle arguments = new Bundle();
             arguments.putInt(FamiliarDialogFragment.ID_KEY, dialogId);
             arguments.putString(ResultListDialogFragment.NAME_KEY, cardName);
+            arguments.putString(ResultListDialogFragment.NAME_SET, cardSet);
             newFragment.setArguments(arguments);
             newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
         }

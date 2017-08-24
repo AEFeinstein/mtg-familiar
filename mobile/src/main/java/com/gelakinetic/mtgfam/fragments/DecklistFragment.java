@@ -238,7 +238,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         final String name = String.valueOf(mNameField.getText());
         final String numberOf = String.valueOf(mNumberOfField.getText());
-        final MtgCard card = CardHelpers.makeMtgCard(getContext(), name,
+        final MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null,
                 mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
 
         /* Don't allow the fields to be empty */

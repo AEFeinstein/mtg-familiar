@@ -685,6 +685,7 @@ public class CardHelpers {
      *
      * @param context context the method is being called from
      * @param cardName name of the card to make
+     * @param cardSet set code of the card to make
      * @param isFoil if the card is foil or not
      * @param numberOf how many copies of the card are needed
      * @return an MtgCard made based on the given parameters
@@ -692,6 +693,7 @@ public class CardHelpers {
     public static MtgCard makeMtgCard(
             Context context,
             String cardName,
+            String cardSet,
             boolean isFoil,
             int numberOf) {
 
@@ -721,7 +723,13 @@ public class CardHelpers {
                 card.message = activity.getString(R.string.wishlist_loading);
             }
             /* Get extra information from the database */
-            Cursor cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+            Cursor cardCursor;
+            if(cardSet == null) {
+                cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+            }
+            else {
+                cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, fields, database);
+            }
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeText(activity, activity.getString(R.string.toast_no_card),
                         ToastWrapper.LENGTH_LONG).show();
