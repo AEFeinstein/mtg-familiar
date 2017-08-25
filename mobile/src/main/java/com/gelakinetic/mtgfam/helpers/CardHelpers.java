@@ -30,7 +30,9 @@ import com.gelakinetic.mtgfam.helpers.util.FragmentHelpers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,12 +151,12 @@ public class CardHelpers {
         /* Get all the cards with relevant info from the database */
         Cursor cards;
         try {
-            cards = CardDbAdapter.fetchCardByName(mCardName, new String[]{
+            cards = CardDbAdapter.fetchCardByName(mCardName, Arrays.asList(
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME}, true, db);
+                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, db);
         } catch (FamiliarDbException e) {
             DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
             return null;
@@ -361,9 +363,8 @@ public class CardHelpers {
      * Parent class of CompressedDecklistInfo and CompressedWishlistInfo.
      * It contains the common code shared between the two.
      */
-    public static class CompressedCardInfo {
+    public static class CompressedCardInfo extends MtgCard {
 
-        public final MtgCard mCard;
         public final ArrayList<IndividualSetInfo> mInfo;
 
         /**
@@ -373,9 +374,9 @@ public class CardHelpers {
          */
         public CompressedCardInfo(MtgCard card) {
 
+            super(card);
             mInfo = new ArrayList<>();
-            mCard = card;
-            if (mCard != null) {
+            if (mName != null) {
                 add(card);
             }
 
@@ -390,14 +391,16 @@ public class CardHelpers {
 
             IndividualSetInfo isi = new IndividualSetInfo();
 
-            isi.mSet = card.setName;
-            isi.mSetCode = card.setCode;
-            isi.mNumber = card.mNumber;
-            isi.mIsFoil = card.foil;
-            isi.mPrice = null;
-            isi.mMessage = card.message;
-            isi.mNumberOf = card.numberOf;
-            isi.mRarity = card.mRarity;
+            if(card != null) {
+                isi.mSet = card.setName;
+                isi.mSetCode = card.setCode;
+                isi.mNumber = card.mNumber;
+                isi.mIsFoil = card.foil;
+                isi.mPrice = null;
+                isi.mMessage = card.message;
+                isi.mNumberOf = card.numberOf;
+                isi.mRarity = card.mRarity;
+            }
 
             mInfo.add(isi);
 
@@ -434,7 +437,7 @@ public class CardHelpers {
 
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
-            return card1.mCard.mName.compareTo(card2.mCard.mName);
+            return card1.mName.compareTo(card2.mName);
         }
 
     }
@@ -448,9 +451,9 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            if (card1.mCard.mCmc == card2.mCard.mCmc) {
+            if (card1.mCmc == card2.mCmc) {
                 return 0;
-            } else if (card1.mCard.mCmc > card2.mCard.mCmc) {
+            } else if (card1.mCmc > card2.mCmc) {
                 return 1;
             }
             return -1;
@@ -494,14 +497,14 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            String cardColors1 = getColors(card1.mCard.mColor);
-            String cardColors2 = getColors(card2.mCard.mColor);
+            String cardColors1 = getColors(card1.mColor);
+            String cardColors2 = getColors(card2.mColor);
             int priority1;
             int priority2;
             //1. If colorless, perform colorless comparison
             if (cardColors1.length() + cardColors2.length() == 0) {
-                cardColors1 = card1.mCard.mColor;
-                cardColors2 = card2.mCard.mColor;
+                cardColors1 = card1.mColor;
+                cardColors2 = card2.mColor;
                 for (int i = 0; i < Math.min(cardColors1.length(), cardColors2.length()); i++) {
                     priority1 = NON_COLORS.indexOf(cardColors1.charAt(i));
                     priority2 = NON_COLORS.indexOf(cardColors2.charAt(i));
@@ -565,8 +568,8 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            String card1Type = card1.mCard.mType;
-            String card2Type = card2.mCard.mType;
+            String card1Type = card1.mType;
+            String card2Type = card2.mType;
             for (String type : mTypes) {
                 if (card1Type.contains(type) && card2Type.contains(type)) {
                     return 0;
@@ -655,7 +658,7 @@ public class CardHelpers {
 
             /* If the price difference is less than a penny */
             if (Math.abs(sumWish1 - sumWish2) < 0.01) {
-                return card1.mCard.mName.compareTo(card2.mCard.mName);
+                return card1.mName.compareTo(card2.mName);
             } else if (sumWish1 > sumWish2) {
                 return 1;
             }
@@ -702,10 +705,10 @@ public class CardHelpers {
             card.numberOf = numberOf;
             /* Find out what kind of fragment we are in, so we can pull less stuff if we can */
             /* trade, wishlist, and decklist all use "name_search" */
-            String[] fields;
+            List<String> fields;
             boolean isTradeFragment = FragmentHelpers.isInstanceOf(context, TradeFragment.class);
             if (isTradeFragment) {
-                fields = new String[]{
+                fields = Arrays.asList(
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
@@ -713,9 +716,9 @@ public class CardHelpers {
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR,
                         /* Don't trust the user */
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME, };
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME);
             } else {
-                fields = CardDbAdapter.allCardDataKeys;
+                fields = CardDbAdapter.ALL_CARD_DATA_KEYS;
                 card.message = activity.getString(R.string.wishlist_loading);
             }
             /* Get extra information from the database */

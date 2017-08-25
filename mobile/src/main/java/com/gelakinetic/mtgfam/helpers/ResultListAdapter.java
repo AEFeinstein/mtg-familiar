@@ -194,7 +194,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                             pow = "X";
                         else {
                             if (p == (int) p) {
-                                pow = Integer.valueOf((int) p).toString();
+                                pow = Integer.toString((int) p);
                             } else {
                                 pow = Float.valueOf(p).toString();
                             }
@@ -221,9 +221,9 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                             tou = "X";
                         else {
                             if (t == (int) t) {
-                                tou = Integer.valueOf((int) t).toString();
+                                tou = Integer.toString((int) t);
                             } else {
-                                tou = Float.valueOf(t).toString();
+                                tou = Float.toString(t);
                             }
                         }
                         textField.setText(tou);

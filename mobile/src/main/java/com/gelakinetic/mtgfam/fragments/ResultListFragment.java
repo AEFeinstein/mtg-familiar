@@ -42,8 +42,8 @@ public class ResultListFragment extends FamiliarFragment {
     private static final String CURSOR_POSITION_OFFSET = "cur_pos";
     private static final String CURSOR_POSITION = "pos_off";
     /* Static integers preserve list position during the fragment's lifecycle */
-    private static int mCursorPosition;
-    private static int mCursorPositionOffset;
+    private int mCursorPosition;
+    private int mCursorPositionOffset;
     /* The cursor with the data and the list view to display it */
     private Cursor mCursor;
     private ListView mListView;
@@ -63,6 +63,15 @@ public class ResultListFragment extends FamiliarFragment {
         /* After a search, make sure the position is on top */
         mCursorPosition = 0;
         mCursorPositionOffset = 0;
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(CURSOR_POSITION)) {
+                mCursorPosition = savedInstanceState.getInt(CURSOR_POSITION);
+            }
+            if (savedInstanceState.containsKey(CURSOR_POSITION_OFFSET)) {
+                mCursorPositionOffset = savedInstanceState.getInt(CURSOR_POSITION_OFFSET);
+            }
+        }
     }
 
     /**
@@ -81,17 +90,6 @@ public class ResultListFragment extends FamiliarFragment {
             outState.putInt(CURSOR_POSITION_OFFSET, 0);
         }
         super.onSaveInstanceState(outState);
-    }
-
-    /**
-     * Called when the fragment is paused, save the list location
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        mCursorPosition = mListView.getFirstVisiblePosition();
-        View tmp = mListView.getChildAt(0);
-        mCursorPositionOffset = (tmp == null) ? 0 : tmp.getTop();
     }
 
     /**
@@ -130,11 +128,6 @@ public class ResultListFragment extends FamiliarFragment {
             doSearch(this.getArguments(), mDatabase);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
-        }
-
-        if (savedInstanceState != null) {
-            mCursorPosition = savedInstanceState.getInt(CURSOR_POSITION);
-            mCursorPositionOffset = savedInstanceState.getInt(CURSOR_POSITION_OFFSET);
         }
 
         /* Inflate the view */

@@ -109,6 +109,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class FamiliarActivity extends AppCompatActivity {
@@ -770,7 +771,7 @@ public class FamiliarActivity extends AppCompatActivity {
         if (getNetworkState(FamiliarActivity.this, false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
             /* Only update the banning list if it hasn't been updated recently */
             long curTime = System.currentTimeMillis();
-            int updateFrequency = Integer.valueOf(mPreferenceAdapter.getUpdateFrequency());
+            int updateFrequency = Integer.parseInt(mPreferenceAdapter.getUpdateFrequency());
             int lastLegalityUpdate = mPreferenceAdapter.getLastLegalityUpdate();
             /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > (updateFrequency * 24 * 60 * 60)) {
@@ -828,7 +829,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         }
                     } else if ((queryParam = data.getQueryParameter("name")) != null) {
                         Cursor cursor = CardDbAdapter.fetchCardByName(queryParam,
-                                new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, true, database);
+                                Arrays.asList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, database);
                         if (cursor.getCount() != 0) {
                             isDeepLink = true;
                             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,

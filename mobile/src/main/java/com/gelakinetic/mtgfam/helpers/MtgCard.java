@@ -25,11 +25,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -76,24 +76,26 @@ public class MtgCard extends Card {
     }
 
     public MtgCard(Card card) {
-        this.mName = card.mName;
-        this.mExpansion = card.mExpansion;
-        this.mType = card.mType;
-        this.mRarity = card.mRarity;
-        this.mManaCost = card.mManaCost;
-        this.mCmc = card.mCmc;
-        this.mPower = card.mPower;
-        this.mToughness = card.mToughness;
-        this.mLoyalty = card.mLoyalty;
-        this.mText = card.mText;
-        this.mFlavor = card.mFlavor;
-        this.mArtist = card.mArtist;
-        this.mNumber = card.mNumber;
-        this.mColor = card.mColor;
-        this.mMultiverseId = card.mMultiverseId;
-        this.mColorIdentity = card.mColorIdentity;
-        this.mWatermark = card.mWatermark;
-        this.mForeignPrintings.addAll(card.mForeignPrintings);
+        if(card != null) {
+            this.mName = card.mName;
+            this.mExpansion = card.mExpansion;
+            this.mType = card.mType;
+            this.mRarity = card.mRarity;
+            this.mManaCost = card.mManaCost;
+            this.mCmc = card.mCmc;
+            this.mPower = card.mPower;
+            this.mToughness = card.mToughness;
+            this.mLoyalty = card.mLoyalty;
+            this.mText = card.mText;
+            this.mFlavor = card.mFlavor;
+            this.mArtist = card.mArtist;
+            this.mNumber = card.mNumber;
+            this.mColor = card.mColor;
+            this.mMultiverseId = card.mMultiverseId;
+            this.mColorIdentity = card.mColorIdentity;
+            this.mWatermark = card.mWatermark;
+            this.mForeignPrintings.addAll(card.mForeignPrintings);
+        }
     }
 
     /**
@@ -204,9 +206,9 @@ public class MtgCard extends Card {
         } else {
             /* Pull from db */
             try {
-                Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, new String[]{
+                Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR}, true, database);
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR), true, database);
                 card.mCmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
                 card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
             } catch (FamiliarDbException e) {
@@ -332,14 +334,7 @@ public class MtgCard extends Card {
      */
     @Override
     public boolean equals(Object o) {
-        if (o instanceof MtgCard) {
-            return this.mName.equals(((MtgCard) o).mName);
-        } else if (o instanceof CompressedCardInfo) {
-            if (((CompressedCardInfo) o).mCard != null) {
-                return this.mName.equals(((CompressedCardInfo) o).mCard.mName);
-            }
-        }
-        return false;
+        return o instanceof MtgCard && this.mName.equals(((MtgCard) o).mName);
     }
 
     @Override

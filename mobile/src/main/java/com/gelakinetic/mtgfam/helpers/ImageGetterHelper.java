@@ -184,7 +184,7 @@ public class ImageGetterHelper {
                     d = ContextCompat.getDrawable(context, R.drawable.glyph_e);
                 } else {
                     for (int i = 0; i < drawableNumbers.length; i++) {
-                        if (source.equals(Integer.valueOf(i).toString())) {
+                        if (source.equals(Integer.toString(i))) {
                             d = ContextCompat.getDrawable(context, drawableNumbers[i]);
                         }
                     }

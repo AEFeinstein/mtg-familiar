@@ -69,8 +69,8 @@ public class DecklistHelpers {
 
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                if (cdi.mCard != null) {
-                    MtgCard card = cdi.mCard;
+                if (cdi.mName != null) {
+                    MtgCard card = cdi;
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                         card.mExpansion = isi.mSet;
                         card.setCode = isi.mSetCode;
@@ -162,7 +162,7 @@ public class DecklistHelpers {
                 readableDecklist
                         .append(isi.mNumberOf)
                         .append(' ')
-                        .append(cdi.mCard.mName);
+                        .append(cdi.mName);
                 if (isi.mIsFoil) {
                     readableDecklist
                             .append(" (")
@@ -219,7 +219,7 @@ public class DecklistHelpers {
         }
 
         public CompressedWishlistInfo convertToWishlist() {
-            final CompressedWishlistInfo wishlist = new CompressedWishlistInfo(this.mCard, 0);
+            final CompressedWishlistInfo wishlist = new CompressedWishlistInfo(this, 0);
             wishlist.mInfo.clear();
             wishlist.mInfo.addAll(this.mInfo);
             return wishlist;
@@ -237,27 +237,19 @@ public class DecklistHelpers {
             if (o instanceof CompressedDecklistInfo) {
                 final CompressedDecklistInfo cdi = (CompressedDecklistInfo) o;
                 /* Are the headers equal? */
-                return (cdi.header != null && cdi.header.equals(header))
-                        /* or is this card not null? */
-                        || (mCard != null
-                            /* and is that card not null? */
-                        && cdi.mCard != null
-                            /* Are their names equal? */
-                        && mCard.mName.equals(cdi.mCard.mName)
-                            /* Both have same sideboard status? */
-                        && mIsSideboard == cdi.mIsSideboard);
-            } else if (o instanceof MtgCard && mCard != null) {
-                return mCard.mName.equals(((MtgCard) o).mName);
+                return (header != null && !header.isEmpty() &&
+                        header.equals(cdi.header)) ||
+                        (mName != null && !mName.isEmpty() &&
+                                mName.equals(cdi.mName) && (mIsSideboard == cdi.mIsSideboard));
             }
-            return false;
+            return super.equals(o);
         }
 
         @Override
         public int hashCode() {
             int hash = 23;
-            hash = hash * 31 + mCard.hashCode();
-            hash = hash * 31 + ((Boolean) mIsSideboard).hashCode();
-            return hash;
+            hash = hash * 31 + super.hashCode();
+            return hash * 31 + ((Boolean) mIsSideboard).hashCode();
         }
 
     }

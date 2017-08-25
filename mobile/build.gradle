@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'pmd'
-//apply plugin: 'checkstyle'
+apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 
 check.dependsOn 'pmd', /*'checkstyle',*/ 'findbugs'
@@ -12,7 +12,7 @@ repositories {
 
 def configDir = "${project.rootDir}/config"
 
-task checkstyle(type: Checkstyle) {
+task checkstyle(type: Checkstyle, group: "verification") {
     configFile file("$configDir/checkstyle.xml")
     configProperties.checkstyleSuppressionsPath = file("$configDir/checkstyle.suppressions.xml").absolutePath
     source 'src'
@@ -21,7 +21,7 @@ task checkstyle(type: Checkstyle) {
     classpath = files()
 }
 
-task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+task findbugs(type: FindBugs, dependsOn: "assembleDebug", group: "verification") {
     ignoreFailures = false
     effort = "max"
     reportLevel = "high"
@@ -40,7 +40,7 @@ task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     classpath = files()
 }
 
-task pmd(type: Pmd) {
+task pmd(type: Pmd, group: "verification") {
     ignoreFailures = true
     ruleSetFiles = files("$configDir/pmd.xml")
     reports {
@@ -64,6 +64,7 @@ android {
         versionCode 49
         versionName "3.4.2"
         vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -74,7 +75,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.txt'
-            findbugs
+            //findbugs
         }
     }
     flavorDimensions "license"
@@ -97,6 +98,13 @@ android {
 }
 
 dependencies {
+    androidTestCompile 'com.android.support:support-annotations:26.0.0'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    // Optional -- Hamcrest library
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.4-atlassian-1'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.8.47'
     compile 'org.apache.commons:commons-lang3:3.6'
     compile 'org.apache.commons:commons-io:1.3.2'
     compile 'org.apache.commons:commons-collections4:4.1'
@@ -118,7 +126,25 @@ dependencies {
     compile 'com.code-troopers.betterpickers:library:3.1.0'
     compile 'com.github.machinarius:preferencefragment:0.1.2'
     compile 'org.jsoup:jsoup:1.10.3'
-    compile "com.splitwise:tokenautocomplete:2.0.8"
+    compile 'com.splitwise:tokenautocomplete:2.0.8'
+    compile 'com.google.code.findbugs:annotations:3.0.1', {
+        // Need to exclude these, or build is broken by:
+        //   com.android.dex.DexException: Multiple dex files define Ljavax/annotation/CheckForNull
+        exclude module: 'jsr305'
+        exclude module: 'jcip-annotations'
+    }
+}
+
+if (System.env.TRAVIS == 'true') {
+    allprojects {
+        tasks.withType(GroovyCompile) {
+            groovyOptions.fork = false
+        }
+        tasks.withType(Test) {
+            maxParallelForks = 2
+            minHeapSize = '128m'
+        }
+    }
 }
 
 if (System.env.TRAVIS == 'true') {

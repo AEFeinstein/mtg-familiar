@@ -96,8 +96,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * This class handles displaying card info.
@@ -271,7 +274,7 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Inflates the view and saves references to UI elements for later filling
+     * Inflates the view and saves references to UI elements for later filling.
      *
      * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous
      *                           saved state as given here.
@@ -283,7 +286,10 @@ public class CardViewFragment extends FamiliarFragment {
      * @return The inflated view
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
 
         try {
             mActivity = ((FamiliarFragment) getParentFragment()).getFamiliarActivity();
@@ -308,7 +314,8 @@ public class CardViewFragment extends FamiliarFragment {
         mTextScrollView = (ScrollView) myFragmentView.findViewById(R.id.cardTextScrollView);
         mImageScrollView = (ScrollView) myFragmentView.findViewById(R.id.cardImageScrollView);
         mCardImageView = (ImageView) myFragmentView.findViewById(R.id.cardpic);
-        mColorIndicatorLayout = (LinearLayout) myFragmentView.findViewById(R.id.color_indicator_view);
+        mColorIndicatorLayout =
+                (LinearLayout) myFragmentView.findViewById(R.id.color_indicator_view);
 
         registerForContextMenu(mNameTextView);
         registerForContextMenu(mCostTextView);
@@ -362,6 +369,7 @@ public class CardViewFragment extends FamiliarFragment {
     /**
      * Release all image resources and invoke the garbage collector.
      */
+    @SuppressFBWarnings(value = "DM_GC", justification = "Memory Leak without this")
     private void releaseImageResources(boolean isSplit) {
 
         if (mCardImageView != null) {
@@ -454,7 +462,8 @@ public class CardViewFragment extends FamiliarFragment {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+        SQLiteDatabase database =
+                DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         Cursor cCardById;
         try {
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
@@ -492,28 +501,38 @@ public class CardViewFragment extends FamiliarFragment {
         switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
             case 'C':
             case 'c':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_common)));
-                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Common));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                        getResourceIdFromAttr(R.attr.color_common)));
+                addToDescription(getString(R.string.search_rarity),
+                        getString(R.string.search_Common));
                 break;
             case 'U':
             case 'u':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_uncommon)));
-                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Uncommon));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                        getResourceIdFromAttr(R.attr.color_uncommon)));
+                addToDescription(getString(R.string.search_rarity),
+                        getString(R.string.search_Uncommon));
                 break;
             case 'R':
             case 'r':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_rare)));
-                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Rare));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                        getResourceIdFromAttr(R.attr.color_rare)));
+                addToDescription(getString(R.string.search_rarity),
+                        getString(R.string.search_Rare));
                 break;
             case 'M':
             case 'm':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_mythic)));
-                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Mythic));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                        getResourceIdFromAttr(R.attr.color_mythic)));
+                addToDescription(getString(R.string.search_rarity),
+                        getString(R.string.search_Mythic));
                 break;
             case 'T':
             case 't':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_timeshifted)));
-                addToDescription(getString(R.string.search_rarity), getString(R.string.search_Timeshifted));
+                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                        getResourceIdFromAttr(R.attr.color_timeshifted)));
+                addToDescription(getString(R.string.search_rarity),
+                        getString(R.string.search_Timeshifted));
                 break;
         }
 
@@ -533,18 +552,24 @@ public class CardViewFragment extends FamiliarFragment {
         CharSequence csFlavor = ImageGetterHelper.formatStringWithGlyphs(sFlavor, imgGetter);
         mFlavorTextView.setText(csFlavor);
 
-        mNameTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)));
+        mNameTextView
+                .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)));
         mCardType = CardDbAdapter.getTypeLine(cCardById);
         mTypeTextView.setText(mCardType);
         mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
-        mArtistTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
-        String numberAndRarity = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)) +
-                " (" + (char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY)) + ")";
+        mArtistTextView
+                .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
+        String numberAndRarity =
+                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)) + " (" +
+                        (char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))
+                        + ")";
         mNumberTextView.setText(numberAndRarity);
 
         addToDescription(getString(R.string.search_type), CardDbAdapter.getTypeLine(cCardById));
-        addToDescription(getString(R.string.search_artist), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
-        addToDescription(getString(R.string.search_collectors_number), cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)));
+        addToDescription(getString(R.string.search_artist),
+                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
+        addToDescription(getString(R.string.search_collectors_number),
+                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)));
 
         int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
         float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
@@ -553,7 +578,7 @@ public class CardViewFragment extends FamiliarFragment {
             if (loyalty == CardDbAdapter.X) {
                 mPowTouTextView.setText("X");
             } else {
-                mPowTouTextView.setText(Integer.valueOf(loyalty).toString());
+                mPowTouTextView.setText(Integer.toString(loyalty));
             }
         } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
@@ -687,8 +712,10 @@ public class CardViewFragment extends FamiliarFragment {
                 TypedValue.COMPLEX_UNIT_SP, 22, getResources().getDisplayMetrics());
 
         mColorIndicatorLayout.removeAllViews();
-        ColorIndicatorView civ = new ColorIndicatorView(this.getActivity(), dimension, dimension / 15,
-                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)), sCost);
+        ColorIndicatorView civ =
+                new ColorIndicatorView(this.getActivity(), dimension, dimension / 15,
+                        cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)),
+                        sCost);
         if (civ.shouldInidcatorBeShown()) {
             mColorIndicatorLayout.setVisibility(View.VISIBLE);
             mColorIndicatorLayout.addView(civ);
@@ -736,10 +763,10 @@ public class CardViewFragment extends FamiliarFragment {
         Cursor cCardByName;
         try {
             cCardByName = CardDbAdapter.fetchCardByName(mCardName,
-                    new String[]{
+                    Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER}, false, database
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, database
             );
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
@@ -750,7 +777,8 @@ public class CardViewFragment extends FamiliarFragment {
         mCardIds = new LinkedHashSet<>();
         while (!cCardByName.isAfterLast()) {
             try {
-                String number = cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                String number =
+                        cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_NUMBER));
                 if (!(number == null || number.length() == 0)) {
                     number = " (" + number + ")";
                 } else {
@@ -869,8 +897,12 @@ public class CardViewFragment extends FamiliarFragment {
                             mArtistTextView.getText() != null &&
                             mNumberTextView.getText() != null) {
                         // Hacky, but it works
-                        String costText = convertHtmlToPlainText(Html.toHtml(new SpannableString(mCostTextView.getText())));
-                        String abilityText = convertHtmlToPlainText(Html.toHtml(new SpannableString(mAbilityTextView.getText())));
+                        String costText =
+                                convertHtmlToPlainText(Html.toHtml(
+                                        new SpannableString(mCostTextView.getText())));
+                        String abilityText =
+                                convertHtmlToPlainText(Html.toHtml(
+                                        new SpannableString(mAbilityTextView.getText())));
                         copyText = mNameTextView.getText().toString() + '\n' +
                                 costText + '\n' +
                                 mTypeTextView.getText().toString() + '\n' +
@@ -957,7 +989,8 @@ public class CardViewFragment extends FamiliarFragment {
                                     mActivity.clearLoading();
 
                                     CardViewFragment.this.removeDialog(getFragmentManager());
-                                    ToastWrapper.makeText(mActivity, spiceException.getMessage(), ToastWrapper.LENGTH_SHORT).show();
+                                    ToastWrapper.makeText(mActivity, spiceException.getMessage(),
+                                            ToastWrapper.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -970,7 +1003,8 @@ public class CardViewFragment extends FamiliarFragment {
                                         mPriceInfo = result;
                                         showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
-                                        ToastWrapper.makeText(mActivity, R.string.card_view_price_not_found,
+                                        ToastWrapper.makeText(mActivity,
+                                                R.string.card_view_price_not_found,
                                                 ToastWrapper.LENGTH_SHORT).show();
                                     }
                                 }
@@ -1122,7 +1156,8 @@ public class CardViewFragment extends FamiliarFragment {
             if (ContextCompat.checkSelfPermission(CardViewFragment.this.mActivity,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 /* Request the permission */
-                ActivityCompat.requestPermissions(CardViewFragment.this.mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                ActivityCompat.requestPermissions(CardViewFragment.this.mActivity,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE);
             } else {
                 /* Permission already granted */
@@ -1139,16 +1174,19 @@ public class CardViewFragment extends FamiliarFragment {
                 try {
 
                     /* Start the intent to share the image */
-                    Uri uri = FileProvider.getUriForFile(mActivity, "com.gelakinetic.mtgfam.FileProvider", getSavedImageFile(false));
+                    Uri uri = FileProvider.getUriForFile(mActivity,
+                            "com.gelakinetic.mtgfam.FileProvider", getSavedImageFile(false));
                     Intent shareIntent = new Intent();
                     shareIntent.setAction(Intent.ACTION_SEND);
                     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
                     shareIntent.setType("image/jpeg");
-                    startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.card_view_send_to)));
+                    startActivity(Intent.createChooser(shareIntent,
+                            getResources().getText(R.string.card_view_send_to)));
 
                 } catch (Exception e) {
-                    ToastWrapper.makeText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG)
+                            .show();
                 }
             } else if (mToastString != null) {
                 ToastWrapper.makeText(mActivity, mToastString, ToastWrapper.LENGTH_LONG).show();
@@ -1171,7 +1209,8 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            SQLiteDatabase database =
+                    DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
             try {
                 Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
@@ -1179,7 +1218,8 @@ public class CardViewFragment extends FamiliarFragment {
 
                 cFormats.moveToFirst();
                 for (int i = 0; i < cFormats.getCount(); i++) {
-                    mFormats[i] = cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                    mFormats[i] =
+                            cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
                     switch (CardDbAdapter.checkLegality(mCardName, mFormats[i], database)) {
                         case CardDbAdapter.LEGAL:
                             mLegalities[i] = getString(R.string.card_view_legal);
@@ -1251,7 +1291,8 @@ public class CardViewFragment extends FamiliarFragment {
                 mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
 
                 assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
-                mHeight = ((rectangle.bottom - rectangle.top) - mActivity.getSupportActionBar().getHeight()) - mBorder;
+                mHeight = ((rectangle.bottom - rectangle.top) -
+                        mActivity.getSupportActionBar().getHeight()) - mBorder;
                 mWidth = (rectangle.right - rectangle.left) - mBorder;
 
                 synchronized (this) {
@@ -1275,6 +1316,7 @@ public class CardViewFragment extends FamiliarFragment {
          * @return unused
          */
         @SuppressWarnings("SpellCheckingInspection")
+        @SuppressFBWarnings(value = "DM_GC", justification = "Memory leak without the GC")
         @Override
         protected Void doInBackground(Integer... params) {
 
@@ -1305,8 +1347,10 @@ public class CardViewFragment extends FamiliarFragment {
                 boolean isToken = false;
                 if (mCardType.contains("Token") || /* try to take the easy way out */
                     (mCardCMC == 0 && /* Tokens have a CMC of 0 */
-                     mSetName.contains("Duel Decks") && /* The only tokens in Gatherer are from Duel Decks */
-                     mCardType.contains("Creature"))) { /* The only tokens in Gatherer are creatures */
+                    /* The only tokens in Gatherer are from Duel Decks */
+                     mSetName.contains("Duel Decks") &&
+                     /* The only tokens in Gatherer are creatures */
+                     mCardType.contains("Creature"))) {
                     isToken = true;
                 }
 
@@ -1409,7 +1453,7 @@ public class CardViewFragment extends FamiliarFragment {
 
                 Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
                 mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 /* Some error resizing. Out of memory? */
             }
 
@@ -1428,8 +1472,13 @@ public class CardViewFragment extends FamiliarFragment {
          * @param cardLanguage          The language of the card
          * @return a URL to the card's image
          */
-        private String getMtgiPicUrl(String cardName, String magicCardsInfoSetCode, String cardNumber,
-                                     String cardLanguage) {
+        private String getMtgiPicUrl(
+                String cardName,
+                String magicCardsInfoSetCode,
+                String cardNumber,
+                String cardLanguage) {
+
+            final String mtgiExtras = "http://magiccards.info/extras/";
             String picURL;
             if (mCardType.toLowerCase().contains(getString(R.string.search_Ongoing).toLowerCase()) ||
                     /* extra space to not confuse with planeswalker */
@@ -1438,7 +1487,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mCardType.toLowerCase().contains(getString(R.string.search_Scheme).toLowerCase())) {
                 switch (mSetCode) {
                     case "PC2":
-                        picURL = "http://magiccards.info/extras/plane/planechase-2012-edition/" + cardName + ".jpg";
+                        picURL = mtgiExtras + "plane/planechase-2012-edition/" + cardName + ".jpg";
                         picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;
@@ -1450,12 +1499,12 @@ public class CardViewFragment extends FamiliarFragment {
                         } else if (cardName.equalsIgnoreCase("horizon boughs")) {
                             cardName = "horizon-boughs-gateway-promo";
                         }
-                        picURL = "http://magiccards.info/extras/plane/planechase/" + cardName + ".jpg";
+                        picURL = mtgiExtras + "plane/planechase/" + cardName + ".jpg";
                         picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;
                     case "ARC":
-                        picURL = "http://magiccards.info/extras/scheme/archenemy/" + cardName + ".jpg";
+                        picURL = mtgiExtras + "scheme/archenemy/" + cardName + ".jpg";
                         picURL = picURL.replace(" ", "-")
                                 .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                         break;

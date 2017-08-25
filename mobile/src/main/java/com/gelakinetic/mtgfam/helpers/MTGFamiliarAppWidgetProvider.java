@@ -11,7 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatDrawableManager;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -110,7 +110,7 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 views.setImageViewResource(entry.buttonResource, vectorResource);
             } else {
-                Drawable d = AppCompatDrawableManager.get().getDrawable(context, vectorResource);
+                Drawable d = AppCompatResources.getDrawable(context, vectorResource);
                 Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
                         d.getIntrinsicHeight(),
                         Bitmap.Config.ARGB_8888);

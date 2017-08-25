@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -133,7 +134,7 @@ public class CardDbAdapter {
     private static final String KEY_WATERMARK = "WATERMARK";
 
     /* All the columns in DATABASE_TABLE_CARDS */
-    public static final String[] allCardDataKeys = {
+    public static final List<String> ALL_CARD_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
             DATABASE_TABLE_CARDS + "." + KEY_ID,
             DATABASE_TABLE_CARDS + "." + KEY_NAME,
             DATABASE_TABLE_CARDS + "." + KEY_SET,
@@ -175,10 +176,10 @@ public class CardDbAdapter {
             DATABASE_TABLE_CARDS + "." + KEY_NAME_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID_KOREAN,
             DATABASE_TABLE_CARDS + "." + KEY_WATERMARK
-    };
+    ));
 
     /* All the columns in DATABASE_CREATE_SETS */
-    private static final String[] allSetDataKeys = {
+    public static final List<String> ALL_SET_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
             DATABASE_TABLE_SETS + "." + KEY_ID,
             DATABASE_TABLE_SETS + "." + KEY_NAME,
             DATABASE_TABLE_SETS + "." + KEY_CODE,
@@ -187,7 +188,7 @@ public class CardDbAdapter {
             DATABASE_TABLE_SETS + "." + KEY_DIGEST,
             DATABASE_TABLE_SETS + "." + KEY_DATE,
             DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL
-    };
+    ));
 
     /* SQL Strings used to create the database tables */
     private static final String DATABASE_CREATE_FORMATS =
@@ -214,7 +215,7 @@ public class CardDbAdapter {
                     KEY_TERM + " text not null, " +
                     KEY_DEFINITION + " text not null);";
 
-    public static final String DATABASE_CREATE_CARDS =
+    static final String DATABASE_CREATE_CARDS =
             "create table " + DATABASE_TABLE_CARDS + "(" +
                     KEY_ID + " integer primary key autoincrement, " +
                     KEY_NAME + " text not null, " +
@@ -258,7 +259,7 @@ public class CardDbAdapter {
                     KEY_NAME_KOREAN + " text, " +
                     KEY_MULTIVERSEID_KOREAN + " integer);";
 
-    public static final String DATABASE_CREATE_SETS =
+    static final String DATABASE_CREATE_SETS =
             "create table " + DATABASE_TABLE_SETS + "(" +
                     KEY_ID + " integer primary key autoincrement, " +
                     KEY_NAME + " text not null, " +
@@ -516,6 +517,8 @@ public class CardDbAdapter {
                 }
                 selectionStr += KEY_ID + "=" + id;
             }
+            String[] allCardDataKeys = new String[ALL_CARD_DATA_KEYS.size()];
+            ALL_CARD_DATA_KEYS.toArray(allCardDataKeys);
             cursor = database.query(true, DATABASE_TABLE_CARDS, allCardDataKeys, selectionStr, null,
                     null, null, orderByStr, null);
         } catch (SQLiteException | IllegalStateException e) {
@@ -539,7 +542,7 @@ public class CardDbAdapter {
      * @return A cursor with the requested information about the card
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchCardByName(String name, String[] fields, boolean shouldGroup,
+    public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
                                          SQLiteDatabase mDb)
             throws FamiliarDbException {
         /* Sanitize the string and remove accent marks */
@@ -630,7 +633,7 @@ public class CardDbAdapter {
         String sql = "SELECT ";
 
         boolean first = true;
-        for (String field : CardDbAdapter.allCardDataKeys) {
+        for (String field : CardDbAdapter.ALL_CARD_DATA_KEYS) {
             if (first) {
                 first = false;
             } else {
@@ -647,21 +650,21 @@ public class CardDbAdapter {
         first = true;
         boolean doSql = false;
         for (CompressedCardInfo cwi : mCompressedCard) {
-            if (cwi.mCard.mType == null || cwi.mCard.mType.equals("")) {
+            if (cwi.mType == null || cwi.mType.equals("")) {
                 doSql = true;
                 if (first) {
                     first = false;
                 } else {
                     sql += " OR ";
                 }
-                if (cwi.mCard.setCode != null && !cwi.mCard.setCode.equals("")) {
+                if (cwi.setCode != null && !cwi.setCode.equals("")) {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mCard.mName, false) +
+                            sanitizeString(cwi.mName, false) +
                             " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" +
-                            cwi.mCard.setCode + "')";
+                            cwi.setCode + "')";
                 } else {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " +
-                            sanitizeString(cwi.mCard.mName, true) + ")";
+                            sanitizeString(cwi.mName, true) + ")";
                 }
             }
         }
@@ -690,28 +693,28 @@ public class CardDbAdapter {
             /* Do stuff */
             String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             for (CompressedCardInfo cwi : mCompressedCard) {
-                if (name != null && name.equals(cwi.mCard.mName)) {
-                    cwi.mCard.mType =
+                if (name != null && name.equals(cwi.mName)) {
+                    cwi.mType =
                             getTypeLine(cursor);
-                    cwi.mCard.mRarity =
+                    cwi.mRarity =
                             (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                    cwi.mCard.mManaCost =
+                    cwi.mManaCost =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-                    cwi.mCard.mPower =
+                    cwi.mPower =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-                    cwi.mCard.mToughness =
+                    cwi.mToughness =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-                    cwi.mCard.mLoyalty =
+                    cwi.mLoyalty =
                             cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-                    cwi.mCard.mText =
+                    cwi.mText =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-                    cwi.mCard.mFlavor =
+                    cwi.mFlavor =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-                    cwi.mCard.mNumber =
+                    cwi.mNumber =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-                    cwi.mCard.mCmc =
+                    cwi.mCmc =
                             cursor.getInt((cursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
-                    cwi.mCard.mColor =
+                    cwi.mColor =
                             cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
                 }
             }
@@ -733,7 +736,7 @@ public class CardDbAdapter {
      * @return A Cursor with the requested information
      * @throws FamiliarDbException If something goes wrong
      */
-    public static Cursor fetchCardByNameAndSet(String name, String setCode, String[] fields,
+    public static Cursor fetchCardByNameAndSet(String name, String setCode, List<String> fields,
                                                SQLiteDatabase mDb)
             throws FamiliarDbException {
         /* Sanitize the string and remove accent marks */
@@ -1927,6 +1930,8 @@ public class CardDbAdapter {
 
         Cursor c;
         try {
+            String[] allSetDataKeys = new String[ALL_SET_DATA_KEYS.size()];
+            ALL_SET_DATA_KEYS.toArray(allSetDataKeys);
             c = sqLiteDatabase.query(DATABASE_TABLE_SETS, allSetDataKeys, null,
                     null, null, null, KEY_DATE + " DESC");
         } catch (SQLiteException | IllegalStateException | NullPointerException e) {
