@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.AVG_PRICE;
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.HIGH_PRICE;
 import static com.gelakinetic.mtgfam.fragments.WishlistFragment.LOW_PRICE;
@@ -63,7 +65,7 @@ public class WishlistHelpers {
 
             /* For each compressed card, make an MtgCard and write it to the wishlist */
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                MtgCard card = cwi.mCard;
+                MtgCard card = cwi;
                 for (IndividualSetInfo isi : cwi.mInfo) {
                     card.mExpansion = isi.mSet;
                     card.setCode = isi.mSetCode;
@@ -89,7 +91,7 @@ public class WishlistHelpers {
     public static void addItemToWishlist(final Context context, final CompressedWishlistInfo wishlistInfo) {
         final ArrayList<MtgCard> currentWishlist = ReadWishlist(context);
         for (IndividualSetInfo isi : wishlistInfo.mInfo) {
-            final MtgCard card = wishlistInfo.mCard;
+            final MtgCard card = wishlistInfo;
             card.mExpansion = isi.mSet;
             card.setCode = isi.mSetCode;
             card.mNumber = isi.mNumber;
@@ -170,12 +172,12 @@ public class WishlistHelpers {
         /* For each wishlist entry */
         for (CompressedWishlistInfo cwi : mCompressedWishlist) {
             /* Append the card name, always */
-            readableWishlist.append(cwi.mCard.mName);
+            readableWishlist.append(cwi.mName);
             readableWishlist.append("\r\n");
 
             /* Append the full text, if the user wants it */
             if (shareText) {
-                cwi.mCard.appendCardText(readableWishlist);
+                cwi.appendCardText(readableWishlist);
             }
 
             /* For each set info in the wishlist */
@@ -242,8 +244,8 @@ public class WishlistHelpers {
     }
 
     /**
-     * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for different printings
-     * of that card
+     * This class encapsulates a single MtgCard and an ArrayList of non-duplicated information for
+     * different printings of that card.
      */
     public static class CompressedWishlistInfo extends CardHelpers.CompressedCardInfo {
 
@@ -260,8 +262,8 @@ public class WishlistHelpers {
         }
 
         /**
-         * Check to see if two CompressedWishlistInfo objects are equivalent, or if this is equivalent to a MtgCard
-         * object. The comparison is done on the MtgCard's name
+         * Check to see if two CompressedWishlistInfo objects are equivalent, or if this is
+         * equivalent to a MtgCard object. The comparison is done on the MtgCard's name.
          *
          * @param o The object to compare to this one
          * @return true if the specified object is equal to this string, false otherwise.
@@ -269,11 +271,16 @@ public class WishlistHelpers {
         @Override
         public boolean equals(Object o) {
             if (o instanceof CompressedWishlistInfo) {
-                return mCard.mName.equals(((CompressedWishlistInfo) o).mCard.mName);
-            } else if (o instanceof MtgCard) {
-                return mCard.mName.equals(((MtgCard) o).mName);
+                return mName.equals(((CompressedWishlistInfo) o).mName);
             }
-            return false;
+            return super.equals(o);
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 23;
+            hash = hash * 31 + super.hashCode();
+            return hash * 31 + mIndex;
         }
 
         /**
@@ -351,6 +358,7 @@ public class WishlistHelpers {
          * @return an integer < 0 if wish1 is less than wish2, 0 if they are equal, and > 0 if wish1 is greater than wish2.
          */
         @Override
+        @SuppressFBWarnings(value = "DM_BOXED_PRIMITIVE_FOR_COMPARE", justification = "Minimum API Level not high enough")
         public int compare(CompressedWishlistInfo wish1, CompressedWishlistInfo wish2) {
 
             int retVal = 0;
@@ -360,31 +368,31 @@ public class WishlistHelpers {
                 try {
                     switch (option.getKey()) {
                         case CardDbAdapter.KEY_NAME: {
-                            retVal = wish1.mCard.mName.compareTo(wish2.mCard.mName);
+                            retVal = wish1.mName.compareTo(wish2.mName);
                             break;
                         }
                         case CardDbAdapter.KEY_COLOR: {
-                            retVal = wish1.mCard.mColor.compareTo(wish2.mCard.mColor);
+                            retVal = wish1.mColor.compareTo(wish2.mColor);
                             break;
                         }
                         case CardDbAdapter.KEY_SUPERTYPE: {
-                            retVal = wish1.mCard.mType.compareTo(wish2.mCard.mType);
+                            retVal = wish1.mType.compareTo(wish2.mType);
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = wish1.mCard.mCmc - wish2.mCard.mCmc;
+                            retVal = wish1.mCmc - wish2.mCmc;
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
-                            retVal = Float.compare(wish1.mCard.mPower, wish2.mCard.mPower);
+                            retVal = Float.compare(wish1.mPower, wish2.mPower);
                             break;
                         }
                         case CardDbAdapter.KEY_TOUGHNESS: {
-                            retVal = Float.compare(wish1.mCard.mToughness, wish2.mCard.mToughness);
+                            retVal = Float.compare(wish1.mToughness, wish2.mToughness);
                             break;
                         }
                         case CardDbAdapter.KEY_SET: {
-                            retVal = wish1.mCard.mExpansion.compareTo(wish2.mCard.mExpansion);
+                            retVal = wish1.mExpansion.compareTo(wish2.mExpansion);
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {

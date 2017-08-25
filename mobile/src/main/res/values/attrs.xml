@@ -39,9 +39,6 @@
 
         <attr name="drawer_background_indicator" format="reference" />
 
-        <!-- checkboxes -->
-        <attr name="btn_check_foil" format="reference" />
-
         <!-- to style the hms time picker -->
         <attr name="hms_picker_style" format="reference" />
 

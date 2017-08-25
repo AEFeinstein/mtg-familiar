@@ -27,6 +27,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
@@ -61,8 +62,8 @@ public class DecklistFragment extends FamiliarListFragment {
     public TextView mDeckCards;
 
     /* Decklist and adapters */
-    public ArrayList<DecklistHelpers.CompressedDecklistInfo> mCompressedDecklist;
-    private ComparatorChain<DecklistHelpers.CompressedDecklistInfo> mDecklistChain;
+    public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
+    private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
     public String mCurrentDeck = "";
@@ -199,9 +200,9 @@ public class DecklistFragment extends FamiliarListFragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.deck_import_selected: {
-                        ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
+                        ArrayList<CompressedDecklistInfo> selectedItems =
                                 mListAdapter.getSelectedItems();
-                        for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
+                        for (CompressedDecklistInfo info : selectedItems) {
                             WishlistHelpers.addItemToWishlist(getContext(),
                                     info.convertToWishlist());
                         }
@@ -248,14 +249,14 @@ public class DecklistFragment extends FamiliarListFragment {
             return;
         }
 
-        final DecklistHelpers.CompressedDecklistInfo decklistInfo =
-                new DecklistHelpers.CompressedDecklistInfo(card, isSideboard);
+        final CompressedDecklistInfo decklistInfo =
+                new CompressedDecklistInfo(card, isSideboard);
 
         /* Add it to the decklist, either as a new CompressedDecklistInfo, or to an existing one */
         if (mCompressedDecklist.contains(decklistInfo)) {
             boolean added = false;
             final int firstIndex = mCompressedDecklist.indexOf(decklistInfo);
-            final DecklistHelpers.CompressedDecklistInfo firstCard =
+            final CompressedDecklistInfo firstCard =
                     mCompressedDecklist.get(firstIndex);
             for (int i = 0; i < firstCard.mInfo.size(); i++) {
                 CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
@@ -269,7 +270,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 firstCard.add(card);
             }
         } else {
-            mCompressedDecklist.add(new DecklistHelpers.CompressedDecklistInfo(card, isSideboard));
+            mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
         }
 
         /* The headers shouldn't (and can't) be sorted */
@@ -349,8 +350,8 @@ public class DecklistFragment extends FamiliarListFragment {
             mCompressedDecklist.clear();
             return;
         }
-        for (final DecklistHelpers.CompressedDecklistInfo cdi : mCompressedDecklist) {
-            if (cdi.mCard != null && cdi.mCard.mName.equals(cardChanged)) {
+        for (final CompressedDecklistInfo cdi : mCompressedDecklist) {
+            if (!cdi.mName.isEmpty() && cdi.mName.equals(cardChanged)) {
                 cdi.clearCompressedInfo();
             }
         }
@@ -384,19 +385,13 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* Translate the set code to TCG name of course it's not saved */
                 card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
                 if (changedCardName == null || changedCardName.equals(card.first.mName)) {
-                    if (mCompressedDecklist.contains(card.first)) {
-                        DecklistHelpers.CompressedDecklistInfo existingCard =
-                                mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first));
-                        if (existingCard.mIsSideboard == card.second) {
-                            mCompressedDecklist.get(mCompressedDecklist.indexOf(card.first))
-                                    .add(card.first);
-                        } else {
-                            mCompressedDecklist.add(new DecklistHelpers
-                                    .CompressedDecklistInfo(card.first, card.second));
-                        }
+                    CompressedDecklistInfo wrapped =
+                            new CompressedDecklistInfo(card.first, card.second);
+                    if (mCompressedDecklist.contains(wrapped)) {
+                        mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
+                                .add(card.first);
                     } else {
-                        mCompressedDecklist.add(new DecklistHelpers
-                                .CompressedDecklistInfo(card.first, card.second));
+                        mCompressedDecklist.add(wrapped);
                     }
                     if (mShowTotalDecklistPrice) {
                         loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
@@ -531,7 +526,7 @@ public class DecklistFragment extends FamiliarListFragment {
     private void clearHeaders() {
 
         for (int i = 0; i < mCompressedDecklist.size(); i++) {
-            if (mCompressedDecklist.get(i).mCard == null) { /* We found our header */
+            if (mCompressedDecklist.get(i).header != null) { /* We found our header */
                 /* Now remove it, and then back up a step */
                 mCompressedDecklist.remove(i);
                 mListAdapter.notifyItemRemoved(i);
@@ -549,8 +544,7 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     private boolean insertHeaderAt(final int position, final String headerText) {
 
-        final DecklistHelpers.CompressedDecklistInfo header =
-                new DecklistHelpers.CompressedDecklistInfo(null, false);
+        final CompressedDecklistInfo header = new CompressedDecklistInfo(new MtgCard(), false);
         header.header = headerText;
         if (!mCompressedDecklist.contains(header)) {
             mCompressedDecklist.add(position, header);
@@ -571,8 +565,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
         for (int i = 0; i < mCompressedDecklist.size(); i++) {
             for (int j = 0; j < cardTypes.length; j++) {
-                final DecklistHelpers.CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
-                if (cdi.mCard != null /* We only want entries that have a card attached */
+                final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
+                if (!cdi.mName.equals("") /* We only want entries that have a card attached */
                         && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
                         && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) {
                     if (cdi.mIsSideboard /* it is in the sideboard */
@@ -581,7 +575,7 @@ public class DecklistFragment extends FamiliarListFragment {
                         break;
                     } else if (j < cardHeaders.length - 1 /* if j is in range */
                             /* the current card has the selected card type */
-                            && cdi.mCard.mType.contains(cardTypes[j])
+                            && cdi.mType.contains(cardTypes[j])
                             /* There isn't already a header */
                             && !insertHeaderAt(i, cardHeaders[j + 1])) {
                         break;
@@ -626,7 +620,7 @@ public class DecklistFragment extends FamiliarListFragment {
             /**
              * Loading the price for this card failed and threw a spiceException.
              *
-             * @param spiceException The exception thrown when trying to load this card's price
+`             * @param spiceException The exception thrown when trying to load this card's price
              */
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -634,8 +628,8 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* because this can return when the fragment is in the background */
                 if (DecklistFragment.this.isAdded()) {
                     /* Find the compressed wishlist info for this card */
-                    for (DecklistHelpers.CompressedDecklistInfo cdi : mCompressedDecklist) {
-                        if (cdi.header == null && cdi.mCard.mName.equals(mCardName)) {
+                    for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+                        if (cdi.header == null && cdi.mName.equals(mCardName)) {
                             /* Find all foil and non foil compressed items with the same set code */
                             for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                                 if (isi.mSetCode.equals(mSetCode)) {
@@ -666,8 +660,8 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* because this can return when the fragment is in the background */
                 if (DecklistFragment.this.isAdded()) {
                     /* Find the compressed wishlist info for this card */
-                    for (DecklistHelpers.CompressedDecklistInfo cdi : mCompressedDecklist) {
-                        if (cdi.header == null && cdi.mCard.mName.equals(mCardName)) {
+                    for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+                        if (cdi.header == null && cdi.mName.equals(mCardName)) {
                             /* Find all foil and non foil compressed items with the same set code */
                             for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                                 if (isi.mSetCode.equals(mSetCode)) {
@@ -701,7 +695,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* default */ float totalPrice = 0;
 
-        for (DecklistHelpers.CompressedDecklistInfo cdi : mCompressedDecklist) {
+        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             if (cdi.header == null) {
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     if (isi.mPrice != null) {
@@ -734,13 +728,13 @@ public class DecklistFragment extends FamiliarListFragment {
      * The adapter that drives the deck list.
      */
     public class CardDataAdapter
-            extends FamiliarListFragment.CardDataAdapter<DecklistHelpers.CompressedDecklistInfo, CardDataAdapter.ViewHolder> {
+            extends FamiliarListFragment.CardDataAdapter<CompressedDecklistInfo, CardDataAdapter.ViewHolder> {
 
         /**
          * Create the adapter.
          * @param values the data set
          */
-        CardDataAdapter(ArrayList<DecklistHelpers.CompressedDecklistInfo> values) {
+        CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
             super(values);
         }
 
@@ -765,7 +759,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 holder.itemView.setSelected(false);
             }
 
-            final DecklistHelpers.CompressedDecklistInfo info = items.get(position);
+            final CompressedDecklistInfo info = items.get(position);
 
             if (isItemPendingRemoval(position)) {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
@@ -795,9 +789,9 @@ public class DecklistFragment extends FamiliarListFragment {
                     View separator = holder.itemView.findViewById(R.id.decklistSeparator);
                     separator.setVisibility(View.GONE);
                     Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                    holder.mCardName.setText(info.mCard.mName);
+                    holder.mCardName.setText(info.mName);
                     holder.mCardCost.setText(ImageGetterHelper
-                            .formatStringWithGlyphs(info.mCard.mManaCost, imageGetter));
+                            .formatStringWithGlyphs(info.mManaCost, imageGetter));
                     holder.setIsSwipeable(true);
                 } else {
                     /* The header uses the same layout, just set it up */
@@ -829,7 +823,7 @@ public class DecklistFragment extends FamiliarListFragment {
             /* default */ int totalCards = 0;
             String[] types = getResources().getStringArray(R.array.card_types_extra);
 
-            for (DecklistHelpers.CompressedDecklistInfo cdi : items) {
+            for (CompressedDecklistInfo cdi : items) {
                 if (cdi.header != null) {
                     continue;
                 }
@@ -841,18 +835,18 @@ public class DecklistFragment extends FamiliarListFragment {
                         /* The type is above -1 OR the card is in the sideboard */
                         && (typeIndex > -1 || cdi.mIsSideboard)
                         /* The card is in the sideboard OR the card is the wanted type */
-                        && (cdi.mIsSideboard || cdi.mCard.mType.contains(types[typeIndex]))) {
+                        && (cdi.mIsSideboard || cdi.mType.contains(types[typeIndex]))) {
                     /* There of course are edge cases */
                     final boolean lookForEnchant = types[typeIndex > -1 ? typeIndex : 0]
                             .equals(types[5]);
-                    final boolean isCreature = cdi.mCard.mType.contains(types[0]);
+                    final boolean isCreature = cdi.mType.contains(types[0]);
                     if (typeIndex > -1 /* Make sure we aren't working on the sideboard */
                             /* Are we looking for enchantments or is the object a creature? */
                             && (lookForEnchant || isCreature)
                             /* Are we looking for enchantments or are we looking for a land? */
                             && (lookForEnchant || types[typeIndex].contains(types[6]))
                             /* Is the current object a creature or is it an artifact? */
-                            && (isCreature || cdi.mCard.mType.contains(types[4]))) {
+                            && (isCreature || cdi.mType.contains(types[4]))) {
                         continue; /* Skip right over to the next iteration */
                     }
                     totalCards += cdi.getTotalNumber();
@@ -869,7 +863,7 @@ public class DecklistFragment extends FamiliarListFragment {
         int getTotalCards() {
 
             int totalCards = 0;
-            for (DecklistHelpers.CompressedDecklistInfo cdi : items) {
+            for (CompressedDecklistInfo cdi : items) {
                 totalCards += cdi.getTotalNumber();
             }
             return totalCards;
@@ -890,7 +884,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         @Override
         public String getItemName(int position) {
-            return items.get(position).mCard.mName;
+            return items.get(position).mName;
         }
 
         @Override
@@ -926,10 +920,9 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 if (!isInSelectMode()) {
                     /* if we aren't in select mode, open a dialog to edit this card */
-                    final DecklistHelpers.CompressedDecklistInfo item =
-                            items.get(getAdapterPosition());
+                    final CompressedDecklistInfo item = items.get(getAdapterPosition());
                     showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
-                            item.mCard.mName, item.mIsSideboard);
+                            item.mName, item.mIsSideboard);
                 }
 
                 super.onClick(view);

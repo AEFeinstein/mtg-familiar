@@ -1,5 +1,9 @@
 language: android
 
+env:
+  global:
+    - GRADLE_OPTS="-Xms128m"
+
 jdk:
   - oraclejdk8
 
