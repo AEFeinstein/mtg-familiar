@@ -81,7 +81,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
     }
 
     /**
-     * Execute any pending runnables NOW. This generally means we are moving away from this
+     * Execute any pending Runnables NOW. This generally means we are moving away from this
      * fragment.
      */
     public void removePendingNow() {

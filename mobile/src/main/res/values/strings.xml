@@ -169,8 +169,11 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
 <string name="search_No_other_colors">"No other colors"</string>
 <string name="search_Exact_all_selected_and_no_others">"Exact (all selected and no others)"</string>
 
-<!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-    See arrays.xml and onCreate method in SearchViewFragment -->
+<string name="result_list_Add_to_decklist">"Add to Deck"</string>
+<string name="result_list_Add_to_wishlist">"Add to Wishlist"</string>
+
+    <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
+        See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
