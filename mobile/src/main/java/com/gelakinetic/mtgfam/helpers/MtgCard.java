@@ -334,7 +334,7 @@ public class MtgCard extends Card {
      */
     @Override
     public boolean equals(Object o) {
-        return o instanceof MtgCard && this.mName.equals(((MtgCard) o).mName);
+        return o instanceof MtgCard && this.mName.equals(((MtgCard) o).mName) && this.mExpansion.equals(((MtgCard) o).mExpansion);
     }
 
     @Override

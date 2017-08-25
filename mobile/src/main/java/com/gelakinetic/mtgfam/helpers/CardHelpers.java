@@ -20,6 +20,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
@@ -111,11 +112,12 @@ public class CardHelpers {
         // The wishlist dialog is shown both in the card view and the wishlist fragments
         final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(ctx, WishlistFragment.class);
         final boolean isCardViewDialog = FragmentHelpers.isInstanceOf(ctx, CardViewPagerFragment.class);
+        final boolean isResultListDialog = FragmentHelpers.isInstanceOf(ctx, ResultListFragment.class);
 
         final String deckName;
         final String dialogText;
 
-        if (isWishlistDialog || isCardViewDialog) {
+        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
             /* Read the wishlist */
             ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
             targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
@@ -220,7 +222,7 @@ public class CardHelpers {
 
                         ArrayList<Pair<MtgCard, Boolean>> list;
 
-                        if (isWishlistDialog || isCardViewDialog) {
+                        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                             /* Read the wishlist */
                             list = new ArrayList<>();
                             ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
@@ -278,7 +280,7 @@ public class CardHelpers {
 
                         }
 
-                        if (isWishlistDialog || isCardViewDialog) {
+                        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                             ArrayList<MtgCard> wishlist = new ArrayList<>();
                             /* Turn it back in to a plain ArrayList */
                             for (Pair<MtgCard, Boolean> card : list) {
@@ -686,6 +688,7 @@ public class CardHelpers {
      *
      * @param context context the method is being called from
      * @param cardName name of the card to make
+     * @param cardSet set code of the card to make
      * @param isFoil if the card is foil or not
      * @param numberOf how many copies of the card are needed
      * @return an MtgCard made based on the given parameters
@@ -693,6 +696,7 @@ public class CardHelpers {
     public static MtgCard makeMtgCard(
             Context context,
             String cardName,
+            String cardSet,
             boolean isFoil,
             int numberOf) {
 
@@ -722,7 +726,13 @@ public class CardHelpers {
                 card.message = activity.getString(R.string.wishlist_loading);
             }
             /* Get extra information from the database */
-            Cursor cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+            Cursor cardCursor;
+            if(cardSet == null) {
+                cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+            }
+            else {
+                cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, fields, database);
+            }
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeText(activity, activity.getString(R.string.toast_no_card),
                         ToastWrapper.LENGTH_LONG).show();
