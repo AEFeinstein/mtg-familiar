@@ -36,14 +36,12 @@ import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
-import com.gelakinetic.mtgfam.helpers.view.ATokenTextView;
 import com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner;
 import com.gelakinetic.mtgfam.helpers.view.CompletionView;
 import com.gelakinetic.mtgfam.helpers.view.ManaCostTextView;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.tokenautocomplete.TokenCompleteTextView;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -185,48 +183,48 @@ public class SearchViewFragment extends FamiliarFragment {
         assert myFragmentView != null;
 
         /* Get references to UI elements. When a search is preformed, these values will be queried */
-        mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
-        mTextField = (EditText) myFragmentView.findViewById(R.id.textsearch);
-        mSupertypeField = (CompletionView) myFragmentView.findViewById(R.id.supertypesearch);
-        mSubtypeField = (CompletionView) myFragmentView.findViewById(R.id.subtypesearch);
-        mFlavorField = (EditText) myFragmentView.findViewById(R.id.flavorsearch);
-        mArtistField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.artistsearch);
-        mCollectorsNumberField = (EditText) myFragmentView.findViewById(R.id.collectorsnumbersearch);
+        mNameField = myFragmentView.findViewById(R.id.name_search);
+        mTextField = myFragmentView.findViewById(R.id.textsearch);
+        mSupertypeField = myFragmentView.findViewById(R.id.supertypesearch);
+        mSubtypeField = myFragmentView.findViewById(R.id.subtypesearch);
+        mFlavorField = myFragmentView.findViewById(R.id.flavorsearch);
+        mArtistField = myFragmentView.findViewById(R.id.artistsearch);
+        mCollectorsNumberField = myFragmentView.findViewById(R.id.collectorsnumbersearch);
 
-        Button searchButton = (Button) myFragmentView.findViewById(R.id.searchbutton);
+        Button searchButton = myFragmentView.findViewById(R.id.searchbutton);
 
-        mCheckboxW = (CheckBox) myFragmentView.findViewById(R.id.checkBoxW);
-        mCheckboxU = (CheckBox) myFragmentView.findViewById(R.id.checkBoxU);
-        mCheckboxB = (CheckBox) myFragmentView.findViewById(R.id.checkBoxB);
-        mCheckboxR = (CheckBox) myFragmentView.findViewById(R.id.checkBoxR);
-        mCheckboxG = (CheckBox) myFragmentView.findViewById(R.id.checkBoxG);
-        mCheckboxL = (CheckBox) myFragmentView.findViewById(R.id.checkBoxL);
+        mCheckboxW = myFragmentView.findViewById(R.id.checkBoxW);
+        mCheckboxU = myFragmentView.findViewById(R.id.checkBoxU);
+        mCheckboxB = myFragmentView.findViewById(R.id.checkBoxB);
+        mCheckboxR = myFragmentView.findViewById(R.id.checkBoxR);
+        mCheckboxG = myFragmentView.findViewById(R.id.checkBoxG);
+        mCheckboxL = myFragmentView.findViewById(R.id.checkBoxL);
 
-        mCheckboxWIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxW_identity);
-        mCheckboxUIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxU_identity);
-        mCheckboxBIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxB_identity);
-        mCheckboxRIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxR_identity);
-        mCheckboxGIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxG_identity);
-        mCheckboxLIdentity = (CheckBox) myFragmentView.findViewById(R.id.checkBoxL_identity);
+        mCheckboxWIdentity = myFragmentView.findViewById(R.id.checkBoxW_identity);
+        mCheckboxUIdentity = myFragmentView.findViewById(R.id.checkBoxU_identity);
+        mCheckboxBIdentity = myFragmentView.findViewById(R.id.checkBoxB_identity);
+        mCheckboxRIdentity = myFragmentView.findViewById(R.id.checkBoxR_identity);
+        mCheckboxGIdentity = myFragmentView.findViewById(R.id.checkBoxG_identity);
+        mCheckboxLIdentity = myFragmentView.findViewById(R.id.checkBoxL_identity);
 
-        mColorSpinner = (Spinner) myFragmentView.findViewById(R.id.colorlogic);
-        mColorIdentitySpinner = (Spinner) myFragmentView.findViewById(R.id.coloridentitylogic);
-        mTextSpinner = (Spinner) myFragmentView.findViewById(R.id.textlogic);
-        mTypeSpinner = (Spinner) myFragmentView.findViewById(R.id.typelogic);
-        mSetSpinner = (Spinner) myFragmentView.findViewById(R.id.setlogic);
+        mColorSpinner = myFragmentView.findViewById(R.id.colorlogic);
+        mColorIdentitySpinner = myFragmentView.findViewById(R.id.coloridentitylogic);
+        mTextSpinner = myFragmentView.findViewById(R.id.textlogic);
+        mTypeSpinner = myFragmentView.findViewById(R.id.typelogic);
+        mSetSpinner = myFragmentView.findViewById(R.id.setlogic);
 
-        mSetField = (CompletionView) myFragmentView.findViewById(R.id.setsearch);
-        mFormatButton = (Button) myFragmentView.findViewById(R.id.formatsearch);
-        mRarityButton = (Button) myFragmentView.findViewById(R.id.raritysearch);
+        mSetField = myFragmentView.findViewById(R.id.setsearch);
+        mFormatButton = myFragmentView.findViewById(R.id.formatsearch);
+        mRarityButton = myFragmentView.findViewById(R.id.raritysearch);
 
-        mPowLogic = (Spinner) myFragmentView.findViewById(R.id.powLogic);
-        mPowChoice = (Spinner) myFragmentView.findViewById(R.id.powChoice);
-        mTouLogic = (Spinner) myFragmentView.findViewById(R.id.touLogic);
-        mTouChoice = (Spinner) myFragmentView.findViewById(R.id.touChoice);
-        mCmcLogic = (Spinner) myFragmentView.findViewById(R.id.cmcLogic);
-        mCmcChoice = (Spinner) myFragmentView.findViewById(R.id.cmcChoice);
-        mManaCostTextView = (ManaCostTextView) myFragmentView.findViewById(R.id.manaCostTextView);
-        mManaComparisonSpinner = (ComparisonSpinner) myFragmentView.findViewById(R.id.comparisonSpinner);
+        mPowLogic = myFragmentView.findViewById(R.id.powLogic);
+        mPowChoice = myFragmentView.findViewById(R.id.powChoice);
+        mTouLogic = myFragmentView.findViewById(R.id.touLogic);
+        mTouChoice = myFragmentView.findViewById(R.id.touChoice);
+        mCmcLogic = myFragmentView.findViewById(R.id.cmcLogic);
+        mCmcChoice = myFragmentView.findViewById(R.id.cmcChoice);
+        mManaCostTextView = myFragmentView.findViewById(R.id.manaCostTextView);
+        mManaComparisonSpinner = myFragmentView.findViewById(R.id.comparisonSpinner);
 
         /* Now we need to apply a different TextView to our Spinners to center the items */
         ArrayAdapter<String> logicAdapter = new ArrayAdapter<>(getContext(), R.layout.centered_spinner_text, getResources().getStringArray(R.array.logic_spinner));
@@ -734,13 +732,13 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     private void clear() {
         mNameField.setText("");
-        clearATokenTextView(mSupertypeField);
-        clearATokenTextView(mSubtypeField);
+        mSupertypeField.clearTextAndTokens();
+        mSubtypeField.clearTextAndTokens();
         mTextField.setText("");
         mArtistField.setText("");
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
-        clearATokenTextView(mSetField);
+        mSetField.clearTextAndTokens();
 
         mCheckboxW.setChecked(false);
         mCheckboxU.setChecked(false);
@@ -818,8 +816,6 @@ public class SearchViewFragment extends FamiliarFragment {
                 /* Concatenate all strings after the first delimiter
                  * in case there's a hyphen in the subtype
                  */
-                String subtype = "";
-                boolean first = true;
                 for (int i = 1; i < type.length; i++) {
                     mSubtypeField.addObject(type[i]);
                 }
@@ -914,7 +910,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 mSetField.clearTextAndTokens();
             }
             if (criteria.mc != null) {
-                manaCostTextView.setObjectsFromString(criteria.mc);
+                mManaCostTextView.setObjectsFromString(criteria.mc);
             } else {
                 mManaCostTextView.clearTextAndTokens();
             }
