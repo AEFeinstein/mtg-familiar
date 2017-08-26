@@ -169,8 +169,11 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
 <string name="search_No_other_colors">"No other colors"</string>
 <string name="search_Exact_all_selected_and_no_others">"Exact (all selected and no others)"</string>
 
-<!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
-    See arrays.xml and onCreate method in SearchViewFragment -->
+<string name="result_list_Add_to_decklist">"Add to Deck"</string>
+<string name="result_list_Add_to_wishlist">"Add to Wishlist"</string>
+
+    <!-- Keep the character after last underscore in the name of rarities the same as the rarity code (C R U M T)
+        See arrays.xml and onCreate method in SearchViewFragment -->
 <string name="search_Common">"Common"</string>
 <string name="search_Uncommon">"Uncommon"</string>
 <string name="search_Rare">"Rare"</string>
@@ -546,12 +549,12 @@ Good luck, and have fun!
 <string name="decklist_saved_toast">"Deck %1$s saved!"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Added a deckbuilder&lt;br&gt;
-- Added result list sorting&lt;br&gt;
-- Added card names in other languages&lt;br&gt;
-- Added share button for card text or image&lt;br&gt;
-- Added Slovak translation&lt;br&gt;
-- Fixed card art for certain cards"</string>
+<string name="main_whats_new_text">"- In Search, search for cards by mana cost&lt;br&gt;
+- In Results, long-press a card to add to Deck or Wishlist&lt;br&gt;
+- In Deck Builder, add cards to the sideboard&lt;br&gt;
+- In Wish &amp; Trade Lists, sort by order added&lt;br&gt;
+- In lists, long-press to select multiple cards and swipe to delete them&lt;br&gt;
+- Bug fixes &amp; optimizations"</string>
 <string name="card_view_send_to">"Share image using"</string>
 <string name="card_view_translated_dialog_title">"Translated Card Name"</string>
 <string name="pref_Portuguese">"Portuguese (Brazil)"</string>

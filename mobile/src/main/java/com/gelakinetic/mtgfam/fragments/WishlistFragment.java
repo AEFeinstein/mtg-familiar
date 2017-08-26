@@ -44,6 +44,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
 
@@ -190,11 +191,12 @@ public class WishlistFragment extends FamiliarListFragment {
             return;
         }
 
-        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
+        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null, mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
+        CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
 
         /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
-        if (mCompressedWishlist.contains(card)) {
-            CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(card));
+        if (mCompressedWishlist.contains(wrapped)) {
+            CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped));
             boolean added = false;
             for (IndividualSetInfo isi : cwi.mInfo) {
                 if (isi.mSetCode.equals(card.setCode) && isi.mIsFoil.equals(card.foil)) {
@@ -279,7 +281,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
                 /* If the number is empty because of a prior bug, get it from the database */
                 if (card.mNumber.equals("")) {
-                    Cursor numberCursor = CardDbAdapter.fetchCardByName(card.mName, new String[]{CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CODE}, false, database);
+                    Cursor numberCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CODE), false, database);
                     numberCursor.moveToFirst();
                     while (!numberCursor.isAfterLast()) {
                         if (card.setCode.equals(numberCursor.getString(numberCursor.getColumnIndex(CardDbAdapter.KEY_CODE)))) {
@@ -298,7 +300,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 mCompressedWishlist.clear();
             } else {
                 for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                    if (cwi.mCard.mName.equals(changedCardName)) {
+                    if (cwi.mName.equals(changedCardName)) {
                         cwi.clearCompressedInfo();
                     }
                 }
@@ -309,8 +311,9 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (changedCardName == null || changedCardName.equals(card.mName)) {
                     /* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each
                      * other */
-                    if (mCompressedWishlist.contains(card)) {
-                        mCompressedWishlist.get(mCompressedWishlist.indexOf(card)).add(card);
+                    CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
+                    if (mCompressedWishlist.contains(wrapped)) {
+                        mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped)).add(card);
                     } else {
                         mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
                     }
@@ -469,7 +472,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (WishlistFragment.this.isAdded()) {
                     /* Find the compressed wishlist info for this card */
                     for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                        if (cwi.mCard.mName.equals(mCardName)) {
+                        if (cwi.mName.equals(mCardName)) {
                             /* Find all foil and non foil compressed items with the same set code */
                             for (IndividualSetInfo isi : cwi.mInfo) {
                                 if (isi.mSetCode.equals(mSetCode)) {
@@ -499,7 +502,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (WishlistFragment.this.isAdded()) {
                     /* Find the compressed wishlist info for this card */
                     for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                        if (cwi.mCard.mName.equals(mCardName)) {
+                        if (cwi.mName.equals(mCardName)) {
                             /* Find all foil and non foil compressed items with the same set code */
                             for (IndividualSetInfo isi : cwi.mInfo) {
                                 if (isi.mSetCode.equals(mSetCode)) {
@@ -592,7 +595,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         public String getItemName(int position) {
-            return items.get(position).mCard.mName;
+            return items.get(position).mName;
         }
 
         @Override
@@ -622,7 +625,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 holder.mWishlistSets.removeAllViews();
 
                 /* Set the card name, always */
-                holder.mCardName.setText(info.mCard.mName);
+                holder.mCardName.setText(info.mName);
 
                 /* Show or hide full card information */
                 holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
@@ -637,12 +640,12 @@ public class WishlistFragment extends FamiliarListFragment {
                     holder.mCardSlash.setVisibility(View.GONE);
                     holder.mCardToughness.setVisibility(View.GONE);
                     /* Set the type, cost, and ability */
-                    holder.mCardType.setText(info.mCard.mType);
-                    holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mManaCost, imgGetter));
-                    holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mCard.mText, imgGetter));
+                    holder.mCardType.setText(info.mType);
+                    holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mManaCost, imgGetter));
+                    holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mText, imgGetter));
                     try {
-                        String power = CardHelpers.adaptCardPT(info.mCard.mPower);
-                        String toughness = CardHelpers.adaptCardPT(info.mCard.mToughness);
+                        String power = CardHelpers.adaptCardPT(info.mPower);
+                        String toughness = CardHelpers.adaptCardPT(info.mToughness);
                         holder.mCardPower.setText(power);
                         holder.mCardToughness.setText(toughness);
                         holder.mCardPower.setVisibility(View.VISIBLE);
@@ -653,7 +656,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
 
                     /* Show the loyalty, if the card has any (traitor...) */
-                    float loyalty = info.mCard.mLoyalty;
+                    float loyalty = info.mLoyalty;
                     if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
                         if (loyalty == CardDbAdapter.X) {
                             holder.mCardToughness.setText("X");
