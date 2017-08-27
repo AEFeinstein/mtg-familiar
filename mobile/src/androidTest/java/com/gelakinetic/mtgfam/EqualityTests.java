@@ -32,7 +32,7 @@ public class EqualityTests {
     @Before
     public void setUp() {
         lightningBolt = CardHelpers.makeMtgCard(
-                mFamiliarActivityRule.getActivity(), "Lightning Bolt", false, 1);
+                mFamiliarActivityRule.getActivity(), "Lightning Bolt", null, false, 1);
     }
 
     @Test

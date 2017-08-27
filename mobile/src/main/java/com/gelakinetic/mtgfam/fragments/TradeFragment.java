@@ -932,6 +932,8 @@ public class TradeFragment extends FamiliarListFragment {
                     );
                 }
 
+                super.onClick(view);
+
             }
 
             /**
