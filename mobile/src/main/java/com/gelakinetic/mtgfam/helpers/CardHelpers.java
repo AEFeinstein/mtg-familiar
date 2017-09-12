@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -729,6 +731,19 @@ public class CardHelpers {
             Cursor cardCursor;
             if(cardSet == null) {
                 cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+                /* If we don't specify the set, and we are trying to find a foil card, choose the
+                 * latest foil printing. If there are no eligible printings, select the latest */
+                if (isFoil) {
+                    while (!CardDbAdapter.canBeFoil(
+                            cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET))
+                            , database)) {
+                        if (cardCursor.isLast()) {
+                            cardCursor.moveToFirst();
+                            break;
+                        }
+                        cardCursor.moveToNext();
+                    }
+                }
             }
             else {
                 cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, fields, database);
