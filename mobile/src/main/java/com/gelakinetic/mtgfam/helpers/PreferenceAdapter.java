@@ -611,4 +611,8 @@ public class PreferenceAdapter {
         return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceDecklistPref), false);
     }
 
+    public synchronized String getDeckPrice() {
+        return this.prefs.getString(context.getString(R.string.key_deckPrice), "1");
+    }
+
 }

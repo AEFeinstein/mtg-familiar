@@ -325,6 +325,14 @@
                 android:summary="@string/pref_decklist_totals_summary"
                 android:title="@string/pref_wishlist_totals_title" />
 
+            <ListPreference
+                android:defaultValue="1"
+                android:entries="@array/trade_option_entries"
+                android:entryValues="@array/trade_option_values"
+                android:key="@string/key_deckPrice"
+                android:summary="@string/pref_deck_price_summary"
+                android:title="@string/pref_trade_price_title" />
+
         </PreferenceCategory>
 
     </PreferenceScreen>

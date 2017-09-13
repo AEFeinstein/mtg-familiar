@@ -439,6 +439,7 @@ Good luck, and have fun!
 <string name="pref_cat_trade_window">"Trade Window"</string>
 <string name="pref_trade_price_title">"Price Setting"</string>
 <string name="pref_trade_price_summary">"TCGplayer price to use when trading cards"</string>
+<string name="pref_deck_price_summary">"TCGPlayer price to use in the deck list"</string>
 <string name="pref_cat_result_list">"Result List"</string>
 <string name="pref_consolidate_title">"Consolidate Results"</string>
 <string name="pref_consolidate_summary">"Only show the most recent printing of a card"</string>
