@@ -53,7 +53,8 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 PlayNotificationSound(context, preferenceAdapter.getTimerSound());
 
                 /* Change the notification to show that the round ended */
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                NotificationHelper.createChannels(context);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationHelper.NOTIFICATION_CHANNEL_ROUND_TIMER);
                 Notification notification = builder
                         .setSmallIcon(R.drawable.notification_icon)
                         .setWhen(System.currentTimeMillis())
@@ -250,10 +251,11 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void PlayNotificationSoundOrTTS(final Context context, Boolean useSound, String soundURI, int textID) {
-        if (useSound)
+        if (useSound) {
             PlayNotificationSound(context, soundURI);
-        else
+        } else {
             context.startService(new Intent(context, TtsService.class).putExtra(TEXT_TO_SPEAK, textID));
+        }
     }
 
 }

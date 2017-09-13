@@ -23,6 +23,7 @@ import com.codetroopers.betterpickers.hmspicker.HmsPicker;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.RoundTimerDialogFragment;
+import com.gelakinetic.mtgfam.helpers.NotificationHelper;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
 
 import java.util.Calendar;
@@ -157,7 +158,8 @@ public class RoundTimerFragment extends FamiliarFragment {
         then.add(Calendar.MILLISECOND, (int) (endTime - System.currentTimeMillis()));
         String messageText = String.format(context.getString(R.string.timer_notification_ongoing), then);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        NotificationHelper.createChannels(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationHelper.NOTIFICATION_CHANNEL_ROUND_TIMER)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(context.getString(R.string.main_timer))

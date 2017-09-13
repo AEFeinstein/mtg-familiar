@@ -34,6 +34,7 @@ import com.gelakinetic.GathererScraper.JsonTypes.Manifest;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.NotificationHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -91,7 +92,8 @@ public class DbUpdaterService extends IntentService {
         Intent intent = new Intent(this, FamiliarActivity.class);
         PendingIntent mNotificationIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        mBuilder = new NotificationCompat.Builder(this.getApplicationContext());
+        NotificationHelper.createChannels(this);
+        mBuilder = new NotificationCompat.Builder(this.getApplicationContext(), NotificationHelper.NOTIFICATION_CHANNEL_UPDATE);
         mBuilder.setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.update_notification))
                 .setSmallIcon(R.drawable.notification_icon)
@@ -271,7 +273,7 @@ public class DbUpdaterService extends IntentService {
                         CardDbAdapter.dropLegalTables(database);
                         CardDbAdapter.createLegalTables(database);
 
-                        for(LegalityData.Format format : legalityDatas.mFormats) {
+                        for (LegalityData.Format format : legalityDatas.mFormats) {
                             CardDbAdapter.createFormat(format.mName, database);
 
                             for (String legalSet : format.mSets) {
