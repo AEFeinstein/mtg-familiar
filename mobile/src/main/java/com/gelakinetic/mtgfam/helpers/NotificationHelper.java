@@ -12,8 +12,8 @@ import com.gelakinetic.mtgfam.R;
  */
 
 public class NotificationHelper {
-    public static String NOTIFICATION_CHANNEL_UPDATE = "channel_update";
-    public static String NOTIFICATION_CHANNEL_ROUND_TIMER = "channel_round_timer";
+    public static final String NOTIFICATION_CHANNEL_UPDATE = "channel_update";
+    public static final String NOTIFICATION_CHANNEL_ROUND_TIMER = "channel_round_timer";
 
     public static void createChannels(Context context) {
 
