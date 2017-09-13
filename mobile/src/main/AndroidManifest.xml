@@ -90,12 +90,12 @@
         <!-- Provides search suggestions for cards by name. -->
         <provider
             android:name=".helpers.database.CardSearchProvider"
-            android:authorities="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
+            android:authorities=".helpers.database.CardSearchProvider"
             android:exported="true" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.gelakinetic.mtgfam.FileProvider"
+            android:authorities=".FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
