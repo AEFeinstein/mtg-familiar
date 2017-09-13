@@ -26,7 +26,7 @@ public class AppIndexingWrapper {
                 .setName(fragment.mCardName + " (" + fragment.mSetName + ")") /* Required, title field */
                 .setDescription(fragment.mDescription)               /* Required, description field */
                 /* Required, deep link in the android-app:// format */
-                .setUrl(Uri.parse("android-app://com.gelakinetic.mtgfam/card/multiverseid/" + fragment.mMultiverseId))
+                .setUrl(Uri.parse("android-app://" + fragment.getContext().getPackageName() + "/card/multiverseid/" + fragment.mMultiverseId))
                 .build();
 
         return new Action.Builder(Action.TYPE_VIEW)
