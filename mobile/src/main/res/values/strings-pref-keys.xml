@@ -67,4 +67,5 @@
     <string name="key_white_symbol" translatable="false">whiteSymbol</string>
     <string name="key_undoTimeout" translatable="false">undo_timeout</string>
     <string name="key_showTotalPriceDecklistPref" translatable="false">showTotalPriceDecklistPref</string>
+    <string name="key_deckPrice" translatable="false">deckPrice</string>
 </resources>

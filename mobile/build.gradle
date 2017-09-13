@@ -77,6 +77,10 @@ android {
                     'proguard-rules.txt'
             //findbugs
         }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+        }
     }
     flavorDimensions "license"
     productFlavors {
