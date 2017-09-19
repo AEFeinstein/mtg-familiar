@@ -197,7 +197,6 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_change_set">"Zmeniť edíciu"</string>
 <string name="card_view_legality">"Legálnosť"</string>
 <string name="card_view_rulings">"Pravidlá karty"</string>
-<string name="card_view_wishlist">"Zoznam želaní"</string>
 <string name="card_view_legal">"Legálna"</string>
 <string name="card_view_restricted">"Obmedzená"</string>
 <string name="card_view_banned">"Zakázaná"</string>
@@ -208,7 +207,6 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_price_dialog_high">"Vysoká:"</string>
 <string name="card_view_price_dialog_foil">"Foil priemerná:"</string>
 <string name="card_view_price_dialog_link">"Kliknite sem pre všetky informácie o cenách a trendoch"</string>
-<string name="card_view_rulings_dialog_title">"Pravidlá karty"</string>
 <string name="card_view_no_rulings">"Žiadne pravidlá pre túto kartu"</string>
 <string name="card_view_gatherer_page">"Stránka Gatherer"</string>
 <string name="card_view_set_dialog_title">"Vyberte edíciu"</string>
@@ -223,7 +221,6 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
 <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
 <string name="card_view_share_card">"Zdieľať kartu"</string>
-<string name="card_view_share_text">"Text"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Oznámiť počty životov"</string>
@@ -254,13 +251,9 @@ Manapool bude tiež vymazaný."</string>
 <item quantity="other">"%1$s má %2$d poison žetónov."</item>
 </plurals>
 <string name="life_counter_over_9000">"nad 9000"</string>
-<string name="life_counter_no_gatherings_exist">"Žiadne stretnutia neexistujú."</string>
 <string name="life_counter_edh_dialog_title">"Zranenie generálom od hráča %1$s"</string>
 <string name="life_counter_edit_life_dialog_title">"Zadajte počet životov"</string>
 <string name="life_counter_edit_poison_dialog_title">"Zadajte poison žetóny"</string>
-
-<!-- Default gathering activity -->
-<string name="gathering_custom_name">"Názov"</string>
 <string name="gathering_starting_life">"Začiatočný počet životov:"</string>
 <string name="gathering_save">"Uložiť stretnutie"</string>
 <string name="gathering_enter_name">"Zadajte názov stretnutia"</string>
@@ -268,8 +261,6 @@ Manapool bude tiež vymazaný."</string>
 <string name="gathering_dialog_overwrite_text">"Toto stretnutie už existuje. Chcete prepísať existujúci súbor?"</string>
 <string name="gathering_load">"Načítať stretnutie"</string>
 <string name="gathering_delete">"Zmazať stretnutie"</string>
-<string name="gathering_remove_player">"Odstrániť hráča"</string>
-<string name="gathering_add_player">"Pridať hráča"</string>
 <string name="gathering_toast_no_gatherings">"Žiadne stretnutia neexistujú."</string>
 <string name="gathering_toast_no_name">"Prosím uveďte názov stretnutia."</string>
 <string name="gathering_empty_field">"Polia nemôžu byť prázdne. Prosím skontrolujte všetky polia."</string>
@@ -288,14 +279,10 @@ Manapool bude tiež vymazaný."</string>
 <string name="trader_save">"Uložiť výmenu"</string>
 <string name="trader_load">"Načítať výmenu"</string>
 <string name="trader_delete">"Zmazať výmenu"</string>
-<string name="trader_clear_fields">"Vymazať polia"</string>
-<string name="trader_set_pricing">"Nastavenia cien"</string>
-<string name="trader_edit_dialog_change_set">"Zmeniť edíciu"</string>
 <string name="trader_edit_dialog_remove">"Odstrániť"</string>
 <string name="trader_edit_dialog_reset_price">"Obnoviť cenu"</string>
 <string name="trader_clear_dialog_title">"Vymazať výmenu"</string>
 <string name="trader_clear_dialog_text">"Naozaj chcete vymazať aktuálnu výmenu?"</string>
-<string name="trader_save_dialog_title">"Uložiť výmenu"</string>
 <string name="trader_select_dialog_title">"Vyberte výmenu"</string>
 <string name="trader_delete_dialog_title">"Zmazať výmenu"</string>
 <string name="trader_edit_dialog_info">"Podrobnosti"</string>
@@ -305,15 +292,10 @@ Manapool bude tiež vymazaný."</string>
 <string name="trader_Low">"Nízke"</string>
 <string name="trader_Average">"Priemerné"</string>
 <string name="trader_High">"Vysoké"</string>
-<string name="trader_pricing_dialog_title">"Nastavenie cien"</string>
 <string name="trader_sort">"Zoradiť výmenu"</string>
 <string name="trader_share">"Zdieľať výmenu"</string>
 <string name="trade_share_title">"Výmena"</string>
-
-<!-- Wishlist activity -->
-<string name="wishlist_name">"Názov"</string>
 <string name="wishlist_add_card">"Pridať"</string>
-<string name="wishlist_clear_fields">"Vymazať polia"</string>
 <string name="wishlist_set_pricing">"Nastavenia cien"</string>
 <string name="wishlist_share">"Zdieľať zoznam želaní"</string>
 <string name="wishlist_empty_dialog_title">"Vyprázdniť zoznam želaní"</string>
@@ -321,7 +303,6 @@ Manapool bude tiež vymazaný."</string>
 <string name="wishlist_edit_dialog_title_end">"v zozname želaní"</string>
 <string name="wishlist_loading">"Načítavam"</string>
 <string name="wishlist_share_title">"MTG Familiar zoznam želaní"</string>
-<string name="wishlist_view_card">"Zobraziť kartu"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Zoradiť zoznam želaní"</string>
 <string name="wishlist_type_price">"Cena"</string>
@@ -353,9 +334,7 @@ Manapool bude tiež vymazaný."</string>
 <string name="rules_search_cat">"Vyhľadať medzi %s"</string>
 <string name="rules_this_cat">"táto kategória:"</string>
 <string name="rules_banned_and_restricted">"Formáty, zákazy a obmedzenia"</string>
-<string name="rules_banned">"Zakázaná"</string>
 <string name="rules_banned_as_commander">"Zakázaná ako generál"</string>
-<string name="rules_restricted">"Obmedzená"</string>
 <string name="rules_no_cards">"Žiadne karty"</string>
 <string name="rules_legal_sets">"Legálne edície"</string>
 <string name="rules_bb_wb_sets">"Všetky edície s čiernym a bielym okrajom"</string>
@@ -406,11 +385,8 @@ Veľa šťastia a zabavte sa!"</string>
 <!-- Preferences -->
 <string name="pref_screen_general">"Všeobecné nastavenia"</string>
 <string name="pref_screen_search">"Vyhľadávanie"</string>
-<string name="pref_screen_counter">"Počítadlo životov"</string>
-<string name="pref_screen_timer">"Časomiera"</string>
 <string name="pref_screen_trade_wishlist">"Výmena a Zoznam želaní"</string>
 <string name="pref_cat_default_fragment">"Predvolená stránka"</string>
-<string name="pref_default_fragment_mode_title">"Predvolená stránka"</string>
 <string name="pref_default_fragment_mode_summary">"Prvá vec, ktorú uvidíte po otvorení aplikácie"</string>
 <string name="pref_cat_updates">"Aktualizácie databázy"</string>
 <string name="pref_auto_updates_title">"Automatické aktualizácie"</string>
@@ -422,7 +398,6 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="pref_show_art_summary">"Pri prezeraní karty načítať oficiálny obrázok karty namiesto textu pravidiel"</string>
 <string name="pref_card_language_title">"Jazyk kariet"</string>
 <string name="pref_card_language_summary">"Vyberte jazyk, v ktorom sa zobrazí obrázok karty"</string>
-<string name="pref_cat_life_counter">"Počítadlo životov"</string>
 <string name="pref_cat_life_screen">"Nastavenia zobrazenia"</string>
 <string name="pref_wake_lock_title">"Zámok vypnutia obrazovky"</string>
 <string name="pref_wake_lock_summary">"Nastaviť obrazovku počítadla životov, aby nikdy neprešla do režimu spánku"</string>
@@ -432,7 +407,6 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="pref_dim_lock_level_title">"Jasnosť obrazovky"</string>
 <string name="pref_display_mode_title">"Režim zobrazenia"</string>
 <string name="pref_display_mode_summary">"Vyberte, ako sa má zobraziť počítadlo životov"</string>
-<string name="pref_cat_timer">"Časomiera"</string>
 <string name="pref_ringtone_title">"Zvonenie časomiery"</string>
 <string name="pref_ringtone_summary">"Vyberte tón upozornenia, ktorý sa prehrá, keď skončí časomiera"</string>
 <string name="pref_fifteen_minutes_title">"15-minútové upozornenie"</string>
@@ -450,7 +424,6 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="pref_show_type_title">"Zobraziť typ/podtyp"</string>
 <string name="pref_show_ability_title">"Zobraziť text pravidiel"</string>
 <string name="pref_show_pt_title">"Zobraziť silu/odolnosť"</string>
-<string name="pref_cat_wishlist">"Zoznam želaní"</string>
 <string name="pref_wishlist_details_title">"Zobraziť podrobnosti"</string>
 <string name="pref_wishlist_details_summary">"Zobraziť úplné informácie o kartách v zozname želaní"</string>
 <string name="pref_wishlist_totals_title">"Zobraziť celkovú sumu"</string>
@@ -502,7 +475,6 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="judges_corner_counter">"Počítadlo"</string>
 <string name="judges_corner_error">"Nastala chyba."</string>
 <string name="deck_counter_reset">"Vynulovať"</string>
-<string name="deck_counter_undo">"Vrátiť späť"</string>
 
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Sideboard"</string>
@@ -545,7 +517,6 @@ Veľa šťastia a zabavte sa!"</string>
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovenský"</string>
 <string name="pref_use_sound_instead_of_tts">"Použiť zvuk namiesto TTS"</string>
-<string name="search_mc">"Manová cena"</string>
 <string name="Equals">"Rovné"</string>
 <string name="DoesNotEqual">"Nerovné"</string>
 <string name="Contains">"Obsahuje"</string>
