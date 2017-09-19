@@ -35,7 +35,7 @@ import android.support.annotation.NonNull;
 public class CardSearchProvider extends ContentProvider {
 
     // The Authority
-    public static final String AUTHORITY = "com.gelakinetic.mtgfam.helpers.database.CardSearchProvider";
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".helpers.database.CardSearchProvider";
 
     // UriMatcher stuff
     private static final int SEARCH_SUGGEST = 0;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application>
+        <!-- Provides search suggestions for cards by name. -->
+        <provider
+            android:name="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
+            android:authorities="com.gelakinetic.mtgfam.debug.helpers.database.CardSearchProvider"
+            android:exported="true"
+            tools:replace="android:authorities" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.gelakinetic.mtgfam.debug.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+    </application>
+
+</manifest>
