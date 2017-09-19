@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Annulla"</string>
 <string name="dialog_yes">"Si"</string>
-<string name="dialog_no">"No"</string>
 <string name="dialog_done">"Termina"</string>
 <string name="dialog_both">"Entrambi"</string>
 <string name="dialog_life">"Vita"</string>
@@ -217,7 +216,6 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_image_saved">"Immagine salvata in "</string>
 <string name="card_view_share_card">"Condividi carta"</string>
 <string name="card_view_share_text">"Testo"</string>
-<string name="card_view_share_image">"Immagine"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Ascolta i punti vita totali"</string>
@@ -244,8 +242,6 @@ Verrà azzerata anche la riserva di mana"</string>
 <item quantity="one">"%1$s ha %2$d contatori veleno."</item>
 <item quantity="other">"%1$s ha %2$d contatori veleno."</item>
 </plurals>
-<string name="life_counter_spoken_life_singular">"%1$s ha %2$d punti vita."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s ha %2$d contatori veleno."</string>
 <string name="life_counter_over_9000">"più di 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Non ci sono modalità di gioco."</string>
 <string name="life_counter_edh_dialog_title">"Danno dal comandante di %1$s"</string>
@@ -271,9 +267,6 @@ Verrà azzerata anche la riserva di mana"</string>
 <!-- Dice activity -->
 <string name="dice_heads">"Testa"</string>
 <string name="dice_tails">"croce"</string>
-<string name="dice_choose_sides">"Scegli il numero di facce"</string>
-<string name="dice_num_too_large">"Hai inserito un numero troppo grande"</string>
-<string name="dice_postive">"Devi inserire un numero positivo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Il caricamento della riserva di mana è fallito!"</string>
@@ -320,14 +313,8 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="wishlist_view_card">"Guarda la carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordina Lista Carte desiderate"</string>
-<string name="wishlist_type_none">"Nessuno"</string>
-<string name="wishlist_type_cmc">"Costo di mana convertito"</string>
-<string name="wishlist_type_color">"Colore"</string>
-<string name="wishlist_type_name">"Nome"</string>
 <string name="wishlist_type_price">"Prezzo"</string>
-<string name="wishlist_type_set">"Espansione"</string>
 <string name="wishlist_ascending">"Crescente"</string>
-<string name="wishlist_descending">"Decrescente"</string>
 <string name="wishlist_sort_by">"Ordina per"</string>
 
 <!-- Round timer activity -->
@@ -513,7 +500,6 @@ Buona fortuna, e divertiti!
 <string name="decklist_artifacts">"Artefatti"</string>
 <string name="decklist_lands">"Terre"</string>
 <string name="decklist_edit_dialog_title_end">"Nel grimorio"</string>
-<string name="deck_save_dialog_title">"Salva grimorio"</string>
 <string name="decklist_delete">"Elimina grimorio"</string>
 <string name="decklist_save">"Salva grimorio"</string>
 <string name="decklist_load">"Carica grimorio"</string>
