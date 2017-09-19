@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Base64;
 
+import com.gelakinetic.mtgfam.BuildConfig;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.google.gson.Gson;
@@ -302,7 +303,7 @@ public class TutorCards {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 /* Tell the camera to use the temporary image file */
-                Uri uri = FileProvider.getUriForFile(mActivity, "com.gelakinetic.mtgfam.FileProvider", getImageFile());
+                Uri uri = FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".FileProvider", getImageFile());
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {

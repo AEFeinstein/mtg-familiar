@@ -65,6 +65,7 @@ import android.widget.TextView;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.Language;
+import com.gelakinetic.mtgfam.BuildConfig;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
@@ -1175,7 +1176,7 @@ public class CardViewFragment extends FamiliarFragment {
 
                     /* Start the intent to share the image */
                     Uri uri = FileProvider.getUriForFile(mActivity,
-                            "com.gelakinetic.mtgfam.FileProvider", getSavedImageFile(false));
+                            BuildConfig.APPLICATION_ID + ".FileProvider", getSavedImageFile(false));
                     Intent shareIntent = new Intent();
                     shareIntent.setAction(Intent.ACTION_SEND);
                     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
