@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Zrušiť"</string>
 <string name="dialog_yes">"Áno"</string>
-<string name="dialog_no">"Nie"</string>
 <string name="dialog_done">"Hotovo"</string>
 <string name="dialog_both">"Oboje"</string>
 <string name="dialog_life">"Život"</string>
@@ -225,7 +224,6 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
 <string name="card_view_share_card">"Zdieľať kartu"</string>
 <string name="card_view_share_text">"Text"</string>
-<string name="card_view_share_image">"Obrázok"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Oznámiť počty životov"</string>
@@ -255,8 +253,6 @@ Manapool bude tiež vymazaný."</string>
 <item quantity="many">"%1$s má %2$d poison žetónov."</item>
 <item quantity="other">"%1$s má %2$d poison žetónov."</item>
 </plurals>
-<string name="life_counter_spoken_life_singular">"%1$s má %2$d životov.␣"</string>
-<string name="life_counter_spoken_poison_singular">"%1$s má %2$d poison žetónov.␣"</string>
 <string name="life_counter_over_9000">"nad 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Žiadne stretnutia neexistujú."</string>
 <string name="life_counter_edh_dialog_title">"Zranenie generálom od hráča %1$s"</string>
@@ -282,9 +278,6 @@ Manapool bude tiež vymazaný."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"hlava"</string>
 <string name="dice_tails">"orol"</string>
-<string name="dice_choose_sides">"Zvoľte počet strán"</string>
-<string name="dice_num_too_large">"Zadané číslo je príliš veľké"</string>
-<string name="dice_postive">"Musíte zadať kladné číslo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Manapool sa nepodarilo načítať!"</string>
@@ -331,14 +324,8 @@ Manapool bude tiež vymazaný."</string>
 <string name="wishlist_view_card">"Zobraziť kartu"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Zoradiť zoznam želaní"</string>
-<string name="wishlist_type_none">"Žiadne"</string>
-<string name="wishlist_type_cmc">"Prevedená manová cena"</string>
-<string name="wishlist_type_color">"Farba"</string>
-<string name="wishlist_type_name">"Názov"</string>
 <string name="wishlist_type_price">"Cena"</string>
-<string name="wishlist_type_set">"Edícia"</string>
 <string name="wishlist_ascending">"Vzostupne"</string>
-<string name="wishlist_descending">"Zostupne"</string>
 <string name="wishlist_sort_by">"Zoradiť podľa"</string>
 
 <!-- Round timer activity -->
@@ -525,7 +512,6 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="decklist_artifacts">"Artefakty"</string>
 <string name="decklist_lands">"Landy"</string>
 <string name="decklist_edit_dialog_title_end">"v balíku"</string>
-<string name="deck_save_dialog_title">"Uložiť balík"</string>
 <string name="decklist_delete">"Zmazať balík"</string>
 <string name="decklist_save">"Uložiť balík"</string>
 <string name="decklist_load">"Načítať balík"</string>
