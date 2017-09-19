@@ -73,12 +73,12 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(
                         new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View v) {
-                        nameInput.setText("");
-                    }
+                            @Override
+                            public void onClick(View v) {
+                                nameInput.setText("");
+                            }
 
-                });
+                        });
                 Dialog dialog = new MaterialDialog.Builder(getActivity())
                         .title(R.string.decklist_save)
                         .customView(textEntryView, false)
@@ -211,7 +211,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 getParentDecklistFragment().mDeckName.setText(
                                         R.string.decklist_unnamed_deck
                                 );
-                                getParentDecklistFragment().mDeckCards.setText("0 ");
+                                getParentDecklistFragment().mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
                                 DecklistHelpers.WriteCompressedDecklist(
                                         getActivity(),
                                         getParentDecklistFragment().mCompressedDecklist

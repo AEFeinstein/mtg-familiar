@@ -93,20 +93,20 @@ public class DecklistFragment extends FamiliarListFragment {
         final TextView.OnEditorActionListener addCardListener =
                 new TextView.OnEditorActionListener() {
 
-            @Override
-            public boolean onEditorAction(final TextView textView,
-                                          final int actionId,
-                                          final KeyEvent event) {
+                    @Override
+                    public boolean onEditorAction(final TextView textView,
+                                                  final int actionId,
+                                                  final KeyEvent event) {
 
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    addCardToDeck(false);
-                    return true;
-                }
-                return false;
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                            addCardToDeck(false);
+                            return true;
+                        }
+                        return false;
 
-            }
+                    }
 
-        };
+                };
 
         /* Call to set up our shared UI elements */
         initializeMembers(myFragmentView);
@@ -136,12 +136,12 @@ public class DecklistFragment extends FamiliarListFragment {
         });
         myFragmentView.findViewById(R.id.add_card_sideboard).setOnClickListener(
                 new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addCardToDeck(true);
-            }
+                    @Override
+                    public void onClick(View v) {
+                        addCardToDeck(true);
+                    }
 
-        });
+                });
 
         /* Set up the decklist and adapter, it will be read in onResume() */
         mCompressedDecklist = new ArrayList<>();
@@ -152,7 +152,7 @@ public class DecklistFragment extends FamiliarListFragment {
         mDeckName = (TextView) myFragmentView.findViewById(R.id.decklistName);
         mDeckName.setText(R.string.decklist_unnamed_deck);
         mDeckCards = (TextView) myFragmentView.findViewById(R.id.decklistCards);
-        mDeckCards.setText("0 ");
+        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
         mTotalPriceField = (TextView) myFragmentView.findViewById(R.id.decklistPrice);
 
         mDecklistChain = new ComparatorChain<>();
@@ -167,12 +167,12 @@ public class DecklistFragment extends FamiliarListFragment {
         myFragmentView.findViewById(R.id.camera_button).setOnClickListener(
                 new View.OnClickListener() {
 
-            @Override
-            public void onClick(final View view) {
-                getFamiliarActivity().startTutorCardsSearch();
-            }
+                    @Override
+                    public void onClick(final View view) {
+                        getFamiliarActivity().startTutorCardsSearch();
+                    }
 
-        });
+                });
         myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
 
         setUpCheckBoxClickListeners();
@@ -233,6 +233,7 @@ public class DecklistFragment extends FamiliarListFragment {
     /**
      * This function takes care of adding a card to the decklist from this fragment. It makes sure
      * that fields are not null or have bad information.
+     *
      * @param isSideboard if the card is in the sideboard
      */
     private void addCardToDeck(final boolean isSideboard) {
@@ -297,7 +298,9 @@ public class DecklistFragment extends FamiliarListFragment {
         }
 
         /* Update the number of cards listed */
-        mDeckCards.setText(((CardDataAdapter)mListAdapter).getTotalCards() + " ");
+        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                ((CardDataAdapter) mListAdapter).getTotalCards(),
+                ((CardDataAdapter) mListAdapter).getTotalCards()));
 
         /* Redraw the new decklist with the new card */
         setHeaderValues();
@@ -312,9 +315,9 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        final String totalCards =
-                Integer.toString(((CardDataAdapter) mListAdapter).getTotalCards()) + " ";
-        mDeckCards.setText(totalCards);
+        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                ((CardDataAdapter) mListAdapter).getTotalCards(),
+                ((CardDataAdapter) mListAdapter).getTotalCards()));
         mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getDeckPrice());
         mShowTotalDecklistPrice = getFamiliarActivity().mPreferenceAdapter
                 .getShowTotalDecklistPrice();
@@ -326,6 +329,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * Sets the deck name header, and returns the full name with extension.
+     *
      * @param deckName name of the deck, null if autosave
      * @return the name of the deck with extension
      */
@@ -345,6 +349,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * Clears the compressed decklist info.
+     *
      * @param cardChanged the card that was changed, null to clear everything
      */
     private void clearCompressedInfo(final @Nullable String cardChanged) {
@@ -365,8 +370,9 @@ public class DecklistFragment extends FamiliarListFragment {
      * Read in the decklist from the file, and pack it into an ArrayList of CompressedDecklistInfo
      * for display in a ListView. This data structure stores one copy of the card itself, and a list
      * of set-specific attributes like the set name and rarity.
+     *
      * @param changedCardName card that was changed inside the list
-     * @param deckName name of the deck that is loaded
+     * @param deckName        name of the deck that is loaded
      */
     public void readAndCompressDecklist(final String changedCardName, final String deckName) {
 
@@ -424,6 +430,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * This notifies the fragment when a change has been made from a card's dialog.
+     *
      * @param cardName the card that was changed
      */
     @Override
@@ -439,8 +446,9 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * Remove any showing dialogs, and show the requested one.
-     * @param id the ID of the dialog to show
-     * @param cardName the name of the card to use if this is a dialog to change decklist counts
+     *
+     * @param id          the ID of the dialog to show
+     * @param cardName    the name of the card to use if this is a dialog to change decklist counts
      * @param isSideboard if the card is in the sideboard
      * @throws IllegalStateException
      */
@@ -463,8 +471,9 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * Handle an ActionBar item click.
+     *
      * @param item the item clicked
-     * @return     true if the click was acted on
+     * @return true if the click was acted on
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -541,7 +550,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * Inserts a header entry at the given position with the given text.
-     * @param position where to put the header
+     *
+     * @param position   where to put the header
      * @param headerText what the header says
      * @return true if the header is inserted, false if it isn't
      */
@@ -623,7 +633,7 @@ public class DecklistFragment extends FamiliarListFragment {
             /**
              * Loading the price for this card failed and threw a spiceException.
              *
-`             * @param spiceException The exception thrown when trying to load this card's price
+             `             * @param spiceException The exception thrown when trying to load this card's price
              */
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -696,7 +706,8 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     private void sumTotalPrice() {
 
-        /* default */ float totalPrice = 0;
+        /* default */
+        float totalPrice = 0;
 
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             if (cdi.header == null) {
@@ -735,6 +746,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /**
          * Create the adapter.
+         *
          * @param values the data set
          */
         CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
@@ -751,7 +763,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /**
          * On binding the view holder.
-         * @param holder the holder being bound
+         *
+         * @param holder   the holder being bound
          * @param position where the holder is
          */
         @Override
@@ -818,12 +831,14 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /**
          * Get the number of cards of the type to display in the header.
+         *
          * @param typeIndex the card type's index we are counting, -1 if it is the sideboard
          * @return the number of cards of the given type
          */
         int getTotalNumberOfType(final int typeIndex) {
 
-            /* default */ int totalCards = 0;
+            /* default */
+            int totalCards = 0;
             String[] types = getResources().getStringArray(R.array.card_types_extra);
 
             for (CompressedDecklistInfo cdi : items) {
@@ -861,6 +876,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /**
          * Get the total number of cards in this adapter.
+         *
          * @return the total number of cards
          */
         int getTotalCards() {
@@ -895,8 +911,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             super.remove(position);
 
-            final String totalDeckCards = getTotalCards() + " ";
-            mDeckCards.setText(totalDeckCards);
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
             clearHeaders();
             notifyItemRemoved(position);
             setHeaderValues();
