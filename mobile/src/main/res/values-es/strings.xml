@@ -7,6 +7,7 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
 <string name="dialog_yes">"Sí"</string>
+<string name="dialog_no">"No"</string>
 <string name="dialog_done">"Listo"</string>
 <string name="dialog_both">"Ambos"</string>
 <string name="dialog_life">"Vida"</string>
@@ -110,8 +111,8 @@ Magic the Gathering y las cartas de Magic the Gathering son ™ &amp; © Wizards
 Programa licenciado bajo la &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-<!--&lt;br&gt;-->
-<!--La búsqueda de cartas por imagen funciona con &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.-->
+&lt;!--&lt;br&gt;--&gt;
+&lt;!--La búsqueda de cartas por imagen funciona con &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.--&gt;
 "</string>
 <string name="main_drawer_open">"Abrir columna de navegación"</string>
 <string name="main_drawer_close">"Cerrar columna de navegación"</string>
@@ -214,6 +215,7 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="card_view_image_saved">"Imagen guardada en"</string>
 <string name="card_view_share_card">"Compartir la carta"</string>
 <string name="card_view_share_text">"El texto"</string>
+<string name="card_view_share_image">"La imagen"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Anunciar total de vida"</string>
@@ -232,13 +234,15 @@ La reserva de maná también será vaciada."</string>
 <string name="life_counter_commander_cast">"Coste de Commander"</string>
 <string name="life_counter_default_name">"Jugador"</string>
 <plurals name="life_counter_spoken_life">
-    <item quantity="one">"%1$s tiene %2$d vida."</item>
-    <item quantity="other">"%1$s tiene %2$d vidas."</item>
+<item quantity="one">"%1$s tiene %2$d vida."</item>
+<item quantity="other">"%1$s tiene %2$d vidas."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
-    <item quantity="one">"%1$s tiene %2$d contador de veneno."</item>
-    <item quantity="other">"%1$s tiene %2$d contadores de veneno."</item>
+<item quantity="one">"%1$s tiene %2$d contador de veneno."</item>
+<item quantity="other">"%1$s tiene %2$d contadores de veneno."</item>
 </plurals>
+<string name="life_counter_spoken_life_singular">"%1$s tiene %2$d vida."</string>
+<string name="life_counter_spoken_poison_singular">"%1$s tiene %2$d contador de veneno."</string>
 <string name="life_counter_over_9000">"más de 9000"</string>
 <string name="life_counter_no_gatherings_exist">"No existen tipos de partida."</string>
 <string name="life_counter_edh_dialog_title">"Daño del Commander de %s"</string>
@@ -264,6 +268,9 @@ La reserva de maná también será vaciada."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"cara"</string>
 <string name="dice_tails">"cruz"</string>
+<string name="dice_choose_sides">"Elige el número de lados"</string>
+<string name="dice_num_too_large">"El número introducido es demasiado alto"</string>
+<string name="dice_postive">"Tienes que ingresar un número positivo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"¡La reserva de maná falló al cargar!"</string>
@@ -310,8 +317,14 @@ La reserva de maná también será vaciada."</string>
 <string name="wishlist_view_card">"Ver carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordenar lista de deseos"</string>
+<string name="wishlist_type_none">"Ninguno"</string>
+<string name="wishlist_type_cmc">"Coste de maná convertido"</string>
+<string name="wishlist_type_color">"Color"</string>
+<string name="wishlist_type_name">"Nombre"</string>
 <string name="wishlist_type_price">"Precio"</string>
+<string name="wishlist_type_set">"Expansión"</string>
 <string name="wishlist_ascending">"Ascendente"</string>
+<string name="wishlist_descending">"Descendente"</string>
 <string name="wishlist_sort_by">"Ordenar por"</string>
 
 <!-- Round timer activity -->
@@ -503,7 +516,8 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="decklist_artifacts">"Artefactos"</string>
 <string name="decklist_lands">"Tierras"</string>
 <string name="decklist_edit_dialog_title_end">"en el mazo"</string>
-    <string name="decklist_delete">"Eliminar mazo"</string>
+<string name="deck_save_dialog_title">"Guardar mazo"</string>
+<string name="decklist_delete">"Eliminar mazo"</string>
 <string name="decklist_save">"Guardar mazo"</string>
 <string name="decklist_load">"Cargar mazo"</string>
 <string name="decklist_clear">"Limpiar mazo"</string>
@@ -521,12 +535,13 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="decklist_cards">"cartas"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Añadido un constructor de mazos&lt;br&gt;
-- Añadido un clasificador de listas de resultados&lt;br&gt;
-- Añadidos los nombres de cartas en otros idiomas&lt;br&gt;
-- Añadido el botón de compartir para el texto o la imagen de una carta&lt;br&gt;
-- Añadida la traducción al eslovaco&lt;br&gt;
-- Arreglada la imagen de algunas cartas"</string>
+<string name="main_whats_new_text">"- Añadida la búsqueda de cartas por coste de maná.&lt;br&gt;
+- En los resultados de una búsqueda, se puede mantener pulsada una carta para añadirla a un mazo o a la lista de deseos.&lt;br&gt;
+- En el constructor de mazos, se pueden añadir cartas al banquillo.&lt;br&gt;
+- En la lista de deseos y de intercambios, se pueden ordenar las cartas por la fecha en que fueron añadidas.&lt;br&gt;
+- En tus listas, se puede mantener pulsada una carta para seleccionar varias,
+ y arrastrar a un lado para eliminarla.&lt;br&gt;
+- Arreglos de bugs y optimizaciones."</string>
 <string name="card_view_send_to">"Compartir imagen con"</string>
 <string name="card_view_translated_dialog_title">"Nombre de Carta Traducido"</string>
 <string name="pref_Portuguese">"Portugués (Brasil)"</string>
@@ -536,4 +551,41 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Eslovaco"</string>
+<string name="pref_use_sound_instead_of_tts">"Usar sonido en lugar de TTS (Text-to-Speech)"</string>
+<string name="search_mc">"Coste de maná"</string>
+<string name="Equals">"es igual a"</string>
+<string name="DoesNotEqual">"no es igual a"</string>
+<string name="Contains">"contiene"</string>
+<string name="DoesNotContain">"no contiene"</string>
+<string name="NoComparison">"sin comparación"</string>
+<string name="card_view_copied_to_clipboard">"Copiada al portapapeles"</string>
+<string name="wishlist_type_order">"Fecha de inclusión"</string>
+<string name="pref_cat_decklist">"Lista de mazo"</string>
+<string name="pref_decklist_totals_summary">"Mostrar precio total en el constructor de mazos"</string>
+<string name="pref_tap_symbol_title">"Símbolo de girar"</string>
+
+<!-- The tap symbol used to look different on old cards, at least in English. This preference allows the user to switch to displaying an old symbol instead of the new one. -->
+<string name="pref_tap_symbol_summary">"Preferencia de símbolo de girar"</string>
+<string name="pref_tap_symbol_modern">"Octava Edición"</string>
+<string name="pref_tap_symbol_old">"Cuarta Edición"</string>
+
+<!-- I'm not sure how to resolve that issue. Even though the set was never released in Spanish, what is it called if someone is trading for an English card? -->
+<string name="pref_tap_symbol_older">"Revised Edition"</string>
+<string name="pref_white_symbol_title">"Símbolo de maná blanco"</string>
+<string name="pref_white_symbol_summary">"Preferencia del símbolo de maná blanco"</string>
+<string name="pref_white_symbol_modern">"Era Glacial"</string>
+<string name="pref_white_symbol_old">"Alfa Edición Limitada"</string>
+<string name="pref_cat_list_general">"Listas generales"</string>
+<string name="pref_undo_timeout_seconds_summary">"El número de segundos en que se puede deshacer la acción de borrar un objeto"</string>
+<string name="pref_undo_timeout_seconds_title">"Tiempo para deshacer"</string>
+
+<!-- General Card List -->
+<string name="cardlist_undo">"deshacer"</string>
+<string name="cardlist_delete_selected">"Borrar la selección"</string>
+<string name="cardlist_item_deleted">"Eliminado"</string>
+<string name="decklist_import_to_wishlist">"Importar la selección a la lista de deseos"</string>
+<string name="decklist_save_as">"Guardar mazo como"</string>
+<string name="decklist_saved_toast">"¡Mazo %1$s guardado!"</string>
+<string name="result_list_Add_to_decklist">"Añadir al mazo"</string>
+<string name="result_list_Add_to_wishlist">"Añadir a la lista de deseos"</string>
 </resources>
