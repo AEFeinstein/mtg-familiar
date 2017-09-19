@@ -29,6 +29,8 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 
+import com.gelakinetic.mtgfam.BuildConfig;
+
 /**
  * Provides access to the card database. Used for the search widget
  */
