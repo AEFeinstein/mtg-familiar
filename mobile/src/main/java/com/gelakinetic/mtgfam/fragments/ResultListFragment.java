@@ -96,6 +96,17 @@ public class ResultListFragment extends FamiliarFragment {
     }
 
     /**
+     * Called when the fragment is paused, save the list location
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCursorPosition = mListView.getFirstVisiblePosition();
+        View tmp = mListView.getChildAt(0);
+        mCursorPositionOffset = (tmp == null) ? 0 : tmp.getTop();
+    }
+
+    /**
      * When the fragment resumes, fill mListView with mCursor, and move the selection to its prior state, so that the
      * list doesn't appear to jump around when opening new fragments
      */
