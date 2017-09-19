@@ -188,7 +188,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_change_set">"Zmień edycję"</string>
 <string name="card_view_legality">"Dopuszczenie"</string>
 <string name="card_view_rulings">"Zasady karty"</string>
-<string name="card_view_wishlist">"Lista Życzeń"</string>
 <string name="card_view_legal">"Dozwolona (legal)"</string>
 <string name="card_view_restricted">"Ograniczona"</string>
 <string name="card_view_banned">"Zakazana (banned)"</string>
@@ -199,7 +198,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_price_dialog_high">"Wysoka"</string>
 <string name="card_view_price_dialog_foil">"Średnia foliowana"</string>
 <string name="card_view_price_dialog_link">"Naciśnij tutaj, aby zobaczyć informację o cenie i tendencji"</string>
-<string name="card_view_rulings_dialog_title">"Zasady karty"</string>
 <string name="card_view_no_rulings">"Brak zasad dla tej karty"</string>
 <string name="card_view_gatherer_page">"Strona karty"</string>
 <string name="card_view_set_dialog_title">"Wybierz edycję"</string>
@@ -214,7 +212,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_save_failure">"Nie udało się zapisać obrazka, proszę spróbować jeszcze raz."</string>
 <string name="card_view_image_saved">"Obrazek zapisano w"</string>
 <string name="card_view_share_card">"Udostępnij kartę"</string>
-<string name="card_view_share_text">"Tekst"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Komunikat o ilości życia"</string>
@@ -243,13 +240,9 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <item quantity="other">"%1$s ma %2$d znaczników trucizny."</item>
 </plurals>
 <string name="life_counter_over_9000">"ponad 9000"</string>
-<string name="life_counter_no_gatherings_exist">"Takie pojedynki nie istnieją."</string>
 <string name="life_counter_edh_dialog_title">"Obrażenia od %s Commandera"</string>
 <string name="life_counter_edit_life_dialog_title">"Wprowadź Życie"</string>
 <string name="life_counter_edit_poison_dialog_title">"Wprowadź Truciznę"</string>
-
-<!-- Default gathering activity -->
-<string name="gathering_custom_name">"Nazwa"</string>
 <string name="gathering_starting_life">"Życie początkowe:"</string>
 <string name="gathering_save">"Zapisz Pojedynek"</string>
 <string name="gathering_enter_name">"Wpisz nazwę Pojedynku"</string>
@@ -257,8 +250,6 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="gathering_dialog_overwrite_text">"Pojedynek już istnieje. Czy chcesz nadpisać plik?"</string>
 <string name="gathering_load">"Wczytaj Pojedynek"</string>
 <string name="gathering_delete">"Usuń Pojedynek"</string>
-<string name="gathering_remove_player">"Usuń Gracza"</string>
-<string name="gathering_add_player">"Dodaj Gracza"</string>
 <string name="gathering_toast_no_gatherings">"Nie zapisano żadnych Pojedynków."</string>
 <string name="gathering_toast_no_name">"Proszę wpisać nazwę dla Pojedynku."</string>
 <string name="gathering_empty_field">"Pola nie mogą pozostać puste. Sprawdź wszystkie pola."</string>
@@ -277,14 +268,10 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="trader_save">"Zapisz Wymianę"</string>
 <string name="trader_load">"Wczytaj Wymianę"</string>
 <string name="trader_delete">"Usuń Wymianę"</string>
-<string name="trader_clear_fields">"Wyczyść pola"</string>
-<string name="trader_set_pricing">"Ustaw opcje cen"</string>
-<string name="trader_edit_dialog_change_set">"Zmień edycję"</string>
 <string name="trader_edit_dialog_remove">"Usuń"</string>
 <string name="trader_edit_dialog_reset_price">"Zeruj Cenę"</string>
 <string name="trader_clear_dialog_title">"Wyczyść Wymianę"</string>
 <string name="trader_clear_dialog_text">"Czy na pewno chcesz wyczyścić obecną wymianę?"</string>
-<string name="trader_save_dialog_title">"Zapisz Wymianę"</string>
 <string name="trader_select_dialog_title">"Wybierz Wymianę"</string>
 <string name="trader_delete_dialog_title">"Usuń Wymianę"</string>
 <string name="trader_edit_dialog_info">"Informacja o karcie"</string>
@@ -294,15 +281,10 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="trader_Low">"Niskie"</string>
 <string name="trader_Average">"Średnie"</string>
 <string name="trader_High">"Wysokie"</string>
-<string name="trader_pricing_dialog_title">"Opcje Cen"</string>
 <string name="trader_sort">"Sortuj Wymianę"</string>
 <string name="trader_share">"Podziel się Wymianą"</string>
 <string name="trade_share_title">"Wymianą"</string>
-
-<!-- Wishlist activity -->
-<string name="wishlist_name">"Nazwa"</string>
 <string name="wishlist_add_card">"Dodaj"</string>
-<string name="wishlist_clear_fields">"Wyczyść pola"</string>
 <string name="wishlist_set_pricing">"Ustaw opcje cen"</string>
 <string name="wishlist_share">"Udostępnij Listę Życzeń"</string>
 <string name="wishlist_empty_dialog_title">"Wyczyść Listę Życzeń"</string>
@@ -310,7 +292,6 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="wishlist_edit_dialog_title_end">"na Liście Życzeń"</string>
 <string name="wishlist_loading">"Wczytuję"</string>
 <string name="wishlist_share_title">"Lista Życzeń MTG Familiar"</string>
-<string name="wishlist_view_card">"Zobacz kartę"</string>
 <string name="wishlist_foil">"foliowane"</string>
 <string name="wishlist_sort">"Sortuj Listę Życzeń"</string>
 <string name="wishlist_type_price">"Cena"</string>
@@ -342,9 +323,7 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="rules_search_cat">"Wyszukaj w %s:"</string>
 <string name="rules_this_cat">"ta kategoria:"</string>
 <string name="rules_banned_and_restricted">"Formaty, Zakazane (banned), oraz Ograniczone (restricted)"</string>
-<string name="rules_banned">"Zakazane (banned)"</string>
 <string name="rules_banned_as_commander">"Nie może być Commanderem"</string>
-<string name="rules_restricted">"Ograniczony (restricted)"</string>
 <string name="rules_no_cards">"Brak kart"</string>
 <string name="rules_legal_sets">"Dozwolone (legal) edycje"</string>
 <string name="rules_bb_wb_sets">"Wszystkie edycje z czarnym i białym obramowaniem"</string>
@@ -399,11 +378,8 @@ Powodzenia i miłej zabawy!
 <!-- Preferences -->
 <string name="pref_screen_general">"Ustawienia ogólne"</string>
 <string name="pref_screen_search">"Wyszukiwanie i Rezultaty"</string>
-<string name="pref_screen_counter">"Licznik Życia"</string>
-<string name="pref_screen_timer">"Licznik Czasu"</string>
 <string name="pref_screen_trade_wishlist">"Wymiana i Lista Życzeń"</string>
 <string name="pref_cat_default_fragment">"Domyślna zakładka"</string>
-<string name="pref_default_fragment_mode_title">"Domyślna zakładka"</string>
 <string name="pref_default_fragment_mode_summary">"Zakładka wyświetlana po uruchomieniu aplikacji"</string>
 <string name="pref_cat_updates">"Aktualizacje"</string>
 <string name="pref_auto_updates_title">"Aktualizacje automatyczne"</string>
@@ -415,7 +391,6 @@ Powodzenia i miłej zabawy!
 <string name="pref_show_art_summary">"Podczas oglądania karty wczytaj oficjalny obrazek zamiast tekstu z zasadami"</string>
 <string name="pref_card_language_title">"Język karty"</string>
 <string name="pref_card_language_summary">"Wybierz język w którym będzie wyświetlana karta"</string>
-<string name="pref_cat_life_counter">"Licznik Życia"</string>
 <string name="pref_cat_life_screen">"Wyświetl Ustawienia"</string>
 <string name="pref_wake_lock_title">"Aktywny wyświetlacz"</string>
 <string name="pref_wake_lock_summary">"Licznik Życia będzie zapobiegał aby ekran przechodził w tryb uśpienia"</string>
@@ -425,7 +400,6 @@ Powodzenia i miłej zabawy!
 <string name="pref_dim_lock_level_title">"Poziom jasności wyświetlacza"</string>
 <string name="pref_display_mode_title">"Tryb wyświetlania"</string>
 <string name="pref_display_mode_summary">"Wybierz tryb wyświetlania dla Licznika Życia"</string>
-<string name="pref_cat_timer">"Licznik Czasu"</string>
 <string name="pref_ringtone_title">"Dźwięk licznika"</string>
 <string name="pref_ringtone_summary">"Wybierz powiadomienie dźwiękowe na zakończenie odliczania"</string>
 <string name="pref_fifteen_minutes_title">"Ostrzeżenie co 15 minut"</string>
@@ -443,7 +417,6 @@ Powodzenia i miłej zabawy!
 <string name="pref_show_type_title">"Pokaż typ/podtyp"</string>
 <string name="pref_show_ability_title">"Pokaż zasady"</string>
 <string name="pref_show_pt_title">"Pokaż siłę/wytrzymałość"</string>
-<string name="pref_cat_wishlist">"Lista Życzeń"</string>
 <string name="pref_wishlist_details_title">"Pokaż szczegóły"</string>
 <string name="pref_wishlist_details_summary">"Pokazuj wszystkie detale karty na Liście Życzeń"</string>
 <string name="pref_wishlist_totals_title">"Podaj całkowitą cenę"</string>
@@ -496,7 +469,6 @@ Liście Życzeń"</string>
 <string name="judges_corner_counter">"Znacznik"</string>
 <string name="judges_corner_error">"Wystąpił błąd."</string>
 <string name="deck_counter_reset">"Wyczyść"</string>
-<string name="deck_counter_undo">"Cofnij"</string>
 
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Sideboard"</string>
@@ -541,7 +513,6 @@ Liście Życzeń"</string>
 
 <!-- What is the context here? -->
 <string name="pref_use_sound_instead_of_tts">"Użyj dźwięku zamiast syntezatora mowy"</string>
-<string name="search_mc">"Koszt many"</string>
 <string name="Equals">"Równa się"</string>
 <string name="DoesNotEqual">"Nie równa się"</string>
 <string name="Contains">"Zawiera"</string>

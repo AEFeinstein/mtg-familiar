@@ -200,7 +200,6 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="card_view_change_set">"Set wechseln"</string>
 <string name="card_view_legality">"Legalität"</string>
 <string name="card_view_rulings">"Regeln für diese Karte"</string>
-<string name="card_view_wishlist">"Wunschliste"</string>
 <string name="card_view_legal">"Legal"</string>
 <string name="card_view_restricted">"Eingeschränkt"</string>
 <string name="card_view_banned">"Ausgeschlossen"</string>
@@ -213,7 +212,6 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 
 <!-- I'm changing "click" to "press" (drücken statt klicken), because this app is used on tablets and phones. -->
 <string name="card_view_price_dialog_link">"Hier drücken für alle Preise und Tendenzen"</string>
-<string name="card_view_rulings_dialog_title">"Regeln für diese Karte"</string>
 <string name="card_view_no_rulings">"Keine Regeln für diese Karte gefunden"</string>
 <string name="card_view_gatherer_page">"Gatherer-Seite"</string>
 <string name="card_view_set_dialog_title">"Set auswählen"</string>
@@ -228,7 +226,6 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="card_view_save_failure">"Bild konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_image_saved">"Bild gespeichert unter"</string>
 <string name="card_view_share_card">"Karte teilen"</string>
-<string name="card_view_share_text">"Text"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Lebenspunkte"</string>
@@ -256,13 +253,9 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <item quantity="other">"%1$s hat %2$d Giftmarken."</item>
 </plurals>
 <string name="life_counter_over_9000">"über 9000"</string>
-<string name="life_counter_no_gatherings_exist">"Keine Spiele vorhanden."</string>
 <string name="life_counter_edh_dialog_title">"Schaden von %1$ss Commander"</string>
 <string name="life_counter_edit_life_dialog_title">"Lebenspunkte eingeben"</string>
 <string name="life_counter_edit_poison_dialog_title">"Giftmarken eingeben"</string>
-
-<!-- Default gathering activity -->
-<string name="gathering_custom_name">"Name"</string>
 <string name="gathering_starting_life">"Startlebenspunkte:"</string>
 <string name="gathering_save">"Spiel speichern"</string>
 <string name="gathering_enter_name">"Spielname eingeben"</string>
@@ -270,8 +263,6 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="gathering_dialog_overwrite_text">"Dieses Spiel existiert bereits. Möchtest du es überschreiben?"</string>
 <string name="gathering_load">"Spiel laden"</string>
 <string name="gathering_delete">"Spiel löschen"</string>
-<string name="gathering_remove_player">"Spieler entfernen"</string>
-<string name="gathering_add_player">"Spieler hinzufügen"</string>
 <string name="gathering_toast_no_gatherings">"Kein Spiel vorhanden"</string>
 <string name="gathering_toast_no_name">"Bitte gib einen Namen für das Spiel an"</string>
 <string name="gathering_empty_field">"Felder dürfen nicht leer sein. Bitte überprüfe alle Felder."</string>
@@ -290,14 +281,10 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="trader_save">"Tausch speichern"</string>
 <string name="trader_load">"Tausch laden"</string>
 <string name="trader_delete">"Tausch löschen"</string>
-<string name="trader_clear_fields">"Felder leeren"</string>
-<string name="trader_set_pricing">"Preisoptionen festlegen"</string>
-<string name="trader_edit_dialog_change_set">"Set wechseln"</string>
 <string name="trader_edit_dialog_remove">"Entfernen"</string>
 <string name="trader_edit_dialog_reset_price">"Preis zurücksetzen"</string>
 <string name="trader_clear_dialog_title">"Tausch leeren"</string>
 <string name="trader_clear_dialog_text">"Bist du sicher, dass du den aktuellen Tausch leeren möchtest?"</string>
-<string name="trader_save_dialog_title">"Tausch speichern"</string>
 <string name="trader_select_dialog_title">"Tausch auswählen"</string>
 <string name="trader_delete_dialog_title">"Tausch löschen"</string>
 <string name="trader_edit_dialog_info">"Karteninformation"</string>
@@ -307,15 +294,10 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="trader_Low">"Tief"</string>
 <string name="trader_Average">"Durchschnitt"</string>
 <string name="trader_High">"Hoch"</string>
-<string name="trader_pricing_dialog_title">"Preisoptionen"</string>
 <string name="trader_sort">"Tausch sortieren"</string>
 <string name="trader_share">"Tausch teilen"</string>
 <string name="trade_share_title">"Tausch"</string>
-
-<!-- Wishlist activity -->
-<string name="wishlist_name">"Name"</string>
 <string name="wishlist_add_card">"Hinzufügen"</string>
-<string name="wishlist_clear_fields">"Felder löschen"</string>
 <string name="wishlist_set_pricing">"Preisoptionen festlegen"</string>
 <string name="wishlist_share">"Wunschliste teilen"</string>
 <string name="wishlist_empty_dialog_title">"Leere Wunschliste"</string>
@@ -323,7 +305,6 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="wishlist_edit_dialog_title_end">"in der Wunschliste"</string>
 <string name="wishlist_loading">"Lädt"</string>
 <string name="wishlist_share_title">"MTG-Familiar-Wunschliste"</string>
-<string name="wishlist_view_card">"Karte betrachten"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Wunschliste sortieren"</string>
 <string name="wishlist_type_price">"Preis"</string>
@@ -355,9 +336,7 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="rules_search_cat">"Innerhalb von %s suchen"</string>
 <string name="rules_this_cat">"diese Kategorie:"</string>
 <string name="rules_banned_and_restricted">"Formate, ausgeschlossene und eingeschränkte Karten"</string>
-<string name="rules_banned">"Ausgeschlossene Karten"</string>
 <string name="rules_banned_as_commander">"Als Commander ausgeschlossen"</string>
-<string name="rules_restricted">"Eingeschränkte Karten"</string>
 <string name="rules_no_cards">"Keine Karten"</string>
 <string name="rules_legal_sets">"Erlaubte Sets"</string>
 <string name="rules_bb_wb_sets">"Alle schwarz- und weißrandigen Sets"</string>
@@ -409,11 +388,8 @@ Viel Glück und viel Spaß!
 <!-- Preferences -->
 <string name="pref_screen_general">"Allgemeine Einstellungen"</string>
 <string name="pref_screen_search">"Suche und Ergebnisse"</string>
-<string name="pref_screen_counter">"Lebenspunktezähler"</string>
-<string name="pref_screen_timer">"Runden-Timer"</string>
 <string name="pref_screen_trade_wishlist">"Tausch &amp; Wunschliste"</string>
 <string name="pref_cat_default_fragment">"Standardseite"</string>
-<string name="pref_default_fragment_mode_title">"Standardseite"</string>
 <string name="pref_default_fragment_mode_summary">"Das Erste, was du nach dem Öffnen der App siehst."</string>
 <string name="pref_cat_updates">"Datenbankaktualisierungen"</string>
 <string name="pref_auto_updates_title">"Automatische Aktualisierungen"</string>
@@ -425,7 +401,6 @@ Viel Glück und viel Spaß!
 <string name="pref_show_art_summary">"Beim Ansehen einer Karte das offizielle Kartenbild statt dem Regeltext laden"</string>
 <string name="pref_card_language_title">"Kartensprache"</string>
 <string name="pref_card_language_summary">"Sprache für das zu ladende Bild auswählen"</string>
-<string name="pref_cat_life_counter">"Lebenspunktezähler"</string>
 <string name="pref_cat_life_screen">"Anzeigeeinstellungen"</string>
 <string name="pref_wake_lock_title">"Bildschirmsperre verhindern"</string>
 <string name="pref_wake_lock_summary">"Lebenspunktezähleranzeige immer aktiv"</string>
@@ -435,7 +410,6 @@ Viel Glück und viel Spaß!
 <string name="pref_dim_lock_level_title">"Bildschirmhelligkeit"</string>
 <string name="pref_display_mode_title">"Anzeigemodus"</string>
 <string name="pref_display_mode_summary">"Darstellung des Lebenspunktezählers auswählen"</string>
-<string name="pref_cat_timer">"Runden-Timer"</string>
 <string name="pref_ringtone_title">"Timer-Ton"</string>
 <string name="pref_ringtone_summary">"Benachrichtigungston auswählen, der am Ende dese Runden-Timers gespielt wird"</string>
 <string name="pref_fifteen_minutes_title">"15-Minuten-Warnung"</string>
@@ -453,7 +427,6 @@ Viel Glück und viel Spaß!
 <string name="pref_show_type_title">"Typ/Subtyp anzeigen"</string>
 <string name="pref_show_ability_title">"Regeltext anzeigen"</string>
 <string name="pref_show_pt_title">"Stärke/Widerstandskraft anzeigen"</string>
-<string name="pref_cat_wishlist">"Wunschliste"</string>
 <string name="pref_wishlist_details_title">"Details anzeigen"</string>
 <string name="pref_wishlist_details_summary">"Alle Kartendetails in der Wunschliste anzeigen"</string>
 
@@ -507,7 +480,6 @@ Viel Glück und viel Spaß!
 <string name="judges_corner_counter">"Zähler"</string>
 <string name="judges_corner_error">"Ein Fehler ist aufgetreten."</string>
 <string name="deck_counter_reset">"Zurücksetzen"</string>
-<string name="deck_counter_undo">"Rückgängig machen"</string>
 
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Sideboard"</string>
@@ -550,7 +522,6 @@ Viel Glück und viel Spaß!
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slowakisch"</string>
 <string name="pref_use_sound_instead_of_tts">"Nutze Ton statt Text-zu-Sprache"</string>
-<string name="search_mc">"Manakosten"</string>
 <string name="Equals">"Entspricht"</string>
 <string name="DoesNotEqual">"Entspricht nicht"</string>
 <string name="Contains">"Beinhaltet"</string>

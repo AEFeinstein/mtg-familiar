@@ -188,7 +188,6 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_change_set">"Cambia espansione"</string>
 <string name="card_view_legality">"Legalità"</string>
 <string name="card_view_rulings">"Regolamento della carta"</string>
-<string name="card_view_wishlist">"Carte desiderate"</string>
 <string name="card_view_legal">"Legale"</string>
 <string name="card_view_restricted">"Limitato"</string>
 <string name="card_view_banned">"Bannate"</string>
@@ -199,7 +198,6 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_price_dialog_high">"Alto:"</string>
 <string name="card_view_price_dialog_foil">"Prezzo medio Foil:"</string>
 <string name="card_view_price_dialog_link">"Clicca qui per tutte le informazioni sui prezzi e le tendenze"</string>
-<string name="card_view_rulings_dialog_title">"Regolamento della carta"</string>
 <string name="card_view_no_rulings">"Nessun regolamento per questa carta"</string>
 <string name="card_view_gatherer_page">"Vai al Gatherer"</string>
 <string name="card_view_set_dialog_title">"Scegli un set"</string>
@@ -214,7 +212,6 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_save_failure">"Salvataggio dell'immagine fallito, per favore riprova."</string>
 <string name="card_view_image_saved">"Immagine salvata in "</string>
 <string name="card_view_share_card">"Condividi carta"</string>
-<string name="card_view_share_text">"Testo"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Ascolta i punti vita totali"</string>
@@ -242,13 +239,9 @@ Verrà azzerata anche la riserva di mana"</string>
 <item quantity="other">"%1$s ha %2$d contatori veleno."</item>
 </plurals>
 <string name="life_counter_over_9000">"più di 9000"</string>
-<string name="life_counter_no_gatherings_exist">"Non ci sono modalità di gioco."</string>
 <string name="life_counter_edh_dialog_title">"Danno dal comandante di %1$s"</string>
 <string name="life_counter_edit_life_dialog_title">"Inserisci la vita"</string>
 <string name="life_counter_edit_poison_dialog_title">"Inserisci i contatori veleno"</string>
-
-<!-- Default gathering activity -->
-<string name="gathering_custom_name">"Nome"</string>
 <string name="gathering_starting_life">"Punti vita iniziali:"</string>
 <string name="gathering_save">"Salva la modalità di gioco"</string>
 <string name="gathering_enter_name">"Inserisci il nome della modalità di gioco"</string>
@@ -256,8 +249,6 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="gathering_dialog_overwrite_text">"Questa è una modalità già esistente. Vuoi sovrascriverla?"</string>
 <string name="gathering_load">"Carica una modalità di gioco"</string>
 <string name="gathering_delete">"Elimina la modalità di gioco"</string>
-<string name="gathering_remove_player">"Rimuovi un giocatore"</string>
-<string name="gathering_add_player">"Aggiungi un giocatore"</string>
 <string name="gathering_toast_no_gatherings">"Non ci sono modalità di gioco."</string>
 <string name="gathering_toast_no_name">"Per favore inserisci un nome per la modalità di gioco."</string>
 <string name="gathering_empty_field">"I campi non possono essere vuoti. Per favore controllali tutti."</string>
@@ -276,14 +267,10 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="trader_save">"Salva Scambio"</string>
 <string name="trader_load">"Carica Scambio"</string>
 <string name="trader_delete">"Elimina Scambio"</string>
-<string name="trader_clear_fields">"Azzera Campi"</string>
-<string name="trader_set_pricing">"Imposta Opzioni Prezzo"</string>
-<string name="trader_edit_dialog_change_set">"Cambia espansione"</string>
 <string name="trader_edit_dialog_remove">"Rimuovi"</string>
 <string name="trader_edit_dialog_reset_price">"Resetta Prezzo"</string>
 <string name="trader_clear_dialog_title">"Azzera Scambio"</string>
 <string name="trader_clear_dialog_text">"Vuoi davvero eliminare lo scambio corrente?"</string>
-<string name="trader_save_dialog_title">"Salva Scambio"</string>
 <string name="trader_select_dialog_title">"Seleziona uno Scambio"</string>
 <string name="trader_delete_dialog_title">"Elimina uno Scambio"</string>
 <string name="trader_edit_dialog_info">"Informazione sulla carta"</string>
@@ -293,15 +280,10 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="trader_Low">"Basso"</string>
 <string name="trader_Average">"Medio"</string>
 <string name="trader_High">"Alto"</string>
-<string name="trader_pricing_dialog_title">"Opzioni Prezzo"</string>
 <string name="trader_sort">"Ordina lo Scambio"</string>
 <string name="trader_share">"Condividi Scambio"</string>
 <string name="trade_share_title">"Scambia"</string>
-
-<!-- Wishlist activity -->
-<string name="wishlist_name">"Nome"</string>
 <string name="wishlist_add_card">"Aggiungi Carta"</string>
-<string name="wishlist_clear_fields">"Azzera Campi"</string>
 <string name="wishlist_set_pricing">"Seleziona opzioni di prezzo"</string>
 <string name="wishlist_share">"Condividi Lista Carte Desiderate"</string>
 <string name="wishlist_empty_dialog_title">"Lista carte desiderate vuota"</string>
@@ -309,7 +291,6 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="wishlist_edit_dialog_title_end">"nella lista carte desiderate"</string>
 <string name="wishlist_loading">"Caricamento"</string>
 <string name="wishlist_share_title">"Lista dei desideri di MTG Familiar"</string>
-<string name="wishlist_view_card">"Guarda la carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordina Lista Carte desiderate"</string>
 <string name="wishlist_type_price">"Prezzo"</string>
@@ -341,9 +322,7 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="rules_search_cat">"Cerca senza %s"</string>
 <string name="rules_this_cat">"questa categoria:"</string>
 <string name="rules_banned_and_restricted">"Formato, Bannate e Limitate"</string>
-<string name="rules_banned">"Bannate"</string>
 <string name="rules_banned_as_commander">"Bannate come Comandante"</string>
-<string name="rules_restricted">"Limitata"</string>
 <string name="rules_no_cards">"Nessuna carta"</string>
 <string name="rules_legal_sets">"Espansioni legali"</string>
 <string name="rules_bb_wb_sets">"Tutte le espansioni con bordi in bianco e nero"</string>
@@ -393,11 +372,8 @@ Buona fortuna, e divertiti!
 <!-- Preferences -->
 <string name="pref_screen_general">"Impostazioni Generali"</string>
 <string name="pref_screen_search">"Ricerca e Risultati"</string>
-<string name="pref_screen_counter">"Contatore punti vita"</string>
-<string name="pref_screen_timer">"Timer del turno"</string>
 <string name="pref_screen_trade_wishlist">"Scambio e Carte desiderate"</string>
 <string name="pref_cat_default_fragment">"Pagina di default"</string>
-<string name="pref_default_fragment_mode_title">"Pagina di default"</string>
 <string name="pref_default_fragment_mode_summary">"La prima cosa che vedi quando apri l'applicazione"</string>
 <string name="pref_cat_updates">"Aggiornamento del database"</string>
 <string name="pref_auto_updates_title">"Aggiornamenti Automatici"</string>
@@ -409,7 +385,6 @@ Buona fortuna, e divertiti!
 <string name="pref_show_art_summary">"Quando si guarda una carta, carica l'immagine ufficiale invece del testo"</string>
 <string name="pref_card_language_title">"Lingua della carta"</string>
 <string name="pref_card_language_summary">"Scegli la lingua usata per recuperare l'immagine"</string>
-<string name="pref_cat_life_counter">"Contatore punti vita"</string>
 <string name="pref_cat_life_screen">"Impostazioni Display"</string>
 <string name="pref_wake_lock_title">"Impedisci il blocco"</string>
 <string name="pref_wake_lock_summary">"Imponi allo schermo di non spegnersi quando mostra il contatore punti vita"</string>
@@ -419,7 +394,6 @@ Buona fortuna, e divertiti!
 <string name="pref_dim_lock_level_title">"Luminosità dello schermo"</string>
 <string name="pref_display_mode_title">"Modalità di visualizzazione"</string>
 <string name="pref_display_mode_summary">"Scegli come mostrare il contatore dei punti vita"</string>
-<string name="pref_cat_timer">"Timer del turno"</string>
 <string name="pref_ringtone_title">"Suoneria Timer"</string>
 <string name="pref_ringtone_summary">"Seleziona una suoneria di notifica per la fine del timer"</string>
 <string name="pref_fifteen_minutes_title">"Allerta fra 15 minuti"</string>
@@ -437,7 +411,6 @@ Buona fortuna, e divertiti!
 <string name="pref_show_type_title">"Mostra Tipo/Sottotipo"</string>
 <string name="pref_show_ability_title">"Mostra il testo del regolamento"</string>
 <string name="pref_show_pt_title">"Mostra Forza/Costituzione"</string>
-<string name="pref_cat_wishlist">"Carte desiderate"</string>
 <string name="pref_wishlist_details_title">"Mostra Dettagli"</string>
 <string name="pref_wishlist_details_summary">"Mostra informazioni dettagliate delle carte nella lista carte desiderate"</string>
 <string name="pref_wishlist_totals_title">"Mostra il prezzo totale"</string>
@@ -489,7 +462,6 @@ Buona fortuna, e divertiti!
 <string name="judges_corner_counter">"Contatore"</string>
 <string name="judges_corner_error">"È occorso un errore."</string>
 <string name="deck_counter_reset">"Reset"</string>
-<string name="deck_counter_undo">"Annulla"</string>
 
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Sideboard"</string>
@@ -532,7 +504,6 @@ Buona fortuna, e divertiti!
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovacco"</string>
 <string name="pref_use_sound_instead_of_tts">"Usa suoni invece del motore TTS"</string>
-<string name="search_mc">"Costo di Mana"</string>
 <string name="Equals">"Uguale"</string>
 <string name="DoesNotEqual">"Non è uguale"</string>
 <string name="Contains">"Contiene"</string>
