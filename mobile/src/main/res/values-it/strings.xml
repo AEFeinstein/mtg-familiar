@@ -2,7 +2,6 @@
 <resources>
 
 <!-- General-purpose strings -->
-<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Ricerca per nome"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Annulla"</string>
