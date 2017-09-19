@@ -187,7 +187,6 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="card_view_change_set">"Cambiar expansión"</string>
 <string name="card_view_legality">"Legalidad"</string>
 <string name="card_view_rulings">"Reglas de la carta"</string>
-<string name="card_view_wishlist">"Lista de deseos"</string>
 <string name="card_view_legal">"Legal"</string>
 <string name="card_view_restricted">"Restringida"</string>
 <string name="card_view_banned">"Prohibida"</string>
@@ -198,7 +197,6 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="card_view_price_dialog_high">"Alto:"</string>
 <string name="card_view_price_dialog_foil">"Media en foil:"</string>
 <string name="card_view_price_dialog_link">"Haz clic aquí para ver todos los precios y las tendencias"</string>
-<string name="card_view_rulings_dialog_title">"Reglas de la carta"</string>
 <string name="card_view_no_rulings">"No hay reglas para esta carta"</string>
 <string name="card_view_gatherer_page">"Ver en Gatherer"</string>
 <string name="card_view_set_dialog_title">"Elige una expansión"</string>
@@ -213,7 +211,6 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
 <string name="card_view_save_failure">"Ha habido un error al guardar la imagen. Prueba otra vez."</string>
 <string name="card_view_image_saved">"Imagen guardada en"</string>
 <string name="card_view_share_card">"Compartir la carta"</string>
-<string name="card_view_share_text">"El texto"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Anunciar total de vida"</string>
@@ -240,13 +237,9 @@ La reserva de maná también será vaciada."</string>
 <item quantity="other">"%1$s tiene %2$d contadores de veneno."</item>
 </plurals>
 <string name="life_counter_over_9000">"más de 9000"</string>
-<string name="life_counter_no_gatherings_exist">"No existen tipos de partida."</string>
 <string name="life_counter_edh_dialog_title">"Daño del Commander de %s"</string>
 <string name="life_counter_edit_life_dialog_title">"Introduce la vida"</string>
 <string name="life_counter_edit_poison_dialog_title">"Introduce los contadores de veneno"</string>
-
-<!-- Default gathering activity -->
-<string name="gathering_custom_name">"Nombre"</string>
 <string name="gathering_starting_life">"Vida inicial:"</string>
 <string name="gathering_save">"Guardar tipo de partida"</string>
 <string name="gathering_enter_name">"Introducir tipo de partida"</string>
@@ -254,8 +247,6 @@ La reserva de maná también será vaciada."</string>
 <string name="gathering_dialog_overwrite_text">"Este tipo de partida ya existe. ¿Quieres sobrescribirlo?"</string>
 <string name="gathering_load">"Cargar tipo de partida"</string>
 <string name="gathering_delete">"Eliminar tipo de partida"</string>
-<string name="gathering_remove_player">"Eliminar un jugador"</string>
-<string name="gathering_add_player">"Añadir un jugador"</string>
 <string name="gathering_toast_no_gatherings">"No existe ningún tipo de partida."</string>
 <string name="gathering_toast_no_name">"Por favor, incluye un nombre para el tipo de partida."</string>
 <string name="gathering_empty_field">"Los campos no pueden estar vacíos. Por favor, compruébalos."</string>
@@ -274,14 +265,10 @@ La reserva de maná también será vaciada."</string>
 <string name="trader_save">"Guardar intercambio"</string>
 <string name="trader_load">"Cargar intercambio"</string>
 <string name="trader_delete">"Eliminar intercambio"</string>
-<string name="trader_clear_fields">"Borrar los campos"</string>
-<string name="trader_set_pricing">"Definir las opciones de los precios"</string>
-<string name="trader_edit_dialog_change_set">"Cambiar de expansión"</string>
 <string name="trader_edit_dialog_remove">"Eliminar intercambio"</string>
 <string name="trader_edit_dialog_reset_price">"Reiniciar precio"</string>
 <string name="trader_clear_dialog_title">"Limpiar intercambio"</string>
 <string name="trader_clear_dialog_text">"¿Seguro que quieres limpiar el intercambio actual?"</string>
-<string name="trader_save_dialog_title">"Guardar intercambio"</string>
 <string name="trader_select_dialog_title">"Seleccionar un intercambio"</string>
 <string name="trader_delete_dialog_title">"Borrar un intercambio"</string>
 <string name="trader_edit_dialog_info">"Información de carta"</string>
@@ -291,15 +278,10 @@ La reserva de maná también será vaciada."</string>
 <string name="trader_Low">"Bajo"</string>
 <string name="trader_Average">"Media"</string>
 <string name="trader_High">"Alto"</string>
-<string name="trader_pricing_dialog_title">"Opciones de los precios"</string>
 <string name="trader_sort">"Ordenar intercambios"</string>
 <string name="trader_share">"Compartir intercambio"</string>
 <string name="trade_share_title">"Intercambios"</string>
-
-<!-- Wishlist activity -->
-<string name="wishlist_name">"Nombre"</string>
 <string name="wishlist_add_card">"Añadir"</string>
-<string name="wishlist_clear_fields">"Limpiar los campos"</string>
 <string name="wishlist_set_pricing">"Definir las opciones de los precios"</string>
 <string name="wishlist_share">"Compartir lista de deseos"</string>
 <string name="wishlist_empty_dialog_title">"Vaciar la lista de deseos"</string>
@@ -307,7 +289,6 @@ La reserva de maná también será vaciada."</string>
 <string name="wishlist_edit_dialog_title_end">"en la lista de deseos"</string>
 <string name="wishlist_loading">"Cargando"</string>
 <string name="wishlist_share_title">"Lista de deseos de MTG Familiar"</string>
-<string name="wishlist_view_card">"Ver carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordenar lista de deseos"</string>
 <string name="wishlist_type_price">"Precio"</string>
@@ -339,9 +320,7 @@ La reserva de maná también será vaciada."</string>
 <string name="rules_search_cat">"Buscar en %s por:"</string>
 <string name="rules_this_cat">"esta categoría:"</string>
 <string name="rules_banned_and_restricted">"Formatos, prohibidas y restringidas"</string>
-<string name="rules_banned">"Prohibida"</string>
 <string name="rules_banned_as_commander">"Prohibida como Commander"</string>
-<string name="rules_restricted">"Restringida"</string>
 <string name="rules_no_cards">"Sin cartas"</string>
 <string name="rules_legal_sets">"Expansiones legales"</string>
 <string name="rules_bb_wb_sets">"Todas las expansiones con borde blanco y negro"</string>
@@ -397,11 +376,8 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <!-- Preferences -->
 <string name="pref_screen_general">"Ajustes generales"</string>
 <string name="pref_screen_search">"Búsqueda y resultados"</string>
-<string name="pref_screen_counter">"Contador de vida"</string>
-<string name="pref_screen_timer">"Temporizador de ronda"</string>
 <string name="pref_screen_trade_wishlist">"Intercambios y lista de deseos"</string>
 <string name="pref_cat_default_fragment">"Página por defecto"</string>
-<string name="pref_default_fragment_mode_title">"Página por defecto"</string>
 <string name="pref_default_fragment_mode_summary">"La primera cosa que ves cuando abres la aplicación"</string>
 <string name="pref_cat_updates">"Actualizaciones de la base de datos"</string>
 <string name="pref_auto_updates_title">"Actualizaciones automáticas"</string>
@@ -413,7 +389,6 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="pref_show_art_summary">"Al ver una carta, cargar la vista de la carta oficial en lugar del texto de reglas"</string>
 <string name="pref_card_language_title">"Idioma de la carta"</string>
 <string name="pref_card_language_summary">"Escoge el idioma usado para recuperar las imágenes de las cartas"</string>
-<string name="pref_cat_life_counter">"Contador de vida"</string>
 <string name="pref_cat_life_screen">"Configuración de pantalla"</string>
 <string name="pref_wake_lock_title">"Impedir bloqueo"</string>
 <string name="pref_wake_lock_summary">"Forzar la pantalla del contador de vidas para que nunca se bloquee"</string>
@@ -423,7 +398,6 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="pref_dim_lock_level_title">"Brillo de la pantalla"</string>
 <string name="pref_display_mode_title">"Modo de vista"</string>
 <string name="pref_display_mode_summary">"Elige cómo se muestra el contador de vidas"</string>
-<string name="pref_cat_timer">"Temporizador de ronda"</string>
 <string name="pref_ringtone_title">"Tono de temporizador"</string>
 <string name="pref_ringtone_summary">"Selecciona un tono de notificación para que suene al terminar el temporizador de ronda"</string>
 <string name="pref_fifteen_minutes_title">"Aviso de 15 minutos"</string>
@@ -441,7 +415,6 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="pref_show_type_title">"Mostrar tipo/subtipo"</string>
 <string name="pref_show_ability_title">"Mostrar texto de reglas"</string>
 <string name="pref_show_pt_title">"Mostrar fuerza/resistencia"</string>
-<string name="pref_cat_wishlist">"Lista de deseos"</string>
 <string name="pref_wishlist_details_title">"Mostrar detalles"</string>
 <string name="pref_wishlist_details_summary">"Mostrar los detales completos de las cartas de la lista de deseos"</string>
 <string name="pref_wishlist_totals_title">"Mostrar precio total"</string>
@@ -493,7 +466,6 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="judges_corner_counter">"Contador"</string>
 <string name="judges_corner_error">"Ha habido un error."</string>
 <string name="deck_counter_reset">"Reiniciar"</string>
-<string name="deck_counter_undo">"Deshacer"</string>
 
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Banquillo"</string>
@@ -538,7 +510,6 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Eslovaco"</string>
 <string name="pref_use_sound_instead_of_tts">"Usar sonido en lugar de TTS (Text-to-Speech)"</string>
-<string name="search_mc">"Coste de maná"</string>
 <string name="Equals">"es igual a"</string>
 <string name="DoesNotEqual">"no es igual a"</string>
 <string name="Contains">"contiene"</string>
