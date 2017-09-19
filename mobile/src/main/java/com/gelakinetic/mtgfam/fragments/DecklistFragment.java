@@ -296,6 +296,9 @@ public class DecklistFragment extends FamiliarListFragment {
             mCheckboxFoil.setChecked(false);
         }
 
+        /* Update the number of cards listed */
+        mDeckCards.setText(((CardDataAdapter)mListAdapter).getTotalCards() + " ");
+
         /* Redraw the new decklist with the new card */
         setHeaderValues();
         mListAdapter.notifyDataSetChanged();

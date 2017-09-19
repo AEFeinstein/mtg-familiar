@@ -228,7 +228,6 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
                         .title(R.string.card_view_share_card)
                         .positiveText(R.string.card_view_share_text)
-                        //.negativeText(R.string.card_view_share_image) // haven't gotten this to work yet
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
