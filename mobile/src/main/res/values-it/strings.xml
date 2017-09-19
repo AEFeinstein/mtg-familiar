@@ -7,6 +7,8 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Annulla"</string>
 <string name="dialog_yes">"Si"</string>
+<string name="dialog_no">"No"</string>
+<string name="dialog_done">"Termina"</string>
 <string name="dialog_both">"Entrambi"</string>
 <string name="dialog_life">"Vita"</string>
 <string name="dialog_thanks">"Grazie!"</string>
@@ -111,8 +113,8 @@ Magic the Gathering e Magic the Gathering cards sono ™ &amp; © Wizards of the
 Questo programma ha una licenza &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-<!--&lt;br&gt;-->
-<!--Ricerca tramite immagini fornita da &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.-->
+&lt;!--&lt;br&gt;--&gt;
+&lt;!--Ricerca tramite immagini fornita da &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.--&gt;
 "</string>
 <string name="main_drawer_open">"Apri la colonna di navigazione"</string>
 <string name="main_drawer_close">"Chiudi la colonna di navigazione"</string>
@@ -215,6 +217,7 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_image_saved">"Immagine salvata in "</string>
 <string name="card_view_share_card">"Condividi carta"</string>
 <string name="card_view_share_text">"Testo"</string>
+<string name="card_view_share_image">"Immagine"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Ascolta i punti vita totali"</string>
@@ -234,13 +237,15 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="life_counter_commander_cast">"Costo del Comandante"</string>
 <string name="life_counter_default_name">"Giocatore"</string>
 <plurals name="life_counter_spoken_life">
-    <item quantity="one">"%1$s ha %2$d punti vita."</item>
-    <item quantity="other">"%1$s ha %2$d punti vita."</item>
+<item quantity="one">"%1$s ha %2$d punti vita."</item>
+<item quantity="other">"%1$s ha %2$d punti vita."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
-    <item quantity="one">"%1$s ha %2$d contatori veleno."</item>
-    <item quantity="other">"%1$s ha %2$d contatori veleno."</item>
+<item quantity="one">"%1$s ha %2$d contatori veleno."</item>
+<item quantity="other">"%1$s ha %2$d contatori veleno."</item>
 </plurals>
+<string name="life_counter_spoken_life_singular">"%1$s ha %2$d punti vita."</string>
+<string name="life_counter_spoken_poison_singular">"%1$s ha %2$d contatori veleno."</string>
 <string name="life_counter_over_9000">"più di 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Non ci sono modalità di gioco."</string>
 <string name="life_counter_edh_dialog_title">"Danno dal comandante di %1$s"</string>
@@ -266,6 +271,9 @@ Verrà azzerata anche la riserva di mana"</string>
 <!-- Dice activity -->
 <string name="dice_heads">"Testa"</string>
 <string name="dice_tails">"croce"</string>
+<string name="dice_choose_sides">"Scegli il numero di facce"</string>
+<string name="dice_num_too_large">"Hai inserito un numero troppo grande"</string>
+<string name="dice_postive">"Devi inserire un numero positivo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Il caricamento della riserva di mana è fallito!"</string>
@@ -312,8 +320,14 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="wishlist_view_card">"Guarda la carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordina Lista Carte desiderate"</string>
+<string name="wishlist_type_none">"Nessuno"</string>
+<string name="wishlist_type_cmc">"Costo di mana convertito"</string>
+<string name="wishlist_type_color">"Colore"</string>
+<string name="wishlist_type_name">"Nome"</string>
 <string name="wishlist_type_price">"Prezzo"</string>
+<string name="wishlist_type_set">"Espansione"</string>
 <string name="wishlist_ascending">"Crescente"</string>
+<string name="wishlist_descending">"Decrescente"</string>
 <string name="wishlist_sort_by">"Ordina per"</string>
 
 <!-- Round timer activity -->
@@ -499,7 +513,8 @@ Buona fortuna, e divertiti!
 <string name="decklist_artifacts">"Artefatti"</string>
 <string name="decklist_lands">"Terre"</string>
 <string name="decklist_edit_dialog_title_end">"Nel grimorio"</string>
-    <string name="decklist_delete">"Elimina grimorio"</string>
+<string name="deck_save_dialog_title">"Salva grimorio"</string>
+<string name="decklist_delete">"Elimina grimorio"</string>
 <string name="decklist_save">"Salva grimorio"</string>
 <string name="decklist_load">"Carica grimorio"</string>
 <string name="decklist_clear">"Azzera grimorio"</string>
@@ -516,11 +531,12 @@ Buona fortuna, e divertiti!
 <string name="decklist_cards">"carte"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Aggiunto un deckbuilder&lt;br&gt;
-- Aggiunta una funzione di ordinamento dei risultati&lt;br&gt;
-- Aggiunti i nomi delle carte in altre lingue&lt;br&gt;
-- Aggiunto un bottone per condividere il testo di una carta o la sua immagine&lt;br&gt;
-- Per alcune carte è stata scelta l'immagine giusta"</string>
+<string name="main_whats_new_text">"- Nella Ricerca, cerca le carte per costo di mana&lt;br&gt;
+- Nei Risultati, tieni premuta una carta per aggiungerla ad un mazzo o alle Carte Desiderate&lt;br&gt;
+- Nel Deck Builder, aggiungi carte al sideboard&lt;br&gt;
+- Nella sezione Scambio Carte e Carte Desiderate, ordina per ordine di aggiunta&lt;br&gt;
+- Nelle liste, tieni premuto per selezionare carte multiple e scorri per eliminarle&lt;br&gt;
+- Risoluzione bug e ottimizzazioni"</string>
 <string name="card_view_send_to">"Condividi l'immagine usando"</string>
 <string name="card_view_translated_dialog_title">"Nome della carta tradotto"</string>
 <string name="pref_Portuguese">"Portoghese(Brasile)"</string>
@@ -530,4 +546,37 @@ Buona fortuna, e divertiti!
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovacco"</string>
+<string name="pref_use_sound_instead_of_tts">"Usa suoni invece del motore TTS"</string>
+<string name="search_mc">"Costo di Mana"</string>
+<string name="Equals">"Uguale"</string>
+<string name="DoesNotEqual">"Non è uguale"</string>
+<string name="Contains">"Contiene"</string>
+<string name="DoesNotContain">"Non contiene"</string>
+<string name="NoComparison">"Nessun confronto"</string>
+<string name="card_view_copied_to_clipboard">"Copiato negli appunti"</string>
+<string name="wishlist_type_order">"Ordine aggiunto"</string>
+<string name="pref_cat_decklist">"Lista mazzo"</string>
+<string name="pref_decklist_totals_summary">"Mostra il prezzo totale nell'editor del mazzo"</string>
+<string name="pref_tap_symbol_title">"Simbolo di tap"</string>
+<string name="pref_tap_symbol_summary">"Quale simbolo di tap visualizzare"</string>
+<string name="pref_tap_symbol_modern">"Ottava Edizione"</string>
+<string name="pref_tap_symbol_old">"Quarta Edizione"</string>
+<string name="pref_tap_symbol_older">"Edizione Rivisitata"</string>
+<string name="pref_white_symbol_title">"Simbolo del Mana Bianco"</string>
+<string name="pref_white_symbol_summary">"Quale simbolo del mana bianco visualizzare"</string>
+<string name="pref_white_symbol_modern">"Era Glaciale"</string>
+<string name="pref_white_symbol_old">"Edizione Limitata Alpha"</string>
+<string name="pref_cat_list_general">"Liste Generiche"</string>
+<string name="pref_undo_timeout_seconds_summary">"Numero di secondi per cui un elemento starà nello stato di annullamento prima di essere eliminato"</string>
+<string name="pref_undo_timeout_seconds_title">"Timeout di Annullamento"</string>
+
+<!-- General Card List -->
+<string name="cardlist_undo">"annulla"</string>
+<string name="cardlist_delete_selected">"Elimina gli elementi selezionati"</string>
+<string name="cardlist_item_deleted">"Rimosso"</string>
+<string name="decklist_import_to_wishlist">"Importa la selezione nelle Carte Desiderate"</string>
+<string name="decklist_save_as">"Salva Mazzo Come"</string>
+<string name="decklist_saved_toast">"Mazzo %1$s salvato!"</string>
+<string name="result_list_Add_to_decklist">"Aggiungi al mazzo"</string>
+<string name="result_list_Add_to_wishlist">"Aggiungi a Carte Desiderate"</string>
 </resources>
