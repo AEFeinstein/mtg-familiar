@@ -187,7 +187,6 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
 <string name="card_view_change_set">"Changer d'Extension"</string>
 <string name="card_view_legality">"Autorisations"</string>
 <string name="card_view_rulings">"Règles de cette Carte"</string>
-<string name="card_view_wishlist">"Ajout Liste de voeux"</string>
 <string name="card_view_legal">"Légal"</string>
 <string name="card_view_restricted">"Restreint"</string>
 <string name="card_view_banned">"Interdit"</string>
@@ -198,7 +197,6 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
 <string name="card_view_price_dialog_high">"Haut:"</string>
 <string name="card_view_price_dialog_foil">"Moyen Premium:"</string>
 <string name="card_view_price_dialog_link">"Cliquer ici pour tous les prix et tendance"</string>
-<string name="card_view_rulings_dialog_title">"Règles de cette Carte"</string>
 <string name="card_view_no_rulings">"Pas de règles pour cette carte"</string>
 <string name="card_view_gatherer_page">"Voir sur Gatherer"</string>
 <string name="card_view_set_dialog_title">"Choix de l'extension"</string>
@@ -213,7 +211,6 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
 <string name="card_view_save_failure">"Echec lors de la sauvegarde de l'image, veuillez essayer à nouveau."</string>
 <string name="card_view_image_saved">"Image sauvée à"</string>
 <string name="card_view_share_card">"Partager Carte"</string>
-<string name="card_view_share_text">"Texte"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Annoncer Totaux Vie"</string>
@@ -240,13 +237,9 @@ La réserve de mana sera aussi vidée."</string>
 <item quantity="other">"%1$s a %2$d marqueurs poison."</item>
 </plurals>
 <string name="life_counter_over_9000">"plus de 9000"</string>
-<string name="life_counter_no_gatherings_exist">"Aucun type de match n'existe."</string>
 <string name="life_counter_edh_dialog_title">"Dégâts du Commander de %s"</string>
 <string name="life_counter_edit_life_dialog_title">"Saisir les points de vie"</string>
 <string name="life_counter_edit_poison_dialog_title">"Saisir les marqueurs poison"</string>
-
-<!-- Default gathering activity -->
-<string name="gathering_custom_name">"Nom"</string>
 <string name="gathering_starting_life">"Vie de départ:"</string>
 <string name="gathering_save">"Sauver type de match"</string>
 <string name="gathering_enter_name">"Saisir nom type de match"</string>
@@ -254,8 +247,6 @@ La réserve de mana sera aussi vidée."</string>
 <string name="gathering_dialog_overwrite_text">"Ce type de match existe déjà. Voulez-vous l'écraser?"</string>
 <string name="gathering_load">"Charger type de match"</string>
 <string name="gathering_delete">"Effacer type de match"</string>
-<string name="gathering_remove_player">"Enlever un joueur"</string>
-<string name="gathering_add_player">"Ajouter un joueur"</string>
 <string name="gathering_toast_no_gatherings">"Aucun type de match n'existe."</string>
 <string name="gathering_toast_no_name">"Veuillez saisir un nom pour ce type de match."</string>
 <string name="gathering_empty_field">"Les champs ne peuvent pas être vides. Veuillez vérifier tous les champs."</string>
@@ -274,14 +265,10 @@ La réserve de mana sera aussi vidée."</string>
 <string name="trader_save">"Sauver Echange"</string>
 <string name="trader_load">"Charger Echange"</string>
 <string name="trader_delete">"Supprimer Echange"</string>
-<string name="trader_clear_fields">"Vider les champs"</string>
-<string name="trader_set_pricing">"Définir options prix"</string>
-<string name="trader_edit_dialog_change_set">"Changer d'Extension"</string>
 <string name="trader_edit_dialog_remove">"Enlever"</string>
 <string name="trader_edit_dialog_reset_price">"Réinitialiser Prix"</string>
 <string name="trader_clear_dialog_title">"Vider Echange"</string>
 <string name="trader_clear_dialog_text">"Etes-vous sûr de vouloir vider l'échange actuel?"</string>
-<string name="trader_save_dialog_title">"Sauver échange"</string>
 <string name="trader_select_dialog_title">"Choisir un échange"</string>
 <string name="trader_delete_dialog_title">"Supprimer un échange"</string>
 <string name="trader_edit_dialog_info">"Informations de carte"</string>
@@ -291,15 +278,10 @@ La réserve de mana sera aussi vidée."</string>
 <string name="trader_Low">"Bas"</string>
 <string name="trader_Average">"Moyen"</string>
 <string name="trader_High">"Haut"</string>
-<string name="trader_pricing_dialog_title">"Options Prix"</string>
 <string name="trader_sort">"Trier Echange"</string>
 <string name="trader_share">"Partager l'échange"</string>
 <string name="trade_share_title">"Echange"</string>
-
-<!-- Wishlist activity -->
-<string name="wishlist_name">"Nom"</string>
 <string name="wishlist_add_card">"Ajouter"</string>
-<string name="wishlist_clear_fields">"Vider les champs"</string>
 <string name="wishlist_set_pricing">"Définir options prix"</string>
 <string name="wishlist_share">"Partager la liste"</string>
 <string name="wishlist_empty_dialog_title">"Vider la Liste"</string>
@@ -307,7 +289,6 @@ La réserve de mana sera aussi vidée."</string>
 <string name="wishlist_edit_dialog_title_end">"dans la liste de voeux"</string>
 <string name="wishlist_loading">"Chargement"</string>
 <string name="wishlist_share_title">"Liste de voeux de MTG Familiar"</string>
-<string name="wishlist_view_card">"Voir la carte"</string>
 <string name="wishlist_foil">"premium"</string>
 <string name="wishlist_sort">"Trier la liste de voeux"</string>
 <string name="wishlist_type_price">"Prix"</string>
@@ -339,9 +320,7 @@ La réserve de mana sera aussi vidée."</string>
 <string name="rules_search_cat">"Chercher dans %s pour:"</string>
 <string name="rules_this_cat">"cette catégorie:"</string>
 <string name="rules_banned_and_restricted">"Formats, interdictions et restrictions"</string>
-<string name="rules_banned">"Interdit"</string>
 <string name="rules_banned_as_commander">"Interdit en tant que Commandeur"</string>
-<string name="rules_restricted">"Restreint"</string>
 <string name="rules_no_cards">"Sans cartes"</string>
 <string name="rules_legal_sets">"Extensions légales"</string>
 <string name="rules_bb_wb_sets">"Toutes les extensions à bords noirs ou blancs"</string>
@@ -397,11 +376,8 @@ Bonne chance, et bon jeu!
 <!-- Preferences -->
 <string name="pref_screen_general">"Paramètres généraux"</string>
 <string name="pref_screen_search">"Recherche &amp; Résultats"</string>
-<string name="pref_screen_counter">"Compteur de Vie"</string>
-<string name="pref_screen_timer">"Minuteur Tour"</string>
 <string name="pref_screen_trade_wishlist">"Echange &amp; Liste de voeux"</string>
 <string name="pref_cat_default_fragment">"Page par défaut"</string>
-<string name="pref_default_fragment_mode_title">"Page par défaut"</string>
 <string name="pref_default_fragment_mode_summary">"La première chose que vous voyez quand l'application démarre"</string>
 <string name="pref_cat_updates">"Mise à jour des données"</string>
 <string name="pref_auto_updates_title">"Mise à jour automatique"</string>
@@ -413,7 +389,6 @@ Bonne chance, et bon jeu!
 <string name="pref_show_art_summary">"En visualisant une carte, charger l'image officielle au lieu du texte de règles"</string>
 <string name="pref_card_language_title">"Langue Carte"</string>
 <string name="pref_card_language_summary">"Choisissez la langue à utiliser pour récupérer les images"</string>
-<string name="pref_cat_life_counter">"Compteur de Vie"</string>
 <string name="pref_cat_life_screen">"Paramètres d'affichage"</string>
 <string name="pref_wake_lock_title">"Verrouillage Veille"</string>
 <string name="pref_wake_lock_summary">"Forcer l'écran du Compteur de Vie à ne jamais passer en veille"</string>
@@ -423,7 +398,6 @@ Bonne chance, et bon jeu!
 <string name="pref_dim_lock_level_title">"Luminosité de l'écran"</string>
 <string name="pref_display_mode_title">"Mode Affichage"</string>
 <string name="pref_display_mode_summary">"Choisissez comment afficher le Compteur de Vie"</string>
-<string name="pref_cat_timer">"Minuteur Tour"</string>
 <string name="pref_ringtone_title">"Sonnerie du Minuteur"</string>
 <string name="pref_ringtone_summary">"Choisir une notification à jouer quand le minuteur se termine"</string>
 <string name="pref_fifteen_minutes_title">"Avertissement 15-Minutes"</string>
@@ -441,7 +415,6 @@ Bonne chance, et bon jeu!
 <string name="pref_show_type_title">"Afficher Type/Sous-type"</string>
 <string name="pref_show_ability_title">"Afficher Texte Règles"</string>
 <string name="pref_show_pt_title">"Afficher Force/Endurance"</string>
-<string name="pref_cat_wishlist">"Liste de voeux"</string>
 <string name="pref_wishlist_details_title">"Afficher Détails"</string>
 <string name="pref_wishlist_details_summary">"Afficher les détails complets des cartes de la liste de voeux"</string>
 <string name="pref_wishlist_totals_title">"Afficher Prix Total"</string>
@@ -493,7 +466,6 @@ Bonne chance, et bon jeu!
 <string name="judges_corner_counter">"Compteur"</string>
 <string name="judges_corner_error">"Une erreur est survenue."</string>
 <string name="deck_counter_reset">"Rétablir"</string>
-<string name="deck_counter_undo">"Annuler"</string>
 
 <!-- Deck Builder -->
 <string name="decklist_sideboard">"Réserve"</string>
@@ -536,9 +508,6 @@ Bonne chance, et bon jeu!
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovaque"</string>
 <string name="pref_use_sound_instead_of_tts">"Son au lieu de synthèse vocale (TTS)"</string>
-
-<!-- There is already a search_mana_cost. Why is this needed? -->
-<string name="search_mc">"Coût Mana"</string>
 <string name="Equals">"Égale"</string>
 <string name="DoesNotEqual">"Différent"</string>
 <string name="Contains">"Contient"</string>
