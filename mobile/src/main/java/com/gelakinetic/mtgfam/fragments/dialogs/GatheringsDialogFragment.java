@@ -181,7 +181,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                 }
 
                 return new MaterialDialog.Builder(getActivity())
-                        .title(R.string.gathering_remove_player)
+                        .title(R.string.life_counter_remove_player)
                         .items(aNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override

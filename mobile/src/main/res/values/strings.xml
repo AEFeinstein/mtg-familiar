@@ -126,12 +126,11 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
 <string name="search_power">"Power"</string>
 <string name="search_toughness">"Toughness"</string>
 <string name="search_cmc">"CMC"</string>
-<string name="search_mc">Mana Cost</string>
-<string name="Equals">Equals</string>
-<string name="DoesNotEqual">Is Not Equal</string>
-<string name="Contains">Contains</string>
-<string name="DoesNotContain">Does Not Contain</string>
-<string name="NoComparison">No Comparison</string>
+<string name="Equals">"Equals"</string>
+<string name="DoesNotEqual">"Is Not Equal"</string>
+<string name="Contains">"Contains"</string>
+<string name="DoesNotContain">"Does Not Contain"</string>
+<string name="NoComparison">"No Comparison"</string>
 
 <!-- this has an {X} after it in layout -->
 <string name="search_set">"Set"</string>
@@ -196,7 +195,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
 <string name="card_view_change_set">"Change Set"</string>
 <string name="card_view_legality">"Legality"</string>
 <string name="card_view_rulings">"Card Rulings"</string>
-<string name="card_view_wishlist">"Wishlist"</string>
 <string name="card_view_legal">"Legal"</string>
 <string name="card_view_restricted">"Restricted"</string>
 <string name="card_view_banned">"Banned"</string>
@@ -207,7 +205,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
 <string name="card_view_price_dialog_high">"High:"</string>
 <string name="card_view_price_dialog_foil">"Foil Average:"</string>
 <string name="card_view_price_dialog_link">"Click here for all prices and trend info"</string>
-<string name="card_view_rulings_dialog_title">"Card Rulings"</string>
 <string name="card_view_no_rulings">"No rulings for this card"</string>
 <string name="card_view_gatherer_page">"Gatherer Page"</string>
 <string name="card_view_set_dialog_title">"Pick a Set"</string>
@@ -222,7 +219,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
 <string name="card_view_save_failure">"Failed to save image, please try again"</string>
 <string name="card_view_image_saved">"Image saved to "</string>
 <string name="card_view_share_card">"Share Card"</string>
-<string name="card_view_share_text">"Text"</string>
 <string name="card_view_copied_to_clipboard">"Copied to Clipboard"</string>
 
 <!-- Life counter activity -->
@@ -250,13 +246,11 @@ Mana pool will also be cleared."</string>
     <item quantity="other">"%1$s has %2$d poison counters."</item>
 </plurals>
 <string name="life_counter_over_9000">"over 9000"</string>
-<string name="life_counter_no_gatherings_exist">"No Gatherings exist."</string>
 <string name="life_counter_edh_dialog_title">"Damage from %1$s's Commander"</string>
 <string name="life_counter_edit_life_dialog_title">"Enter Life"</string>
 <string name="life_counter_edit_poison_dialog_title">"Enter Poison"</string>
 
 <!-- Default gathering activity -->
-<string name="gathering_custom_name">"Name"</string>
 <string name="gathering_starting_life">"Starting life:"</string>
 <string name="gathering_save">"Save Gathering"</string>
 <string name="gathering_enter_name">"Enter Gathering's Name"</string>
@@ -264,8 +258,6 @@ Mana pool will also be cleared."</string>
 <string name="gathering_dialog_overwrite_text">"This Gathering already exists. Do you want to overwrite the existing file?"</string>
 <string name="gathering_load">"Load Gathering"</string>
 <string name="gathering_delete">"Delete Gathering"</string>
-<string name="gathering_remove_player">"Remove a Player"</string>
-<string name="gathering_add_player">"Add a Player"</string>
 <string name="gathering_toast_no_gatherings">"No Gatherings exist."</string>
 <string name="gathering_toast_no_name">"Please include a name for the Gathering."</string>
 <string name="gathering_empty_field">"Fields cannot be empty. Please check all fields."</string>
@@ -284,14 +276,10 @@ Mana pool will also be cleared."</string>
 <string name="trader_save">"Save Trade"</string>
 <string name="trader_load">"Load Trade"</string>
 <string name="trader_delete">"Delete Trade"</string>
-<string name="trader_clear_fields">"Clear Fields"</string>
-<string name="trader_set_pricing">"Set Pricing Option"</string>
-<string name="trader_edit_dialog_change_set">"Change Set"</string>
 <string name="trader_edit_dialog_remove">"Remove"</string>
 <string name="trader_edit_dialog_reset_price">"Reset Price"</string>
 <string name="trader_clear_dialog_title">"Clear Trade"</string>
 <string name="trader_clear_dialog_text">"Are you sure you want to clear the current trade?"</string>
-<string name="trader_save_dialog_title">"Save Trade"</string>
 <string name="trader_select_dialog_title">"Select a Trade"</string>
 <string name="trader_delete_dialog_title">"Delete a Trade"</string>
 <string name="trader_edit_dialog_info">"Card Info"</string>
@@ -301,15 +289,12 @@ Mana pool will also be cleared."</string>
 <string name="trader_Low">"Low"</string>
 <string name="trader_Average">"Average"</string>
 <string name="trader_High">"High"</string>
-<string name="trader_pricing_dialog_title">"Price Options"</string>
 <string name="trader_sort">"Sort Trade"</string>
 <string name="trader_share">"Share Trade"</string>
 <string name="trade_share_title">"Trade"</string>
 
     <!-- Wishlist activity -->
-<string name="wishlist_name">"Name"</string>
 <string name="wishlist_add_card">"Add"</string>
-<string name="wishlist_clear_fields">"Clear Fields"</string>
 <string name="wishlist_set_pricing">"Set Pricing Option"</string>
 <string name="wishlist_share">"Share Wishlist"</string>
 <string name="wishlist_empty_dialog_title">"Empty Wishlist"</string>
@@ -317,7 +302,6 @@ Mana pool will also be cleared."</string>
 <string name="wishlist_edit_dialog_title_end">"in the Wishlist"</string>
 <string name="wishlist_loading">"Loading"</string>
 <string name="wishlist_share_title">"MTG Familiar Wishlist"</string>
-<string name="wishlist_view_card">"View Card"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Sort Wishlist"</string>
 <string name="wishlist_type_price">"Price"</string>
@@ -350,9 +334,7 @@ Mana pool will also be cleared."</string>
 <string name="rules_search_cat">"Search within %s"</string>
 <string name="rules_this_cat">"this category:"</string>
 <string name="rules_banned_and_restricted">"Formats, Banned, and Restricted"</string>
-<string name="rules_banned">"Banned"</string>
 <string name="rules_banned_as_commander">"Banned as Commander"</string>
-<string name="rules_restricted">"Restricted"</string>
 <string name="rules_no_cards">"No Cards"</string>
 <string name="rules_legal_sets">"Legal Sets"</string>
 <string name="rules_bb_wb_sets">"All black &amp; white bordered sets"</string>
@@ -403,11 +385,8 @@ Good luck, and have fun!
 <!-- Preferences -->
 <string name="pref_screen_general">"General Settings"</string>
 <string name="pref_screen_search">"Search &amp; Results"</string>
-<string name="pref_screen_counter">"Life Counter"</string>
-<string name="pref_screen_timer">"Round Timer"</string>
 <string name="pref_screen_trade_wishlist">"Trade &amp; Wishlist"</string>
 <string name="pref_cat_default_fragment">"Default Page"</string>
-<string name="pref_default_fragment_mode_title">"Default Page"</string>
 <string name="pref_default_fragment_mode_summary">"The first thing you see when you open the app"</string>
 <string name="pref_cat_updates">"Database Updates"</string>
 <string name="pref_auto_updates_title">"Automatic Updates"</string>
@@ -419,7 +398,6 @@ Good luck, and have fun!
 <string name="pref_show_art_summary">"When viewing a card, load official card image instead of rules text"</string>
 <string name="pref_card_language_title">"Card image language"</string>
 <string name="pref_card_language_summary">"Choose the language used to retrieve the card image"</string>
-<string name="pref_cat_life_counter">"Life Counter"</string>
 <string name="pref_cat_life_screen">"Display Settings"</string>
 <string name="pref_wake_lock_title">"Wake Lock"</string>
 <string name="pref_wake_lock_summary">"Force the life counter screen to never go to sleep"</string>
@@ -429,7 +407,6 @@ Good luck, and have fun!
 <string name="pref_dim_lock_level_title">"Screen Brightness"</string>
 <string name="pref_display_mode_title">"Display Mode"</string>
 <string name="pref_display_mode_summary">"Choose how to display the Life Counter"</string>
-<string name="pref_cat_timer">"Round Timer"</string>
 <string name="pref_ringtone_title">"Timer Ringtone"</string>
 <string name="pref_ringtone_summary">"Select a notification ringtone to play when the round timer ends"</string>
 <string name="pref_fifteen_minutes_title">"15-Minute Warning"</string>
@@ -448,14 +425,13 @@ Good luck, and have fun!
 <string name="pref_show_type_title">"Show Type/Subtype"</string>
 <string name="pref_show_ability_title">"Show Rules Text"</string>
 <string name="pref_show_pt_title">"Show Power/Toughness"</string>
-<string name="pref_cat_wishlist">"Wishlist"</string>
 <string name="pref_wishlist_details_title">"Show Details"</string>
 <string name="pref_wishlist_details_summary">"Display full card details in the wishlist"</string>
 <string name="pref_wishlist_totals_title">"Show Total Price"</string>
 <string name="pref_wishlist_totals_summary">"Display total price summary in the wishlist"</string>
 <string name="pref_wishlist_prices_title">"Show Card Prices"</string>
 <string name="pref_wishlist_prices_summary">"Display each card price in the wishlist"</string>
-<string name="pref_cat_decklist">"Decklist"</string>
+<string name="pref_cat_decklist">"Deck Builder"</string>
 <string name="pref_decklist_totals_summary">"Display total price in the deck builder"</string>
 <string name="pref_English">"English"</string>
 <string name="pref_French">"French"</string>
@@ -515,10 +491,9 @@ Good luck, and have fun!
 <string name="judges_corner_counter">"Counter"</string>
 <string name="judges_corner_error">"An error occurred."</string>
 <string name="deck_counter_reset">"Reset"</string>
-<string name="deck_counter_undo">"Undo"</string>
 
 <!-- General Card List -->
-<string name="cardlist_undo">"undo"</string>
+<string name="cardlist_undo">"Undo"</string>
 <string name="cardlist_delete_selected">"Delete Selected Items"</string>
 <string name="cardlist_item_deleted">"Removed"</string>
 

@@ -33,7 +33,7 @@ public class NotificationHelper {
             // Sound is handled in RoundTimerBroadcastReceiver's onReceive(), case TIMER_RING_ALARM
             NotificationChannel roundTimerChannel = new NotificationChannel(
                     NotificationHelper.NOTIFICATION_CHANNEL_ROUND_TIMER,
-                    context.getString(R.string.pref_cat_timer),
+                    context.getString(R.string.main_timer),
                     NotificationManager.IMPORTANCE_HIGH);
             roundTimerChannel.setSound(null, null);
             manager.createNotificationChannel(roundTimerChannel);

@@ -212,7 +212,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 ));
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
-                builder.title(R.string.card_view_rulings_dialog_title);
+                builder.title(R.string.card_view_rulings);
                 builder.customView(v, false);
                 return builder.build();
             }
@@ -227,7 +227,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
             case SHARE_CARD: {
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
                         .title(R.string.card_view_share_card)
-                        .positiveText(R.string.card_view_share_text)
+                        .positiveText(R.string.search_text)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {

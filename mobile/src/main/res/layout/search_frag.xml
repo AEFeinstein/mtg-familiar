@@ -467,7 +467,7 @@
                     style="@style/Widget.AppCompat.AutoCompleteTextView"
                     android:dropDownAnchor="@+id/linearLayout20"
                     android:dropDownWidth="wrap_content"
-                    android:hint="@string/search_mc"
+                    android:hint="@string/search_mana_cost"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:layout_height="match_parent"

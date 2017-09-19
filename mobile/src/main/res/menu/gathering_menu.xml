@@ -23,13 +23,13 @@
     <item
         android:id="@+id/add_player"
         android:icon="@drawable/ic_menu_person_add"
-        android:title="@string/gathering_add_player"
+        android:title="@string/life_counter_add_player"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/remove_player"
         android:icon="@drawable/ic_menu_person_remove"
-        android:title="@string/gathering_remove_player"
+        android:title="@string/life_counter_remove_player"
         app:showAsAction="ifRoom" />
 
 </menu>

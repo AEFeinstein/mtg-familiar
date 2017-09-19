@@ -612,7 +612,7 @@ public class RulesFragment extends FamiliarFragment {
                 if (legality == RESTRICTED) {
                     mLegality = getString(R.string.rules_banned_as_commander);
                 } else if (legality == BANNED) {
-                    mLegality = getString(R.string.rules_banned);
+                    mLegality = getString(R.string.card_view_banned);
                 } else if (legality == NONE) {
                     mLegality = "";
                 } else if (legality == SETS) {
@@ -622,9 +622,9 @@ public class RulesFragment extends FamiliarFragment {
                 }
             } else {
                 if (legality == BANNED) {
-                    mLegality = getString(R.string.rules_banned);
+                    mLegality = getString(R.string.card_view_banned);
                 } else if (legality == RESTRICTED) {
-                    mLegality = getString(R.string.rules_restricted);
+                    mLegality = getString(R.string.card_view_restricted);
 
                 } else if (legality == NONE) {
                     mLegality = "";

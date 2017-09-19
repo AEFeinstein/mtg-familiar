@@ -22,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:hint="@string/wishlist_name"
+        android:hint="@string/search_name"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:maxLines="1">

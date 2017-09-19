@@ -51,7 +51,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_PRICE_SETTING: {
                 return new MaterialDialog.Builder(this.getActivity())
-                        .title(R.string.trader_pricing_dialog_title)
+                        .title(R.string.pref_trade_price_title)
                         .items(new String[]{getString(R.string.trader_Low),
                                 getString(R.string.trader_Average), getString(R.string.trader_High)})
                         .itemsCallbackSingleChoice(getParentWishlistFragment().mPriceSetting, new MaterialDialog.ListCallbackSingleChoice() {

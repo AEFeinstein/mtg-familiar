@@ -22,7 +22,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <item
         android:id="@+id/wishlist_menu_clear"
         android:icon="@drawable/ic_menu_close"
-        android:title="@string/wishlist_clear_fields"
+        android:title="@string/search_clear_fields"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/wishlist_menu_settings"

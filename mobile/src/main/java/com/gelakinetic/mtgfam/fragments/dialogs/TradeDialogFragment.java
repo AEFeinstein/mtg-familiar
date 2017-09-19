@@ -349,7 +349,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             case DIALOG_PRICE_SETTING: {
                 /* Build the dialog with some choices */
                 return new MaterialDialog.Builder(this.getActivity())
-                        .title(R.string.trader_pricing_dialog_title)
+                        .title(R.string.pref_trade_price_title)
                         .items(new String[]{getString(R.string.trader_Low),
                                 getString(R.string.trader_Average),
                                 getString(R.string.trader_High)})
@@ -404,7 +404,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 });
 
                 Dialog dialog = new MaterialDialog.Builder(getActivity())
-                        .title(R.string.trader_save_dialog_title)
+                        .title(R.string.trader_save)
                         .customView(textEntryView, false)
                         .positiveText(R.string.dialog_ok)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {

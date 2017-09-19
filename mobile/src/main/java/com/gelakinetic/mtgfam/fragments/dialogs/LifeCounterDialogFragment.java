@@ -145,7 +145,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
             case DIALOG_SET_GATHERING: {
                         /* If there aren't any dialogs, don't show the dialog. Pop a toast instead */
                 if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.life_counter_no_gatherings_exist,
+                    ToastWrapper.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
                             ToastWrapper.LENGTH_LONG).show();
                     return DontShowDialog();
                 }

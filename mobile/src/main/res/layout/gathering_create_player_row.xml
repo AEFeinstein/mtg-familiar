@@ -10,7 +10,7 @@
         style="@style/forty_eight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/gathering_custom_name"
+        android:hint="@string/search_name"
         android:selectAllOnFocus="true" />
 
     <LinearLayout

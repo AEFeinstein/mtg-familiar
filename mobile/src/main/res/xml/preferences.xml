@@ -23,7 +23,7 @@
                 android:entryValues="@array/default_fragment_array_entries"
                 android:key="@string/key_defaultFragment"
                 android:summary="@string/pref_default_fragment_mode_summary"
-                android:title="@string/pref_default_fragment_mode_title" />
+                android:title="@string/pref_cat_default_fragment" />
         </PreferenceCategory>
 
         <PreferenceCategory android:title="@string/pref_cat_updates">
@@ -171,9 +171,9 @@
     </PreferenceScreen>
 
     <!-- Life counter preferences -->
-    <PreferenceScreen android:title="@string/pref_screen_counter">
+    <PreferenceScreen android:title="@string/main_life_counter">
 
-        <PreferenceCategory android:title="@string/pref_cat_life_counter">
+        <PreferenceCategory android:title="@string/main_life_counter">
 
             <ListPreference
                 android:defaultValue="0"
@@ -224,9 +224,9 @@
     </PreferenceScreen>
 
     <!-- Round timer preferences -->
-    <PreferenceScreen android:title="@string/pref_screen_timer">
+    <PreferenceScreen android:title="@string/main_timer">
 
-        <PreferenceCategory android:title="@string/pref_cat_timer">
+        <PreferenceCategory android:title="@string/main_timer">
 
             <RingtonePreference
                 android:key="@string/key_timerSound"
@@ -295,7 +295,7 @@
 
         </PreferenceCategory>
 
-        <PreferenceCategory android:title="@string/pref_cat_wishlist">
+        <PreferenceCategory android:title="@string/main_wishlist">
 
             <CheckBoxPreference
                 android:defaultValue="false"

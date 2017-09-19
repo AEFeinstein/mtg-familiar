@@ -41,7 +41,7 @@ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
     <item
         android:id="@+id/addtowishlist"
         android:icon="@drawable/ic_menu_wishlist"
-        android:title="@string/card_view_wishlist"
+        android:title="@string/main_wishlist"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/legality"
