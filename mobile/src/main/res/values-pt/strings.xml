@@ -7,6 +7,7 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
 <string name="dialog_yes">"Sim"</string>
+<string name="dialog_no">"Não"</string>
 <string name="dialog_done">"Pronto"</string>
 <string name="dialog_both">"Ambos"</string>
 <string name="dialog_life">"Vida"</string>
@@ -87,7 +88,7 @@ Obrigado a todos os tradutores, incluindo, mas não limitado a, Michal Ďurovič
 &lt;br&gt;
 Obrigado a todos aqueles que gerem fontes de dados, incluindo, mas não limitado a, Ryan Stapleton (&lt;a href = \"http://www.bluewizard.net/Bluewizards_Tower/ Home_Page.html \"&gt; Bluewizard.net &lt;/a&gt;) e Chedy Hampson (&lt;a href = \"http://tcgplayer.com\"&gt; TCGPlayer.com &lt;/a&gt;).&lt;br&gt;
 &lt;br&gt;
-Obrigado ao reddit  's &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt; / r / magictcg &lt;/a&gt; para testes e feedback.&lt;br&gt;
+Obrigado ao reddit  s &lt;a href = \"http://www.reddit.com/r/magicTCG/ \"&gt; / r / magictcg &lt;/a&gt; para testes e feedback.&lt;br&gt;
 &lt;br&gt;
 agradecimento especial a Richard Garfield eo resto das pessoas em &lt;a href =\"http://www.wizards.com/magic \"&gt; Wizards of the Coast. &lt;/a&gt;&lt;br&gt;
 &lt;br&gt;
@@ -110,8 +111,8 @@ Magic the Gathering e Magic the Gathering cartões são ™ &amp; © Wizards of 
 Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .&lt;br&gt;
-<!--&lt;br&gt;-->
-<!--Busca por imagem de carta desenvolvido por &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;-->
+&lt;!--&lt;br&gt;--&gt;
+&lt;!--Busca por imagem de carta desenvolvido por &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;--&gt;
 "</string>
 <string name="main_drawer_open">"Abrir coluna de navegação"</string>
 <string name="main_drawer_close">"Fechar coluna de navegação"</string>
@@ -214,6 +215,7 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_image_saved">"Imagem salva"</string>
 <string name="card_view_share_card">"Compartilhar Carta"</string>
 <string name="card_view_share_text">"Texto"</string>
+<string name="card_view_share_image">"Imagem"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Anunciar total de vida"</string>
@@ -232,13 +234,15 @@ Reserva de mana também serão apagados."</string>
 <string name="life_counter_commander_cast">"Custo do Commander"</string>
 <string name="life_counter_default_name">"Jogador"</string>
 <plurals name="life_counter_spoken_life">
-    <item quantity="one">"%1$s tem %2$d de vida."</item>
-    <item quantity="other">"%1$s tem %2$d de vida."</item>
+<item quantity="one">"%1$s tem %2$d de vida."</item>
+<item quantity="other">"%1$s tem %2$d de vida."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
-    <item quantity="one">"%1$s tem %2$d contador de veneno."</item>
-    <item quantity="other">"%1$s tem %2$d contadores de veneno."</item>
+<item quantity="one">"%1$s tem %2$d contador de veneno."</item>
+<item quantity="other">"%1$s tem %2$d contadores de veneno."</item>
 </plurals>
+<string name="life_counter_spoken_life_singular">"%1$s tem %2$d de vida."</string>
+<string name="life_counter_spoken_poison_singular">"%1$s tem %2$d contador de veneno."</string>
 <string name="life_counter_over_9000">"acima de 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Nenhum tipo de jogo."</string>
 <string name="life_counter_edh_dialog_title">"%1$s's de dano Commander"</string>
@@ -264,6 +268,9 @@ Reserva de mana também serão apagados."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"Cara"</string>
 <string name="dice_tails">"Coroa"</string>
+<string name="dice_choose_sides">"Escolha o número de lados"</string>
+<string name="dice_num_too_large">"O número digitado é muito grande"</string>
+<string name="dice_postive">"Você deve digitar um número positivo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Falha ao carregar Reserva de mana!"</string>
@@ -310,8 +317,14 @@ Reserva de mana também serão apagados."</string>
 <string name="wishlist_view_card">"Ver carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordenar Lista de Desejos"</string>
+<string name="wishlist_type_none">"Nenhum"</string>
+<string name="wishlist_type_cmc">"Custo de mana convertido"</string>
+<string name="wishlist_type_color">"Cor"</string>
+<string name="wishlist_type_name">"Nome"</string>
 <string name="wishlist_type_price">"Preço"</string>
+<string name="wishlist_type_set">"Coleção"</string>
 <string name="wishlist_ascending">"Crescente"</string>
+<string name="wishlist_descending">"Decrescente"</string>
 <string name="wishlist_sort_by">"Ordenar Por"</string>
 
 <!-- Round timer activity -->
@@ -505,7 +518,8 @@ Boa sorte, e divirtam-se!
 <string name="decklist_artifacts">"Artefatos"</string>
 <string name="decklist_lands">"Terrenos"</string>
 <string name="decklist_edit_dialog_title_end">"no deck"</string>
-    <string name="decklist_delete">"Deletar Deck"</string>
+<string name="deck_save_dialog_title">"Salvar Deck"</string>
+<string name="decklist_delete">"Deletar Deck"</string>
 <string name="decklist_save">"Salvar Deck"</string>
 <string name="decklist_load">"Carregar Deck"</string>
 <string name="decklist_clear">"Limpar Deck"</string>
@@ -522,12 +536,12 @@ Boa sorte, e divirtam-se!
 <string name="decklist_cards">"cartas"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Adicionado um montador de decks&lt;br&gt;
-- Adicionado ordenação na lista de resultados&lt;br&gt;
-- Adicionado nomes de cartas em outras linguagens&lt;br&gt;
-- Adicionado botão de compartilhar para o texto ou imagem da carta&lt;br&gt;
-- Adicionado tradução Eslovaquia&lt;br&gt;
-- Corrigido arte de carta para certas cartas"</string>
+<string name="main_whats_new_text">"- Em Pesquisa, busque por cartas por custo de mana&lt;br&gt;
+- Em Resultados, aperte e segure uma carta para adicioná-la à Lista de desejos&lt;br&gt;
+- Em Construtor de Deck, adicione cartas para o sideboard&lt;br&gt;
+- Em Listas de Desejo &amp; Troca, classifique por ordem adicionada&lt;br&gt;
+- Em listas, aperte e segure para selecionar múltiplas cartas e deslize-as para deletá-las&lt;br&gt;
+- Correção de bugs &amp; otimizações"</string>
 <string name="card_view_send_to">"Compartilhar imagem usando"</string>
 <string name="card_view_translated_dialog_title">"Nome da carta traduzido"</string>
 <string name="pref_Portuguese">"Português (Brasil)"</string>
@@ -537,4 +551,37 @@ Boa sorte, e divirtam-se!
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Eslovaca"</string>
+<string name="pref_use_sound_instead_of_tts">"Usar som em vez de TTS (Text-To-Speech)"</string>
+<string name="search_mc">"Custo de Mana"</string>
+<string name="Equals">"Igual a"</string>
+<string name="DoesNotEqual">"Não é igual a"</string>
+<string name="Contains">"Contém"</string>
+<string name="DoesNotContain">"Não Contém"</string>
+<string name="NoComparison">"Sem Comparação"</string>
+<string name="card_view_copied_to_clipboard">"Copiado para a área de transferência"</string>
+<string name="wishlist_type_order">"Ordem Adicionada"</string>
+<string name="pref_cat_decklist">"Lista de Decks"</string>
+<string name="pref_decklist_totals_summary">"Mostrar preço total no editor de deck"</string>
+<string name="pref_tap_symbol_title">"Símbolo de Tap/Virar"</string>
+<string name="pref_tap_symbol_summary">"Qual símbolo de tap para usar no display"</string>
+<string name="pref_tap_symbol_modern">"Oitava Edição"</string>
+<string name="pref_tap_symbol_old">"Quarta Edição"</string>
+<string name="pref_tap_symbol_older">"Edição Revisada"</string>
+<string name="pref_white_symbol_title">"Símbolo de Mana Branca"</string>
+<string name="pref_white_symbol_summary">"Qual símbolo de mana branco para usar no display"</string>
+<string name="pref_white_symbol_modern">"Era do Gelo"</string>
+<string name="pref_white_symbol_old">"Edição Limitada Alpha"</string>
+<string name="pref_cat_list_general">"Listas Gerais"</string>
+<string name="pref_undo_timeout_seconds_summary">"O número de segundos um item permanecerá no estado de \"desfazer\" antes de deletado"</string>
+<string name="pref_undo_timeout_seconds_title">"Desfazer Intervalo"</string>
+
+<!-- General Card List -->
+<string name="cardlist_undo">"desfazer"</string>
+<string name="cardlist_delete_selected">"Deletar Itens Selecionados"</string>
+<string name="cardlist_item_deleted">"Removido"</string>
+<string name="decklist_import_to_wishlist">"Importar selecionado para Lista de desejos"</string>
+<string name="decklist_save_as">"Salvar Deck como"</string>
+<string name="decklist_saved_toast">"Deck %1$s salvo!"</string>
+<string name="result_list_Add_to_decklist">"Adicionar ao Deck"</string>
+<string name="result_list_Add_to_wishlist">"Adicionar à lista de desejos"</string>
 </resources>
