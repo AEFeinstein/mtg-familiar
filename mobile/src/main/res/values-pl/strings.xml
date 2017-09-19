@@ -7,6 +7,7 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Anuluj"</string>
 <string name="dialog_yes">"Tak"</string>
+<string name="dialog_no">"Nie"</string>
 <string name="dialog_done">"Gotowe"</string>
 <string name="dialog_both">"Wyczyść oba"</string>
 <string name="dialog_life">"Życie"</string>
@@ -44,7 +45,7 @@
 <string name="main_rules">"Zasady (en)"</string>
 <string name="main_judges_corner">"Kącik Sędziów"</string>
 <string name="main_mojhosto">"MoJhoSto Basic"</string>
-<string name="main_decklist">"Deck Builder"</string>
+<string name="main_decklist">"Kreator talii"</string>
 <string name="main_force_update_title">"Wymuś aktualizację"</string>
 <string name="main_settings_title">"Ustawienia"</string>
 <string name="main_donate_title">"Wspomóż nas"</string>
@@ -111,8 +112,8 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 Program licenced under the &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-<!--&lt;br&gt;-->
-<!--Wyszukiwanie obrazu karty uzyskane przy pomocy &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;-->
+&lt;!--&lt;br&gt;--&gt;
+&lt;!--Wyszukiwanie obrazu karty uzyskane przy pomocy &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;--&gt;
 "</string>
 <string name="main_drawer_open">"Otwórz menu nawigacji"</string>
 <string name="main_drawer_close">"Zamknij menu nawigacji"</string>
@@ -146,7 +147,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <plurals name="search_toast_results">
 <item quantity="one">"Znaleziono %1$d wynik wyszukiwania."</item>
 <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
-<item quantity="many">"Znaleziono %1$d wyników wyszukiwania."</item>
 <item quantity="other">"Znaleziono %1$d wyników wyszukiwania."</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
@@ -200,7 +200,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_price_dialog_medium">"Średnia"</string>
 <string name="card_view_price_dialog_high">"Wysoka"</string>
 <string name="card_view_price_dialog_foil">"Średnia foliowana"</string>
-<string name="card_view_price_dialog_link">"Naciśnij tutaj aby zobaczyć informację o cenie i tendencji"</string>
+<string name="card_view_price_dialog_link">"Naciśnij tutaj, aby zobaczyć informację o cenie i tendencji"</string>
 <string name="card_view_rulings_dialog_title">"Zasady karty"</string>
 <string name="card_view_no_rulings">"Brak zasad dla tej karty"</string>
 <string name="card_view_gatherer_page">"Strona karty"</string>
@@ -217,6 +217,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <string name="card_view_image_saved">"Obrazek zapisano w"</string>
 <string name="card_view_share_card">"Udostępnij kartę"</string>
 <string name="card_view_share_text">"Tekst"</string>
+<string name="card_view_share_image">"Obrazek"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Komunikat o ilości życia"</string>
@@ -235,17 +236,17 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="life_counter_commander_cast">"Wywołania Commandera"</string>
 <string name="life_counter_default_name">"Gracz"</string>
 <plurals name="life_counter_spoken_life">
-    <item quantity="one">"%1$s ma %2$d życia."</item>
-    <item quantity="few">"%1$s ma %2$d życia."</item>
-    <item quantity="many">"%1$s ma %2$d życia."</item>
-    <item quantity="other">"%1$s ma %2$d życia."</item>
+<item quantity="one">"%1$s ma %2$d życia."</item>
+<item quantity="few">"%1$s ma %2$d życia."</item>
+<item quantity="other">"%1$s ma %2$d życia."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
-    <item quantity="one">"%1$s ma %2$d znacznik trucizny."</item>
-    <item quantity="few">"%1$s ma %2$d znaczników trucizny."</item>
-    <item quantity="many">"%1$s ma %2$d znaczników trucizny."</item>
-    <item quantity="other">"%1$s ma %2$d znaczników trucizny."</item>
+<item quantity="one">"%1$s ma %2$d znacznik trucizny."</item>
+<item quantity="few">"%1$s ma %2$d znaczników trucizny."</item>
+<item quantity="other">"%1$s ma %2$d znaczników trucizny."</item>
 </plurals>
+<string name="life_counter_spoken_life_singular">"%1$s ma %2$d życia."</string>
+<string name="life_counter_spoken_poison_singular">"%1$s ma %2$d znacznik trucizny."</string>
 <string name="life_counter_over_9000">"ponad 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Takie pojedynki nie istnieją."</string>
 <string name="life_counter_edh_dialog_title">"Obrażenia od %s Commandera"</string>
@@ -271,6 +272,9 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"Orzeł"</string>
 <string name="dice_tails">"Reszka"</string>
+<string name="dice_choose_sides">"Wpisz ilość ścianek"</string>
+<string name="dice_num_too_large">"Liczba którą wprowadziłeś jest zbyt duża"</string>
+<string name="dice_postive">"Musisz wprowadzić liczbę dodatnią"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Nie udało się wczytać licznika many!"</string>
@@ -317,8 +321,14 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="wishlist_view_card">"Zobacz kartę"</string>
 <string name="wishlist_foil">"foliowane"</string>
 <string name="wishlist_sort">"Sortuj Listę Życzeń"</string>
+<string name="wishlist_type_none">"Żadne"</string>
+<string name="wishlist_type_cmc">"Całkowity koszt many"</string>
+<string name="wishlist_type_color">"Kolor"</string>
+<string name="wishlist_type_name">"Nazwa"</string>
 <string name="wishlist_type_price">"Cena"</string>
+<string name="wishlist_type_set">"Edycja"</string>
 <string name="wishlist_ascending">"Wzrastająco"</string>
+<string name="wishlist_descending">"Opadająco"</string>
 <string name="wishlist_sort_by">"Sortuj według"</string>
 
 <!-- Round timer activity -->
@@ -453,7 +463,8 @@ Powodzenia i miłej zabawy!
 <string name="pref_wishlist_totals_title">"Podaj całkowitą cenę"</string>
 <string name="pref_wishlist_totals_summary">"Wyświetl całkowitą cenę w Liście Życzeń"</string>
 <string name="pref_wishlist_prices_title">"Pokaż ceny"</string>
-<string name="pref_wishlist_prices_summary">"Pokaż cenę każdej karty w liście życzeń"</string>
+<string name="pref_wishlist_prices_summary">"Pokaż cenę każdej karty w 
+Liście Życzeń"</string>
 <string name="pref_English">"angielski"</string>
 <string name="pref_French">"francuski"</string>
 <string name="pref_Italian">"włoski"</string>
@@ -509,7 +520,8 @@ Powodzenia i miłej zabawy!
 <string name="decklist_artifacts">"Artefakty"</string>
 <string name="decklist_lands">"Landy"</string>
 <string name="decklist_edit_dialog_title_end">"w talii"</string>
-    <string name="decklist_delete">"Usuń talię"</string>
+<string name="deck_save_dialog_title">"Zapisz talię"</string>
+<string name="decklist_delete">"Usuń talię"</string>
 <string name="decklist_save">"Zapisz talię"</string>
 <string name="decklist_load">"Załaduj talię"</string>
 <string name="decklist_clear">"Wyczyść talię"</string>
@@ -526,11 +538,12 @@ Powodzenia i miłej zabawy!
 <string name="decklist_cards">"Karty"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Dodano kreator talii&lt;br&gt;
-- Dodano sortowanie listy wyników&lt;br&gt;
-- Dodano nazwy kart w innych językach&lt;br&gt;
-- Dodano przycisk udostępniania dla obrazków lub tekstu&lt;br&gt;
-- Naprawiono zgodność obrazków z niektórymi kartami"</string>
+<string name="main_whats_new_text">"- w trybie Szukania karty są szukane wedle kosztu many&lt;br&gt;
+- w trybie Wyniki naciśnij i przytrzymaj, aby dodać kartę do Talii lub Listy Życzeń&lt;br&gt;
+- w Kreatorze talii można dodawać karty do sideboard'u&lt;br&gt;
+- w Liście Życzeń i w Liście Wymiany dodano opcje sortowania wedle kolejności
+- podczas przeglądania listy kart, naciśnij i przytrzymaj, aby wybrać kilka kart oraz przesuń palcem, aby je usunąć&lt;br&gt;
+- Naprawiono błędy i zoptymalizowano"</string>
 <string name="card_view_send_to">"Udostępnij obrazek przy użyciu"</string>
 <string name="card_view_translated_dialog_title">"Przetłumaczona nazwa karty"</string>
 <string name="pref_Portuguese">"Portugalski (Brazylijski)"</string>
@@ -540,4 +553,42 @@ Powodzenia i miłej zabawy!
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovak"</string>
+
+<!-- What is the context here? -->
+<string name="pref_use_sound_instead_of_tts">"Użyj dźwięku zamiast syntezatora mowy"</string>
+<string name="search_mc">"Koszt many"</string>
+<string name="Equals">"Równa się"</string>
+<string name="DoesNotEqual">"Nie równa się"</string>
+<string name="Contains">"Zawiera"</string>
+<string name="DoesNotContain">"Nie zawiera"</string>
+<string name="NoComparison">"Brak porównania"</string>
+<string name="card_view_copied_to_clipboard">"Skopiowano do schowka"</string>
+<string name="wishlist_type_order">"Dodano kolejność"</string>
+<string name="pref_cat_decklist">"Lista kart"</string>
+<string name="pref_decklist_totals_summary">"Pokaż całkowitą cenę w edytorze talii"</string>
+<string name="pref_tap_symbol_title">"Symbol tapowania"</string>
+<string name="pref_tap_symbol_summary">"Wybierz który symbol tapowania będzie wyświetlany"</string>
+<string name="pref_tap_symbol_modern">"Ósma edycja"</string>
+<string name="pref_tap_symbol_old">"Czwarta edycja"</string>
+<string name="pref_tap_symbol_older">"Revised"</string>
+<string name="pref_white_symbol_title">"Symbol białej many"</string>
+<string name="pref_white_symbol_summary">"Wybierz który symbol białej many będzie wyświetlany"</string>
+<string name="pref_white_symbol_modern">"Ice Age"</string>
+<string name="pref_white_symbol_old">"Limited Alpha"</string>
+
+<!-- What does this refer to? -->
+<string name="pref_cat_list_general">"Opcje wyświetlania kart
+"</string>
+<string name="pref_undo_timeout_seconds_summary">"Czas, po upłynięciu którego niemożliwe będzie cofnięcie akcji."</string>
+<string name="pref_undo_timeout_seconds_title">"Czas na cofnięcie akcji"</string>
+
+<!-- General Card List -->
+<string name="cardlist_undo">"cofnij"</string>
+<string name="cardlist_delete_selected">"Usuń zaznaczone"</string>
+<string name="cardlist_item_deleted">"Usunięto"</string>
+<string name="decklist_import_to_wishlist">"Importuj zaznaczone do Listy Życzeń"</string>
+<string name="decklist_save_as">"Zapisz deck jako"</string>
+<string name="decklist_saved_toast">"Talia %1$s została zapisana!"</string>
+<string name="result_list_Add_to_decklist">"Dodaj do Talii"</string>
+<string name="result_list_Add_to_wishlist">"Dodaj do Listy Życzeń"</string>
 </resources>
