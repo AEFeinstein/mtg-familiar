@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Abbrechen"</string>
 <string name="dialog_yes">"Ja"</string>
-<string name="dialog_no">"Nein"</string>
 <string name="dialog_done">"Erledigt"</string>
 <string name="dialog_both">"Beide"</string>
 <string name="dialog_life">"Leben"</string>
@@ -231,7 +230,6 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="card_view_image_saved">"Bild gespeichert unter"</string>
 <string name="card_view_share_card">"Karte teilen"</string>
 <string name="card_view_share_text">"Text"</string>
-<string name="card_view_share_image">"Bild"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Lebenspunkte"</string>
@@ -258,8 +256,6 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <item quantity="one">"%1$s hat %2$d Giftmarke."</item>
 <item quantity="other">"%1$s hat %2$d Giftmarken."</item>
 </plurals>
-<string name="life_counter_spoken_life_singular">"%1$s hat %2$d Lebenspunkt."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s hat %2$d Giftmarke."</string>
 <string name="life_counter_over_9000">"über 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Keine Spiele vorhanden."</string>
 <string name="life_counter_edh_dialog_title">"Schaden von %1$ss Commander"</string>
@@ -285,9 +281,6 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <!-- Dice activity -->
 <string name="dice_heads">"Kopf"</string>
 <string name="dice_tails">"Zahl"</string>
-<string name="dice_choose_sides">"Anzahl der Seiten wählen"</string>
-<string name="dice_num_too_large">"Die eingegebene Zahl ist zu groß"</string>
-<string name="dice_postive">"Du musst einen positiven Wert eingeben"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Manavorrat konnte nicht geladen werden!"</string>
@@ -334,14 +327,8 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="wishlist_view_card">"Karte betrachten"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Wunschliste sortieren"</string>
-<string name="wishlist_type_none">"Keine"</string>
-<string name="wishlist_type_cmc">"Umgewandelte Manakosten"</string>
-<string name="wishlist_type_color">"Farbe"</string>
-<string name="wishlist_type_name">"Name"</string>
 <string name="wishlist_type_price">"Preis"</string>
-<string name="wishlist_type_set">"Set"</string>
 <string name="wishlist_ascending">"Aufsteigend"</string>
-<string name="wishlist_descending">"Absteigend"</string>
 <string name="wishlist_sort_by">"Sortieren nach"</string>
 
 <!-- Round timer activity -->
@@ -531,7 +518,6 @@ Viel Glück und viel Spaß!
 <string name="decklist_artifacts">"Artefakte"</string>
 <string name="decklist_lands">"Länder"</string>
 <string name="decklist_edit_dialog_title_end">"im Deck"</string>
-<string name="deck_save_dialog_title">"Deck speichern"</string>
 <string name="decklist_delete">"Deck löschen"</string>
 <string name="decklist_save">"Deck speichern"</string>
 <string name="decklist_load">"Deck laden"</string>
