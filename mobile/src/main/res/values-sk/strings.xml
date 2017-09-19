@@ -7,6 +7,7 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Zrušiť"</string>
 <string name="dialog_yes">"Áno"</string>
+<string name="dialog_no">"Nie"</string>
 <string name="dialog_done">"Hotovo"</string>
 <string name="dialog_both">"Oboje"</string>
 <string name="dialog_life">"Život"</string>
@@ -111,8 +112,8 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 Program licenced under the &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-<!--&lt;br&gt;-->
-<!--Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.-->
+&lt;!--&lt;br&gt;--&gt;
+&lt;!--Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.--&gt;
 "</string>
 <string name="main_drawer_open">"Otvoriť navigačný panel"</string>
 <string name="main_drawer_close">"Zatvoriť navigačný panel"</string>
@@ -153,6 +154,7 @@ For 2-4:   %1$d nájdené karty. -->
 <plurals name="search_toast_results">
 <item quantity="one">"%1$d nájdená karta"</item>
 <item quantity="few">"%1$d nájdené karty"</item>
+<item quantity="many">"%1$d nájdených kariet"</item>
 <item quantity="other">"%1$d nájdených kariet"</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nepodarilo sa uložiť možnosti vyhľadávania."</string>
@@ -223,6 +225,7 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
 <string name="card_view_share_card">"Zdieľať kartu"</string>
 <string name="card_view_share_text">"Text"</string>
+<string name="card_view_share_image">"Obrázok"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Oznámiť počty životov"</string>
@@ -241,15 +244,19 @@ Manapool bude tiež vymazaný."</string>
 <string name="life_counter_commander_cast">"Počet zahraní generála"</string>
 <string name="life_counter_default_name">"Hráč"</string>
 <plurals name="life_counter_spoken_life">
-    <item quantity="one">"%1$s má %2$d životov."</item>
-    <item quantity="few">"%1$s má %2$d životov."</item>
-    <item quantity="other">"%1$s má %2$d životov."</item>
+<item quantity="one">"%1$s má %2$d život."</item>
+<item quantity="few">"%1$s má %2$d životov."</item>
+<item quantity="many">"%1$s má %2$d životov."</item>
+<item quantity="other">"%1$s má %2$d životov."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
-    <item quantity="one">"%1$s má %2$d poison žetónov."</item>
-    <item quantity="few">"%1$s má %2$d poison žetónov."</item>
-    <item quantity="other">"%1$s má %2$d poison žetónov."</item>
+<item quantity="one">"%1$s má %2$d poison žetón."</item>
+<item quantity="few">"%1$s má %2$d poison žetónov."</item>
+<item quantity="many">"%1$s má %2$d poison žetónov."</item>
+<item quantity="other">"%1$s má %2$d poison žetónov."</item>
 </plurals>
+<string name="life_counter_spoken_life_singular">"%1$s má %2$d životov.␣"</string>
+<string name="life_counter_spoken_poison_singular">"%1$s má %2$d poison žetónov.␣"</string>
 <string name="life_counter_over_9000">"nad 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Žiadne stretnutia neexistujú."</string>
 <string name="life_counter_edh_dialog_title">"Zranenie generálom od hráča %1$s"</string>
@@ -275,6 +282,9 @@ Manapool bude tiež vymazaný."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"hlava"</string>
 <string name="dice_tails">"orol"</string>
+<string name="dice_choose_sides">"Zvoľte počet strán"</string>
+<string name="dice_num_too_large">"Zadané číslo je príliš veľké"</string>
+<string name="dice_postive">"Musíte zadať kladné číslo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Manapool sa nepodarilo načítať!"</string>
@@ -321,8 +331,14 @@ Manapool bude tiež vymazaný."</string>
 <string name="wishlist_view_card">"Zobraziť kartu"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Zoradiť zoznam želaní"</string>
+<string name="wishlist_type_none">"Žiadne"</string>
+<string name="wishlist_type_cmc">"Prevedená manová cena"</string>
+<string name="wishlist_type_color">"Farba"</string>
+<string name="wishlist_type_name">"Názov"</string>
 <string name="wishlist_type_price">"Cena"</string>
+<string name="wishlist_type_set">"Edícia"</string>
 <string name="wishlist_ascending">"Vzostupne"</string>
+<string name="wishlist_descending">"Zostupne"</string>
 <string name="wishlist_sort_by">"Zoradiť podľa"</string>
 
 <!-- Round timer activity -->
@@ -509,7 +525,8 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="decklist_artifacts">"Artefakty"</string>
 <string name="decklist_lands">"Landy"</string>
 <string name="decklist_edit_dialog_title_end">"v balíku"</string>
-    <string name="decklist_delete">"Zmazať balík"</string>
+<string name="deck_save_dialog_title">"Uložiť balík"</string>
+<string name="decklist_delete">"Zmazať balík"</string>
 <string name="decklist_save">"Uložiť balík"</string>
 <string name="decklist_load">"Načítať balík"</string>
 <string name="decklist_clear">"Vymazať balík"</string>
@@ -526,12 +543,12 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="decklist_cards">"kariet"</string>
 
 <!-- "Added Slovak Translation" was added -->
-<string name="main_whats_new_text">"- Pridaný deckbuilder&lt;br&gt;
-- Pridané triedenie zoznamu výsledkov&lt;br&gt;
-- Pridané názvy kariet v iných jazykoch&lt;br&gt;
-- Pridané tlačidlo zdieľať pre text alebo obrázok karty&lt;br&gt;
-- Pridaný slovenský preklad&lt;br&gt;
-- Opravené obrázky pre určité karty"</string>
+<string name="main_whats_new_text">"- Vyhľadávanie kariet podľa mana costu&lt;br&gt;
+- Vo výsledkoch vyhľadávania stlačte a podržte na karte, ktorú chcete pridať do balíčka alebo do zoznamu želaní&lt;br&gt;
+- Pridávanie kariet do sideboardu v deckbuilderi&lt;br&gt;
+- Zoradenie kariet podľa poradia pridania v zozname želaní a vo výmene kariet &lt;br&gt;
+- V zoznamoch stlačte a podržte pre výber viacerých kariet a prejdením prsta ich odstránite&lt;br&gt;
+- Opravy chýb a optimalizácie"</string>
 <string name="card_view_send_to">"Zdieľať obrázok cez"</string>
 <string name="card_view_translated_dialog_title">"Preložený názov karty"</string>
 <string name="pref_Portuguese">"Portugalský (Brazílsky)"</string>
@@ -541,4 +558,37 @@ Veľa šťastia a zabavte sa!"</string>
 
 <!-- Only used for app translation, not card names -->
 <string name="pref_Slovak">"Slovenský"</string>
+<string name="pref_use_sound_instead_of_tts">"Použiť zvuk namiesto TTS"</string>
+<string name="search_mc">"Manová cena"</string>
+<string name="Equals">"Rovné"</string>
+<string name="DoesNotEqual">"Nerovné"</string>
+<string name="Contains">"Obsahuje"</string>
+<string name="DoesNotContain">"Neobsahuje"</string>
+<string name="NoComparison">"Žiadne porovnanie"</string>
+<string name="card_view_copied_to_clipboard">"Skopírované"</string>
+<string name="wishlist_type_order">"Poradie pridané"</string>
+<string name="pref_cat_decklist">"Decklist"</string>
+<string name="pref_decklist_totals_summary">"Zobraziť celkovú sumu v editore balíkov"</string>
+<string name="pref_tap_symbol_title">"Symbol tapnutia"</string>
+<string name="pref_tap_symbol_summary">"Ktorý symbol tapnutia zobrazovať"</string>
+<string name="pref_tap_symbol_modern">"Ôsma edícia"</string>
+<string name="pref_tap_symbol_old">"Štvrtá edícia"</string>
+<string name="pref_tap_symbol_older">"Revised edícia"</string>
+<string name="pref_white_symbol_title">"Biely mana symbol"</string>
+<string name="pref_white_symbol_summary">"Ktorý biely mana symbol používať"</string>
+<string name="pref_white_symbol_modern">"Ice Age"</string>
+<string name="pref_white_symbol_old">"Limitovaná edícia Alpha"</string>
+<string name="pref_cat_list_general">"Všeobecný zoznam"</string>
+<string name="pref_undo_timeout_seconds_summary">"Počet sekúnd, počas ktorých položka zostane v stave vrátenia pred odstránením"</string>
+<string name="pref_undo_timeout_seconds_title">"Časový limit pre vrátenie späť"</string>
+
+<!-- General Card List -->
+<string name="cardlist_undo">"vrátiť späť"</string>
+<string name="cardlist_delete_selected">"Odstrániť vybrané položky"</string>
+<string name="cardlist_item_deleted">"Odstránené"</string>
+<string name="decklist_import_to_wishlist">"Importovať vybrané do zoznamu želaní"</string>
+<string name="decklist_save_as">"Uložiť balík ako"</string>
+<string name="decklist_saved_toast">"Balík %1$s uložený!"</string>
+<string name="result_list_Add_to_decklist">"Pridať do balíka"</string>
+<string name="result_list_Add_to_wishlist">"Pridať do zoznamu želaní"</string>
 </resources>
