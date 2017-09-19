@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Annuler"</string>
 <string name="dialog_yes">"Oui"</string>
-<string name="dialog_no">"Non"</string>
 <string name="dialog_done">"Terminé"</string>
 <string name="dialog_both">"Joueurs &amp; Vie"</string>
 <string name="dialog_life">"Que Vie"</string>
@@ -215,7 +214,6 @@ Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/
 <string name="card_view_image_saved">"Image sauvée à"</string>
 <string name="card_view_share_card">"Partager Carte"</string>
 <string name="card_view_share_text">"Texte"</string>
-<string name="card_view_share_image">"Image"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Annoncer Totaux Vie"</string>
@@ -241,8 +239,6 @@ La réserve de mana sera aussi vidée."</string>
 <item quantity="one">"%1$s a %2$d marqueur poison."</item>
 <item quantity="other">"%1$s a %2$d marqueurs poison."</item>
 </plurals>
-<string name="life_counter_spoken_life_singular">"%1$s a %2$d point de vie."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s a %2$d marqueur poison."</string>
 <string name="life_counter_over_9000">"plus de 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Aucun type de match n'existe."</string>
 <string name="life_counter_edh_dialog_title">"Dégâts du Commander de %s"</string>
@@ -268,9 +264,6 @@ La réserve de mana sera aussi vidée."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"face"</string>
 <string name="dice_tails">"pile"</string>
-<string name="dice_choose_sides">"Choisissez le nombre de faces"</string>
-<string name="dice_num_too_large">"Le nombre que vous avez saisi est trop grand"</string>
-<string name="dice_postive">"Vous devez saisir un nombre positif"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Echec du chargement de la Réserve de Mana!"</string>
@@ -317,14 +310,8 @@ La réserve de mana sera aussi vidée."</string>
 <string name="wishlist_view_card">"Voir la carte"</string>
 <string name="wishlist_foil">"premium"</string>
 <string name="wishlist_sort">"Trier la liste de voeux"</string>
-<string name="wishlist_type_none">"Aucun"</string>
-<string name="wishlist_type_cmc">"Coût de mana converti"</string>
-<string name="wishlist_type_color">"Couleur"</string>
-<string name="wishlist_type_name">"Nom"</string>
 <string name="wishlist_type_price">"Prix"</string>
-<string name="wishlist_type_set">"Extension"</string>
 <string name="wishlist_ascending">"Ascendant"</string>
-<string name="wishlist_descending">"Descendant"</string>
 <string name="wishlist_sort_by">"Trier par"</string>
 
 <!-- Round timer activity -->
@@ -516,7 +503,6 @@ Bonne chance, et bon jeu!
 <string name="decklist_artifacts">"Artefacts"</string>
 <string name="decklist_lands">"Terrains"</string>
 <string name="decklist_edit_dialog_title_end">"dans le deck"</string>
-<string name="deck_save_dialog_title">"Enregistrer Deck"</string>
 <string name="decklist_delete">"Supprimer Deck"</string>
 <string name="decklist_save">"Enregistrer Deck"</string>
 <string name="decklist_load">"Charger Deck"</string>
