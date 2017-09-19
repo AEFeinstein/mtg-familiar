@@ -7,7 +7,6 @@
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
 <string name="dialog_yes">"Sim"</string>
-<string name="dialog_no">"Não"</string>
 <string name="dialog_done">"Pronto"</string>
 <string name="dialog_both">"Ambos"</string>
 <string name="dialog_life">"Vida"</string>
@@ -215,7 +214,6 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_image_saved">"Imagem salva"</string>
 <string name="card_view_share_card">"Compartilhar Carta"</string>
 <string name="card_view_share_text">"Texto"</string>
-<string name="card_view_share_image">"Imagem"</string>
 
 <!-- Life counter activity -->
 <string name="life_counter_announce_life">"Anunciar total de vida"</string>
@@ -241,8 +239,6 @@ Reserva de mana também serão apagados."</string>
 <item quantity="one">"%1$s tem %2$d contador de veneno."</item>
 <item quantity="other">"%1$s tem %2$d contadores de veneno."</item>
 </plurals>
-<string name="life_counter_spoken_life_singular">"%1$s tem %2$d de vida."</string>
-<string name="life_counter_spoken_poison_singular">"%1$s tem %2$d contador de veneno."</string>
 <string name="life_counter_over_9000">"acima de 9000"</string>
 <string name="life_counter_no_gatherings_exist">"Nenhum tipo de jogo."</string>
 <string name="life_counter_edh_dialog_title">"%1$s's de dano Commander"</string>
@@ -268,9 +264,6 @@ Reserva de mana também serão apagados."</string>
 <!-- Dice activity -->
 <string name="dice_heads">"Cara"</string>
 <string name="dice_tails">"Coroa"</string>
-<string name="dice_choose_sides">"Escolha o número de lados"</string>
-<string name="dice_num_too_large">"O número digitado é muito grande"</string>
-<string name="dice_postive">"Você deve digitar um número positivo"</string>
 
 <!-- Mana pool activity -->
 <string name="mana_pool_error_toast">"Falha ao carregar Reserva de mana!"</string>
@@ -317,14 +310,8 @@ Reserva de mana também serão apagados."</string>
 <string name="wishlist_view_card">"Ver carta"</string>
 <string name="wishlist_foil">"foil"</string>
 <string name="wishlist_sort">"Ordenar Lista de Desejos"</string>
-<string name="wishlist_type_none">"Nenhum"</string>
-<string name="wishlist_type_cmc">"Custo de mana convertido"</string>
-<string name="wishlist_type_color">"Cor"</string>
-<string name="wishlist_type_name">"Nome"</string>
 <string name="wishlist_type_price">"Preço"</string>
-<string name="wishlist_type_set">"Coleção"</string>
 <string name="wishlist_ascending">"Crescente"</string>
-<string name="wishlist_descending">"Decrescente"</string>
 <string name="wishlist_sort_by">"Ordenar Por"</string>
 
 <!-- Round timer activity -->
@@ -518,7 +505,6 @@ Boa sorte, e divirtam-se!
 <string name="decklist_artifacts">"Artefatos"</string>
 <string name="decklist_lands">"Terrenos"</string>
 <string name="decklist_edit_dialog_title_end">"no deck"</string>
-<string name="deck_save_dialog_title">"Salvar Deck"</string>
 <string name="decklist_delete">"Deletar Deck"</string>
 <string name="decklist_save">"Salvar Deck"</string>
 <string name="decklist_load">"Carregar Deck"</string>
