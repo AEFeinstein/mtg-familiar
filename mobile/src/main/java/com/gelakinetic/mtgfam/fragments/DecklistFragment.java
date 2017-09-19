@@ -315,16 +315,15 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((CardDataAdapter) mListAdapter).getTotalCards(),
-                ((CardDataAdapter) mListAdapter).getTotalCards()));
         mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getDeckPrice());
         mShowTotalDecklistPrice = getFamiliarActivity().mPreferenceAdapter
                 .getShowTotalDecklistPrice();
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
         mListAdapter.notifyDataSetChanged();
-
+        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                ((CardDataAdapter) mListAdapter).getTotalCards(),
+                ((CardDataAdapter) mListAdapter).getTotalCards()));
     }
 
     /**
@@ -391,19 +390,22 @@ public class DecklistFragment extends FamiliarListFragment {
 
             /* Compress the whole decklist, or just the card that changed */
             for (Pair<MtgCard, Boolean> card : decklist) {
-                /* Translate the set code to TCG name of course it's not saved */
-                card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
-                if (changedCardName == null || changedCardName.equals(card.first.mName)) {
-                    CompressedDecklistInfo wrapped =
-                            new CompressedDecklistInfo(card.first, card.second);
-                    if (mCompressedDecklist.contains(wrapped)) {
-                        mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
-                                .add(card.first);
-                    } else {
-                        mCompressedDecklist.add(wrapped);
-                    }
-                    if (mShowTotalDecklistPrice) {
-                        loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
+                /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
+                if(!card.first.mName.isEmpty()) {
+                    /* Translate the set code to TCG name of course it's not saved */
+                    card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
+                    if (changedCardName == null || changedCardName.equals(card.first.mName)) {
+                        CompressedDecklistInfo wrapped =
+                                new CompressedDecklistInfo(card.first, card.second);
+                        if (mCompressedDecklist.contains(wrapped)) {
+                            mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
+                                    .add(card.first);
+                        } else {
+                            mCompressedDecklist.add(wrapped);
+                        }
+                        if (mShowTotalDecklistPrice) {
+                            loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
+                        }
                     }
                 }
             }
@@ -420,6 +422,9 @@ public class DecklistFragment extends FamiliarListFragment {
             CardDbAdapter.fillExtraWishlistData(mCompressedDecklist, database);
             Collections.sort(mCompressedDecklist, mDecklistChain);
             setHeaderValues();
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                    ((CardDataAdapter) mListAdapter).getTotalCards(),
+                    ((CardDataAdapter) mListAdapter).getTotalCards()));
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
         }
