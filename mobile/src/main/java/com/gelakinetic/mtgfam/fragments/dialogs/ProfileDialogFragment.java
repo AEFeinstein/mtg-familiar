@@ -42,7 +42,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                 View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
 
-                final EditText dciEditText = (EditText) view.findViewById(R.id.text_entry);
+                final EditText dciEditText = view.findViewById(R.id.text_entry);
                 dciEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
                 view.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {

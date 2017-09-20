@@ -116,7 +116,7 @@ public class RulesFragment extends FamiliarFragment {
             isBanned = extras.getBoolean(BANNED_KEY, false);
         }
 
-        ListView list = (ListView) myFragmentView.findViewById(R.id.result_list);
+        ListView list = myFragmentView.findViewById(R.id.result_list);
         mRules = new ArrayList<>();
         boolean isClickable;
         Cursor cursor;
@@ -747,8 +747,8 @@ public class RulesFragment extends FamiliarFragment {
             assert v != null;
             DisplayItem data = mItems.get(position);
             if (data != null) {
-                TextView rulesHeader = (TextView) v.findViewById(R.id.rules_item_header);
-                TextView rulesText = (TextView) v.findViewById(R.id.rules_item_text);
+                TextView rulesHeader = v.findViewById(R.id.rules_item_header);
+                TextView rulesText = v.findViewById(R.id.rules_item_text);
 
                 String header = data.getHeader();
                 String text = data.getText();

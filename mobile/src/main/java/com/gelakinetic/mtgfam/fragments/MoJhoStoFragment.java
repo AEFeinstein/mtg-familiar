@@ -118,8 +118,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
         });
 
         /* Save the spinners to pull out the CMCs later */
-        mMomirCmcChoice = (Spinner) myFragmentView.findViewById(R.id.momir_spinner);
-        mStonehewerCmcChoice = (Spinner) myFragmentView.findViewById(R.id.stonehewer_spinner);
+        mMomirCmcChoice = myFragmentView.findViewById(R.id.momir_spinner);
+        mStonehewerCmcChoice = myFragmentView.findViewById(R.id.stonehewer_spinner);
 
         /* Return the view */
         return myFragmentView;

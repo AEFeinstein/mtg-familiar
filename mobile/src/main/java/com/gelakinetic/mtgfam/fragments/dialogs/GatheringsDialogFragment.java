@@ -64,7 +64,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                 final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry,
                         null, false);
                 assert textEntryView != null;
-                final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+                final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
                 if (getParentGatheringsFragment().mCurrentGatheringName != null) {
                     nameInput.append(getParentGatheringsFragment().mCurrentGatheringName);
                 }
@@ -153,7 +153,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                 return new MaterialDialog.Builder(getActivity())
                         .title(R.string.gathering_delete)
-                        .items(dProperNames)
+                        .items((CharSequence[]) dProperNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
@@ -170,7 +170,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                 for (int idx = 0; idx < getParentGatheringsFragment().mLinearLayout.getChildCount(); idx++) {
                     View player = getParentGatheringsFragment().mLinearLayout.getChildAt(idx);
                     assert player != null;
-                    EditText customName = (EditText) player.findViewById(R.id.custom_name);
+                    EditText customName = player.findViewById(R.id.custom_name);
                     assert customName.getText() != null;
                     names.add(customName.getText().toString().trim());
                 }
@@ -182,7 +182,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                 return new MaterialDialog.Builder(getActivity())
                         .title(R.string.life_counter_remove_player)
-                        .items(aNames)
+                        .items((CharSequence[]) aNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
@@ -210,7 +210,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
 
                 return new MaterialDialog.Builder(getActivity())
                         .title(R.string.gathering_load)
-                        .items(properNames)
+                        .items((CharSequence[]) properNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {

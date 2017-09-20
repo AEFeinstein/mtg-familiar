@@ -147,7 +147,7 @@ public class ResultListFragment extends FamiliarFragment {
         /* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
         assert myFragmentView != null; /* Because Android Studio */
-        mListView = (ListView) myFragmentView.findViewById(R.id.result_list);
+        mListView = myFragmentView.findViewById(R.id.result_list);
 
         /* Sub-optimal, but KitKat is silly */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -109,7 +109,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 public class FamiliarActivity extends AppCompatActivity {
@@ -499,7 +499,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
         DatabaseManager.initializeInstance(getApplicationContext());
 
-        mRefreshLayout = ((IndeterminateRefreshLayout) findViewById(R.id.fragment_container));
+        mRefreshLayout = findViewById(R.id.fragment_container);
         mRefreshLayout.setColors(
                 ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
                 ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
@@ -525,8 +525,8 @@ public class FamiliarActivity extends AppCompatActivity {
         mUpdatingRoundTimer = false;
 
         /* Get the drawer layout and list */
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerList = findViewById(R.id.left_drawer);
 
         /* set a custom shadow that overlays the main content when the drawer opens */
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -657,7 +657,7 @@ public class FamiliarActivity extends AppCompatActivity {
             }
         });
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             //toolbar.setCollapsible(true);
             /* I don't like styling in java, but I can't get it to work other ways */
@@ -829,7 +829,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         }
                     } else if ((queryParam = data.getQueryParameter("name")) != null) {
                         Cursor cursor = CardDbAdapter.fetchCardByName(queryParam,
-                                Arrays.asList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, database);
+                                Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, database);
                         if (cursor.getCount() != 0) {
                             isDeepLink = true;
                             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
@@ -1129,7 +1129,7 @@ public class FamiliarActivity extends AppCompatActivity {
             /* Color the icon when the fragment changes */
             View drawerListItemView = mDrawerList.getChildAt(position);
             if (drawerListItemView != null) {
-                TextView textView = (TextView) drawerListItemView.findViewById(R.id.drawer_entry_name);
+                TextView textView = drawerListItemView.findViewById(R.id.drawer_entry_name);
                 if (textView != null) {
                     mPagesAdapter.colorDrawerEntry(textView);
                 }
@@ -1230,7 +1230,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar toolbar = findViewById(R.id.toolbar);
             if (toolbar != null) {
                 if (toolbar.isOverflowMenuShowing()) {
                     toolbar.dismissPopupMenus();

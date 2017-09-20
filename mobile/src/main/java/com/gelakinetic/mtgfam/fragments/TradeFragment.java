@@ -14,9 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -101,9 +98,9 @@ public class TradeFragment extends FamiliarListFragment {
         View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
 
         assert myFragmentView != null;
-        mNameField = (AutoCompleteTextView) myFragmentView.findViewById(R.id.name_search);
-        mNumberOfField = (EditText) myFragmentView.findViewById(R.id.number_input);
-        mCheckboxFoil = (CheckBox) myFragmentView.findViewById(R.id.list_foil);
+        mNameField = myFragmentView.findViewById(R.id.name_search);
+        mNumberOfField = myFragmentView.findViewById(R.id.number_input);
+        mCheckboxFoil = myFragmentView.findViewById(R.id.list_foil);
 
         /* Set up the autocomplete adapter, and default number */
         mNameField.setAdapter(
@@ -117,7 +114,7 @@ public class TradeFragment extends FamiliarListFragment {
         /* Initialize the left list and company */
         mListLeft = new ArrayList<>();
         mListAdapterLeft = new CardDataAdapter(mListLeft, LEFT);
-        RecyclerView mListViewLeft = (RecyclerView) myFragmentView.findViewById(R.id.tradeListLeft);
+        RecyclerView mListViewLeft = myFragmentView.findViewById(R.id.tradeListLeft);
         mListViewLeft.setAdapter(mListAdapterLeft);
         mListViewLeft.setLayoutManager(new LinearLayoutManager(getContext()));
         ItemTouchHelper.SimpleCallback leftCallback =
@@ -128,7 +125,7 @@ public class TradeFragment extends FamiliarListFragment {
         /* Initialize the right list and company */
         mListRight = new ArrayList<>();
         mListAdapterRight = new CardDataAdapter(mListRight, RIGHT);
-        RecyclerView mListViewRight = (RecyclerView) myFragmentView.findViewById(R.id.tradeListRight);
+        RecyclerView mListViewRight = myFragmentView.findViewById(R.id.tradeListRight);
         mListViewRight.setAdapter(mListAdapterRight);
         mListViewRight.setLayoutManager(new LinearLayoutManager(getContext()));
         ItemTouchHelper.SimpleCallback rightCallback =
@@ -141,8 +138,8 @@ public class TradeFragment extends FamiliarListFragment {
         mListAdapterRight.setOtherAdapter(mListAdapterLeft);
 
         /* Total price fields */
-        mTotalPriceLeft = (TextView) myFragmentView.findViewById(R.id.priceTextLeft);
-        mTotalPriceRight = (TextView) myFragmentView.findViewById(R.id.priceTextRight);
+        mTotalPriceLeft = myFragmentView.findViewById(R.id.priceTextLeft);
+        mTotalPriceRight = myFragmentView.findViewById(R.id.priceTextRight);
 
         /* Temporary? Just to appease FamiliarListFragment's onPause */
         mListAdapter = mListAdapterLeft;
@@ -911,10 +908,10 @@ public class TradeFragment extends FamiliarListFragment {
 
                 super(view, R.layout.trader_row);
 
-                mCardSet = (TextView) itemView.findViewById(R.id.traderRowSet);
-                mCardNumberOf = (TextView) itemView.findViewById(R.id.traderNumber);
-                mCardFoil = (ImageView) itemView.findViewById(R.id.traderRowFoil);
-                mCardPrice = (TextView) itemView.findViewById(R.id.traderRowPrice);
+                mCardSet = itemView.findViewById(R.id.traderRowSet);
+                mCardNumberOf = itemView.findViewById(R.id.traderNumber);
+                mCardFoil = itemView.findViewById(R.id.traderRowFoil);
+                mCardPrice = itemView.findViewById(R.id.traderRowPrice);
 
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);

@@ -73,7 +73,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
                 View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
                 assert dialogLayout != null;
-                TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
+                TextView text = dialogLayout.findViewById(R.id.aboutfield);
                 text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
                 text.setMovementMethod(LinkMovementMethod.getInstance());
                 builder.customView(dialogLayout, false);
@@ -96,7 +96,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
                 View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
                 assert dialogLayout != null;
-                TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
+                TextView text = dialogLayout.findViewById(R.id.aboutfield);
                 text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_whats_new_text)));
                 text.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -128,12 +128,12 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the text */
                 assert dialogLayout != null;
-                TextView text = (TextView) dialogLayout.findViewById(R.id.aboutfield);
+                TextView text = dialogLayout.findViewById(R.id.aboutfield);
                 text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_donate_text)));
                 text.setMovementMethod(LinkMovementMethod.getInstance());
 
                 /* Set the image view */
-                ImageView payPal = (ImageView) dialogLayout.findViewById(R.id.imageview1);
+                ImageView payPal = dialogLayout.findViewById(R.id.imageview1);
                 payPal.setImageResource(R.drawable.paypal_icon);
                 payPal.setOnClickListener(new View.OnClickListener() {
 

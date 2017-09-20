@@ -26,10 +26,10 @@ import java.util.Set;
 public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
     private static class WidgetEntry {
-        int buttonResource;
-        int vectorResourceLight;
-        int vectorResourceDark;
-        String intentAction;
+        final int buttonResource;
+        final int vectorResourceLight;
+        final int vectorResourceDark;
+        final String intentAction;
 
         WidgetEntry(int btnRes, int imgResLight, int imgResDark, String intent) {
             this.buttonResource = btnRes;

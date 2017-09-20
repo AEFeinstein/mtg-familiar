@@ -256,8 +256,8 @@ public class LcPlayer {
                 /* Inflate the player view */
                 mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, null, false);
                 assert mView != null;
-                mHistoryList = (ListView) mView.findViewById(R.id.player_history);
-                mCommanderCastingButton = (Button) mView.findViewById(R.id.commanderCast);
+                mHistoryList = mView.findViewById(R.id.player_history);
+                mCommanderCastingButton = mView.findViewById(R.id.commanderCast);
 
                 /* Make new adapters */
                 mHistoryLifeAdapter = new HistoryArrayAdapter(mFragment.getActivity(), LifeCounterFragment.STAT_LIFE);
@@ -292,11 +292,11 @@ public class LcPlayer {
                     mCommanderRowView = LayoutInflater.from(
                             mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, null, false);
                     assert mCommanderRowView != null;
-                    mCommanderNameTextView = (TextView) mCommanderRowView.findViewById(R.id.player_name);
+                    mCommanderNameTextView = mCommanderRowView.findViewById(R.id.player_name);
                     if (mName != null) {
                         mCommanderNameTextView.setText(mName);
                     }
-                    mCommanderReadoutTextView = (TextView) mCommanderRowView.findViewById(R.id.player_readout);
+                    mCommanderReadoutTextView = mCommanderRowView.findViewById(R.id.player_readout);
                 }
                 /* otherwise hide the commander casting button */
                 else {
@@ -321,12 +321,12 @@ public class LcPlayer {
         assert mView != null;
 
         /* Set the name, will be in either compact or normal mView */
-        mNameTextView = (TextView) mView.findViewById(R.id.player_name);
+        mNameTextView = mView.findViewById(R.id.player_name);
         if (mName != null) {
             mNameTextView.setText(mName);
         }
         /* If the user touches the life total, pop a dialog to change it via keyboard */
-        mReadoutTextView = (TextView) mView.findViewById(R.id.player_readout);
+        mReadoutTextView = mView.findViewById(R.id.player_readout);
         mReadoutTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

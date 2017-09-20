@@ -48,7 +48,7 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
                 Dialog dialog = new Dialog(this.getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.card_view_image_dialog);
-                ImageView image = (ImageView) dialog.findViewById(R.id.cardimage);
+                ImageView image = dialog.findViewById(R.id.cardimage);
 
                         /* These drawables are re-sized on-the-fly, so only a single hi-res version exists in a resource
                            folder without density */

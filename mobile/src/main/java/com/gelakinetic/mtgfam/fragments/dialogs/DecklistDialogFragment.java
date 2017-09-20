@@ -67,7 +67,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 View textEntryView = getActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
-                final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+                final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
                 nameInput.append(getParentDecklistFragment().mCurrentDeck);
                 /* Set the button to clear the text field */
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(
@@ -129,7 +129,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items(deckNames)
+                        .items((CharSequence[]) deckNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
 
                             @Override
@@ -167,7 +167,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.decklist_delete_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items(deckNames)
+                        .items((CharSequence[]) deckNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(

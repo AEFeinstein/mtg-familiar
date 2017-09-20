@@ -101,7 +101,7 @@ public class WishlistFragment extends FamiliarListFragment {
         mNumberOfField.setOnEditorActionListener(addCardListener);
 
         /* Grab other elements */
-        mTotalPriceField = (TextView) myFragmentView.findViewById(R.id.priceText);
+        mTotalPriceField = myFragmentView.findViewById(R.id.priceText);
         mTotalPriceDivider = myFragmentView.findViewById(R.id.divider_total_price);
         mListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -725,7 +725,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
 
                     /* Show individual prices and number of each card, or message if price does not exist, if desired */
-                    TextView priceText = ((TextView) setRow.findViewById(R.id.wishlistRowPrice));
+                    TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);
                     if (mShowIndividualPrices) {
                         if (isi.mIsFoil) {
                             if (isi.mPrice == null || isi.mPrice.mFoilAverage == 0) {
@@ -793,13 +793,13 @@ public class WishlistFragment extends FamiliarListFragment {
             ViewHolder(ViewGroup view) {
                 super(view, R.layout.result_list_card_row);
 
-                mCardType = (TextView) itemView.findViewById(R.id.cardtype);
-                mCardText = (TextView) itemView.findViewById(R.id.cardability);
-                mCardPower = (TextView) itemView.findViewById(R.id.cardp);
-                mCardSlash = (TextView) itemView.findViewById(R.id.cardslash);
-                mCardToughness = (TextView) itemView.findViewById(R.id.cardt);
-                mCardCost = (TextView) itemView.findViewById(R.id.cardcost);
-                mWishlistSets = ((LinearLayout) itemView.findViewById(R.id.wishlist_sets));
+                mCardType = itemView.findViewById(R.id.cardtype);
+                mCardText = itemView.findViewById(R.id.cardability);
+                mCardPower = itemView.findViewById(R.id.cardp);
+                mCardSlash = itemView.findViewById(R.id.cardslash);
+                mCardToughness = itemView.findViewById(R.id.cardt);
+                mCardCost = itemView.findViewById(R.id.cardcost);
+                mWishlistSets = itemView.findViewById(R.id.wishlist_sets);
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
             }

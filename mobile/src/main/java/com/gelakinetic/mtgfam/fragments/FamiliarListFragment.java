@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SelectableItemAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -64,10 +65,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      */
     void initializeMembers(View fragmentView) {
 
-        mNameField = (AutoCompleteTextView) fragmentView.findViewById(R.id.name_search);
-        mNumberOfField = (EditText) fragmentView.findViewById(R.id.number_input);
-        mCheckboxFoil = (CheckBox) fragmentView.findViewById(R.id.list_foil);
-        mListView = (RecyclerView) fragmentView.findViewById(R.id.cardlist);
+        mNameField = fragmentView.findViewById(R.id.name_search);
+        mNumberOfField = fragmentView.findViewById(R.id.number_input);
+        mCheckboxFoil = fragmentView.findViewById(R.id.list_foil);
+        mListView = fragmentView.findViewById(R.id.cardlist);
 
     }
 
@@ -146,7 +147,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param <T> type that is stored in the ArrayList
      * @param <VH> ViewHolder that is used by the adapter
      */
-    public abstract class CardDataAdapter<T, VH extends CardDataAdapter.ViewHolder>
+    public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataAdapter.ViewHolder>
             extends SelectableItemAdapter<T, VH> {
 
         public CardDataAdapter(ArrayList<T> values) {
@@ -191,7 +192,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
             ViewHolder(ViewGroup view, @LayoutRes final int layoutRowId) {
                 super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));
-                mCardName = (TextView) itemView.findViewById(R.id.card_name);
+                mCardName = itemView.findViewById(R.id.card_name);
             }
 
             @Override

@@ -54,7 +54,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                 case FORMAT_LIST: {
                     getParentSearchViewFragment().mFormatDialog = new MaterialDialog.Builder(this.getActivity())
                             .title(R.string.search_formats)
-                            .items(getParentSearchViewFragment().mFormatNames)
+                            .items((CharSequence[]) getParentSearchViewFragment().mFormatNames)
                             .itemsCallbackSingleChoice(getParentSearchViewFragment().mSelectedFormat, new MaterialDialog.ListCallbackSingleChoice() {
                                 @Override
                                 public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
@@ -70,7 +70,7 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                     getParentSearchViewFragment().mRarityDialog = new MaterialDialog.Builder(this.getActivity())
                             .title(R.string.search_rarities)
                             .positiveText(R.string.dialog_ok)
-                            .items(getParentSearchViewFragment().mRarityNames)
+                            .items((CharSequence[]) getParentSearchViewFragment().mRarityNames)
                             .alwaysCallMultiChoiceCallback()
                             .itemsCallbackMultiChoice(toIntegerArray(getParentSearchViewFragment().mRarityCheckedIndices), new MaterialDialog.ListCallbackMultiChoice() {
                                 @Override

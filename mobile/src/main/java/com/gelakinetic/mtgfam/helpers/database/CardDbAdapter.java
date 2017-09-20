@@ -179,7 +179,7 @@ public class CardDbAdapter {
     ));
 
     /* All the columns in DATABASE_CREATE_SETS */
-    public static final List<String> ALL_SET_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<String> ALL_SET_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
             DATABASE_TABLE_SETS + "." + KEY_ID,
             DATABASE_TABLE_SETS + "." + KEY_NAME,
             DATABASE_TABLE_SETS + "." + KEY_CODE,

@@ -76,13 +76,13 @@ public class GatheringsFragment extends FamiliarFragment {
             View player = mLinearLayout.getChildAt(idx);
             assert player != null;
 
-            EditText nameField = ((EditText) player.findViewById(R.id.custom_name));
+            EditText nameField = player.findViewById(R.id.custom_name);
             assert nameField.getText() != null;
             String name = nameField.getText().toString().trim();
 
             int startingLife;
             try {
-                EditText startingLifeField = ((EditText) player.findViewById(R.id.starting_life));
+                EditText startingLifeField = player.findViewById(R.id.starting_life);
                 assert startingLifeField.getText() != null;
                 startingLife = Integer.parseInt(startingLifeField.getText().toString().trim());
             } catch (NumberFormatException e) {
@@ -117,8 +117,8 @@ public class GatheringsFragment extends FamiliarFragment {
         /* Inflate a view */
         View myFragmentView = inflater.inflate(R.layout.gathering_frag, container, false);
         assert myFragmentView != null;
-        mLinearLayout = (LinearLayout) myFragmentView.findViewById(R.id.gathering_player_list);
-        mDisplayModeSpinner = (Spinner) myFragmentView.findViewById(R.id.gathering_display_mode);
+        mLinearLayout = myFragmentView.findViewById(R.id.gathering_player_list);
+        mDisplayModeSpinner = myFragmentView.findViewById(R.id.gathering_display_mode);
 
         return myFragmentView;
     }
@@ -250,11 +250,11 @@ public class GatheringsFragment extends FamiliarFragment {
             View player = mLinearLayout.getChildAt(idx);
             assert player != null;
 
-            EditText customName = (EditText) player.findViewById(R.id.custom_name);
+            EditText customName = player.findViewById(R.id.custom_name);
             assert customName.getText() != null;
             String name = customName.getText().toString().trim();
 
-            EditText startingLife = (EditText) player.findViewById(R.id.starting_life);
+            EditText startingLife = player.findViewById(R.id.starting_life);
             assert startingLife.getText() != null;
             int life = Integer.parseInt(startingLife.getText().toString());
 
@@ -278,14 +278,14 @@ public class GatheringsFragment extends FamiliarFragment {
             View player = mLinearLayout.getChildAt(idx);
 
             assert player != null;
-            EditText customName = (EditText) player.findViewById(R.id.custom_name);
+            EditText customName = player.findViewById(R.id.custom_name);
             assert customName.getText() != null;
             String name = customName.getText().toString().trim();
             if (name.trim().length() == 0) {
                 return true;
             }
 
-            EditText startingLife = (EditText) player.findViewById(R.id.starting_life);
+            EditText startingLife = player.findViewById(R.id.starting_life);
 
             assert startingLife.getText() != null;
             if (startingLife.getText().toString().trim().length() == 0) {

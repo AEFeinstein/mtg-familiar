@@ -41,29 +41,29 @@ public class ManaPoolFragment extends FamiliarFragment {
         mGreen = 0;
 
         assert myFragmentView != null;
-        Button whiteMinus = (Button) myFragmentView.findViewById(R.id.white_minus);
-        Button blueMinus = (Button) myFragmentView.findViewById(R.id.blue_minus);
-        Button blackMinus = (Button) myFragmentView.findViewById(R.id.black_minus);
-        Button redMinus = (Button) myFragmentView.findViewById(R.id.red_minus);
-        Button greenMinus = (Button) myFragmentView.findViewById(R.id.green_minus);
-        Button colorlessMinus = (Button) myFragmentView.findViewById(R.id.colorless_minus);
-        Button spellMinus = (Button) myFragmentView.findViewById(R.id.spell_minus);
+        Button whiteMinus = myFragmentView.findViewById(R.id.white_minus);
+        Button blueMinus = myFragmentView.findViewById(R.id.blue_minus);
+        Button blackMinus = myFragmentView.findViewById(R.id.black_minus);
+        Button redMinus = myFragmentView.findViewById(R.id.red_minus);
+        Button greenMinus = myFragmentView.findViewById(R.id.green_minus);
+        Button colorlessMinus = myFragmentView.findViewById(R.id.colorless_minus);
+        Button spellMinus = myFragmentView.findViewById(R.id.spell_minus);
 
-        Button whitePlus = (Button) myFragmentView.findViewById(R.id.white_plus);
-        Button bluePlus = (Button) myFragmentView.findViewById(R.id.blue_plus);
-        Button blackPlus = (Button) myFragmentView.findViewById(R.id.black_plus);
-        Button redPlus = (Button) myFragmentView.findViewById(R.id.red_plus);
-        Button greenPlus = (Button) myFragmentView.findViewById(R.id.green_plus);
-        Button colorlessPlus = (Button) myFragmentView.findViewById(R.id.colorless_plus);
-        Button spellPlus = (Button) myFragmentView.findViewById(R.id.spell_plus);
+        Button whitePlus = myFragmentView.findViewById(R.id.white_plus);
+        Button bluePlus = myFragmentView.findViewById(R.id.blue_plus);
+        Button blackPlus = myFragmentView.findViewById(R.id.black_plus);
+        Button redPlus = myFragmentView.findViewById(R.id.red_plus);
+        Button greenPlus = myFragmentView.findViewById(R.id.green_plus);
+        Button colorlessPlus = myFragmentView.findViewById(R.id.colorless_plus);
+        Button spellPlus = myFragmentView.findViewById(R.id.spell_plus);
 
-        mWhiteReadout = (TextView) myFragmentView.findViewById(R.id.white_readout);
-        mBlueReadout = (TextView) myFragmentView.findViewById(R.id.blue_readout);
-        mBlackReadout = (TextView) myFragmentView.findViewById(R.id.black_readout);
-        mRedReadout = (TextView) myFragmentView.findViewById(R.id.red_readout);
-        mGreenReadout = (TextView) myFragmentView.findViewById(R.id.green_readout);
-        mColorlessReadout = (TextView) myFragmentView.findViewById(R.id.colorless_readout);
-        mSpellReadout = (TextView) myFragmentView.findViewById(R.id.spell_readout);
+        mWhiteReadout = myFragmentView.findViewById(R.id.white_readout);
+        mBlueReadout = myFragmentView.findViewById(R.id.blue_readout);
+        mBlackReadout = myFragmentView.findViewById(R.id.black_readout);
+        mRedReadout = myFragmentView.findViewById(R.id.red_readout);
+        mGreenReadout = myFragmentView.findViewById(R.id.green_readout);
+        mColorlessReadout = myFragmentView.findViewById(R.id.colorless_readout);
+        mSpellReadout = myFragmentView.findViewById(R.id.spell_readout);
 
         boolean loadSuccessful = true;
 

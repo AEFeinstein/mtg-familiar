@@ -55,7 +55,7 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                 View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
                         null, false);
                 assert textEntryView != null;
-                final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+                final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -61,7 +61,6 @@ public class ResultListAdapter extends SimpleCursorAdapter {
         super(context, R.layout.result_list_card_row, cursor, from, to, 0);
         this.mFrom = from;
         this.mTo = to;
-        Resources mResources = context.getResources();
         this.mTheme = context.getTheme();
         this.mImgGetter = ImageGetterHelper.GlyphGetter(context);
     }
@@ -112,7 +111,7 @@ public class ResultListAdapter extends SimpleCursorAdapter {
         /* Iterate through the mFrom, find the appropriate view in mTo */
         for (int i = 0; i < mFrom.length; i++) {
 
-            TextView textField = (TextView) view.findViewById(mTo[i]);
+            TextView textField = view.findViewById(mTo[i]);
 
             switch (mFrom[i]) {
                 case CardDbAdapter.KEY_NAME: {

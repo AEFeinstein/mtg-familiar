@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -77,9 +78,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
                         null, false);
                 assert view != null;
-                final CheckBox foilCheckbox = (CheckBox) view.findViewById(R.id.traderDialogFoil);
-                final EditText numberOf = (EditText) view.findViewById(R.id.traderDialogNumber);
-                final EditText priceText = (EditText) view.findViewById(R.id.traderDialogPrice);
+                final CheckBox foilCheckbox = view.findViewById(R.id.traderDialogFoil);
+                final EditText numberOf = view.findViewById(R.id.traderDialogNumber);
+                final EditText priceText = view.findViewById(R.id.traderDialogPrice);
 
                         /* Set initial values */
                 String numberOfStr = String.valueOf(lSide.get(positionForDialog).numberOf);
@@ -154,7 +155,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         try {
                                     /* Get the card ID, and send it to a new CardViewPagerFragment */
                             Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
-                                    lSide.get(positionForDialog).setCode, Arrays.asList(
+                                    lSide.get(positionForDialog).setCode, Collections.singletonList(
                                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
 
                             Bundle args = new Bundle();
@@ -301,7 +302,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     /* Build and return the dialog */
                     return new MaterialDialog.Builder(getActivity())
                             .title(R.string.card_view_set_dialog_title)
-                            .items(aSets)
+                            .items((CharSequence[]) aSets)
                             .itemsCallback(new MaterialDialog.ListCallback() {
                                 @Override
                                 public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
@@ -350,7 +351,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Build the dialog with some choices */
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
-                        .items(new String[]{getString(R.string.trader_Low),
+                        .items(new CharSequence[]{getString(R.string.trader_Low),
                                 getString(R.string.trader_Average),
                                 getString(R.string.trader_High)})
                         .itemsCallbackSingleChoice(getParentTradeFragment().mPriceSetting, new MaterialDialog.ListCallbackSingleChoice() {
@@ -393,7 +394,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 View textEntryView = getActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
-                final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+                final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
                 nameInput.append(getParentTradeFragment().mCurrentTrade);
                 /* Set the button to clear the text field */
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
@@ -443,7 +444,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.trader_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items(tradeNames)
+                        .items((CharSequence[]) tradeNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
@@ -473,7 +474,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.trader_delete_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items(tradeNames)
+                        .items((CharSequence[]) tradeNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {

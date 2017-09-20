@@ -301,22 +301,22 @@ public class CardViewFragment extends FamiliarFragment {
         View myFragmentView = inflater.inflate(R.layout.card_view_frag, container, false);
 
         assert myFragmentView != null; /* Because Android Studio */
-        mNameTextView = (TextView) myFragmentView.findViewById(R.id.name);
-        mCostTextView = (TextView) myFragmentView.findViewById(R.id.cost);
-        mTypeTextView = (TextView) myFragmentView.findViewById(R.id.type);
-        mSetTextView = (TextView) myFragmentView.findViewById(R.id.set);
-        mAbilityTextView = (TextView) myFragmentView.findViewById(R.id.ability);
-        mFlavorTextView = (TextView) myFragmentView.findViewById(R.id.flavor);
-        mArtistTextView = (TextView) myFragmentView.findViewById(R.id.artist);
-        mNumberTextView = (TextView) myFragmentView.findViewById(R.id.number);
-        mPowTouTextView = (TextView) myFragmentView.findViewById(R.id.pt);
+        mNameTextView = myFragmentView.findViewById(R.id.name);
+        mCostTextView = myFragmentView.findViewById(R.id.cost);
+        mTypeTextView = myFragmentView.findViewById(R.id.type);
+        mSetTextView = myFragmentView.findViewById(R.id.set);
+        mAbilityTextView = myFragmentView.findViewById(R.id.ability);
+        mFlavorTextView = myFragmentView.findViewById(R.id.flavor);
+        mArtistTextView = myFragmentView.findViewById(R.id.artist);
+        mNumberTextView = myFragmentView.findViewById(R.id.number);
+        mPowTouTextView = myFragmentView.findViewById(R.id.pt);
         mTransformButtonDivider = myFragmentView.findViewById(R.id.transform_button_divider);
-        mTransformButton = (Button) myFragmentView.findViewById(R.id.transformbutton);
-        mTextScrollView = (ScrollView) myFragmentView.findViewById(R.id.cardTextScrollView);
-        mImageScrollView = (ScrollView) myFragmentView.findViewById(R.id.cardImageScrollView);
-        mCardImageView = (ImageView) myFragmentView.findViewById(R.id.cardpic);
+        mTransformButton = myFragmentView.findViewById(R.id.transformbutton);
+        mTextScrollView = myFragmentView.findViewById(R.id.cardTextScrollView);
+        mImageScrollView = myFragmentView.findViewById(R.id.cardImageScrollView);
+        mCardImageView = myFragmentView.findViewById(R.id.cardpic);
         mColorIndicatorLayout =
-                (LinearLayout) myFragmentView.findViewById(R.id.color_indicator_view);
+                myFragmentView.findViewById(R.id.color_indicator_view);
 
         registerForContextMenu(mNameTextView);
         registerForContextMenu(mCostTextView);

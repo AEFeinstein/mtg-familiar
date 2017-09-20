@@ -30,11 +30,11 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
         switch (DIALOG_SET_WARNINGS) {
             case DIALOG_SET_WARNINGS: {
                 final View v = View.inflate(this.getActivity(), R.layout.round_timer_warning_dialog, null);
-                final CheckBox chkFifteen = (CheckBox) v.findViewById(R.id.timer_pref_fifteen);
-                final CheckBox chkTen = (CheckBox) v.findViewById(R.id.timer_pref_ten);
-                final CheckBox chkFive = (CheckBox) v.findViewById(R.id.timer_pref_five);
-                final CheckBox chkTwo = (CheckBox) v.findViewById(R.id.timer_pref_two);
-                final CheckBox chkUseSound = (CheckBox) v.findViewById(R.id.timer_use_sound_instead_of_tts);
+                final CheckBox chkFifteen = v.findViewById(R.id.timer_pref_fifteen);
+                final CheckBox chkTen = v.findViewById(R.id.timer_pref_ten);
+                final CheckBox chkFive = v.findViewById(R.id.timer_pref_five);
+                final CheckBox chkTwo = v.findViewById(R.id.timer_pref_two);
+                final CheckBox chkUseSound = v.findViewById(R.id.timer_use_sound_instead_of_tts);
 
                 boolean fifteen =
                         getFamiliarActivity().mPreferenceAdapter.getFifteenMinutePref();

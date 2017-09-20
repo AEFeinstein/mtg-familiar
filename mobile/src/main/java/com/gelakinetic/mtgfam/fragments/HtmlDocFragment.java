@@ -41,8 +41,8 @@ public class HtmlDocFragment extends FamiliarFragment {
         /* Inflate the view, pull out UI elements */
         View view = inflater.inflate(R.layout.html_frag, container, false);
         assert view != null;
-        final WebView webView = (WebView) view.findViewById(R.id.webview);
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        final WebView webView = view.findViewById(R.id.webview);
+        final ProgressBar progressBar = view.findViewById(R.id.progress_bar);
 
         /* The progress bar will spin until the web view is loaded */
         webView.setWebViewClient(new WebViewClient() {

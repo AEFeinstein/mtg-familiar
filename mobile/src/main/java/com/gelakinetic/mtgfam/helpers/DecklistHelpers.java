@@ -70,15 +70,14 @@ public class DecklistHelpers {
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                 if (cdi.mName != null) {
-                    MtgCard card = cdi;
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                        card.mExpansion = isi.mSet;
-                        card.setCode = isi.mSetCode;
-                        card.mNumber = isi.mNumber;
-                        card.foil = isi.mIsFoil;
-                        card.numberOf = isi.mNumberOf;
-                        String cardString = card.toWishlistString();
-                    /* If the card is a sideboard card, add the sideboard marking */
+                        cdi.mExpansion = isi.mSet;
+                        cdi.setCode = isi.mSetCode;
+                        cdi.mNumber = isi.mNumber;
+                        cdi.foil = isi.mIsFoil;
+                        cdi.numberOf = isi.mNumberOf;
+                        String cardString = cdi.toWishlistString();
+                        /* If the card is a sideboard card, add the sideboard marking */
                         if (cdi.mIsSideboard) {
                             cardString = "SB:" + cardString;
                         }

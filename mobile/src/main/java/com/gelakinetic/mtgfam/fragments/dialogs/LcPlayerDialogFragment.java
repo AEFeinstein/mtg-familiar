@@ -61,7 +61,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                 View textEntryView = getActivity().getLayoutInflater().inflate(
                         R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
-                final EditText nameInput = (EditText) textEntryView.findViewById(R.id.text_entry);
+                final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
                 nameInput.append(mLcPlayer.mName);
                 textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -100,8 +100,8 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                 View view = LayoutInflater.from(getActivity()).inflate(R.layout.life_counter_edh_dialog,
                         null, false);
                 assert view != null;
-                final TextView deltaText = (TextView) view.findViewById(R.id.delta);
-                final TextView absoluteText = (TextView) view.findViewById(R.id.absolute);
+                final TextView deltaText = view.findViewById(R.id.delta);
+                final TextView absoluteText = view.findViewById(R.id.absolute);
 
                         /* These are strange arrays of length one to have modifiable, yet final, variables */
                 final int[] delta = {0};
@@ -152,7 +152,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
                 View textEntryView2 = getActivity().getLayoutInflater().inflate(
                         R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView2 != null;
-                final EditText lifeInput = (EditText) textEntryView2.findViewById(R.id.text_entry);
+                final EditText lifeInput = textEntryView2.findViewById(R.id.text_entry);
                 lifeInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
                 if (mLcPlayer.mReadoutTextView.getText() != null) {
                     lifeInput.append(mLcPlayer.mReadoutTextView.getText());

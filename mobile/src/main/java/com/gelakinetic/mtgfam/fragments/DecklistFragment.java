@@ -149,11 +149,11 @@ public class DecklistFragment extends FamiliarListFragment {
         mListView.setAdapter(mListAdapter);
 
         /* Decklist information */
-        mDeckName = (TextView) myFragmentView.findViewById(R.id.decklistName);
+        mDeckName = myFragmentView.findViewById(R.id.decklistName);
         mDeckName.setText(R.string.decklist_unnamed_deck);
-        mDeckCards = (TextView) myFragmentView.findViewById(R.id.decklistCards);
+        mDeckCards = myFragmentView.findViewById(R.id.decklistCards);
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
-        mTotalPriceField = (TextView) myFragmentView.findViewById(R.id.decklistPrice);
+        mTotalPriceField = myFragmentView.findViewById(R.id.decklistPrice);
 
         mDecklistChain = new ComparatorChain<>();
         mDecklistChain.addComparator(new CardHelpers.CardComparatorSideboard());
@@ -201,7 +201,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 switch (item.getItemId()) {
                     case R.id.deck_import_selected: {
                         ArrayList<CompressedDecklistInfo> selectedItems =
-                                mListAdapter.getSelectedItems();
+                                ((CardDataAdapter)mListAdapter).getSelectedItems();
                         for (CompressedDecklistInfo info : selectedItems) {
                             WishlistHelpers.addItemToWishlist(getContext(),
                                     info.convertToWishlist());
@@ -933,8 +933,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 super(view, R.layout.decklist_card_row);
 
-                mCardNumberOf = (TextView) itemView.findViewById(R.id.decklistRowNumber);
-                mCardCost = (TextView) itemView.findViewById(R.id.decklistRowCost);
+                mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
+                mCardCost = itemView.findViewById(R.id.decklistRowCost);
 
             }
 

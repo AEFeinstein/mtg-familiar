@@ -91,12 +91,12 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         /* A {@link ViewPager} which will be used in conjunction with the {@link SlidingTabLayout} above. */
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        ViewPager viewPager = view.findViewById(R.id.viewpager);
         viewPager.setAdapter(new SampleFragmentPagerAdapter(getChildFragmentManager()));
         viewPager.setOffscreenPageLimit(2);
 
         // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) view.findViewById(R.id.sliding_tabs);
+        PagerSlidingTabStrip tabs = view.findViewById(R.id.sliding_tabs);
         tabs.setViewPager(viewPager);
     }
 

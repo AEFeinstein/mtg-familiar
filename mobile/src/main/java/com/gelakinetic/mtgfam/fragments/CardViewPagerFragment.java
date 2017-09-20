@@ -60,7 +60,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
         /* Instantiate a ViewPager and a PagerAdapter. */
         View v = inflater.inflate(R.layout.card_view_pager, container, false);
         assert v != null; /* Because Android Studio */
-        mViewPager = (ViewPager) v.findViewById(R.id.pager);
+        mViewPager = v.findViewById(R.id.pager);
 
         /* Retain the instance */
         if (getParentFragment() == null) {

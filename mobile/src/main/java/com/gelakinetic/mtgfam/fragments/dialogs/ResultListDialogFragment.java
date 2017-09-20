@@ -27,7 +27,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
     public static final int DIALOG_SORT = 0;
     public static final int QUICK_ADD = 1;
-    public static final int PICK_DECK = 2;
+    private static final int PICK_DECK = 2;
     public static final String NAME_KEY = "cardname";
     public static final String NAME_SET = "cardset";
 
@@ -80,7 +80,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
-                        .items(deckNames)
+                        .items((CharSequence[]) deckNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
 
                             @Override

@@ -79,7 +79,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 dialog.setContentView(R.layout.card_view_image_dialog);
 
-                ImageView dialogImageView = (ImageView) dialog.findViewById(R.id.cardimage);
+                ImageView dialogImageView = dialog.findViewById(R.id.cardimage);
                 dialogImageView.setImageDrawable(getCardViewFragment().mCardBitmap);
 
                 dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -133,11 +133,11 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
 
                 assert v != null; /* Because Android Studio */
-                TextView l = (TextView) v.findViewById(R.id.low);
-                TextView m = (TextView) v.findViewById(R.id.med);
-                TextView h = (TextView) v.findViewById(R.id.high);
-                TextView f = (TextView) v.findViewById(R.id.foil);
-                TextView priceLink = (TextView) v.findViewById(R.id.pricelink);
+                TextView l = v.findViewById(R.id.low);
+                TextView m = v.findViewById(R.id.med);
+                TextView h = v.findViewById(R.id.high);
+                TextView f = v.findViewById(R.id.foil);
+                TextView priceLink = v.findViewById(R.id.pricelink);
 
                 l.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mLow));
                 m.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mAverage));
@@ -170,7 +170,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 }
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
                 builder.title(R.string.card_view_set_dialog_title);
-                builder.items(aSets);
+                builder.items((CharSequence[]) aSets);
                 builder.itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
@@ -188,8 +188,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null, false);
                 assert v != null; /* Because Android Studio */
 
-                TextView textViewRules = (TextView) v.findViewById(R.id.rules);
-                TextView textViewUrl = (TextView) v.findViewById(R.id.url);
+                TextView textViewRules = v.findViewById(R.id.rules);
+                TextView textViewUrl = v.findViewById(R.id.url);
 
                 String message = "";
                 if (getCardViewFragment().mRulingsArrayList.size() == 0) {

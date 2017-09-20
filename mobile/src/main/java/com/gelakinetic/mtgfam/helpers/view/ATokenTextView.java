@@ -37,7 +37,7 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
         }
     }
 
-    private ATokenTextView.TokenListener tokenListenerWrapper = new ATokenTextView.TokenListener();
+    private final ATokenTextView.TokenListener tokenListenerWrapper = new ATokenTextView.TokenListener();
     private boolean handleDismiss = false;
 
     public ATokenTextView(Context context, AttributeSet attrs) {

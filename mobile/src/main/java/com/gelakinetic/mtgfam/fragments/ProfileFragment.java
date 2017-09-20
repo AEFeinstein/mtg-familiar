@@ -66,9 +66,9 @@ public class ProfileFragment extends FamiliarFragment {
         View myFragmentView = inflater.inflate(R.layout.profile_frag, container, false);
 
         assert myFragmentView != null;
-        mBarcodeTextView = (TextView) myFragmentView.findViewById(R.id.barcode);
-        mDCINumberTextView = (TextView) myFragmentView.findViewById(R.id.dci_number);
-        mNoDCINumberTextView = (TextView) myFragmentView.findViewById(R.id.no_dci_number);
+        mBarcodeTextView = myFragmentView.findViewById(R.id.barcode);
+        mDCINumberTextView = myFragmentView.findViewById(R.id.dci_number);
+        mNoDCINumberTextView = myFragmentView.findViewById(R.id.no_dci_number);
 
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "free3of9.ttf");
         mBarcodeTextView.setTypeface(tf);

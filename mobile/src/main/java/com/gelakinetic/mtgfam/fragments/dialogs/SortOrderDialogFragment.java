@@ -108,12 +108,12 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
              */
             if (priceAdded && !orderAdded) {
                 options.add(new SortOption(getResources().getString(R.string.wishlist_type_order),
-                        false, KEY_ORDER, idx++));
+                        false, KEY_ORDER, idx));
             }
         }
 
         /* Get the sort view and set it up */
-        DragListView sortView = (DragListView) view.findViewById(R.id.sort_list_view);
+        DragListView sortView = view.findViewById(R.id.sort_list_view);
         sortView.setLayoutManager(new LinearLayoutManager(getFamiliarFragment().getActivity()));
         sortItemAdapter adapter = new sortItemAdapter(options);
         sortView.setAdapter(adapter, true);
@@ -228,8 +228,8 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
              */
             sortItemViewHolder(final View itemView) {
                 super(itemView, R.id.sort_list_handle, false);
-                mText = (TextView) itemView.findViewById(R.id.sort_list_text);
-                mCheckbox = (CheckBox) itemView.findViewById(R.id.asc_desc_checkbox);
+                mText = itemView.findViewById(R.id.sort_list_text);
+                mCheckbox = itemView.findViewById(R.id.asc_desc_checkbox);
             }
 
         }

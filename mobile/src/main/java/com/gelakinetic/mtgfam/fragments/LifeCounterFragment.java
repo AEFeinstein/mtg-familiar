@@ -133,11 +133,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         View myFragmentView = inflater.inflate(R.layout.life_counter_frag, container, false);
         assert myFragmentView != null;
-        mGridLayout = (GridLayout) myFragmentView.findViewById(R.id.playerList);
+        mGridLayout = myFragmentView.findViewById(R.id.playerList);
 
         mDisplayMode = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getDisplayMode());
 
-        mCommanderPlayerView = (LinearLayout) myFragmentView.findViewById(R.id.commander_player);
+        mCommanderPlayerView = myFragmentView.findViewById(R.id.commander_player);
 
         if (null != myFragmentView.findViewById(R.id.playerScrollView_horz)) {
             mScrollView = myFragmentView.findViewById(R.id.playerScrollView_horz);
@@ -177,21 +177,21 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             }
         });
 
-        mPoisonButton = (ImageView) myFragmentView.findViewById(R.id.poison_button);
+        mPoisonButton = myFragmentView.findViewById(R.id.poison_button);
         mPoisonButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 setStatDisplaying(STAT_POISON);
             }
         });
 
-        mLifeButton = (ImageView) myFragmentView.findViewById(R.id.life_button);
+        mLifeButton = myFragmentView.findViewById(R.id.life_button);
         mLifeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 setStatDisplaying(STAT_LIFE);
             }
         });
 
-        mCommanderButton = (ImageView) myFragmentView.findViewById(R.id.commander_button);
+        mCommanderButton = myFragmentView.findViewById(R.id.commander_button);
         mCommanderButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 setStatDisplaying(STAT_COMMANDER);

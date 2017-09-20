@@ -194,11 +194,11 @@ public class RoundTimerFragment extends FamiliarFragment {
 
         assert v != null;
 
-        mTimePicker = (HmsPicker) v.findViewById(R.id.rt_time_picker);
+        mTimePicker = v.findViewById(R.id.rt_time_picker);
         mTimePicker.setTheme(getResourceIdFromAttr(R.attr.hms_picker_style));
         mTimePicker.setPlusMinusVisibility(View.INVISIBLE);
 
-        mTimerButton = ((Button) v.findViewById(R.id.rt_action_button));
+        mTimerButton = v.findViewById(R.id.rt_action_button);
         mTimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -56,7 +56,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
                         /* Build the dialog */
                 builder.title(getString(R.string.life_counter_remove_player));
 
-                builder.items(names)
+                builder.items((CharSequence[]) names)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
@@ -124,7 +124,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
             case DIALOG_CHANGE_DISPLAY: {
 
                 builder.title(R.string.pref_display_mode_title);
-                builder.items(getResources().getStringArray(R.array.display_array_entries))
+                builder.items((CharSequence[]) getResources().getStringArray(R.array.display_array_entries))
                         .itemsCallbackSingleChoice(getParentLifeCounterFragment().mDisplayMode,
                                 new MaterialDialog.ListCallbackSingleChoice() {
                                     @Override
@@ -161,7 +161,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
 
                         /* Set the AlertDialog title, items */
                 builder.title(R.string.life_counter_gathering_dialog_title);
-                builder.items(properNames)
+                builder.items((CharSequence[]) properNames)
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {

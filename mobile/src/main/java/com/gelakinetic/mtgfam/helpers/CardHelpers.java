@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -70,7 +68,7 @@ public class CardHelpers {
 
         /* Grab the linear layout. Make it final to be accessible from the button later */
         final LinearLayout linearLayout =
-                (LinearLayout) customView.findViewById(R.id.linear_layout);
+                customView.findViewById(R.id.linear_layout);
 
         /* If the button should be shown, show it and attach a listener */
         if (showCardButton) {
@@ -248,7 +246,7 @@ public class CardHelpers {
                             card.mName = mCardName;
                             card.setCode = potentialSetCodes.get(i);
                             try {
-                                Button numberInput = ((Button) view.findViewById(R.id.number_button));
+                                Button numberInput = view.findViewById(R.id.number_button);
                                 assert numberInput.getText() != null;
                                 card.numberOf = Integer.parseInt(numberInput.getText().toString());
                             } catch (NumberFormatException e) {
@@ -328,7 +326,7 @@ public class CardHelpers {
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);
         String numberOf = targetCardNumberOf;
         numberOf = numberOf == null ? "0" : numberOf;
-        final Button numberButton = (Button) dialogRow.findViewById(R.id.number_button);
+        final Button numberButton = dialogRow.findViewById(R.id.number_button);
         numberButton.setText(numberOf);
         numberButton.setOnClickListener(new NumberButtonOnClickListener(fragment) {
             @SuppressLint("SetTextI18n")

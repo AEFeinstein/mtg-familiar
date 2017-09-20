@@ -114,7 +114,7 @@ class CardAndSetParser {
      * @return An ArrayList of String[] which contains the {Name, URL, Set Code} for each available patch
      */
     public Manifest readUpdateJsonStream(PrintWriter logWriter) {
-        Manifest manifest = null;
+        Manifest manifest;
 
         try {
             InputStream stream = FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter);
@@ -146,7 +146,7 @@ class CardAndSetParser {
      */
     public LegalityData readLegalityJsonStream(PreferenceAdapter prefAdapter, PrintWriter logWriter) {
 
-        LegalityData legalityDatas = null;
+        LegalityData legalityDatas;
 
         try {
             InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter);

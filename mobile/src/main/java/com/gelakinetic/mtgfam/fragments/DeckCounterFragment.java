@@ -53,8 +53,8 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
         /* Inflate the view, pull out UI elements */
         View myFragmentView = inflater.inflate(R.layout.deck_counter_frag, container, false);
         assert myFragmentView != null;
-        mDeckCountText = (TextSwitcher) myFragmentView.findViewById(R.id.deck_counter_count);
-        mDeckCountHistory = (TextView) myFragmentView.findViewById(R.id.deck_counter_history);
+        mDeckCountText = myFragmentView.findViewById(R.id.deck_counter_count);
+        mDeckCountHistory = myFragmentView.findViewById(R.id.deck_counter_history);
 
         /* Set the animations for the text switcher */
         mDeckCountText.setFactory(this);
