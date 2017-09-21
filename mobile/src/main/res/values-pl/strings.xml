@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Wyszukaj"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Anuluj"</string>
@@ -243,6 +244,8 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="life_counter_edh_dialog_title">"Obrażenia od %s Commandera"</string>
 <string name="life_counter_edit_life_dialog_title">"Wprowadź Życie"</string>
 <string name="life_counter_edit_poison_dialog_title">"Wprowadź Truciznę"</string>
+
+<!-- Default gathering activity -->
 <string name="gathering_starting_life">"Życie początkowe:"</string>
 <string name="gathering_save">"Zapisz Pojedynek"</string>
 <string name="gathering_enter_name">"Wpisz nazwę Pojedynku"</string>
@@ -284,6 +287,8 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <string name="trader_sort">"Sortuj Wymianę"</string>
 <string name="trader_share">"Podziel się Wymianą"</string>
 <string name="trade_share_title">"Wymianą"</string>
+
+<!-- Wishlist activity -->
 <string name="wishlist_add_card">"Dodaj"</string>
 <string name="wishlist_set_pricing">"Ustaw opcje cen"</string>
 <string name="wishlist_share">"Udostępnij Listę Życzeń"</string>
@@ -492,7 +497,6 @@ Liście Życzeń"</string>
 <string name="decklist_sorceries">"Sorceries"</string>
 <string name="decklist_others">"Inne"</string>
 <string name="decklist_unnamed_deck">"Talia bez nazwy"</string>
-<string name="decklist_cards">"Karty"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- w trybie Szukania karty są szukane wedle kosztu many&lt;br&gt;
@@ -547,4 +551,10 @@ Liście Życzeń"</string>
 <string name="decklist_saved_toast">"Talia %1$s została zapisana!"</string>
 <string name="result_list_Add_to_decklist">"Dodaj do Talii"</string>
 <string name="result_list_Add_to_wishlist">"Dodaj do Listy Życzeń"</string>
+<string name="pref_deck_price_summary">"Wybierz który zakres cen TCGplayera będzie używany przy budowaniu talii"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d karta"</item>
+<item quantity="few"></item>
+<item quantity="other">"%1$d karty"</item>
+</plurals>
 </resources>
