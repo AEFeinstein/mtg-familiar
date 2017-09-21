@@ -2,7 +2,6 @@
 <resources>
 
 <!-- General-purpose strings -->
-<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Wyszukaj"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Anuluj"</string>
@@ -147,6 +146,7 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
 <item quantity="one">"Znaleziono %1$d wynik wyszukiwania."</item>
 <item quantity="few">"Znaleziono %1$d wyników wyszukiwania."</item>
 <item quantity="other">"Znaleziono %1$d wyników wyszukiwania."</item>
+<item quantity="many">"Znaleziono %1$d wyników wyszukiwania."</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nie można zapisać opcji wyszukiwania."</string>
 <string name="search_toast_cannot_load">"Nie można wczytać opcji wyszukiwania."</string>
@@ -234,11 +234,13 @@ Licznik many także ulegnie wyczyszczeniu."</string>
 <item quantity="one">"%1$s ma %2$d życia."</item>
 <item quantity="few">"%1$s ma %2$d życia."</item>
 <item quantity="other">"%1$s ma %2$d życia."</item>
+<item quantity="many">"%1$s ma %2$d życia."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
 <item quantity="one">"%1$s ma %2$d znacznik trucizny."</item>
 <item quantity="few">"%1$s ma %2$d znaczników trucizny."</item>
 <item quantity="other">"%1$s ma %2$d znaczników trucizny."</item>
+<item quantity="many">"%1$s ma %2$d znaczników trucizny."</item>
 </plurals>
 <string name="life_counter_over_9000">"ponad 9000"</string>
 <string name="life_counter_edh_dialog_title">"Obrażenia od %s Commandera"</string>
@@ -554,7 +556,8 @@ Liście Życzeń"</string>
 <string name="pref_deck_price_summary">"Wybierz który zakres cen TCGplayera będzie używany przy budowaniu talii"</string>
 <plurals name="decklist_cards_count">
 <item quantity="one">"%1$d karta"</item>
-<item quantity="few"></item>
+<item quantity="few">"%1$d karty"</item>
 <item quantity="other">"%1$d karty"</item>
+<item quantity="many">"%1$d karty"</item>
 </plurals>
 </resources>
