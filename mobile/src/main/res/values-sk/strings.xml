@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Vyhľadať názvy"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Zrušiť"</string>
@@ -253,6 +254,8 @@ Manapool bude tiež vymazaný."</string>
 <string name="life_counter_edh_dialog_title">"Zranenie generálom od hráča %1$s"</string>
 <string name="life_counter_edit_life_dialog_title">"Zadajte počet životov"</string>
 <string name="life_counter_edit_poison_dialog_title">"Zadajte poison žetóny"</string>
+
+<!-- Default gathering activity -->
 <string name="gathering_starting_life">"Začiatočný počet životov:"</string>
 <string name="gathering_save">"Uložiť stretnutie"</string>
 <string name="gathering_enter_name">"Zadajte názov stretnutia"</string>
@@ -294,6 +297,8 @@ Manapool bude tiež vymazaný."</string>
 <string name="trader_sort">"Zoradiť výmenu"</string>
 <string name="trader_share">"Zdieľať výmenu"</string>
 <string name="trade_share_title">"Výmena"</string>
+
+<!-- Wishlist activity -->
 <string name="wishlist_add_card">"Pridať"</string>
 <string name="wishlist_set_pricing">"Nastavenia cien"</string>
 <string name="wishlist_share">"Zdieľať zoznam želaní"</string>
@@ -497,7 +502,6 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="decklist_sorceries">"Sorcery"</string>
 <string name="decklist_others">"Ostatné"</string>
 <string name="decklist_unnamed_deck">"Nepomenovaný balík"</string>
-<string name="decklist_cards">"kariet"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Vyhľadávanie kariet podľa mana costu&lt;br&gt;
@@ -547,4 +551,11 @@ Veľa šťastia a zabavte sa!"</string>
 <string name="decklist_saved_toast">"Balík %1$s uložený!"</string>
 <string name="result_list_Add_to_decklist">"Pridať do balíka"</string>
 <string name="result_list_Add_to_wishlist">"Pridať do zoznamu želaní"</string>
+<string name="pref_deck_price_summary">"Používať ceny kariet z TCGPlayer v deck builderi"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d karta"</item>
+<item quantity="few">"%1$d karty"</item>
+<item quantity="many">"%1$d kariet"</item>
+<item quantity="other">"%1$d kariet"</item>
+</plurals>
 </resources>
