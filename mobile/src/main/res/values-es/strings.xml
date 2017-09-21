@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Buscar nombre"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
@@ -239,6 +240,8 @@ La reserva de maná también será vaciada."</string>
 <string name="life_counter_edh_dialog_title">"Daño del Commander de %s"</string>
 <string name="life_counter_edit_life_dialog_title">"Introduce la vida"</string>
 <string name="life_counter_edit_poison_dialog_title">"Introduce los contadores de veneno"</string>
+
+<!-- Default gathering activity -->
 <string name="gathering_starting_life">"Vida inicial:"</string>
 <string name="gathering_save">"Guardar tipo de partida"</string>
 <string name="gathering_enter_name">"Introducir tipo de partida"</string>
@@ -280,6 +283,8 @@ La reserva de maná también será vaciada."</string>
 <string name="trader_sort">"Ordenar intercambios"</string>
 <string name="trader_share">"Compartir intercambio"</string>
 <string name="trade_share_title">"Intercambios"</string>
+
+<!-- Wishlist activity -->
 <string name="wishlist_add_card">"Añadir"</string>
 <string name="wishlist_set_pricing">"Definir las opciones de los precios"</string>
 <string name="wishlist_share">"Compartir lista de deseos"</string>
@@ -489,7 +494,6 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="decklist_sorceries">"Conjuros"</string>
 <string name="decklist_others">"Otros"</string>
 <string name="decklist_unnamed_deck">"Mazo sin nombre"</string>
-<string name="decklist_cards">"cartas"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Añadida la búsqueda de cartas por coste de maná.&lt;br&gt;
@@ -544,4 +548,9 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 <string name="decklist_saved_toast">"¡Mazo %1$s guardado!"</string>
 <string name="result_list_Add_to_decklist">"Añadir al mazo"</string>
 <string name="result_list_Add_to_wishlist">"Añadir a la lista de deseos"</string>
+<string name="pref_deck_price_summary">"Precio de TCGPlayer para usar en el constructor de mazos"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d carta"</item>
+<item quantity="other">"%1$d cartas"</item>
+</plurals>
 </resources>
