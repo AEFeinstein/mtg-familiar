@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Chercher un nom"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Annuler"</string>
@@ -239,6 +240,8 @@ La réserve de mana sera aussi vidée."</string>
 <string name="life_counter_edh_dialog_title">"Dégâts du Commander de %s"</string>
 <string name="life_counter_edit_life_dialog_title">"Saisir les points de vie"</string>
 <string name="life_counter_edit_poison_dialog_title">"Saisir les marqueurs poison"</string>
+
+<!-- Default gathering activity -->
 <string name="gathering_starting_life">"Vie de départ:"</string>
 <string name="gathering_save">"Sauver type de match"</string>
 <string name="gathering_enter_name">"Saisir nom type de match"</string>
@@ -280,6 +283,8 @@ La réserve de mana sera aussi vidée."</string>
 <string name="trader_sort">"Trier Echange"</string>
 <string name="trader_share">"Partager l'échange"</string>
 <string name="trade_share_title">"Echange"</string>
+
+<!-- Wishlist activity -->
 <string name="wishlist_add_card">"Ajouter"</string>
 <string name="wishlist_set_pricing">"Définir options prix"</string>
 <string name="wishlist_share">"Partager la liste"</string>
@@ -488,7 +493,6 @@ Bonne chance, et bon jeu!
 <string name="decklist_sorceries">"Rituels"</string>
 <string name="decklist_others">"Autres"</string>
 <string name="decklist_unnamed_deck">"Deck Sans Nom"</string>
-<string name="decklist_cards">"cartes"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Recherche: Recherche de cartes par coût de mana
@@ -538,4 +542,9 @@ Bonne chance, et bon jeu!
 <string name="decklist_saved_toast">"Deck %1$s enregistré"</string>
 <string name="result_list_Add_to_decklist">"Ajouter au deck"</string>
 <string name="result_list_Add_to_wishlist">"Ajouter à la liste de voeux"</string>
+<string name="pref_deck_price_summary">"Prix de TCGPlayer à utiliser dans le concepteur de deck"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d carte"</item>
+<item quantity="other">"%1$d cartes"</item>
+</plurals>
 </resources>
