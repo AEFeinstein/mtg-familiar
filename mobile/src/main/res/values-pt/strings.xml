@@ -2,6 +2,7 @@
 <resources>
 
 <!-- General-purpose strings -->
+<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Pesquisar Nomes"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
@@ -239,6 +240,8 @@ Reserva de mana também serão apagados."</string>
 <string name="life_counter_edh_dialog_title">"%1$s's de dano Commander"</string>
 <string name="life_counter_edit_life_dialog_title">"Digite a vida"</string>
 <string name="life_counter_edit_poison_dialog_title">"Digite quantos marcadores de Veneno"</string>
+
+<!-- Default gathering activity -->
 <string name="gathering_starting_life">"Vida Inicial:"</string>
 <string name="gathering_save">"Salvar jogo"</string>
 <string name="gathering_enter_name">"Digite o nome do Gathering"</string>
@@ -280,6 +283,8 @@ Reserva de mana também serão apagados."</string>
 <string name="trader_sort">"Organizar"</string>
 <string name="trader_share">"Compartilhar Troca"</string>
 <string name="trade_share_title">"Troca"</string>
+
+<!-- Wishlist activity -->
 <string name="wishlist_add_card">"Adicionar"</string>
 <string name="wishlist_set_pricing">"Definir opções de preço"</string>
 <string name="wishlist_share">"Compartilhar lista"</string>
@@ -490,12 +495,11 @@ Boa sorte, e divirtam-se!
 <string name="decklist_sorceries">"Feitiço"</string>
 <string name="decklist_others">"Outros"</string>
 <string name="decklist_unnamed_deck">"Deck sem nome"</string>
-<string name="decklist_cards">"cartas"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Em Pesquisa, busque por cartas por custo de mana&lt;br&gt;
 - Em Resultados, aperte e segure uma carta para adicioná-la à Lista de desejos&lt;br&gt;
-- Em Construtor de Deck, adicione cartas para o sideboard&lt;br&gt;
+- Em Montador de Decks, adicione cartas para o sideboard&lt;br&gt;
 - Em Listas de Desejo &amp; Troca, classifique por ordem adicionada&lt;br&gt;
 - Em listas, aperte e segure para selecionar múltiplas cartas e deslize-as para deletá-las&lt;br&gt;
 - Correção de bugs &amp; otimizações"</string>
@@ -516,8 +520,8 @@ Boa sorte, e divirtam-se!
 <string name="NoComparison">"Sem Comparação"</string>
 <string name="card_view_copied_to_clipboard">"Copiado para a área de transferência"</string>
 <string name="wishlist_type_order">"Ordem Adicionada"</string>
-<string name="pref_cat_decklist">"Lista de Decks"</string>
-<string name="pref_decklist_totals_summary">"Mostrar preço total no editor de deck"</string>
+<string name="pref_cat_decklist">"Montador de Decks"</string>
+<string name="pref_decklist_totals_summary">"Mostrar preço total no Montador de Decks"</string>
 <string name="pref_tap_symbol_title">"Símbolo de Tap/Virar"</string>
 <string name="pref_tap_symbol_summary">"Qual símbolo de tap para usar no display"</string>
 <string name="pref_tap_symbol_modern">"Oitava Edição"</string>
@@ -540,4 +544,9 @@ Boa sorte, e divirtam-se!
 <string name="decklist_saved_toast">"Deck %1$s salvo!"</string>
 <string name="result_list_Add_to_decklist">"Adicionar ao Deck"</string>
 <string name="result_list_Add_to_wishlist">"Adicionar à lista de desejos"</string>
+<string name="pref_deck_price_summary">"Preço do TCGPlayer para usar no Montador de Decks"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d carta"</item>
+<item quantity="other">"%1$d cartas"</item>
+</plurals>
 </resources>
