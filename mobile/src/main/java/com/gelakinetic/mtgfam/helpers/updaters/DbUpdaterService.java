@@ -28,12 +28,12 @@ import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.JsonTypes.LegalityData;
 import com.gelakinetic.GathererScraper.JsonTypes.Manifest;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.NotificationHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -138,7 +138,7 @@ public class DbUpdaterService extends IntentService {
             boolean newRulesParsed = false;
 
             try {
-                ArrayList<MtgCard> cardsToAdd = new ArrayList<>();
+                ArrayList<Card> cardsToAdd = new ArrayList<>();
                 ArrayList<Expansion> setsToAdd = new ArrayList<>();
                 ArrayList<String> setsToDrop = new ArrayList<>();
 
@@ -204,7 +204,7 @@ public class DbUpdaterService extends IntentService {
                                         if (streamToRead != null) {
                                             GZIPInputStream gis = new GZIPInputStream(streamToRead);
                                             JsonReader reader = new JsonReader(new InputStreamReader(gis, "UTF-8"));
-                                            parser.readCardJsonStream(reader, reporter, cardsToAdd, setsToAdd);
+                                            parser.readCardJsonStream(reader, cardsToAdd, setsToAdd);
                                             streamToRead.close();
                                             updatedStuff.add(set.mName);
                                             /* Everything was successful, retries = 0 breaks the while loop */
@@ -249,8 +249,10 @@ public class DbUpdaterService extends IntentService {
                         newRulesParsed = true;
                         updatedStuff.add(getString(R.string.update_added_rules));
                     }
-                    switchToChecking();
                 }
+
+                /* Change the notification to generic "checking for updates" */
+                switchToChecking();
 
                 if (logWriter != null) {
                     logWriter.write("legalityDatas: " + ((legalityDatas == null) ? "null" : "not null") + '\n');
@@ -307,7 +309,7 @@ public class DbUpdaterService extends IntentService {
                     }
 
                     /* Add cards */
-                    for (MtgCard card : cardsToAdd) {
+                    for (Card card : cardsToAdd) {
                         CardDbAdapter.createCard(card, database);
                     }
 

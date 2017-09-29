@@ -2,8 +2,6 @@ package com.gelakinetic.GathererScraper.JsonTypes;
 
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
-import java.util.ArrayList;
-
 /*
  * This class contains all information about a scraped card
  *
@@ -61,7 +59,7 @@ public class Card {
     public int mLoyalty = CardDbAdapter.NO_ONE_CARES;
     
     // All the card's foreign printings
-    public ArrayList<ForeignPrinting> mForeignPrintings = new ArrayList<ForeignPrinting>();
+    public ForeignPrinting[] mForeignPrintings;
 
     // The card's loyalty. An integer in practice
     public String mWatermark = "";

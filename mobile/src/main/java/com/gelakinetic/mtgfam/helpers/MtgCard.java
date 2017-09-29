@@ -72,7 +72,7 @@ public class MtgCard extends Card {
         mMultiverseId = 0;
         mColorIdentity = "";
         mWatermark = "";
-        mForeignPrintings.clear();
+        mForeignPrintings = new ForeignPrinting[]{};
     }
 
     public MtgCard(Card card) {
@@ -94,7 +94,8 @@ public class MtgCard extends Card {
             this.mMultiverseId = card.mMultiverseId;
             this.mColorIdentity = card.mColorIdentity;
             this.mWatermark = card.mWatermark;
-            this.mForeignPrintings.addAll(card.mForeignPrintings);
+            this.mForeignPrintings = new ForeignPrinting[card.mForeignPrintings.length];
+            System.arraycopy(card.mForeignPrintings, 0, this.mForeignPrintings, 0, card.mForeignPrintings.length);
         }
     }
 

@@ -26,7 +26,6 @@ import com.gelakinetic.GathererScraper.JsonTypes.Manifest;
 import com.gelakinetic.GathererScraper.JsonTypes.Patch;
 import com.gelakinetic.GathererScraper.PrefixedFieldNamingStrategy;
 import com.gelakinetic.mtgfam.FamiliarActivity;
-import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -70,41 +69,24 @@ class CardAndSetParser {
      * There is some special processing for weird power and toughness too
      *
      * @param reader           A JsonRead to parse from
-     * @param progressReporter A percentage progress is reported through this class to be shown in the notification
      * @param cardsToAdd       An array list to place cards before adding to the database
      * @param setsToAdd        An array list to place sets before adding to the database
      * @throws IOException If something goes wrong with the InputStream, this will be thrown
      */
-    public void readCardJsonStream(JsonReader reader, CardProgressReporter progressReporter, ArrayList<MtgCard> cardsToAdd, ArrayList<Expansion> setsToAdd) {
-
-        ArrayList<MtgCard> tempCardsToAdd = new ArrayList<>();
+    public void readCardJsonStream(JsonReader reader, ArrayList<Card> cardsToAdd, ArrayList<Expansion> setsToAdd) {
 
         Gson gson = CardAndSetParser.getGson();
 
         Patch patch = gson.fromJson(reader, Patch.class);
         if(patch != null)
         {
-
-
-            int numTotalElements = patch.mCards.size();
-            int elementsParsed = 0;
-            for(Card card : patch.mCards)
-            {
-                tempCardsToAdd.add(new MtgCard(card));
-                elementsParsed++;
-                progressReporter.reportJsonCardProgress((int) Math.round(100 * elementsParsed / (double) numTotalElements));
-            }
+            cardsToAdd.addAll(patch.mCards);
 
             /* Stage the sets and cards for database addition. */
             if(setsToAdd != null) {
                  setsToAdd.add(patch.mExpansion);
             }
-            if(cardsToAdd != null) {
-                cardsToAdd.addAll(tempCardsToAdd);
-            }
         }
-
-
     }
 
     /**
