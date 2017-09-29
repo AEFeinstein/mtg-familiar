@@ -10,6 +10,7 @@
 	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
@@ -65,28 +66,28 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_coin" />
+                app:srcCompat="@drawable/die_coin" />
 
             <ImageView
                 android:id="@+id/d4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_4" />
+                app:srcCompat="@drawable/die_4" />
 
             <ImageView
                 android:id="@+id/d6"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_6" />
+                app:srcCompat="@drawable/die_6" />
 
             <ImageView
                 android:id="@+id/d8"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_8" />
+                app:srcCompat="@drawable/die_8" />
         </LinearLayout>
         <!-- Second die row -->
 
@@ -102,35 +103,35 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_10" />
+                app:srcCompat="@drawable/die_10" />
 
             <ImageView
                 android:id="@+id/d12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_12" />
+                app:srcCompat="@drawable/die_12" />
 
             <ImageView
                 android:id="@+id/d20"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_20" />
+                app:srcCompat="@drawable/die_20" />
 
             <ImageView
                 android:id="@+id/d100"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_100" />
+                app:srcCompat="@drawable/die_100" />
 
             <ImageView
                 android:id="@+id/dN"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/die_n" />
+                app:srcCompat="@drawable/die_n" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

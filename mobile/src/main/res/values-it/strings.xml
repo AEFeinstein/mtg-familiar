@@ -242,6 +242,8 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="life_counter_edh_dialog_title">"Danno dal comandante di %1$s"</string>
 <string name="life_counter_edit_life_dialog_title">"Inserisci la vita"</string>
 <string name="life_counter_edit_poison_dialog_title">"Inserisci i contatori veleno"</string>
+
+<!-- Default gathering activity -->
 <string name="gathering_starting_life">"Punti vita iniziali:"</string>
 <string name="gathering_save">"Salva la modalità di gioco"</string>
 <string name="gathering_enter_name">"Inserisci il nome della modalità di gioco"</string>
@@ -283,6 +285,8 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="trader_sort">"Ordina lo Scambio"</string>
 <string name="trader_share">"Condividi Scambio"</string>
 <string name="trade_share_title">"Scambia"</string>
+
+<!-- Wishlist activity -->
 <string name="wishlist_add_card">"Aggiungi Carta"</string>
 <string name="wishlist_set_pricing">"Seleziona opzioni di prezzo"</string>
 <string name="wishlist_share">"Condividi Lista Carte Desiderate"</string>
@@ -485,7 +489,6 @@ Buona fortuna, e divertiti!
 <string name="decklist_sorceries">"Stregonerie"</string>
 <string name="decklist_others">"Altri"</string>
 <string name="decklist_unnamed_deck">"Grimorio senza nome"</string>
-<string name="decklist_cards">"carte"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Nella Ricerca, cerca le carte per costo di mana&lt;br&gt;
@@ -535,4 +538,9 @@ Buona fortuna, e divertiti!
 <string name="decklist_saved_toast">"Mazzo %1$s salvato!"</string>
 <string name="result_list_Add_to_decklist">"Aggiungi al mazzo"</string>
 <string name="result_list_Add_to_wishlist">"Aggiungi a Carte Desiderate"</string>
+<string name="pref_deck_price_summary">"Prezzo TCGPlayer da usare nel deck builder"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d carta"</item>
+<item quantity="other">"%1$d carte"</item>
+</plurals>
 </resources>

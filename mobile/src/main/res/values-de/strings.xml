@@ -256,6 +256,8 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="life_counter_edh_dialog_title">"Schaden von %1$ss Commander"</string>
 <string name="life_counter_edit_life_dialog_title">"Lebenspunkte eingeben"</string>
 <string name="life_counter_edit_poison_dialog_title">"Giftmarken eingeben"</string>
+
+<!-- Default gathering activity -->
 <string name="gathering_starting_life">"Startlebenspunkte:"</string>
 <string name="gathering_save">"Spiel speichern"</string>
 <string name="gathering_enter_name">"Spielname eingeben"</string>
@@ -297,6 +299,8 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="trader_sort">"Tausch sortieren"</string>
 <string name="trader_share">"Tausch teilen"</string>
 <string name="trade_share_title">"Tausch"</string>
+
+<!-- Wishlist activity -->
 <string name="wishlist_add_card">"Hinzufügen"</string>
 <string name="wishlist_set_pricing">"Preisoptionen festlegen"</string>
 <string name="wishlist_share">"Wunschliste teilen"</string>
@@ -503,7 +507,6 @@ Viel Glück und viel Spaß!
 <string name="decklist_sorceries">"Hexereien"</string>
 <string name="decklist_others">"Andere"</string>
 <string name="decklist_unnamed_deck">"Unbenanntes Deck"</string>
-<string name="decklist_cards">"Karten"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- Suche Karten nach ihren Manakosten&lt;br&gt;
@@ -562,4 +565,9 @@ Viel Glück und viel Spaß!
 <string name="decklist_saved_toast">"Deck %1$s gespeichert!"</string>
 <string name="result_list_Add_to_decklist">"Zum Deck hinzufügen"</string>
 <string name="result_list_Add_to_wishlist">"Zur Wunschliste hinzufügen"</string>
+<string name="pref_deck_price_summary">"Im Deckbauer zu verwendender TCGPlayer-Preis"</string>
+<plurals name="decklist_cards_count">
+<item quantity="one">"%1$d-Karte"</item>
+<item quantity="other">"%1$d-Karten"</item>
+</plurals>
 </resources>
