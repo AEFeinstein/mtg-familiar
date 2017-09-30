@@ -48,8 +48,7 @@ class CardAndSetParser {
     /**
      * Used to store various dates before committing them
      */
-    long mCurrentPatchTimestamp = 0;
-    long mCurrentRulesTimestamp = 0;
+    long mCurrentLegalityTimestamp = 0;
 
     private static Gson getGson() {
         GsonBuilder reader = new GsonBuilder();
@@ -68,9 +67,9 @@ class CardAndSetParser {
      * <p/>
      * There is some special processing for weird power and toughness too
      *
-     * @param reader           A JsonRead to parse from
-     * @param cardsToAdd       An array list to place cards before adding to the database
-     * @param setsToAdd        An array list to place sets before adding to the database
+     * @param reader     A JsonRead to parse from
+     * @param cardsToAdd An array list to place cards before adding to the database
+     * @param setsToAdd  An array list to place sets before adding to the database
      * @throws IOException If something goes wrong with the InputStream, this will be thrown
      */
     public void readCardJsonStream(JsonReader reader, ArrayList<Card> cardsToAdd, ArrayList<Expansion> setsToAdd) {
@@ -78,13 +77,12 @@ class CardAndSetParser {
         Gson gson = CardAndSetParser.getGson();
 
         Patch patch = gson.fromJson(reader, Patch.class);
-        if(patch != null)
-        {
+        if (patch != null) {
             cardsToAdd.addAll(patch.mCards);
 
             /* Stage the sets and cards for database addition. */
-            if(setsToAdd != null) {
-                 setsToAdd.add(patch.mExpansion);
+            if (setsToAdd != null) {
+                setsToAdd.add(patch.mExpansion);
             }
         }
     }
@@ -128,7 +126,7 @@ class CardAndSetParser {
      */
     public LegalityData readLegalityJsonStream(PreferenceAdapter prefAdapter, PrintWriter logWriter) {
 
-        LegalityData legalityDatas;
+        LegalityData legalityData;
 
         try {
             InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter);
@@ -138,20 +136,20 @@ class CardAndSetParser {
             JsonReader reader = new JsonReader(new InputStreamReader(stream, "ISO-8859-1"));
             Gson gson = CardAndSetParser.getGson();
 
-            legalityDatas = gson.fromJson(reader, LegalityData.class);
+            legalityData = gson.fromJson(reader, LegalityData.class);
 
-            mCurrentRulesTimestamp = legalityDatas.mTimestamp;
+            mCurrentLegalityTimestamp = legalityData.mTimestamp;
             long spDate = prefAdapter.getLegalityTimestamp();
-            if (spDate >= mCurrentRulesTimestamp) {
-                legalityDatas = null; /* dates match, nothing new here. */
+            if (spDate >= mCurrentLegalityTimestamp) {
+                legalityData = null; /* dates match, nothing new here. */
             }
         } catch (IOException e) {
             if (logWriter != null) {
                 e.printStackTrace(logWriter);
             }
-            legalityDatas = null;
+            legalityData = null;
         }
-        return legalityDatas;
+        return legalityData;
     }
 
     /**
@@ -160,34 +158,7 @@ class CardAndSetParser {
      * @param prefAdapter The preferences to write to
      */
     public void commitDates(PreferenceAdapter prefAdapter) {
-        prefAdapter.setLastUpdateTimestamp(mCurrentPatchTimestamp);
-        prefAdapter.setLegalityTimestamp(mCurrentRulesTimestamp);
-        mCurrentPatchTimestamp = 0;
-        mCurrentRulesTimestamp = 0;
-    }
-
-    /**
-     * This interface is implemented by ProgressReporter in DbUpdaterService. It's used to report progress to the
-     * notification
-     */
-    public interface CardProgressReporter {
-        void reportJsonCardProgress(int progress);
-    }
-
-    private class LegalInfo {
-        final ArrayList<NameAndMetadata> legalSets = new ArrayList<>();
-        final ArrayList<NameAndMetadata> bannedCards = new ArrayList<>();
-        final ArrayList<NameAndMetadata> restrictedCards = new ArrayList<>();
-        final ArrayList<String> formats = new ArrayList<>();
-    }
-
-    class NameAndMetadata {
-        final String name;
-        final String metadata;
-
-        public NameAndMetadata(String restrictedCard, String formatName) {
-            name = restrictedCard;
-            metadata = formatName;
-        }
+        prefAdapter.setLegalityTimestamp(mCurrentLegalityTimestamp);
+        mCurrentLegalityTimestamp = 0;
     }
 }

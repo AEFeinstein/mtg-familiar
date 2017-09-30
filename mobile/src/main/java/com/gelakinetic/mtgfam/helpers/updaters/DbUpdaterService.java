@@ -113,6 +113,7 @@ public class DbUpdaterService extends IntentService {
     public void onHandleIntent(Intent intent) {
 
         showStatusNotification();
+        switchToChecking();
 
         /* Try to open up a log */
         PrintWriter logWriter = null;
@@ -138,25 +139,50 @@ public class DbUpdaterService extends IntentService {
             boolean newRulesParsed = false;
 
             try {
-                ArrayList<Card> cardsToAdd = new ArrayList<>();
-                ArrayList<Expansion> setsToAdd = new ArrayList<>();
-                ArrayList<String> setsToDrop = new ArrayList<>();
-
                 /* Look for updates with the banned / restricted lists and formats */
-                LegalityData legalityDatas = parser.readLegalityJsonStream(mPrefAdapter, logWriter);
+                LegalityData legalityData = parser.readLegalityJsonStream(mPrefAdapter, logWriter);
 
                 /* Log the date */
                 if (logWriter != null) {
-                    logWriter.write("mCurrentRulesDate: " + parser.mCurrentRulesTimestamp + '\n');
+                    logWriter.write("mCurrentRulesDate: " + parser.mCurrentLegalityTimestamp + '\n');
                 }
+
+                if (legalityData != null) {
+                    if (logWriter != null) {
+                        logWriter.write("Adding new legalityData" + '\n');
+                    }
+
+                    /* Open a writable database, insert the legality data */
+                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                    /* Add all the data we've downloaded */
+                    CardDbAdapter.dropLegalTables(database);
+                    CardDbAdapter.createLegalTables(database);
+
+                    for (LegalityData.Format format : legalityData.mFormats) {
+                        CardDbAdapter.createFormat(format.mName, database);
+
+                        for (String legalSet : format.mSets) {
+                            CardDbAdapter.addLegalSet(legalSet, format.mName, database);
+                        }
+
+                        for (String bannedCard : format.mBanlist) {
+                            CardDbAdapter.addLegalCard(bannedCard, format.mName, CardDbAdapter.BANNED, database);
+                        }
+
+                        for (String restrictedCard : format.mRestrictedlist) {
+                            CardDbAdapter.addLegalCard(restrictedCard, format.mName, CardDbAdapter.RESTRICTED, database);
+                        }
+                    }
+
+                    /* Close the writable database */
+                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+                }
+
+                /* Change the notification to generic "checking for updates" */
+                switchToChecking();
 
                 /* Look for new cards */
                 Manifest manifest = parser.readUpdateJsonStream(logWriter);
-
-                /* Log the date */
-                if (logWriter != null) {
-                    logWriter.write("mCurrentPatchDate: " + parser.mCurrentPatchTimestamp + '\n');
-                }
 
                 if (manifest != null) {
                     /* Make an arraylist of all the current set codes */
@@ -179,45 +205,76 @@ public class DbUpdaterService extends IntentService {
                     }
                     DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false);
 
+                    /* Look through the manifest and drop all out of date sets */
+                    database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                    for (Manifest.ManifestEntry set : manifest.mPatches) {
+                        try {
+                            /* If the digest doesn't match, mark the set for dropping
+                             * and remove it from currentSetCodes so it redownloads
+                             */
+                            if (set.mDigest != null && !storedDigests.get(set.mCode).equals(set.mDigest)) {
+                                if (logWriter != null) {
+                                    logWriter.write("Dropping expansion: " + set.mCode + '\n');
+                                }
+                                currentSetCodes.remove(set.mCode);
+                                CardDbAdapter.dropSetAndCards(set.mCode, database);
+                            }
+                        } catch (NullPointerException e) {
+                            /* eat it */
+                        }
+                    }
+                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+
                     /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
                     for (Manifest.ManifestEntry set : manifest.mPatches) {
-                        if (!set.mCode.equals("DD3")) { /* Never download the old Duel Deck Anthologies patch */
-                            try {
-                                /* If the digest doesn't match, mark the set for dropping
-                                 * and remove it from currentSetCodes so it redownloads
-                                 */
-                                if (set.mDigest != null && !storedDigests.get(set.mCode).equals(set.mDigest)) {
-                                    currentSetCodes.remove(set.mCode);
-                                    setsToDrop.add(set.mCode);
-                                }
-                            } catch (NullPointerException e) {
-                                /* eat it */
-                            }
+                        if (!set.mCode.equals("DD3") && /* Never download the old Duel Deck Anthologies patch */
+                                !currentSetCodes.contains(set.mCode)) { /* check to see if the patch is known already */
+                            int retries = 5;
+                            while (retries > 0) {
+                                try {
+                                    /* Change the notification to the specific set */
+                                    switchToUpdating(String.format(getString(R.string.update_updating_set), set.mName));
+                                    InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter);
+                                    if (streamToRead != null) {
+                                        ArrayList<Card> cardsToAdd = new ArrayList<>();
+                                        ArrayList<Expansion> setsToAdd = new ArrayList<>();
 
-                            if (!currentSetCodes.contains(set.mCode)) { /* check to see if the patch is known already */
-                                int retries = 5;
-                                while (retries > 0) {
-                                    try {
-                                        /* Change the notification to the specific set */
-                                        switchToUpdating(String.format(getString(R.string.update_updating_set), set.mName));
-                                        InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter);
-                                        if (streamToRead != null) {
-                                            GZIPInputStream gis = new GZIPInputStream(streamToRead);
-                                            JsonReader reader = new JsonReader(new InputStreamReader(gis, "UTF-8"));
-                                            parser.readCardJsonStream(reader, cardsToAdd, setsToAdd);
-                                            streamToRead.close();
-                                            updatedStuff.add(set.mName);
-                                            /* Everything was successful, retries = 0 breaks the while loop */
-                                            retries = 0;
+                                        GZIPInputStream gis = new GZIPInputStream(streamToRead);
+                                        JsonReader reader = new JsonReader(new InputStreamReader(gis, "UTF-8"));
+                                        parser.readCardJsonStream(reader, cardsToAdd, setsToAdd);
+                                        streamToRead.close();
+                                        updatedStuff.add(set.mName);
+                                        /* Everything was successful, retries = 0 breaks the while loop */
+                                        retries = 0;
+
+                                        /* After the download, open the database */
+                                        database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                                        /* Insert the newly downloaded info */
+                                        for (Expansion expansion : setsToAdd) {
+                                            if (logWriter != null) {
+                                                logWriter.write("Adding expansion: " + expansion.mCode_gatherer + '\n');
+                                            }
+
+                                            CardDbAdapter.createSet(expansion, database);
+                                            CardDbAdapter.addTcgName(expansion.mName_tcgp, expansion.mCode_gatherer, database);
+                                            CardDbAdapter.addFoilInfo(expansion.mCanBeFoil, expansion.mCode_gatherer, database);
                                         }
-                                    } catch (IOException e) {
-                                        if (logWriter != null) {
-                                            logWriter.print("Retry " + retries + '\n');
-                                            e.printStackTrace(logWriter);
+                                        int cardsAdded = 0;
+                                        for (Card card : cardsToAdd) {
+                                            CardDbAdapter.createCard(card, database);
+                                            cardsAdded++;
+                                            mProgress = (int) (100 * (cardsAdded / (float)cardsToAdd.size()));
                                         }
+                                        /* Close the database */
+                                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
                                     }
-                                    retries--;
+                                } catch (IOException e) {
+                                    if (logWriter != null) {
+                                        logWriter.print("Retry " + retries + '\n');
+                                        e.printStackTrace(logWriter);
+                                    }
                                 }
+                                retries--;
                             }
                         }
                     }
@@ -235,18 +292,39 @@ public class DbUpdaterService extends IntentService {
                 long lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
 
                 RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
-                ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();
-                ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
 
                 if (rp.needsToUpdate(logWriter)) {
                     switchToUpdating(getString(R.string.update_updating_rules));
                     if (rp.parseRules(logWriter)) {
+                        ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();
+                        ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
                         rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
 
                         /* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
                          * should let them know and try again next update.
                          */
                         newRulesParsed = true;
+
+                        /* Open the database */
+                        SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+
+                        /* Add stored rules */
+                        if (rulesToAdd.size() > 0 || glossaryItemsToAdd.size() > 0) {
+                            CardDbAdapter.dropRulesTables(database);
+                            CardDbAdapter.createRulesTables(database);
+                        }
+
+                        for (RulesParser.RuleItem rule : rulesToAdd) {
+                            CardDbAdapter.insertRule(rule.category, rule.subcategory, rule.entry, rule.text, rule.position, database);
+                        }
+
+                        for (RulesParser.GlossaryItem term : glossaryItemsToAdd) {
+                            CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
+                        }
+
+                        /* Close the database */
+                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+
                         updatedStuff.add(getString(R.string.update_added_rules));
                     }
                 }
@@ -254,82 +332,6 @@ public class DbUpdaterService extends IntentService {
                 /* Change the notification to generic "checking for updates" */
                 switchToChecking();
 
-                if (logWriter != null) {
-                    logWriter.write("legalityDatas: " + ((legalityDatas == null) ? "null" : "not null") + '\n');
-                    logWriter.write("setsToAdd: " + setsToAdd.size() + '\n');
-                    logWriter.write("cardsToAdd: " + cardsToAdd.size() + '\n');
-                    logWriter.write("rulesToAdd: " + rulesToAdd.size() + '\n');
-                    logWriter.write("glossaryItemsToAdd: " + glossaryItemsToAdd.size() + '\n');
-                }
-
-                /* Open a writable database, as briefly as possible */
-                if (legalityDatas != null ||
-                        setsToDrop.size() > 0 ||
-                        setsToAdd.size() > 0 ||
-                        cardsToAdd.size() > 0 ||
-                        rulesToAdd.size() > 0 ||
-                        glossaryItemsToAdd.size() > 0) {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
-                    /* Add all the data we've downloaded */
-                    if (legalityDatas != null) {
-                        CardDbAdapter.dropLegalTables(database);
-                        CardDbAdapter.createLegalTables(database);
-
-                        for (LegalityData.Format format : legalityDatas.mFormats) {
-                            CardDbAdapter.createFormat(format.mName, database);
-
-                            for (String legalSet : format.mSets) {
-                                CardDbAdapter.addLegalSet(legalSet, format.mName, database);
-                            }
-
-                            for (String bannedCard : format.mBanlist) {
-                                CardDbAdapter.addLegalCard(bannedCard, format.mName, CardDbAdapter.BANNED, database);
-                            }
-
-                            for (String restrictedCard : format.mRestrictedlist) {
-                                CardDbAdapter.addLegalCard(restrictedCard, format.mName, CardDbAdapter.RESTRICTED, database);
-                            }
-                        }
-                    }
-
-                    /* Drop any out of date sets */
-                    for (String code : setsToDrop) {
-                        CardDbAdapter.dropSetAndCards(code, database);
-                    }
-
-                    /* Add set data */
-                    for (Expansion set : setsToAdd) {
-                        CardDbAdapter.createSet(set, database);
-
-                        /* Add the corresponding TCG name */
-                        CardDbAdapter.addTcgName(set.mName_tcgp, set.mCode_gatherer, database);
-
-                        /* Add the corresponding foil information */
-                        CardDbAdapter.addFoilInfo(set.mCanBeFoil, set.mCode_gatherer, database);
-                    }
-
-                    /* Add cards */
-                    for (Card card : cardsToAdd) {
-                        CardDbAdapter.createCard(card, database);
-                    }
-
-                    /* Add stored rules */
-                    if (rulesToAdd.size() > 0 || glossaryItemsToAdd.size() > 0) {
-                        CardDbAdapter.dropRulesTables(database);
-                        CardDbAdapter.createRulesTables(database);
-                    }
-
-                    for (RulesParser.RuleItem rule : rulesToAdd) {
-                        CardDbAdapter.insertRule(rule.category, rule.subcategory, rule.entry, rule.text, rule.position, database);
-                    }
-
-                    for (RulesParser.GlossaryItem term : glossaryItemsToAdd) {
-                        CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
-                    }
-
-                    /* Close the writable database */
-                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
-                }
             } catch (FamiliarDbException e1) {
                 commitDates = false; /* don't commit the dates */
                 if (logWriter != null) {
@@ -468,17 +470,7 @@ public class DbUpdaterService extends IntentService {
     /**
      * This inner class is used by other parsers to pass progress percentages to the notification
      */
-    private class ProgressReporter implements CardAndSetParser.CardProgressReporter,
-            RulesParser.RulesProgressReporter {
-        /**
-         * This is used by CardAndSetParser to report the progress for adding a set
-         *
-         * @param progress An integer between 0 and 100 representing the progress percent
-         */
-        public void reportJsonCardProgress(int progress) {
-            mProgress = progress;
-        }
-
+    private class ProgressReporter implements RulesParser.RulesProgressReporter {
         /**
          * This is used by RulesParser to report the progress for adding new rules
          *
