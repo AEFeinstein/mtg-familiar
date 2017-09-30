@@ -542,8 +542,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 switch (mPageEntries[i].mNameResource) {
                     case R.string.main_force_update_title: {
                         if (getNetworkState(FamiliarActivity.this, true) != -1) {
-                            SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this, true).openDatabase(true);
                             try {
+                                SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this, true).openDatabase(true);
                                 CardDbAdapter.dropCreateDB(database);
                                 mPreferenceAdapter.setLastLegalityUpdate(0);
                                 mPreferenceAdapter.setLastIPGUpdate(0);
@@ -812,8 +812,8 @@ public class FamiliarActivity extends AppCompatActivity {
 
             boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
             if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
-                SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
                 try {
+                    SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
                     String queryParam;
                     if ((queryParam = data.getQueryParameter("multiverseid")) != null) {
                         Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
@@ -859,8 +859,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 /* User clicked a deep link, jump to the card(s) */
                 isDeepLink = true;
 
-                SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
                 try {
+                    SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false);
                     Cursor cursor = null;
                     boolean screenLaunched = false;
                     if (data.getScheme().toLowerCase().equals("card") &&

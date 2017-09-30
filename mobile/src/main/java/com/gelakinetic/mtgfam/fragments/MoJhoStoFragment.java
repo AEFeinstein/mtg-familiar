@@ -198,8 +198,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param cmc  The converted mana cost of the card to randomly fetch
      */
     private void getOneSpell(String type, int cmc) {
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
             String logic = "=";
             if (type.equals(EQUIPMENT)) {
                 logic = "<=";
@@ -246,8 +246,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param type The supertype of the card to randomly fetch
      */
     private void getThreeSpells(String type) {
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
             criteria.type = type;

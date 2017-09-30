@@ -136,18 +136,19 @@ public class ResultListFragment extends FamiliarFragment {
             return null;
         }
 
-        /* Open up the database, search for stuff */
-        mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-        try {
-            doSearch(this.getArguments(), mDatabase);
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(true);
-        }
-
         /* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
         assert myFragmentView != null; /* Because Android Studio */
         mListView = myFragmentView.findViewById(R.id.result_list);
+
+        /* Open up the database, search for stuff */
+        try {
+            mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            doSearch(this.getArguments(), mDatabase);
+        } catch (FamiliarDbException e) {
+            handleFamiliarDbException(true);
+            return myFragmentView;
+        }
 
         /* Sub-optimal, but KitKat is silly */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

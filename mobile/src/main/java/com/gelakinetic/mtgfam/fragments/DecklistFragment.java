@@ -380,11 +380,11 @@ public class DecklistFragment extends FamiliarListFragment {
         /* Read the decklist */
         final ArrayList<Pair<MtgCard, Boolean>> decklist =
                 DecklistHelpers.ReadDecklist(getActivity(), lDeckName);
-        final SQLiteDatabase database =
-                DatabaseManager.getInstance(getActivity(), false)
-                        .openDatabase(false);
 
         try {
+            final SQLiteDatabase database =
+                    DatabaseManager.getInstance(getActivity(), false)
+                            .openDatabase(false);
             /* Clear the decklist, or just the card that changed */
             clearCompressedInfo(changedCardName);
 
@@ -428,9 +428,7 @@ public class DecklistFragment extends FamiliarListFragment {
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
         }
-        DatabaseManager.getInstance(getActivity(), false)
-                .closeDatabase(false);
-
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**

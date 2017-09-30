@@ -35,13 +35,13 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
 import com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner;
 import com.gelakinetic.mtgfam.helpers.view.CompletionView;
 import com.gelakinetic.mtgfam.helpers.view.ManaCostTextView;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -297,11 +297,11 @@ public class SearchViewFragment extends FamiliarFragment {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
 
                 /* Only actually get data if the arrays are null */
-                if (mSetNames == null) {
-                    try {
+                try {
+                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                    if (mSetNames == null) {
                         /* Query the database for all sets and fill the arrays to populate the list of choices with */
                         Cursor setCursor = CardDbAdapter.fetchAllSets(database);
                         setCursor.moveToFirst();
@@ -320,14 +320,10 @@ public class SearchViewFragment extends FamiliarFragment {
                             setCursor.moveToNext();
                         }
                         setCursor.close();
-                    } catch (FamiliarDbException e) {
-                        handleFamiliarDbException(true);
                     }
-                }
 
-                if (mFormatNames == null) {
-                    try {
-                        /* Query the database for all formats and fill the arrays to populate the list of choices with */
+                    if (mFormatNames == null) {
+                            /* Query the database for all formats and fill the arrays to populate the list of choices with */
                         Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
                         formatCursor.moveToFirst();
 
@@ -338,35 +334,22 @@ public class SearchViewFragment extends FamiliarFragment {
                             formatCursor.moveToNext();
                         }
                         formatCursor.close();
-                    } catch (FamiliarDbException e) {
-                        handleFamiliarDbException(true);
                     }
-                }
 
-                if (mSupertypes == null) {
-                    try {
+                    if (mSupertypes == null) {
                         mSupertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, true, database);
-                    } catch (FamiliarDbException e) {
-                        handleFamiliarDbException(true);
                     }
-                }
 
-                if (mSubtypes == null) {
-                    try {
+                    if (mSubtypes == null) {
                         mSubtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, true, database);
-                    } catch (FamiliarDbException e) {
-                        handleFamiliarDbException(true);
                     }
-                }
 
-                if (mArtists == null) {
-                    try {
+                    if (mArtists == null) {
                         mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_ARTIST, false, database);
-                    } catch (FamiliarDbException e) {
-                        handleFamiliarDbException(true);
                     }
+                } catch (FamiliarDbException e) {
+                    handleFamiliarDbException(true);
                 }
-
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 return null;
