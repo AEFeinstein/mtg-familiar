@@ -1,11 +1,15 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -13,11 +17,18 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Class that creates dialogs for DecklistFragment.
@@ -30,6 +41,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
     public static final int DIALOG_LOAD_DECK = 3;
     public static final int DIALOG_DELETE_DECK = 4;
     public static final int DIALOG_CONFIRMATION = 5;
+    public static final int DIALOG_GET_LEGALITY = 6;
 
     public static final String NAME_KEY = "name";
     public static final String SIDE_KEY = "side";
@@ -224,6 +236,72 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .negativeText(R.string.dialog_cancel)
                         .cancelable(true)
                         .build();
+            }
+            case DIALOG_GET_LEGALITY: {
+                String[] from = new String[]{"format", "status"};
+                int[] to = new int[]{R.id.format, R.id.status};
+                try {
+                    SQLiteDatabase database =
+                            DatabaseManager.getInstance(getContext(), false).openDatabase(false);
+                    Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
+                    cFormats.moveToFirst();
+                    List<HashMap<String, String>> fillMaps = new ArrayList<>();
+                    for (int i = 0; i < cFormats.getCount(); i++) {
+                        boolean deckIsLegal = true;
+                        String deckLegality = "";
+                        String format =
+                                cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                        for (CompressedDecklistInfo info :
+                                getParentDecklistFragment().mCompressedDecklist) {
+                            if (!info.mName.isEmpty()) { /* Skip the headers */
+                                switch (CardDbAdapter.checkLegality(info.mName, format, database)) {
+                                    case CardDbAdapter.LEGAL: {
+                                        if (format.equalsIgnoreCase("Commander")
+                                                && info.getTotalNumber() > 1) {
+                                            deckLegality = getString(R.string.decklist_not_legal);
+                                            deckIsLegal = false;
+                                        }
+                                        break;
+                                    }
+                                    case CardDbAdapter.RESTRICTED: {
+                                        if (format.equalsIgnoreCase("Vintage")
+                                                && info.getTotalNumber() > 1) {
+                                            deckLegality = getString(R.string.decklist_not_legal);
+                                            deckIsLegal = false;
+                                        }
+                                        break;
+                                    }
+                                    case CardDbAdapter.BANNED: {
+                                        deckLegality = getString(R.string.decklist_not_legal);
+                                        deckIsLegal = false;
+                                        break;
+                                    }
+                                }
+                                if (!deckIsLegal) {
+                                    break;
+                                }
+                            }
+                        }
+                        if (deckIsLegal) {
+                            deckLegality = getString(R.string.card_view_legal);
+                        }
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(from[0], format);
+                        map.put(from[1], deckLegality);
+                        fillMaps.add(map);
+                        cFormats.moveToNext();
+                    }
+                    SimpleAdapter adapter = new SimpleAdapter(
+                            getActivity(), fillMaps, R.layout.card_view_legal_row, from, to);
+                    ListView lv = new ListView(getActivity());
+                    lv.setAdapter(adapter);
+                    MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+                    builder.customView(lv, false);
+                    builder.title(R.string.decklist_legality);
+                    return builder.build();
+                } catch (FamiliarDbException fdbe) {
+                    getParentDecklistFragment().handleFamiliarDbException(false);
+                }
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);
