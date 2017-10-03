@@ -527,8 +527,6 @@ Good luck, and have fun!
     <item quantity="one">"%1$d card"</item>
     <item quantity="other">"%1$d cards"</item>
 </plurals>
-<string name="decklist_legality">"Deck Legality"</string>
-<string name="decklist_not_legal">"Not Legal"</string>
 
 <!-- "Added Slovak Translation" was added -->
 <string name="main_whats_new_text">"- In Search, search for cards by mana cost&lt;br&gt;
