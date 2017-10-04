@@ -463,321 +463,293 @@ public class CardViewFragment extends FamiliarFragment {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
-        SQLiteDatabase database =
-                DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-        Cursor cCardById;
         try {
+            SQLiteDatabase database =
+                    DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            Cursor cCardById;
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(true);
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return;
-        }
 
-        /* http://magiccards.info/scans/en/mt/55.jpg */
-        mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
-        mCardCMC = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_CMC));
-        mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
+            /* http://magiccards.info/scans/en/mt/55.jpg */
+            mCardName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
+            mCardCMC = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_CMC));
+            mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
 
-        /* Start building a description */
-        addToDescription(getString(R.string.search_name), mCardName);
-        try {
+            /* Start building a description */
+            addToDescription(getString(R.string.search_name), mCardName);
             mSetName = CardDbAdapter.getSetNameFromCode(mSetCode, database);
             addToDescription(getString(R.string.search_set), mSetName);
-        } catch (FamiliarDbException e) {
-            /* no set for you */
-        }
 
-        try {
             mMagicCardsInfoSetCode =
                     CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
                             database);
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(true);
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return;
-        }
-        mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+            mCardNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
-        switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
-            case 'C':
-            case 'c':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
-                        getResourceIdFromAttr(R.attr.color_common)));
-                addToDescription(getString(R.string.search_rarity),
-                        getString(R.string.search_Common));
-                break;
-            case 'U':
-            case 'u':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
-                        getResourceIdFromAttr(R.attr.color_uncommon)));
-                addToDescription(getString(R.string.search_rarity),
-                        getString(R.string.search_Uncommon));
-                break;
-            case 'R':
-            case 'r':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
-                        getResourceIdFromAttr(R.attr.color_rare)));
-                addToDescription(getString(R.string.search_rarity),
-                        getString(R.string.search_Rare));
-                break;
-            case 'M':
-            case 'm':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
-                        getResourceIdFromAttr(R.attr.color_mythic)));
-                addToDescription(getString(R.string.search_rarity),
-                        getString(R.string.search_Mythic));
-                break;
-            case 'T':
-            case 't':
-                mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
-                        getResourceIdFromAttr(R.attr.color_timeshifted)));
-                addToDescription(getString(R.string.search_rarity),
-                        getString(R.string.search_Timeshifted));
-                break;
-        }
-
-        String sCost = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-        addToDescription(getString(R.string.search_mana_cost), sCost);
-        CharSequence csCost = ImageGetterHelper.formatStringWithGlyphs(sCost, imgGetter);
-        mCostTextView.setText(csCost);
-
-        String sAbility = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-        addToDescription(getString(R.string.search_text), sAbility);
-        CharSequence csAbility = ImageGetterHelper.formatStringWithGlyphs(sAbility, imgGetter);
-        mAbilityTextView.setText(csAbility);
-        mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());
-
-        String sFlavor = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-        addToDescription(getString(R.string.search_flavor_text), sFlavor);
-        CharSequence csFlavor = ImageGetterHelper.formatStringWithGlyphs(sFlavor, imgGetter);
-        mFlavorTextView.setText(csFlavor);
-
-        mNameTextView
-                .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)));
-        mCardType = CardDbAdapter.getTypeLine(cCardById);
-        mTypeTextView.setText(mCardType);
-        mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
-        mArtistTextView
-                .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
-        String numberAndRarity =
-                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)) + " (" +
-                        (char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))
-                        + ")";
-        mNumberTextView.setText(numberAndRarity);
-
-        addToDescription(getString(R.string.search_type), CardDbAdapter.getTypeLine(cCardById));
-        addToDescription(getString(R.string.search_artist),
-                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
-        addToDescription(getString(R.string.search_collectors_number),
-                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)));
-
-        int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-        float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
-        float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-        if (loyalty != CardDbAdapter.NO_ONE_CARES) {
-            if (loyalty == CardDbAdapter.X) {
-                mPowTouTextView.setText("X");
-            } else {
-                mPowTouTextView.setText(Integer.toString(loyalty));
+            switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
+                case 'C':
+                case 'c':
+                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                            getResourceIdFromAttr(R.attr.color_common)));
+                    addToDescription(getString(R.string.search_rarity),
+                            getString(R.string.search_Common));
+                    break;
+                case 'U':
+                case 'u':
+                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                            getResourceIdFromAttr(R.attr.color_uncommon)));
+                    addToDescription(getString(R.string.search_rarity),
+                            getString(R.string.search_Uncommon));
+                    break;
+                case 'R':
+                case 'r':
+                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                            getResourceIdFromAttr(R.attr.color_rare)));
+                    addToDescription(getString(R.string.search_rarity),
+                            getString(R.string.search_Rare));
+                    break;
+                case 'M':
+                case 'm':
+                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                            getResourceIdFromAttr(R.attr.color_mythic)));
+                    addToDescription(getString(R.string.search_rarity),
+                            getString(R.string.search_Mythic));
+                    break;
+                case 'T':
+                case 't':
+                    mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
+                            getResourceIdFromAttr(R.attr.color_timeshifted)));
+                    addToDescription(getString(R.string.search_rarity),
+                            getString(R.string.search_Timeshifted));
+                    break;
             }
-        } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
-            String powTouStr = "";
+            String sCost = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_MANACOST));
+            addToDescription(getString(R.string.search_mana_cost), sCost);
+            CharSequence csCost = ImageGetterHelper.formatStringWithGlyphs(sCost, imgGetter);
+            mCostTextView.setText(csCost);
 
-            if (p == CardDbAdapter.STAR)
-                powTouStr += "*";
-            else if (p == CardDbAdapter.ONE_PLUS_STAR)
-                powTouStr += "1+*";
-            else if (p == CardDbAdapter.TWO_PLUS_STAR)
-                powTouStr += "2+*";
-            else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-                powTouStr += "7-*";
-            else if (p == CardDbAdapter.STAR_SQUARED)
-                powTouStr += "*^2";
-            else if (p == CardDbAdapter.X)
-                powTouStr += "X";
-            else {
-                if (p == (int) p) {
-                    powTouStr += (int) p;
+            String sAbility = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ABILITY));
+            addToDescription(getString(R.string.search_text), sAbility);
+            CharSequence csAbility = ImageGetterHelper.formatStringWithGlyphs(sAbility, imgGetter);
+            mAbilityTextView.setText(csAbility);
+            mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+            String sFlavor = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+            addToDescription(getString(R.string.search_flavor_text), sFlavor);
+            CharSequence csFlavor = ImageGetterHelper.formatStringWithGlyphs(sFlavor, imgGetter);
+            mFlavorTextView.setText(csFlavor);
+
+            mNameTextView
+                    .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)));
+            mCardType = CardDbAdapter.getTypeLine(cCardById);
+            mTypeTextView.setText(mCardType);
+            mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
+            mArtistTextView
+                    .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
+            String numberAndRarity =
+                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)) + " (" +
+                            (char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))
+                            + ")";
+            mNumberTextView.setText(numberAndRarity);
+
+            addToDescription(getString(R.string.search_type), CardDbAdapter.getTypeLine(cCardById));
+            addToDescription(getString(R.string.search_artist),
+                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
+            addToDescription(getString(R.string.search_collectors_number),
+                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)));
+
+            int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+            float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
+            float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+            if (loyalty != CardDbAdapter.NO_ONE_CARES) {
+                if (loyalty == CardDbAdapter.X) {
+                    mPowTouTextView.setText("X");
                 } else {
-                    powTouStr += p;
+                    mPowTouTextView.setText(Integer.toString(loyalty));
                 }
-            }
+            } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
 
-            powTouStr += "/";
+                String powTouStr = "";
 
-            if (t == CardDbAdapter.STAR)
-                powTouStr += "*";
-            else if (t == CardDbAdapter.ONE_PLUS_STAR)
-                powTouStr += "1+*";
-            else if (t == CardDbAdapter.TWO_PLUS_STAR)
-                powTouStr += "2+*";
-            else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-                powTouStr += "7-*";
-            else if (t == CardDbAdapter.STAR_SQUARED)
-                powTouStr += "*^2";
-            else if (t == CardDbAdapter.X)
-                powTouStr += "X";
-            else {
-                if (t == (int) t) {
-                    powTouStr += (int) t;
-                } else {
-                    powTouStr += t;
-                }
-            }
-
-            addToDescription(getString(R.string.search_power), powTouStr);
-
-            mPowTouTextView.setText(powTouStr);
-        } else {
-            mPowTouTextView.setText("");
-        }
-
-        boolean isMultiCard = false;
-        switch (CardDbAdapter.isMultiCard(mCardNumber,
-                cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)))) {
-            case NOPE:
-                isMultiCard = false;
-                mTransformButton.setVisibility(View.GONE);
-                mTransformButtonDivider.setVisibility(View.GONE);
-                break;
-            case TRANSFORM:
-                isMultiCard = true;
-                mTransformButton.setVisibility(View.VISIBLE);
-                mTransformButtonDivider.setVisibility(View.VISIBLE);
-                mTransformButton.setText(R.string.card_view_transform);
-                break;
-            case FUSE:
-                isMultiCard = true;
-                mTransformButton.setVisibility(View.VISIBLE);
-                mTransformButtonDivider.setVisibility(View.VISIBLE);
-                mTransformButton.setText(R.string.card_view_fuse);
-                break;
-            case SPLIT:
-                isMultiCard = true;
-                mTransformButton.setVisibility(View.VISIBLE);
-                mTransformButtonDivider.setVisibility(View.VISIBLE);
-                mTransformButton.setText(R.string.card_view_other_half);
-                break;
-        }
-
-        if (isMultiCard) {
-            if (mCardNumber.contains("a")) {
-                mTransformCardNumber = mCardNumber.replace("a", "b");
-            } else if (mCardNumber.contains("b")) {
-                mTransformCardNumber = mCardNumber.replace("b", "a");
-            }
-            try {
-                mTransformId = CardDbAdapter.getIdFromSetAndNumber(mSetCode, mTransformCardNumber, database);
-            } catch (FamiliarDbException e) {
-                handleFamiliarDbException(true);
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return;
-            }
-            if (mTransformId == -1) {
-                mTransformButton.setVisibility(View.GONE);
-                mTransformButtonDivider.setVisibility(View.GONE);
-            } else {
-                mTransformButton.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        releaseImageResources(true);
-                        mCardNumber = mTransformCardNumber;
-                        setInfoFromID(mTransformId);
+                if (p == CardDbAdapter.STAR)
+                    powTouStr += "*";
+                else if (p == CardDbAdapter.ONE_PLUS_STAR)
+                    powTouStr += "1+*";
+                else if (p == CardDbAdapter.TWO_PLUS_STAR)
+                    powTouStr += "2+*";
+                else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
+                    powTouStr += "7-*";
+                else if (p == CardDbAdapter.STAR_SQUARED)
+                    powTouStr += "*^2";
+                else if (p == CardDbAdapter.X)
+                    powTouStr += "X";
+                else {
+                    if (p == (int) p) {
+                        powTouStr += (int) p;
+                    } else {
+                        powTouStr += p;
                     }
-                });
+                }
+
+                powTouStr += "/";
+
+                if (t == CardDbAdapter.STAR)
+                    powTouStr += "*";
+                else if (t == CardDbAdapter.ONE_PLUS_STAR)
+                    powTouStr += "1+*";
+                else if (t == CardDbAdapter.TWO_PLUS_STAR)
+                    powTouStr += "2+*";
+                else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
+                    powTouStr += "7-*";
+                else if (t == CardDbAdapter.STAR_SQUARED)
+                    powTouStr += "*^2";
+                else if (t == CardDbAdapter.X)
+                    powTouStr += "X";
+                else {
+                    if (t == (int) t) {
+                        powTouStr += (int) t;
+                    } else {
+                        powTouStr += t;
+                    }
+                }
+
+                addToDescription(getString(R.string.search_power), powTouStr);
+
+                mPowTouTextView.setText(powTouStr);
+            } else {
+                mPowTouTextView.setText("");
             }
-        }
 
-        mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
-
-        /* Do we load the image immediately to the main page, or do it in a dialog later? */
-        if (mActivity.mPreferenceAdapter.getPicFirst()) {
-            mImageScrollView.setVisibility(View.VISIBLE);
-            mTextScrollView.setVisibility(View.GONE);
-
-            mActivity.setLoading();
-            if (mAsyncTask != null) {
-                mAsyncTask.cancel(true);
+            boolean isMultiCard = false;
+            switch (CardDbAdapter.isMultiCard(mCardNumber,
+                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)))) {
+                case NOPE:
+                    isMultiCard = false;
+                    mTransformButton.setVisibility(View.GONE);
+                    mTransformButtonDivider.setVisibility(View.GONE);
+                    break;
+                case TRANSFORM:
+                    isMultiCard = true;
+                    mTransformButton.setVisibility(View.VISIBLE);
+                    mTransformButtonDivider.setVisibility(View.VISIBLE);
+                    mTransformButton.setText(R.string.card_view_transform);
+                    break;
+                case FUSE:
+                    isMultiCard = true;
+                    mTransformButton.setVisibility(View.VISIBLE);
+                    mTransformButtonDivider.setVisibility(View.VISIBLE);
+                    mTransformButton.setText(R.string.card_view_fuse);
+                    break;
+                case SPLIT:
+                    isMultiCard = true;
+                    mTransformButton.setVisibility(View.VISIBLE);
+                    mTransformButtonDivider.setVisibility(View.VISIBLE);
+                    mTransformButton.setText(R.string.card_view_other_half);
+                    break;
             }
-            mAsyncTask = new FetchPictureTask();
-            ((FetchPictureTask) mAsyncTask).execute(MAIN_PAGE);
-        } else {
-            mImageScrollView.setVisibility(View.GONE);
-            mTextScrollView.setVisibility(View.VISIBLE);
-        }
 
-        /* Figure out how large the color indicator should be. Medium text is 18sp, with a border
-         * its 22sp */
-        int dimension = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP, 22, getResources().getDisplayMetrics());
-
-        mColorIndicatorLayout.removeAllViews();
-        ColorIndicatorView civ =
-                new ColorIndicatorView(this.getActivity(), dimension, dimension / 15,
-                        cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)),
-                        sCost);
-        if (civ.shouldInidcatorBeShown()) {
-            mColorIndicatorLayout.setVisibility(View.VISIBLE);
-            mColorIndicatorLayout.addView(civ);
-        } else {
-            mColorIndicatorLayout.setVisibility(View.GONE);
-        }
-
-        String allLanguageKeys[][] = {
-                {Language.Chinese_Traditional, CardDbAdapter.KEY_NAME_CHINESE_TRADITIONAL, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_TRADITIONAL},
-                {Language.Chinese_Simplified, CardDbAdapter.KEY_NAME_CHINESE_SIMPLIFIED, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_SIMPLIFIED},
-                {Language.French, CardDbAdapter.KEY_NAME_FRENCH, CardDbAdapter.KEY_MULTIVERSEID_FRENCH},
-                {Language.German, CardDbAdapter.KEY_NAME_GERMAN, CardDbAdapter.KEY_MULTIVERSEID_GERMAN},
-                {Language.Italian, CardDbAdapter.KEY_NAME_ITALIAN, CardDbAdapter.KEY_MULTIVERSEID_ITALIAN},
-                {Language.Japanese, CardDbAdapter.KEY_NAME_JAPANESE, CardDbAdapter.KEY_MULTIVERSEID_JAPANESE},
-                {Language.Portuguese_Brazil, CardDbAdapter.KEY_NAME_PORTUGUESE_BRAZIL, CardDbAdapter.KEY_MULTIVERSEID_PORTUGUESE_BRAZIL},
-                {Language.Russian, CardDbAdapter.KEY_NAME_RUSSIAN, CardDbAdapter.KEY_MULTIVERSEID_RUSSIAN},
-                {Language.Spanish, CardDbAdapter.KEY_NAME_SPANISH, CardDbAdapter.KEY_MULTIVERSEID_SPANISH},
-                {Language.Korean, CardDbAdapter.KEY_NAME_KOREAN, CardDbAdapter.KEY_MULTIVERSEID_KOREAN}};
-
-        // Clear the translations first
-        mTranslatedNames.clear();
-
-        // Add English
-        Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting();
-        englishPrinting.mLanguageCode = Language.English;
-        englishPrinting.mName = mCardName;
-        englishPrinting.mMultiverseId = mMultiverseId;
-        mTranslatedNames.add(englishPrinting);
-
-        // Add all the others
-        for (String lang[] : allLanguageKeys) {
-            Card.ForeignPrinting fp = new Card.ForeignPrinting();
-            fp.mLanguageCode = lang[0];
-            fp.mName = cCardById.getString(cCardById.getColumnIndex(lang[1]));
-            fp.mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(lang[2]));
-            if (fp.mName != null && !fp.mName.isEmpty()) {
-                mTranslatedNames.add(fp);
+            if (isMultiCard) {
+                if (mCardNumber.contains("a")) {
+                    mTransformCardNumber = mCardNumber.replace("a", "b");
+                } else if (mCardNumber.contains("b")) {
+                    mTransformCardNumber = mCardNumber.replace("b", "a");
+                }
+                mTransformId = CardDbAdapter.getIdFromSetAndNumber(mSetCode, mTransformCardNumber, database);
+                if (mTransformId == -1) {
+                    mTransformButton.setVisibility(View.GONE);
+                    mTransformButtonDivider.setVisibility(View.GONE);
+                } else {
+                    mTransformButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            releaseImageResources(true);
+                            mCardNumber = mTransformCardNumber;
+                            setInfoFromID(mTransformId);
+                        }
+                    });
+                }
             }
-        }
 
-        cCardById.close();
+            mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
 
-        /* Find the other sets this card is in ahead of time, so that it can be remove from the menu
-         * if there is only one set */
-        Cursor cCardByName;
-        try {
+            /* Do we load the image immediately to the main page, or do it in a dialog later? */
+            if (mActivity.mPreferenceAdapter.getPicFirst()) {
+                mImageScrollView.setVisibility(View.VISIBLE);
+                mTextScrollView.setVisibility(View.GONE);
+
+                mActivity.setLoading();
+                if (mAsyncTask != null) {
+                    mAsyncTask.cancel(true);
+                }
+                mAsyncTask = new FetchPictureTask();
+                ((FetchPictureTask) mAsyncTask).execute(MAIN_PAGE);
+            } else {
+                mImageScrollView.setVisibility(View.GONE);
+                mTextScrollView.setVisibility(View.VISIBLE);
+            }
+
+            /* Figure out how large the color indicator should be. Medium text is 18sp, with a border
+             * its 22sp */
+            int dimension = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP, 22, getResources().getDisplayMetrics());
+
+            mColorIndicatorLayout.removeAllViews();
+            ColorIndicatorView civ =
+                    new ColorIndicatorView(this.getActivity(), dimension, dimension / 15,
+                            cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)),
+                            sCost);
+            if (civ.shouldInidcatorBeShown()) {
+                mColorIndicatorLayout.setVisibility(View.VISIBLE);
+                mColorIndicatorLayout.addView(civ);
+            } else {
+                mColorIndicatorLayout.setVisibility(View.GONE);
+            }
+
+            String allLanguageKeys[][] = {
+                    {Language.Chinese_Traditional, CardDbAdapter.KEY_NAME_CHINESE_TRADITIONAL, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_TRADITIONAL},
+                    {Language.Chinese_Simplified, CardDbAdapter.KEY_NAME_CHINESE_SIMPLIFIED, CardDbAdapter.KEY_MULTIVERSEID_CHINESE_SIMPLIFIED},
+                    {Language.French, CardDbAdapter.KEY_NAME_FRENCH, CardDbAdapter.KEY_MULTIVERSEID_FRENCH},
+                    {Language.German, CardDbAdapter.KEY_NAME_GERMAN, CardDbAdapter.KEY_MULTIVERSEID_GERMAN},
+                    {Language.Italian, CardDbAdapter.KEY_NAME_ITALIAN, CardDbAdapter.KEY_MULTIVERSEID_ITALIAN},
+                    {Language.Japanese, CardDbAdapter.KEY_NAME_JAPANESE, CardDbAdapter.KEY_MULTIVERSEID_JAPANESE},
+                    {Language.Portuguese_Brazil, CardDbAdapter.KEY_NAME_PORTUGUESE_BRAZIL, CardDbAdapter.KEY_MULTIVERSEID_PORTUGUESE_BRAZIL},
+                    {Language.Russian, CardDbAdapter.KEY_NAME_RUSSIAN, CardDbAdapter.KEY_MULTIVERSEID_RUSSIAN},
+                    {Language.Spanish, CardDbAdapter.KEY_NAME_SPANISH, CardDbAdapter.KEY_MULTIVERSEID_SPANISH},
+                    {Language.Korean, CardDbAdapter.KEY_NAME_KOREAN, CardDbAdapter.KEY_MULTIVERSEID_KOREAN}};
+
+            // Clear the translations first
+            mTranslatedNames.clear();
+
+            // Add English
+            Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting();
+            englishPrinting.mLanguageCode = Language.English;
+            englishPrinting.mName = mCardName;
+            englishPrinting.mMultiverseId = mMultiverseId;
+            mTranslatedNames.add(englishPrinting);
+
+            // Add all the others
+            for (String lang[] : allLanguageKeys) {
+                Card.ForeignPrinting fp = new Card.ForeignPrinting();
+                fp.mLanguageCode = lang[0];
+                fp.mName = cCardById.getString(cCardById.getColumnIndex(lang[1]));
+                fp.mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(lang[2]));
+                if (fp.mName != null && !fp.mName.isEmpty()) {
+                    mTranslatedNames.add(fp);
+                }
+            }
+
+            cCardById.close();
+
+            /* Find the other sets this card is in ahead of time, so that it can be remove from the menu
+             * if there is only one set */
+            Cursor cCardByName;
             cCardByName = CardDbAdapter.fetchCardByName(mCardName,
                     Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, database
             );
-        } catch (FamiliarDbException e) {
-            handleFamiliarDbException(true);
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            return;
-        }
-        mPrintings = new LinkedHashSet<>();
-        mCardIds = new LinkedHashSet<>();
-        while (!cCardByName.isAfterLast()) {
-            try {
+            mPrintings = new LinkedHashSet<>();
+            mCardIds = new LinkedHashSet<>();
+            while (!cCardByName.isAfterLast()) {
                 String number =
                         cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_NUMBER));
                 if (!(number == null || number.length() == 0)) {
@@ -789,17 +761,17 @@ public class CardViewFragment extends FamiliarFragment {
                         .getSetNameFromCode(cCardByName.getString(cCardByName.getColumnIndex(CardDbAdapter.KEY_SET)), database) + number)) {
                     mCardIds.add(cCardByName.getLong(cCardByName.getColumnIndex(CardDbAdapter.KEY_ID)));
                 }
-            } catch (FamiliarDbException e) {
-                handleFamiliarDbException(true);
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                return;
+                cCardByName.moveToNext();
             }
-            cCardByName.moveToNext();
-        }
-        cCardByName.close();
-        /* If it exists in only one set, remove the button from the menu */
-        if (mPrintings.size() == 1) {
-            mActivity.supportInvalidateOptionsMenu();
+            cCardByName.close();
+            /* If it exists in only one set, remove the button from the menu */
+            if (mPrintings.size() == 1) {
+                mActivity.supportInvalidateOptionsMenu();
+            }
+        } catch (FamiliarDbException e) {
+            handleFamiliarDbException(true);
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+            return;
         }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
@@ -1210,9 +1182,9 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            SQLiteDatabase database =
-                    DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
             try {
+                SQLiteDatabase database =
+                        DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                 Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
                 mLegalities = new String[cFormats.getCount()];

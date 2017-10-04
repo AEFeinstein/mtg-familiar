@@ -75,30 +75,30 @@ public class CardHelpers {
             customView.findViewById(R.id.show_card_button).setOnClickListener(
                     new View.OnClickListener() {
 
-                @Override
-                public void onClick(View view) {
+                        @Override
+                        public void onClick(View view) {
 
-                    Bundle args = new Bundle();
-                        /* Open the database */
-                    SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false)
-                            .openDatabase(false);
-                    try {
-                        /* Get the card ID, and send it to a new CardViewFragment */
-                        args.putLongArray(
-                                CardViewPagerFragment.CARD_ID_ARRAY,
-                                new long[]{CardDbAdapter.fetchIdByName(mCardName, db)}
+                            Bundle args = new Bundle();
+                            /* Open the database */
+                            try {
+                                SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false)
+                                        .openDatabase(false);
+                                /* Get the card ID, and send it to a new CardViewFragment */
+                                args.putLongArray(
+                                        CardViewPagerFragment.CARD_ID_ARRAY,
+                                        new long[]{CardDbAdapter.fetchIdByName(mCardName, db)}
                                 );
-                        args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-                        CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
-                        fragment.startNewFragment(cvpFrag, args);
-                    } catch (FamiliarDbException e) {
-                        fragment.handleFamiliarDbException(false);
-                    }
-                    DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
+                                args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+                                CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+                                fragment.startNewFragment(cvpFrag, args);
+                            } catch (FamiliarDbException e) {
+                                fragment.handleFamiliarDbException(false);
+                            }
+                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
 
-                }
+                        }
 
-            });
+                    });
         } else {
             customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
             customView.findViewById(R.id.divider1).setVisibility(View.GONE);
@@ -146,66 +146,62 @@ public class CardHelpers {
         final ArrayList<Character> potentialRarities = new ArrayList<>();
         final ArrayList<String> potentialNumbers = new ArrayList<>();
 
-        /* Open the database */
-        SQLiteDatabase db =
-                DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
-
-        /* Get all the cards with relevant info from the database */
-        Cursor cards;
         try {
+            /* Open the database */
+            SQLiteDatabase db =
+                    DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
+
+            /* Get all the cards with relevant info from the database */
+            Cursor cards;
             cards = CardDbAdapter.fetchCardByName(mCardName, Arrays.asList(
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
                     CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, db);
-        } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-            return null;
-        }
 
-        Set<String> foilSets;
-        try {
+            Set<String> foilSets;
             foilSets = CardDbAdapter.getFoilSets(db);
-        } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-            return null;
-        }
 
-        /* For each card, add it to the wishlist view */
-        while (!cards.isAfterLast()) {
-            String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
-            String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
-            char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
-            String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+            /* For each card, add it to the wishlist view */
+            while (!cards.isAfterLast()) {
+                String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
+                String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
+                char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
+                String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
-            /* Inflate a row and fill it with stuff */
-            View listDialogRow =
-                    createDialogRow(fragment, setName, targetCardNumberOfs.get(setCode), false);
-            linearLayout.addView(listDialogRow);
-            potentialSetCodes.add(setCode);
-            potentialRarities.add(rarity);
-            potentialNumbers.add(number);
-
-            /* If this card has a foil version, add that too */
-            if (foilSets.contains(setCode)) {
-                View wishlistRowFoil = createDialogRow(
-                        fragment,
-                        setName,
-                        targetFoilCardNumberOfs.get(setCode),
-                        true
-                );
-                linearLayout.addView(wishlistRowFoil);
+                /* Inflate a row and fill it with stuff */
+                View listDialogRow =
+                        createDialogRow(fragment, setName, targetCardNumberOfs.get(setCode), false);
+                linearLayout.addView(listDialogRow);
                 potentialSetCodes.add(setCode);
                 potentialRarities.add(rarity);
                 potentialNumbers.add(number);
+
+                /* If this card has a foil version, add that too */
+                if (foilSets.contains(setCode)) {
+                    View wishlistRowFoil = createDialogRow(
+                            fragment,
+                            setName,
+                            targetFoilCardNumberOfs.get(setCode),
+                            true
+                    );
+                    linearLayout.addView(wishlistRowFoil);
+                    potentialSetCodes.add(setCode);
+                    potentialRarities.add(rarity);
+                    potentialNumbers.add(number);
+                }
+
+                cards.moveToNext();
             }
 
-            cards.moveToNext();
+            /* Clean up */
+            cards.close();
+        } catch (FamiliarDbException e) {
+            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
+            return null;
         }
 
-        /* Clean up */
-        cards.close();
         DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
 
         /* make and return the actual dialog */
@@ -308,10 +304,11 @@ public class CardHelpers {
 
     /**
      * Creates the row of each card in the edit dialog.
-     * @param fragment the fragment we are from
-     * @param setName the set of the card
+     *
+     * @param fragment           the fragment we are from
+     * @param setName            the set of the card
      * @param targetCardNumberOf the number of the card
-     * @param isFoil if the card is foil or not
+     * @param isFoil             if the card is foil or not
      * @return a View that displays an idividual printing of a card
      */
     private static View createDialogRow(
@@ -393,7 +390,7 @@ public class CardHelpers {
 
             IndividualSetInfo isi = new IndividualSetInfo();
 
-            if(card != null) {
+            if (card != null) {
                 isi.mSet = card.setName;
                 isi.mSetCode = card.setCode;
                 isi.mNumber = card.mNumber;
@@ -416,7 +413,6 @@ public class CardHelpers {
         }
 
         /**
-         *
          * @return The total number cards this object contains
          */
         public int getTotalNumber() {
@@ -432,7 +428,7 @@ public class CardHelpers {
     }
 
     /**
-     *  Comparator based on name.
+     * Comparator based on name.
      */
     public static class CardComparatorName
             implements Comparator<CompressedDecklistInfo>, Serializable {
@@ -686,10 +682,10 @@ public class CardHelpers {
     /**
      * Construct a MtgCard based on the given parameters.
      *
-     * @param context context the method is being called from
+     * @param context  context the method is being called from
      * @param cardName name of the card to make
-     * @param cardSet set code of the card to make
-     * @param isFoil if the card is foil or not
+     * @param cardSet  set code of the card to make
+     * @param isFoil   if the card is foil or not
      * @param numberOf how many copies of the card are needed
      * @return an MtgCard made based on the given parameters
      */
@@ -701,8 +697,8 @@ public class CardHelpers {
             int numberOf) {
 
         FamiliarActivity activity = (FamiliarActivity) context;
-        SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false);
         try {
+            SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false);
             /* Make the new MTGCard */
             MtgCard card = new MtgCard();
             card.foil = isFoil;
@@ -727,7 +723,7 @@ public class CardHelpers {
             }
             /* Get extra information from the database */
             Cursor cardCursor;
-            if(cardSet == null) {
+            if (cardSet == null) {
                 cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
                 /* If we don't specify the set, and we are trying to find a foil card, choose the
                  * latest foil printing. If there are no eligible printings, select the latest */
@@ -742,8 +738,7 @@ public class CardHelpers {
                         cardCursor.moveToNext();
                     }
                 }
-            }
-            else {
+            } else {
                 cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, fields, database);
             }
             if (cardCursor.getCount() == 0) {

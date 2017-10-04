@@ -272,9 +272,9 @@ public class WishlistFragment extends FamiliarListFragment {
     private void readAndCompressWishlist(String changedCardName) {
         /* Read the wishlist */
         ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-        boolean cardNumberFixed = false;
         try {
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            boolean cardNumberFixed = false;
             /* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
                 card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);

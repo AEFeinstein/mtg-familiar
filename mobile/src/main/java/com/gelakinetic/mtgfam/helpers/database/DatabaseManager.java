@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.helpers.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -46,7 +47,7 @@ public class DatabaseManager {
      *
      * @param isTransactional Whether or not this database operation is transactional
      */
-    public synchronized SQLiteDatabase openDatabase(boolean isTransactional) {
+    public synchronized SQLiteDatabase openDatabase(boolean isTransactional) throws FamiliarDbException {
         if (isTransactional) {
             return mTransactionalDatabase.openDatabase();
         } else {
@@ -119,19 +120,23 @@ public class DatabaseManager {
          *
          * @return a SQLiteDatabase to query or whatever
          */
-        public synchronized SQLiteDatabase openDatabase() {
-            if (mOpenCounter.incrementAndGet() == 1) {
-                // Opening new database
-                if (mTransactional) {
-                    mDatabase = mDatabaseHelper.getWritableDatabase();
-                    if (mDatabase != null) {
-                        mDatabase.execSQL("BEGIN EXCLUSIVE TRANSACTION");
+        public synchronized SQLiteDatabase openDatabase() throws FamiliarDbException {
+            try {
+                if (mOpenCounter.incrementAndGet() == 1) {
+                    // Opening new database
+                    if (mTransactional) {
+                        mDatabase = mDatabaseHelper.getWritableDatabase();
+                        if (mDatabase != null) {
+                            mDatabase.execSQL("BEGIN EXCLUSIVE TRANSACTION");
+                        }
+                    } else {
+                        mDatabase = mDatabaseHelper.getReadableDatabase();
                     }
-                } else {
-                    mDatabase = mDatabaseHelper.getReadableDatabase();
                 }
+                return mDatabase;
+            } catch (SQLiteException e) {
+                throw new FamiliarDbException(e);
             }
-            return mDatabase;
         }
 
         /**

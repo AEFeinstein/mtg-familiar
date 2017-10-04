@@ -86,9 +86,6 @@ public class RulesFragment extends FamiliarFragment {
         String keyword;
         final String format;
 
-        /* Open a database connection */
-        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-
         /* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.result_list_frag, container, false);
         assert myFragmentView != null;
@@ -119,10 +116,6 @@ public class RulesFragment extends FamiliarFragment {
         ListView list = myFragmentView.findViewById(R.id.result_list);
         mRules = new ArrayList<>();
         boolean isClickable;
-        Cursor cursor;
-
-        Cursor setsCursor;
-        setsCursor = null;
 
         /* Sub-optimal, but KitKat is silly */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -149,8 +142,14 @@ public class RulesFragment extends FamiliarFragment {
             });
         }
 
+        Cursor cursor;
+        Cursor setsCursor = null;
+
         /* Populate the cursor with information from the database */
         try {
+            /* Open a database connection */
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+
             if (isGlossary) {
                 cursor = CardDbAdapter.getGlossaryTerms(database);
                 isClickable = false;
@@ -421,8 +420,8 @@ public class RulesFragment extends FamiliarFragment {
         if (shouldLink) {
             Matcher m = mLinkPattern.matcher(cs);
             while (m.find()) {
-                SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                 try {
+                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                     String[] tokens = cs.subSequence(m.start(), m.end()).toString().split("(\\.)");
                     int firstInt = Integer.parseInt(tokens[0]);
                     final int linkCat = firstInt / 100;

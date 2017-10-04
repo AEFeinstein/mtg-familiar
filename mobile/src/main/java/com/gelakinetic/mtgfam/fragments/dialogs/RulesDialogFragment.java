@@ -67,8 +67,8 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                 if (getParentRulesFragment().mCategory == -1) {
                     title = getString(R.string.rules_search_all);
                 } else {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                     try {
+                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                         title = String.format(getString(R.string.rules_search_cat),
                                 CardDbAdapter.getCategoryName(getParentRulesFragment().mCategory, getParentRulesFragment().mSubcategory, database));
                     } catch (FamiliarDbException e) {

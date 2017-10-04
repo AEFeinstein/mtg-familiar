@@ -90,7 +90,12 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
         int retry = MAX_NUM_RETRIES; /* try the fetch up to eight times, for different accent mark & split card combos*/
         /* then the same for multicard ordering */
         SpiceException exception = null; /* Save the exception during while loops */
-        SQLiteDatabase database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
+        SQLiteDatabase database;
+        try {
+            database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
+        } catch (FamiliarDbException e) {
+            throw new SpiceException(e.getLocalizedMessage());
+        }
         while (retry > 0) {
             try {
                 /* If the card number wasn't given, figure it out */

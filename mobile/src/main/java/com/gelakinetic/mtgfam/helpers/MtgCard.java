@@ -72,7 +72,7 @@ public class MtgCard extends Card {
         mMultiverseId = 0;
         mColorIdentity = "";
         mWatermark = "";
-        mForeignPrintings.clear();
+        mForeignPrintings = new ForeignPrinting[]{};
     }
 
     public MtgCard(Card card) {
@@ -94,7 +94,8 @@ public class MtgCard extends Card {
             this.mMultiverseId = card.mMultiverseId;
             this.mColorIdentity = card.mColorIdentity;
             this.mWatermark = card.mWatermark;
-            this.mForeignPrintings.addAll(card.mForeignPrintings);
+            this.mForeignPrintings = new ForeignPrinting[card.mForeignPrintings.length];
+            System.arraycopy(card.mForeignPrintings, 0, this.mForeignPrintings, 0, card.mForeignPrintings.length);
         }
     }
 
@@ -171,7 +172,12 @@ public class MtgCard extends Card {
      */
     public static MtgCard fromTradeString(String line, Context context) {
 
-        SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false);
+        SQLiteDatabase database = null;
+        try {
+            database = DatabaseManager.getInstance(context, false).openDatabase(false);
+        } catch (FamiliarDbException e) {
+            /* Carry on without the database */
+        }
 
         MtgCard card = new MtgCard();
         String[] parts = line.split(DELIMITER);
@@ -185,7 +191,7 @@ public class MtgCard extends Card {
         if (card.setCode.equals("DD3")) {
             try {
                 card.setCode = CardDbAdapter.getCorrectSetCode(card.mName, card.setCode, database);
-            } catch (FamiliarDbException e) {
+            } catch (FamiliarDbException | NullPointerException e) {
                 /* Eat it and use the old mExpansion code. */
             }
         }
@@ -211,7 +217,7 @@ public class MtgCard extends Card {
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR), true, database);
                 card.mCmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
                 card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
-            } catch (FamiliarDbException e) {
+            } catch (FamiliarDbException | NullPointerException e) {
                 card.mCmc = 0;
                 card.mColor = "";
             }
@@ -220,7 +226,7 @@ public class MtgCard extends Card {
         /* Defaults regardless */
         try {
             card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
-        } catch (FamiliarDbException e) {
+        } catch (FamiliarDbException | NullPointerException e) {
             card.setName = null;
         }
         DatabaseManager.getInstance(context, false).closeDatabase(false);
@@ -292,8 +298,8 @@ public class MtgCard extends Card {
 
         /* Correct the mExpansion code for Duel Deck Anthologies */
         if (newCard.setCode.equals("DD3")) {
-            SQLiteDatabase database = DatabaseManager.getInstance(mCtx, false).openDatabase(false);
             try {
+                SQLiteDatabase database = DatabaseManager.getInstance(mCtx, false).openDatabase(false);
                 newCard.setCode = CardDbAdapter.getCorrectSetCode(newCard.mName, newCard.setCode, database);
             } catch (FamiliarDbException e) {
                 /* Eat it and use the old mExpansion code. */

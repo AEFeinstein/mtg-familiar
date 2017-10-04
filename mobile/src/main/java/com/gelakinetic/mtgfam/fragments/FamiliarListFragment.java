@@ -121,9 +121,9 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     @Override
     public void receiveTutorCardsResult(long multiverseId) {
 
-        SQLiteDatabase database =
-                DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
         try {
+            SQLiteDatabase database =
+                    DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
             Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
             final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
@@ -138,7 +138,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             e.printStackTrace();
         }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-
     }
 
     /**
