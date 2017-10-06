@@ -64,7 +64,8 @@ public class DecklistHelpers {
 
         try {
 
-            final String newFileName = fileName.replaceAll("(\\s)", "_");
+            final String newFileName =
+                    fileName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
             FileOutputStream fos = mCtx.openFileOutput(newFileName, Context.MODE_PRIVATE);
 
             /* For each compressed card, make an MtgCard and write it to the default decklist */

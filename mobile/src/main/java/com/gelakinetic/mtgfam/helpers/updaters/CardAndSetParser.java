@@ -135,7 +135,7 @@ class CardAndSetParser {
             if (stream == null) {
                 throw new IOException("No Stream");
             }
-            JsonReader reader = new JsonReader(new InputStreamReader(stream, "ISO-8859-1"));
+            JsonReader reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
             Gson gson = CardAndSetParser.getGson();
 
             legalityData = gson.fromJson(reader, LegalityData.class);
