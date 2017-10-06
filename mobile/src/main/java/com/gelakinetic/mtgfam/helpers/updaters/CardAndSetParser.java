@@ -19,6 +19,8 @@
 
 package com.gelakinetic.mtgfam.helpers.updaters;
 
+import android.content.Context;
+
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.JsonTypes.LegalityData;
@@ -120,11 +122,11 @@ class CardAndSetParser {
      * Parses the legality file and populates the database with the different formats, their respective sets, and their
      * banned and restricted lists
      *
-     * @param prefAdapter The preference adapter is used to get the last update time
-     * @param logWriter   A writer to print debug statements when things go wrong
+     * @param context   The context to manage preferences with
+     * @param logWriter A writer to print debug statements when things go wrong
      * @return An object with all of the legal info, to be added to the database in one fell swoop
      */
-    public LegalityData readLegalityJsonStream(PreferenceAdapter prefAdapter, PrintWriter logWriter) {
+    public LegalityData readLegalityJsonStream(Context context, PrintWriter logWriter) {
 
         LegalityData legalityData;
 
@@ -139,7 +141,7 @@ class CardAndSetParser {
             legalityData = gson.fromJson(reader, LegalityData.class);
 
             mCurrentLegalityTimestamp = legalityData.mTimestamp;
-            long spDate = prefAdapter.getLegalityTimestamp();
+            long spDate = PreferenceAdapter.getLegalityTimestamp(context);
             if (spDate >= mCurrentLegalityTimestamp) {
                 legalityData = null; /* dates match, nothing new here. */
             }
@@ -155,10 +157,10 @@ class CardAndSetParser {
     /**
      * When the service is done, this method is called to commit the update dates to the shared preferences
      *
-     * @param prefAdapter The preferences to write to
+     * @param context the Context to manage preferences with
      */
-    public void commitDates(PreferenceAdapter prefAdapter) {
-        prefAdapter.setLegalityTimestamp(mCurrentLegalityTimestamp);
+    public void commitDates(Context context) {
+        PreferenceAdapter.setLegalityTimestamp(context, mCurrentLegalityTimestamp);
         mCurrentLegalityTimestamp = 0;
     }
 }

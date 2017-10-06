@@ -45,12 +45,11 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         assert intent.getExtras() != null;
         int type = intent.getExtras().getInt(RoundTimerFragment.ROUND_TIMER_INTENT);
-        PreferenceAdapter preferenceAdapter = new PreferenceAdapter(context);
 
         switch (type) {
             case RoundTimerFragment.TIMER_RING_ALARM:
                 /* Play the notification sound */
-                PlayNotificationSound(context, preferenceAdapter.getTimerSound());
+                PlayNotificationSound(context, PreferenceAdapter.getTimerSound(context));
 
                 /* Change the notification to show that the round ended */
                 NotificationHelper.createChannels(context);
@@ -70,25 +69,25 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 notificationManager.notify(RoundTimerFragment.TIMER_NOTIFICATION_ID, notification);
                 break;
             case RoundTimerFragment.TIMER_2_MIN_WARNING:
-                VerifyPlayNotificationSoundOrTTS(context, preferenceAdapter.getTwoMinutePref(), preferenceAdapter.getUseSoundInsteadOfTTSPref()
-                        , preferenceAdapter.getTimerSound(), R.string.timer_two_minutes_left);
+                VerifyPlayNotificationSoundOrTTS(context, PreferenceAdapter.getTwoMinutePref(context), PreferenceAdapter.getUseSoundInsteadOfTTSPref(context)
+                        , PreferenceAdapter.getTimerSound(context), R.string.timer_two_minutes_left);
 
                 break;
             case RoundTimerFragment.TIMER_5_MIN_WARNING:
-                VerifyPlayNotificationSoundOrTTS(context, preferenceAdapter.getFiveMinutePref(), preferenceAdapter.getUseSoundInsteadOfTTSPref()
-                        , preferenceAdapter.getTimerSound(), R.string.timer_five_minutes_left);
+                VerifyPlayNotificationSoundOrTTS(context, PreferenceAdapter.getFiveMinutePref(context), PreferenceAdapter.getUseSoundInsteadOfTTSPref(context)
+                        , PreferenceAdapter.getTimerSound(context), R.string.timer_five_minutes_left);
                 break;
             case RoundTimerFragment.TIMER_10_MIN_WARNING:
-                VerifyPlayNotificationSoundOrTTS(context, preferenceAdapter.getTenMinutePref(), preferenceAdapter.getUseSoundInsteadOfTTSPref()
-                        , preferenceAdapter.getTimerSound(), R.string.timer_ten_minutes_left);
+                VerifyPlayNotificationSoundOrTTS(context, PreferenceAdapter.getTenMinutePref(context), PreferenceAdapter.getUseSoundInsteadOfTTSPref(context)
+                        , PreferenceAdapter.getTimerSound(context), R.string.timer_ten_minutes_left);
                 break;
             case RoundTimerFragment.TIMER_15_MIN_WARNING:
-                VerifyPlayNotificationSoundOrTTS(context, preferenceAdapter.getFifteenMinutePref(), preferenceAdapter.getUseSoundInsteadOfTTSPref()
-                        , preferenceAdapter.getTimerSound(), R.string.timer_fifteen_minutes_left);
+                VerifyPlayNotificationSoundOrTTS(context, PreferenceAdapter.getFifteenMinutePref(context), PreferenceAdapter.getUseSoundInsteadOfTTSPref(context)
+                        , PreferenceAdapter.getTimerSound(context), R.string.timer_fifteen_minutes_left);
                 break;
             case RoundTimerFragment.TIMER_EASTER_EGG:
-                VerifyPlayNotificationSoundOrTTS(context, preferenceAdapter.getFifteenMinutePref(), preferenceAdapter.getUseSoundInsteadOfTTSPref()
-                        , preferenceAdapter.getTimerSound(), R.string.timer_easter_egg);
+                VerifyPlayNotificationSoundOrTTS(context, PreferenceAdapter.getFifteenMinutePref(context), PreferenceAdapter.getUseSoundInsteadOfTTSPref(context)
+                        , PreferenceAdapter.getTimerSound(context), R.string.timer_easter_egg);
                 break;
         }
     }
@@ -168,7 +167,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                 int result = mTts.setLanguage(getResources().getConfiguration().locale);
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     /* Fall back to ringtone */
-                    PlayNotificationSound(getApplicationContext(), new PreferenceAdapter(getApplicationContext()).getTimerSound());
+                    PlayNotificationSound(getApplicationContext(), PreferenceAdapter.getTimerSound(getApplicationContext()));
                 } else {
                     /* Request audio focus for playback on the alarm stream */
                     int res = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_ALARM,
@@ -183,12 +182,12 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                         return; /* if we don't return, the service will stop before speaking */
                     } else {
                         /* Fall back to ringtone */
-                        PlayNotificationSound(getApplicationContext(), new PreferenceAdapter(getApplicationContext()).getTimerSound());
+                        PlayNotificationSound(getApplicationContext(), PreferenceAdapter.getTimerSound(getApplicationContext()));
                     }
                 }
             } else {
                 /* Fall back to ringtone */
-                PlayNotificationSound(getApplicationContext(), new PreferenceAdapter(getApplicationContext()).getTimerSound());
+                PlayNotificationSound(getApplicationContext(), PreferenceAdapter.getTimerSound(getApplicationContext()));
             }
             /* The ringtone has played, so stop the service */
             stopSelf();

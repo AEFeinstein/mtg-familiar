@@ -16,6 +16,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.MoJhoStoDialogFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -132,9 +133,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getFamiliarActivity().mPreferenceAdapter.getMojhostoFirstTime()) {
+        if (PreferenceAdapter.getMojhostoFirstTime(getContext())) {
             showDialog(MoJhoStoDialogFragment.DIALOG_RULES);
-            getFamiliarActivity().mPreferenceAdapter.setMojhostoFirstTime();
+            PreferenceAdapter.setMojhostoFirstTime(getContext());
         }
     }
 

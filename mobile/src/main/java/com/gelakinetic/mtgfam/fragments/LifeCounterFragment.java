@@ -28,6 +28,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.LifeCounterDialogFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.CommanderEntry;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -135,7 +136,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         assert myFragmentView != null;
         mGridLayout = myFragmentView.findViewById(R.id.playerList);
 
-        mDisplayMode = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getDisplayMode());
+        mDisplayMode = Integer.parseInt(PreferenceAdapter.getDisplayMode(getContext()));
 
         mCommanderPlayerView = myFragmentView.findViewById(R.id.commander_player);
 
@@ -235,7 +236,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             player.onPause();
             playerData += player.toString();
         }
-        getFamiliarActivity().mPreferenceAdapter.setPlayerData(playerData);
+        PreferenceAdapter.setPlayerData(getContext(), playerData);
         mGridLayout.removeAllViews();
         mPlayers.clear();
 
@@ -255,7 +256,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     public void onResume() {
         super.onResume();
 
-        String playerData = getFamiliarActivity().mPreferenceAdapter.getPlayerData();
+        String playerData = PreferenceAdapter.getPlayerData(getContext());
         if (playerData == null || playerData.length() == 0) {
             addPlayer();
             addPlayer();
@@ -272,7 +273,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         setStatDisplaying(mStatDisplaying);
 
-        if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
+        if (PreferenceAdapter.getKeepScreenOn(getContext())) {
             getActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
@@ -282,9 +283,9 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      */
     @Override
     public void onUserInactive() {
-        if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn() &&
-                getFamiliarActivity().mPreferenceAdapter.getDimScreen()) {
-            float dimLevel = (float) getFamiliarActivity().mPreferenceAdapter.getDimLevel() / (float) 100;
+        if (PreferenceAdapter.getKeepScreenOn(getContext()) &&
+                PreferenceAdapter.getDimScreen(getContext())) {
+            float dimLevel = (float) PreferenceAdapter.getDimLevel(getContext()) / (float) 100;
             WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
             layoutParams.screenBrightness = dimLevel;
             getActivity().getWindow().setAttributes(layoutParams);
@@ -296,7 +297,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      */
     @Override
     public void onUserActive() {
-        if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
+        if (PreferenceAdapter.getKeepScreenOn(getContext())) {
             WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
             layoutParams.screenBrightness = -1;
             getActivity().getWindow().setAttributes(layoutParams);
@@ -438,7 +439,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      */
     public void changeDisplayMode(boolean shouldDefaultLives) {
         /* update the preference */
-        getFamiliarActivity().mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
+        PreferenceAdapter.setDisplayMode(getContext(), String.valueOf(mDisplayMode));
 
         mGridLayout.removeAllViews();
 

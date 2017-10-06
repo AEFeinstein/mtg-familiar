@@ -30,6 +30,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
@@ -315,9 +316,8 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getDeckPrice());
-        mShowTotalDecklistPrice = getFamiliarActivity().mPreferenceAdapter
-                .getShowTotalDecklistPrice();
+        mPriceSetting = Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext()));
+        mShowTotalDecklistPrice = PreferenceAdapter.getShowTotalDecklistPrice(getContext());
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
         mListAdapter.notifyDataSetChanged();

@@ -70,10 +70,10 @@ public class TutorCards {
         mActivity.setLoading();
 
         /* For the first three searches, tell the user it's powered by TutorCards */
-        int numSearches = mActivity.mPreferenceAdapter.getNumTutorCardsSearches();
+        int numSearches = PreferenceAdapter.getNumTutorCardsSearches(mActivity);
         if (numSearches < 3) {
             numSearches++;
-            mActivity.mPreferenceAdapter.setNumTutorCardsSearches(numSearches);
+            PreferenceAdapter.setNumTutorCardsSearches(mActivity, numSearches);
             ToastWrapper.makeText(mActivity, R.string.tutor_cards_notice, ToastWrapper.LENGTH_LONG).show();
         }
 

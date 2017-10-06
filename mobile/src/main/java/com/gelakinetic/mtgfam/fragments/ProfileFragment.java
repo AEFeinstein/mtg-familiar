@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.ProfileDialogFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 /**
  * This fragment contains a players profile information such as their DCI number and anything else
@@ -73,7 +74,7 @@ public class ProfileFragment extends FamiliarFragment {
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "free3of9.ttf");
         mBarcodeTextView.setTypeface(tf);
 
-        mDCINumber = getFamiliarActivity().mPreferenceAdapter.getDCINumber();
+        mDCINumber = PreferenceAdapter.getDCINumber(getContext());
 
         checkDCINumber();
 
@@ -103,7 +104,7 @@ public class ProfileFragment extends FamiliarFragment {
                 showDialog();
                 return true;
             case R.id.profile_menu_remove_dci:
-                getFamiliarActivity().mPreferenceAdapter.setDCINumber("");
+                PreferenceAdapter.setDCINumber(getContext(), "");
                 mDCINumber = "";
                 checkDCINumber();
                 return true;

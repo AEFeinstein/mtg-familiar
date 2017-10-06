@@ -24,6 +24,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.RoundTimerDialogFragment;
 import com.gelakinetic.mtgfam.helpers.NotificationHelper;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
 
 import java.util.Calendar;
@@ -202,9 +203,9 @@ public class RoundTimerFragment extends FamiliarFragment {
         mTimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (getFamiliarActivity().mPreferenceAdapter.getRoundTimerEnd() != -1) {
+                if (PreferenceAdapter.getRoundTimerEnd(getContext()) != -1) {
                     /* Commit the endTime as -1 */
-                    getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(-1);
+                    PreferenceAdapter.setRoundTimerEnd(getContext(), -1);
                     /* Cancel the alarms */
                     setOrCancelAlarms(getActivity(), 0, false);
                     /* Stop the ActionBar timer display*/
@@ -225,7 +226,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                     }
                     long endTime = System.currentTimeMillis() + timeInMillis;
                     /* Commit the end time */
-                    getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(endTime);
+                    PreferenceAdapter.setRoundTimerEnd(getContext(), endTime);
 
                     /* Set the alarm, and any warning alarms if applicable */
                     setOrCancelAlarms(getActivity(), endTime, true);
@@ -239,7 +240,7 @@ public class RoundTimerFragment extends FamiliarFragment {
             }
         });
 
-        if (getFamiliarActivity().mPreferenceAdapter.getRoundTimerEnd() != -1) {
+        if (PreferenceAdapter.getRoundTimerEnd(getContext()) != -1) {
             mTimerButton.setText(R.string.timer_cancel);
         }
 
@@ -279,7 +280,7 @@ public class RoundTimerFragment extends FamiliarFragment {
         /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.set_timer_ringtone:
-                Uri soundFile = Uri.parse(getFamiliarActivity().mPreferenceAdapter.getTimerSound());
+                Uri soundFile = Uri.parse(PreferenceAdapter.getTimerSound(getContext()));
 
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);

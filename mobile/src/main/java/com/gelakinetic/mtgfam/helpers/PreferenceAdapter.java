@@ -25,509 +25,533 @@ import java.util.Set;
  */
 public class PreferenceAdapter {
 
-    private final Context context;
-    private final SharedPreferences prefs;
-    private final Editor edit;
-
-    /**
-     * Constructor
-     *
-     * @param context A context to get string keys and commit preferences with
-     */
-    public PreferenceAdapter(Context context) {
-        this.context = context;
-        this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        this.edit = this.prefs.edit();
+    public static synchronized void registerOnSharedPreferenceChangeListener(
+            Context context,
+            SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(listener);
     }
 
-    public void registerOnSharedPreferenceChangeListener(
+    public static synchronized void unregisterOnSharedPreferenceChangeListener(
+            Context context,
             SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        this.prefs.registerOnSharedPreferenceChangeListener(listener);
-    }
-
-    public void unregisterOnSharedPreferenceChangeListener(
-            SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        this.prefs.unregisterOnSharedPreferenceChangeListener(listener);
+        PreferenceManager.getDefaultSharedPreferences(context).unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     /* Last version */
-    public synchronized int getLastVersion() {
-        return this.prefs.getInt(context.getString(R.string.key_lastVersion), 0);
+    public static synchronized int getLastVersion(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_lastVersion), 0);
     }
 
-    public synchronized void setLastVersion(int lastVersion) {
-        this.edit.putInt(context.getString(R.string.key_lastVersion), lastVersion);
-        this.edit.commit();
+    public static synchronized void setLastVersion(Context context, int lastVersion) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_lastVersion), lastVersion);
+        edit.apply();
     }
 
     /* Last legality update */
-    public synchronized int getLastLegalityUpdate() {
-        return this.prefs.getInt(context.getString(R.string.key_lastLegalityUpdate), 0);
+    public static synchronized int getLastLegalityUpdate(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_lastLegalityUpdate), 0);
     }
 
-    public synchronized void setLastLegalityUpdate(int lastLegalityUpdate) {
-        this.edit.putInt(context.getString(R.string.key_lastLegalityUpdate), lastLegalityUpdate);
-        this.edit.commit();
+    public static synchronized void setLastLegalityUpdate(Context context, int lastLegalityUpdate) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_lastLegalityUpdate), lastLegalityUpdate);
+        edit.apply();
     }
 
     /* White mana */
-    public synchronized int getWhiteMana() {
-        return this.prefs.getInt(context.getString(R.string.key_whiteMana), 0);
+    public static synchronized int getWhiteMana(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_whiteMana), 0);
     }
 
-    public synchronized void setWhiteMana(int whiteMana) {
-        this.edit.putInt(context.getString(R.string.key_whiteMana), whiteMana);
-        this.edit.commit();
+    public static synchronized void setWhiteMana(Context context, int whiteMana) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_whiteMana), whiteMana);
+        edit.apply();
     }
 
     /* Blue mana */
-    public synchronized int getBlueMana() {
-        return this.prefs.getInt(context.getString(R.string.key_blueMana), 0);
+    public static synchronized int getBlueMana(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_blueMana), 0);
     }
 
-    public synchronized void setBlueMana(int blueMana) {
-        this.edit.putInt(context.getString(R.string.key_blueMana), blueMana);
-        this.edit.commit();
+    public static synchronized void setBlueMana(Context context, int blueMana) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_blueMana), blueMana);
+        edit.apply();
     }
 
     /* Black mana */
-    public synchronized int getBlackMana() {
-        return this.prefs.getInt(context.getString(R.string.key_blackMana), 0);
+    public static synchronized int getBlackMana(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_blackMana), 0);
     }
 
-    public synchronized void setBlackMana(int blackMana) {
-        this.edit.putInt(context.getString(R.string.key_blackMana), blackMana);
-        this.edit.commit();
+    public static synchronized void setBlackMana(Context context, int blackMana) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_blackMana), blackMana);
+        edit.apply();
     }
 
     /* Red mana */
-    public synchronized int getRedMana() {
-        return this.prefs.getInt(context.getString(R.string.key_redMana), 0);
+    public static synchronized int getRedMana(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_redMana), 0);
     }
 
-    public synchronized void setRedMana(int redMana) {
-        this.edit.putInt(context.getString(R.string.key_redMana), redMana);
-        this.edit.commit();
+    public static synchronized void setRedMana(Context context, int redMana) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_redMana), redMana);
+        edit.apply();
     }
 
     /* Green mana */
-    public synchronized int getGreenMana() {
-        return this.prefs.getInt(context.getString(R.string.key_greenMana), 0);
+    public static synchronized int getGreenMana(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_greenMana), 0);
     }
 
-    public synchronized void setGreenMana(int greenMana) {
-        this.edit.putInt(context.getString(R.string.key_greenMana), greenMana);
-        this.edit.commit();
+    public static synchronized void setGreenMana(Context context, int greenMana) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_greenMana), greenMana);
+        edit.apply();
     }
 
     /* Colorless mana */
-    public synchronized int getColorlessMana() {
-        return this.prefs.getInt(context.getString(R.string.key_colorlessMana), 0);
+    public static synchronized int getColorlessMana(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_colorlessMana), 0);
     }
 
-    public synchronized void setColorlessMana(int colorlessMana) {
-        this.edit.putInt(context.getString(R.string.key_colorlessMana), colorlessMana);
-        this.edit.commit();
+    public static synchronized void setColorlessMana(Context context, int colorlessMana) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_colorlessMana), colorlessMana);
+        edit.apply();
     }
 
     /* Spell count */
-    public synchronized int getSpellCount() {
-        return this.prefs.getInt(context.getString(R.string.key_spellCount), 0);
+    public static synchronized int getSpellCount(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_spellCount), 0);
     }
 
-    public synchronized void setSpellCount(int spellCount) {
-        this.edit.putInt(context.getString(R.string.key_spellCount), spellCount);
-        this.edit.commit();
+    public static synchronized void setSpellCount(Context context, int spellCount) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_spellCount), spellCount);
+        edit.apply();
     }
 
     /* Last rules update */
-    public synchronized long getLastRulesUpdate() {
-        return this.prefs.getLong(context.getString(R.string.key_lastRulesUpdate), BuildDate.get(this.context).getTime());
+    public static synchronized long getLastRulesUpdate(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_lastRulesUpdate), BuildDate.get(context).getTime());
     }
 
-    public synchronized void setLastRulesUpdate(long lastRulesUpdate) {
-        this.edit.putLong(context.getString(R.string.key_lastRulesUpdate), lastRulesUpdate);
-        this.edit.commit();
+    public static synchronized void setLastRulesUpdate(Context context, long lastRulesUpdate) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_lastRulesUpdate), lastRulesUpdate);
+        edit.apply();
     }
 
     /* Last MTR update */
-    public synchronized long getLastMTRUpdate() {
-        return this.prefs.getLong(context.getString(R.string.key_lastMTRUpdate), 0);
+    public static synchronized long getLastMTRUpdate(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_lastMTRUpdate), 0);
     }
 
-    public synchronized void setLastMTRUpdate(long lastMTRUpdate) {
-        this.edit.putLong(context.getString(R.string.key_lastMTRUpdate), lastMTRUpdate);
-        this.edit.commit();
+    public static synchronized void setLastMTRUpdate(Context context, long lastMTRUpdate) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_lastMTRUpdate), lastMTRUpdate);
+        edit.apply();
     }
 
     /* Last IPG update */
-    public synchronized long getLastIPGUpdate() {
-        return this.prefs.getLong(context.getString(R.string.key_lastIPGUpdate), 0);
+    public static synchronized long getLastIPGUpdate(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_lastIPGUpdate), 0);
     }
 
-    public synchronized void setLastIPGUpdate(long lastIPGUpdate) {
-        this.edit.putLong(context.getString(R.string.key_lastIPGUpdate), lastIPGUpdate);
-        this.edit.commit();
+    public static synchronized void setLastIPGUpdate(Context context, long lastIPGUpdate) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_lastIPGUpdate), lastIPGUpdate);
+        edit.apply();
     }
 
     /* Last JAR update */
-    public synchronized long getLastJARUpdate() {
-        return this.prefs.getLong(context.getString(R.string.key_lastJARUpdate), 0);
+    public static synchronized long getLastJARUpdate(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_lastJARUpdate), 0);
     }
 
-    public synchronized void setLastJARUpdate(long lastJARUpdate) {
-        this.edit.putLong(context.getString(R.string.key_lastJARUpdate), lastJARUpdate);
-        this.edit.commit();
+    public static synchronized void setLastJARUpdate(Context context, long lastJARUpdate) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_lastJARUpdate), lastJARUpdate);
+        edit.apply();
     }
 
     /* TTS show dialog */
-    public synchronized boolean getTtsShowDialog() {
-        return this.prefs.getBoolean(context.getString(R.string.key_ttsShowDialog), true);
+    public static synchronized boolean getTtsShowDialog(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_ttsShowDialog), true);
     }
 
-    public synchronized void setTtsShowDialog() {
-        this.edit.putBoolean(context.getString(R.string.key_ttsShowDialog), false);
-        this.edit.commit();
+    public static synchronized void setTtsShowDialog(Context context) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_ttsShowDialog), false);
+        edit.apply();
     }
 
     /* Auto-update */
-    public synchronized boolean getAutoUpdate() {
-        return this.prefs.getBoolean(context.getString(R.string.key_autoupdate), true);
+    public static synchronized boolean getAutoUpdate(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_autoupdate), true);
     }
 
     /* Consolidate search */
-    public synchronized boolean getConsolidateSearch() {
-        return this.prefs.getBoolean(context.getString(R.string.key_consolidateSearch), true);
+    public static synchronized boolean getConsolidateSearch(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_consolidateSearch), true);
     }
 
     /* Pic first */
-    public synchronized boolean getPicFirst() {
-        return this.prefs.getBoolean(context.getString(R.string.key_picFirst), false);
+    public static synchronized boolean getPicFirst(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_picFirst), false);
     }
 
     /* Keep Screen On */
-    public synchronized boolean getKeepScreenOn() {
-        return this.prefs.getBoolean(context.getString(R.string.key_wakelock), true);
+    public static synchronized boolean getKeepScreenOn(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_wakelock), true);
     }
 
     /* Dim Screen */
-    public synchronized boolean getDimScreen() {
-        return this.prefs.getBoolean(context.getString(R.string.key_dimlock), true);
+    public static synchronized boolean getDimScreen(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_dimlock), true);
     }
 
     /* Percentage to dim screen */
-    public synchronized int getDimLevel() {
-        return this.prefs.getInt(context.getString(R.string.key_dimlevel), 1);
+    public static synchronized int getDimLevel(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_dimlevel), 1);
     }
 
     /* Set pref */
-    public synchronized boolean getSetPref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_setPref), true);
+    public static synchronized boolean getSetPref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_setPref), true);
     }
 
     /* Mana cost pref */
-    public synchronized boolean getManaCostPref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_manacostPref), true);
+    public static synchronized boolean getManaCostPref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_manacostPref), true);
     }
 
     /* Type pref */
-    public synchronized boolean getTypePref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_typePref), true);
+    public static synchronized boolean getTypePref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_typePref), true);
     }
 
     /* Ability pref */
-    public synchronized boolean getAbilityPref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_abilityPref), true);
+    public static synchronized boolean getAbilityPref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_abilityPref), true);
     }
 
     /* P/T pref */
-    public synchronized boolean getPTPref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_ptPref), true);
+    public static synchronized boolean getPTPref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_ptPref), true);
     }
 
     /* 15-minute warning pref */
-    public synchronized boolean getFifteenMinutePref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_fifteenMinutePref), false);
+    public static synchronized boolean getFifteenMinutePref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_fifteenMinutePref), false);
     }
 
-    public synchronized void setFifteenMinutePref(boolean fifteenMinutePref) {
-        this.edit.putBoolean(context.getString(R.string.key_fifteenMinutePref), fifteenMinutePref);
-        this.edit.commit();
+    public static synchronized void setFifteenMinutePref(Context context, boolean fifteenMinutePref) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_fifteenMinutePref), fifteenMinutePref);
+        edit.apply();
     }
 
     /* 10-minute warning pref */
-    public synchronized boolean getTenMinutePref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_tenMinutePref), false);
+    public static synchronized boolean getTenMinutePref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_tenMinutePref), false);
     }
 
-    public synchronized void setTenMinutePref(boolean tenMinutePref) {
-        this.edit.putBoolean(context.getString(R.string.key_tenMinutePref), tenMinutePref);
-        this.edit.commit();
+    public static synchronized void setTenMinutePref(Context context, boolean tenMinutePref) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_tenMinutePref), tenMinutePref);
+        edit.apply();
     }
 
     /* 5-minute warning pref */
-    public synchronized boolean getFiveMinutePref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_fiveMinutePref), false);
+    public static synchronized boolean getFiveMinutePref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_fiveMinutePref), false);
     }
 
-    public synchronized void setFiveMinutePref(boolean fiveMinutePref) {
-        this.edit.putBoolean(context.getString(R.string.key_fiveMinutePref), fiveMinutePref);
-        this.edit.commit();
+    public static synchronized void setFiveMinutePref(Context context, boolean fiveMinutePref) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_fiveMinutePref), fiveMinutePref);
+        edit.apply();
     }
 
     /* 2-minute warning pref */
-    public synchronized boolean getTwoMinutePref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_twoMinutePref), false);
+    public static synchronized boolean getTwoMinutePref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_twoMinutePref), false);
     }
 
-    public synchronized void setTwoMinutePref(boolean twoMinutePref) {
-        this.edit.putBoolean(context.getString(R.string.key_twoMinutePref), twoMinutePref);
-        this.edit.commit();
+    public static synchronized void setTwoMinutePref(Context context, boolean twoMinutePref) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_twoMinutePref), twoMinutePref);
+        edit.apply();
     }
 
     /* Use sound instead of TTS pref */
-    public synchronized boolean getUseSoundInsteadOfTTSPref() {
-        return this.prefs.getBoolean(context.getString(R.string.key_useSoundInsteadOfTTSPref), false);
+    public static synchronized boolean getUseSoundInsteadOfTTSPref(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_useSoundInsteadOfTTSPref), false);
     }
 
-    public synchronized void setUseSoundInsteadOfTTSPref(boolean useSoundPref) {
-        this.edit.putBoolean(context.getString(R.string.key_useSoundInsteadOfTTSPref), useSoundPref);
-        this.edit.commit();
+    public static synchronized void setUseSoundInsteadOfTTSPref(Context context, boolean useSoundPref) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_useSoundInsteadOfTTSPref), useSoundPref);
+        edit.apply();
     }
 
     /* Show total wishlist price */
-    public synchronized boolean getShowTotalWishlistPrice() {
-        return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceWishlistPref), false);
+    public static synchronized boolean getShowTotalWishlistPrice(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_showTotalPriceWishlistPref), false);
     }
 
     /* Show individual wishlist prices */
-    public synchronized boolean getShowIndividualWishlistPrices() {
-        return this.prefs.getBoolean(context.getString(R.string.key_showIndividualPricesWishlistPref), true);
+    public static synchronized boolean getShowIndividualWishlistPrices(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_showIndividualPricesWishlistPref), true);
     }
 
     /* Verbose wishlist */
-    public synchronized boolean getVerboseWishlist() {
-        return this.prefs.getBoolean(context.getString(R.string.key_verboseWishlistPref), false);
+    public static synchronized boolean getVerboseWishlist(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_verboseWishlistPref), false);
     }
 
     /* MoJhoSto first time */
-    public synchronized boolean getMojhostoFirstTime() {
-        return this.prefs.getBoolean(context.getString(R.string.key_mojhostoFirstTime), true);
+    public static synchronized boolean getMojhostoFirstTime(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_mojhostoFirstTime), true);
     }
 
-    public synchronized void setMojhostoFirstTime() {
-        this.edit.putBoolean(context.getString(R.string.key_mojhostoFirstTime), false);
-        this.edit.commit();
+    public static synchronized void setMojhostoFirstTime(Context context) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_mojhostoFirstTime), false);
+        edit.apply();
     }
 
 
     /* String preferences */
     /* Update frequency */
-    public synchronized String getUpdateFrequency() {
-        return this.prefs.getString(context.getString(R.string.key_updatefrequency), "3");
+    public static synchronized String getUpdateFrequency(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_updatefrequency), "3");
     }
 
     /* Card language */
-    public synchronized String getCardLanguage() {
-        return this.prefs.getString(context.getString(R.string.key_cardlanguage), "en");
+    public static synchronized String getCardLanguage(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_cardlanguage), "en");
     }
 
     /* Default fragment */
-    public synchronized String getDefaultFragment() {
-        return this.prefs.getString(context.getString(R.string.key_defaultFragment), this.context.getString(R.string.main_card_search));
+    public static synchronized String getDefaultFragment(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_defaultFragment), context.getString(R.string.main_card_search));
     }
 
     /* Display mode */
-    public synchronized String getDisplayMode() {
-        return this.prefs.getString(context.getString(R.string.key_displayMode), "0");
+    public static synchronized String getDisplayMode(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_displayMode), "0");
     }
 
-    public synchronized void setDisplayMode(String displayMode) {
-        this.edit.putString(context.getString(R.string.key_displayMode), displayMode);
-        this.edit.commit();
+    public static synchronized void setDisplayMode(Context context, String displayMode) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_displayMode), displayMode);
+        edit.apply();
     }
 
     /* Player data */
-    public synchronized String getPlayerData() {
-        return this.prefs.getString(context.getString(R.string.key_player_data), null);
+    public static synchronized String getPlayerData(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_player_data), null);
     }
 
-    public synchronized void setPlayerData(String playerData) {
-        this.edit.putString(context.getString(R.string.key_player_data), playerData);
-        this.edit.commit();
+    public static synchronized void setPlayerData(Context context, String playerData) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_player_data), playerData);
+        edit.apply();
     }
 
     /* Timer sound */
-    public synchronized String getTimerSound() {
-        return this.prefs.getString(context.getString(R.string.key_timerSound), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
+    public static synchronized String getTimerSound(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_timerSound), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
     }
 
-    public synchronized void setTimerSound(String timerSound) {
-        this.edit.putString(context.getString(R.string.key_timerSound), timerSound);
-        this.edit.commit();
+    public static synchronized void setTimerSound(Context context, String timerSound) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_timerSound), timerSound);
+        edit.apply();
     }
 
     /* Trade price */
-    public synchronized String getTradePrice() {
-        return this.prefs.getString(context.getString(R.string.key_tradePrice), "1");
+    public static synchronized String getTradePrice(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tradePrice), "1");
     }
 
-    public synchronized void setTradePrice(String tradePrice) {
-        this.edit.putString(context.getString(R.string.key_tradePrice), tradePrice);
-        this.edit.commit();
+    public static synchronized void setTradePrice(Context context, String tradePrice) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_tradePrice), tradePrice);
+        edit.apply();
     }
 
     /* Date, deprecated
-    public synchronized String getLegalityDate() {
-        return this.prefs.getString(context.getString(R.string.key_date), null);
+    public static synchronized String getLegalityDate(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_date), null);
     }
 
-    public synchronized void setLegalityDate(String date) {
-        this.edit.putString(context.getString(R.string.key_date), date);
-        this.edit.commit();
+    public static synchronized void setLegalityDate(String date) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+edit.putString(context.getString(R.string.key_date), date);
+        edit.apply();
     }
     */
 
     /* Date */
-    public synchronized long getLegalityTimestamp() {
-        return this.prefs.getLong(context.getString(R.string.key_legality_timestamp), 0);
+    public static synchronized long getLegalityTimestamp(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_legality_timestamp), 0);
     }
 
-    public synchronized void setLegalityTimestamp(long timestamp) {
-        this.edit.putLong(context.getString(R.string.key_legality_timestamp), timestamp);
-        this.edit.commit();
+    public static synchronized void setLegalityTimestamp(Context context, long timestamp) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_legality_timestamp), timestamp);
+        edit.apply();
     }
 
     /* Deprecated
-    public synchronized void setLastUpdate(String lastUpdate) {
-        this.edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
-        this.edit.commit();
+    public static synchronized void setLastUpdate(String lastUpdate) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
+        edit.apply();
     }
     */
 
-    public synchronized long getLastUpdateTimestamp() {
-        return this.prefs.getLong(context.getString(R.string.key_last_update_timestamp), 0);
+    public static synchronized long getLastUpdateTimestamp(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_last_update_timestamp), 0);
     }
 
-    public synchronized void setLastUpdateTimestamp(long timestamp) {
-        this.edit.putLong(context.getString(R.string.key_last_update_timestamp), timestamp);
-        this.edit.commit();
+    public static synchronized void setLastUpdateTimestamp(Context context, long timestamp) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_last_update_timestamp), timestamp);
+        edit.apply();
     }
 
 
     /* Life Counter Timer */
-    public synchronized String getLifeTimer() {
-        return this.prefs.getString(context.getString(R.string.key_lifeTimer), "1000");
+    public static synchronized String getLifeTimer(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_lifeTimer), "1000");
     }
 
     /*  Round timer finish time */
-    public synchronized long getRoundTimerEnd() {
-        Long endTime = prefs.getLong(context.getString(R.string.key_currentRoundTimer), -1);
+    public static synchronized long getRoundTimerEnd(Context context) {
+        Long endTime = PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_currentRoundTimer), -1);
         /* If the timer has expired, set it as -1 */
         if (endTime < System.currentTimeMillis()) {
             endTime = -1L;
-            setRoundTimerEnd(endTime);
+            setRoundTimerEnd(context, endTime);
         }
         return endTime;
     }
 
-    public synchronized void setRoundTimerEnd(long milliseconds) {
-        this.edit.putLong(context.getString(R.string.key_currentRoundTimer), milliseconds);
-        this.edit.commit();
+    public static synchronized void setRoundTimerEnd(Context context, long milliseconds) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_currentRoundTimer), milliseconds);
+        edit.apply();
     }
 
     /* Bounce Drawer, default true */
-    public synchronized boolean getBounceDrawer() {
-        return this.prefs.getBoolean(context.getString(R.string.key_bounceDrawer), true);
+    public static synchronized boolean getBounceDrawer(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_bounceDrawer), true);
     }
 
-    public synchronized void setBounceDrawer() {
-        this.edit.putBoolean(context.getString(R.string.key_bounceDrawer), false);
-        this.edit.commit();
+    public static synchronized void setBounceDrawer(Context context) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putBoolean(context.getString(R.string.key_bounceDrawer), false);
+        edit.apply();
     }
 
-    public synchronized Set<String> getWidgetButtons() {
-        return this.prefs.getStringSet(context.getString(R.string.key_widgetButtons), new HashSet<>(
+    public static synchronized Set<String> getWidgetButtons(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getStringSet(context.getString(R.string.key_widgetButtons), new HashSet<>(
                 Arrays.asList(context.getResources().getStringArray(R.array.default_widget_buttons_array_entries))));
     }
 
-    public synchronized void setWidgetButtons(Set<String> widgetButtons) {
-        this.edit.putStringSet(context.getString(R.string.key_widgetButtons), widgetButtons);
-        this.edit.commit();
+    public static synchronized void setWidgetButtons(Context context, Set<String> widgetButtons) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putStringSet(context.getString(R.string.key_widgetButtons), widgetButtons);
+        edit.apply();
     }
 
     /* This is slightly different because we want to make sure to commit a theme if one doesn't
      * exist, not just return the default. asd is a nice tag, no?
      */
-    public synchronized String getTheme() {
-        String theme = this.prefs.getString(context.getString(R.string.key_theme), "asd");
+    public static synchronized String getTheme(Context context) {
+        String theme = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_theme), "asd");
         if (theme.equals("asd")) {
             theme = context.getResources().getString(R.string.pref_theme_light);
-            setTheme(theme);
+            setTheme(context, theme);
         }
         return theme;
     }
 
-    private synchronized void setTheme(String theme) {
-        this.edit.putString(context.getString(R.string.key_theme), theme);
-        this.edit.commit();
+    public static synchronized void setTheme(Context context, String theme) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_theme), theme);
+        edit.apply();
     }
 
-    public synchronized String getDCINumber() {
-        return this.prefs.getString(context.getString(R.string.key_dci_number), "");
+    public static synchronized String getDCINumber(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_dci_number), "");
     }
 
-    public synchronized void setDCINumber(String dciNumber) {
-        this.edit.putString(context.getString(R.string.key_dci_number), dciNumber);
-        this.edit.commit();
+    public static synchronized void setDCINumber(Context context, String dciNumber) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_dci_number), dciNumber);
+        edit.apply();
     }
 
-    public synchronized int getImageCacheSize() {
-        return this.prefs.getInt(context.getString(R.string.key_imageCacheSize), 12);
+    public static synchronized int getImageCacheSize(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_imageCacheSize), 12);
     }
 
-    synchronized int getNumTutorCardsSearches() {
-        return this.prefs.getInt(context.getString(R.string.key_num_tutor_cards_searches), 0);
+    public static synchronized int getNumTutorCardsSearches(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_num_tutor_cards_searches), 0);
     }
 
-    synchronized void setNumTutorCardsSearches(int NumTutorCardsSearches) {
-        this.edit.putInt(context.getString(R.string.key_num_tutor_cards_searches),
+    public static synchronized void setNumTutorCardsSearches(Context context, int NumTutorCardsSearches) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_num_tutor_cards_searches),
                 NumTutorCardsSearches);
-        this.edit.commit();
+        edit.apply();
     }
 
-    public synchronized int getDatabaseVersion() {
-        return this.prefs.getInt(context.getString(R.string.key_database_version), -1);
+    public static synchronized int getDatabaseVersion(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_database_version), -1);
     }
 
-    public synchronized void setDatabaseVersion(int databaseVersion) {
-        this.edit.putInt(context.getString(R.string.key_database_version),
+    public static synchronized void setDatabaseVersion(Context context, int databaseVersion) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_database_version),
                 databaseVersion);
-        this.edit.commit();
+        edit.apply();
     }
 
-    public synchronized String getLanguage() {
-        return this.prefs.getString(context.getString(R.string.key_language),
+    public static synchronized String getLanguage(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_language),
                 context.getResources().getConfiguration().locale.getLanguage());
     }
 
-    synchronized void setNumWidgetButtons(int widgetID, int numButtons) {
-        this.edit.putInt(context.getString(R.string.key_widgetNumButtons) + widgetID,
+    public static synchronized void setNumWidgetButtons(Context context, int widgetID, int numButtons) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_widgetNumButtons) + widgetID,
                 numButtons);
-        this.edit.commit();
+        edit.apply();
     }
 
-    synchronized int getNumWidgetButtons(int widgetID) {
-        return this.prefs.getInt(context.getString(R.string.key_widgetNumButtons) + widgetID, 100);
+    public static synchronized int getNumWidgetButtons(Context context, int widgetID) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_widgetNumButtons) + widgetID, 100);
     }
 
-    public synchronized void setSearchSortOrder(String searchSortOrder) {
-        this.edit.putString(context.getString(R.string.key_searchSortOrder), searchSortOrder);
-        this.edit.commit();
+    public static synchronized void setSearchSortOrder(Context context, String searchSortOrder) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_searchSortOrder), searchSortOrder);
+        edit.apply();
     }
 
-    public synchronized String getSearchSortOrder() {
-        return this.prefs.getString(context.getString(R.string.key_searchSortOrder),
+    public static synchronized String getSearchSortOrder(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_searchSortOrder),
                 CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_SUPERTYPE + " " + SortOrderDialogFragment.SQL_ASC + "," +
@@ -537,13 +561,14 @@ public class PreferenceAdapter {
         );
     }
 
-    public synchronized void setWishlistSortOrder(String searchSortOrder) {
-        this.edit.putString(context.getString(R.string.key_wishlist_sort_order_2), searchSortOrder);
-        this.edit.commit();
+    public static synchronized void setWishlistSortOrder(Context context, String searchSortOrder) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_wishlist_sort_order_2), searchSortOrder);
+        edit.apply();
     }
 
-    public synchronized String getWishlistSortOrder() {
-        return this.prefs.getString(context.getString(R.string.key_wishlist_sort_order_2),
+    public static synchronized String getWishlistSortOrder(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_wishlist_sort_order_2),
                 CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_SUPERTYPE + " " + SortOrderDialogFragment.SQL_ASC + "," +
@@ -555,13 +580,14 @@ public class PreferenceAdapter {
         );
     }
 
-    public synchronized void setTradeSortOrder(String searchSortOrder) {
-        this.edit.putString(context.getString(R.string.key_trade_sort_order_2), searchSortOrder);
-        this.edit.commit();
+    public static synchronized void setTradeSortOrder(Context context, String searchSortOrder) {
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_trade_sort_order_2), searchSortOrder);
+        edit.apply();
     }
 
-    public synchronized String getTradeSortOrder() {
-        return this.prefs.getString(context.getString(R.string.key_trade_sort_order_2),
+    public static synchronized String getTradeSortOrder(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_trade_sort_order_2),
                 CardDbAdapter.KEY_NAME + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_SET + " " + SortOrderDialogFragment.SQL_ASC + "," +
                         CardDbAdapter.KEY_COLOR + " " + SortOrderDialogFragment.SQL_ASC + "," +
@@ -574,12 +600,13 @@ public class PreferenceAdapter {
         );
     }
 
-    public synchronized @DrawableRes int getTapSymbol() {
-        String symbolResName = this.prefs.getString(context.getString(R.string.key_tap_symbol), null);
-        if(symbolResName == null) {
+    public static synchronized
+    @DrawableRes
+    int getTapSymbol(Context context) {
+        String symbolResName = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tap_symbol), null);
+        if (symbolResName == null) {
             return R.drawable.glyph_tap;
-        }
-        else {
+        } else {
             symbolResName = symbolResName.substring(symbolResName.lastIndexOf('/') + 1, symbolResName.lastIndexOf('.'));
             return context.getResources().getIdentifier(
                     symbolResName,
@@ -588,12 +615,13 @@ public class PreferenceAdapter {
         }
     }
 
-    public synchronized @DrawableRes int getWhiteSymbol() {
-        String symbolResName = this.prefs.getString(context.getString(R.string.key_white_symbol), null);
-        if(symbolResName == null) {
+    public static synchronized
+    @DrawableRes
+    int getWhiteSymbol(Context context) {
+        String symbolResName = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_white_symbol), null);
+        if (symbolResName == null) {
             return R.drawable.glyph_w;
-        }
-        else {
+        } else {
             symbolResName = symbolResName.substring(symbolResName.lastIndexOf('/') + 1, symbolResName.lastIndexOf('.'));
             return context.getResources().getIdentifier(
                     symbolResName,
@@ -603,16 +631,16 @@ public class PreferenceAdapter {
     }
 
     /* General list settings (trades, wishlist, decklist) */
-    public synchronized int getUndoTimeout() {
-        return this.prefs.getInt(context.getString(R.string.key_undoTimeout), 3) * 1000;
+    public static synchronized int getUndoTimeout(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_undoTimeout), 3) * 1000;
     }
 
-    public boolean getShowTotalDecklistPrice() {
-        return this.prefs.getBoolean(context.getString(R.string.key_showTotalPriceDecklistPref), false);
+    public static synchronized boolean getShowTotalDecklistPrice(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_showTotalPriceDecklistPref), false);
     }
 
-    public synchronized String getDeckPrice() {
-        return this.prefs.getString(context.getString(R.string.key_deckPrice), "1");
+    public static synchronized String getDeckPrice(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "1");
     }
 
 }

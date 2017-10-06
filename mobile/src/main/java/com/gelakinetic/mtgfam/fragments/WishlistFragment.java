@@ -30,6 +30,7 @@ import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
@@ -215,7 +216,7 @@ public class WishlistFragment extends FamiliarListFragment {
         loadPrice(card.mName, card.setCode, card.mNumber);
 
         /* Sort the wishlist */
-        sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
+        sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
 
         /* Clean up for the next add */
         mNumberOfField.setText("1");
@@ -238,10 +239,10 @@ public class WishlistFragment extends FamiliarListFragment {
         super.onResume();
 
         /* Get the relevant preferences */
-        mPriceSetting = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getTradePrice());
-        mShowIndividualPrices = getFamiliarActivity().mPreferenceAdapter.getShowIndividualWishlistPrices();
-        mShowTotalWishlistPrice = getFamiliarActivity().mPreferenceAdapter.getShowTotalWishlistPrice();
-        mShowCardInfo = getFamiliarActivity().mPreferenceAdapter.getVerboseWishlist();
+        mPriceSetting = Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
+        mShowIndividualPrices = PreferenceAdapter.getShowIndividualWishlistPrices(getContext());
+        mShowTotalWishlistPrice = PreferenceAdapter.getShowTotalWishlistPrice(getContext());
+        mShowCardInfo = PreferenceAdapter.getVerboseWishlist(getContext());
 
         /* Clear, then read the wishlist. This is done in onResume() in case the user quick-searched for a card, and
          * added it to the wishlist from the CardViewFragment */
@@ -340,7 +341,7 @@ public class WishlistFragment extends FamiliarListFragment {
             if(cardNumberFixed) {
                 sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
                 WishlistHelpers.WriteCompressedWishlist(getContext(), mCompressedWishlist);
-                sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
+                sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
             }
 
         } catch (FamiliarDbException e) {
@@ -434,7 +435,7 @@ public class WishlistFragment extends FamiliarListFragment {
             SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
             Bundle args = new Bundle();
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
-                    getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
+                    PreferenceAdapter.getWishlistSortOrder(getContext()));
             newFragment.setArguments(args);
             newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
@@ -521,7 +522,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     if (mPriceFetchRequests == 0) {
                         getFamiliarActivity().clearLoading();
                     }
-                    sortWishlist(getFamiliarActivity().mPreferenceAdapter.getWishlistSortOrder());
+                    sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
                     mListAdapter.notifyDataSetChanged();
                 }
             }
@@ -569,7 +570,7 @@ public class WishlistFragment extends FamiliarListFragment {
      */
     @Override
     public void receiveSortOrder(String orderByStr) {
-        getFamiliarActivity().mPreferenceAdapter.setWishlistSortOrder(orderByStr);
+        PreferenceAdapter.setWishlistSortOrder(getContext(), orderByStr);
         sortWishlist(orderByStr);
     }
 

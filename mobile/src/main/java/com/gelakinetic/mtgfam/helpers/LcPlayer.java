@@ -236,7 +236,7 @@ public class LcPlayer {
             mCommitting = true;
             mHandler.removeCallbacks(mLifePoisonCommitter);
             mHandler.postDelayed(mLifePoisonCommitter,
-                    Integer.parseInt(mFragment.getFamiliarActivity().mPreferenceAdapter.getLifeTimer()));
+                    Integer.parseInt(PreferenceAdapter.getLifeTimer(mFragment.getContext())));
 
         }
     }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SelectableItemAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -150,7 +151,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             extends SelectableItemAdapter<T, VH> {
 
         public CardDataAdapter(ArrayList<T> values) {
-            super(values, getFamiliarActivity().mPreferenceAdapter.getUndoTimeout());
+            super(values, PreferenceAdapter.getUndoTimeout(getContext()));
         }
 
         @Override

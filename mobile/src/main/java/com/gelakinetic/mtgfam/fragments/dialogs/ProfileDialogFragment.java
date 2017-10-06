@@ -13,6 +13,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.ProfileFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +53,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                     }
                 });
 
-                final String strDCI = getFamiliarActivity().mPreferenceAdapter.getDCINumber();
+                final String strDCI = PreferenceAdapter.getDCINumber(getContext());
 
                 dciEditText.setText(strDCI);
 
@@ -72,7 +73,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                                     return;
                                 }
 
-                                getFamiliarActivity().mPreferenceAdapter.setDCINumber(strNumber);
+                                PreferenceAdapter.setDCINumber(getContext(), strNumber);
                                 getParentProfileFragment().mDCINumber = strNumber;
                                 getParentProfileFragment().checkDCINumber();
                                 dismiss();

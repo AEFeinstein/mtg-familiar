@@ -36,17 +36,14 @@ class MTRIPGParser {
     private static final String IPG_LOCAL_FILE = "IPG.html";
     private static final String JAR_LOCAL_FILE = "JAR.html";
     private final Context mContext;
-    private final PreferenceAdapter mPrefAdapter;
     String mPrettyDate;
 
     /**
      * Default constructor
      *
-     * @param prefAdapter A PreferenceAdapter used for pulling fetching and committing update times
      * @param context     This context is used to get file handles to write the HTML files later
      */
-    public MTRIPGParser(PreferenceAdapter prefAdapter, Context context) {
-        this.mPrefAdapter = prefAdapter;
+    public MTRIPGParser(Context context) {
         this.mContext = context;
     }
 
@@ -137,15 +134,15 @@ class MTRIPGParser {
         boolean shouldUpdate;
         switch (mode) {
             case MODE_IPG: {
-                shouldUpdate = documentDate != mPrefAdapter.getLastIPGUpdate();
+                shouldUpdate = documentDate != PreferenceAdapter.getLastIPGUpdate(mContext);
                 break;
             }
             case MODE_MTR: {
-                shouldUpdate = documentDate != mPrefAdapter.getLastMTRUpdate();
+                shouldUpdate = documentDate != PreferenceAdapter.getLastMTRUpdate(mContext);
                 break;
             }
             case MODE_JAR: {
-                shouldUpdate = documentDate != mPrefAdapter.getLastJARUpdate();
+                shouldUpdate = documentDate != PreferenceAdapter.getLastJARUpdate(mContext);
                 break;
             }
             default: {
@@ -183,13 +180,13 @@ class MTRIPGParser {
 
             switch (mode) {
                 case MODE_IPG:
-                    mPrefAdapter.setLastIPGUpdate(documentDate);
+                    PreferenceAdapter.setLastIPGUpdate(mContext, documentDate);
                     break;
                 case MODE_MTR:
-                    mPrefAdapter.setLastMTRUpdate(documentDate);
+                    PreferenceAdapter.setLastMTRUpdate(mContext, documentDate);
                     break;
                 case MODE_JAR:
-                    mPrefAdapter.setLastJARUpdate(documentDate);
+                    PreferenceAdapter.setLastJARUpdate(mContext, documentDate);
                     break;
                 default:
                     throw new FileNotFoundException("Invalid switch"); /* handled below */

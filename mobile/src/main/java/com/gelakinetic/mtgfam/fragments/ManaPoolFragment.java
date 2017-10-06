@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 public class ManaPoolFragment extends FamiliarFragment {
@@ -270,26 +271,26 @@ public class ManaPoolFragment extends FamiliarFragment {
      * Load the mana values from the shared preferences
      */
     private void load() {
-        mWhite = getFamiliarActivity().mPreferenceAdapter.getWhiteMana();
-        mBlue = getFamiliarActivity().mPreferenceAdapter.getBlueMana();
-        mBlack = getFamiliarActivity().mPreferenceAdapter.getBlackMana();
-        mRed = getFamiliarActivity().mPreferenceAdapter.getRedMana();
-        mGreen = getFamiliarActivity().mPreferenceAdapter.getGreenMana();
-        mColorless = getFamiliarActivity().mPreferenceAdapter.getColorlessMana();
-        mSpell = getFamiliarActivity().mPreferenceAdapter.getSpellCount();
+        mWhite = PreferenceAdapter.getWhiteMana(getContext());
+        mBlue = PreferenceAdapter.getBlueMana(getContext());
+        mBlack = PreferenceAdapter.getBlackMana(getContext());
+        mRed = PreferenceAdapter.getRedMana(getContext());
+        mGreen = PreferenceAdapter.getGreenMana(getContext());
+        mColorless = PreferenceAdapter.getColorlessMana(getContext());
+        mSpell = PreferenceAdapter.getSpellCount(getContext());
     }
 
     /**
      * Save the mana values in the shared preferences
      */
     private void store() {
-        getFamiliarActivity().mPreferenceAdapter.setWhiteMana(mWhite);
-        getFamiliarActivity().mPreferenceAdapter.setBlueMana(mBlue);
-        getFamiliarActivity().mPreferenceAdapter.setBlackMana(mBlack);
-        getFamiliarActivity().mPreferenceAdapter.setRedMana(mRed);
-        getFamiliarActivity().mPreferenceAdapter.setGreenMana(mGreen);
-        getFamiliarActivity().mPreferenceAdapter.setColorlessMana(mColorless);
-        getFamiliarActivity().mPreferenceAdapter.setSpellCount(mSpell);
+        PreferenceAdapter.setWhiteMana(getContext(), mWhite);
+        PreferenceAdapter.setBlueMana(getContext(), mBlue);
+        PreferenceAdapter.setBlackMana(getContext(), mBlack);
+        PreferenceAdapter.setRedMana(getContext(), mRed);
+        PreferenceAdapter.setGreenMana(getContext(), mGreen);
+        PreferenceAdapter.setColorlessMana(getContext(), mColorless);
+        PreferenceAdapter.setSpellCount(getContext(), mSpell);
     }
 
     /**
@@ -315,13 +316,13 @@ public class ManaPoolFragment extends FamiliarFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.clear_all:
-                getFamiliarActivity().mPreferenceAdapter.setWhiteMana(0);
-                getFamiliarActivity().mPreferenceAdapter.setBlueMana(0);
-                getFamiliarActivity().mPreferenceAdapter.setBlackMana(0);
-                getFamiliarActivity().mPreferenceAdapter.setRedMana(0);
-                getFamiliarActivity().mPreferenceAdapter.setGreenMana(0);
-                getFamiliarActivity().mPreferenceAdapter.setColorlessMana(0);
-                getFamiliarActivity().mPreferenceAdapter.setSpellCount(0);
+                PreferenceAdapter.setWhiteMana(getContext(), 0);
+                PreferenceAdapter.setBlueMana(getContext(), 0);
+                PreferenceAdapter.setBlackMana(getContext(), 0);
+                PreferenceAdapter.setRedMana(getContext(), 0);
+                PreferenceAdapter.setGreenMana(getContext(), 0);
+                PreferenceAdapter.setColorlessMana(getContext(), 0);
+                PreferenceAdapter.setSpellCount(getContext(), 0);
                 load();
                 update();
                 return true;

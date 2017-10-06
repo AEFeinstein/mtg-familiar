@@ -33,6 +33,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -445,7 +446,7 @@ public class SearchViewFragment extends FamiliarFragment {
         super.onResume();
 
         /* Do we want to consolidate different printings of the same card in results, or not? */
-        boolean consolidate = getFamiliarActivity().mPreferenceAdapter.getConsolidateSearch();
+        boolean consolidate = PreferenceAdapter.getConsolidateSearch(getContext());
         mSetSpinner.setSelection(consolidate ? CardDbAdapter.MOST_RECENT_PRINTING : CardDbAdapter.ALL_PRINTINGS);
     }
 
