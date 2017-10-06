@@ -282,12 +282,16 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      */
     @Override
     public void onUserInactive() {
-        if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn() &&
-                getFamiliarActivity().mPreferenceAdapter.getDimScreen()) {
-            float dimLevel = (float) getFamiliarActivity().mPreferenceAdapter.getDimLevel() / (float) 100;
-            WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
-            layoutParams.screenBrightness = dimLevel;
-            getActivity().getWindow().setAttributes(layoutParams);
+        try {
+            if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn() &&
+                    getFamiliarActivity().mPreferenceAdapter.getDimScreen()) {
+                float dimLevel = (float) getFamiliarActivity().mPreferenceAdapter.getDimLevel() / (float) 100;
+                WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
+                layoutParams.screenBrightness = dimLevel;
+                getActivity().getWindow().setAttributes(layoutParams);
+            }
+        } catch (NullPointerException e) {
+            /* Can't dim the screen, oh well */
         }
     }
 
