@@ -628,8 +628,12 @@ public class TradeFragment extends FamiliarListFragment {
                             if (mPriceFetchRequests == 0 && TradeFragment.this.isAdded()) {
                                 getFamiliarActivity().clearLoading();
                             }
-                            sortTrades(getFamiliarActivity().mPreferenceAdapter
-                                    .getTradeSortOrder());
+                            try {
+                                sortTrades(getFamiliarActivity().mPreferenceAdapter
+                                        .getTradeSortOrder());
+                            } catch (NullPointerException e) {
+                                /* couldn't get the preference, so don't bother sorting */
+                            }
                         }
                     }
             );
