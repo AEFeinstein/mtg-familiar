@@ -252,16 +252,21 @@ public abstract class FamiliarFragment extends Fragment {
         });
         /* Finish the fragment if requested */
         if (shouldFinish) {
-            /* will be correct for nested ViewPager fragments too */
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            if (fm != null) {
-                /* If there is only one fragment, finish the activity
-                 * Otherwise pop the offending fragment */
-                if (fm.getFragments().size() == 1) {
-                    getActivity().finish();
-                } else {
-                    fm.popBackStack();
+            try {
+                /* will be correct for nested ViewPager fragments too */
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                if (fm != null) {
+                    /* If there is only one fragment, finish the activity
+                     * Otherwise pop the offending fragment */
+                    if (fm.getFragments().size() == 1) {
+                        getActivity().finish();
+                    } else {
+                        fm.popBackStack();
+                    }
                 }
+            } catch (IllegalStateException e) {
+                /* Just give up, hopefully the toast was shown */
+                getActivity().finish();
             }
         }
     }
