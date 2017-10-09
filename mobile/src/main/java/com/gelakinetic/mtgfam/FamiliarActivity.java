@@ -549,7 +549,6 @@ public class FamiliarActivity extends AppCompatActivity {
                                 PreferenceAdapter.setLastMTRUpdate(FamiliarActivity.this, 0);
                                 PreferenceAdapter.setLastJARUpdate(FamiliarActivity.this, 0);
                                 PreferenceAdapter.setLastRulesUpdate(FamiliarActivity.this, 0);
-                                PreferenceAdapter.setLastUpdateTimestamp(FamiliarActivity.this, 0);
                                 PreferenceAdapter.setLegalityTimestamp(FamiliarActivity.this, 0);
                                 startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
                             } catch (FamiliarDbException e) {

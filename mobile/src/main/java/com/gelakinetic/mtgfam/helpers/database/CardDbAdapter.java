@@ -371,7 +371,6 @@ public class CardDbAdapter {
                     /* Couldn't delete the old database, so exit */
                     return;
                 }
-                PreferenceAdapter.setLastUpdateTimestamp(context, 0);
                 PreferenceAdapter.setDatabaseVersion(context, -1);
             }
             if (!dbFile.exists()) {

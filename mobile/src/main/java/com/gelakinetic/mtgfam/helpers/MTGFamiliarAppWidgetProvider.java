@@ -137,6 +137,9 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
     private void showButtonsFromPreferences(Context context, RemoteViews views, int maxNumButtons) {
         String[] entries = context.getResources().getStringArray(R.array.default_fragment_array_entries);
         Set<String> buttons = PreferenceAdapter.getWidgetButtons(context);
+        if (null == buttons) {
+            return;
+        }
 
         int buttonsVisible = 0;
         if (maxNumButtons == 0) {

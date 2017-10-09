@@ -35,6 +35,9 @@ public class MtgAppWidgetConfigure extends Activity {
 
         /* Figure out which ones are already selected */
         Set<String> defaults = PreferenceAdapter.getWidgetButtons(this);
+        if (null == defaults) {
+            return;
+        }
         ArrayList<Integer> selectedIndicesTmp = new ArrayList<>();
         for (int i = 0; i < mLaunchers.length; i++) {
             if (defaults.contains(mLaunchers[i])) {
