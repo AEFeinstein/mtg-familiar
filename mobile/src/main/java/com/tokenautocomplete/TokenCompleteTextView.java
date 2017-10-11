@@ -93,7 +93,7 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
     private TokenSpanWatcher spanWatcher;
     private TokenTextWatcher textWatcher;
     private ArrayList<T> objects;
-    private List<TokenImageSpan> hiddenSpans;
+    private List<TokenCompleteTextView<T>.TokenImageSpan> hiddenSpans;
     private TokenDeleteStyle deletionStyle = TokenDeleteStyle._Parent;
     private TokenClickStyle tokenClickStyle = TokenClickStyle.None;
     private CharSequence prefix = "";
@@ -798,7 +798,7 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
                     try {
                         text.insert(lastPosition, cs.text);
                     } catch (IndexOutOfBoundsException ignored) {
-                        Log.d(TAG, "extractText hit IndexOutOfBoundsException. This may be normal.", ignored);
+                        Log.d(TAG, "performCollapse hit IndexOutOfBoundsException. This may be normal.", ignored);
                     }
                     float newWidth = Layout.getDesiredWidth(text, 0,
                             lastPosition + cs.text.length(), lastLayout.getPaint());
@@ -817,7 +817,7 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
                         try {
                             text.insert(lastPosition, cs.text);
                         } catch (IndexOutOfBoundsException ignored) {
-                            Log.d(TAG, "extractText hit IndexOutOfBoundsException. This may be normal.", ignored);
+                            Log.d(TAG, "performCollapse hit IndexOutOfBoundsException. This may be normal.", ignored);
                         }
                     }
 
