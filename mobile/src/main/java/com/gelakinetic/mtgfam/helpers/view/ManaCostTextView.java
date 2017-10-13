@@ -144,6 +144,9 @@ public class ManaCostTextView extends ATokenTextView {
 
     public void setObjectsFromString(@NotNull String value) {
         /* Get a list of the persisted mana symbols */
+        if (value.isEmpty()) {
+            return;
+        }
         for (String symbol : value.split("}")) {
             this.addObject(symbol + "}");
         }
