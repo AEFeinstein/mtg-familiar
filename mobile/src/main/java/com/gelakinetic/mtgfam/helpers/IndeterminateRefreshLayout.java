@@ -52,7 +52,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
     private static final int[] LAYOUT_ATTRS = new int[]{android.R.attr.enabled};
     public boolean mRefreshing = false;
     private IndeterminateProgressBar mProgressBar; //the thing that shows progress is going
-    private View mTarget; //the content that gets pulled down
     private int mProgressBarHeight;
 
     /**
@@ -85,11 +84,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
      */
     public void setRefreshing(boolean refreshing) {
         if (mRefreshing != refreshing) {
-            try {
-                ensureTarget();
-            } catch (IllegalStateException e) {
-                return;
-            }
             mRefreshing = refreshing;
             if (mRefreshing) {
                 mProgressBar.start();
@@ -99,15 +93,15 @@ public class IndeterminateRefreshLayout extends ViewGroup {
         }
     }
 
-    private void ensureTarget() {
-        // Don't bother getting the parent height if the parent hasn't been laid out yet.
-        if (mTarget == null) {
-            if (getChildCount() > 1 && !isInEditMode()) {
-                throw new IllegalStateException(
-                        "IndeterminateRefreshLayout can host only one direct child");
-            }
-            mTarget = getChildAt(0);
+    private View getTargetView() {
+        if ((getChildCount() > 1 && !isInEditMode()) || getChildCount() == 0) {
+            // IndeterminateRefreshLayout can host only one direct child
+            // Also can't do much with zero children
+            return null;
+        } else if (getChildCount() == 1) {
+            return getChildAt(0);
         }
+        return null;
     }
 
     @Override
@@ -121,34 +115,36 @@ public class IndeterminateRefreshLayout extends ViewGroup {
         final int width = getMeasuredWidth();
         final int height = getMeasuredHeight();
         mProgressBar.setBounds(width, mProgressBarHeight);
-        if (getChildCount() == 0) {
-            return;
+        View targetView = getTargetView();
+        if (targetView != null) {
+            final int childLeft = getPaddingLeft();
+            final int childTop = getPaddingTop();
+            final int childWidth = width - getPaddingLeft() - getPaddingRight();
+            final int childHeight = height - getPaddingTop() - getPaddingBottom();
+            try {
+                targetView.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+            } catch (IllegalStateException e) {
+                // eat it
+            }
         }
-        final View child = getChildAt(0);
-        final int childLeft = getPaddingLeft();
-        final int childTop = getPaddingTop();
-        final int childWidth = width - getPaddingLeft() - getPaddingRight();
-        final int childHeight = height - getPaddingTop() - getPaddingBottom();
-        assert child != null;
-        child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
     }
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (getChildCount() > 1 && !isInEditMode()) {
-            throw new IllegalStateException("IndeterminateRefreshLayout can host only one direct child");
-        }
-        if (getChildCount() > 0) {
+        View targetView = getTargetView();
+        if (targetView != null) {
             int width = MeasureSpec.makeMeasureSpec(
                     getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
                     MeasureSpec.EXACTLY);
             int height = MeasureSpec.makeMeasureSpec(
                     getMeasuredHeight() - getPaddingTop() - getPaddingBottom(),
                     MeasureSpec.EXACTLY);
-            View child = getChildAt(0);
-            assert child != null;
-            child.measure(width, height);
+            try {
+                targetView.measure(width, height);
+            } catch (IllegalStateException e) {
+                // eat it
+            }
         }
     }
 
