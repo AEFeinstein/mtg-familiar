@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -769,7 +770,7 @@ public class CardViewFragment extends FamiliarFragment {
             if (mPrintings.size() == 1) {
                 mActivity.supportInvalidateOptionsMenu();
             }
-        } catch (FamiliarDbException e) {
+        } catch (FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             return;
