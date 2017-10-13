@@ -10,6 +10,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +60,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                                 if (getParentWishlistFragment().mPriceSetting != which) {
                                     getParentWishlistFragment().mPriceSetting = which;
-                                    getFamiliarActivity().mPreferenceAdapter.setTradePrice(
+                                    PreferenceAdapter.setTradePrice(getContext(),
                                             String.valueOf(getParentWishlistFragment().mPriceSetting));
                                     getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
                                     getParentWishlistFragment().sumTotalPrice();

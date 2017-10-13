@@ -21,6 +21,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -264,7 +265,7 @@ public class ResultListFragment extends FamiliarFragment {
             long id1 = args.getLong(CARD_ID_1);
             long id2 = args.getLong(CARD_ID_2);
             mCursor = CardDbAdapter.fetchCards(new long[]{id, id1, id2},
-                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder(), database);
+                    PreferenceAdapter.getSearchSortOrder(getContext()), database);
         } else {
 
             /* All the things we may want to display */
@@ -279,7 +280,7 @@ public class ResultListFragment extends FamiliarFragment {
                     criteria.setLogic == CardDbAdapter.FIRST_PRINTING);
 
             mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
-                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder(), database);
+                    PreferenceAdapter.getSearchSortOrder(getContext()), database);
         }
     }
 
@@ -304,26 +305,26 @@ public class ResultListFragment extends FamiliarFragment {
             ArrayList<Integer> toList = new ArrayList<>();
             fromList.add(CardDbAdapter.KEY_NAME);
             toList.add(R.id.card_name);
-            if (getFamiliarActivity().mPreferenceAdapter.getSetPref()) {
+            if (PreferenceAdapter.getSetPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_SET);
                 toList.add(R.id.cardset);
                 fromList.add(CardDbAdapter.KEY_RARITY);
                 toList.add(R.id.rarity);
             }
-            if (getFamiliarActivity().mPreferenceAdapter.getManaCostPref()) {
+            if (PreferenceAdapter.getManaCostPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_MANACOST);
                 toList.add(R.id.cardcost);
             }
-            if (getFamiliarActivity().mPreferenceAdapter.getTypePref()) {
+            if (PreferenceAdapter.getTypePref(getContext())) {
                 /* This will handle both sub and super type */
                 fromList.add(CardDbAdapter.KEY_SUPERTYPE);
                 toList.add(R.id.cardtype);
             }
-            if (getFamiliarActivity().mPreferenceAdapter.getAbilityPref()) {
+            if (PreferenceAdapter.getAbilityPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_ABILITY);
                 toList.add(R.id.cardability);
             }
-            if (getFamiliarActivity().mPreferenceAdapter.getPTPref()) {
+            if (PreferenceAdapter.getPTPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_POWER);
                 toList.add(R.id.cardp);
                 fromList.add(CardDbAdapter.KEY_TOUGHNESS);
@@ -449,7 +450,7 @@ public class ResultListFragment extends FamiliarFragment {
             SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
             Bundle args = new Bundle();
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
-                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder());
+                    PreferenceAdapter.getSearchSortOrder(getContext()));
             newFragment.setArguments(args);
             newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
@@ -470,7 +471,7 @@ public class ResultListFragment extends FamiliarFragment {
      */
     public void receiveSortOrder(String orderByStr) {
 
-        getFamiliarActivity().mPreferenceAdapter.setSearchSortOrder(orderByStr);
+        PreferenceAdapter.setSearchSortOrder(getContext(), orderByStr);
 
         try {
             /* Close the old cursor */

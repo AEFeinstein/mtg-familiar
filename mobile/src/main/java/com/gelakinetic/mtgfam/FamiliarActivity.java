@@ -183,7 +183,7 @@ public class FamiliarActivity extends AppCompatActivity {
     public DrawerLayout mDrawerLayout;
     public ListView mDrawerList;
     public boolean mIsMenuVisible;
-    public PreferenceAdapter mPreferenceAdapter;
+
     /* Image caching */
     public ImageCache mImageCache;
     /* Listen for changes to preferences */
@@ -212,7 +212,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 /* Set up the image cache */
                 ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
                 cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-                cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
+                cacheParams.diskCacheSize = 1024 * 1024 * PreferenceAdapter.getImageCacheSize(FamiliarActivity.this);
                 addImageCache(getSupportFragmentManager(), cacheParams);
             }
         }
@@ -436,7 +436,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
         mAppIndexingWrapper.disconnectIfConnected();
 
-        mPreferenceAdapter.unregisterOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+        PreferenceAdapter.unregisterOnSharedPreferenceChangeListener(this, mPreferenceChangeListener);
     }
 
     /**
@@ -471,7 +471,6 @@ public class FamiliarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PrefsFragment.checkOverrideSystemLanguage(this);
-        mPreferenceAdapter = new PreferenceAdapter(this);
 
         /* Figure out what theme the app is currently in, and change it if necessary */
         int resourceId = getResourceIdFromAttr(R.attr.color_drawer_background);
@@ -486,7 +485,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         /* Switch the theme if the preference does not match the current theme */
-        if (!themeString.equals(mPreferenceAdapter.getTheme())) {
+        if (!themeString.equals(PreferenceAdapter.getTheme(this))) {
             this.setTheme(otherTheme);
         }
 
@@ -511,13 +510,13 @@ public class FamiliarActivity extends AppCompatActivity {
 
         /* Set up a listener to update the home screen widget whenever the user changes the
            preference */
-        mPreferenceAdapter.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+        PreferenceAdapter.registerOnSharedPreferenceChangeListener(this, mPreferenceChangeListener);
 
         /* Create the handler to update the timer in the action bar */
         mRoundTimerUpdateHandler = new Handler();
 
         /* Check if we should make the timer notification */
-        mRoundEndTime = mPreferenceAdapter.getRoundTimerEnd();
+        mRoundEndTime = PreferenceAdapter.getRoundTimerEnd(this);
         if (mRoundEndTime != -1) {
             RoundTimerFragment.showTimerRunningNotification(this, mRoundEndTime);
             RoundTimerFragment.setOrCancelAlarms(this, mRoundEndTime, true);
@@ -545,13 +544,12 @@ public class FamiliarActivity extends AppCompatActivity {
                             try {
                                 SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this, true).openDatabase(true);
                                 CardDbAdapter.dropCreateDB(database);
-                                mPreferenceAdapter.setLastLegalityUpdate(0);
-                                mPreferenceAdapter.setLastIPGUpdate(0);
-                                mPreferenceAdapter.setLastMTRUpdate(0);
-                                mPreferenceAdapter.setLastJARUpdate(0);
-                                mPreferenceAdapter.setLastRulesUpdate(0);
-                                mPreferenceAdapter.setLastUpdateTimestamp(0);
-                                mPreferenceAdapter.setLegalityTimestamp(0);
+                                PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
+                                PreferenceAdapter.setLastIPGUpdate(FamiliarActivity.this, 0);
+                                PreferenceAdapter.setLastMTRUpdate(FamiliarActivity.this, 0);
+                                PreferenceAdapter.setLastJARUpdate(FamiliarActivity.this, 0);
+                                PreferenceAdapter.setLastRulesUpdate(FamiliarActivity.this, 0);
+                                PreferenceAdapter.setLegalityTimestamp(FamiliarActivity.this, 0);
                                 startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
                             } catch (FamiliarDbException e) {
                                 e.printStackTrace();
@@ -613,7 +611,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     }
                     case R.string.main_force_update_title: {
                         if (getNetworkState(FamiliarActivity.this, true) != -1) {
-                            mPreferenceAdapter.setLastLegalityUpdate(0);
+                            PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
                             startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
                         }
                         shouldCloseDrawer = true;
@@ -661,7 +659,7 @@ public class FamiliarActivity extends AppCompatActivity {
         if (toolbar != null) {
             //toolbar.setCollapsible(true);
             /* I don't like styling in java, but I can't get it to work other ways */
-            if (mPreferenceAdapter.getTheme().equals(getString(R.string.pref_theme_light))) {
+            if (PreferenceAdapter.getTheme(this).equals(getString(R.string.pref_theme_light))) {
                 toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat_Light);
             } else {
                 toolbar.setPopupTheme(R.style.ThemeOverlay_AppCompat);
@@ -726,7 +724,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 assert getPackageManager() != null;
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
-                int lastVersion = mPreferenceAdapter.getLastVersion();
+                int lastVersion = PreferenceAdapter.getLastVersion(this);
                 if (pInfo.versionCode != lastVersion) {
                     /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices
                      * will exist*/
@@ -738,7 +736,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     if (lastVersion != 0) {
                         showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }
-                    mPreferenceAdapter.setLastVersion(pInfo.versionCode);
+                    PreferenceAdapter.setLastVersion(this, pInfo.versionCode);
 
                     /* Clear the mtr and ipg on update, to replace them with the newly colored
                      *  versions, but only if we're updating to 3.0.1 (v24) */
@@ -768,11 +766,11 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         /* Run the updater service if there is a network connection */
-        if (getNetworkState(FamiliarActivity.this, false) != -1 && mPreferenceAdapter.getAutoUpdate()) {
+        if (getNetworkState(FamiliarActivity.this, false) != -1 && PreferenceAdapter.getAutoUpdate(this)) {
             /* Only update the banning list if it hasn't been updated recently */
             long curTime = System.currentTimeMillis();
-            int updateFrequency = Integer.parseInt(mPreferenceAdapter.getUpdateFrequency());
-            int lastLegalityUpdate = mPreferenceAdapter.getLastLegalityUpdate();
+            int updateFrequency = Integer.parseInt(PreferenceAdapter.getUpdateFrequency(this));
+            int lastLegalityUpdate = PreferenceAdapter.getLastLegalityUpdate(this);
             /* days to ms */
             if (((curTime / 1000) - lastLegalityUpdate) > (updateFrequency * 24 * 60 * 60)) {
                 startService(new Intent(this, DbUpdaterService.class));
@@ -782,7 +780,7 @@ public class FamiliarActivity extends AppCompatActivity {
         /* Set up the image cache */
         ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(this, IMAGE_CACHE_DIR);
         cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-        cacheParams.diskCacheSize = 1024 * 1024 * mPreferenceAdapter.getImageCacheSize();
+        cacheParams.diskCacheSize = 1024 * 1024 * PreferenceAdapter.getImageCacheSize(this);
         addImageCache(getSupportFragmentManager(), cacheParams);
 
         /* Set up app indexing */
@@ -954,7 +952,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * Launch the home fragment, based on a preference.
      */
     private void launchHomeScreen() {
-        String defaultFragment = mPreferenceAdapter.getDefaultFragment();
+        String defaultFragment = PreferenceAdapter.getDefaultFragment(this);
 
         if (defaultFragment.equals(this.getString(R.string.main_card_search))) {
             selectItem(R.string.main_card_search, null, true, false);
@@ -1273,9 +1271,9 @@ public class FamiliarActivity extends AppCompatActivity {
      * If TTS couldn't init, show this dialog. It will only display once as to not annoy people.
      */
     public void showTtsDialog() {
-        if (mPreferenceAdapter != null && mPreferenceAdapter.getTtsShowDialog()) {
+        if (PreferenceAdapter.getTtsShowDialog(this)) {
             showDialogFragment(FamiliarActivityDialogFragment.DIALOG_TTS);
-            mPreferenceAdapter.setTtsShowDialog();
+            PreferenceAdapter.setTtsShowDialog(this);
         }
     }
 
@@ -1323,7 +1321,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * second.
      */
     public void startUpdatingDisplay() {
-        mRoundEndTime = mPreferenceAdapter.getRoundTimerEnd();
+        mRoundEndTime = PreferenceAdapter.getRoundTimerEnd(this);
         mUpdatingRoundTimer = true;
 
         mRoundTimerUpdateHandler.removeCallbacks(timerUpdate);
@@ -1369,7 +1367,7 @@ public class FamiliarActivity extends AppCompatActivity {
             if (data.getExtras().keySet().contains(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)) {
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 if (uri != null) {
-                    mPreferenceAdapter.setTimerSound(uri.toString());
+                    PreferenceAdapter.setTimerSound(this, uri.toString());
                 }
             }
         }

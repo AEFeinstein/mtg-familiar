@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,12 +37,11 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                 final CheckBox chkTwo = v.findViewById(R.id.timer_pref_two);
                 final CheckBox chkUseSound = v.findViewById(R.id.timer_use_sound_instead_of_tts);
 
-                boolean fifteen =
-                        getFamiliarActivity().mPreferenceAdapter.getFifteenMinutePref();
-                boolean ten = getFamiliarActivity().mPreferenceAdapter.getTenMinutePref();
-                boolean five = getFamiliarActivity().mPreferenceAdapter.getFiveMinutePref();
-                boolean two = getFamiliarActivity().mPreferenceAdapter.getTwoMinutePref();
-                boolean useSound = getFamiliarActivity().mPreferenceAdapter.getUseSoundInsteadOfTTSPref();
+                boolean fifteen = PreferenceAdapter.getFifteenMinutePref(getContext());
+                boolean ten = PreferenceAdapter.getTenMinutePref(getContext());
+                boolean five = PreferenceAdapter.getFiveMinutePref(getContext());
+                boolean two = PreferenceAdapter.getTwoMinutePref(getContext());
+                boolean useSound = PreferenceAdapter.getUseSoundInsteadOfTTSPref(getContext());
 
                 chkFifteen.setChecked(fifteen);
                 chkTen.setChecked(ten);
@@ -56,16 +56,16 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getFamiliarActivity().mPreferenceAdapter
-                                        .setFifteenMinutePref(chkFifteen.isChecked());
-                                getFamiliarActivity().mPreferenceAdapter
-                                        .setTenMinutePref(chkTen.isChecked());
-                                getFamiliarActivity().mPreferenceAdapter
-                                        .setFiveMinutePref(chkFive.isChecked());
-                                getFamiliarActivity().mPreferenceAdapter
-                                        .setTwoMinutePref(chkTwo.isChecked());
-                                getFamiliarActivity().mPreferenceAdapter
-                                        .setUseSoundInsteadOfTTSPref(chkUseSound.isChecked());
+                                PreferenceAdapter
+                                        .setFifteenMinutePref(getContext(), chkFifteen.isChecked());
+                                PreferenceAdapter
+                                        .setTenMinutePref(getContext(), chkTen.isChecked());
+                                PreferenceAdapter
+                                        .setFiveMinutePref(getContext(), chkFive.isChecked());
+                                PreferenceAdapter
+                                        .setTwoMinutePref(getContext(), chkTwo.isChecked());
+                                PreferenceAdapter
+                                        .setUseSoundInsteadOfTTSPref(getContext(), chkUseSound.isChecked());
                             }
                         })
                         .build();

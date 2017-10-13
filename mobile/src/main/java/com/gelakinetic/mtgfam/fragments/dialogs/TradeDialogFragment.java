@@ -18,6 +18,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -378,7 +379,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     getParentTradeFragment().mListAdapterRight.notifyDataSetChanged();
 
                                     /* And also update the preference */
-                                    getFamiliarActivity().mPreferenceAdapter.setTradePrice(
+                                    PreferenceAdapter.setTradePrice(getContext(),
                                             String.valueOf(getParentTradeFragment().mPriceSetting));
 
                                     getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);

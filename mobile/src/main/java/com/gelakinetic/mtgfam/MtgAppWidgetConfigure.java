@@ -23,20 +23,21 @@ import java.util.Set;
  */
 public class MtgAppWidgetConfigure extends Activity {
 
-    private PreferenceAdapter mPrefAdapter;
     private String[] mLaunchers;
     private Integer[] mSelectedIndices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPrefAdapter = new PreferenceAdapter(this);
 
         /* Get all the widget buttons */
         mLaunchers = getResources().getStringArray(R.array.default_fragment_array_entries);
 
         /* Figure out which ones are already selected */
-        Set<String> defaults = mPrefAdapter.getWidgetButtons();
+        Set<String> defaults = PreferenceAdapter.getWidgetButtons(this);
+        if (null == defaults) {
+            return;
+        }
         ArrayList<Integer> selectedIndicesTmp = new ArrayList<>();
         for (int i = 0; i < mLaunchers.length; i++) {
             if (defaults.contains(mLaunchers[i])) {
@@ -87,7 +88,7 @@ public class MtgAppWidgetConfigure extends Activity {
         for (Integer mSelectedIndex : mSelectedIndices) {
             selectedButtons.add(mLaunchers[mSelectedIndex]);
         }
-        mPrefAdapter.setWidgetButtons(selectedButtons);
+        PreferenceAdapter.setWidgetButtons(this, selectedButtons);
 
         /* Get the widget id */
         int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;

@@ -21,6 +21,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -194,7 +195,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
         try {
             final FamiliarActivity activity = getFamiliarActivity();
             if (mDialogId == DIALOG_CHANGE_LOG) {
-                if (activity.mPreferenceAdapter.getBounceDrawer()) {
+                if (PreferenceAdapter.getBounceDrawer(getContext())) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -203,7 +204,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                                 @Override
                                 public void run() {
                                     activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-                                    activity.mPreferenceAdapter.setBounceDrawer();
+                                    PreferenceAdapter.setBounceDrawer(getContext());
                                 }
                             }, 2000);
                         }

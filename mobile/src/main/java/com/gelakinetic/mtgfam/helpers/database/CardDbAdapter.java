@@ -352,7 +352,6 @@ public class CardDbAdapter {
      * @param context The Context to get the packaged gzipped database from
      */
     public static void copyDB(Context context) {
-        PreferenceAdapter adapter = new PreferenceAdapter(context);
 
         try {
 
@@ -372,8 +371,7 @@ public class CardDbAdapter {
                     /* Couldn't delete the old database, so exit */
                     return;
                 }
-                adapter.setLastUpdateTimestamp(0);
-                adapter.setDatabaseVersion(-1);
+                PreferenceAdapter.setDatabaseVersion(context, -1);
             }
             if (!dbFile.exists()) {
 
@@ -387,7 +385,7 @@ public class CardDbAdapter {
                     fos.write(buffer, 0, length);
                 }
 
-                adapter.setDatabaseVersion(CardDbAdapter.DATABASE_VERSION);
+                PreferenceAdapter.setDatabaseVersion(context, CardDbAdapter.DATABASE_VERSION);
 
                 /* Close the streams */
                 fos.flush();
@@ -407,11 +405,10 @@ public class CardDbAdapter {
      * DATABASE_VERSION
      */
     public static boolean isDbOutOfDate(Context context) {
-        PreferenceAdapter adapter = new PreferenceAdapter(context);
         String dbPath = context.getFilesDir().getPath();
         dbPath = dbPath.substring(0, dbPath.lastIndexOf("/")) + "/databases";
         File f = new File(dbPath, DATABASE_NAME);
-        int dbVersion = adapter.getDatabaseVersion();
+        int dbVersion = PreferenceAdapter.getDatabaseVersion(context);
         return (!f.exists() || f.length() < 1048576 || dbVersion < CardDbAdapter.DATABASE_VERSION);
     }
 

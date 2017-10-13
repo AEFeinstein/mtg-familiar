@@ -130,8 +130,6 @@ public class DbUpdaterService extends IntentService {
         }
 
         try {
-            PreferenceAdapter mPrefAdapter = new PreferenceAdapter(this);
-
             ProgressReporter reporter = new ProgressReporter();
             ArrayList<String> updatedStuff = new ArrayList<>();
             CardAndSetParser parser = new CardAndSetParser();
@@ -140,7 +138,7 @@ public class DbUpdaterService extends IntentService {
 
             try {
                 /* Look for updates with the banned / restricted lists and formats */
-                LegalityData legalityData = parser.readLegalityJsonStream(mPrefAdapter, logWriter);
+                LegalityData legalityData = parser.readLegalityJsonStream(this, logWriter);
 
                 /* Log the date */
                 if (logWriter != null) {
@@ -289,7 +287,7 @@ public class DbUpdaterService extends IntentService {
                  * in.
                  */
 
-                long lastRulesUpdate = mPrefAdapter.getLastRulesUpdate();
+                long lastRulesUpdate = PreferenceAdapter.getLastRulesUpdate(this);
 
                 RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
 
@@ -340,7 +338,7 @@ public class DbUpdaterService extends IntentService {
             }
 
             /* Parse the MTR and IPG */
-            MTRIPGParser mtrIpgParser = new MTRIPGParser(mPrefAdapter, this);
+            MTRIPGParser mtrIpgParser = new MTRIPGParser(this);
             if (mtrIpgParser.performMtrIpgUpdateIfNeeded(MTRIPGParser.MODE_MTR, logWriter)) {
                 updatedStuff.add(getString(R.string.update_added_mtr));
             }
@@ -364,12 +362,12 @@ public class DbUpdaterService extends IntentService {
 
             /* If everything went well so far, commit the date and show the update complete notification */
             if (commitDates) {
-                parser.commitDates(mPrefAdapter);
+                parser.commitDates(this);
 
                 long curTime = new Date().getTime();
-                mPrefAdapter.setLastLegalityUpdate((int) (curTime / 1000));
+                PreferenceAdapter.setLastLegalityUpdate(this, (int) (curTime / 1000));
                 if (newRulesParsed) {
-                    mPrefAdapter.setLastRulesUpdate(curTime);
+                    PreferenceAdapter.setLastRulesUpdate(this, curTime);
                 }
 
                 if (updatedStuff.size() > 0) {

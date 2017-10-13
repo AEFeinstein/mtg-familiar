@@ -73,6 +73,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -671,7 +672,7 @@ public class CardViewFragment extends FamiliarFragment {
             mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
 
             /* Do we load the image immediately to the main page, or do it in a dialog later? */
-            if (mActivity.mPreferenceAdapter.getPicFirst()) {
+            if (PreferenceAdapter.getPicFirst(getContext())) {
                 mImageScrollView.setVisibility(View.VISIBLE);
                 mTextScrollView.setVisibility(View.GONE);
 
@@ -1058,7 +1059,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         MenuItem mi;
         /* If the image has been loaded to the main page, remove the menu option for image */
-        if (mActivity.mPreferenceAdapter.getPicFirst() && mCardBitmap != null) {
+        if (PreferenceAdapter.getPicFirst(getContext()) && mCardBitmap != null) {
             mi = menu.findItem(R.id.image);
             if (mi != null) {
                 menu.removeItem(mi.getItemId());
@@ -1299,7 +1300,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mLoadTo = MAIN_PAGE;
             }
 
-            String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
+            String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
             if (cardLanguage == null) {
                 cardLanguage = "en";
             }
@@ -1744,7 +1745,7 @@ public class CardViewFragment extends FamiliarFragment {
             }
 
             /* If the card is displayed, there's a real good chance it's cached */
-            String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
+            String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
             if (cardLanguage == null) {
                 cardLanguage = "en";
             }

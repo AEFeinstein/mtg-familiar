@@ -70,7 +70,6 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         setLayout();
         /* Perform this loop procedure for each App Widget that belongs to this provider */
-        PreferenceAdapter preferenceAdapter = new PreferenceAdapter(context);
         for (int appWidgetId : appWidgetIds) {
 
             /* Get the layout for the App Widget and attach an on-click listener to the buttons */
@@ -78,7 +77,7 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
             bindButtons(context, views);
 
-            int maxNumButtons = preferenceAdapter.getNumWidgetButtons(appWidgetId);
+            int maxNumButtons = PreferenceAdapter.getNumWidgetButtons(context, appWidgetId);
 
             /* 100 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
             showButtonsFromPreferences(context, views, maxNumButtons);
@@ -137,7 +136,10 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
      */
     private void showButtonsFromPreferences(Context context, RemoteViews views, int maxNumButtons) {
         String[] entries = context.getResources().getStringArray(R.array.default_fragment_array_entries);
-        Set<String> buttons = (new PreferenceAdapter(context)).getWidgetButtons();
+        Set<String> buttons = PreferenceAdapter.getWidgetButtons(context);
+        if (null == buttons) {
+            return;
+        }
 
         int buttonsVisible = 0;
         if (maxNumButtons == 0) {
@@ -190,6 +192,6 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
         /* Save the number of buttons visible for this widget id */
-        (new PreferenceAdapter(context)).setNumWidgetButtons(appWidgetId, maxNumButtons);
+        PreferenceAdapter.setNumWidgetButtons(context, appWidgetId, maxNumButtons);
     }
 }

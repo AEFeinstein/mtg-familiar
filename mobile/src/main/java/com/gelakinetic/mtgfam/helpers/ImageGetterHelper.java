@@ -94,9 +94,8 @@ public class ImageGetterHelper {
                 Drawable d = null;
                 source = source.replace("/", "");
 
-                PreferenceAdapter pa = new PreferenceAdapter(context);
-                final int tapRes = pa.getTapSymbol();
-                final int wRes = pa.getWhiteSymbol();
+                final int tapRes = PreferenceAdapter.getTapSymbol(context);
+                final int wRes = PreferenceAdapter.getWhiteSymbol(context);
 
                 if (source.equalsIgnoreCase("w")) {
                     d = ContextCompat.getDrawable(context, wRes);//ContextCompat.getDrawable(context, R.drawable.glyph_w, null);
