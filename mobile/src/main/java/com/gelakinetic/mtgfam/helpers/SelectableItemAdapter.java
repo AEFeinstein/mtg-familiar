@@ -54,7 +54,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
                 items.remove(position);
                 notifyItemRemoved(position);
             }
-        } catch (ArrayIndexOutOfBoundsException oob) {
+        } catch (IndexOutOfBoundsException oob) {
             /* Happens from time to time, shouldn't worry about it */
         }
 
