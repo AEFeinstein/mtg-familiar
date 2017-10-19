@@ -61,8 +61,8 @@ android {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 49
-        versionName "3.4.2"
+        versionCode 50
+        versionName "3.4.3"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -91,7 +91,7 @@ android {
             dimension "license"
         }
         foss {
-            versionName "3.4.2-foss"
+            versionName "3.4.3-foss"
             dimension "license"
         }
     }
