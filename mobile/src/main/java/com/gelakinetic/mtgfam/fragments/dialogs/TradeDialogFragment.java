@@ -73,6 +73,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Get some final references */
                 final ArrayList<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
                 final TradeFragment.CardDataAdapter aaSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListAdapterLeft : getParentTradeFragment().mListAdapterRight);
+                if(positionForDialog >= lSide.size()) {
+                    return DontShowDialog();
+                }
                 final boolean oldFoil = lSide.get(positionForDialog).foil;
 
                 /* Inflate the view and pull out UI elements */
