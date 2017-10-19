@@ -22,7 +22,7 @@ android:
     - tools # to get the new `repository-11.xml`
     - tools # to install Android SDK tools 25.1.x (x = 6 right now)
 
-    - build-tools-26.0.1
+    - build-tools-26.0.2
 
     # The SDK version used to compile your project
     - android-26
