@@ -365,23 +365,27 @@ public class TradeFragment extends FamiliarListFragment {
             );
             String line;
             while ((line = br.readLine()) != null) {
-                MtgCard card = MtgCard.fromTradeString(line, getActivity());
-                card.setIndex(mOrderAddedIdx++);
+                try {
+                    MtgCard card = MtgCard.fromTradeString(line, getActivity());
+                    card.setIndex(mOrderAddedIdx++);
 
-                if (card.setName == null) {
-                    handleFamiliarDbException(false);
-                    return;
-                }
-                if (card.mSide == LEFT) {
-                    mListLeft.add(card);
-                    if (!card.customPrice) {
-                        loadPrice(card, mListAdapterLeft);
+                    if (card.setName == null) {
+                        handleFamiliarDbException(false);
+                        return;
                     }
-                } else if (card.mSide == RIGHT) {
-                    mListRight.add(card);
-                    if (!card.customPrice) {
-                        loadPrice(card, mListAdapterRight);
+                    if (card.mSide == LEFT) {
+                        mListLeft.add(card);
+                        if (!card.customPrice) {
+                            loadPrice(card, mListAdapterLeft);
+                        }
+                    } else if (card.mSide == RIGHT) {
+                        mListRight.add(card);
+                        if (!card.customPrice) {
+                            loadPrice(card, mListAdapterRight);
+                        }
                     }
+                } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                    // This card line is junk, ignore it
                 }
             }
         } catch (FileNotFoundException e) {
