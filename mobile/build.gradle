@@ -56,7 +56,7 @@ task pmd(type: Pmd, group: "verification") {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
@@ -80,19 +80,6 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-        }
-    }
-    flavorDimensions "license"
-    productFlavors {
-        standard {
-            dependencies {
-                compile 'com.google.firebase:firebase-appindexing:11.0.2'
-            }
-            dimension "license"
-        }
-        foss {
-            versionName "3.4.3-foss"
-            dimension "license"
         }
     }
     lintOptions {

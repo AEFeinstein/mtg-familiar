@@ -83,7 +83,6 @@ import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -217,7 +216,6 @@ public class FamiliarActivity extends AppCompatActivity {
             }
         }
     };
-    public AppIndexingWrapper mAppIndexingWrapper;
     private ActionBarDrawerToggle mDrawerToggle;
     /* UI elements */
     private IndeterminateRefreshLayout mRefreshLayout;
@@ -433,8 +431,6 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        mAppIndexingWrapper.disconnectIfConnected();
 
         PreferenceAdapter.unregisterOnSharedPreferenceChangeListener(this, mPreferenceChangeListener);
     }
@@ -782,10 +778,6 @@ public class FamiliarActivity extends AppCompatActivity {
         cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
         cacheParams.diskCacheSize = 1024 * 1024 * PreferenceAdapter.getImageCacheSize(this);
         addImageCache(getSupportFragmentManager(), cacheParams);
-
-        /* Set up app indexing */
-        mAppIndexingWrapper = new AppIndexingWrapper(this);
-        mAppIndexingWrapper.connectIfDisconnected();
     }
 
     private boolean processIntent(Intent intent) {
