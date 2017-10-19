@@ -2,6 +2,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
@@ -71,6 +72,7 @@ public class FamiliarDialogFragment extends DialogFragment {
     /**
      * @return The current fragment being displayed by the app
      */
+    @Nullable
     FamiliarFragment getFamiliarFragment() {
         return (FamiliarFragment)
                 getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -85,6 +87,7 @@ public class FamiliarDialogFragment extends DialogFragment {
 
     /**
      * Gets all files of the given extension
+     *
      * @param fileExtension kind of files to get
      * @return array of string file names, without the extension
      */

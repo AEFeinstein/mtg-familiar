@@ -43,7 +43,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         setShowsDialog(true);
 
         /* Inflate the view */
-        View view = getFamiliarFragment().getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
         assert view != null;
 
         /* Create an arraylist of all the sorting options */
@@ -114,17 +114,17 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
 
         /* Get the sort view and set it up */
         DragListView sortView = view.findViewById(R.id.sort_list_view);
-        sortView.setLayoutManager(new LinearLayoutManager(getFamiliarFragment().getActivity()));
+        sortView.setLayoutManager(new LinearLayoutManager(getActivity()));
         sortItemAdapter adapter = new sortItemAdapter(options);
         sortView.setAdapter(adapter, true);
         sortView.setCanDragHorizontally(false);
 
         /* Create the dialog */
-        MaterialDialog.Builder adb = new MaterialDialog.Builder(getFamiliarFragment().getActivity());
+        MaterialDialog.Builder adb = new MaterialDialog.Builder(getActivity());
         adb.customView(view, false);
         adb.title(getResources().getString(R.string.wishlist_sort_by));
         adb.negativeText(R.string.dialog_cancel);
-        adb.positiveText(getFamiliarFragment().getActivity().getResources().getString(R.string.dialog_ok));
+        adb.positiveText(getActivity().getResources().getString(R.string.dialog_ok));
         adb.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -143,7 +143,9 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     first = false;
                 }
-                getFamiliarFragment().receiveSortOrder(orderByStr);
+                if (null != getFamiliarFragment()) {
+                    getFamiliarFragment().receiveSortOrder(orderByStr);
+                }
                 dismiss();
             }
         });

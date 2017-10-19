@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -54,8 +55,13 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
     /**
      * @return the currently viewed CardViewFragment in the CardViewPagerFragment
      */
+    @Nullable
     private CardViewFragment getCardViewFragment() {
-        return ((CardViewPagerFragment) getFamiliarFragment()).getCurrentFragment();
+        CardViewPagerFragment pagerFrag = ((CardViewPagerFragment) getFamiliarFragment());
+        if (null != pagerFrag) {
+            return pagerFrag.getCurrentFragment();
+        }
+        return null;
     }
 
     @NotNull
@@ -68,6 +74,11 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
         setShowsDialog(true);
 
         mDialogId = getArguments().getInt(ID_KEY);
+
+        if (null == getCardViewFragment()) {
+            return DontShowDialog();
+        }
+
         switch (mDialogId) {
             case GET_IMAGE: {
                 if (getCardViewFragment().mCardBitmap == null) {
@@ -97,7 +108,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return dialog;
             }
             case GET_LEGALITY: {
-                if (getCardViewFragment().mFormats == null || getCardViewFragment().mLegalities == null) {
+                if (null == getCardViewFragment() || getCardViewFragment().mFormats == null || getCardViewFragment().mLegalities == null) {
                     /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
@@ -126,7 +137,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return builder.build();
             }
             case GET_PRICE: {
-                if (getCardViewFragment().mPriceInfo == null) {
+                if (null == getCardViewFragment() || getCardViewFragment().mPriceInfo == null) {
                     return DontShowDialog();
                 }
 
@@ -180,7 +191,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return builder.build();
             }
             case CARD_RULINGS: {
-                if (getCardViewFragment().mRulingsArrayList == null) {
+                if (null == getCardViewFragment() || getCardViewFragment().mRulingsArrayList == null) {
                     return DontShowDialog();
                 }
                 Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
@@ -217,6 +228,9 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return builder.build();
             }
             case WISH_LIST_COUNTS: {
+                if (null == getCardViewFragment()) {
+                    return DontShowDialog();
+                }
                 Dialog dialog = CardHelpers.getDialog(getCardViewFragment().mCardName, getCardViewFragment(), false, false);
                 if (dialog == null) {
                     getCardViewFragment().handleFamiliarDbException(false);
@@ -263,7 +277,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
             }
             case TRANSLATE_CARD: {
                 /* Make sure the translations exist */
-                if (getCardViewFragment().mTranslatedNames == null || getCardViewFragment().mTranslatedNames.isEmpty()) {
+                if (null == getCardViewFragment() || getCardViewFragment().mTranslatedNames == null || getCardViewFragment().mTranslatedNames.isEmpty()) {
                     /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
