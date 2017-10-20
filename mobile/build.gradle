@@ -89,6 +89,8 @@ android {
 }
 
 dependencies {
+    findbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
+    findbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.0.5'
     androidTestCompile 'com.android.support:support-annotations:26.0.0'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
