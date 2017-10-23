@@ -34,7 +34,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private WishlistFragment getParentWishlistFragment() {
-        return (WishlistFragment) getFamiliarFragment();
+        return (WishlistFragment) getParentFamiliarFragment();
     }
 
     @NotNull

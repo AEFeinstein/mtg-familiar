@@ -41,7 +41,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
         mDialogId = getArguments().getInt(ID_KEY);
 
-        if (null == getResultListFragment()) {
+        if (null == getParentResultListFragment()) {
             return DontShowDialog();
         }
         
@@ -66,8 +66,8 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 // Show the dialog to pick a deck
-                                if (null != getResultListFragment()) {
-                                    getResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
+                                if (null != getParentResultListFragment()) {
+                                    getParentResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
                                 }
                             }
                         })
@@ -134,7 +134,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
     }
 
     @Nullable
-    private ResultListFragment getResultListFragment() {
-        return (ResultListFragment) getFamiliarFragment();
+    private ResultListFragment getParentResultListFragment() {
+        return (ResultListFragment) getParentFamiliarFragment();
     }
 }

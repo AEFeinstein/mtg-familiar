@@ -32,7 +32,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private ProfileFragment getParentProfileFragment() {
-        return (ProfileFragment) getFamiliarFragment();
+        return (ProfileFragment) getParentFamiliarFragment();
     }
 
     @NotNull

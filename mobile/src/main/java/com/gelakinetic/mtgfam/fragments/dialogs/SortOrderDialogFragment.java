@@ -143,8 +143,8 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     first = false;
                 }
-                if (null != getFamiliarFragment()) {
-                    getFamiliarFragment().receiveSortOrder(orderByStr);
+                if (null != getParentFamiliarFragment()) {
+                    getParentFamiliarFragment().receiveSortOrder(orderByStr);
                 }
                 dismiss();
             }

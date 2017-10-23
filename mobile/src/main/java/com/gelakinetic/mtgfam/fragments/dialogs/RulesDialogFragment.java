@@ -35,15 +35,15 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private RulesFragment getParentRulesFragment() {
-        return (RulesFragment) getFamiliarFragment();
+        return (RulesFragment) getParentFamiliarFragment();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (searchArgs != null && getFamiliarFragment() != null) {
+        if (searchArgs != null && getParentFamiliarFragment() != null) {
             RulesFragment frag = new RulesFragment();
-            getFamiliarFragment().startNewFragment(frag, searchArgs);
+            getParentFamiliarFragment().startNewFragment(frag, searchArgs);
         }
     }
 

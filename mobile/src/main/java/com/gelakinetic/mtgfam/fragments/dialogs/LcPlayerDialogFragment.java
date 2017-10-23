@@ -36,7 +36,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private LifeCounterFragment getParentLifeCounterFragment() {
-        return (LifeCounterFragment) getFamiliarFragment();
+        return (LifeCounterFragment) getParentFamiliarFragment();
     }
 
     /**

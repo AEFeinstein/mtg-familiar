@@ -59,7 +59,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private TradeFragment getParentTradeFragment() {
-        return (TradeFragment) getFamiliarFragment();
+        return (TradeFragment) getParentFamiliarFragment();
     }
 
     @NotNull

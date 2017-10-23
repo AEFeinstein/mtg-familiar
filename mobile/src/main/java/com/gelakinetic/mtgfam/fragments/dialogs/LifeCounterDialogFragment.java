@@ -36,7 +36,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private LifeCounterFragment getParentLifeCounterFragment() {
-        return (LifeCounterFragment) getFamiliarFragment();
+        return (LifeCounterFragment) getParentFamiliarFragment();
     }
 
     @NotNull
