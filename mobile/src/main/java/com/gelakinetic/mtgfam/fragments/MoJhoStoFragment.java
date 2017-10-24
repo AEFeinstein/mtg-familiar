@@ -22,6 +22,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -200,17 +201,17 @@ public class MoJhoStoFragment extends FamiliarFragment {
      */
     private void getOneSpell(String type, int cmc) {
         try {
+            SearchCriteria criteria = new SearchCriteria();
             SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-            String logic = "=";
             if (type.equals(EQUIPMENT)) {
-                logic = "<=";
-                type = " - " + EQUIPMENT;
+                criteria.cmcLogic = "<=";
+                criteria.subTypes = Collections.singletonList(type);
+            } else {
+                criteria.cmcLogic = "=";
+                criteria.superTypes = Collections.singletonList(type);
             }
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
-            SearchCriteria criteria = new SearchCriteria();
-            criteria.type = type;
             criteria.cmc = cmc;
-            criteria.cmcLogic = logic;
             criteria.moJhoStoFilter = true;
             Cursor permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
@@ -251,7 +252,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
-            criteria.type = type;
+            criteria.superTypes = Collections.singletonList(type);
             Cursor spells = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
             if (spells == null) {

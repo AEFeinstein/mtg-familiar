@@ -99,6 +99,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
@@ -259,7 +260,7 @@ public class CardViewFragment extends FamiliarFragment {
             public void onClick(View v) {
                 SearchCriteria setSearch = new SearchCriteria();
                 assert mSetTextView.getText() != null;
-                setSearch.set = mSetTextView.getText().toString();
+                setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
                 Bundle arguments = new Bundle();
                 arguments.putSerializable(SearchViewFragment.CRITERIA, setSearch);
                 ResultListFragment rlFrag = new ResultListFragment();
