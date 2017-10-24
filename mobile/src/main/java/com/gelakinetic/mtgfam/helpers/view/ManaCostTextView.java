@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 public class ManaCostTextView extends ATokenTextView {
     private static final LinkedHashMap<String, BitmapDrawable> MANA_DRAWABLES = new LinkedHashMap<>();
     private static final LinkedHashMap<String, Integer> MANA_SYMBOLS = new LinkedHashMap<>();
+
     static {
         MANA_SYMBOLS.put("0", R.drawable.glyph_0);
         MANA_SYMBOLS.put("1", R.drawable.glyph_1);

@@ -545,10 +545,10 @@ public class SearchViewFragment extends FamiliarFragment {
         if (searchCriteria.collectorsNumber.length() == 0) {
             searchCriteria.collectorsNumber = null;
         }
-        if(searchCriteria.manaCost.size() == 0) {
+        if (searchCriteria.manaCost.size() == 0) {
             searchCriteria.manaCost = null;
         }
-        if(searchCriteria.sets.size() == 0) {
+        if (searchCriteria.sets.size() == 0) {
             searchCriteria.sets = null;
         }
 
@@ -795,21 +795,19 @@ public class SearchViewFragment extends FamiliarFragment {
 
             mNameField.setText(criteria.name);
 
-            if(null != criteria.superTypes && criteria.superTypes.size() > 0) {
+            if (null != criteria.superTypes && criteria.superTypes.size() > 0) {
                 for (String supertype : criteria.superTypes) {
                     mSupertypeField.addObject(supertype);
                 }
-            }
-            else {
+            } else {
                 mSupertypeField.clearTextAndTokens();
             }
 
-            if(null != criteria.subTypes && criteria.subTypes.size() > 0) {
+            if (null != criteria.subTypes && criteria.subTypes.size() > 0) {
                 for (String subtype : criteria.subTypes) {
                     mSubtypeField.addObject(subtype);
                 }
-            }
-            else {
+            } else {
                 mSubtypeField.clearTextAndTokens();
             }
 

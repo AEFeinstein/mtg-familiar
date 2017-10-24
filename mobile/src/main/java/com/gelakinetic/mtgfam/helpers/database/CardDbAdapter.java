@@ -1198,7 +1198,7 @@ public class CardDbAdapter {
 
         if (null != criteria.manaCostLogic && null != criteria.manaCost) {
             StringBuilder manaCost = new StringBuilder();
-            for(String mana : criteria.manaCost) {
+            for (String mana : criteria.manaCost) {
                 manaCost.append('{').append(mana).append('}');
             }
             statement = criteria.manaCostLogic.appendToSql(statement,
@@ -2266,7 +2266,7 @@ public class CardDbAdapter {
      * @param subcategory The integer subcategory, or -1 for no subcategory
      * @param mDb         The database to query
      * @return A Cursor pointing to all rules which match that keyword in that category &
-     *         subcategory
+     * subcategory
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor getRulesByKeyword(String keyword, int category, int subcategory,
