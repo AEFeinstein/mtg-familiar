@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -54,8 +55,13 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
     /**
      * @return the currently viewed CardViewFragment in the CardViewPagerFragment
      */
-    private CardViewFragment getCardViewFragment() {
-        return ((CardViewPagerFragment) getFamiliarFragment()).getCurrentFragment();
+    @Nullable
+    private CardViewFragment getParentCardViewFragment() {
+        CardViewPagerFragment pagerFrag = ((CardViewPagerFragment) getParentFamiliarFragment());
+        if (null != pagerFrag) {
+            return pagerFrag.getCurrentFragment();
+        }
+        return null;
     }
 
     @NotNull
@@ -68,9 +74,14 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
         setShowsDialog(true);
 
         mDialogId = getArguments().getInt(ID_KEY);
+
+        if (null == getParentCardViewFragment()) {
+            return DontShowDialog();
+        }
+
         switch (mDialogId) {
             case GET_IMAGE: {
-                if (getCardViewFragment().mCardBitmap == null) {
+                if (getParentCardViewFragment().mCardBitmap == null) {
                     return DontShowDialog();
                 }
 
@@ -80,16 +91,16 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 dialog.setContentView(R.layout.card_view_image_dialog);
 
                 ImageView dialogImageView = dialog.findViewById(R.id.cardimage);
-                dialogImageView.setImageDrawable(getCardViewFragment().mCardBitmap);
+                dialogImageView.setImageDrawable(getParentCardViewFragment().mCardBitmap);
 
                 dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        if (getCardViewFragment().mAsyncTask != null) {
-                            getCardViewFragment().mAsyncTask.cancel(true);
+                        if (getParentCardViewFragment().mAsyncTask != null) {
+                            getParentCardViewFragment().mAsyncTask.cancel(true);
                         }
-                        getCardViewFragment().mAsyncTask = getCardViewFragment().new saveCardImageTask();
-                        ((CardViewFragment.saveCardImageTask) getCardViewFragment().mAsyncTask).execute(CardViewFragment.MAIN_PAGE);
+                        getParentCardViewFragment().mAsyncTask = getParentCardViewFragment().new saveCardImageTask();
+                        ((CardViewFragment.saveCardImageTask) getParentCardViewFragment().mAsyncTask).execute(CardViewFragment.MAIN_PAGE);
                         return true;
                     }
                 });
@@ -97,7 +108,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return dialog;
             }
             case GET_LEGALITY: {
-                if (getCardViewFragment().mFormats == null || getCardViewFragment().mLegalities == null) {
+                if (null == getParentCardViewFragment() || getParentCardViewFragment().mFormats == null || getParentCardViewFragment().mLegalities == null) {
                     /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
@@ -108,10 +119,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 /* prepare the list of all records */
                 List<HashMap<String, String>> fillMaps = new ArrayList<>();
-                for (int i = 0; i < getCardViewFragment().mFormats.length; i++) {
+                for (int i = 0; i < getParentCardViewFragment().mFormats.length; i++) {
                     HashMap<String, String> map = new HashMap<>();
-                    map.put(from[0], getCardViewFragment().mFormats[i]);
-                    map.put(from[1], getCardViewFragment().mLegalities[i]);
+                    map.put(from[0], getParentCardViewFragment().mFormats[i]);
+                    map.put(from[1], getParentCardViewFragment().mLegalities[i]);
                     fillMaps.add(map);
                 }
 
@@ -126,7 +137,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return builder.build();
             }
             case GET_PRICE: {
-                if (getCardViewFragment().mPriceInfo == null) {
+                if (null == getParentCardViewFragment() || getParentCardViewFragment().mPriceInfo == null) {
                     return DontShowDialog();
                 }
 
@@ -139,18 +150,18 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 TextView f = v.findViewById(R.id.foil);
                 TextView priceLink = v.findViewById(R.id.pricelink);
 
-                l.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mLow));
-                m.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mAverage));
-                h.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mHigh));
+                l.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mLow));
+                m.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mAverage));
+                h.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mHigh));
 
-                if (getCardViewFragment().mPriceInfo.mFoilAverage != 0) {
-                    f.setText(String.format(Locale.US, "$%1$,.2f", getCardViewFragment().mPriceInfo.mFoilAverage));
+                if (getParentCardViewFragment().mPriceInfo.mFoilAverage != 0) {
+                    f.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mFoilAverage));
                 } else {
                     f.setVisibility(View.GONE);
                     v.findViewById(R.id.foil_label).setVisibility(View.GONE);
                 }
                 priceLink.setMovementMethod(LinkMovementMethod.getInstance());
-                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getCardViewFragment().mPriceInfo.mUrl + "\">" +
+                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.mUrl + "\">" +
                         getString(R.string.card_view_price_dialog_link) + "</a>"));
 
                 MaterialDialog.Builder adb = new MaterialDialog.Builder(getActivity());
@@ -159,8 +170,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return adb.build();
             }
             case CHANGE_SET: {
-                final String[] aSets = getCardViewFragment().mPrintings.toArray(new String[getCardViewFragment().mPrintings.size()]);
-                final Long[] aIds = getCardViewFragment().mCardIds.toArray(new Long[getCardViewFragment().mCardIds.size()]);
+                final String[] aSets = getParentCardViewFragment().mPrintings.toArray(new String[getParentCardViewFragment().mPrintings.size()]);
+                final Long[] aIds = getParentCardViewFragment().mCardIds.toArray(new Long[getParentCardViewFragment().mCardIds.size()]);
 
                 /* Sanity check */
                 for (String set : aSets) {
@@ -174,13 +185,13 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 builder.itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
-                        getCardViewFragment().setInfoFromID(aIds[position]);
+                        getParentCardViewFragment().setInfoFromID(aIds[position]);
                     }
                 });
                 return builder.build();
             }
             case CARD_RULINGS: {
-                if (getCardViewFragment().mRulingsArrayList == null) {
+                if (null == getParentCardViewFragment() || getParentCardViewFragment().mRulingsArrayList == null) {
                     return DontShowDialog();
                 }
                 Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
@@ -192,10 +203,10 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 TextView textViewUrl = v.findViewById(R.id.url);
 
                 String message = "";
-                if (getCardViewFragment().mRulingsArrayList.size() == 0) {
+                if (getParentCardViewFragment().mRulingsArrayList.size() == 0) {
                     message = getString(R.string.card_view_no_rulings);
                 } else {
-                    for (CardViewFragment.Ruling r : getCardViewFragment().mRulingsArrayList) {
+                    for (CardViewFragment.Ruling r : getParentCardViewFragment().mRulingsArrayList) {
                         message += (r.toString() + "<br><br>");
                     }
 
@@ -208,7 +219,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
                 textViewUrl.setText(Html.fromHtml(
                         "<a href=http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
-                                getCardViewFragment().mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
+                                getParentCardViewFragment().mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
                 ));
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
@@ -217,9 +228,12 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 return builder.build();
             }
             case WISH_LIST_COUNTS: {
-                Dialog dialog = CardHelpers.getDialog(getCardViewFragment().mCardName, getCardViewFragment(), false, false);
+                if (null == getParentCardViewFragment()) {
+                    return DontShowDialog();
+                }
+                Dialog dialog = CardHelpers.getDialog(getParentCardViewFragment().mCardName, getParentCardViewFragment(), false, false);
                 if (dialog == null) {
-                    getCardViewFragment().handleFamiliarDbException(false);
+                    getParentCardViewFragment().handleFamiliarDbException(false);
                     return DontShowDialog();
                 }
                 return dialog;
@@ -231,11 +245,11 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                View view = getCardViewFragment().getView();
+                                View view = getParentCardViewFragment().getView();
                                 SpannableString costSpannable = new SpannableString(((TextView) view.findViewById(R.id.cost)).getText());
                                 SpannableString abilitySpannable = new SpannableString(((TextView) view.findViewById(R.id.ability)).getText());
-                                String costText = getCardViewFragment().convertHtmlToPlainText(Html.toHtml(costSpannable));
-                                String abilityText = getCardViewFragment().convertHtmlToPlainText(Html.toHtml(abilitySpannable));
+                                String costText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(costSpannable));
+                                String abilityText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(abilitySpannable));
                                 String copyText = ((TextView) view.findViewById(R.id.name)).getText().toString() + '\n' +
                                         costText + '\n' +
                                         ((TextView) view.findViewById(R.id.type)).getText().toString() + '\n' +
@@ -256,14 +270,14 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getCardViewFragment().runShareImageTask();
+                                getParentCardViewFragment().runShareImageTask();
                             }
                         });
                 return builder.build();
             }
             case TRANSLATE_CARD: {
                 /* Make sure the translations exist */
-                if (getCardViewFragment().mTranslatedNames == null || getCardViewFragment().mTranslatedNames.isEmpty()) {
+                if (null == getParentCardViewFragment() || getParentCardViewFragment().mTranslatedNames == null || getParentCardViewFragment().mTranslatedNames.isEmpty()) {
                     /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
@@ -274,7 +288,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 /* prepare the list of all translations */
                 List<HashMap<String, String>> fillMaps = new ArrayList<>();
-                for (Card.ForeignPrinting fp : getCardViewFragment().mTranslatedNames) {
+                for (Card.ForeignPrinting fp : getParentCardViewFragment().mTranslatedNames) {
                     HashMap<String, String> map = new HashMap<>();
 
                     /* Translate the language code into a readable language label */
@@ -340,7 +354,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         /* Copy the translated name to the clipboard */
-                        ClipboardManager clipboard = (ClipboardManager) (getCardViewFragment().getContext().
+                        ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().getContext().
                                 getSystemService(android.content.Context.CLIPBOARD_SERVICE));
                         ClipData cd = new ClipData(
                                 ((TextView) view.findViewById(R.id.format)).getText(),

@@ -3,6 +3,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.view.View;
 
@@ -39,6 +40,11 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         setShowsDialog(true);
 
         mDialogId = getArguments().getInt(ID_KEY);
+
+        if (null == getParentResultListFragment()) {
+            return DontShowDialog();
+        }
+        
         switch (mDialogId) {
             case QUICK_ADD: {
                 final String cardName = getArguments().getString(NAME_KEY);
@@ -60,7 +66,9 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 // Show the dialog to pick a deck
-                                getResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
+                                if (null != getParentResultListFragment()) {
+                                    getParentResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
+                                }
                             }
                         })
                         .build();
@@ -125,7 +133,8 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         }
     }
 
-    private ResultListFragment getResultListFragment() {
-        return (ResultListFragment) getFamiliarFragment();
+    @Nullable
+    private ResultListFragment getParentResultListFragment() {
+        return (ResultListFragment) getParentFamiliarFragment();
     }
 }

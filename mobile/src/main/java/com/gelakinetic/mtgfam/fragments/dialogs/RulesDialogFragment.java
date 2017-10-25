@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -32,16 +33,17 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed RulesFragment
      */
+    @Nullable
     private RulesFragment getParentRulesFragment() {
-        return (RulesFragment) getFamiliarFragment();
+        return (RulesFragment) getParentFamiliarFragment();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (searchArgs != null) {
+        if (searchArgs != null && getParentFamiliarFragment() != null) {
             RulesFragment frag = new RulesFragment();
-            getFamiliarFragment().startNewFragment(frag, searchArgs);
+            getParentFamiliarFragment().startNewFragment(frag, searchArgs);
         }
     }
 
@@ -49,6 +51,11 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         searchArgs = null;
+
+        if (null == getParentRulesFragment()) {
+            return DontShowDialog();
+        }
+
         switch (DIALOG_SEARCH) {
             case DIALOG_SEARCH: {
                         /* Inflate a view to type in the player's name, and show it in an AlertDialog */

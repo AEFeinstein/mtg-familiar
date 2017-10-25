@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -56,8 +57,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed TradeFragment
      */
+    @Nullable
     private TradeFragment getParentTradeFragment() {
-        return (TradeFragment) getFamiliarFragment();
+        return (TradeFragment) getParentFamiliarFragment();
     }
 
     @NotNull
@@ -68,6 +70,11 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
         mDialogId = getArguments().getInt(ID_KEY);
         final int sideForDialog = getArguments().getInt(ID_SIDE);
         final int positionForDialog = getArguments().getInt(ID_POSITION);
+
+        if (null == getParentTradeFragment()) {
+            return DontShowDialog();
+        }
+
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
                 /* Get some final references */
@@ -355,9 +362,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Build the dialog with some choices */
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
-                        .items(new CharSequence[]{getString(R.string.trader_Low),
+                        .items(getString(R.string.trader_Low),
                                 getString(R.string.trader_Average),
-                                getString(R.string.trader_High)})
+                                getString(R.string.trader_High))
                         .itemsCallbackSingleChoice(getParentTradeFragment().mPriceSetting, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {

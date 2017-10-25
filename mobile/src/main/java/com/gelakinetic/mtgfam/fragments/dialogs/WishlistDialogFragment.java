@@ -3,6 +3,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -31,8 +32,9 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed DiceFragment
      */
+    @Nullable
     private WishlistFragment getParentWishlistFragment() {
-        return (WishlistFragment) getFamiliarFragment();
+        return (WishlistFragment) getParentFamiliarFragment();
     }
 
     @NotNull
@@ -41,11 +43,18 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
         setShowsDialog(true);
         mDialogId = getArguments().getInt(ID_KEY);
         String cardName = getArguments().getString(NAME_KEY);
+
+        if (null == getParentWishlistFragment()) {
+            return DontShowDialog();
+        }
+
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
                 Dialog dialog = CardHelpers.getDialog(cardName, getParentWishlistFragment(), true, false);
                 if (dialog == null) {
-                    getParentWishlistFragment().handleFamiliarDbException(false);
+                    if (null != getParentWishlistFragment()) {
+                        getParentWishlistFragment().handleFamiliarDbException(false);
+                    }
                     return DontShowDialog();
                 }
                 return dialog;

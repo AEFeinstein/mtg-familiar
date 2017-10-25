@@ -3,6 +3,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -24,15 +25,18 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed SearchViewFragment
      */
+    @Nullable
     private SearchViewFragment getParentSearchViewFragment() {
-        return (SearchViewFragment) getFamiliarFragment();
+        return (SearchViewFragment) getParentFamiliarFragment();
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
         try {
-            getParentSearchViewFragment().checkDialogButtonColors();
+            if (null != getParentSearchViewFragment()) {
+                getParentSearchViewFragment().checkDialogButtonColors();
+            }
         } catch (NullPointerException e) {
             /* Ignore it if there's no activity */
         }
@@ -43,13 +47,18 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
 
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
+        /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
         mDialogId = getArguments().getInt(ID_KEY);
+
+        if (null == getParentSearchViewFragment()) {
+            return DontShowDialog();
+        }
+
         try {
-                    /* Build the dialogs to display format and rarity choices. The arrays were
-                        already filled in onCreate() */
+            /* Build the dialogs to display format and rarity choices. The arrays were
+                already filled in onCreate() */
             switch (mDialogId) {
                 case FORMAT_LIST: {
                     getParentSearchViewFragment().mFormatDialog = new MaterialDialog.Builder(this.getActivity())
@@ -64,7 +73,10 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                             })
                             .positiveText(R.string.dialog_ok)
                             .build();
-                    return getParentSearchViewFragment().mFormatDialog;
+                    if (null != getParentSearchViewFragment()) {
+                        return getParentSearchViewFragment().mFormatDialog;
+                    }
+                    return DontShowDialog();
                 }
                 case RARITY_LIST: {
                     getParentSearchViewFragment().mRarityDialog = new MaterialDialog.Builder(this.getActivity())
@@ -80,14 +92,17 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                                 }
                             })
                             .build();
-                    return getParentSearchViewFragment().mRarityDialog;
+                    if (null != getParentSearchViewFragment()) {
+                        return getParentSearchViewFragment().mRarityDialog;
+                    }
+                    return DontShowDialog();
                 }
                 default: {
                     return DontShowDialog();
                 }
             }
         } catch (NullPointerException e) {
-                    /* if the db failed to open, these arrays will be null. */
+            /* if the db failed to open, these arrays will be null. */
             getParentSearchViewFragment().handleFamiliarDbException(false);
             return DontShowDialog();
         }

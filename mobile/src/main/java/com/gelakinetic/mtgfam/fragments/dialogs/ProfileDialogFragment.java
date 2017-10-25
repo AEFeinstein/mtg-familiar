@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,9 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed ProfileFragment
      */
+    @Nullable
     private ProfileFragment getParentProfileFragment() {
-        return (ProfileFragment) getFamiliarFragment();
+        return (ProfileFragment) getParentFamiliarFragment();
     }
 
     @NotNull
@@ -38,6 +40,11 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
                 /* We're setting this to false if we return null, so we should reset it every time to be safe */
         setShowsDialog(true);
+
+        if (null == getParentProfileFragment()) {
+            return DontShowDialog();
+        }
+
         switch (DIALOG_DCI_NUMBER) {
             case DIALOG_DCI_NUMBER: {
                 View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
@@ -74,8 +81,10 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                                 }
 
                                 PreferenceAdapter.setDCINumber(getContext(), strNumber);
-                                getParentProfileFragment().mDCINumber = strNumber;
-                                getParentProfileFragment().checkDCINumber();
+                                if (null != getParentProfileFragment()) {
+                                    getParentProfileFragment().mDCINumber = strNumber;
+                                    getParentProfileFragment().checkDCINumber();
+                                }
                                 dismiss();
                             }
                         })
@@ -83,7 +92,9 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentProfileFragment().checkDCINumber();
+                                if (null != getParentProfileFragment()) {
+                                    getParentProfileFragment().checkDCINumber();
+                                }
                                 dismiss();
                             }
                         })

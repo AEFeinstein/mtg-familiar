@@ -3,6 +3,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +34,9 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed LifeCounterFragment
      */
+    @Nullable
     private LifeCounterFragment getParentLifeCounterFragment() {
-        return (LifeCounterFragment) getFamiliarFragment();
+        return (LifeCounterFragment) getParentFamiliarFragment();
     }
 
     /**
@@ -54,6 +56,10 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
 
         mDialogId = getArguments().getInt(ID_KEY);
         final int position = getArguments().getInt(POSITION_KEY);
+
+        if (null == getParentLifeCounterFragment()) {
+            return DontShowDialog();
+        }
 
         switch (mDialogId) {
             case DIALOG_SET_NAME: {
