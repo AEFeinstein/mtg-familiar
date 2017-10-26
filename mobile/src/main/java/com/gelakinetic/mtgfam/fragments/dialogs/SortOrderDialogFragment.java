@@ -211,7 +211,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
          * @return This position's ID
          */
         @Override
-        public long getItemId(int position) {
+        public long getUniqueItemId(int position) {
             return mItemList.get(position).mId;
         }
 

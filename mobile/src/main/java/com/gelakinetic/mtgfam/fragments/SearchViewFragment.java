@@ -514,21 +514,15 @@ public class SearchViewFragment extends FamiliarFragment {
                 subtype += " " + type;
             }
         }
-        String sets = null;
-        for (String set : mSetField.getObjects()) {
-            if (sets == null) {
-                sets = set;
-            } else {
-                sets += "-" + set;
-            }
-        }
-        searchCriteria.type = supertype.trim() + " - " + subtype.trim();
+
+        searchCriteria.superTypes = mSupertypeField.getObjects();
+        searchCriteria.subTypes = mSubtypeField.getObjects();
         searchCriteria.flavor = mFlavorField.getText().toString().trim();
         searchCriteria.artist = mArtistField.getText().toString().trim();
         searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString().trim();
-        searchCriteria.set = sets;
-        searchCriteria.mc = mManaCostTextView.getStringFromObjects();
-        searchCriteria.mcLogic = (Comparison) mManaComparisonSpinner.getSelectedItem();
+        searchCriteria.sets = mSetField.getObjects();
+        searchCriteria.manaCost = mManaCostTextView.getObjects();
+        searchCriteria.manaCostLogic = (Comparison) mManaComparisonSpinner.getSelectedItem();
 
         if (searchCriteria.name.length() == 0) {
             searchCriteria.name = null;
@@ -536,8 +530,11 @@ public class SearchViewFragment extends FamiliarFragment {
         if (searchCriteria.text.length() == 0) {
             searchCriteria.text = null;
         }
-        if (searchCriteria.type.length() == 0) {
-            searchCriteria.type = null;
+        if (searchCriteria.superTypes.size() == 0) {
+            searchCriteria.superTypes = null;
+        }
+        if (searchCriteria.subTypes.size() == 0) {
+            searchCriteria.subTypes = null;
         }
         if (searchCriteria.flavor.length() == 0) {
             searchCriteria.flavor = null;
@@ -547,6 +544,12 @@ public class SearchViewFragment extends FamiliarFragment {
         }
         if (searchCriteria.collectorsNumber.length() == 0) {
             searchCriteria.collectorsNumber = null;
+        }
+        if (searchCriteria.manaCost.size() == 0) {
+            searchCriteria.manaCost = null;
+        }
+        if (searchCriteria.sets.size() == 0) {
+            searchCriteria.sets = null;
         }
 
         /* Build a color string. capital letters means the user is search for that color */
@@ -791,19 +794,23 @@ public class SearchViewFragment extends FamiliarFragment {
             oInputStream.close();
 
             mNameField.setText(criteria.name);
-            String delimiter = " - ";
-            String[] type = criteria.type.split(delimiter);
-            if (type.length > 0 && type[0] != null) {
-                mSupertypeField.addObject(type[0]);
-            }
-            if (type.length > 1 && type[1] != null) {
-                /* Concatenate all strings after the first delimiter
-                 * in case there's a hyphen in the subtype
-                 */
-                for (int i = 1; i < type.length; i++) {
-                    mSubtypeField.addObject(type[i]);
+
+            if (null != criteria.superTypes && criteria.superTypes.size() > 0) {
+                for (String supertype : criteria.superTypes) {
+                    mSupertypeField.addObject(supertype);
                 }
+            } else {
+                mSupertypeField.clearTextAndTokens();
             }
+
+            if (null != criteria.subTypes && criteria.subTypes.size() > 0) {
+                for (String subtype : criteria.subTypes) {
+                    mSubtypeField.addObject(subtype);
+                }
+            } else {
+                mSubtypeField.clearTextAndTokens();
+            }
+
             mTextField.setText(criteria.text);
             mArtistField.setText(criteria.artist);
             mFlavorField.setText(criteria.flavor);
@@ -885,20 +892,22 @@ public class SearchViewFragment extends FamiliarFragment {
             mCmcChoice.setSelection(Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
                     .indexOf(String.valueOf(criteria.cmc)));
 
-            if (criteria.set != null) {
+            if (criteria.sets != null && criteria.sets.size() > 0) {
                 /* Get a list of the persisted sets */
-                for (String set : criteria.set.split("-")) {
+                for (String set : criteria.sets) {
                     mSetField.addObject(set);
                 }
             } else {
                 mSetField.clearTextAndTokens();
             }
-            if (criteria.mc != null) {
-                mManaCostTextView.setObjectsFromString(criteria.mc);
+            if (criteria.manaCost != null && criteria.manaCost.size() > 0) {
+                for (String mana : criteria.manaCost) {
+                    mManaCostTextView.addObject(mana);
+                }
             } else {
                 mManaCostTextView.clearTextAndTokens();
             }
-            mManaComparisonSpinner.setSelection(criteria.mcLogic.ordinal());
+            mManaComparisonSpinner.setSelection(criteria.manaCostLogic.ordinal());
             if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
             }

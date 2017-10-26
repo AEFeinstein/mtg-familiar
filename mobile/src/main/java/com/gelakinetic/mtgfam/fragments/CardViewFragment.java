@@ -99,6 +99,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
@@ -259,7 +260,7 @@ public class CardViewFragment extends FamiliarFragment {
             public void onClick(View v) {
                 SearchCriteria setSearch = new SearchCriteria();
                 assert mSetTextView.getText() != null;
-                setSearch.set = mSetTextView.getText().toString();
+                setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
                 Bundle arguments = new Bundle();
                 arguments.putSerializable(SearchViewFragment.CRITERIA, setSearch);
                 ResultListFragment rlFrag = new ResultListFragment();
@@ -732,7 +733,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param item The context menu item that was selected.
      * @return boolean Return false to allow normal context menu processing to proceed, true to
-     *         consume it here.
+     * consume it here.
      */
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
@@ -1203,11 +1204,11 @@ public class CardViewFragment extends FamiliarFragment {
                 /* Some trickery to figure out if we have a token */
                 boolean isToken = false;
                 if (mCardType.contains("Token") || /* try to take the easy way out */
-                    (mCardCMC == 0 && /* Tokens have a CMC of 0 */
+                        (mCardCMC == 0 && /* Tokens have a CMC of 0 */
                     /* The only tokens in Gatherer are from Duel Decks */
-                     mSetName.contains("Duel Decks") &&
+                                mSetName.contains("Duel Decks") &&
                      /* The only tokens in Gatherer are creatures */
-                     mCardType.contains("Creature"))) {
+                                mCardType.contains("Creature"))) {
                     isToken = true;
                 }
 

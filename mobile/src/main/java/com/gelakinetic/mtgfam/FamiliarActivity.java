@@ -54,6 +54,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -1256,7 +1257,8 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     @NotNull
     public android.app.FragmentManager getFragmentManager() {
-        throw new IllegalAccessError("Use .getSupportFragmentManager()");
+        Log.e("Suggestion", "Use .getSupportFragmentManager()");
+        return super.getFragmentManager();
     }
 
     /**
