@@ -7,7 +7,7 @@ apply plugin: 'findbugs'
 
 repositories {
     mavenCentral()
-    //google() // Gradle 4.0 adds this
+    google()
 }
 
 def configDir = "${project.rootDir}/config"
