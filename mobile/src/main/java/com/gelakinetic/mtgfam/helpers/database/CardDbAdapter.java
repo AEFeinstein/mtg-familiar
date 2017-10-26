@@ -910,47 +910,16 @@ public class CardDbAdapter {
          * types.
          */
 
-        String supertypes = null;
-        String subtypes = null;
-
-        if (criteria.type != null && !criteria.type.matches("\\s*-\\s*")) {
-            boolean containsSupertype = true;
-            if (criteria.type.substring(0, 2).equals("- ")) {
-                containsSupertype = false;
-            }
-            String delimiter = " - ";
-            String[] split = criteria.type.split(delimiter);
-            if (split.length >= 2) {
-                supertypes = split[0];
-
-                /* Concatenate all strings after the first delimiter
-                 * in case there's a hyphen in the subtype
-                 */
-                subtypes = "";
-                boolean first = true;
-                for (int i = 1; i < split.length; i++) {
-                    if (!first) {
-                        subtypes += delimiter;
-                    }
-                    subtypes += split[i];
-                    first = false;
-                }
-            } else if (containsSupertype) {
-                supertypes = criteria.type.replace(" -", "");
-            } else {
-                subtypes = criteria.type.replace("- ", "");
-            }
-        }
+        List<String> supertypes = criteria.superTypes;
+        List<String> subtypes = criteria.subTypes;
 
         if (supertypes != null && !supertypes.isEmpty()) {
-            /* Separate each individual */
-            String[] supertypesParts = supertypes.split(" ");
             /* Concat a leading and a trailing space to the supertype */
             final String supertypeInDb = "' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " || ' '";
 
             switch (criteria.typeLogic) {
                 case 0:
-                    for (String s : supertypesParts) {
+                    for (String s : supertypes) {
                         if (s.contains(EXCLUDE_TOKEN)) {
                             statement += " AND (" + supertypeInDb + " NOT LIKE " +
                                     sanitizeString("% " + s.substring(1) + " %", false) + ")";
@@ -961,7 +930,7 @@ public class CardDbAdapter {
                     break;
                 case 1:
                     boolean firstRun = true;
-                    for (String s : supertypesParts) {
+                    for (String s : supertypes) {
                         if (firstRun) {
                             firstRun = false;
 
@@ -982,7 +951,7 @@ public class CardDbAdapter {
                     statement += ")";
                     break;
                 case 2:
-                    for (String s : supertypesParts) {
+                    for (String s : supertypes) {
                         statement += " AND (" + supertypeInDb + " NOT LIKE " +
                                 sanitizeString("% " + s + " %", false) + ")";
                     }
@@ -993,14 +962,12 @@ public class CardDbAdapter {
         }
 
         if (subtypes != null && !subtypes.isEmpty()) {
-            /* Separate each individual */
-            String[] subtypesParts = subtypes.split(" ");
             /* Concat a leading and a trailing space to the subtype */
             final String subtypeInDb = "' ' || " + DATABASE_TABLE_CARDS + "." + KEY_SUBTYPE + " || ' '";
 
             switch (criteria.typeLogic) {
                 case 0:
-                    for (String s : subtypesParts) {
+                    for (String s : subtypes) {
                         if (s.contains(EXCLUDE_TOKEN)) {
                             statement += " AND (" + subtypeInDb + " NOT LIKE " +
                                     sanitizeString("% " + s.substring(1) + " %", false) + ")";
@@ -1012,7 +979,7 @@ public class CardDbAdapter {
                     break;
                 case 1:
                     boolean firstRun = true;
-                    for (String s : subtypesParts) {
+                    for (String s : subtypes) {
                         if (firstRun) {
                             firstRun = false;
                             if (s.contains(EXCLUDE_TOKEN))
@@ -1031,7 +998,7 @@ public class CardDbAdapter {
                     statement += ")";
                     break;
                 case 2:
-                    for (String s : subtypesParts) {
+                    for (String s : subtypes) {
                         statement += " AND (" + subtypeInDb + " NOT LIKE " +
                                 sanitizeString("% " + s + " %", false) + ")";
                     }
@@ -1178,12 +1145,12 @@ public class CardDbAdapter {
             }
         }
 
-        if (criteria.set != null) {
+        if (criteria.sets != null && criteria.sets.size() > 0) {
             statement += " AND (";
 
             boolean first = true;
 
-            for (String set : criteria.set.split("-")) {
+            for (String set : criteria.sets) {
                 if (first) {
                     first = false;
                 } else {
@@ -1229,9 +1196,13 @@ public class CardDbAdapter {
             statement += ")";
         }
 
-        if (null != criteria.mcLogic) {
-            statement = criteria.mcLogic.appendToSql(statement,
-                    DATABASE_TABLE_CARDS + "." + KEY_MANACOST, criteria.mc);
+        if (null != criteria.manaCostLogic && null != criteria.manaCost) {
+            StringBuilder manaCost = new StringBuilder();
+            for (String mana : criteria.manaCost) {
+                manaCost.append('{').append(mana).append('}');
+            }
+            statement = criteria.manaCostLogic.appendToSql(statement,
+                    DATABASE_TABLE_CARDS + "." + KEY_MANACOST, manaCost.toString());
         }
 
         if (criteria.cmc != -1) {
@@ -2295,7 +2266,7 @@ public class CardDbAdapter {
      * @param subcategory The integer subcategory, or -1 for no subcategory
      * @param mDb         The database to query
      * @return A Cursor pointing to all rules which match that keyword in that category &
-     *         subcategory
+     * subcategory
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor getRulesByKeyword(String keyword, int category, int subcategory,
