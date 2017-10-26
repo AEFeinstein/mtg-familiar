@@ -24,7 +24,7 @@
         android:layout_marginBottom="3dp"
         android:layout_marginTop="3dp"
         android:ellipsize="start"
-        android:maxLines="1" />
+        android:singleLine="true" />
 
     <View
         android:layout_width="match_parent"
