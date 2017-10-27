@@ -246,6 +246,9 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 View view = getParentCardViewFragment().getView();
+                                if(view == null) {
+                                    return;
+                                }
                                 SpannableString costSpannable = new SpannableString(((TextView) view.findViewById(R.id.cost)).getText());
                                 SpannableString abilitySpannable = new SpannableString(((TextView) view.findViewById(R.id.ability)).getText());
                                 String costText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(costSpannable));

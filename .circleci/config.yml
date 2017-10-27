@@ -1,0 +1,76 @@
+# Java Gradle CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/android:api-26-alpha
+      
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/repo
+
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    
+    steps:
+    
+      # Checkout the code
+      - checkout
+    
+      # Download and restore dependency cache
+      - restore_cache:
+          keys:
+            # Use both build.gradle files to get a specific cache
+            - jars-{{ checksum "build.gradle" }}-{{ checksum "mobile/build.gradle" }}
+            # Or just use one build.gradle file if we have added/changed dependencies, so we only have to update/add the new ones
+            - jars-{{ checksum "build.gradle" }}-
+            # Or just load the last cache of this type, and it will update it from there
+            - jars-
+            
+      # Download and restore build cache
+      - restore_cache:
+          keys:
+            - build-{{ epoch }}
+            - build-
+
+      # Update our dependencies
+      - run: ./gradlew androidDependencies
+          
+      # run tests! Subsequent builds should be faster due to caching the build cache
+      - run: ./gradlew :mobile:check
+      - run: ./gradlew :mobile:checkstyle
+      - run: ./gradlew :mobile:pmd
+      - run: ./gradlew :mobile:findbugs
+      - run: ./gradlew assembleDebug
+      
+      # Save our gradle stuff, depenencies, gradle distribution
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle"}}-{{ checksum "mobile/build.gradle" }}
+          
+      # Save our build cache so we can lessen the time used on it
+      - save_cache:
+          paths:
+            - mobile/build
+          key: build-{{ epoch }}
+      
+      # Store our APK so we can have nightly builds
+      - store_artifacts:
+          path: mobile/build/outputs
+          destination: apks
+      
+      # Also store the reports so we can track our progress on cleaning up the project
+      - store_artifacts:
+          path: mobile/build/reports
+          destination: reports

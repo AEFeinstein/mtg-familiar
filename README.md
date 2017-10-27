@@ -15,7 +15,7 @@ MTG Familiar is an Android app which has a suite of tools to play Magic: The Gat
 - Momir, Jhoira, Stonehewer randomizer
 
 ## How To Build
-[![Build Status](https://travis-ci.org/AEFeinstein/mtg-familiar.svg?branch=master)](https://travis-ci.org/AEFeinstein/mtg-familiar)
+[![Build Status](https://circleci.com/gh/AEFeinstein/mtg-familiar.svg?&style=shield&circle-token=aa58feb74f2eb4f089dc621f23745b3b32279fd9)](https://circleci.com/gh/AEFeinstein/mtg-familiar)
 - Download and install the latest [Android Studio](https://developer.android.com/sdk/index.html)
 - Make sure you have installed the lastest Android SDK Platform, Android SDK Tools, Android SDK Platform-tools, Android SDK Build-tools, Android Support Repository, Android Support Library, and Google Play Services from the Android SDK manager
 - Check out this project with Android Studio's VCS tools

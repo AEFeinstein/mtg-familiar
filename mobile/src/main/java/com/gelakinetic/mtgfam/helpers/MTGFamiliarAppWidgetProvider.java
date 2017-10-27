@@ -110,13 +110,15 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
                 views.setImageViewResource(entry.buttonResource, vectorResource);
             } else {
                 Drawable d = AppCompatResources.getDrawable(context, vectorResource);
-                Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
-                        d.getIntrinsicHeight(),
-                        Bitmap.Config.ARGB_8888);
-                Canvas c = new Canvas(b);
-                d.setBounds(0, 0, c.getWidth(), c.getHeight());
-                d.draw(c);
-                views.setImageViewBitmap(entry.buttonResource, b);
+                if(d != null) {
+                    Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
+                            d.getIntrinsicHeight(),
+                            Bitmap.Config.ARGB_8888);
+                    Canvas c = new Canvas(b);
+                    d.setBounds(0, 0, c.getWidth(), c.getHeight());
+                    d.draw(c);
+                    views.setImageViewBitmap(entry.buttonResource, b);
+                }
             }
 
             /* Set the listener */
