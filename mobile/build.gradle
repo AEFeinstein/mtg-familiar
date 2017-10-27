@@ -3,7 +3,7 @@ apply plugin: 'pmd'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 
-//check.dependsOn 'pmd', /*'checkstyle',*/ 'findbugs'
+check.dependsOn 'pmd', 'checkstyle', 'findbugs'
 
 repositories {
     mavenCentral()
