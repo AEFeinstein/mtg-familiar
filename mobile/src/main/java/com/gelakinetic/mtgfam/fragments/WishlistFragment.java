@@ -193,6 +193,9 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null, mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
+        if(card == null) {
+            return;
+        }
         CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
 
         /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
