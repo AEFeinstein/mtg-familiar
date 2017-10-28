@@ -47,9 +47,6 @@ jobs:
           
       # run tests! Subsequent builds should be faster due to caching the build cache
       - run: ./gradlew :mobile:check
-      - run: ./gradlew :mobile:checkstyle
-      - run: ./gradlew :mobile:pmd
-      - run: ./gradlew :mobile:findbugs
       - run: ./gradlew assembleDebug
       
       # Save our gradle stuff, depenencies, gradle distribution
