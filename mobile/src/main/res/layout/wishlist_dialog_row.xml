@@ -31,17 +31,21 @@
     <TextView
         android:id="@+id/cardset"
         style="@style/text.medium"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="fill_parent"
+	android:layout_weight="1"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center_vertical"
+	android:ellipsize="end"
+	android:lines="1"
         android:text="@string/search_set" />
 
     <ImageView
         android:id="@+id/wishlistDialogFoil"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+	android:layout_marginRight="8dp"
         app:srcCompat="@drawable/glyph_foil" />
 
 </LinearLayout>
