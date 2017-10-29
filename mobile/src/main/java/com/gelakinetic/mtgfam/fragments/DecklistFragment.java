@@ -202,7 +202,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 switch (item.getItemId()) {
                     case R.id.deck_import_selected: {
                         ArrayList<CompressedDecklistInfo> selectedItems =
-                                ((CardDataAdapter)mListAdapter).getSelectedItems();
+                                ((CardDataAdapter) mListAdapter).getSelectedItems();
                         for (CompressedDecklistInfo info : selectedItems) {
                             WishlistHelpers.addItemToWishlist(getContext(),
                                     info.convertToWishlist());
@@ -391,7 +391,7 @@ public class DecklistFragment extends FamiliarListFragment {
             /* Compress the whole decklist, or just the card that changed */
             for (Pair<MtgCard, Boolean> card : decklist) {
                 /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
-                if(!card.first.mName.isEmpty()) {
+                if (!card.first.mName.isEmpty()) {
                     /* Translate the set code to TCG name of course it's not saved */
                     card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
                     if (changedCardName == null || changedCardName.equals(card.first.mName)) {

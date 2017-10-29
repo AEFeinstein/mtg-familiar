@@ -41,7 +41,7 @@ class MTRIPGParser {
     /**
      * Default constructor
      *
-     * @param context     This context is used to get file handles to write the HTML files later
+     * @param context This context is used to get file handles to write the HTML files later
      */
     public MTRIPGParser(Context context) {
         this.mContext = context;

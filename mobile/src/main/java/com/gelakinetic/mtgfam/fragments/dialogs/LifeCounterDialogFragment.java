@@ -51,7 +51,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
         if (null == getParentLifeCounterFragment()) {
             return DontShowDialog();
         }
-        
+
         switch (mDialogId) {
             case DIALOG_REMOVE_PLAYER: {
                         /* Get all the player names */

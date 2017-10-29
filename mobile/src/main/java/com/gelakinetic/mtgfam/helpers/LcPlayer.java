@@ -110,7 +110,7 @@ public class LcPlayer {
                     mHistoryList.invalidate();
                 }
                 mReadoutTextView.setText(mLife + "");
-                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(), 
+                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(),
                         R.color.material_red_500));
                 if (mCommanderReadoutTextView != null) {
                     mCommanderReadoutTextView.setText(mLife + "");
@@ -124,7 +124,7 @@ public class LcPlayer {
                     mHistoryList.invalidate();
                 }
                 mReadoutTextView.setText(mPoison + "");
-                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(), 
+                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(),
                         R.color.material_green_500));
                 if (mCommanderReadoutTextView != null) {
                     mCommanderReadoutTextView.setText(mPoison + "");
@@ -138,7 +138,7 @@ public class LcPlayer {
                     mHistoryList.invalidate();
                 }
                 mReadoutTextView.setText(mLife + "");
-                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(), 
+                mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(),
                         R.color.material_red_500));
                 if (mCommanderReadoutTextView != null) {
                     mCommanderReadoutTextView.setText(mLife + "");
@@ -625,13 +625,13 @@ public class LcPlayer {
                     if (mLifeHistory.get(position).mDelta > 0) {
                         ((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
-                                ContextCompat.getColor(mFragment.getContext(), 
+                                ContextCompat.getColor(mFragment.getContext(),
                                         R.color.material_green_500)
                         );
                     } else {
                         ((TextView) view.findViewById(R.id.relative)).setText("" + mLifeHistory.get(position).mDelta);
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
-                                ContextCompat.getColor(mFragment.getContext(), 
+                                ContextCompat.getColor(mFragment.getContext(),
                                         R.color.material_red_500)
                         );
                     }
@@ -642,13 +642,13 @@ public class LcPlayer {
                         ((TextView) view.findViewById(R.id.relative))
                                 .setText("+" + mPoisonHistory.get(position).mDelta);
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
-                                ContextCompat.getColor(mFragment.getContext(), 
+                                ContextCompat.getColor(mFragment.getContext(),
                                         R.color.material_green_500)
                         );
                     } else {
                         ((TextView) view.findViewById(R.id.relative)).setText("" + mPoisonHistory.get(position).mDelta);
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
-                                ContextCompat.getColor(mFragment.getContext(), 
+                                ContextCompat.getColor(mFragment.getContext(),
                                         R.color.material_red_500)
                         );
                     }

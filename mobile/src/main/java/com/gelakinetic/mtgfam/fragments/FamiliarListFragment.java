@@ -62,6 +62,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
     /**
      * Initializes common members. Generally called in onCreate
+     *
      * @param fragmentView the fragment calling this method
      */
     void initializeMembers(View fragmentView) {
@@ -144,7 +145,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * Specific implementation for list-based Familiar Fragments.
      *
-     * @param <T> type that is stored in the ArrayList
+     * @param <T>  type that is stored in the ArrayList
      * @param <VH> ViewHolder that is used by the adapter
      */
     public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataAdapter.ViewHolder>

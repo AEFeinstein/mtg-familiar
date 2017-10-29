@@ -24,7 +24,9 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
     }
 
     @Override
-    public boolean enoughToFilter() { return true; }
+    public boolean enoughToFilter() {
+        return true;
+    }
 
     @Override
     public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {

@@ -57,7 +57,7 @@ public class Card {
 
     // The card's loyalty. An integer in practice
     public int mLoyalty = CardDbAdapter.NO_ONE_CARES;
-    
+
     // All the card's foreign printings
     public ForeignPrinting[] mForeignPrintings;
 
@@ -66,8 +66,8 @@ public class Card {
 
     // Private class for encapsulating foreign printing information
     public static class ForeignPrinting {
-    	public int mMultiverseId;
-    	public String mName;
-    	public String mLanguageCode;
+        public int mMultiverseId;
+        public String mName;
+        public String mLanguageCode;
     }
 }

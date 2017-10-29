@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Adapter that holds whatever, swipes to delete with a undo timeout, and multi-select of items.
  *
- * @param <T> type of what is held in the ArrayList
+ * @param <T>  type of what is held in the ArrayList
  * @param <VH> the ViewHolder that is used for the adapter
  */
 public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.ViewHolder>
@@ -41,6 +41,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
 
     /**
      * Properly go about removing an item from the list.
+     *
      * @param position where the item to remove is
      */
     public void remove(final int position) {
@@ -62,6 +63,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
 
     /**
      * Where things go before they get removed.
+     *
      * @param position where the item to be removed is
      */
     public boolean pendingRemoval(final int position) {
@@ -95,6 +97,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
 
     /**
      * If we are in select mode.
+     *
      * @return inSelectMode
      */
     public boolean isInSelectMode() {
@@ -103,6 +106,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
 
     /**
      * Set the select mode.
+     *
      * @param inSelectMode if we are in select mode or not
      */
     public void setInSelectMode(final boolean inSelectMode) {

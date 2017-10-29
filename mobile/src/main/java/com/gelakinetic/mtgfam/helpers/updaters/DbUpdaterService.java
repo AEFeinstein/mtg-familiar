@@ -261,7 +261,7 @@ public class DbUpdaterService extends IntentService {
                                         for (Card card : cardsToAdd) {
                                             CardDbAdapter.createCard(card, database);
                                             cardsAdded++;
-                                            mProgress = (int) (100 * (cardsAdded / (float)cardsToAdd.size()));
+                                            mProgress = (int) (100 * (cardsAdded / (float) cardsToAdd.size()));
                                         }
                                         /* Close the database */
                                         DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);

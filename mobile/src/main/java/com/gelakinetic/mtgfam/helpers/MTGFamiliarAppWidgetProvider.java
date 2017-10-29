@@ -98,10 +98,9 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
         for (WidgetEntry entry : widgetEntries) {
 
             int vectorResource;
-            if(mLayout == R.layout.mtgfamiliar_appwidget_dark) {
+            if (mLayout == R.layout.mtgfamiliar_appwidget_dark) {
                 vectorResource = entry.vectorResourceDark;
-            }
-            else {
+            } else {
                 vectorResource = entry.vectorResourceLight;
             }
 
@@ -110,7 +109,7 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
                 views.setImageViewResource(entry.buttonResource, vectorResource);
             } else {
                 Drawable d = AppCompatResources.getDrawable(context, vectorResource);
-                if(d != null) {
+                if (d != null) {
                     Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
                             d.getIntrinsicHeight(),
                             Bitmap.Config.ARGB_8888);

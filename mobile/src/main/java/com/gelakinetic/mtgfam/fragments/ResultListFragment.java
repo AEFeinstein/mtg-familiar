@@ -224,8 +224,8 @@ public class ResultListFragment extends FamiliarFragment {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String cardName = ((TextView)view.findViewById(R.id.card_name)).getText().toString();
-                String cardSet = ((TextView)view.findViewById(R.id.cardset)).getText().toString();
+                String cardName = ((TextView) view.findViewById(R.id.card_name)).getText().toString();
+                String cardSet = ((TextView) view.findViewById(R.id.cardset)).getText().toString();
                 showDialog(ResultListDialogFragment.QUICK_ADD, cardName, cardSet);
                 return true;
             }

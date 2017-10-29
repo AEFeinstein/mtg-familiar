@@ -76,7 +76,7 @@ public class MtgCard extends Card {
     }
 
     public MtgCard(Card card) {
-        if(card != null) {
+        if (card != null) {
             this.mName = card.mName;
             this.mExpansion = card.mExpansion;
             this.mType = card.mType;

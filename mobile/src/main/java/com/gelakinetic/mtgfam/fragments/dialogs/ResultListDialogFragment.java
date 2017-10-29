@@ -44,7 +44,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
         if (null == getParentResultListFragment()) {
             return DontShowDialog();
         }
-        
+
         switch (mDialogId) {
             case QUICK_ADD: {
                 final String cardName = getArguments().getString(NAME_KEY);

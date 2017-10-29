@@ -193,7 +193,7 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null, mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
-        if(card == null) {
+        if (card == null) {
             return;
         }
         CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
@@ -341,7 +341,7 @@ public class WishlistFragment extends FamiliarListFragment {
             /* Fill extra card data from the database, for displaying full card info */
             CardDbAdapter.fillExtraWishlistData(mCompressedWishlist, database);
 
-            if(cardNumberFixed) {
+            if (cardNumberFixed) {
                 sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
                 WishlistHelpers.WriteCompressedWishlist(getContext(), mCompressedWishlist);
                 sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));

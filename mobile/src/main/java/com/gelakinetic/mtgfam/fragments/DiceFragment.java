@@ -135,10 +135,12 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                     mLastNumber = number;
                     DiceFragment.this.rollDie(number);
                 }
+
                 @Override
                 public Integer getMaxNumber() {
                     return Integer.MAX_VALUE;
                 }
+
                 @Override
                 public Integer getInitialValue() {
                     return mLastNumber;

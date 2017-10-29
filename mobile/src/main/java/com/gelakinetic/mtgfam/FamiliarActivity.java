@@ -1216,7 +1216,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param keyCode The value in event.getKeyCode().
      * @param event   Description of the key event.
      * @return If you handled the event, return true. If you want to allow the event to be handled
-     *         by the next receiver, return false.
+     * by the next receiver, return false.
      */
     @Override
     public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
@@ -1472,7 +1472,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param context         the context where this is being called
      * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
      * @return -1 if there is no network connection, or the type of network, like
-     *         ConnectivityManager.TYPE_WIFI
+     * ConnectivityManager.TYPE_WIFI
      */
     public static int getNetworkState(Context context, boolean shouldShowToast) {
         try {
