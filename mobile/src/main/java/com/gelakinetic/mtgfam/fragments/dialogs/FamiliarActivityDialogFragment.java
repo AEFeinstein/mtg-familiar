@@ -204,7 +204,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                                 @Override
                                 public void run() {
                                     activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-                                    PreferenceAdapter.setBounceDrawer(getContext());
+                                    PreferenceAdapter.setBounceDrawer(activity);
                                 }
                             }, 2000);
                         }
