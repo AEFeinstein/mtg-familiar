@@ -528,7 +528,7 @@ public class FamiliarActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         /* set up the drawer's list view with items and click listener */
-        mPagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
+        mPagesAdapter = new DrawerEntryArrayAdapter(this);
 
         mDrawerList.setAdapter(mPagesAdapter);
         mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -1118,13 +1118,7 @@ public class FamiliarActivity extends AppCompatActivity {
             ft.commit();
 
             /* Color the icon when the fragment changes */
-            View drawerListItemView = mDrawerList.getChildAt(position);
-            if (drawerListItemView != null) {
-                TextView textView = drawerListItemView.findViewById(R.id.drawer_entry_name);
-                if (textView != null) {
-                    mPagesAdapter.colorDrawerEntry(textView);
-                }
-            }
+            mPagesAdapter.colorDrawerEntry(mPageEntries[position].getTextView());
         }
     }
 
@@ -1597,11 +1591,20 @@ public class FamiliarActivity extends AppCompatActivity {
         final int mNameResource;
         final int mIconAttr;
         final boolean mIsDivider;
+        TextView textView;
 
         public DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
             mNameResource = nameResource;
             mIconAttr = iconResource;
             mIsDivider = isHeader;
+        }
+
+        public void setTextView(TextView textView) {
+            this.textView = textView;
+        }
+
+        public TextView getTextView() {
+            return textView;
         }
     }
 
@@ -1610,7 +1613,6 @@ public class FamiliarActivity extends AppCompatActivity {
      * both entries and headers.
      */
     public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
-        private final DrawerEntry[] values;
         private Drawable mHighlightedDrawable;
 
         /**
@@ -1618,11 +1620,9 @@ public class FamiliarActivity extends AppCompatActivity {
          * used to populate the views.
          *
          * @param context The application's context, used to inflate views later.
-         * @param values  An array of DrawerEntries which will populate the list
          */
-        public DrawerEntryArrayAdapter(Context context, DrawerEntry[] values) {
-            super(context, R.layout.drawer_list_item, values);
-            this.values = values;
+        public DrawerEntryArrayAdapter(Context context) {
+            super(context, R.layout.drawer_list_item, mPageEntries);
         }
 
         /**
@@ -1638,7 +1638,7 @@ public class FamiliarActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             int layout;
-            if (values[position].mIsDivider) {
+            if (mPageEntries[position].mIsDivider) {
                 layout = R.layout.drawer_list_divider;
             } else {
                 layout = R.layout.drawer_list_item;
@@ -1648,7 +1648,7 @@ public class FamiliarActivity extends AppCompatActivity {
             }
 
             assert convertView != null;
-            if (values[position].mIsDivider) {
+            if (mPageEntries[position].mIsDivider) {
                 /* Make sure the recycled view is the right type, inflate a new one if necessary */
                 if (convertView.findViewById(R.id.divider) == null) {
                     convertView = getLayoutInflater().inflate(layout, parent, false);
@@ -1662,11 +1662,13 @@ public class FamiliarActivity extends AppCompatActivity {
                     convertView = getLayoutInflater().inflate(layout, parent, false);
                 }
                 assert convertView != null;
-                ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
-                ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconAttr), 0, 0, 0);
+                TextView textView = convertView.findViewById(R.id.drawer_entry_name);
+                mPageEntries[position].setTextView(textView);
+                textView.setText(mPageEntries[position].mNameResource);
+                textView.setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(mPageEntries[position].mIconAttr), 0, 0, 0);
                 /* Color the initial icon */
                 if (mCurrentFrag == position) {
-                    colorDrawerEntry(((TextView) convertView.findViewById(R.id.drawer_entry_name)));
+                    colorDrawerEntry(textView);
                 } else {
                     ((TextView) convertView.findViewById(R.id.drawer_entry_name)).getCompoundDrawables()[0].setColorFilter(null);
                 }
@@ -1684,8 +1686,10 @@ public class FamiliarActivity extends AppCompatActivity {
             if (mHighlightedDrawable != null) {
                 mHighlightedDrawable.setColorFilter(null);
             }
-            mHighlightedDrawable = textView.getCompoundDrawables()[0];
-            mHighlightedDrawable.setColorFilter(ContextCompat.getColor(FamiliarActivity.this, getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
+            if(textView != null) {
+                mHighlightedDrawable = textView.getCompoundDrawables()[0];
+                mHighlightedDrawable.setColorFilter(ContextCompat.getColor(FamiliarActivity.this, getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
+            }
         }
     }
 
