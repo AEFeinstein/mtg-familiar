@@ -725,6 +725,14 @@ public class CardHelpers {
             Cursor cardCursor;
             if (cardSet == null) {
                 cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+
+                /* Make sure at least one card was found */
+                if (cardCursor.getCount() == 0) {
+                    ToastWrapper.makeText(activity, activity.getString(R.string.toast_no_card),
+                            ToastWrapper.LENGTH_LONG).show();
+                    DatabaseManager.getInstance(activity, false).closeDatabase(false);
+                    return null;
+                }
                 /* If we don't specify the set, and we are trying to find a foil card, choose the
                  * latest foil printing. If there are no eligible printings, select the latest */
                 if (isFoil) {
@@ -741,12 +749,7 @@ public class CardHelpers {
             } else {
                 cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, fields, database);
             }
-            if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeText(activity, activity.getString(R.string.toast_no_card),
-                        ToastWrapper.LENGTH_LONG).show();
-                DatabaseManager.getInstance(activity, false).closeDatabase(false);
-                return null;
-            }
+
             /* Don't rely on the user's given name, get it from the DB just to be sure */
             card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
