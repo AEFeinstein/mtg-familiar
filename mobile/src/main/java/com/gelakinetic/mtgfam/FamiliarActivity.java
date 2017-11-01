@@ -206,8 +206,10 @@ public class FamiliarActivity extends AppCompatActivity {
                 startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
             } else if (s.equals(getString(R.string.key_imageCacheSize))) {
                 /* Close the old cache */
-                mImageCache.flush();
-                mImageCache.close();
+                if (mImageCache != null) {
+                    mImageCache.flush();
+                    mImageCache.close();
+                }
 
                 /* Set up the image cache */
                 ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
@@ -1686,7 +1688,7 @@ public class FamiliarActivity extends AppCompatActivity {
             if (mHighlightedDrawable != null) {
                 mHighlightedDrawable.setColorFilter(null);
             }
-            if(textView != null) {
+            if (textView != null) {
                 mHighlightedDrawable = textView.getCompoundDrawables()[0];
                 mHighlightedDrawable.setColorFilter(ContextCompat.getColor(FamiliarActivity.this, getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
             }
