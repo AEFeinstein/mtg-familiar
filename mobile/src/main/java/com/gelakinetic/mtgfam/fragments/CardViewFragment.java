@@ -1385,7 +1385,7 @@ public class CardViewFragment extends FamiliarFragment {
          * @return uri of the card image
          */
         private String getScryfallImageUri(int multiverseId) {
-            return "https://api.scryfall.com/cards/multiverse/" + multiverseId + "?format=image";
+            return "https://api.scryfall.com/cards/multiverse/" + multiverseId + "?format=image&version=normal";
         }
 
         /**
