@@ -4,9 +4,9 @@ import android.app.Dialog;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
@@ -96,7 +96,7 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
                 }
 
                         /* Scale the drawable */
-                image.setLayoutParams(new LinearLayout.LayoutParams((int) (imageWidth * scaleFactor),
+                image.setLayoutParams(new ViewGroup.LayoutParams((int) (imageWidth * scaleFactor),
                         (int) (imageHeight * scaleFactor)));
 
                 return dialog;

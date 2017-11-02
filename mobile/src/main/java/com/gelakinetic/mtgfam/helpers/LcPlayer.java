@@ -480,7 +480,7 @@ public class LcPlayer {
 
         switch (mDisplayMode) {
             case LifeCounterFragment.DISPLAY_NORMAL: {
-                GridLayout.LayoutParams params = (GridLayout.LayoutParams) mView.getLayoutParams();
+                ViewGroup.LayoutParams params = mView.getLayoutParams();
                 assert params != null;
                 if (isPortrait) {
                     params.width = mGridLayoutWidth;
@@ -493,7 +493,7 @@ public class LcPlayer {
                 break;
             }
             case LifeCounterFragment.DISPLAY_COMPACT: {
-                GridLayout.LayoutParams params = (GridLayout.LayoutParams) mView.getLayoutParams();
+                ViewGroup.LayoutParams params = mView.getLayoutParams();
                 assert params != null;
                 if (isPortrait) {
                     params.width = mGridLayoutWidth / 2;
@@ -507,7 +507,7 @@ public class LcPlayer {
             }
             case LifeCounterFragment.DISPLAY_COMMANDER: {
                 /* Set the row height to 48dp and the width to some fraction of the screen */
-                GridLayout.LayoutParams rowParams = (GridLayout.LayoutParams) mCommanderRowView.getLayoutParams();
+                ViewGroup.LayoutParams rowParams = mCommanderRowView.getLayoutParams();
                 assert rowParams != null;
                 rowParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
                         mFragment.getActivity().getResources().getDisplayMetrics());
