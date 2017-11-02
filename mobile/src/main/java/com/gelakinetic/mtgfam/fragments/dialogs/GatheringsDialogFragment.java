@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -67,7 +68,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                 }
 
                 LayoutInflater factory = LayoutInflater.from(this.getActivity());
-                final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry,
+                @SuppressLint("InflateParams") final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry,
                         null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);

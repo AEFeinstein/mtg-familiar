@@ -541,7 +541,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param player The player to be added
      */
     private void addPlayerView(final LcPlayer player) {
-        mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying));
+        mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying, mGridLayout, mCommanderPlayerView));
         if (mDisplayMode == DISPLAY_COMMANDER) {
             player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -11,7 +11,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="48dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:weightSum="1">
 
@@ -19,7 +19,7 @@
         android:id="@+id/relative"
         style="@style/text.medium"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:layout_weight=".5"
         android:gravity="center"
@@ -35,7 +35,7 @@
         android:id="@+id/absolute"
         style="@style/text.medium"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:layout_weight=".5"
         android:gravity="center"

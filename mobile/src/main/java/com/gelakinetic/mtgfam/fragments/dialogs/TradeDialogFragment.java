@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -86,7 +87,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 final boolean oldFoil = lSide.get(positionForDialog).foil;
 
                 /* Inflate the view and pull out UI elements */
-                View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
+                @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
                         null, false);
                 assert view != null;
                 final CheckBox foilCheckbox = view.findViewById(R.id.traderDialogFoil);
@@ -402,7 +403,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_SAVE_TRADE: {
                 /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
-                View textEntryView = getActivity().getLayoutInflater()
+                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);

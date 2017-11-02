@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -141,7 +142,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
+                @SuppressLint("InflateParams") View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
 
                 assert v != null; /* Because Android Studio */
                 TextView l = v.findViewById(R.id.low);
@@ -196,7 +197,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 }
                 Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
 
-                View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null, false);
+                @SuppressLint("InflateParams") View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_rulings_dialog, null, false);
                 assert v != null; /* Because Android Studio */
 
                 TextView textViewRules = v.findViewById(R.id.rules);

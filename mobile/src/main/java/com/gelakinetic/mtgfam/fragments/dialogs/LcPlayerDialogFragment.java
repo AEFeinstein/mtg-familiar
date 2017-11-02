@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -64,7 +65,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
         switch (mDialogId) {
             case DIALOG_SET_NAME: {
                         /* Inflate a view to type in the player's name, and show it in an AlertDialog */
-                View textEntryView = getActivity().getLayoutInflater().inflate(
+                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater().inflate(
                         R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -103,7 +104,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_COMMANDER_DAMAGE: {
                         /* inflate a view to add or subtract commander damage, and show it in an AlertDialog */
-                View view = LayoutInflater.from(getActivity()).inflate(R.layout.life_counter_edh_dialog,
+                @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.life_counter_edh_dialog,
                         null, false);
                 assert view != null;
                 final TextView deltaText = view.findViewById(R.id.delta);
@@ -155,7 +156,7 @@ public class LcPlayerDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_CHANGE_LIFE: {
                         /* Inflate a view to type in a new life, then show it in an AlertDialog */
-                View textEntryView2 = getActivity().getLayoutInflater().inflate(
+                @SuppressLint("InflateParams") View textEntryView2 = getActivity().getLayoutInflater().inflate(
                         R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView2 != null;
                 final EditText lifeInput = textEntryView2.findViewById(R.id.text_entry);
