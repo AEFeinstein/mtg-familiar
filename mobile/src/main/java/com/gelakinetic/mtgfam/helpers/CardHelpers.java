@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -171,8 +172,12 @@ public class CardHelpers {
                 String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
                 /* Inflate a row and fill it with stuff */
-                View listDialogRow =
-                        createDialogRow(fragment, setName, targetCardNumberOfs.get(setCode), false);
+                View listDialogRow = createDialogRow(
+                        fragment,
+                        setName,
+                        targetCardNumberOfs.get(setCode),
+                        false,
+                        linearLayout);
                 linearLayout.addView(listDialogRow);
                 potentialSetCodes.add(setCode);
                 potentialRarities.add(rarity);
@@ -184,8 +189,8 @@ public class CardHelpers {
                             fragment,
                             setName,
                             targetFoilCardNumberOfs.get(setCode),
-                            true
-                    );
+                            true,
+                            linearLayout);
                     linearLayout.addView(wishlistRowFoil);
                     potentialSetCodes.add(setCode);
                     potentialRarities.add(rarity);
@@ -309,16 +314,18 @@ public class CardHelpers {
      * @param setName            the set of the card
      * @param targetCardNumberOf the number of the card
      * @param isFoil             if the card is foil or not
+     * @param viewGroup          the viewGroup to inflate the row into
      * @return a View that displays an idividual printing of a card
      */
     private static View createDialogRow(
             FamiliarFragment fragment,
             String setName,
             String targetCardNumberOf,
-            boolean isFoil) {
+            boolean isFoil,
+            ViewGroup viewGroup) {
 
         View dialogRow = fragment.getActivity().getLayoutInflater()
-                .inflate(R.layout.wishlist_dialog_row, null, false);
+                .inflate(R.layout.wishlist_dialog_row, viewGroup, false);
         assert dialogRow != null;
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);
         String numberOf = targetCardNumberOf;

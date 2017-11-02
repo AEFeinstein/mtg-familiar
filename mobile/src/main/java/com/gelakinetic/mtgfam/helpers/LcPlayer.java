@@ -245,16 +245,22 @@ public class LcPlayer {
      * Inflate the necessary views for this player, set the onClickListeners, and return the view to be added to the
      * GridView
      *
-     * @param displayMode The display mode, either DISPLAY_COMMANDER, DISPLAY_COMPACT or DISPLAY_NORMAL
-     * @param statType    The stat type being displayed, either STAT_POISON, STAT_LIFE, or STAT_COMMANDER
+     * @param displayMode         The display mode, either DISPLAY_COMMANDER, DISPLAY_COMPACT or DISPLAY_NORMAL
+     * @param statType            The stat type being displayed, either STAT_POISON, STAT_LIFE, or STAT_COMMANDER
+     * @param playersView         The GridLayout to inflate all players into
+     * @param commanderPlayerView The LinearLayout to inflate commander players into
      * @return The view to be added to the GridView. Can either be mView or mCommanderRowView
      */
-    public View newView(int displayMode, int statType) {
+    public View newView(int displayMode, int statType, GridLayout playersView, LinearLayout commanderPlayerView) {
         switch (displayMode) {
             case LifeCounterFragment.DISPLAY_COMMANDER:
             case LifeCounterFragment.DISPLAY_NORMAL: {
                 /* Inflate the player view */
-                mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, null, false);
+                if (LifeCounterFragment.DISPLAY_COMMANDER == displayMode) {
+                    mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, commanderPlayerView, false); // TODO test
+                } else {
+                    mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, playersView, false); // TODO test
+                }
                 assert mView != null;
                 mHistoryList = mView.findViewById(R.id.player_history);
                 mCommanderCastingButton = mView.findViewById(R.id.commanderCast);
@@ -290,7 +296,7 @@ public class LcPlayer {
                     });
 
                     mCommanderRowView = LayoutInflater.from(
-                            mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, null, false);
+                            mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, playersView, false); // TODO test
                     assert mCommanderRowView != null;
                     mCommanderNameTextView = mCommanderRowView.findViewById(R.id.player_name);
                     if (mName != null) {
@@ -309,7 +315,7 @@ public class LcPlayer {
             case LifeCounterFragment.DISPLAY_COMPACT: {
                 /* inflate the compact view */
                 mView = LayoutInflater
-                        .from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, null, false);
+                        .from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, playersView, false); // TODO test
                 /* don't bother with adapters */
                 mHistoryList = null;
                 mHistoryLifeAdapter = null;
@@ -513,7 +519,7 @@ public class LcPlayer {
                 mCommanderRowView.setLayoutParams(rowParams);
 
                 /* Then set the player view to half the screen, if in landscape */
-                LinearLayout.LayoutParams viewParams = (LinearLayout.LayoutParams) mView.getLayoutParams();
+                ViewGroup.LayoutParams viewParams = mView.getLayoutParams();
                 if (viewParams != null) {
                     if (!isPortrait) {
                         viewParams.width = mGridLayoutWidth / 2;
@@ -607,7 +613,7 @@ public class LcPlayer {
                 view = convertView;
             } else {
                 view = LayoutInflater.from(mFragment.getActivity())
-                        .inflate(R.layout.life_counter_history_adapter_row, null, false);
+                        .inflate(R.layout.life_counter_history_adapter_row, parent, false);
             }
             assert view != null;
 
@@ -689,7 +695,7 @@ public class LcPlayer {
                 view = convertView;
             } else {
                 view = LayoutInflater.from(mFragment.getActivity())
-                        .inflate(R.layout.life_counter_player_commander, null, false);
+                        .inflate(R.layout.life_counter_player_commander, parent, false);
             }
             assert view != null;
 

@@ -316,7 +316,7 @@ public class GatheringsFragment extends FamiliarFragment {
                 /* eat it */
             }
         }
-        View newView = getLayoutInflater().inflate(R.layout.gathering_create_player_row, null, false);
+        View newView = getLayoutInflater().inflate(R.layout.gathering_create_player_row, mLinearLayout, false);
         assert newView != null;
 
         ((TextView) newView.findViewById(R.id.custom_name)).setText(_player.mName);
