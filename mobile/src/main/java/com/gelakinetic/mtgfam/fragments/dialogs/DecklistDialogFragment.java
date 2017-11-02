@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -73,7 +74,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_SAVE_DECK_AS: {
                 /* Inflate a view to type in the deck's name and show it in an AlertDialog */
-                View textEntryView = getActivity().getLayoutInflater()
+                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);

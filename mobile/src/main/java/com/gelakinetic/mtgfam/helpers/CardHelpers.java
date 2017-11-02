@@ -62,7 +62,7 @@ public class CardHelpers {
         final Context ctx = fragment.getActivity();
 
         /* Create the custom view */
-        View customView = fragment.getActivity().getLayoutInflater()
+        @SuppressLint("InflateParams") View customView = fragment.getActivity().getLayoutInflater()
                 .inflate(R.layout.wishlist_dialog, null, false);
         assert customView != null;
 

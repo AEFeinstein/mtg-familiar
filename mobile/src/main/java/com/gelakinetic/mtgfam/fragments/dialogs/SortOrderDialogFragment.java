@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -43,7 +44,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         setShowsDialog(true);
 
         /* Inflate the view */
-        View view = getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
+        @SuppressLint("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
         assert view != null;
 
         /* Create an arraylist of all the sorting options */

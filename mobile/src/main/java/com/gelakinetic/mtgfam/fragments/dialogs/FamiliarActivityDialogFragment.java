@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -72,7 +73,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the custom view, with some images below the text */
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
+                @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
                 assert dialogLayout != null;
                 TextView text = dialogLayout.findViewById(R.id.aboutfield);
                 text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
@@ -95,7 +96,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the custom view, with some images below the text */
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
+                @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
                 assert dialogLayout != null;
                 TextView text = dialogLayout.findViewById(R.id.aboutfield);
                 text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_whats_new_text)));
@@ -125,7 +126,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the custom view */
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
+                @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
 
                 /* Set the text */
                 assert dialogLayout != null;

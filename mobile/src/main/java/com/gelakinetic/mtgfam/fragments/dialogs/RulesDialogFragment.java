@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -59,7 +60,7 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
         switch (DIALOG_SEARCH) {
             case DIALOG_SEARCH: {
                         /* Inflate a view to type in the player's name, and show it in an AlertDialog */
-                View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
+                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
                         null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);

@@ -1,5 +1,6 @@
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
 
         switch (DIALOG_DCI_NUMBER) {
             case DIALOG_DCI_NUMBER: {
-                View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                @SuppressLint("InflateParams") View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
 
                 final EditText dciEditText = view.findViewById(R.id.text_entry);
