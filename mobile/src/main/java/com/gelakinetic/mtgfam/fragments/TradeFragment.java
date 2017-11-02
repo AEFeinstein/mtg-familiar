@@ -227,14 +227,17 @@ public class TradeFragment extends FamiliarListFragment {
      */
     private void addCardToTrade(final int side) {
 
+        if (mNameField.getText() == null || mNameField.getText().length() == 0 ||
+                mNumberOfField.getText() == null || mNumberOfField.getText().length() == 0) {
+            return;
+        }
+
         final String cardName = mNameField.getText().toString();
         final int numberOf = Integer.parseInt(mNumberOfField.getText().toString());
         final boolean isFoil = mCheckboxFoil.isChecked();
         final MtgCard card = CardHelpers.makeMtgCard(getContext(), cardName, null, isFoil, numberOf);
 
-        if (mNameField.getText() == null || mNameField.getText().length() == 0 ||
-                mNumberOfField.getText() == null || mNumberOfField.getText().length() == 0 ||
-                card == null) {
+        if (card == null) {
             return;
         }
 

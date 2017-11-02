@@ -239,15 +239,19 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     private void addCardToDeck(final boolean isSideboard) {
 
+        /* Don't allow the fields to be empty */
+        if (mNameField.getText() == null || mNameField.getText().length() == 0 ||
+                mNumberOfField.getText() == null || mNumberOfField.getText().length() == 0) {
+            return;
+        }
+
         final String name = String.valueOf(mNameField.getText());
         final String numberOf = String.valueOf(mNumberOfField.getText());
         final MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null,
                 mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
 
-        /* Don't allow the fields to be empty */
-        if (name == null || name.equals("")
-                || numberOf == null || numberOf.equals("")
-                || card == null) /* If for some reason the card was null, we can just leave */ {
+        /* If for some reason the card was null, we can just leave */
+        if (card == null) {
             return;
         }
 
