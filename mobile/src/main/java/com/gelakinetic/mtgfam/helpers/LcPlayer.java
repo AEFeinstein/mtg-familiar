@@ -257,9 +257,9 @@ public class LcPlayer {
             case LifeCounterFragment.DISPLAY_NORMAL: {
                 /* Inflate the player view */
                 if (LifeCounterFragment.DISPLAY_COMMANDER == displayMode) {
-                    mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, commanderPlayerView, false); // TODO test
+                    mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, commanderPlayerView, false);
                 } else {
-                    mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, playersView, false); // TODO test
+                    mView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.life_counter_player, playersView, false);
                 }
                 assert mView != null;
                 mHistoryList = mView.findViewById(R.id.player_history);
@@ -296,7 +296,7 @@ public class LcPlayer {
                     });
 
                     mCommanderRowView = LayoutInflater.from(
-                            mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, playersView, false); // TODO test
+                            mFragment.getActivity()).inflate(R.layout.life_counter_player_commander, playersView, false);
                     assert mCommanderRowView != null;
                     mCommanderNameTextView = mCommanderRowView.findViewById(R.id.player_name);
                     if (mName != null) {
@@ -315,7 +315,7 @@ public class LcPlayer {
             case LifeCounterFragment.DISPLAY_COMPACT: {
                 /* inflate the compact view */
                 mView = LayoutInflater
-                        .from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, playersView, false); // TODO test
+                        .from(mFragment.getActivity()).inflate(R.layout.life_counter_player_compact, playersView, false);
                 /* don't bother with adapters */
                 mHistoryList = null;
                 mHistoryLifeAdapter = null;
