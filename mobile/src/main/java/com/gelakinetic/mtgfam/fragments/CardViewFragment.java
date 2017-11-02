@@ -1276,7 +1276,7 @@ public class CardViewFragment extends FamiliarFragment {
             try {
                 /* 16dp */
                 mBorder = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics());
+                        TypedValue.COMPLEX_UNIT_DIP, 34, getResources().getDisplayMetrics());
                 if (mLoadTo == MAIN_PAGE) {
                     /* Block the worker thread until the size is figured out */
                     synchronized (getWindowSize) {
