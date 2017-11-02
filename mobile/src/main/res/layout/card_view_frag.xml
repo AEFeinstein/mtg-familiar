@@ -150,7 +150,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <FrameLayout
+            <View
                 android:id="@+id/frameLayout1"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
