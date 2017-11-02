@@ -735,7 +735,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
                 int lastVersion = PreferenceAdapter.getLastVersion(this);
-                if (pInfo.versionCode != lastVersion) {
+                if (pInfo.versionCode != lastVersion &&
+                        !(lastVersion == 50 && pInfo.versionCode == 51)) { // Don't show 50 -> 51, it was just a quick bugfix release
                     /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices
                      * will exist*/
                     try {
