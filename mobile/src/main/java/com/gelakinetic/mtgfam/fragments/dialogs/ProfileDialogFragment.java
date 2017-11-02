@@ -39,7 +39,12 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-                /* We're setting this to false if we return null, so we should reset it every time to be safe */
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
+        /* We're setting this to false if we return null, so we should reset it every time to be safe */
         setShowsDialog(true);
 
         if (null == getParentProfileFragment()) {
@@ -103,7 +108,8 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             default: {
-                return DontShowDialog();
+                savedInstanceState.putInt("id", mDialogId);
+                return super.onCreateDialog(savedInstanceState);
             }
         }
     }

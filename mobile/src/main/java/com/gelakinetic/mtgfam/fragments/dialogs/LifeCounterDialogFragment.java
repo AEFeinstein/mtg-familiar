@@ -42,7 +42,12 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
+        /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());

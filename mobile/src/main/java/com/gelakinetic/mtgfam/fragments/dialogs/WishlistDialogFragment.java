@@ -40,6 +40,11 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
         setShowsDialog(true);
         mDialogId = getArguments().getInt(ID_KEY);
         String cardName = getArguments().getString(NAME_KEY);

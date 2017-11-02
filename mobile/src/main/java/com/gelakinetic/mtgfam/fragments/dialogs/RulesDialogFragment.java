@@ -51,6 +51,11 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
         searchArgs = null;
 
         if (null == getParentRulesFragment()) {

@@ -45,7 +45,10 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
 
         /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
@@ -98,7 +101,8 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
                 default: {
-                    return DontShowDialog();
+                    savedInstanceState.putInt("id", mDialogId);
+                    return super.onCreateDialog(savedInstanceState);
                 }
             }
         } catch (NullPointerException e) {

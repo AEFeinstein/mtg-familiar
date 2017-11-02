@@ -106,4 +106,14 @@ public class FamiliarDialogFragment extends DialogFragment {
         validFiles.toArray(tradeNames);
         return tradeNames;
     }
+
+    /**
+     * @return true if the dialog should be created, false otherwise
+     */
+    boolean canCreateDialog() {
+        if(getParentFamiliarFragment().getActivity().isFinishing()) {
+            return false;
+        }
+        return true;
+    }
 }
