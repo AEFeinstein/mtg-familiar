@@ -105,7 +105,7 @@ class MTRIPGParser {
                 default:
                     throw new FileNotFoundException("Invalid switch"); /* handled below */
             }
-            InputStream stream = FamiliarActivity.getHttpInputStream(urlString, logWriter);
+            InputStream stream = FamiliarActivity.getHttpInputStream(urlString, logWriter, mContext);
             if (stream != null) {
                 updated = parseDocument(mode, stream);
             }

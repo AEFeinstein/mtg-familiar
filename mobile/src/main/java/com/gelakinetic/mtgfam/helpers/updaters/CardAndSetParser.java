@@ -93,13 +93,14 @@ class CardAndSetParser {
      * This method checks the hardcoded URL and downloads a list of patches to be checked
      *
      * @param logWriter A writer to print debug statements when things go wrong
+     * @param context   The context to manage preferences with
      * @return An ArrayList of String[] which contains the {Name, URL, Set Code} for each available patch
      */
-    public Manifest readUpdateJsonStream(PrintWriter logWriter) {
+    public Manifest readUpdateJsonStream(Context context, PrintWriter logWriter) {
         Manifest manifest;
 
         try {
-            InputStream stream = FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter);
+            InputStream stream = FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter, context);
             if (stream == null) {
                 throw new IOException("No Stream");
             }
@@ -131,7 +132,7 @@ class CardAndSetParser {
         LegalityData legalityData;
 
         try {
-            InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter);
+            InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter, context);
             if (stream == null) {
                 throw new IOException("No Stream");
             }

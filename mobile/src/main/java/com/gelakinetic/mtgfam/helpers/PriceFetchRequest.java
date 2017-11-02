@@ -170,7 +170,7 @@ public class PriceFetchRequest extends SpiceRequest<PriceInfo> {
                 );
 
                 /* Fetch the information from the web */
-                String result = IOUtils.toString(FamiliarActivity.getHttpInputStream(priceUrl, null));
+                String result = IOUtils.toString(FamiliarActivity.getHttpInputStream(priceUrl, null, mContext));
 
                 /* Parse the XML */
                 Document document = loadXMLFromString(result);

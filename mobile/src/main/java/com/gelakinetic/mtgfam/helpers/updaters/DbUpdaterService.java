@@ -180,7 +180,7 @@ public class DbUpdaterService extends IntentService {
                 switchToChecking();
 
                 /* Look for new cards */
-                Manifest manifest = parser.readUpdateJsonStream(logWriter);
+                Manifest manifest = parser.readUpdateJsonStream(getApplicationContext(), logWriter);
 
                 if (manifest != null) {
                     /* Make an arraylist of all the current set codes */
@@ -232,7 +232,7 @@ public class DbUpdaterService extends IntentService {
                                 try {
                                     /* Change the notification to the specific set */
                                     switchToUpdating(String.format(getString(R.string.update_updating_set), set.mName));
-                                    InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter);
+                                    InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter, getApplicationContext());
                                     if (streamToRead != null) {
                                         ArrayList<Card> cardsToAdd = new ArrayList<>();
                                         ArrayList<Expansion> setsToAdd = new ArrayList<>();
@@ -291,7 +291,7 @@ public class DbUpdaterService extends IntentService {
 
                 RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
 
-                if (rp.needsToUpdate(logWriter)) {
+                if (rp.needsToUpdate(getApplicationContext(), logWriter)) {
                     switchToUpdating(getString(R.string.update_updating_rules));
                     if (rp.parseRules(logWriter)) {
                         ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();

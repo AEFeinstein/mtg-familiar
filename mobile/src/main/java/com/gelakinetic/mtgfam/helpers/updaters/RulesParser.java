@@ -1,5 +1,7 @@
 package com.gelakinetic.mtgfam.helpers.updaters;
 
+import android.content.Context;
+
 import com.gelakinetic.mtgfam.FamiliarActivity;
 
 import java.io.BufferedReader;
@@ -52,12 +54,13 @@ class RulesParser {
      * the file and its date is newer than this.mLastUpdated, true will be returned. Otherwise, it will return false. If
      * true is returned, this.rulesUrl will be populated.
      *
+     * @param context a context to open the HttpInputStream with
      * @return Whether or this the rules need updating.
      */
-    public boolean needsToUpdate(PrintWriter logWriter) {
+    public boolean needsToUpdate(Context context, PrintWriter logWriter) {
 
         try {
-            this.mInputStream = FamiliarActivity.getHttpInputStream(SOURCE, logWriter);
+            this.mInputStream = FamiliarActivity.getHttpInputStream(SOURCE, logWriter, context);
             if (this.mInputStream == null) {
                 throw new IOException("No Stream");
             }

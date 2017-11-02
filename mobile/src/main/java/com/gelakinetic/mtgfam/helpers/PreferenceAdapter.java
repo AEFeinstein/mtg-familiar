@@ -775,11 +775,29 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.apply();
     }
 
-    public static synchronized int getImageCacheSize(@Nullable Context context) {
+    public static synchronized void setImageCacheSize(@Nullable Context context, int cacheSize) {
         if (null == context) {
-            return 12;
+            return;
         }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_imageCacheSize), 12);
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putInt(context.getString(R.string.key_imageCacheSize), cacheSize);
+        edit.apply();
+    }
+
+    public static synchronized int getImageCacheSize(@Nullable Context context) {
+        final int MIN_CACHE_MB = 50;
+        if (null == context) {
+            return MIN_CACHE_MB;
+        }
+        int cacheSize = PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_imageCacheSize), MIN_CACHE_MB);
+
+        /* Make sure the cache is at least 50 MB */
+        if (cacheSize < MIN_CACHE_MB) {
+            setImageCacheSize(context, MIN_CACHE_MB);
+            return MIN_CACHE_MB;
+        }
+        return cacheSize;
     }
 
     static synchronized int getNumTutorCardsSearches(@Nullable Context context) {

@@ -1248,7 +1248,7 @@ public class CardViewFragment extends FamiliarFragment {
                         }
 
                         /* Download the bitmap */
-                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null));
+                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null, getContext()));
                         /* Cache it */
                         getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
                     } catch (Exception e) {
@@ -1276,7 +1276,7 @@ public class CardViewFragment extends FamiliarFragment {
             try {
                 /* 16dp */
                 mBorder = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+                        TypedValue.COMPLEX_UNIT_DIP, 34, getResources().getDisplayMetrics());
                 if (mLoadTo == MAIN_PAGE) {
                     /* Block the worker thread until the size is figured out */
                     synchronized (getWindowSize) {
@@ -1385,7 +1385,7 @@ public class CardViewFragment extends FamiliarFragment {
          * @return uri of the card image
          */
         private String getScryfallImageUri(int multiverseId) {
-            return "https://api.scryfall.com/cards/multiverse/" + multiverseId + "?format=image";
+            return "https://api.scryfall.com/cards/multiverse/" + multiverseId + "?format=image&version=normal";
         }
 
         /**
@@ -1467,7 +1467,7 @@ public class CardViewFragment extends FamiliarFragment {
             mRulingsArrayList = new ArrayList<>();
             try {
                 url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mMultiverseId);
-                is = FamiliarActivity.getHttpInputStream(url, null);
+                is = FamiliarActivity.getHttpInputStream(url, null, getContext());
                 if (is == null) {
                     throw new IOException("null stream");
                 }
