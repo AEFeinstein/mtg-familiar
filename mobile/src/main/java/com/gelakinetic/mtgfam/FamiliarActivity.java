@@ -298,13 +298,14 @@ public class FamiliarActivity extends AppCompatActivity {
      *
      * @param stringUrl The URL to open a stream to, in String form
      * @param logWriter A PrintWriter to log debug info to. Can be null
+     * @param ctx       A context to build the User Agent with
      * @return An InputStream to the content at the URL, or null
      * @throws IOException Thrown if something goes terribly wrong
      */
     public static
     @Nullable
-    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter) throws IOException {
-        return getHttpInputStream(new URL(stringUrl), logWriter, 0);
+    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter, Context ctx) throws IOException {
+        return getHttpInputStream(new URL(stringUrl), logWriter, ctx, 0);
     }
 
     /**
@@ -312,13 +313,14 @@ public class FamiliarActivity extends AppCompatActivity {
      *
      * @param url       The URL to open a stream to
      * @param logWriter A PrintWriter to log debug info to. Can be null
+     * @param ctx       A context to build the User Agent with
      * @return An InputStream to the content at the URL, or null
      * @throws IOException Thrown if something goes terribly wrong
      */
     public static
     @Nullable
-    InputStream getHttpInputStream(URL url, PrintWriter logWriter) throws IOException {
-        return getHttpInputStream(url, logWriter, 0);
+    InputStream getHttpInputStream(URL url, PrintWriter logWriter, Context ctx) throws IOException {
+        return getHttpInputStream(url, logWriter, ctx, 0);
     }
 
     /**
@@ -327,13 +329,14 @@ public class FamiliarActivity extends AppCompatActivity {
      *
      * @param url            The URL to open a stream to
      * @param logWriter      A PrintWriter to log debug info to. Can be null
+     * @param ctx            A context to build the User Agent with
      * @param recursionLevel The redirect recursion level. Starts at 0, doesn't go past 10
      * @return An InputStream to the content at the URL, or null
      * @throws IOException Thrown if something goes terribly wrong
      */
     private static
     @Nullable
-    InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter,
+    InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter, Context ctx,
                                    int recursionLevel) throws IOException {
 
         /* Don't allow infinite recursion */
@@ -344,6 +347,14 @@ public class FamiliarActivity extends AppCompatActivity {
         /* Make the URL & connection objects, follow redirects, timeout after 5s */
         HttpURLConnection.setFollowRedirects(true);
         HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
+        String version = "";
+        try {
+            version = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        connection.setRequestProperty("User-Agent", ctx.getString(R.string.app_name) + "/" + version);
         connection.setConnectTimeout(5000);
         connection.setInstanceFollowRedirects(true);
 
@@ -400,7 +411,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
             if (nextUrl != null) {
                 /* If there is a URL to follow, follow it */
-                return getHttpInputStream(nextUrl, logWriter, recursionLevel + 1);
+                return getHttpInputStream(nextUrl, logWriter, ctx, recursionLevel + 1);
             } else {
                 /* Otherwise return null */
                 return null;

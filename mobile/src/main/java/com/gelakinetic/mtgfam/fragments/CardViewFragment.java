@@ -1248,7 +1248,7 @@ public class CardViewFragment extends FamiliarFragment {
                         }
 
                         /* Download the bitmap */
-                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null));
+                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null, getContext()));
                         /* Cache it */
                         getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
                     } catch (Exception e) {
@@ -1467,7 +1467,7 @@ public class CardViewFragment extends FamiliarFragment {
             mRulingsArrayList = new ArrayList<>();
             try {
                 url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mMultiverseId);
-                is = FamiliarActivity.getHttpInputStream(url, null);
+                is = FamiliarActivity.getHttpInputStream(url, null, getContext());
                 if (is == null) {
                     throw new IOException("null stream");
                 }
