@@ -2,7 +2,6 @@
     android:id="@+id/master_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginTop="4dp"
     android:orientation="vertical">
 
     <View
@@ -41,8 +40,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="4dp">
 
                     <TextView
                         android:id="@+id/textView1"
@@ -64,7 +63,6 @@
                     style="?attr/button"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
-                    android:layout_margin="4dp"
                     android:text="@string/mojhosto_random_creature"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -95,8 +93,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -117,7 +115,6 @@
                     style="?attr/button"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
-                    android:layout_margin="4dp"
                     android:text="@string/mojhosto_random_equipment"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -151,7 +148,6 @@
                     style="?attr/button"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
-                    android:layout_margin="4dp"
                     android:text="@string/mojhosto_random_instants"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -161,7 +157,6 @@
                     style="?attr/button"
                     android:layout_width="fill_parent"
                     android:layout_height="48dp"
-                    android:layout_margin="4dp"
                     android:text="@string/mojhosto_random_sorceries"
                     android:textSize="14sp"
                     android:textStyle="bold" />
