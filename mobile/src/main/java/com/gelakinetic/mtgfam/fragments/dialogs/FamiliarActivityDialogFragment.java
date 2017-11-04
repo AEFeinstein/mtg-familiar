@@ -223,14 +223,23 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            activity.mDrawerLayout.openDrawer(activity.mDrawerList);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-                                    PreferenceAdapter.setBounceDrawer(activity);
-                                }
-                            }, 2000);
+                            if (null != activity &&
+                                    null != activity.mDrawerLayout &&
+                                    null != activity.mDrawerList) {
+                                activity.mDrawerLayout.openDrawer(activity.mDrawerList);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != activity) {
+                                            PreferenceAdapter.setBounceDrawer(activity);
+                                            if (null != activity.mDrawerLayout &&
+                                                    null != activity.mDrawerList) {
+                                                activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
+                                            }
+                                        }
+                                    }
+                                }, 2000);
+                            }
                         }
                     }, 500);
                 }
