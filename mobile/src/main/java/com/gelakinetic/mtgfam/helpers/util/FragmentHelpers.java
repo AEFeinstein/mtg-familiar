@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 bmaurer
+ * Copyright 2017 bmaurer
  *
  * This file is part of MTG Familiar.
  *
