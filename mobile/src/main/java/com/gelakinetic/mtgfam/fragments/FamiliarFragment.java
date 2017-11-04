@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.app.SearchManager;
@@ -106,7 +125,7 @@ public abstract class FamiliarFragment extends Fragment {
      * Called when the Fragment is no longer resumed.  This is generally
      * tied to {@link FamiliarActivity#onPause() Activity.onPause} of the containing
      * Activity's lifecycle.
-     * <p/>
+     *
      * In this case, always remove the dialog, since it can contain stale references to the pre-rotated activity and
      * fragment after rotation. The one exception is the change log dialog, which would get removed by TTS checking
      * intents on the first install. It also cleans up any pending spice requests (price loading)

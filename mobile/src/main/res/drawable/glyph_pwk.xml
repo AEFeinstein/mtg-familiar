@@ -1,3 +1,22 @@
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <vector android:height="24dp" android:viewportHeight="1204.163"
     android:viewportWidth="600.0" android:width="12dp" xmlns:android="http://schemas.android.com/apk/res/android">
     <path android:fillColor="?attr/color_text" android:pathData="M593.7,462.2c-5.1,-133.6 -16.6,-184.3 -24.2,-184.3 -7.7,0 -10.2,74 -20.3,139.4 -10.2,65.2 -28.1,139.2 -28.1,139.2l-45.7,-17.4s-12.8,-94.4 -17.9,-207.6c-5,-113.1 -8.8,-212 -23,-212 -13.8,-0.1 -16.4,92.9 -21.5,213.4 -5.1,120.5 -22.9,187.2 -22.9,187.2L348.2,514.4s-20.3,-104.5 -28,-423.7c-1.8,-75.6 -20.2,-90.7 -20.2,-90.7s-18.4,15.1 -20.2,90.7c-7.6,319.2 -28.1,423.7 -28.1,423.7l-41.9,5.8s-17.9,-66.7 -23,-187.2c-5.1,-120.5 -7.6,-213.6 -21.5,-213.4 -14,0 -17.9,98.8 -23.1,212 -4.9,113.1 -17.7,207.6 -17.7,207.6l-45.7,17.4s-17.9,-74 -28,-139.2C40.7,351.9 38.1,277.9 30.5,277.9c-7.6,0 -19.1,50.7 -24.2,184.3C1.2,595.7 0,621.8 0,621.8s150.1,64 208.5,229.5c58.5,165.4 73.3,309.1 73.8,325 0.8,24.8 17.7,27.9 17.7,27.9s14.7,-3.2 17.7,-27.9c1.9,-15.8 15.2,-159.6 73.8,-325C449.9,685.7 600,621.8 600,621.8s-1.2,-26.1 -6.3,-159.5"/>

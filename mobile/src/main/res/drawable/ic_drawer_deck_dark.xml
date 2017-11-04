@@ -1,3 +1,22 @@
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <vector android:height="24dp" android:viewportHeight="18.627"
     android:viewportWidth="18.627" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
     <path android:fillColor="@color/drawer_item_icon_dark" android:pathData="M3.21,0c-0.582,0 -1.063,0.482 -1.063,1.062L2.147,13.83c0,0.58 0.48,1.062 1.062,1.062h8.485c0.58,0 1.062,-0.482 1.062,-1.063L12.756,1.06c0,-0.58 -0.482,-1.062 -1.062,-1.062zM3.21,0.934h8.486c0.08,0 0.127,0.05 0.127,0.128L11.823,13.83c0,0.078 -0.048,0.128 -0.127,0.128L3.21,13.958c-0.08,0 -0.13,-0.05 -0.13,-0.13L3.08,1.063c0,-0.08 0.05,-0.128 0.13,-0.128z"/>

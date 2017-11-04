@@ -1,17 +1,20 @@
 /*
- * Copyright 2013 The Android Open Source Project
+ * Copyright 2017 Adam Feinstein
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This file is part of MTG Familiar.
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.fragments;
@@ -79,7 +82,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
     /**
      * This is called after the {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} has finished.
      * Here we can pick out the {@link View}s we need to configure from the content view.
-     * <p/>
+     *
      * We set the {@link ViewPager}'s adapter to be an instance of
      * {@link SampleFragmentPagerAdapter}. The {@link PagerSlidingTabStrip} is then given the
      * {@link ViewPager} so that it can populate itself.
@@ -157,7 +160,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
      * The {@link FragmentPagerAdapter} used to display pages in this sample. The individual pages
      * are instances of ContentFragment which just display three lines of text. Each page is
      * created by the relevant {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem} for the requested position.
-     * <p/>
+     *
      * The important section of this class is the {@link #getPageTitle(int)} method which controls
      * what is displayed in the {@link PagerSlidingTabStrip}.
      */
@@ -169,7 +172,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
 
         /**
          * Return the {@link android.support.v4.app.Fragment} to be displayed at {@code position}.
-         * <p/>
+         *
          * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#createFragment()}.
          */
         @Override
@@ -185,7 +188,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
         /**
          * Return the title of the item at {@code position}. This is important as what this method
          * returns is what is displayed in the {@link PagerSlidingTabStrip}.
-         * <p/>
+         *
          * Here we return the value returned from {@link com.gelakinetic.mtgfam.fragments.JudgesCornerFragment.PagerItem#getTitle()}.
          */
         @Override
