@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2011 Adam Feinstein
  * <p/>
  * This file is part of MTG Familiar.

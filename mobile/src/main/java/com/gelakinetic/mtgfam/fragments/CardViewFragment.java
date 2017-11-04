@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2011 Adam Feinstein
  * <p/>
  * This file is part of MTG Familiar.
@@ -669,7 +669,7 @@ public class CardViewFragment extends FamiliarFragment {
             cCardByName.close();
             /* If it exists in only one set, remove the button from the menu */
             if (mPrintings.size() == 1) {
-                mActivity.supportInvalidateOptionsMenu();
+                mActivity.invalidateOptionsMenu();
             }
         } catch (FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
@@ -781,10 +781,12 @@ public class CardViewFragment extends FamiliarFragment {
             if (copyText != null) {
                 ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
                         getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-                String label = getResources().getString(R.string.app_name);
-                String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-                ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
-                clipboard.setPrimaryClip(cd);
+                if (null != clipboard) {
+                    String label = getResources().getString(R.string.app_name);
+                    String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+                    ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
+                    clipboard.setPrimaryClip(cd);
+                }
             }
             return true;
         }
@@ -1410,7 +1412,7 @@ public class CardViewFragment extends FamiliarFragment {
                         mCardImageView.setImageDrawable(mCardBitmap);
                     }
                     /* remove the image load button if it is the main page */
-                    mActivity.supportInvalidateOptionsMenu();
+                    mActivity.invalidateOptionsMenu();
                 } else if (mLoadTo == SHARE) {
 
                     /* Images must be saved before sharing */

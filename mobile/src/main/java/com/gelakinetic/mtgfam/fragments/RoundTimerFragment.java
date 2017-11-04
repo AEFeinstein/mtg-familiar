@@ -70,6 +70,10 @@ public class RoundTimerFragment extends FamiliarFragment {
     public static void setOrCancelAlarms(Context context, long endTime, boolean set) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+        if (null == am) {
+            return;
+        }
+
         PendingIntent AlarmPendingIntent = PendingIntent.getBroadcast(context, TIMER_RING_ALARM, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_RING_ALARM),
                 PendingIntent.FLAG_UPDATE_CURRENT

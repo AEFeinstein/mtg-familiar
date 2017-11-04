@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2011 Adam Feinstein
  * <p/>
  * This file is part of MTG Familiar.
@@ -1937,7 +1937,7 @@ public class CardDbAdapter {
      * @param setCode  The set code to look up
      * @param database The database to query
      * @return The full set name
-     * @throws FamiliarDbException
+     * @throws FamiliarDbException If the database couldn't be accessed
      */
     public static String getSetNameFromCode(String setCode, SQLiteDatabase database)
             throws FamiliarDbException {

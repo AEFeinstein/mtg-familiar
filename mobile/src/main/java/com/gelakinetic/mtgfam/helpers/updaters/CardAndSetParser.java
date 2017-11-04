@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2011 Adam Feinstein
  * <p/>
  * This file is part of MTG Familiar.
@@ -72,7 +72,6 @@ class CardAndSetParser {
      * @param reader     A JsonRead to parse from
      * @param cardsToAdd An array list to place cards before adding to the database
      * @param setsToAdd  An array list to place sets before adding to the database
-     * @throws IOException If something goes wrong with the InputStream, this will be thrown
      */
     public void readCardJsonStream(JsonReader reader, ArrayList<Card> cardsToAdd, ArrayList<Expansion> setsToAdd) {
 

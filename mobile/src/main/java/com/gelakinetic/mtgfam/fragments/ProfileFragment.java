@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 Devin Collins
  * <p/>
  * This file is part of MTG Familiar.
@@ -160,7 +160,7 @@ public class ProfileFragment extends FamiliarFragment {
         } else {
             showDCINumber();
         }
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     private void hideDCINumber() {

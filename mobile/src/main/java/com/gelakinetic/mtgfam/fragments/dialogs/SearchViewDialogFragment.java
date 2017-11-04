@@ -17,8 +17,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class SearchViewDialogFragment extends FamiliarDialogFragment {
 
-    /* Dialog IDs */
-    public static final int SET_LIST = 1;
     public static final int FORMAT_LIST = 2;
     public static final int RARITY_LIST = 3;
 
@@ -107,7 +105,9 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
             }
         } catch (NullPointerException e) {
             /* if the db failed to open, these arrays will be null. */
-            getParentSearchViewFragment().handleFamiliarDbException(false);
+            if (null != getParentSearchViewFragment()) {
+                getParentSearchViewFragment().handleFamiliarDbException(false);
+            }
             return DontShowDialog();
         }
     }

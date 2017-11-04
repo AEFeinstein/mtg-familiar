@@ -267,12 +267,14 @@ public class RulesFragment extends FamiliarFragment {
                                 // Gets a handle to the clipboard service.
                                 ClipboardManager clipboard = (ClipboardManager)
                                         getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                                // Creates a new text clip to put on the clipboard
-                                ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
-                                // Set the clipboard's primary clip.
-                                clipboard.setPrimaryClip(clip);
-                                // Alert the user
-                                ToastWrapper.makeText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT).show();
+                                if (null != clipboard) {
+                                    // Creates a new text clip to put on the clipboard
+                                    ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
+                                    // Set the clipboard's primary clip.
+                                    clipboard.setPrimaryClip(clip);
+                                    // Alert the user
+                                    ToastWrapper.makeText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT).show();
+                                }
                             }
                             return true;
                         }

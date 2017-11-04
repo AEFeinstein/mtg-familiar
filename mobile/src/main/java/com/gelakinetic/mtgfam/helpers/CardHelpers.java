@@ -51,7 +51,7 @@ public class CardHelpers {
      * @param mCardName      The name of the card
      * @param fragment       The fragment which hosts the dialog and receives onWishlistChanged()
      * @param showCardButton Whether the button to launch the CardViewFragment should be shown
-     * @param isSideboard
+     * @param isSideboard    true if this card goes in the sidebard, false for the maindeck
      * @return A dialog which edits the wishlist
      */
     public static Dialog getDialog(
@@ -586,102 +586,6 @@ public class CardHelpers {
             }
             return 0;
 
-        }
-
-    }
-
-    /**
-     * Comparator based on price.
-     */
-    public static class CardComparatorPrice
-            implements Comparator<CompressedCardInfo>, Serializable {
-
-        /* Price setting constants */
-        private static final int LOW_PRICE = 0;
-        private static final int AVG_PRICE = 1;
-        private static final int HIGH_PRICE = 2;
-
-        private final int mPriceSetting;
-
-        public CardComparatorPrice(int mPriceSetting) {
-            this.mPriceSetting = mPriceSetting;
-        }
-
-        @Override
-        public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
-
-            double sumWish1 = 0;
-            double sumWish2 = 0;
-
-            for (IndividualSetInfo isi : card1.mInfo) {
-                try {
-                    if (isi.mIsFoil) {
-                        sumWish1 += (isi.mPrice.mFoilAverage * isi.mNumberOf);
-                    } else {
-                        switch (mPriceSetting) {
-                            case LOW_PRICE:
-                                sumWish1 += (isi.mPrice.mLow * isi.mNumberOf);
-                                break;
-                            case AVG_PRICE:
-                                sumWish1 += (isi.mPrice.mAverage * isi.mNumberOf);
-                                break;
-                            case HIGH_PRICE:
-                                sumWish1 += (isi.mPrice.mHigh * isi.mNumberOf);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    /* eat it, no price is loaded */
-                }
-            }
-
-            for (IndividualSetInfo isi : card2.mInfo) {
-                try {
-                    if (isi.mIsFoil) {
-                        sumWish2 += (isi.mPrice.mFoilAverage * isi.mNumberOf);
-                    } else {
-                        switch (mPriceSetting) {
-                            case LOW_PRICE:
-                                sumWish2 += (isi.mPrice.mLow * isi.mNumberOf);
-                                break;
-                            case AVG_PRICE:
-                                sumWish2 += (isi.mPrice.mAverage * isi.mNumberOf);
-                                break;
-                            case HIGH_PRICE:
-                                sumWish2 += (isi.mPrice.mHigh * isi.mNumberOf);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    /* eat it, no price is loaded */
-                }
-            }
-
-            /* If the price difference is less than a penny */
-            if (Math.abs(sumWish1 - sumWish2) < 0.01) {
-                return card1.mName.compareTo(card2.mName);
-            } else if (sumWish1 > sumWish2) {
-                return 1;
-            }
-            return -1;
-
-        }
-
-    }
-
-    /**
-     * Comparator based on the first set of a card.
-     */
-    private static class CardComparatorSet
-            implements Comparator<CompressedCardInfo>, Serializable {
-
-        @Override
-        public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
-            return card1.mInfo.get(0).mSet.compareTo(card2.mInfo.get(0).mSet);
         }
 
     }

@@ -169,7 +169,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                                 GatheringsIO.DeleteGathering(dfGatherings[position], getActivity().getFilesDir(),
                                         getActivity());
-                                getActivity().supportInvalidateOptionsMenu();
+                                getActivity().invalidateOptionsMenu();
                             }
                         })
                         .build();
@@ -197,7 +197,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                                 getParentGatheringsFragment().mLinearLayout.removeViewAt(position);
-                                getActivity().supportInvalidateOptionsMenu();
+                                getActivity().invalidateOptionsMenu();
                             }
                         })
                         .build();
@@ -236,7 +236,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                                 for (GatheringsPlayerData player : players) {
                                     getParentGatheringsFragment().AddPlayerRow(player);
                                 }
-                                getActivity().supportInvalidateOptionsMenu();
+                                getActivity().invalidateOptionsMenu();
                             }
                         })
                         .build();

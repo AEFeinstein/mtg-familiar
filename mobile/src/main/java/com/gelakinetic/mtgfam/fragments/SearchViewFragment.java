@@ -397,14 +397,6 @@ public class SearchViewFragment extends FamiliarFragment {
             }
         });
 
-        myFragmentView.findViewById(R.id.camera_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SearchViewFragment.this.getFamiliarActivity().startTutorCardsSearch();
-                    }
-                }
-        );
         myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
         return myFragmentView;
     }

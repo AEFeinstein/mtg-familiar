@@ -775,7 +775,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.apply();
     }
 
-    public static synchronized void setImageCacheSize(@Nullable Context context, int cacheSize) {
+    private static synchronized void setImageCacheSize(@Nullable Context context, int cacheSize) {
         if (null == context) {
             return;
         }
@@ -798,24 +798,6 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
             return MIN_CACHE_MB;
         }
         return cacheSize;
-    }
-
-    static synchronized int getNumTutorCardsSearches(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_num_tutor_cards_searches), 0);
-    }
-
-    static synchronized void setNumTutorCardsSearches(@Nullable Context context, int NumTutorCardsSearches) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_num_tutor_cards_searches),
-                NumTutorCardsSearches);
-        edit.apply();
     }
 
     public static synchronized int getDatabaseVersion(@Nullable Context context) {

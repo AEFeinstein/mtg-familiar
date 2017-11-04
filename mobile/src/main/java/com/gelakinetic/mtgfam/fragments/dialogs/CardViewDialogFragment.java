@@ -284,7 +284,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
             }
             case TRANSLATE_CARD: {
                 /* Make sure the translations exist */
-                if (null == getParentCardViewFragment() || getParentCardViewFragment().mTranslatedNames == null || getParentCardViewFragment().mTranslatedNames.isEmpty()) {
+                if (null == getParentCardViewFragment() || getParentCardViewFragment().mTranslatedNames.isEmpty()) {
                     /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
@@ -363,13 +363,15 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         /* Copy the translated name to the clipboard */
                         ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().getContext().
                                 getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-                        ClipData cd = new ClipData(
-                                ((TextView) view.findViewById(R.id.format)).getText(),
-                                new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
-                                new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
-                        clipboard.setPrimaryClip(cd);
+                        if (null != clipboard) {
+                            ClipData cd = new ClipData(
+                                    ((TextView) view.findViewById(R.id.format)).getText(),
+                                    new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
+                                    new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
+                            clipboard.setPrimaryClip(cd);
 
-                        Toast.makeText(getContext(), R.string.card_view_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.card_view_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                        }
                         return false;
                     }
                 });

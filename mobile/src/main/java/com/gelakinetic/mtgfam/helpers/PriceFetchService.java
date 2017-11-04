@@ -68,7 +68,7 @@ public class PriceFetchService extends SpiceService {
              * @param data    The PriceInfo data to cache
              * @param cacheKey    The key to cache it with
              * @return The same data that was passed in
-             * @throws CacheSavingException
+             * @throws CacheSavingException If the cache could not be written to
              */
             @Override
             public PriceInfo saveDataToCacheAndReturnData(final PriceInfo data, final Object cacheKey)

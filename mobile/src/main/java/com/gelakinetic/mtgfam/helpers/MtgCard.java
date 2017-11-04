@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2011 Adam Feinstein
  * <p/>
  * This file is part of MTG Familiar.
@@ -116,34 +116,6 @@ public class MtgCard extends Card {
     /************************************************
      *             MtgCards and Trading             *
      ************************************************/
-
-    /**
-     * Constructor used when creating a new card for the trade list. Only populates relevant information
-     *
-     * @param name     This card's mName
-     * @param tcgName  The tcgplayer.com mExpansion mName
-     * @param setCode  The mExpansion code
-     * @param numberOf The mNumber of these cards being traded
-     * @param message  A message associated with this card
-     * @param number   This card's mNumber within the mExpansion
-     * @param foil     Whether or not this card is foil
-     * @param color    This card's mColor
-     * @param cmc      This card's converted mana cost
-     */
-    public MtgCard(String name, String tcgName, String setCode, int numberOf, String message, String number, boolean foil, String color, int cmc) {
-        this.mName = name;
-        this.mNumber = number;
-        this.setCode = setCode;
-        this.setName = tcgName;
-        this.numberOf = numberOf;
-        this.price = 0;
-        this.message = message;
-        this.mRarity = (char) (int) '-';
-        this.customPrice = false;
-        this.foil = foil;
-        this.mColor = color;
-        this.mCmc = cmc;
-    }
 
     /**
      * Returns the string representation of this MtgCard for saving trades

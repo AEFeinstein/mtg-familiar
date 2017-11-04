@@ -165,15 +165,6 @@ public class DecklistFragment extends FamiliarListFragment {
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
 
-        myFragmentView.findViewById(R.id.camera_button).setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(final View view) {
-                        getFamiliarActivity().startTutorCardsSearch();
-                    }
-
-                });
         myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
 
         setUpCheckBoxClickListeners();
@@ -457,7 +448,7 @@ public class DecklistFragment extends FamiliarListFragment {
      * @param id          the ID of the dialog to show
      * @param cardName    the name of the card to use if this is a dialog to change decklist counts
      * @param isSideboard if the card is in the sideboard
-     * @throws IllegalStateException
+     * @throws IllegalStateException If something is done out of order
      */
     private void showDialog(final int id, final String cardName, final boolean isSideboard)
             throws IllegalStateException {

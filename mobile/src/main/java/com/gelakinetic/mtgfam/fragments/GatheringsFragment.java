@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2012 Jonathan Bettger
  * <p/>
  * This file is part of MTG Familiar.
@@ -149,7 +149,7 @@ public class GatheringsFragment extends FamiliarFragment {
             for (GatheringsPlayerData player : players) {
                 AddPlayerRow(player);
             }
-            getActivity().supportInvalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
             mCurrentGatheringName = savedInstanceState.getString(SAVED_NAME_KEY);
         }
     }
@@ -263,7 +263,7 @@ public class GatheringsFragment extends FamiliarFragment {
 
         GatheringsIO.writeGatheringXML(players, _gatheringName, mDisplayModeSpinner.getSelectedItemPosition(),
                 getActivity().getFilesDir());
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     /**
@@ -323,7 +323,7 @@ public class GatheringsFragment extends FamiliarFragment {
         ((TextView) newView.findViewById(R.id.starting_life)).setText(String.valueOf(_player.mStartingLife));
 
         mLinearLayout.addView(newView);
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     /**

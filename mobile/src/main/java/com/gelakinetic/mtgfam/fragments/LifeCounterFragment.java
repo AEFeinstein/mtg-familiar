@@ -811,12 +811,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                         mAfterSearchClosedRunnable = new Runnable() {
                             @Override
                             public void run() {
-                                getActivity().supportInvalidateOptionsMenu();
+                                getActivity().invalidateOptionsMenu();
                             }
                         };
                     } else {
                         /* Redraw menu */
-                        getActivity().supportInvalidateOptionsMenu();
+                        getActivity().invalidateOptionsMenu();
                     }
                 }
             } else if (status == TextToSpeech.ERROR) {

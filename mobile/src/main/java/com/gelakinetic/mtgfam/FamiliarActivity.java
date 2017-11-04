@@ -90,7 +90,6 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.TutorCards;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -291,8 +290,6 @@ public class FamiliarActivity extends AppCompatActivity {
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
 
-    private final TutorCards mTutorCards = new TutorCards(this);
-
     /**
      * Open an inputStream to the HTML content at the given URL.
      *
@@ -450,7 +447,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Called whenever we call supportInvalidateOptionsMenu(). This hides action bar items when the
+     * Called whenever we call invalidateOptionsMenu(). This hides action bar items when the
      * drawer is open.
      *
      * @param menu The menu to hide or show items in
@@ -706,7 +703,7 @@ public class FamiliarActivity extends AppCompatActivity {
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
                 if ((mIsMenuVisible && slideOffset > 0) || (slideOffset == 0 && !mIsMenuVisible)) {
-                    supportInvalidateOptionsMenu();
+                    invalidateOptionsMenu();
                 }
             }
         };
@@ -1249,9 +1246,10 @@ public class FamiliarActivity extends AppCompatActivity {
     public void hideKeyboard() {
         try {
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert getCurrentFocus() != null;
-            inputManager
-                    .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            if (null != inputManager && null != getCurrentFocus()) {
+                inputManager
+                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
         } catch (NullPointerException e) {
             /* eat it */
         }
@@ -1360,8 +1358,6 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        mTutorCards.onActivityResult(requestCode, resultCode);
 
         /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result
          * here */
@@ -1485,6 +1481,12 @@ public class FamiliarActivity extends AppCompatActivity {
     public static int getNetworkState(Context context, boolean shouldShowToast) {
         try {
             ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (null == conMan) {
+                if (shouldShowToast) {
+                    ToastWrapper.makeText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
+                }
+                return -1;
+            }
             for (NetworkInfo ni : conMan.getAllNetworkInfo()) {
                 if (ni.isConnected()) {
                     return ni.getType();
@@ -1570,32 +1572,6 @@ public class FamiliarActivity extends AppCompatActivity {
                         .onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
         }
-    }
-
-    /**
-     * Checks to see if there is network connectivity, and if there is, starts the visual
-     * search process.
-     */
-    public void startTutorCardsSearch() {
-        if (getNetworkState(FamiliarActivity.this, true) != -1) {
-            mTutorCards.startTutorCardsSearch();
-        }
-    }
-
-    /**
-     * When TutorCards returns a response over the network to a query, this function is called
-     * with the multiverse ID of the card in the image as a parameter.
-     *
-     * @param multiverseId The multiverse ID returned by the TutorCards query
-     */
-    public void receiveTutorCardsResult(long multiverseId) {
-        try {
-            ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
-                    .receiveTutorCardsResult(multiverseId);
-        } catch (NullPointerException e) {
-            /* Ignore it */
-        }
-        clearLoading();
     }
 
     /**

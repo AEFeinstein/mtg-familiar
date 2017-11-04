@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2012 Michael Shick
  * <p/>
  * This file is part of MTG Familiar.

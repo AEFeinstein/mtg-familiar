@@ -26,7 +26,7 @@ public class DecklistHelpers {
      *
      * @param mCtx      A context to open the file and pop toasts with
      * @param lDecklist The decklist to write to the file
-     * @param fileName
+     * @param fileName  The name of the file to write the decklist to
      */
     public static void WriteDecklist(
             Context mCtx,
@@ -96,8 +96,8 @@ public class DecklistHelpers {
     /**
      * Write the decklist passed as a parameter to the autosave file.
      *
-     * @param mCtx
-     * @param mCompressedDecklist
+     * @param mCtx                A context to open the file and pop toasts with
+     * @param mCompressedDecklist The decklist to write
      */
     public static void WriteCompressedDecklist(
             Context mCtx,

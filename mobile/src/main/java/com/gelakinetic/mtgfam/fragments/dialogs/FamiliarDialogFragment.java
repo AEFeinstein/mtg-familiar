@@ -111,9 +111,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @return true if the dialog should be created, false otherwise
      */
     boolean canCreateDialog() {
-        if(getParentFamiliarFragment().getActivity().isFinishing()) {
-            return false;
-        }
-        return true;
+        return (null != getParentFamiliarFragment()) &&
+                (!getParentFamiliarFragment().getActivity().isFinishing());
     }
 }

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -151,6 +150,9 @@ public abstract class FamiliarFragment extends Fragment {
             } else {
 
                 SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+                if (null == searchManager) {
+                    return;
+                }
                 SearchView sv = new SearchView(getActivity());
                 try {
                     sv.setSearchableInfo(searchManager.getSearchableInfo(
@@ -158,8 +160,8 @@ public abstract class FamiliarFragment extends Fragment {
 
                     MenuItem mi = menu.add(R.string.name_search_hint)
                             .setIcon(R.drawable.ic_menu_search);
-                    MenuItemCompat.setActionView(mi, sv);
-                    MenuItemCompat.setOnActionExpandListener(mi, new MenuItemCompat.OnActionExpandListener() {
+                    mi.setActionView(sv);
+                    mi.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
                         @Override
                         public boolean onMenuItemActionExpand(MenuItem item) {
                             mIsSearchViewOpen = true;
@@ -176,7 +178,7 @@ public abstract class FamiliarFragment extends Fragment {
                             return true;
                         }
                     });
-                    MenuItemCompat.setShowAsAction(mi, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+                    mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
                 } catch (Resources.NotFoundException e) {
                     /* One user threw this once. I think the typed ComponentName fixes it, but just in case */
@@ -296,7 +298,7 @@ public abstract class FamiliarFragment extends Fragment {
      *
      * @return The FamiliarActivity
      */
-    public FamiliarActivity getFamiliarActivity() {
+    FamiliarActivity getFamiliarActivity() {
         if (getActivity() instanceof FamiliarActivity) {
             return (FamiliarActivity) getActivity();
         }
