@@ -22,8 +22,13 @@ public class ViewSpan extends ReplacementSpan {
         this.maxWidth = maxWidth;
         view = v;
         ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        if (null == params) {
+            params = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        } else {
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
         view.setLayoutParams(params);
     }
 

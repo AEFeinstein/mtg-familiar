@@ -500,46 +500,49 @@ public class LcPlayer {
         switch (mDisplayMode) {
             case LifeCounterFragment.DISPLAY_NORMAL: {
                 ViewGroup.LayoutParams params = mView.getLayoutParams();
-                assert params != null;
-                if (isPortrait) {
-                    params.width = mGridLayoutWidth;
-                    params.height = mGridLayoutHeight / 2;
-                } else {
-                    params.width = mGridLayoutWidth / 2;
-                    params.height = mGridLayoutHeight;
+                if (null != params) {
+                    if (isPortrait) {
+                        params.width = mGridLayoutWidth;
+                        params.height = mGridLayoutHeight / 2;
+                    } else {
+                        params.width = mGridLayoutWidth / 2;
+                        params.height = mGridLayoutHeight;
+                    }
+                    mView.setLayoutParams(params);
                 }
-                mView.setLayoutParams(params);
                 break;
             }
             case LifeCounterFragment.DISPLAY_COMPACT: {
                 ViewGroup.LayoutParams params = mView.getLayoutParams();
-                assert params != null;
-                if (isPortrait) {
-                    params.width = mGridLayoutWidth / 2;
-                    params.height = mGridLayoutHeight / 2;
-                } else {
-                    params.width = mGridLayoutWidth / 4;
-                    params.height = mGridLayoutHeight;
+                if (null != params) {
+                    if (isPortrait) {
+                        params.width = mGridLayoutWidth / 2;
+                        params.height = mGridLayoutHeight / 2;
+                    } else {
+                        params.width = mGridLayoutWidth / 4;
+                        params.height = mGridLayoutHeight;
+                    }
+                    mView.setLayoutParams(params);
                 }
-                mView.setLayoutParams(params);
                 break;
             }
             case LifeCounterFragment.DISPLAY_COMMANDER: {
                 /* Set the row height to 48dp and the width to some fraction of the screen */
                 ViewGroup.LayoutParams rowParams = mCommanderRowView.getLayoutParams();
-                assert rowParams != null;
-                rowParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
-                        mFragment.getActivity().getResources().getDisplayMetrics());
-                if (isPortrait) {
-                    rowParams.width = mGridLayoutWidth / 2;
-                } else {
-                    rowParams.width = mGridLayoutWidth / 4;
+                if (null != rowParams) {
+                    rowParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
+                            mFragment.getActivity().getResources().getDisplayMetrics());
+                    if (isPortrait) {
+                        rowParams.width = mGridLayoutWidth / 2;
+                    } else {
+                        rowParams.width = mGridLayoutWidth / 4;
+                    }
+                    mCommanderRowView.setLayoutParams(rowParams);
                 }
-                mCommanderRowView.setLayoutParams(rowParams);
 
                 /* Then set the player view to half the screen, if in landscape */
                 ViewGroup.LayoutParams viewParams = mView.getLayoutParams();
-                if (viewParams != null) {
+                if (null != viewParams) {
                     if (!isPortrait) {
                         viewParams.width = mGridLayoutWidth / 2;
                     }
