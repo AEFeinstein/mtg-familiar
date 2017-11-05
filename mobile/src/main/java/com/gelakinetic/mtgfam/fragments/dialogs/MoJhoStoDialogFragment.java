@@ -114,9 +114,11 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
                     scaleFactor = (windowWidth - border) / (float) imageWidth;
                 }
 
-                        /* Scale the drawable */
-                image.setLayoutParams(new ViewGroup.LayoutParams((int) (imageWidth * scaleFactor),
-                        (int) (imageHeight * scaleFactor)));
+                /* Scale the drawable */
+                ViewGroup.LayoutParams params = image.getLayoutParams();
+                params.width = (int) (imageWidth * scaleFactor);
+                params.height = (int) (imageHeight * scaleFactor);
+                image.setLayoutParams(params);
 
                 return dialog;
             }
