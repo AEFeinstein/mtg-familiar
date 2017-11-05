@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -53,14 +54,16 @@ public class ToastWrapper {
      *                 {@link #LENGTH_LONG}
      */
     @SuppressLint("ShowToast")
-    @NonNull
-    public static Toast makeText(@NonNull Context context, CharSequence text,
+    public static Toast makeText(Context context, CharSequence text,
                                  int duration) {
         if (mToast != null) {
             mToast.cancel();
         }
-        mToast = Toast.makeText(context, text, duration);
-        return mToast;
+        if (context != null && !((Activity) context).isFinishing()) {
+            mToast = Toast.makeText(context, text, duration);
+            return mToast;
+        }
+        return null;
     }
 
     /**

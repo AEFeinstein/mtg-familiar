@@ -38,7 +38,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -49,6 +48,7 @@ import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -389,7 +389,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                     new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
                             clipboard.setPrimaryClip(cd);
 
-                            Toast.makeText(getContext(), R.string.card_view_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                            ToastWrapper.makeText(getContext(), R.string.card_view_copied_to_clipboard, ToastWrapper.LENGTH_SHORT).show();
                         }
                         return false;
                     }
