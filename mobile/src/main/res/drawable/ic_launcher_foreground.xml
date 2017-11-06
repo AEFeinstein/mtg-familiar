@@ -2,10 +2,10 @@
         xmlns:aapt="http://schemas.android.com/aapt"
         android:width="108dp"
         android:height="108dp"
-        android:viewportWidth="691.8919"
-        android:viewportHeight="691.8919">
-    <group android:translateX="89.945946"
-            android:translateY="89.945946">
+        android:viewportWidth="731.4286"
+        android:viewportHeight="731.4286">
+    <group android:translateX="109.71429"
+            android:translateY="109.71429">
         <path
             android:pathData="m255.8,266.1a5.3,5.3 59,0 0,-4 2.2l-106.9,147.1a5.3,5.3 0,0 0,4.3 8.4l213.8,0a5.3,5.3 0,0 0,4.3 -8.4L260.4,268.2a5.3,5.3 102.9,0 0,-4.6 -2.2z"
             android:fillAlpha="1"
