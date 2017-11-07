@@ -23,6 +23,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -92,9 +93,16 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @return The current fragment being displayed by the app
      */
     @Nullable
+    Fragment getDialogParentFragment() {
+        return getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+    }
+
+    /**
+     * @return The current fragment being displayed by the app
+     */
+    @Nullable
     FamiliarFragment getParentFamiliarFragment() {
-        return (FamiliarFragment)
-                getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        return (FamiliarFragment) getDialogParentFragment();
     }
 
     /**
@@ -130,7 +138,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @return true if the dialog should be created, false otherwise
      */
     boolean canCreateDialog() {
-        return (null != getParentFamiliarFragment()) &&
-                (!getParentFamiliarFragment().getActivity().isFinishing());
+        return (null != getDialogParentFragment()) &&
+                (!getDialogParentFragment().getActivity().isFinishing());
     }
 }
