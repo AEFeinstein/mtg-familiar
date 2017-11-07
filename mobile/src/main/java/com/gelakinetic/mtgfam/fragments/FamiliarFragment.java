@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SearchView;
@@ -265,29 +266,32 @@ public abstract class FamiliarFragment extends Fragment {
      */
     public void handleFamiliarDbException(boolean shouldFinish) {
         /* Show a toast on the UI thread */
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ToastWrapper.makeText(getActivity(), getString(R.string.error_database), ToastWrapper.LENGTH_LONG).show();
-            }
-        });
-        /* Finish the fragment if requested */
-        if (shouldFinish) {
-            try {
+        FragmentActivity activity = getActivity();
+        if (null != activity) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ToastWrapper.makeText(getActivity(), getString(R.string.error_database), ToastWrapper.LENGTH_LONG).show();
+                }
+            });
+            /* Finish the fragment if requested */
+            if (shouldFinish) {
+                try {
                 /* will be correct for nested ViewPager fragments too */
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                if (fm != null) {
+                    FragmentManager fm = activity.getSupportFragmentManager();
+                    if (fm != null) {
                     /* If there is only one fragment, finish the activity
                      * Otherwise pop the offending fragment */
-                    if (fm.getFragments().size() == 1) {
-                        getActivity().finish();
-                    } else {
-                        fm.popBackStack();
+                        if (fm.getFragments().size() == 1) {
+                            activity.finish();
+                        } else {
+                            fm.popBackStack();
+                        }
                     }
+                } catch (IllegalStateException e) {
+                    /* Just give up, hopefully the toast was shown */
+                    activity.finish();
                 }
-            } catch (IllegalStateException e) {
-                /* Just give up, hopefully the toast was shown */
-                getActivity().finish();
             }
         }
     }
