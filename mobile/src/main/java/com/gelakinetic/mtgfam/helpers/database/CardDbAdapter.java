@@ -2051,6 +2051,14 @@ public class CardDbAdapter {
                             " FROM " + DATABASE_TABLE_SETS +
                             " WHERE " + KEY_CODE + " = \"" + setCode + "\"";
             Cursor c = mDb.rawQuery(sql, null);
+
+            /* Check if the cursor returned any values first */
+            if(c.getCount() == 0) {
+                c.close();
+                return false;
+            }
+
+            /* Then check if the set contains foils */
             c.moveToFirst();
             if (0 == c.getInt(c.getColumnIndex(KEY_CAN_BE_FOIL))) {
                 canBeFoilReturn = false;
