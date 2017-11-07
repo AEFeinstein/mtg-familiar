@@ -42,6 +42,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -112,7 +113,8 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Locale;
 
-public class FamiliarActivity extends AppCompatActivity {
+public class FamiliarActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     /* Tags for fragments */
     public static final String DIALOG_TAG = "dialog";
     public static final String FRAGMENT_TAG = "fragment";
@@ -445,12 +447,82 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerVisible = mDrawerLayout.isDrawerVisible(mDrawerList);
+        boolean drawerVisible = mDrawerLayout.isDrawerVisible(findViewById(R.id.navigation_view));
         mIsMenuVisible = !drawerVisible;
         for (int i = 0; i < menu.size(); i++) {
             menu.getItem(i).setVisible(!drawerVisible);
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        PrefsFragment.checkOverrideSystemLanguage(this);
+
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                toolbar,
+                R.string.main_drawer_open,
+                R.string.main_drawer_close);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        mDrawerToggle.syncState();
+
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("");
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        DatabaseManager.initializeInstance(getApplicationContext());
+
+        mRefreshLayout = findViewById(R.id.fragment_container);
+        mRefreshLayout.setColors(
+                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
+                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
+                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_rare)),
+                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_mythic))
+        );
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        PreferenceAdapter.registerOnSharedPreferenceChangeListener(this, mPreferenceChangeListener);
+
+        mRoundTimerUpdateHandler = new Handler();
+
+        mRoundEndTime = PreferenceAdapter.getRoundTimerEnd(this);
+        if (mRoundEndTime != -1) {
+            RoundTimerFragment.showTimerRunningNotification(this, mRoundEndTime);
+            RoundTimerFragment.setOrCancelAlarms(this, mRoundEndTime, true);
+        }
+        mUpdatingRoundTimer = false;
+
+        boolean isDeepLink = false;
+
+        if (savedInstanceState == null) {
+            isDeepLink = processIntent(getIntent());
+        }
+
+        if (!isDeepLink) {
+            PackageInfo packageInfo;
+            try {
+                assert getPackageManager() != null;
+                packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
+            } catch (PackageManager.NameNotFoundException e) {
+                /* Eat it, don't show change log */
+            }
+        }
     }
 
     /**
@@ -464,8 +536,8 @@ public class FamiliarActivity extends AppCompatActivity {
      *                           in onSaveInstanceState(Bundle).
      *                           Note: Otherwise it is null.
      */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    //@Override
+    protected void onCreate2(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PrefsFragment.checkOverrideSystemLanguage(this);
 
@@ -522,7 +594,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
         /* Get the drawer layout and list */
         mDrawerLayout = findViewById(R.id.drawer_layout);
-        mDrawerList = findViewById(R.id.left_drawer);
+        mDrawerList = findViewById(R.id.navigation_view);
 
         /* set a custom shadow that overlays the main content when the drawer opens */
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -1000,7 +1072,23 @@ public class FamiliarActivity extends AppCompatActivity {
             startUpdatingDisplay();
         }
         mInactivityHandler.postDelayed(userInactive, INACTIVITY_MS);
-        mPagesAdapter.notifyDataSetChanged(); /* To properly color icons when popping activities */
+        // todo: enable
+        //mPagesAdapter.notifyDataSetChanged(); /* To properly color icons when popping activities */
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks
+        final int id = item.getItemId();
+
+        switch (id) {
+            case R.id.drawer_search: {
+
+            }
+        }
+
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     /**
@@ -1140,7 +1228,7 @@ public class FamiliarActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         /* Sync the toggle state after onRestoreInstanceState has occurred. */
-        mDrawerToggle.syncState();
+        //mDrawerToggle.syncState();
     }
 
     /**
@@ -1152,7 +1240,7 @@ public class FamiliarActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         /* Pass any configuration change to the drawer toggles */
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        //mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -1318,11 +1406,13 @@ public class FamiliarActivity extends AppCompatActivity {
         mRoundEndTime = PreferenceAdapter.getRoundTimerEnd(this);
         mUpdatingRoundTimer = true;
 
-        mRoundTimerUpdateHandler.removeCallbacks(timerUpdate);
-        mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1);
+        // todo: reenable
+        //mRoundTimerUpdateHandler.removeCallbacks(timerUpdate);
+        //mRoundTimerUpdateHandler.postDelayed(timerUpdate, 1);
 
         assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        // todo: enable
+        //getSupportActionBar().setDisplayShowTitleEnabled(true);
     }
 
     /**

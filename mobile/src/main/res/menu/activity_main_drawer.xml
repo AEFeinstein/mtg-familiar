@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/drawer_main">
+
+        <item
+            android:id="@+id/drawer_search"
+            android:title="@string/main_card_search"
+            android:icon="?attr/ic_drawer_search" />
+
+        <item
+            android:id="@+id/drawer_life"
+            android:title="@string/main_life_counter"
+            android:icon="?attr/ic_drawer_life" />
+
+        <item
+            android:id="@+id/drawer_dice"
+            android:title="@string/main_dice"
+            android:icon="?attr/ic_drawer_dice" />
+
+        <item
+            android:id="@+id/drawer_trade"
+            android:title="@string/main_trade"
+            android:icon="?attr/ic_drawer_trade" />
+
+        <item
+            android:id="@+id/drawer_wishlist"
+            android:title="@string/main_wishlist"
+            android:icon="?attr/ic_drawer_wishlist" />
+
+        <item
+            android:id="@+id/drawer_decklist"
+            android:title="@string/main_decklist"
+            android:icon="?attr/ic_drawer_deck" />
+
+        <item
+            android:id="@+id/drawer_timer"
+            android:title="@string/main_timer"
+            android:icon="?attr/ic_drawer_timer" />
+
+        <item
+            android:id="@+id/drawer_rules"
+            android:title="@string/main_rules"
+            android:icon="?attr/ic_drawer_rules" />
+
+        <item
+            android:id="@+id/drawer_judge"
+            android:title="@string/main_judges_corner"
+            android:icon="?attr/ic_drawer_judge" />
+
+        <item
+            android:id="@+id/drawer_mojhosto"
+            android:title="@string/main_mojhosto"
+            android:icon="?attr/ic_drawer_mojhosto" />
+
+        <item
+            android:id="@+id/drawer_profile"
+            android:title="@string/main_profile"
+            android:icon="?attr/ic_drawer_profile" />
+
+    </group>
+
+    <group android:id="@+id/drawer_extra">
+
+        <item
+            android:id="@+id/drawer_settings"
+            android:title="@string/main_settings_title"
+            android:icon="?attr/ic_drawer_settings" />
+
+        <item
+            android:id="@+id/drawer_force_update"
+            android:title="@string/main_force_update_title"
+            android:icon="?attr/ic_drawer_download" />
+
+        <item
+            android:id="@+id/drawer_donate"
+            android:title="@string/main_donate_title"
+            android:icon="?attr/ic_drawer_good" />
+
+        <item
+            android:id="@+id/drawer_about"
+            android:title="@string/main_about"
+            android:icon="?attr/ic_drawer_about" />
+
+        <item
+            android:id="@+id/drawer_whats_new"
+            android:title="@string/main_whats_new_title"
+            android:icon="?attr/ic_drawer_help" />
+
+        <item
+            android:id="@+id/drawer_save_data"
+            android:title="@string/main_export_data_title"
+            android:icon="?attr/ic_drawer_save" />
+
+        <item
+            android:id="@+id/drawer_load_data"
+            android:title="@string/main_import_data_title"
+            android:icon="?attr/ic_drawer_load" />
+
+    </group>
+
+</menu>
