@@ -154,7 +154,7 @@ public class FamiliarActivity extends AppCompatActivity {
     private static final int MESSAGE_INIT_DISK_CACHE = 1;
     private static final int MESSAGE_FLUSH = 2;
     private static final int MESSAGE_CLOSE = 3;
-    private static final String IMAGE_CACHE_DIR = "images";
+    private static final String IMAGE_CACHE_DIR = "familiar_image_cache";
     /* Spice setup */
     public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
     /* What the drawer menu will be */
