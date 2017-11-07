@@ -102,7 +102,11 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     @Nullable
     FamiliarFragment getParentFamiliarFragment() {
-        return (FamiliarFragment) getDialogParentFragment();
+        try {
+            return (FamiliarFragment) getDialogParentFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     /**

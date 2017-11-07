@@ -59,7 +59,11 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private GatheringsFragment getParentGatheringsFragment() {
-        return (GatheringsFragment) getParentFamiliarFragment();
+        try {
+            return (GatheringsFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull

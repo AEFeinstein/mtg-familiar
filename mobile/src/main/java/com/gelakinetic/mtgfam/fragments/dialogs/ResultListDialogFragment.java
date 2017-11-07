@@ -158,6 +158,10 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
     @Nullable
     private ResultListFragment getParentResultListFragment() {
-        return (ResultListFragment) getParentFamiliarFragment();
+        try {
+            return (ResultListFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 }

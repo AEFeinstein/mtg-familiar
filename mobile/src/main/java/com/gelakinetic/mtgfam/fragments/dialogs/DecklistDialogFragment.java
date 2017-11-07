@@ -60,7 +60,11 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private DecklistFragment getParentDecklistFragment() {
-        return (DecklistFragment) getParentFamiliarFragment();
+        try {
+            return (DecklistFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull

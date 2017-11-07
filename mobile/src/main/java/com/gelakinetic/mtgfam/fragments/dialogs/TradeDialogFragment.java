@@ -79,7 +79,11 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private TradeFragment getParentTradeFragment() {
-        return (TradeFragment) getParentFamiliarFragment();
+        try {
+            return (TradeFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull

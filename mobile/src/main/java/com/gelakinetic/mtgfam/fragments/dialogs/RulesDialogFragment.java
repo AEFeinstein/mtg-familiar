@@ -55,7 +55,11 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private RulesFragment getParentRulesFragment() {
-        return (RulesFragment) getParentFamiliarFragment();
+        try {
+            return (RulesFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @Override

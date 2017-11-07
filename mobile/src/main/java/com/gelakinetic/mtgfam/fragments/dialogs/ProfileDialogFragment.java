@@ -52,7 +52,11 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private ProfileFragment getParentProfileFragment() {
-        return (ProfileFragment) getParentFamiliarFragment();
+        try {
+            return (ProfileFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull

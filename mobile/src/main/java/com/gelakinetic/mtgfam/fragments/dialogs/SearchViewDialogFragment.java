@@ -44,7 +44,11 @@ public class SearchViewDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private SearchViewFragment getParentSearchViewFragment() {
-        return (SearchViewFragment) getParentFamiliarFragment();
+        try {
+            return (SearchViewFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @Override

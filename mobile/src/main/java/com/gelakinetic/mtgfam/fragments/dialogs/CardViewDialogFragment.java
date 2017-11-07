@@ -77,9 +77,13 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
      */
     @Nullable
     private CardViewFragment getParentCardViewFragment() {
-        CardViewPagerFragment pagerFrag = ((CardViewPagerFragment) getParentFamiliarFragment());
-        if (null != pagerFrag) {
-            return pagerFrag.getCurrentFragment();
+        try {
+            CardViewPagerFragment pagerFrag = ((CardViewPagerFragment) getParentFamiliarFragment());
+            if (null != pagerFrag) {
+                return pagerFrag.getCurrentFragment();
+            }
+        } catch (ClassCastException e) {
+            return null;
         }
         return null;
     }
