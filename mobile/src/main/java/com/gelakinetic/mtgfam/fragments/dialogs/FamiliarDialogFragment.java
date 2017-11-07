@@ -53,6 +53,18 @@ public class FamiliarDialogFragment extends DialogFragment {
     }
 
     /**
+     * first saving my state, so the bundle wont be empty.
+     * http://code.google.com/p/android/issues/detail?id=19917
+     *
+     * @param outState Bundle in which to place your saved state.
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        super.onSaveInstanceState(outState);
+    }
+
+    /**
      * Default constructor, except we always retain the instance state, as long as it isn't nested
      * (fragment isn't destroyed/created across activity recreation)
      *
