@@ -114,6 +114,10 @@ public class LcPlayer {
      */
     public void setMode(int mode) {
 
+        if (null == mReadoutTextView) {
+            return;
+        }
+
         /* Commit any changes before switching modes */
         if (mCommitting) {
             mCommitting = false;
@@ -517,6 +521,10 @@ public class LcPlayer {
      * @param mDisplayMode      either LifeCounterFragment.DISPLAY_COMPACT or LifeCounterFragment.DISPLAY_NORMAL
      */
     public void setSize(int mGridLayoutWidth, int mGridLayoutHeight, int mDisplayMode, boolean isPortrait) {
+
+        if (null == mView) {
+            return;
+        }
 
         switch (mDisplayMode) {
             case LifeCounterFragment.DISPLAY_NORMAL: {

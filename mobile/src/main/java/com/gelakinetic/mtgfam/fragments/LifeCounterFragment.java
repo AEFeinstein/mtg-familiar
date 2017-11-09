@@ -538,7 +538,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             mCommanderButton.setVisibility(View.VISIBLE);
             mCommanderPlayerView.setVisibility(View.VISIBLE);
             mCommanderPlayerView.removeAllViews();
-            if (mPlayers.size() > 0) {
+            if (mPlayers.size() > 0 && null != mPlayers.get(0).mView) {
                 mCommanderPlayerView.addView(mPlayers.get(0).mView);
                 mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources()
                         .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
@@ -560,7 +560,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param player The player to be added
      */
     private void addPlayerView(final LcPlayer player) {
-        mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying, mGridLayout, mCommanderPlayerView));
+        try {
+            mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying, mGridLayout, mCommanderPlayerView));
+        } catch (IllegalArgumentException e) {
+            return;
+        }
         if (mDisplayMode == DISPLAY_COMMANDER) {
             player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
                 @Override
