@@ -1243,7 +1243,12 @@ public class CardDbAdapter {
 
             /* Check if the format is eternal or not, by the number of legal sets */
             String numLegalSetsSql = "SELECT * FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + KEY_FORMAT + " = \"" + criteria.format + "\"";
-            Cursor numLegalSetCursor = mDb.rawQuery(numLegalSetsSql, null);
+            Cursor numLegalSetCursor;
+            try {
+                numLegalSetCursor = mDb.rawQuery(numLegalSetsSql, null);
+            } catch (SQLiteException | IllegalStateException e) {
+                throw new FamiliarDbException(e);
+            }
 
             /* If the format is not eternal, filter by set */
             if (numLegalSetCursor.getCount() > 0) {
@@ -2053,7 +2058,7 @@ public class CardDbAdapter {
             Cursor c = mDb.rawQuery(sql, null);
 
             /* Check if the cursor returned any values first */
-            if(c.getCount() == 0) {
+            if (c.getCount() == 0) {
                 c.close();
                 return false;
             }
