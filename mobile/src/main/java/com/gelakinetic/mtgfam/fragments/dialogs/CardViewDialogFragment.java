@@ -393,7 +393,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                     new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
                             clipboard.setPrimaryClip(cd);
 
-                            ToastWrapper.makeText(getContext(), R.string.card_view_copied_to_clipboard, ToastWrapper.LENGTH_SHORT).show();
+                            ToastWrapper.makeText(getActivity(), R.string.card_view_copied_to_clipboard, ToastWrapper.LENGTH_SHORT).show();
                         }
                         return false;
                     }
