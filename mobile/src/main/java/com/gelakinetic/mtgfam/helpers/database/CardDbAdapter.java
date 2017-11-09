@@ -801,7 +801,7 @@ public class CardDbAdapter {
             throw new FamiliarDbException(e);
         }
 
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             long id = cursor.getLong(cursor.getColumnIndex(CardDbAdapter.KEY_ID));
             cursor.close();

@@ -104,13 +104,16 @@ public class CardHelpers {
                                 SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false)
                                         .openDatabase(false);
                                 /* Get the card ID, and send it to a new CardViewFragment */
-                                args.putLongArray(
-                                        CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{CardDbAdapter.fetchIdByName(mCardName, db)}
-                                );
-                                args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-                                CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
-                                fragment.startNewFragment(cvpFrag, args);
+                                long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
+                                if (cardId > 0) {
+                                    args.putLongArray(
+                                            CardViewPagerFragment.CARD_ID_ARRAY,
+                                            new long[]{cardId}
+                                    );
+                                    args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+                                    CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+                                    fragment.startNewFragment(cvpFrag, args);
+                                }
                             } catch (FamiliarDbException e) {
                                 fragment.handleFamiliarDbException(false);
                             }
