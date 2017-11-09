@@ -42,6 +42,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.LcPlayerDialogFragment;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class LcPlayer {
     /* Handler for committing life changes */
@@ -132,11 +133,11 @@ public class LcPlayer {
                     mHistoryList.setAdapter(mHistoryLifeAdapter);
                     mHistoryList.invalidate();
                 }
-                mReadoutTextView.setText(mLife + "");
+                mReadoutTextView.setText(formatInt(mLife, false));
                 mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(),
                         R.color.material_red_500));
                 if (mCommanderReadoutTextView != null) {
-                    mCommanderReadoutTextView.setText(mLife + "");
+                    mCommanderReadoutTextView.setText(formatInt(mLife, false));
                     mCommanderReadoutTextView.setTextColor(
                             ContextCompat.getColor(mFragment.getContext(), R.color.material_red_500));
                 }
@@ -146,11 +147,11 @@ public class LcPlayer {
                     mHistoryList.setAdapter(mHistoryPoisonAdapter);
                     mHistoryList.invalidate();
                 }
-                mReadoutTextView.setText(mPoison + "");
+                mReadoutTextView.setText(formatInt(mPoison, false));
                 mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(),
                         R.color.material_green_500));
                 if (mCommanderReadoutTextView != null) {
-                    mCommanderReadoutTextView.setText(mPoison + "");
+                    mCommanderReadoutTextView.setText(formatInt(mPoison, false));
                     mCommanderReadoutTextView.setTextColor(
                             ContextCompat.getColor(mFragment.getContext(), R.color.material_green_500));
                 }
@@ -160,11 +161,11 @@ public class LcPlayer {
                     mHistoryList.setAdapter(mCommanderDamageAdapter);
                     mHistoryList.invalidate();
                 }
-                mReadoutTextView.setText(mLife + "");
+                mReadoutTextView.setText(formatInt(mLife, false));
                 mReadoutTextView.setTextColor(ContextCompat.getColor(mFragment.getContext(),
                         R.color.material_red_500));
                 if (mCommanderReadoutTextView != null) {
-                    mCommanderReadoutTextView.setText(mLife + "");
+                    mCommanderReadoutTextView.setText(formatInt(mLife, false));
                     mCommanderReadoutTextView.setTextColor(
                             ContextCompat.getColor(mFragment.getContext(), R.color.material_red_500));
                 }
@@ -182,17 +183,17 @@ public class LcPlayer {
         switch (mMode) {
             case LifeCounterFragment.STAT_POISON:
                 mPoison += delta;
-                mReadoutTextView.setText(mPoison + "");
+                mReadoutTextView.setText(formatInt(mPoison, false));
                 if (mCommanderReadoutTextView != null) {
-                    mCommanderReadoutTextView.setText(mPoison + "");
+                    mCommanderReadoutTextView.setText(formatInt(mPoison, false));
                 }
                 break;
             case LifeCounterFragment.STAT_COMMANDER:
             case LifeCounterFragment.STAT_LIFE:
                 mLife += delta;
-                mReadoutTextView.setText(mLife + "");
+                mReadoutTextView.setText(formatInt(mLife, false));
                 if (mCommanderReadoutTextView != null) {
-                    mCommanderReadoutTextView.setText(mLife + "");
+                    mCommanderReadoutTextView.setText(formatInt(mLife, false));
                 }
                 break;
         }
@@ -318,13 +319,13 @@ public class LcPlayer {
                 /* If it's commander, also inflate the entry to display in the grid, and set up the casting button */
                 if (displayMode == LifeCounterFragment.DISPLAY_COMMANDER) {
                     mView.findViewById(R.id.commanderCastText).setVisibility(View.VISIBLE);
-                    mCommanderCastingButton.setText("" + mCommanderCasting);
+                    mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
                     mCommanderCastingButton.setVisibility(View.VISIBLE);
                     mCommanderCastingButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             mCommanderCasting++;
-                            mCommanderCastingButton.setText("" + mCommanderCasting);
+                            mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
                         }
                     });
                     mCommanderCastingButton.setOnLongClickListener(new View.OnLongClickListener() {
@@ -334,7 +335,7 @@ public class LcPlayer {
                             if (mCommanderCasting < 0) {
                                 mCommanderCasting = 0;
                             }
-                            mCommanderCastingButton.setText("" + mCommanderCasting);
+                            mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
                             return true;
                         }
                     });
@@ -427,6 +428,18 @@ public class LcPlayer {
     }
 
     /**
+     * @param i       The int to turn into a string
+     * @param addSign true to have a leading "+", false otherwise
+     * @return The String representation of i
+     */
+    private String formatInt(int i, boolean addSign) {
+        if (addSign) {
+            return String.format(Locale.getDefault(), "%+d", i);
+        }
+        return String.format(Locale.getDefault(), "%d", i);
+    }
+
+    /**
      * Returns a string containing all the player data in the form:
      * name; life; life History; poison; poison History; default Life; commander History; commander casting
      * The history entries are comma delimited
@@ -434,47 +447,55 @@ public class LcPlayer {
      * @return A string of player data
      */
     public String toString() {
-        String data = mName.replace(";", "") + ";";
+        StringBuilder data = new StringBuilder();
+        data.append(mName.replace(";", ""));
+        data.append(";");
 
         boolean first = true;
-        data += mLife + ";";
+        data.append(mLife);
+        data.append(";");
         for (HistoryEntry entry : mLifeHistory) {
             if (first) {
                 first = false;
-                data += entry.mAbsolute;
             } else {
-                data += "," + entry.mAbsolute;
+                data.append(",");
             }
+            data.append(entry.mAbsolute);
         }
 
-        data += ";";
+        data.append(";");
 
         first = true;
-        data += mPoison + ";";
+        data.append(mPoison);
+        data.append(";");
         for (HistoryEntry entry : mPoisonHistory) {
             if (first) {
                 first = false;
-                data += entry.mAbsolute;
             } else {
-                data += "," + entry.mAbsolute;
+                data.append(",");
             }
+            data.append(entry.mAbsolute);
         }
 
-        data += ";" + mDefaultLifeTotal;
+        data.append(";");
+        data.append(mDefaultLifeTotal);
 
         first = true;
         for (CommanderEntry entry : mCommanderDamage) {
             if (first) {
                 first = false;
-                data += ";" + entry.mLife;
+                data.append(";");
             } else {
-                data += "," + entry.mLife;
+                data.append(",");
             }
+            data.append(entry.mLife);
         }
 
-        data += ";" + mCommanderCasting;
+        data.append(";");
+        data.append(mCommanderCasting);
+        data.append(";\n");
 
-        return data + ";\n";
+        return data.toString();
     }
 
     /**
@@ -509,7 +530,7 @@ public class LcPlayer {
         /* Redraw life totals */
         changeValue(0, true);
         if (mCommanderCastingButton != null) {
-            mCommanderCastingButton.setText("" + mCommanderCasting);
+            mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
         }
     }
 
@@ -642,7 +663,7 @@ public class LcPlayer {
          * @param context a context to use in the superclass constructor
          * @param type    either STAT_LIFE or STAT_POISON
          */
-        public HistoryArrayAdapter(Context context, int type) {
+        HistoryArrayAdapter(Context context, int type) {
             super(context, R.layout.life_counter_history_adapter_row,
                     (type == LifeCounterFragment.STAT_LIFE) ? mLifeHistory : mPoisonHistory);
             mType = type;
@@ -678,15 +699,15 @@ public class LcPlayer {
 
             switch (mType) {
                 case LifeCounterFragment.STAT_LIFE:
-                    ((TextView) view.findViewById(R.id.absolute)).setText(mLifeHistory.get(position).mAbsolute + "");
+                    ((TextView) view.findViewById(R.id.absolute)).setText(formatInt(mLifeHistory.get(position).mAbsolute, false));
                     if (mLifeHistory.get(position).mDelta > 0) {
-                        ((TextView) view.findViewById(R.id.relative)).setText("+" + mLifeHistory.get(position).mDelta);
+                        ((TextView) view.findViewById(R.id.relative)).setText(formatInt(mLifeHistory.get(position).mDelta, true));
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
                                 ContextCompat.getColor(mFragment.getContext(),
                                         R.color.material_green_500)
                         );
                     } else {
-                        ((TextView) view.findViewById(R.id.relative)).setText("" + mLifeHistory.get(position).mDelta);
+                        ((TextView) view.findViewById(R.id.relative)).setText(formatInt(mLifeHistory.get(position).mDelta, true));
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
                                 ContextCompat.getColor(mFragment.getContext(),
                                         R.color.material_red_500)
@@ -694,16 +715,16 @@ public class LcPlayer {
                     }
                     break;
                 case LifeCounterFragment.STAT_POISON:
-                    ((TextView) view.findViewById(R.id.absolute)).setText(mPoisonHistory.get(position).mAbsolute + "");
+                    ((TextView) view.findViewById(R.id.absolute)).setText(formatInt(mPoisonHistory.get(position).mAbsolute, false));
                     if (mPoisonHistory.get(position).mDelta > 0) {
                         ((TextView) view.findViewById(R.id.relative))
-                                .setText("+" + mPoisonHistory.get(position).mDelta);
+                                .setText(formatInt(mPoisonHistory.get(position).mDelta, true));
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
                                 ContextCompat.getColor(mFragment.getContext(),
                                         R.color.material_green_500)
                         );
                     } else {
-                        ((TextView) view.findViewById(R.id.relative)).setText("" + mPoisonHistory.get(position).mDelta);
+                        ((TextView) view.findViewById(R.id.relative)).setText(formatInt(mPoisonHistory.get(position).mDelta, true));
                         ((TextView) view.findViewById(R.id.relative)).setTextColor(
                                 ContextCompat.getColor(mFragment.getContext(),
                                         R.color.material_red_500)
@@ -726,7 +747,7 @@ public class LcPlayer {
          *
          * @param context a context to use in the superclass constructor
          */
-        public CommanderDamageAdapter(Context context) {
+        CommanderDamageAdapter(Context context) {
             super(context, R.layout.life_counter_player_commander, mCommanderDamage);
         }
 
@@ -750,8 +771,8 @@ public class LcPlayer {
             }
             assert view != null;
 
-            ((TextView) view.findViewById(R.id.player_name)).setText(mCommanderDamage.get(position).mName + "");
-            ((TextView) view.findViewById(R.id.player_readout)).setText(mCommanderDamage.get(position).mLife + "");
+            ((TextView) view.findViewById(R.id.player_name)).setText(mCommanderDamage.get(position).mName);
+            ((TextView) view.findViewById(R.id.player_readout)).setText(formatInt(mCommanderDamage.get(position).mLife, false));
 
             view.findViewById(R.id.dividerH).setVisibility(View.GONE);
             view.findViewById(R.id.dividerV).setVisibility(View.GONE);

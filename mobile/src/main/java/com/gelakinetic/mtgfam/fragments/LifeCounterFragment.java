@@ -250,12 +250,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     @Override
     public void onPause() {
         super.onPause();
-        String playerData = "";
+        StringBuilder playerData = new StringBuilder();
         for (LcPlayer player : mPlayers) {
             player.onPause();
-            playerData += player.toString();
+            playerData.append(player.toString());
         }
-        PreferenceAdapter.setPlayerData(getContext(), playerData);
+        PreferenceAdapter.setPlayerData(getContext(), playerData.toString());
         mGridLayout.removeAllViews();
         mPlayers.clear();
 
