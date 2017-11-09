@@ -658,8 +658,8 @@ public class CardHelpers {
 
                 /* Make sure at least one card was found */
                 if (cardCursor.getCount() == 0) {
-                    ToastWrapper.makeText(activity, activity.getString(R.string.toast_no_card),
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(activity, activity.getString(R.string.toast_no_card),
+                            ToastWrapper.LENGTH_LONG);
                     DatabaseManager.getInstance(activity, false).closeDatabase(false);
                     return null;
                 }

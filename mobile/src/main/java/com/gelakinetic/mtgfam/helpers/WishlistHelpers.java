@@ -68,7 +68,7 @@ public class WishlistHelpers {
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
     }
 
@@ -96,7 +96,7 @@ public class WishlistHelpers {
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
     }
 
@@ -164,7 +164,7 @@ public class WishlistHelpers {
                 br.close();
             }
         } catch (NumberFormatException e) {
-            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         } catch (IOException e) {
             /* Catches file not found exception when wishlist doesn't exist */
         }

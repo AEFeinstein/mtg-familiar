@@ -476,8 +476,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (tradeNames.length == 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
-                            .show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -506,8 +505,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (tradeNames.length == 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
-                            .show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -521,8 +519,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 File toDelete = new File(getActivity().getFilesDir(), tradeNames[position] +
                                         TradeFragment.TRADE_EXTENSION);
                                 if (!toDelete.delete()) {
-                                    ToastWrapper.makeText(getActivity(), toDelete.getName() + " " +
-                                            getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG).show();
+                                    ToastWrapper.makeAndShowText(getActivity(), toDelete.getName() + " " +
+                                            getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG);
                                 }
                             }
                         })

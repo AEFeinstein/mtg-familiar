@@ -849,8 +849,8 @@ public class CardViewFragment extends FamiliarFragment {
                                     mActivity.clearLoading();
 
                                     CardViewFragment.this.removeDialog(getFragmentManager());
-                                    ToastWrapper.makeText(mActivity, spiceException.getMessage(),
-                                            ToastWrapper.LENGTH_SHORT).show();
+                                    ToastWrapper.makeAndShowText(mActivity, spiceException.getMessage(),
+                                            ToastWrapper.LENGTH_SHORT);
                                 }
                             }
 
@@ -863,9 +863,9 @@ public class CardViewFragment extends FamiliarFragment {
                                         mPriceInfo = result;
                                         showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
-                                        ToastWrapper.makeText(mActivity,
+                                        ToastWrapper.makeAndShowText(mActivity,
                                                 R.string.card_view_price_not_found,
-                                                ToastWrapper.LENGTH_SHORT).show();
+                                                ToastWrapper.LENGTH_SHORT);
                                     }
                                 }
                             }
@@ -1045,11 +1045,10 @@ public class CardViewFragment extends FamiliarFragment {
                             getResources().getText(R.string.card_view_send_to)));
 
                 } catch (Exception e) {
-                    ToastWrapper.makeText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG)
-                            .show();
+                    ToastWrapper.makeAndShowText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG);
                 }
             } else if (mToastString != null) {
-                ToastWrapper.makeText(mActivity, mToastString, ToastWrapper.LENGTH_LONG).show();
+                ToastWrapper.makeAndShowText(mActivity, mToastString, ToastWrapper.LENGTH_LONG);
             }
         }
     }
@@ -1433,7 +1432,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mImageScrollView.setVisibility(View.GONE);
                     mTextScrollView.setVisibility(View.VISIBLE);
                 }
-                ToastWrapper.makeText(mActivity, mError, ToastWrapper.LENGTH_LONG).show();
+                ToastWrapper.makeAndShowText(mActivity, mError, ToastWrapper.LENGTH_LONG);
             }
             mActivity.clearLoading();
         }
@@ -1530,7 +1529,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             } else {
                 removeDialog(getFragmentManager());
-                ToastWrapper.makeText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT);
             }
             mActivity.clearLoading();
         }
@@ -1562,8 +1561,8 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                 } else {
                     /* Permission denied */
-                    ToastWrapper.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
+                            ToastWrapper.LENGTH_LONG);
                 }
             }
         }

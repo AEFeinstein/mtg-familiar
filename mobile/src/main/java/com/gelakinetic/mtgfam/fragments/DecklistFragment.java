@@ -525,8 +525,8 @@ public class DecklistFragment extends FamiliarListFragment {
                     startActivity(Intent.createChooser(sendIntent,
                             getString(R.string.decklist_share)));
                 } catch (ActivityNotFoundException anfe) {
-                    ToastWrapper.makeText(getActivity(), R.string.error_no_email_client,
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
+                            ToastWrapper.LENGTH_LONG);
                 }
                 return true;
             }
@@ -539,7 +539,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 deckName.append(DecklistFragment.DECK_EXTENSION);
                 DecklistHelpers.WriteCompressedDecklist(getContext(), mCompressedDecklist,
                         deckName.toString());
-                ToastWrapper.makeText(getActivity(), savedToast, ToastWrapper.LENGTH_SHORT);
+                ToastWrapper.makeAndShowText(getActivity(), savedToast, ToastWrapper.LENGTH_SHORT);
                 return true;
             }
             default: {

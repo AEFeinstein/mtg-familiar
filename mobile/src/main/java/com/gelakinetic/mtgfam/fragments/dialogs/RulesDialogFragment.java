@@ -127,8 +127,8 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                                 }
                                 String keyword = nameInput.getText().toString();
                                 if (keyword.length() < 3) {
-                                    ToastWrapper.makeText(getActivity(),
-                                            R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG).show();
+                                    ToastWrapper.makeAndShowText(getActivity(),
+                                            R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG);
                                 } else {
                                     searchArgs = new Bundle();
                                     searchArgs.putString(RulesFragment.KEYWORD_KEY, keyword);

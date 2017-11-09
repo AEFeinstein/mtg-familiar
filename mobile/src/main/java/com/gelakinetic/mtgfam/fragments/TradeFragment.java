@@ -350,11 +350,11 @@ public class TradeFragment extends FamiliarListFragment {
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_save_error,
-                    ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_save_error,
+                    ToastWrapper.LENGTH_LONG);
         } catch (IllegalArgumentException e) {
-            ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_invalid_chars,
-                    ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_invalid_chars,
+                    ToastWrapper.LENGTH_LONG);
         }
 
         /* And resort to the expected order after saving */
@@ -405,8 +405,8 @@ public class TradeFragment extends FamiliarListFragment {
         } catch (FileNotFoundException e) {
             /* Do nothing, the autosave doesn't exist */
         } catch (IOException e) {
-            ToastWrapper.makeText(this.getActivity(), e.getLocalizedMessage(),
-                    ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
+                    ToastWrapper.LENGTH_LONG);
         } finally {
             if (br != null) {
                 IOUtils.closeQuietly(br);
@@ -493,8 +493,8 @@ public class TradeFragment extends FamiliarListFragment {
         try {
             startActivity(Intent.createChooser(sendIntent, getString(R.string.trader_share)));
         } catch (android.content.ActivityNotFoundException ex) {
-            ToastWrapper.makeText(getActivity(), getString(R.string.error_no_email_client),
-                    ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(getActivity(), getString(R.string.error_no_email_client),
+                    ToastWrapper.LENGTH_SHORT);
         }
     }
 

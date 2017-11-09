@@ -333,7 +333,7 @@ public class GatheringsIO {
         File path = new File(filesDir, FOLDER_PATH);
         File gatheringFile = new File(path, fileName);
         if (!gatheringFile.delete()) {
-            ToastWrapper.makeText(ctx, fileName + " " + ctx.getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(ctx, fileName + " " + ctx.getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG);
         }
     }
 

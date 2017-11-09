@@ -102,9 +102,9 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                                 String strNumber = dciEditText.getText().toString();
 
                                 if (strNumber.isEmpty()) {
-                                    ToastWrapper.makeText(getActivity(),
+                                    ToastWrapper.makeAndShowText(getActivity(),
                                             getString(R.string.profile_invalid_dci),
-                                            ToastWrapper.LENGTH_SHORT).show();
+                                            ToastWrapper.LENGTH_SHORT);
 
                                     return;
                                 }

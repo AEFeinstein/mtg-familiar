@@ -58,7 +58,7 @@ public class ZipUtils {
 
         /* Make sure external storage exists */
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            ToastWrapper.makeText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG);
             return;
         }
 
@@ -88,16 +88,16 @@ public class ZipUtils {
         }
         try {
             zipIt(zipOut, files, activity);
-            ToastWrapper.makeText(activity, activity.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
-                    ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(activity, activity.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
+                    ToastWrapper.LENGTH_SHORT);
         } catch (ZipException e) {
             if (e.getMessage().equals("No entries")) {
-                ToastWrapper.makeText(activity, activity.getString(R.string.main_export_no_data), ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(activity, activity.getString(R.string.main_export_no_data), ToastWrapper.LENGTH_SHORT);
             } else {
-                ToastWrapper.makeText(activity, activity.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(activity, activity.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT);
             }
         } catch (IOException e) {
-            ToastWrapper.makeText(activity, activity.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(activity, activity.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT);
         }
     }
 
@@ -110,7 +110,7 @@ public class ZipUtils {
 
         /* Make sure external storage exists */
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            ToastWrapper.makeText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG);
             return;
         }
 
@@ -130,9 +130,9 @@ public class ZipUtils {
         File zipIn = new File(sdCard, BACKUP_FILE_NAME);
         try {
             unZipIt(new ZipFile(zipIn), activity);
-            ToastWrapper.makeText(activity, activity.getString(R.string.main_import_success), ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(activity, activity.getString(R.string.main_import_success), ToastWrapper.LENGTH_SHORT);
         } catch (IOException e) {
-            ToastWrapper.makeText(activity, activity.getString(R.string.main_import_fail), ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(activity, activity.getString(R.string.main_import_fail), ToastWrapper.LENGTH_SHORT);
         }
     }
 

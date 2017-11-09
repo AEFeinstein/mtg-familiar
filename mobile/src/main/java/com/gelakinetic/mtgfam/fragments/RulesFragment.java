@@ -292,7 +292,7 @@ public class RulesFragment extends FamiliarFragment {
                                     // Set the clipboard's primary clip.
                                     clipboard.setPrimaryClip(clip);
                                     // Alert the user
-                                    ToastWrapper.makeText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT).show();
+                                    ToastWrapper.makeAndShowText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT);
                                 }
                             }
                             return true;
@@ -302,7 +302,7 @@ public class RulesFragment extends FamiliarFragment {
                     /* Cursor had a size of 0, boring */
                     cursor.close();
                     if (!isBanned) {
-                        ToastWrapper.makeText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT).show();
+                        ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
                         getFragmentManager().popBackStack();
                     }
                 }
@@ -313,7 +313,7 @@ public class RulesFragment extends FamiliarFragment {
             }
         } else {
             if (!isBanned) { /* Cursor is null. weird. */
-                ToastWrapper.makeText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
                 getFragmentManager().popBackStack();
             }
         }

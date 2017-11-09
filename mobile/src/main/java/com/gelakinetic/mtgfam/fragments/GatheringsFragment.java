@@ -238,7 +238,7 @@ public class GatheringsFragment extends FamiliarFragment {
      */
     public void SaveGathering(String _gatheringName) {
         if (_gatheringName.length() <= 0) {
-            ToastWrapper.makeText(getActivity(), R.string.gathering_toast_no_name, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(getActivity(), R.string.gathering_toast_no_name, ToastWrapper.LENGTH_LONG);
             return;
         }
 

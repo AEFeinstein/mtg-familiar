@@ -790,7 +790,7 @@ public class SearchViewFragment extends FamiliarFragment {
             os.writeObject(searchCriteria);
             os.close();
         } catch (IOException e) {
-            ToastWrapper.makeText(this.getActivity(), R.string.search_toast_cannot_save, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_save, ToastWrapper.LENGTH_LONG);
         }
     }
 
@@ -943,7 +943,7 @@ public class SearchViewFragment extends FamiliarFragment {
             checkDialogButtonColors();
 
         } catch (IOException | ClassNotFoundException e) {
-            ToastWrapper.makeText(this.getActivity(), R.string.search_toast_cannot_load, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_load, ToastWrapper.LENGTH_LONG);
         }
     }
 

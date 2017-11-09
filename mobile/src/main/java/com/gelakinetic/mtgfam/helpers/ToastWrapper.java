@@ -19,11 +19,9 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 /**
@@ -53,17 +51,14 @@ public class ToastWrapper {
      * @param duration How long to display the message.  Either {@link #LENGTH_SHORT} or
      *                 {@link #LENGTH_LONG}
      */
-    @SuppressLint("ShowToast")
-    public static Toast makeText(Context context, CharSequence text,
-                                 int duration) {
+    public static void makeAndShowText(Context context, CharSequence text, int duration) {
         if (mToast != null) {
             mToast.cancel();
         }
         if (context != null && !((Activity) context).isFinishing()) {
             mToast = Toast.makeText(context, text, duration);
-            return mToast;
+            mToast.show();
         }
-        return null;
     }
 
     /**
@@ -76,16 +71,15 @@ public class ToastWrapper {
      *                 {@link #LENGTH_LONG}
      * @throws Resources.NotFoundException if the resource can't be found.
      */
-    @SuppressLint("ShowToast")
-    @NonNull
-    public static Toast makeText(@NonNull Context context, int resId,
-                                 int duration)
+    public static void makeAndShowText(Context context, int resId, int duration)
             throws Resources.NotFoundException {
         if (mToast != null) {
             mToast.cancel();
         }
-        mToast = Toast.makeText(context, resId, duration);
-        return mToast;
+        if (context != null && !((Activity) context).isFinishing()) {
+            mToast = Toast.makeText(context, resId, duration);
+            mToast.show();
+        }
     }
 
 }

@@ -103,7 +103,7 @@ public class ManaPoolFragment extends FamiliarFragment {
             }
         }
         if (!loadSuccessful) {
-            ToastWrapper.makeText(this.getActivity(), R.string.mana_pool_error_toast, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(this.getActivity(), R.string.mana_pool_error_toast, ToastWrapper.LENGTH_LONG);
             this.getActivity().getSupportFragmentManager().popBackStack();
             return null;
         }

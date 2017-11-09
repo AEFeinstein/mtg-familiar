@@ -64,7 +64,7 @@ public class DecklistHelpers {
             }
             fos.close();
         } catch (IOException ioe) {
-            ToastWrapper.makeText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
 
     }
@@ -107,7 +107,7 @@ public class DecklistHelpers {
             }
             fos.close();
         } catch (IOException ioe) {
-            ToastWrapper.makeText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
 
     }
@@ -161,7 +161,7 @@ public class DecklistHelpers {
                 br.close();
             }
         } catch (NumberFormatException nfe) {
-            ToastWrapper.makeText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         } catch (IOException ioe) {
             /* Catches file not found exception when decklist doesn't exist */
         }

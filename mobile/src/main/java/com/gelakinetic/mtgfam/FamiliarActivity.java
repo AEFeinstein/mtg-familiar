@@ -757,16 +757,16 @@ public class FamiliarActivity extends AppCompatActivity {
                         File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
                         if (mtr.exists()) {
                             if (!mtr.delete()) {
-                                ToastWrapper.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG).show();
+                                ToastWrapper.makeAndShowText(this, mtr.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG);
                             }
                             if (!ipg.delete()) {
-                                ToastWrapper.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG).show();
+                                ToastWrapper.makeAndShowText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG);
                             }
                             if (!jar.delete()) {
-                                ToastWrapper.makeText(this, jar.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG).show();
+                                ToastWrapper.makeAndShowText(this, jar.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG);
                             }
                         }
                     }
@@ -849,7 +849,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     /* empty cursor, just return */
-                    ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
                     this.finish();
                     shouldSelectItem = false;
                 } finally {
@@ -896,14 +896,14 @@ public class FamiliarActivity extends AppCompatActivity {
                                     new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                         } else {
                             /* empty cursor, just return */
-                            ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
+                            ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
                             this.finish();
                             shouldSelectItem = false;
                         }
                         cursor.close();
                     } else if (!screenLaunched) {
                         /* null cursor, just return */
-                        ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
+                        ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
                         this.finish();
                         shouldSelectItem = false;
                     }
@@ -1486,7 +1486,7 @@ public class FamiliarActivity extends AppCompatActivity {
             ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (null == conMan) {
                 if (shouldShowToast) {
-                    ToastWrapper.makeText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
+                    ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
                 }
                 return -1;
             }
@@ -1496,12 +1496,12 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
             }
             if (shouldShowToast) {
-                ToastWrapper.makeText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
             }
             return -1;
         } catch (NullPointerException e) {
             if (shouldShowToast) {
-                ToastWrapper.makeText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
             }
             return -1;
         }
