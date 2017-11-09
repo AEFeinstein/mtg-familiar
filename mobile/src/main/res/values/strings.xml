@@ -47,8 +47,6 @@
 <string name="not_deleted">"not deleted"</string>
 <string name="no_network">"Network is not available"</string>
 <string name="filter_title_view_card">"View Card"</string>
-<string name="tutor_cards_notice">"Powered by TutorCards"</string>
-<string name="tutor_cards_fail">"TutorCards unreachable"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"PAGES"</string>
@@ -129,8 +127,6 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 Program licenced under the &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-<!--&lt;br&gt;-->
-<!--Card Image Search powered by &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.-->
 "</string>
 <string name="main_drawer_open">"Open navigation drawer"</string>
 <string name="main_drawer_close">"Close navigation drawer"</string>

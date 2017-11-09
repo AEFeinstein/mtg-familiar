@@ -19,8 +19,6 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
@@ -39,9 +37,6 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SelectableItemAdapter;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.util.ArrayList;
 
@@ -131,34 +126,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         super.onPause();
         mListAdapter.removePendingNow();
 
-    }
-
-    /**
-     * Receive the result from the card image search, then fill in the name edit text on the
-     * UI thread.
-     *
-     * @param multiverseId The multiverseId of the card the query returned
-     */
-    @Override
-    public void receiveTutorCardsResult(long multiverseId) {
-
-        try {
-            SQLiteDatabase database =
-                    DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-            Cursor card = CardDbAdapter.fetchCardByMultiverseId(multiverseId, new String[]{
-                    CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME}, database);
-            final String name = card.getString(card.getColumnIndex(CardDbAdapter.KEY_NAME));
-            getFamiliarActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mNameField.setText(name);
-                }
-            });
-            card.close();
-        } catch (FamiliarDbException e) {
-            e.printStackTrace();
-        }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**

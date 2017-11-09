@@ -36,13 +36,6 @@
             android:padding="8sp"
             android:text="TextView" />
 
-        <ImageView
-            android:id="@+id/imageview3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:src="@drawable/tutor_cards_logo" />
-
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/imageview1"
             android:layout_width="fill_parent"

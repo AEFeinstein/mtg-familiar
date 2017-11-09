@@ -46,8 +46,6 @@
 <string name="not_deleted">"não excluída"</string>
 <string name="no_network">"A rede não está disponível"</string>
 <string name="filter_title_view_card">"Vizualizar Carta"</string>
-<string name="tutor_cards_notice">"Desenvolvido por Tutor Cards"</string>
-<string name="tutor_cards_fail">"TutorCards não localizado"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"PÁGINAS"</string>
@@ -128,8 +126,6 @@ Magic the Gathering e Magic the Gathering cartões são ™ &amp; © Wizards of 
 Programa licenciado sob a &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt; GNU General Public License v3 + &lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt; Creative Commons Atribuição-Compartilhamento pela mesma licença 3.0 Unported License &lt;a&gt; .&lt;br&gt;
-&lt;!--&lt;br&gt;--&gt;
-&lt;!--Busca por imagem de carta desenvolvido por &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;--&gt;
 "</string>
 <string name="main_drawer_open">"Abrir coluna de navegação"</string>
 <string name="main_drawer_close">"Fechar coluna de navegação"</string>

@@ -1054,19 +1054,4 @@ public class SearchViewFragment extends FamiliarFragment {
         inflater.inflate(R.menu.search_menu, menu);
     }
 
-    /**
-     * Called when there is a result from Tutor.cards visual search
-     * It starts the ResultListFragment with the multiverseId to show
-     * the card
-     *
-     * @param multiverseId The multiverse ID of the card the query returned
-     */
-    @Override
-    public void receiveTutorCardsResult(long multiverseId) {
-
-        Bundle args = new Bundle();
-        args.putSerializable(ResultListFragment.CARD_ID, multiverseId);
-        ResultListFragment rlFrag = new ResultListFragment();
-        startNewFragment(rlFrag, args);
-    }
 }

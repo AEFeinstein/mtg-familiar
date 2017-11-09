@@ -339,15 +339,6 @@ public abstract class FamiliarFragment extends Fragment {
     }
 
     /**
-     * Override this to receive results from Tutor Cards visual image search queries
-     *
-     * @param multiverseId The multiverseId of the card the query returned
-     */
-    public void receiveTutorCardsResult(long multiverseId) {
-
-    }
-
-    /**
      * Override this to receive results from ResultListDialogFragments
      *
      * @param orderByStr The sort order string
