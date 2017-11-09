@@ -45,7 +45,7 @@ public abstract class NumberButtonOnClickListener implements View.OnClickListene
                 .setFragmentManager(fragment.getFragmentManager())
                 .setLabelText(this.getLabelText())
                 .setMaxNumber(BigDecimal.valueOf(this.getMaxNumber()))
-                .setMinNumber(BigDecimal.valueOf(0))
+                .setMinNumber(BigDecimal.valueOf(this.getMinNumber()))
                 .setPlusMinusVisibility(View.GONE)
                 .setStyleResId(fragment.getResourceIdFromAttr(R.attr.num_picker_style));
         if (this.getInitialValue() != null) {
@@ -71,6 +71,10 @@ public abstract class NumberButtonOnClickListener implements View.OnClickListene
 
     public Integer getMaxNumber() {
         return 99;
+    }
+
+    public Integer getMinNumber() {
+        return 0;
     }
 
     public abstract void onDialogNumberSet(Integer number);

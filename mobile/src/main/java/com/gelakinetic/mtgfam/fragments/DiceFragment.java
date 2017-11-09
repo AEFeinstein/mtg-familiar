@@ -161,6 +161,11 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
                 }
 
                 @Override
+                public Integer getMinNumber() {
+                    return 1;
+                }
+
+                @Override
                 public Integer getInitialValue() {
                     return mLastNumber;
                 }
