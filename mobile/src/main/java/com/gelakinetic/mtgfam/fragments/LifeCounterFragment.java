@@ -110,11 +110,13 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 
         m9000Player = MediaPlayer.create(getActivity(), R.raw.over_9000);
-        m9000Player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            public void onCompletion(MediaPlayer mp) {
-                onUtteranceCompleted(LIFE_ANNOUNCE);
-            }
-        });
+        if (m9000Player != null) {
+            m9000Player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    onUtteranceCompleted(LIFE_ANNOUNCE);
+                }
+            });
+        }
     }
 
     /**
