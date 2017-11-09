@@ -355,6 +355,18 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 /* Figure out what we're updating */
                                 MtgCard data;
                                 TradeFragment.CardDataAdapter adapter;
+
+                                /* Make sure positionForDialog is in bounds */
+                                int max;
+                                if (sideForDialog == TradeFragment.LEFT) {
+                                    max = getParentTradeFragment().mListLeft.size();
+                                } else {
+                                    max = getParentTradeFragment().mListRight.size();
+                                }
+                                if (positionForDialog < 0 || positionForDialog >= max) {
+                                    return;
+                                }
+
                                 if (sideForDialog == TradeFragment.LEFT) {
                                     data = getParentTradeFragment().mListLeft.get(positionForDialog);
                                     adapter = getParentTradeFragment().mListAdapterLeft;
