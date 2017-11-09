@@ -140,6 +140,8 @@ public class DecklistHelpers {
 
         try {
             String line;
+            // Sanitize the deckname before loading in case it was saved improperly on an earlier version of Familiar
+            deckName = deckName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
             BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)));
             try {
                 boolean isSideboard;
