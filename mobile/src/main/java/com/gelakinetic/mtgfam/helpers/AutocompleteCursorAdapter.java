@@ -40,6 +40,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardSearchProvider;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.RejectedExecutionException;
+
 /**
  * This cursor adapter provides suggestions for card names directly from the database
  */
@@ -85,7 +87,11 @@ public class AutocompleteCursorAdapter extends SimpleCursorAdapter implements Lo
             public void afterTextChanged(Editable editable) {
                 /* Preform a query */
                 mAutocompleteFilter[0] = String.valueOf(editable);
-                mFragment.getLoaderManager().restartLoader(0, null, AutocompleteCursorAdapter.this);
+                try {
+                    mFragment.getLoaderManager().restartLoader(0, null, AutocompleteCursorAdapter.this);
+                } catch (RejectedExecutionException e) {
+                    // Autocomplete broke, but at least it won't take down the whole app
+                }
             }
         });
     }
