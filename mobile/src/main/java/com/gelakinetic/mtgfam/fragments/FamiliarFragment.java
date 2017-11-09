@@ -126,7 +126,7 @@ public abstract class FamiliarFragment extends Fragment {
      * Called when the Fragment is no longer resumed.  This is generally
      * tied to {@link FamiliarActivity#onPause() Activity.onPause} of the containing
      * Activity's lifecycle.
-     *
+     * <p>
      * In this case, always remove the dialog, since it can contain stale references to the pre-rotated activity and
      * fragment after rotation. The one exception is the change log dialog, which would get removed by TTS checking
      * intents on the first install. It also cleans up any pending spice requests (price loading)
@@ -234,16 +234,20 @@ public abstract class FamiliarFragment extends Fragment {
      * @param args Any arguments which the fragment takes
      */
     public void startNewFragment(Fragment frag, Bundle args) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        if (fm != null) {
-            frag.setArguments(args);
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.fragment_container, frag, FamiliarActivity.FRAGMENT_TAG);
-            ft.addToBackStack(null);
-            ft.commit();
-            if (getActivity() != null) {
-                getFamiliarActivity().hideKeyboard();
+        try {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            if (fm != null) {
+                frag.setArguments(args);
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.fragment_container, frag, FamiliarActivity.FRAGMENT_TAG);
+                ft.addToBackStack(null);
+                ft.commit();
+                if (getActivity() != null) {
+                    getFamiliarActivity().hideKeyboard();
+                }
             }
+        } catch (IllegalStateException e) {
+            // If the fragment can't be shown, fail quietly
         }
     }
 
