@@ -1413,11 +1413,11 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
                 spanEnd--;
 
                 //Delete any extra split chars
-                if (spanEnd >= 0 && isSplitChar(text.charAt(spanEnd))) {
+                if (spanEnd >= 0 && spanEnd < text.length() && isSplitChar(text.charAt(spanEnd))) {
                     text.delete(spanEnd, spanEnd + 1);
                 }
 
-                if (spanStart >= 0 && isSplitChar(text.charAt(spanStart))) {
+                if (spanStart >= 0 && spanStart < text.length() && isSplitChar(text.charAt(spanStart))) {
                     text.delete(spanStart, spanStart + 1);
                 }
             }
