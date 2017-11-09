@@ -199,39 +199,15 @@ public class LcPlayer {
 
         /* If we're not committing yet, make a new history entry */
         if (!mCommitting) {
-            /* Create a new historyEntry */
-            HistoryEntry entry = new HistoryEntry();
-            /* If there are no entries, assume life is mDefaultLifeTotal */
-            if (mLifeHistory.size() == 0) {
-                entry.mDelta = mLife - mDefaultLifeTotal;
-            } else {
-                entry.mDelta = mLife - mLifeHistory.get(0).mAbsolute;
-            }
-            entry.mAbsolute = mLife;
-            if (entry.mDelta != 0) {
-                mLifeHistory.add(0, entry);
-                if (mHistoryLifeAdapter != null) {
-                    mHistoryLifeAdapter.notifyDataSetChanged();
-                }
-            }
-
-            entry = new HistoryEntry();
-            if (mPoisonHistory.size() == 0) {
-                entry.mDelta = mPoison;
-            } else {
-                entry.mDelta = mPoison - mPoisonHistory.get(0).mAbsolute;
-            }
-            entry.mAbsolute = mPoison;
-            if (entry.mDelta != 0) {
-                mPoisonHistory.add(0, entry);
-                if (mHistoryPoisonAdapter != null) {
-                    mHistoryPoisonAdapter.notifyDataSetChanged();
-                }
-            }
+            addNewLifeHistoryEntry();
+            addNewPoisonHistoryEntry();
         } else if (!immediate) {
             /* Modify current historyEntry */
             switch (mMode) {
                 case LifeCounterFragment.STAT_POISON: {
+                    if (mPoisonHistory.isEmpty()) {
+                        addNewPoisonHistoryEntry();
+                    }
                     mPoisonHistory.get(0).mDelta += delta;
                     mPoisonHistory.get(0).mAbsolute += delta;
                     if (null != mHistoryPoisonAdapter) {
@@ -241,6 +217,9 @@ public class LcPlayer {
                 }
                 case LifeCounterFragment.STAT_COMMANDER:
                 case LifeCounterFragment.STAT_LIFE: {
+                    if (mLifeHistory.isEmpty()) {
+                        addNewLifeHistoryEntry();
+                    }
                     mLifeHistory.get(0).mDelta += delta;
                     mLifeHistory.get(0).mAbsolute += delta;
                     if (null != mHistoryLifeAdapter) {
@@ -257,6 +236,48 @@ public class LcPlayer {
             mHandler.postDelayed(mLifePoisonCommitter,
                     Integer.parseInt(PreferenceAdapter.getLifeTimer(mFragment.getContext())));
 
+        }
+    }
+
+    /**
+     * Create and add a new HistoryEntry to the mPoisonHistory
+     * If there was a change, notify the adapter
+     */
+    private void addNewPoisonHistoryEntry() {
+        HistoryEntry entry = new HistoryEntry();
+        if (mPoisonHistory.size() == 0) {
+            entry.mDelta = mPoison;
+        } else {
+            entry.mDelta = mPoison - mPoisonHistory.get(0).mAbsolute;
+        }
+        entry.mAbsolute = mPoison;
+        if (entry.mDelta != 0) {
+            mPoisonHistory.add(0, entry);
+            if (mHistoryPoisonAdapter != null) {
+                mHistoryPoisonAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    /**
+     * Create and add a new HistoryEntry to the mDefaultLifeTotal
+     * If there was a change, notify the adapter
+     */
+    private void addNewLifeHistoryEntry() {
+        /* Create a new historyEntry */
+        HistoryEntry entry = new HistoryEntry();
+        /* If there are no entries, assume life is mDefaultLifeTotal */
+        if (mLifeHistory.size() == 0) {
+            entry.mDelta = mLife - mDefaultLifeTotal;
+        } else {
+            entry.mDelta = mLife - mLifeHistory.get(0).mAbsolute;
+        }
+        entry.mAbsolute = mLife;
+        if (entry.mDelta != 0) {
+            mLifeHistory.add(0, entry);
+            if (mHistoryLifeAdapter != null) {
+                mHistoryLifeAdapter.notifyDataSetChanged();
+            }
         }
     }
 
