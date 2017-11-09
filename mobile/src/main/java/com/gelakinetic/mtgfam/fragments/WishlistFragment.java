@@ -262,8 +262,17 @@ public class WishlistFragment extends FamiliarListFragment {
 
         /* Clear, then read the wishlist. This is done in onResume() in case the user quick-searched for a card, and
          * added it to the wishlist from the CardViewFragment */
-        mCompressedWishlist.clear();
-        readAndCompressWishlist(null);
+        new Thread(new Runnable() {
+            public void run() {
+                readAndCompressWishlist(null);
+                mListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
 
         /* Show the total price, if desired */
         if (mShowTotalWishlistPrice) {
@@ -273,9 +282,6 @@ public class WishlistFragment extends FamiliarListFragment {
             mTotalPriceField.setVisibility(View.GONE);
             mTotalPriceDivider.setVisibility(View.GONE);
         }
-
-        /* Tell the adapter to redraw */
-        mListAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -370,9 +376,18 @@ public class WishlistFragment extends FamiliarListFragment {
      * This notifies the fragment when a change has been made from a card's dialog
      */
     @Override
-    public void onWishlistChanged(String cardName) {
-        readAndCompressWishlist(cardName);
-        mListAdapter.notifyDataSetChanged();
+    public void onWishlistChanged(final String cardName) {
+        new Thread(new Runnable() {
+            public void run() {
+                readAndCompressWishlist(cardName);
+                mListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 
     /**
