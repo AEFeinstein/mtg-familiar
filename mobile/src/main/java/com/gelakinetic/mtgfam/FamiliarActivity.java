@@ -1009,7 +1009,7 @@ public class FamiliarActivity extends AppCompatActivity
             finish();
         }
 
-        mDrawerList.setItemChecked(mCurrentFrag, true);
+        //mDrawerList.setItemChecked(mCurrentFrag, true);
         return isDeepLink;
     }
 
@@ -1081,13 +1081,70 @@ public class FamiliarActivity extends AppCompatActivity
         // Handle navigation view item clicks
         final int id = item.getItemId();
 
-        switch (id) {
-            case R.id.drawer_search: {
+        if (id == R.id.drawer_settings) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+            ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
+            ft.commit();
+        } else if (id == R.id.drawer_force_update) {
+            if (getNetworkState(FamiliarActivity.this, true) != -1) {
+                PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
+                startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
+            }
+        } else if (id == R.id.drawer_donate) {
+            showDialogFragment(FamiliarActivityDialogFragment.DIALOG_DONATE);
+        } else if (id == R.id.drawer_about) {
+            showDialogFragment(FamiliarActivityDialogFragment.DIALOG_ABOUT);
+        } else if (id == R.id.drawer_whats_new) {
+            showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
+        } else if (id == R.id.drawer_save_data) {
+            ZipUtils.exportData(FamiliarActivity.this);
+        } else if (id == R.id.drawer_load_data) {
+            ZipUtils.importData(FamiliarActivity.this);
+        } else {
 
+            Fragment newFragment = null;
+            if (id == R.id.drawer_search) {
+                newFragment = new SearchViewFragment();
+            } else if (id == R.id.drawer_life) {
+                newFragment = new LifeCounterFragment();
+            } else if (id == R.id.drawer_mana) {
+                newFragment = new ManaPoolFragment();
+            } else if (id == R.id.drawer_dice) {
+                newFragment = new DiceFragment();
+            } else if (id == R.id.drawer_trade) {
+                newFragment = new TradeFragment();
+            } else if (id == R.id.drawer_wishlist) {
+                newFragment = new WishlistFragment();
+            } else if (id == R.id.drawer_decklist) {
+                newFragment = new DecklistFragment();
+            } else if (id == R.id.drawer_timer) {
+                newFragment = new RoundTimerFragment();
+            } else if (id == R.id.drawer_rules) {
+                newFragment = new RulesFragment();
+            } else if (id == R.id.drawer_judge) {
+                newFragment = new JudgesCornerFragment();
+            } else if (id == R.id.drawer_mojhosto) {
+                newFragment = new MoJhoStoFragment();
+            } else if (id == R.id.drawer_profile) {
+                newFragment = new ProfileFragment();
+            }
+
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm != null) {
+                FragmentTransaction ft = fm.beginTransaction();
+
+                try {
+                    ft.replace(R.id.fragment_container, newFragment, FamiliarActivity.FRAGMENT_TAG);
+                    ft.commit();
+                } catch (NullPointerException npe) {
+                    // todo: declare that it was not initialized.
+                }
             }
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
+        item.setChecked(true);
         return true;
     }
 
@@ -1206,13 +1263,13 @@ public class FamiliarActivity extends AppCompatActivity
             ft.commit();
 
             /* Color the icon when the fragment changes */
-            View drawerListItemView = mDrawerList.getChildAt(position);
+            /*View drawerListItemView = mDrawerList.getChildAt(position);
             if (drawerListItemView != null) {
                 TextView textView = drawerListItemView.findViewById(R.id.drawer_entry_name);
                 if (textView != null) {
                     mPagesAdapter.colorDrawerEntry(textView);
                 }
-            }
+            }*/
         }
     }
 
@@ -1228,7 +1285,7 @@ public class FamiliarActivity extends AppCompatActivity
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         /* Sync the toggle state after onRestoreInstanceState has occurred. */
-        //mDrawerToggle.syncState();
+        mDrawerToggle.syncState();
     }
 
     /**
@@ -1240,7 +1297,7 @@ public class FamiliarActivity extends AppCompatActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         /* Pass any configuration change to the drawer toggles */
-        //mDrawerToggle.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -1521,7 +1578,7 @@ public class FamiliarActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.containsKey(CURRENT_FRAG)) {
             mCurrentFrag = savedInstanceState.getInt(CURRENT_FRAG);
-            mDrawerList.setItemChecked(mCurrentFrag, true);
+            //mDrawerList.setItemChecked(mCurrentFrag, true);
 
             mRefreshLayout.setRefreshing(savedInstanceState.getBoolean(IS_REFRESHING));
         }

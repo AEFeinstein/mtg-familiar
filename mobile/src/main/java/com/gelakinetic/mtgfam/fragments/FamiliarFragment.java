@@ -87,7 +87,8 @@ public abstract class FamiliarFragment extends Fragment {
         super.onResume();
         if ((getActivity()) != null) {
             getFamiliarActivity().getFragmentResults();
-            getFamiliarActivity().mDrawerLayout.closeDrawer(getFamiliarActivity().mDrawerList);
+            // todo: come back to this
+            //getFamiliarActivity().mDrawerLayout.closeDrawer(getFamiliarActivity().mDrawerList);
         }
     }
 

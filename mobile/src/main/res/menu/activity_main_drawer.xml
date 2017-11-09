@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/drawer_main">
+    <group android:id="@+id/drawer_main"
+        android:checkableBehavior="single">
 
         <item
             android:id="@+id/drawer_search"
@@ -12,6 +13,11 @@
             android:id="@+id/drawer_life"
             android:title="@string/main_life_counter"
             android:icon="?attr/ic_drawer_life" />
+
+        <item
+            android:id="@+id/drawer_mana"
+            android:title="@string/main_mana_pool"
+            android:icon="?attr/ic_drawer_mana" />
 
         <item
             android:id="@+id/drawer_dice"
