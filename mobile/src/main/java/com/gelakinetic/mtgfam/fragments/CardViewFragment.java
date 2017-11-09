@@ -1561,7 +1561,7 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                 } else {
                     /* Permission denied */
-                    ToastWrapper.makeAndShowText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
+                    ToastWrapper.makeAndShowText(this.getContext(), R.string.card_view_unable_to_save_image,
                             ToastWrapper.LENGTH_LONG);
                 }
             }

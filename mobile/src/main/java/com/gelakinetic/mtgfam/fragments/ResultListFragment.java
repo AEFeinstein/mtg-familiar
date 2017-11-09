@@ -207,7 +207,7 @@ public class ResultListFragment extends FamiliarFragment {
             }
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
-                ToastWrapper.makeAndShowText(this.getActivity(), getString(R.string.search_toast_no_results), ToastWrapper.LENGTH_SHORT
+                ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, ToastWrapper.LENGTH_SHORT
                 );
                 if (!getActivity().isTaskRoot()) {
                     getActivity().finish();

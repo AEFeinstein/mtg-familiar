@@ -103,7 +103,7 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
 
                                 if (strNumber.isEmpty()) {
                                     ToastWrapper.makeAndShowText(getActivity(),
-                                            getString(R.string.profile_invalid_dci),
+                                            R.string.profile_invalid_dci,
                                             ToastWrapper.LENGTH_SHORT);
 
                                     return;

@@ -275,7 +275,7 @@ public abstract class FamiliarFragment extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ToastWrapper.makeAndShowText(getActivity(), getString(R.string.error_database), ToastWrapper.LENGTH_LONG);
+                    ToastWrapper.makeAndShowText(getActivity(), R.string.error_database, ToastWrapper.LENGTH_LONG);
                 }
             });
             /* Finish the fragment if requested */

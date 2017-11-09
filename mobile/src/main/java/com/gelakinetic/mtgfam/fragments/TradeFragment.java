@@ -493,7 +493,7 @@ public class TradeFragment extends FamiliarListFragment {
         try {
             startActivity(Intent.createChooser(sendIntent, getString(R.string.trader_share)));
         } catch (android.content.ActivityNotFoundException ex) {
-            ToastWrapper.makeAndShowText(getActivity(), getString(R.string.error_no_email_client),
+            ToastWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
                     ToastWrapper.LENGTH_SHORT);
         }
     }
