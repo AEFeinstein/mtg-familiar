@@ -381,6 +381,12 @@ public class LcPlayer {
         mReadoutTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /* Commit any changes before showing the dialog */
+                if (mCommitting) {
+                    mCommitting = false;
+                    mHandler.removeCallbacks(mLifePoisonCommitter);
+                    mLifePoisonCommitter.run();
+                }
                 showDialog(LcPlayerDialogFragment.DIALOG_CHANGE_LIFE, -1);
             }
         });
