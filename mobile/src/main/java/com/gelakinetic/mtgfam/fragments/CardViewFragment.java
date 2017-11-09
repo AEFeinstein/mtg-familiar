@@ -1271,13 +1271,13 @@ public class CardViewFragment extends FamiliarFragment {
             /* Image download failed, just return null */
             if (bitmap == null) {
                 return null;
-            } else {
-                // Then try caching the image
-                try {
-                    getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
-                } catch (Exception e) {
-                    // Cache failed
-                }
+            }
+
+            // Then try caching the image
+            try {
+                getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
+            } catch (Exception e) {
+                // Cache failed
             }
 
             try {
