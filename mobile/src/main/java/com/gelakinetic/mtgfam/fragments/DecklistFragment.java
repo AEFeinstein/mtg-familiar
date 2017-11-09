@@ -539,7 +539,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 deckName.append(DecklistFragment.DECK_EXTENSION);
                 DecklistHelpers.WriteCompressedDecklist(getContext(), mCompressedDecklist,
                         deckName.toString());
-                ToastWrapper.makeText(getContext(), savedToast, ToastWrapper.LENGTH_SHORT);
+                ToastWrapper.makeText(getActivity(), savedToast, ToastWrapper.LENGTH_SHORT);
                 return true;
             }
             default: {
