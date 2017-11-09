@@ -1251,8 +1251,6 @@ public class CardViewFragment extends FamiliarFragment {
 
                         /* Download the bitmap */
                         bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null, getContext()));
-                        /* Cache it */
-                        getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
                     } catch (Exception e) {
                         /* Something went wrong */
                         try {
@@ -1273,6 +1271,13 @@ public class CardViewFragment extends FamiliarFragment {
             /* Image download failed, just return null */
             if (bitmap == null) {
                 return null;
+            } else {
+                // Then try caching the image
+                try {
+                    getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
+                } catch (Exception e) {
+                    // Cache failed
+                }
             }
 
             try {
