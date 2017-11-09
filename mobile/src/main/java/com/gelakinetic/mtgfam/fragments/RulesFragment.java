@@ -762,7 +762,7 @@ public class RulesFragment extends FamiliarFragment {
             View v = convertView;
             if (v == null) {
                 LayoutInflater inf = getActivity().getLayoutInflater();
-                v = inf.inflate(mLayoutResourceId, null);
+                v = inf.inflate(mLayoutResourceId, parent, false);
             }
             assert v != null;
             DisplayItem data = mItems.get(position);

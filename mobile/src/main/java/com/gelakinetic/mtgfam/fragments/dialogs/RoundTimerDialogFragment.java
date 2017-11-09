@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -52,7 +53,7 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
 
         switch (DIALOG_SET_WARNINGS) {
             case DIALOG_SET_WARNINGS: {
-                final View v = View.inflate(this.getActivity(), R.layout.round_timer_warning_dialog, null);
+                @SuppressLint("InflateParams") final View v = getActivity().getLayoutInflater().inflate(R.layout.round_timer_warning_dialog, null, false);
                 final CheckBox chkFifteen = v.findViewById(R.id.timer_pref_fifteen);
                 final CheckBox chkTen = v.findViewById(R.id.timer_pref_ten);
                 final CheckBox chkFive = v.findViewById(R.id.timer_pref_five);
