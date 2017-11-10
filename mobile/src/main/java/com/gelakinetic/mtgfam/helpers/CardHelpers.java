@@ -683,6 +683,14 @@ public class CardHelpers {
                 cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, fields, database);
             }
 
+            /* Make sure at least one card was found */
+            if (cardCursor.getCount() == 0) {
+                ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
+                        ToastWrapper.LENGTH_LONG);
+                DatabaseManager.getInstance(activity, false).closeDatabase(false);
+                return null;
+            }
+
             /* Don't rely on the user's given name, get it from the DB just to be sure */
             card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
