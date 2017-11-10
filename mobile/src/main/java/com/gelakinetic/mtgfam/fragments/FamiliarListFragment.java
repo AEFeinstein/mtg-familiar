@@ -144,6 +144,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             if (!isInSelectMode()) {
                 /* Sometimes an item will be selected after we exit select mode */
                 setItemSelected(holder.itemView, position, false, false);
+            } else {
+                setItemSelected(holder.itemView, position, getItem(position).isSelected(), false);
             }
         }
 
