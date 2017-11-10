@@ -814,7 +814,12 @@ public class FamiliarActivity extends AppCompatActivity {
 
             Uri data = intent.getData();
             Bundle args = new Bundle();
-            assert data != null;
+
+            if (null == data || null == data.getAuthority()) {
+                ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                this.finish();
+                return false;
+            }
 
             boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
             if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
