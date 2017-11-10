@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
@@ -137,6 +138,15 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataAdapter.ViewHolder>
             extends SelectableItemAdapter<T, VH> {
 
+        @Override
+        @CallSuper
+        public void onBindViewHolder(VH holder, int position) {
+            if (!isInSelectMode()) {
+                /* Sometimes an item will be selected after we exit select mode */
+                setItemSelected(holder.itemView, position, false, false);
+            }
+        }
+
         public CardDataAdapter(ArrayList<T> values) {
             super(values, PreferenceAdapter.getUndoTimeout(getContext()));
         }
@@ -147,16 +157,15 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 Snackbar undoBar = Snackbar.make(
                         getFamiliarActivity().findViewById(R.id.fragment_container),
                         getString(R.string.cardlist_item_deleted) + " " + getItemName(position),
-                        pendingTimeout
+                        getPendingTimeout()
                 );
                 undoBar.setAction(R.string.cardlist_undo, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Runnable pendingRemovalRunnable = pendingRunnables.get(position);
-                        pendingRunnables.remove(position);
+                        Runnable pendingRemovalRunnable = getAndRemovePendingRunnable(position);
                         onUndoDelete(position);
                         if (pendingRemovalRunnable != null) {
-                            handler.removeCallbacks(pendingRemovalRunnable);
+                            removePending(pendingRemovalRunnable);
                         }
                         notifyItemChanged(position);
                     }
@@ -178,6 +187,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             final TextView mCardName;
 
             ViewHolder(ViewGroup view, @LayoutRes final int layoutRowId) {
+                // The inflated view is set to itemView
                 super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));
                 mCardName = itemView.findViewById(R.id.card_name);
             }
@@ -185,32 +195,39 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             @Override
             public void onClick(View view) {
                 if (isInSelectMode()) {
-                    if (selectedItems.get(getAdapterPosition(), false)) {
-                        selectedItems.delete(getAdapterPosition());
-                        itemView.setSelected(false);
-                        if (selectedItems.size() < 1) {
+                    int position = getAdapterPosition();
+                    if (itemView.isSelected()) {
+                        // Unselect the item
+                        setItemSelected(itemView, position, false, true);
+
+                        // If there are no more items
+                        if (getNumSelectedItems() < 1) {
+                            // Finish select mode
                             mActionMode.finish();
                             setInSelectMode(false);
                         }
-                        notifyItemChanged(getAdapterPosition());
-                        return;
+                    } else {
+                        // Select the item
+                        setItemSelected(itemView, position, true, true);
                     }
-                    itemView.setSelected(true);
-                    selectedItems.put(getAdapterPosition(), true);
-                    notifyItemChanged(getAdapterPosition());
                 }
             }
 
             @Override
             public boolean onLongClick(View view) {
                 if (!isInSelectMode()) {
+                    // Start select mode
                     mActionMode = getFamiliarActivity().startSupportActionMode(mActionModeCallback);
-                    itemView.setSelected(true);
-                    selectedItems.put(getAdapterPosition(), true);
                     setInSelectMode(true);
-                    notifyItemChanged(getAdapterPosition());
+
+                    // Then select the item
+                    setItemSelected(itemView, getAdapterPosition(), true, true);
+
+                    // This click was handled
                     return true;
                 }
+
+                // The click was not handled
                 return false;
             }
         }

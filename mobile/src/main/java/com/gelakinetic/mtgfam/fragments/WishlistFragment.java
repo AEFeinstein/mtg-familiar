@@ -627,7 +627,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         public String getItemName(int position) {
-            return items.get(position).mName;
+            return getItem(position).mName;
         }
 
         @Override
@@ -637,14 +637,10 @@ public class WishlistFragment extends FamiliarListFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            super.onBindViewHolder(holder, position);
 
             /* Get all the wishlist info for this entry */
-            final CompressedWishlistInfo info = items.get(position);
-
-            if (!isInSelectMode()) {
-                /* Sometimes an item will be selected after we exit select mode */
-                holder.itemView.setSelected(false);
-            }
+            final CompressedWishlistInfo info = getItem(position);
 
             if (isItemPendingRemoval(position)) {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
@@ -841,8 +837,9 @@ public class WishlistFragment extends FamiliarListFragment {
                 if (!isInSelectMode()) {
                     showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD,
                             mCardName.getText().toString());
+                } else {
+                    super.onClick(view);
                 }
-                super.onClick(view);
             }
 
         }

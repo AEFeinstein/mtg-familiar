@@ -874,13 +874,14 @@ public class TradeFragment extends FamiliarListFragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            super.onBindViewHolder(holder, position);
 
-            final MtgCard item = items.get(position);
+            final MtgCard item = getItem(position);
 
             if (isItemPendingRemoval(position)) {
                 holder.itemView.findViewById(R.id.trade_row).setVisibility(View.GONE);
             } else {
-                holder.itemView.setSelected(selectedItems.get(position, false));
+                setItemSelected(holder.itemView, position, isItemSelected(position), false);
                 holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
                 holder.mCardName.setText(item.mName);
                 holder.mCardSet.setText(item.setName);
@@ -916,7 +917,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         @Override
         public String getItemName(int position) {
-            return items.get(position).mName;
+            return getItem(position).mName;
         }
 
         class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
@@ -949,9 +950,9 @@ public class TradeFragment extends FamiliarListFragment {
                             side,
                             getAdapterPosition()
                     );
+                } else {
+                    super.onClick(view);
                 }
-
-                super.onClick(view);
 
             }
 

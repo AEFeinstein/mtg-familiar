@@ -786,13 +786,9 @@ public class DecklistFragment extends FamiliarListFragment {
          */
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
+            super.onBindViewHolder(holder, position);
 
-            if (!isInSelectMode()) {
-                /* Sometimes an item will be selected after we exit select mode */
-                holder.itemView.setSelected(false);
-            }
-
-            final CompressedDecklistInfo info = items.get(position);
+            final CompressedDecklistInfo info = getItem(position);
 
             if (isItemPendingRemoval(position)) {
                 holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
@@ -805,13 +801,13 @@ public class DecklistFragment extends FamiliarListFragment {
                     holder.itemView.setOnLongClickListener(holder);
 
                     /* Do the selection stuff */
-                    if (selectedItems.get(position, false)) {
-                        holder.itemView.setSelected(true);
+                    if (isItemSelected(position)) {
+                        setItemSelected(holder.itemView, position, true, false);
                         holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(
                                 R.drawable.ic_menu_done, 0, 0, 0);
                         holder.mCardNumberOf.setText("");
                     } else {
-                        holder.itemView.setSelected(false);
+                        setItemSelected(holder.itemView, position, false, false);
                         holder.mCardNumberOf
                                 .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                         holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
@@ -858,11 +854,12 @@ public class DecklistFragment extends FamiliarListFragment {
             int totalCards = 0;
             String[] types = getResources().getStringArray(R.array.card_types_extra);
 
-            for (CompressedDecklistInfo cdi : items) {
+            for (int i = 0; i < getItemCount(); i++) {
+                CompressedDecklistInfo cdi = getItem(i);
                 if (cdi.header != null) {
                     continue;
                 }
-                final int position = items.indexOf(cdi);
+                final int position = itemsIndexOf(cdi);
                 /* The card is NOT pending removal */
                 if (!isItemPendingRemoval(position)
                         /* The type is not above -1 OR is not in the sideboard */
@@ -899,8 +896,8 @@ public class DecklistFragment extends FamiliarListFragment {
         int getTotalCards() {
 
             int totalCards = 0;
-            for (CompressedDecklistInfo cdi : items) {
-                totalCards += cdi.getTotalNumber();
+            for (int i = 0; i < getItemCount(); i++) {
+                totalCards += getItem(i).getTotalNumber();
             }
             return totalCards;
 
@@ -920,7 +917,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         @Override
         public String getItemName(int position) {
-            return items.get(position).mName;
+            return getItem(position).mName;
         }
 
         @Override
@@ -955,12 +952,12 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 if (!isInSelectMode()) {
                     /* if we aren't in select mode, open a dialog to edit this card */
-                    final CompressedDecklistInfo item = items.get(getAdapterPosition());
+                    final CompressedDecklistInfo item = getItem(getAdapterPosition());
                     showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
                             item.mName, item.mIsSideboard);
+                } else {
+                    super.onClick(view);
                 }
-
-                super.onClick(view);
 
             }
 

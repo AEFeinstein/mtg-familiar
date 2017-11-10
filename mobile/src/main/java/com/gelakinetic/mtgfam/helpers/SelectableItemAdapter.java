@@ -28,6 +28,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,15 +40,15 @@ import java.util.List;
 public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.ViewHolder>
         extends RecyclerView.Adapter<VH> {
 
-    protected final List<T> items;
+    private final List<T> items;
 
     private boolean inSelectMode;
-    protected final SparseBooleanArray selectedItems;
+    private final SparseBooleanArray selectedItems;
 
-    protected final Handler handler;
-    protected final SparseArray<Runnable> pendingRunnables;
+    private final Handler handler;
+    private final SparseArray<Runnable> pendingRunnables;
 
-    protected final int pendingTimeout;
+    private final int pendingTimeout;
 
     public SelectableItemAdapter(ArrayList<T> values, final int millisPending) {
         items = values;
@@ -114,6 +115,10 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
         pendingRunnables.clear();
     }
 
+    protected void removePending(Runnable pendingRemovalRunnable) {
+        handler.removeCallbacks(pendingRemovalRunnable);
+    }
+
     /**
      * If we are in select mode.
      *
@@ -145,10 +150,17 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
     }
 
     public void deleteSelectedItems() {
+        ArrayList<Integer> toRemove = new ArrayList<>();
         for (int i = 0; i < selectedItems.size(); i++) {
             if (selectedItems.valueAt(i)) {
-                remove(selectedItems.keyAt(i));
+                toRemove.add(selectedItems.keyAt(i));
             }
+        }
+        Collections.sort(toRemove);
+        while (!toRemove.isEmpty()) {
+            int lastIdx = toRemove.size() - 1;
+            remove(toRemove.get(lastIdx));
+            toRemove.remove(lastIdx);
         }
     }
 
@@ -174,6 +186,47 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
         notifyItemChanged(position);
     }
 
+    protected void setItemSelected(View view, int position, boolean selected, boolean shouldNotify) {
+        view.setSelected(selected);
+        if (selected) {
+            selectedItems.put(position, true);
+        } else {
+            selectedItems.delete(position);
+        }
+        view.invalidate();
+
+        // Notify of any changes
+        if(shouldNotify) {
+            notifyDataSetChanged();
+        }
+    }
+
+    protected int getNumSelectedItems() {
+        return selectedItems.size();
+    }
+
+    protected boolean isItemSelected(int position) {
+        return selectedItems.get(position, false);
+    }
+
+    protected T getItem(int position) {
+        return items.get(position);
+    }
+
+    protected int itemsIndexOf(T item) {
+        return items.indexOf(item);
+    }
+
+    protected Runnable getAndRemovePendingRunnable(int position) {
+        Runnable runnable = pendingRunnables.get(position);
+        pendingRunnables.remove(position);
+        return runnable;
+    }
+
+    protected int getPendingTimeout() {
+        return pendingTimeout;
+    }
+
     /**
      * ViewHolder implementing the needed listeners and defining swipeable and its get/setters.
      */
@@ -187,7 +240,7 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
             super(view);
         }
 
-        public boolean getIsSwipeable() {
+        boolean getIsSwipeable() {
             return isSwipeable;
         }
 
