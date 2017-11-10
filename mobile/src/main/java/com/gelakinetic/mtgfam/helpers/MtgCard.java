@@ -35,7 +35,7 @@ import java.util.Locale;
 /**
  * Encapsulate all information about a magic card
  */
-public class MtgCard extends Card {
+public class MtgCard extends Card implements SelectableItem {
     private static final String DELIMITER = "%";
 
     /* Wish and trade list fields */
@@ -49,6 +49,7 @@ public class MtgCard extends Card {
     public int mSide;
     public PriceInfo priceInfo;
     private int mIndex;
+    private boolean selected = false;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -367,5 +368,15 @@ public class MtgCard extends Card {
 
     public int getIndex() {
         return mIndex;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return selected;
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

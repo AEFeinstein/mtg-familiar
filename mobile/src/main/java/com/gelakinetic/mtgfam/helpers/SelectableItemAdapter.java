@@ -22,13 +22,11 @@ package com.gelakinetic.mtgfam.helpers;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,13 +35,12 @@ import java.util.List;
  * @param <T>  type of what is held in the ArrayList
  * @param <VH> the ViewHolder that is used for the adapter
  */
-public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.ViewHolder>
+public abstract class SelectableItemAdapter<T extends SelectableItem, VH extends SelectableItemAdapter.ViewHolder>
         extends RecyclerView.Adapter<VH> {
 
     private final List<T> items;
 
     private boolean inSelectMode;
-    private final SparseBooleanArray selectedItems;
 
     private final Handler handler;
     private final SparseArray<Runnable> pendingRunnables;
@@ -52,7 +49,6 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
 
     public SelectableItemAdapter(ArrayList<T> values, final int millisPending) {
         items = values;
-        selectedItems = new SparseBooleanArray();
         handler = new Handler();
         inSelectMode = false;
         pendingRunnables = new SparseArray<>();
@@ -140,9 +136,9 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
     public ArrayList<T> getSelectedItems() {
 
         ArrayList<T> selectedItemsLocal = new ArrayList<>();
-        for (int i = 0; i < this.selectedItems.size(); i++) {
-            if (this.selectedItems.valueAt(i)) {
-                selectedItemsLocal.add(items.get(this.selectedItems.keyAt(i)));
+        for (T item : items) {
+            if (item.isSelected()) {
+                selectedItemsLocal.add(item);
             }
         }
         return selectedItemsLocal;
@@ -150,17 +146,10 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
     }
 
     public void deleteSelectedItems() {
-        ArrayList<Integer> toRemove = new ArrayList<>();
-        for (int i = 0; i < selectedItems.size(); i++) {
-            if (selectedItems.valueAt(i)) {
-                toRemove.add(selectedItems.keyAt(i));
+        for (int i = items.size() - 1; i >= 0; i--) {
+            if (items.get(i).isSelected()) {
+                items.remove(i);
             }
-        }
-        Collections.sort(toRemove);
-        while (!toRemove.isEmpty()) {
-            int lastIdx = toRemove.size() - 1;
-            remove(toRemove.get(lastIdx));
-            toRemove.remove(lastIdx);
         }
     }
 
@@ -170,7 +159,9 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
 
     public void deselectAll() {
 
-        selectedItems.clear();
+        for (T item : items) {
+            item.setSelected(false);
+        }
         setInSelectMode(false);
         notifyDataSetChanged();
 
@@ -189,24 +180,30 @@ public abstract class SelectableItemAdapter<T, VH extends SelectableItemAdapter.
     protected void setItemSelected(View view, int position, boolean selected, boolean shouldNotify) {
         view.setSelected(selected);
         if (selected) {
-            selectedItems.put(position, true);
+            items.get(position).setSelected(true);
         } else {
-            selectedItems.delete(position);
+            items.get(position).setSelected(false);
         }
         view.invalidate();
 
         // Notify of any changes
-        if(shouldNotify) {
+        if (shouldNotify) {
             notifyDataSetChanged();
         }
     }
 
     protected int getNumSelectedItems() {
-        return selectedItems.size();
+        int numSelected = 0;
+        for (T item : items) {
+            if (item.isSelected()) {
+                numSelected++;
+            }
+        }
+        return numSelected;
     }
 
     protected boolean isItemSelected(int position) {
-        return selectedItems.get(position, false);
+        return items.get(position).isSelected();
     }
 
     protected T getItem(int position) {
