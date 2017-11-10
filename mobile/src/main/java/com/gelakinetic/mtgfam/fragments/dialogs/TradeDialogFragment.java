@@ -310,6 +310,17 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_CHANGE_SET: {
+                /* Make sure positionForDialog is in bounds */
+                int max;
+                if (sideForDialog == TradeFragment.LEFT) {
+                    max = getParentTradeFragment().mListLeft.size();
+                } else {
+                    max = getParentTradeFragment().mListRight.size();
+                }
+                if (positionForDialog < 0 || positionForDialog >= max) {
+                    return DontShowDialog();
+                }
+
                 /* Get the card */
                 MtgCard data = (sideForDialog == TradeFragment.LEFT ?
                         getParentTradeFragment().mListLeft.get(positionForDialog) : getParentTradeFragment().mListRight.get(positionForDialog));
