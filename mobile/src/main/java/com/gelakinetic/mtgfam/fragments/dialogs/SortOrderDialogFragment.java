@@ -169,7 +169,6 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                 if (null != getParentFamiliarFragment()) {
                     getParentFamiliarFragment().receiveSortOrder(orderByStr);
                 }
-                dismiss();
             }
         });
 

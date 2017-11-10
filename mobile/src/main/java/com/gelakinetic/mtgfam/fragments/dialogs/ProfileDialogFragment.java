@@ -114,7 +114,6 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                                     getParentProfileFragment().mDCINumber = strNumber;
                                     getParentProfileFragment().checkDCINumber();
                                 }
-                                dismiss();
                             }
                         })
                         .negativeText(R.string.dialog_cancel)
@@ -124,7 +123,6 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                                 if (null != getParentProfileFragment()) {
                                     getParentProfileFragment().checkDCINumber();
                                 }
-                                dismiss();
                             }
                         })
                         .customView(view, false)

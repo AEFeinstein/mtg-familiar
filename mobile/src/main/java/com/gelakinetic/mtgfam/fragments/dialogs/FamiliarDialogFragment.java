@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -50,6 +52,22 @@ public class FamiliarDialogFragment extends DialogFragment {
      * will occur in some cases during state restore.
      */
     public FamiliarDialogFragment() {
+    }
+
+    /**
+     * Display the dialog, adding the fragment to the given FragmentManager. This is a convenience
+     * for explicitly creating a transaction, adding the fragment to it with the given tag, and
+     * committing it. This does not add the transaction to the back stack. When the fragment is
+     * dismissed, a new transaction will be executed to remove it from the activity.
+     *
+     * @param manager The FragmentManager this fragment will be added to.
+     * @param tag     The tag for this fragment, as per FragmentTransaction.add.
+     */
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(this, tag);
+        ft.commitAllowingStateLoss();
     }
 
     /**

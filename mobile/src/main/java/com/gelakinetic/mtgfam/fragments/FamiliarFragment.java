@@ -241,7 +241,7 @@ public abstract class FamiliarFragment extends Fragment {
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragment_container, frag, FamiliarActivity.FRAGMENT_TAG);
                 ft.addToBackStack(null);
-                ft.commit();
+                ft.commitAllowingStateLoss();
                 if (getActivity() != null) {
                     getFamiliarActivity().hideKeyboard();
                 }

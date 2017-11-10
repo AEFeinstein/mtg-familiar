@@ -615,7 +615,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.addToBackStack(null);
                         ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
-                        ft.commit();
+                        ft.commitAllowingStateLoss();
                         shouldCloseDrawer = true;
                         break;
                     }
@@ -1135,7 +1135,7 @@ public class FamiliarActivity extends AppCompatActivity {
             if (!shouldClearFragmentStack) {
                 ft.addToBackStack(null);
             }
-            ft.commit();
+            ft.commitAllowingStateLoss();
 
             /* Color the icon when the fragment changes */
             mPagesAdapter.colorDrawerEntry(mPageEntries[position].getTextView());
@@ -1298,7 +1298,7 @@ public class FamiliarActivity extends AppCompatActivity {
             if (prev != null) {
                 if (prev instanceof DialogFragment) {
                     try {
-                        ((DialogFragment) prev).dismiss();
+                        ((DialogFragment) prev).dismissAllowingStateLoss();
                     } catch (IllegalStateException e) {
                         // Don't remove the dialog I guess
                         return;
@@ -1306,7 +1306,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.remove(prev);
-                ft.commit();
+                ft.commitAllowingStateLoss();
             }
         }
     }
@@ -1372,6 +1372,7 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
         /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result
          * here */
