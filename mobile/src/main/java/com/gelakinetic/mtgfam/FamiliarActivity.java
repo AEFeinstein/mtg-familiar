@@ -1292,7 +1292,12 @@ public class FamiliarActivity extends AppCompatActivity {
             Fragment prev = fragmentManager.findFragmentByTag(FamiliarActivity.DIALOG_TAG);
             if (prev != null) {
                 if (prev instanceof DialogFragment) {
-                    ((DialogFragment) prev).dismiss();
+                    try {
+                        ((DialogFragment) prev).dismiss();
+                    } catch (IllegalStateException e) {
+                        // Don't remove the dialog I guess
+                        return;
+                    }
                 }
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.remove(prev);
