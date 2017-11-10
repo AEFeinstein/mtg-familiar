@@ -262,17 +262,8 @@ public class WishlistFragment extends FamiliarListFragment {
 
         /* Clear, then read the wishlist. This is done in onResume() in case the user quick-searched for a card, and
          * added it to the wishlist from the CardViewFragment */
-        new Thread(new Runnable() {
-            public void run() {
-                readAndCompressWishlist(null);
-                mListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mListAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        }).start();
+        readAndCompressWishlist(null);
+        mListAdapter.notifyDataSetChanged();
 
         /* Show the total price, if desired */
         if (mShowTotalWishlistPrice) {
@@ -377,17 +368,8 @@ public class WishlistFragment extends FamiliarListFragment {
      */
     @Override
     public void onWishlistChanged(final String cardName) {
-        new Thread(new Runnable() {
-            public void run() {
-                readAndCompressWishlist(cardName);
-                mListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mListAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        }).start();
+        readAndCompressWishlist(cardName);
+        mListAdapter.notifyDataSetChanged();
     }
 
     /**
