@@ -24,9 +24,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,7 +44,6 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -74,7 +70,7 @@ public class TradeFragment extends FamiliarListFragment {
 
     /* Side constants */
     public static final int LEFT = 0;
-    private static final int RIGHT = 1;
+    public static final int RIGHT = 1;
     public static final int BOTH = 2;
 
     public static final String TRADE_EXTENSION = ".trade";
@@ -82,11 +78,9 @@ public class TradeFragment extends FamiliarListFragment {
 
     /* Left List and Company */
     public ArrayList<MtgCard> mListLeft;
-    public CardDataAdapter mListAdapterLeft;
 
     /* Right List and Company */
     public ArrayList<MtgCard> mListRight;
-    public CardDataAdapter mListAdapterRight;
 
     /* Total Price Views */
     private TextView mTotalPriceLeft;
@@ -131,38 +125,24 @@ public class TradeFragment extends FamiliarListFragment {
         );
         mNumberOfField.setText("1");
 
-        /* Initialize the left list and company */
         mListLeft = new ArrayList<>();
-        mListAdapterLeft = new CardDataAdapter(mListLeft, LEFT);
-        RecyclerView mListViewLeft = myFragmentView.findViewById(R.id.tradeListLeft);
-        mListViewLeft.setAdapter(mListAdapterLeft);
-        mListViewLeft.setLayoutManager(new LinearLayoutManager(getContext()));
-        ItemTouchHelper.SimpleCallback leftCallback =
-                new SelectableItemTouchHelper(mListAdapterLeft, ItemTouchHelper.LEFT);
-        ItemTouchHelper leftItemTouchHelper = new ItemTouchHelper(leftCallback);
-        leftItemTouchHelper.attachToRecyclerView(mListViewLeft);
+        CardDataAdapter listAdapterLeft = new CardDataAdapter(mListLeft, LEFT);
 
-        /* Initialize the right list and company */
         mListRight = new ArrayList<>();
-        mListAdapterRight = new CardDataAdapter(mListRight, RIGHT);
-        RecyclerView mListViewRight = myFragmentView.findViewById(R.id.tradeListRight);
-        mListViewRight.setAdapter(mListAdapterRight);
-        mListViewRight.setLayoutManager(new LinearLayoutManager(getContext()));
-        ItemTouchHelper.SimpleCallback rightCallback =
-                new SelectableItemTouchHelper(mListAdapterRight, ItemTouchHelper.LEFT);
-        ItemTouchHelper rightItemTouchHelper = new ItemTouchHelper(rightCallback);
-        rightItemTouchHelper.attachToRecyclerView(mListViewRight);
+        CardDataAdapter listAdapterRight = new CardDataAdapter(mListRight, RIGHT);
 
-        /* Set up the adapters so they know each other */
-        mListAdapterLeft.setOtherAdapter(mListAdapterRight);
-        mListAdapterRight.setOtherAdapter(mListAdapterLeft);
+        listAdapterLeft.setOtherAdapter(listAdapterRight);
+        listAdapterRight.setOtherAdapter(listAdapterLeft);
+
+        /* Call to set up our shared UI elements */
+        initializeMembers(
+                myFragmentView,
+                new int[]{R.id.tradeListLeft, R.id.tradeListRight},
+                new CardDataAdapter[]{listAdapterLeft, listAdapterRight});
 
         /* Total price fields */
-        mTotalPriceLeft = myFragmentView.findViewById(R.id.priceTextLeft);
+        mTotalPriceLeft = myFragmentView.findViewById(R.id.priceTextLeft); // TODO merge
         mTotalPriceRight = myFragmentView.findViewById(R.id.priceTextRight);
-
-        /* Temporary? Just to appease FamiliarListFragment's onPause */
-        mListAdapter = mListAdapterLeft;
 
         /* Click listeners to add cards */
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(
@@ -185,8 +165,6 @@ public class TradeFragment extends FamiliarListFragment {
 
                 });
 
-        setUpCheckBoxClickListeners();
-
         mActionModeCallback = new ActionMode.Callback() {
 
             @Override
@@ -205,8 +183,7 @@ public class TradeFragment extends FamiliarListFragment {
             public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.deck_delete_selected: {
-                        mListAdapterLeft.deleteSelectedItems();
-                        mListAdapterRight.deleteSelectedItems();
+                        adaptersDeleteSelectedItems();
                         mActionMode.finish();
                         return true;
                     }
@@ -218,15 +195,10 @@ public class TradeFragment extends FamiliarListFragment {
 
             @Override
             public void onDestroyActionMode(ActionMode actionMode) {
-
-                mListAdapterLeft.deselectAll();
-                mListAdapterRight.deselectAll();
-
+                adaptersDeselectAll();
             }
 
         };
-
-        myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
 
         return myFragmentView;
     }
@@ -257,14 +229,14 @@ public class TradeFragment extends FamiliarListFragment {
         switch (side) {
             case LEFT: {
                 mListLeft.add(0, card);
-                mListAdapterLeft.notifyItemInserted(0);
-                loadPrice(card, mListAdapterLeft);
+                getCardDataAdapter(LEFT).notifyItemInserted(0);
+                loadPrice(card, (CardDataAdapter) getCardDataAdapter(LEFT));
                 break;
             }
             case RIGHT: {
                 mListRight.add(0, card);
-                mListAdapterRight.notifyItemInserted(0);
-                loadPrice(card, mListAdapterRight);
+                getCardDataAdapter(RIGHT).notifyItemInserted(0);
+                loadPrice(card, (CardDataAdapter) getCardDataAdapter(RIGHT));
                 break;
             }
             default: {
@@ -390,12 +362,12 @@ public class TradeFragment extends FamiliarListFragment {
                     if (card.mSide == LEFT) {
                         mListLeft.add(card);
                         if (!card.customPrice) {
-                            loadPrice(card, mListAdapterLeft);
+                            loadPrice(card, (CardDataAdapter) getCardDataAdapter(LEFT));
                         }
                     } else if (card.mSide == RIGHT) {
                         mListRight.add(card);
                         if (!card.customPrice) {
-                            loadPrice(card, mListAdapterRight);
+                            loadPrice(card, (CardDataAdapter) getCardDataAdapter(RIGHT));
                         }
                     }
                 } catch (NumberFormatException | IndexOutOfBoundsException e) {
@@ -526,8 +498,8 @@ public class TradeFragment extends FamiliarListFragment {
     public void onPause() {
 
         super.onPause();
-        mListAdapterRight.removePendingNow();
-        mListAdapterLeft.removePendingNow();
+        getCardDataAdapter(RIGHT).removePendingNow();
+        getCardDataAdapter(LEFT).removePendingNow();
         saveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
 
     }
@@ -672,7 +644,7 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as
                    "bad," (incomplete) */
                 for (MtgCard data : mListLeft) {
-                    if (!mListAdapterLeft.isItemPendingRemoval(mListLeft.indexOf(data))) {
+                    if (!getCardDataAdapter(LEFT).isItemPendingRemoval(mListLeft.indexOf(data))) {
                         if (data.hasPrice()) {
                             totalCards += data.numberOf;
                             totalPrice += data.numberOf * data.price;
@@ -700,7 +672,7 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as "bad,"
                    (incomplete) */
                 for (MtgCard data : mListRight) {
-                    if (!mListAdapterRight.isItemPendingRemoval(mListRight.indexOf(data))) {
+                    if (!getCardDataAdapter(RIGHT).isItemPendingRemoval(mListRight.indexOf(data))) {
                         if (data.hasPrice()) {
                             totalCards += data.numberOf;
                             totalPrice += data.numberOf * data.price;
@@ -744,8 +716,8 @@ public class TradeFragment extends FamiliarListFragment {
         TradeComparator tradeComparator = new TradeComparator(sortOrder);
         Collections.sort(mListLeft, tradeComparator);
         Collections.sort(mListRight, tradeComparator);
-        mListAdapterLeft.notifyDataSetChanged();
-        mListAdapterRight.notifyDataSetChanged();
+        getCardDataAdapter(LEFT).notifyDataSetChanged();
+        getCardDataAdapter(RIGHT).notifyDataSetChanged();
     }
 
     private static class TradeComparator implements Comparator<MtgCard>, Serializable {

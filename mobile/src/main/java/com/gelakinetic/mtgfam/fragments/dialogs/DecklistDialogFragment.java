@@ -181,7 +181,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                         .readAndCompressDecklist(null, deckNames[position]);
                                 getParentDecklistFragment().mCurrentDeck = deckNames[position];
                                 /* Alert things to update */
-                                getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
 
                             }
 
@@ -245,7 +245,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 /* do some cleaning up */
                                 getParentDecklistFragment().mCurrentDeck = "autosave";
                                 getParentDecklistFragment().mCompressedDecklist.clear();
-                                getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                                 getParentDecklistFragment().mDeckName.setText(
                                         R.string.decklist_unnamed_deck
                                 );

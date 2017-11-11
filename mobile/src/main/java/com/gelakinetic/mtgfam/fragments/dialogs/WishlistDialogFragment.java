@@ -99,7 +99,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                                     getParentWishlistFragment().mPriceSetting = which;
                                     PreferenceAdapter.setTradePrice(getContext(),
                                             String.valueOf(getParentWishlistFragment().mPriceSetting));
-                                    getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
+                                    getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                                     getParentWishlistFragment().sumTotalPrice();
                                 }
                                 dialog.dismiss();
@@ -118,7 +118,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 WishlistHelpers.ResetCards(getActivity());
                                 getParentWishlistFragment().mCompressedWishlist.clear();
-                                getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                                 getParentWishlistFragment().sumTotalPrice();
                                 /* Clear input too */
                                 getParentWishlistFragment().mNameField.setText("");

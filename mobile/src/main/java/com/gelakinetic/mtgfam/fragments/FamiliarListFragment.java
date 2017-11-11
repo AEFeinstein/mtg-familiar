@@ -23,6 +23,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SelectableItemAdapter;
+import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
 
 import java.util.ArrayList;
 
@@ -64,33 +66,45 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
     int mPriceFetchRequests = 0;
 
-    RecyclerView mListView;
-
-    public CardDataAdapter mListAdapter;
+    private ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
 
     boolean mCheckboxFoilLocked = false;
 
     ActionMode mActionMode;
     ActionMode.Callback mActionModeCallback;
 
-    ItemTouchHelper itemTouchHelper;
-
     /**
-     * Initializes common members. Generally called in onCreate
+     * Initializes common members. Must be called in onCreate
      *
-     * @param fragmentView the fragment calling this method
+     * @param fragmentView    the view of the fragment calling this method
+     * @param recyclerViewIds the resource IDs of all the recycler views to be managed
+     * @param adapters        the adapters for all the recycler views. Must have the same number of
+     *                        elements as recyclerViewIds
      */
-    void initializeMembers(View fragmentView) {
+    void initializeMembers(View fragmentView, int recyclerViewIds[], CardDataAdapter adapters[]) {
 
+        // Set up the name field
         mNameField = fragmentView.findViewById(R.id.name_search);
+
+        // Set up the number of field
         mNumberOfField = fragmentView.findViewById(R.id.number_input);
+
+        // Set up the recycler views and adapters
+        for (int i = 0; i < recyclerViewIds.length; i++) {
+            RecyclerView recyclerView = fragmentView.findViewById(recyclerViewIds[i]);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(adapters[i]);
+
+            ItemTouchHelper.SimpleCallback callback =
+                    new SelectableItemTouchHelper(adapters[i], ItemTouchHelper.LEFT);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+
+            mCardDataAdapters.add(adapters[i]);
+        }
+
+        // Then set up the checkbox
         mCheckboxFoil = fragmentView.findViewById(R.id.list_foil);
-        mListView = fragmentView.findViewById(R.id.cardlist);
-
-    }
-
-    void setUpCheckBoxClickListeners() {
-
         mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
 
             @Override
@@ -104,7 +118,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             }
 
         });
-
         mCheckboxFoil.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -119,14 +132,32 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         });
 
+        // And hide the camera button
+        fragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
     }
 
     @Override
     public void onPause() {
-
         super.onPause();
-        mListAdapter.removePendingNow();
+        for (CardDataAdapter adapter : mCardDataAdapters) {
+            adapter.removePendingNow();
+        }
+    }
 
+    public CardDataAdapter getCardDataAdapter(int adapterIdx) {
+        return mCardDataAdapters.get(adapterIdx);
+    }
+
+    void adaptersDeleteSelectedItems() {
+        for (CardDataAdapter adapter : mCardDataAdapters) {
+            adapter.deleteSelectedItems();
+        }
+    }
+
+    void adaptersDeselectAll() {
+        for (CardDataAdapter adapter : mCardDataAdapters) {
+            adapter.deselectAll();
+        }
     }
 
     /**

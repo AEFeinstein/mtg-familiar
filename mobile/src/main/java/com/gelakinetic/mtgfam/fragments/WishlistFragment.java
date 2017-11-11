@@ -25,8 +25,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -52,7 +50,6 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
@@ -109,8 +106,14 @@ public class WishlistFragment extends FamiliarListFragment {
             }
         };
 
+        /* Set up the wishlist and adapter, it will be read in onResume() */
+        mCompressedWishlist = new ArrayList<>();
+
         /* Make sure to initialize shared members */
-        initializeMembers(myFragmentView);
+        initializeMembers(
+                myFragmentView,
+                new int[]{R.id.cardlist},
+                new FamiliarListFragment.CardDataAdapter[]{new WishlistFragment.CardDataAdapter(mCompressedWishlist)});
 
         /* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, false));
@@ -123,7 +126,6 @@ public class WishlistFragment extends FamiliarListFragment {
         /* Grab other elements */
         mTotalPriceField = myFragmentView.findViewById(R.id.priceText);
         mTotalPriceDivider = myFragmentView.findViewById(R.id.divider_total_price);
-        mListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,16 +133,6 @@ public class WishlistFragment extends FamiliarListFragment {
                 addCardToWishlist();
             }
         });
-
-        /* Set up the wishlist and adapter, it will be read in onResume() */
-        mCompressedWishlist = new ArrayList<>();
-        mListAdapter = new CardDataAdapter(mCompressedWishlist);
-        mListView.setAdapter(mListAdapter);
-
-        ItemTouchHelper.SimpleCallback callback =
-                new SelectableItemTouchHelper(mListAdapter, ItemTouchHelper.LEFT);
-        itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(mListView);
 
         mActionModeCallback = new ActionMode.Callback() {
             @Override
@@ -159,7 +151,7 @@ public class WishlistFragment extends FamiliarListFragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.deck_delete_selected: {
-                        mListAdapter.deleteSelectedItems();
+                        adaptersDeleteSelectedItems();
                         mActionMode.finish();
                         return true;
                     }
@@ -171,13 +163,9 @@ public class WishlistFragment extends FamiliarListFragment {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                mListAdapter.deselectAll();
+                adaptersDeselectAll();
             }
         };
-
-        myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
-
-        setUpCheckBoxClickListeners();
 
         return myFragmentView;
     }
@@ -242,7 +230,7 @@ public class WishlistFragment extends FamiliarListFragment {
             mCheckboxFoil.setChecked(false);
         }
         /* Redraw the new wishlist with the new card */
-        mListAdapter.notifyDataSetChanged();
+        getCardDataAdapter(0).notifyDataSetChanged();
 
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
@@ -263,7 +251,7 @@ public class WishlistFragment extends FamiliarListFragment {
         /* Clear, then read the wishlist. This is done in onResume() in case the user quick-searched for a card, and
          * added it to the wishlist from the CardViewFragment */
         readAndCompressWishlist(null);
-        mListAdapter.notifyDataSetChanged();
+        getCardDataAdapter(0).notifyDataSetChanged();
 
         /* Show the total price, if desired */
         if (mShowTotalWishlistPrice) {
@@ -369,7 +357,7 @@ public class WishlistFragment extends FamiliarListFragment {
     @Override
     public void onWishlistChanged(final String cardName) {
         readAndCompressWishlist(cardName);
-        mListAdapter.notifyDataSetChanged();
+        getCardDataAdapter(0).notifyDataSetChanged();
     }
 
     /**
@@ -501,7 +489,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     if (mPriceFetchRequests == 0) {
                         getFamiliarActivity().clearLoading();
                     }
-                    mListAdapter.notifyDataSetChanged();
+                    getCardDataAdapter(0).notifyDataSetChanged();
                 }
             }
 
@@ -536,7 +524,7 @@ public class WishlistFragment extends FamiliarListFragment {
                         getFamiliarActivity().clearLoading();
                     }
                     sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
-                    mListAdapter.notifyDataSetChanged();
+                    getCardDataAdapter(0).notifyDataSetChanged();
                 }
             }
         });
@@ -593,7 +581,7 @@ public class WishlistFragment extends FamiliarListFragment {
     private void sortWishlist(String orderByStr) {
         Collections.sort(mCompressedWishlist,
                 new WishlistHelpers.WishlistComparator(orderByStr, mPriceSetting));
-        mListAdapter.notifyDataSetChanged();
+        getCardDataAdapter(0).notifyDataSetChanged();
     }
 
     /**

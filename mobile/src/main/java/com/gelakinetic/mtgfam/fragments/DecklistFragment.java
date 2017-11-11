@@ -25,8 +25,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Html;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -52,7 +50,6 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -128,8 +125,14 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 };
 
+        /* Set up the decklist and adapter, it will be read in onResume() */
+        mCompressedDecklist = new ArrayList<>();
+
         /* Call to set up our shared UI elements */
-        initializeMembers(myFragmentView);
+        initializeMembers(
+                myFragmentView,
+                new int[]{R.id.cardlist},
+                new CardDataAdapter[]{new CardDataAdapter(mCompressedDecklist)});
 
         /* set the autocomplete for card names */
         mNameField.setAdapter(
@@ -143,8 +146,6 @@ public class DecklistFragment extends FamiliarListFragment {
         /* Default the number of cards field */
         mNumberOfField.setText("1");
         mNumberOfField.setOnEditorActionListener(addCardListener);
-
-        mListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
 
@@ -163,11 +164,6 @@ public class DecklistFragment extends FamiliarListFragment {
 
                 });
 
-        /* Set up the decklist and adapter, it will be read in onResume() */
-        mCompressedDecklist = new ArrayList<>();
-        mListAdapter = new CardDataAdapter(mCompressedDecklist);
-        mListView.setAdapter(mListAdapter);
-
         /* Decklist information */
         mDeckName = myFragmentView.findViewById(R.id.decklistName);
         mDeckName.setText(R.string.decklist_unnamed_deck);
@@ -183,15 +179,6 @@ public class DecklistFragment extends FamiliarListFragment {
         mDecklistChain.addComparator(new CardHelpers.CardComparatorCMC());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
-
-        myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
-
-        setUpCheckBoxClickListeners();
-
-        ItemTouchHelper.SimpleCallback callback =
-                new SelectableItemTouchHelper(mListAdapter, ItemTouchHelper.LEFT);
-        itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(mListView);
 
         mActionModeCallback = new ActionMode.Callback() {
 
@@ -212,7 +199,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 switch (item.getItemId()) {
                     case R.id.deck_import_selected: {
                         ArrayList<CompressedDecklistInfo> selectedItems =
-                                ((CardDataAdapter) mListAdapter).getSelectedItems();
+                                ((CardDataAdapter) getCardDataAdapter(0)).getSelectedItems();
                         for (CompressedDecklistInfo info : selectedItems) {
                             WishlistHelpers.addItemToWishlist(getContext(),
                                     info.convertToWishlist());
@@ -221,7 +208,7 @@ public class DecklistFragment extends FamiliarListFragment {
                         return true;
                     }
                     case R.id.deck_delete_selected: {
-                        mListAdapter.deleteSelectedItems();
+                        adaptersDeleteSelectedItems();
                         mActionMode.finish();
                         return true;
                     }
@@ -233,7 +220,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                mListAdapter.deselectAll();
+                adaptersDeselectAll();
             }
 
         };
@@ -314,12 +301,12 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Update the number of cards listed */
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((CardDataAdapter) mListAdapter).getTotalCards(),
-                ((CardDataAdapter) mListAdapter).getTotalCards()));
+                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
 
         /* Redraw the new decklist with the new card */
         setHeaderValues();
-        mListAdapter.notifyDataSetChanged();
+        getCardDataAdapter(0).notifyDataSetChanged();
 
     }
 
@@ -334,10 +321,10 @@ public class DecklistFragment extends FamiliarListFragment {
         mShowTotalDecklistPrice = PreferenceAdapter.getShowTotalDecklistPrice(getContext());
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
-        mListAdapter.notifyDataSetChanged();
+        getCardDataAdapter(0).notifyDataSetChanged();
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((CardDataAdapter) mListAdapter).getTotalCards(),
-                ((CardDataAdapter) mListAdapter).getTotalCards()));
+                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
     }
 
     /**
@@ -437,8 +424,8 @@ public class DecklistFragment extends FamiliarListFragment {
             Collections.sort(mCompressedDecklist, mDecklistChain);
             setHeaderValues();
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                    ((CardDataAdapter) mListAdapter).getTotalCards(),
-                    ((CardDataAdapter) mListAdapter).getTotalCards()));
+                    ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                    ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
         }
@@ -457,7 +444,7 @@ public class DecklistFragment extends FamiliarListFragment {
         clearHeaders();
         Collections.sort(mCompressedDecklist, mDecklistChain);
         setHeaderValues();
-        mListAdapter.notifyDataSetChanged();
+        getCardDataAdapter(0).notifyDataSetChanged();
 
     }
 
@@ -558,7 +545,7 @@ public class DecklistFragment extends FamiliarListFragment {
             if (mCompressedDecklist.get(i).header != null) { /* We found our header */
                 /* Now remove it, and then back up a step */
                 mCompressedDecklist.remove(i);
-                mListAdapter.notifyItemRemoved(i);
+                getCardDataAdapter(0).notifyItemRemoved(i);
                 i--;
             }
         }
@@ -578,7 +565,7 @@ public class DecklistFragment extends FamiliarListFragment {
         header.header = headerText;
         if (!mCompressedDecklist.contains(header)) {
             mCompressedDecklist.add(position, header);
-            mListAdapter.notifyItemInserted(position);
+            getCardDataAdapter(0).notifyItemInserted(position);
             return true;
         }
         return false;
@@ -598,7 +585,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
                 if (!cdi.mName.equals("") /* We only want entries that have a card attached */
                         && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
-                        && ((CardDataAdapter) mListAdapter).getTotalNumberOfType(j) > 0) {
+                        && ((CardDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
                     if (cdi.mIsSideboard /* it is in the sideboard */
                             /* The sideboard header isn't already there */
                             && !insertHeaderAt(i, cardHeaders[0])) {
@@ -674,7 +661,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     if (mPriceFetchRequests == 0) {
                         getFamiliarActivity().clearLoading();
                     }
-                    mListAdapter.notifyDataSetChanged();
+                    getCardDataAdapter(0).notifyDataSetChanged();
                 }
 
             }
