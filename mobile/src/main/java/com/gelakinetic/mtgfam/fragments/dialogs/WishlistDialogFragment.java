@@ -121,7 +121,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                                 getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                                 getParentWishlistFragment().sumTotalPrice();
                                 /* Clear input too */
-                                getParentWishlistFragment().mNameField.setText("");
+                                getParentWishlistFragment().clearCardNameInput();
                                 getParentWishlistFragment().mNumberOfField.setText("1");
                                 getParentWishlistFragment().mCheckboxFoil.setChecked(false);
                                 dialog.dismiss();

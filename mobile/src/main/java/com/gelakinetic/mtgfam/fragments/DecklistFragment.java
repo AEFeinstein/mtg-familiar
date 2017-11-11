@@ -41,7 +41,6 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
@@ -132,16 +131,8 @@ public class DecklistFragment extends FamiliarListFragment {
         initializeMembers(
                 myFragmentView,
                 new int[]{R.id.cardlist},
-                new CardDataAdapter[]{new CardDataAdapter(mCompressedDecklist)});
-
-        /* set the autocomplete for card names */
-        mNameField.setAdapter(
-                new AutocompleteCursorAdapter(this,
-                        new String[]{CardDbAdapter.KEY_NAME},
-                        new int[]{R.id.text1}, mNameField,
-                        false)
-        );
-        mNameField.setOnEditorActionListener(addCardListener);
+                new CardDataAdapter[]{new CardDataAdapter(mCompressedDecklist)},
+                addCardListener);
 
         /* Default the number of cards field */
         mNumberOfField.setText("1");
@@ -237,12 +228,12 @@ public class DecklistFragment extends FamiliarListFragment {
     private void addCardToDeck(final boolean isSideboard) {
 
         /* Don't allow the fields to be empty */
-        if (mNameField.getText() == null || mNameField.getText().length() == 0 ||
+        if (getCardNameInput() == null || getCardNameInput().length() == 0 ||
                 mNumberOfField.getText() == null || mNumberOfField.getText().length() == 0) {
             return;
         }
 
-        final String name = String.valueOf(mNameField.getText());
+        final String name = String.valueOf(getCardNameInput());
         final String numberOf = String.valueOf(mNumberOfField.getText());
         final MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null,
                 mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
@@ -292,7 +283,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Clean up for the next add */
         mNumberOfField.setText("1");
-        mNameField.setText("");
+        clearCardNameInput();
 
         /* Uncheck the foil box if it isn't locked */
         if (!mCheckboxFoilLocked) {

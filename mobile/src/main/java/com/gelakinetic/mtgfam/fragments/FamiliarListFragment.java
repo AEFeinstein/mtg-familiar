@@ -26,6 +26,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,10 +37,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SelectableItemAdapter;
 import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import java.util.ArrayList;
 
@@ -59,7 +62,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public static final int FOIL_PRICE = 3;
 
     /* UI Elements */
-    public AutoCompleteTextView mNameField;
+    private AutoCompleteTextView mNameField;
     public EditText mNumberOfField;
     public CheckBox mCheckboxFoil;
     TextView mTotalPriceField;
@@ -76,15 +79,26 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * Initializes common members. Must be called in onCreate
      *
-     * @param fragmentView    the view of the fragment calling this method
-     * @param recyclerViewIds the resource IDs of all the recycler views to be managed
-     * @param adapters        the adapters for all the recycler views. Must have the same number of
-     *                        elements as recyclerViewIds
+     * @param fragmentView      the view of the fragment calling this method
+     * @param recyclerViewIds   the resource IDs of all the recycler views to be managed
+     * @param adapters          the adapters for all the recycler views. Must have the same number of
+     *                          elements as recyclerViewIds
+     * @param nameFieldListener the listener to attach to mNameField, or null
      */
-    void initializeMembers(View fragmentView, int recyclerViewIds[], CardDataAdapter adapters[]) {
+    void initializeMembers(View fragmentView, int[] recyclerViewIds, CardDataAdapter[] adapters, TextView.OnEditorActionListener nameFieldListener) {
 
         // Set up the name field
         mNameField = fragmentView.findViewById(R.id.name_search);
+        /* Set up the autocomplete adapter, and default number */
+        mNameField.setAdapter(
+                new AutocompleteCursorAdapter(this,
+                        new String[]{CardDbAdapter.KEY_NAME},
+                        new int[]{R.id.text1}, mNameField,
+                        false)
+        );
+        if (null != nameFieldListener) {
+            mNameField.setOnEditorActionListener(nameFieldListener);
+        }
 
         // Set up the number of field
         mNumberOfField = fragmentView.findViewById(R.id.number_input);
@@ -158,6 +172,20 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deselectAll();
         }
+    }
+
+    /**
+     * @return The current text in mNameField
+     */
+    Editable getCardNameInput() {
+        return mNameField.getText();
+    }
+
+    /**
+     * Clears mNameField
+     */
+    public void clearCardNameInput() {
+        mNameField.setText("");
     }
 
     /**

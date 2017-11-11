@@ -42,7 +42,6 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
-import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
@@ -113,11 +112,8 @@ public class WishlistFragment extends FamiliarListFragment {
         initializeMembers(
                 myFragmentView,
                 new int[]{R.id.cardlist},
-                new FamiliarListFragment.CardDataAdapter[]{new WishlistFragment.CardDataAdapter(mCompressedWishlist)});
-
-        /* set the autocomplete for card names */
-        mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, false));
-        mNameField.setOnEditorActionListener(addCardListener);
+                new FamiliarListFragment.CardDataAdapter[]{new WishlistFragment.CardDataAdapter(mCompressedWishlist)},
+                addCardListener);
 
         /* Default the number of cards field */
         mNumberOfField.setText("1");
@@ -184,7 +180,7 @@ public class WishlistFragment extends FamiliarListFragment {
      */
     private void addCardToWishlist() {
         /* Do not allow empty fields */
-        String name = String.valueOf(mNameField.getText());
+        String name = String.valueOf(getCardNameInput());
         if (name == null || name.equals("")) {
             return;
         }
@@ -224,7 +220,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
         /* Clean up for the next add */
         mNumberOfField.setText("1");
-        mNameField.setText("");
+        clearCardNameInput();
         /* Only unselect the checkbox if it isn't locked */
         if (!mCheckboxFoilLocked) {
             mCheckboxFoil.setChecked(false);

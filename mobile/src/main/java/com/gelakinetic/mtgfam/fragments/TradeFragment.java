@@ -38,7 +38,6 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
-import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -112,17 +111,9 @@ public class TradeFragment extends FamiliarListFragment {
         View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
 
         assert myFragmentView != null;
-        mNameField = myFragmentView.findViewById(R.id.name_search);
         mNumberOfField = myFragmentView.findViewById(R.id.number_input);
         mCheckboxFoil = myFragmentView.findViewById(R.id.list_foil);
 
-        /* Set up the autocomplete adapter, and default number */
-        mNameField.setAdapter(
-                new AutocompleteCursorAdapter(this,
-                        new String[]{CardDbAdapter.KEY_NAME},
-                        new int[]{R.id.text1}, mNameField,
-                        false)
-        );
         mNumberOfField.setText("1");
 
         mListLeft = new ArrayList<>();
@@ -138,7 +129,7 @@ public class TradeFragment extends FamiliarListFragment {
         initializeMembers(
                 myFragmentView,
                 new int[]{R.id.tradeListLeft, R.id.tradeListRight},
-                new CardDataAdapter[]{listAdapterLeft, listAdapterRight});
+                new CardDataAdapter[]{listAdapterLeft, listAdapterRight}, null);
 
         /* Total price fields */
         mTotalPriceLeft = myFragmentView.findViewById(R.id.priceTextLeft); // TODO merge
@@ -210,12 +201,12 @@ public class TradeFragment extends FamiliarListFragment {
      */
     private void addCardToTrade(final int side) {
 
-        if (mNameField.getText() == null || mNameField.getText().length() == 0 ||
+        if (getCardNameInput() == null || getCardNameInput().length() == 0 ||
                 mNumberOfField.getText() == null || mNumberOfField.getText().length() == 0) {
             return;
         }
 
-        final String cardName = mNameField.getText().toString();
+        final String cardName = getCardNameInput().toString();
         final int numberOf = Integer.parseInt(mNumberOfField.getText().toString());
         final boolean isFoil = mCheckboxFoil.isChecked();
         final MtgCard card = CardHelpers.makeMtgCard(getContext(), cardName, null, isFoil, numberOf);
@@ -244,7 +235,7 @@ public class TradeFragment extends FamiliarListFragment {
             }
         }
 
-        mNameField.setText("");
+        clearCardNameInput();
         mNumberOfField.setText("1");
 
         if (!mCheckboxFoilLocked) {
