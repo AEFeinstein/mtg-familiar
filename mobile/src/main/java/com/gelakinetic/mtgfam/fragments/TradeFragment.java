@@ -473,8 +473,8 @@ public class TradeFragment extends FamiliarListFragment {
                    "bad," (incomplete) */
                 for (MtgCard data : mListLeft) {
                     if (!getCardDataAdapter(LEFT).isItemPendingRemoval(mListLeft.indexOf(data))) {
+                        totalCards += data.numberOf;
                         if (data.hasPrice()) {
-                            totalCards += data.numberOf;
                             totalPrice += data.numberOf * (data.price / 100.0f);
                         } else {
                             hasBadValues = true;
@@ -500,8 +500,8 @@ public class TradeFragment extends FamiliarListFragment {
                    (incomplete) */
                 for (MtgCard data : mListRight) {
                     if (!getCardDataAdapter(RIGHT).isItemPendingRemoval(mListRight.indexOf(data))) {
+                        totalCards += data.numberOf;
                         if (data.hasPrice()) {
-                            totalCards += data.numberOf;
                             totalPrice += data.numberOf * (data.price / 100.0f);
                         } else {
                             hasBadValues = true;
