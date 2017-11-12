@@ -232,13 +232,14 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     }
 
     /**
-     * TODO
+     * Updates the total prices shown for the lists
+     *
+     * @param side The side to update (only valid for trade)
      */
     abstract void updateTotalPrices(int side);
 
     /**
-     * TODO
-     * @return
+     * @return true if the total price should be shown, false otherwise
      */
     abstract boolean shouldShowPrice();
 
@@ -357,7 +358,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                 case R.id.deck_delete_selected: {
                                     adaptersDeleteSelectedItems();
                                     mode.finish();
-                                    if(shouldShowPrice()) {
+                                    if (shouldShowPrice()) {
                                         updateTotalPrices(TradeFragment.BOTH);
                                     }
                                     return true;
@@ -404,13 +405,13 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         @Override
         public void onItemDismissed(final int position) {
             super.onItemDismissed(position);
-            if(shouldShowPrice()) {
+            if (shouldShowPrice()) {
                 updateTotalPrices(TradeFragment.BOTH);
             }
         }
 
         void onUndoDelete(final int position) {
-            if(shouldShowPrice()) {
+            if (shouldShowPrice()) {
                 updateTotalPrices(TradeFragment.BOTH);
             }
         }
