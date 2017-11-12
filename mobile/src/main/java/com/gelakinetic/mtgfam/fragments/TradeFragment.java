@@ -428,7 +428,6 @@ public class TradeFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        mPriceSetting = Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
         loadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
 
     }
@@ -458,7 +457,7 @@ public class TradeFragment extends FamiliarListFragment {
             if (data.foil) {
                 data.price = (int) (data.priceInfo.mFoilAverage * 100);
             } else {
-                switch (mPriceSetting) {
+                switch (getPriceSetting()) {
                     case LOW_PRICE: {
                         data.price = (int) (data.priceInfo.mLow * 100);
                         break;
@@ -530,7 +529,7 @@ public class TradeFragment extends FamiliarListFragment {
                                     if (data.foil) {
                                         data.price = (int) (result.mFoilAverage * 100);
                                     } else {
-                                        switch (mPriceSetting) {
+                                        switch (getPriceSetting()) {
                                             case LOW_PRICE: {
                                                 data.price = (int) (result.mLow * 100);
                                                 break;
@@ -640,6 +639,16 @@ public class TradeFragment extends FamiliarListFragment {
     @Override
     boolean shouldShowPrice() {
         return true;
+    }
+
+    @Override
+    public int getPriceSetting() {
+        return Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
+    }
+
+    @Override
+    public void setPriceSetting(int priceSetting) {
+        PreferenceAdapter.setTradePrice(getContext(), Integer.toString(priceSetting));
     }
 
     /**

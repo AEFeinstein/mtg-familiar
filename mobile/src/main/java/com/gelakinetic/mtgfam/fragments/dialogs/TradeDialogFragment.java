@@ -274,7 +274,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     if (data.foil) {
                                         oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
                                     } else {
-                                        switch (getParentTradeFragment().mPriceSetting) {
+                                        switch (getParentTradeFragment().getPriceSetting()) {
                                             case TradeFragment.LOW_PRICE: {
                                                 oldPrice = (int) (data.priceInfo.mLow * 100);
                                                 break;
@@ -417,11 +417,11 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .items(getString(R.string.trader_Low),
                                 getString(R.string.trader_Average),
                                 getString(R.string.trader_High))
-                        .itemsCallbackSingleChoice(getParentTradeFragment().mPriceSetting, new MaterialDialog.ListCallbackSingleChoice() {
+                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentTradeFragment().mPriceSetting != which) {
-                                    getParentTradeFragment().mPriceSetting = which;
+                                if (getParentTradeFragment().getPriceSetting() != which) {
+                                    getParentTradeFragment().setPriceSetting(which);
 
                                     /* Update ALL the prices! */
                                     for (MtgCard data : getParentTradeFragment().mListLeft) {
@@ -442,7 +442,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                                     /* And also update the preference */
                                     PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentTradeFragment().mPriceSetting));
+                                            String.valueOf(getParentTradeFragment().getPriceSetting()));
 
                                     getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                                 }

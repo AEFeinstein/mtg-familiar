@@ -995,4 +995,13 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "1");
     }
 
+    public static synchronized void setDeckPrice(@Nullable Context context, String deckPrice) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_deckPrice), deckPrice);
+        edit.apply();
+    }
 }

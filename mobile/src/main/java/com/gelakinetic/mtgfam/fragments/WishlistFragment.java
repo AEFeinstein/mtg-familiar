@@ -194,7 +194,6 @@ public class WishlistFragment extends FamiliarListFragment {
         super.onResume();
 
         /* Get the relevant preferences */
-        mPriceSetting = Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
         mShowIndividualPrices = PreferenceAdapter.getShowIndividualWishlistPrices(getContext());
         mShowCardInfo = PreferenceAdapter.getVerboseWishlist(getContext());
 
@@ -341,7 +340,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.wishlist_share_title);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, WishlistHelpers.GetSharableWishlist(mCompressedWishlist, getActivity(),
-                        mShowCardInfo, mShowIndividualPrices, mPriceSetting));
+                        mShowCardInfo, mShowIndividualPrices, getPriceSetting()));
                 sendIntent.setType("text/plain");
 
                 try {
@@ -484,7 +483,7 @@ public class WishlistFragment extends FamiliarListFragment {
                         if (isi.mIsFoil) {
                             totalPrice += (isi.mPrice.mFoilAverage * isi.mNumberOf);
                         } else {
-                            switch (mPriceSetting) {
+                            switch (getPriceSetting()) {
                                 case LOW_PRICE:
                                     totalPrice += (isi.mPrice.mLow * isi.mNumberOf);
                                     break;
@@ -510,6 +509,16 @@ public class WishlistFragment extends FamiliarListFragment {
         return PreferenceAdapter.getShowTotalWishlistPrice(getContext());
     }
 
+    @Override
+    public int getPriceSetting() {
+        return Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
+    }
+
+    @Override
+    public void setPriceSetting(int priceSetting) {
+        PreferenceAdapter.setTradePrice(getContext(), Integer.toString(priceSetting));
+    }
+
     /**
      * Called when the sorting dialog closes. Sort the wishlist with the new options
      *
@@ -526,7 +535,7 @@ public class WishlistFragment extends FamiliarListFragment {
      */
     private void sortWishlist(String orderByStr) {
         Collections.sort(mCompressedWishlist,
-                new WishlistHelpers.WishlistComparator(orderByStr, mPriceSetting));
+                new WishlistHelpers.WishlistComparator(orderByStr, getPriceSetting()));
         getCardDataAdapter(0).notifyDataSetChanged();
     }
 
@@ -681,7 +690,7 @@ public class WishlistFragment extends FamiliarListFragment {
                         } else {
                             boolean priceFound = false;
                             if (isi.mPrice != null) {
-                                switch (mPriceSetting) {
+                                switch (getPriceSetting()) {
                                     case LOW_PRICE:
                                         if (isi.mPrice.mLow != 0) {
                                             priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mLow));

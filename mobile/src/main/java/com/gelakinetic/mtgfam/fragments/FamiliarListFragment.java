@@ -64,9 +64,9 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public static final int AVG_PRICE = 1;
     public static final int HIGH_PRICE = 2;
     public static final int FOIL_PRICE = 3;
-    public int mPriceSetting;
-    int mPriceFetchRequests = 0;
     static final String PRICE_FORMAT = "$%.02f";
+
+    int mPriceFetchRequests = 0;
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
@@ -191,6 +191,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public void onResume() {
         super.onResume();
 
+        if (null == mNameField) {
+            throw new IllegalStateException("A class extending FamiliarListFragment must call initializeMembers()");
+        }
+
         /* Show the total price, if desired */
         if (shouldShowPrice()) {
             for (TextView priceView : mTotalPriceFields) {
@@ -294,6 +298,16 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @return true if the total price should be shown, false otherwise
      */
     abstract boolean shouldShowPrice();
+
+    /**
+     * @return the current price setting
+     */
+    public abstract int getPriceSetting();
+
+    /**
+     * @param priceSetting The price setting to write to preferences
+     */
+    public abstract void setPriceSetting(int priceSetting);
 
     /**
      * Specific implementation for list-based Familiar Fragments.

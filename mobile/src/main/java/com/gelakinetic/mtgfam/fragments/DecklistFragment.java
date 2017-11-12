@@ -252,7 +252,6 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        mPriceSetting = Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext()));
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
         getCardDataAdapter(0).notifyDataSetChanged();
@@ -654,7 +653,7 @@ public class DecklistFragment extends FamiliarListFragment {
                         if (isi.mIsFoil) {
                             totalPrice += isi.mPrice.mFoilAverage * isi.mNumberOf;
                         } else {
-                            switch (mPriceSetting) {
+                            switch (getPriceSetting()) {
                                 case LOW_PRICE:
                                     totalPrice += isi.mPrice.mLow * isi.mNumberOf;
                                     break;
@@ -678,6 +677,16 @@ public class DecklistFragment extends FamiliarListFragment {
     @Override
     boolean shouldShowPrice() {
         return PreferenceAdapter.getShowTotalDecklistPrice(getContext());
+    }
+
+    @Override
+    public int getPriceSetting() {
+        return Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext()));
+    }
+
+    @Override
+    public void setPriceSetting(int priceSetting) {
+        PreferenceAdapter.setDeckPrice(getContext(), Integer.toString(priceSetting));
     }
 
     /**
