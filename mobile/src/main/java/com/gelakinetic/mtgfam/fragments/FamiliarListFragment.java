@@ -40,7 +40,7 @@ import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
+import com.gelakinetic.mtgfam.helpers.CardDataTouchHelper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -121,7 +121,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             recyclerView.setAdapter(adapters[i]);
 
             ItemTouchHelper.SimpleCallback callback =
-                    new SelectableItemTouchHelper(adapters[i], ItemTouchHelper.LEFT);
+                    new CardDataTouchHelper(adapters[i], ItemTouchHelper.LEFT);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
             itemTouchHelper.attachToRecyclerView(recyclerView);
 

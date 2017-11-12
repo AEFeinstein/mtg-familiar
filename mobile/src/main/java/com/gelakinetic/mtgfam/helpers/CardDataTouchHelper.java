@@ -28,11 +28,11 @@ import android.support.v7.widget.helper.ItemTouchHelper.SimpleCallback;
 /**
  * Used for the callback for the ItemTouchHelper when swiping items.
  */
-public class SelectableItemTouchHelper extends SimpleCallback {
+public class CardDataTouchHelper extends SimpleCallback {
 
-    private final SelectableItemAdapter adapter;
+    private final CardDataAdapter adapter;
 
-    public SelectableItemTouchHelper(final SelectableItemAdapter adapter, final int swipeDirs) {
+    public CardDataTouchHelper(final CardDataAdapter adapter, final int swipeDirs) {
         super(0, swipeDirs);
         this.adapter = adapter;
     }
@@ -49,8 +49,8 @@ public class SelectableItemTouchHelper extends SimpleCallback {
 
     @Override
     public int getSwipeDirs(RecyclerView parent, ViewHolder holder) {
-        if (holder instanceof SelectableItemViewHolder) {
-            if (!((SelectableItemViewHolder) holder).getIsSwipeable()) {
+        if (holder instanceof CardDataViewHolder) {
+            if (!((CardDataViewHolder) holder).getIsSwipeable()) {
                 return 0;
             }
         }

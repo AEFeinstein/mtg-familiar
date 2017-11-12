@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.helpers;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,12 +35,15 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.FamiliarListFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 
-public abstract class CardDataViewHolder extends SelectableItemViewHolder {
+public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener, View.OnLongClickListener {
 
     protected final CardDataAdapter mAdapter;
     private final FamiliarListFragment mFragment;
     public TextView mCardName;
     private int mActionMenuResId;
+
+    private boolean isSwipeable = true;
 
     public CardDataViewHolder(ViewGroup view, @LayoutRes final int layoutRowId, CardDataAdapter adapter, FamiliarListFragment fragment, @MenuRes int actionMenuResId) {
         // The inflated view is set to itemView
@@ -48,6 +52,14 @@ public abstract class CardDataViewHolder extends SelectableItemViewHolder {
         mAdapter = adapter;
         mFragment = fragment;
         mActionMenuResId = actionMenuResId;
+    }
+
+    boolean getIsSwipeable() {
+        return isSwipeable;
+    }
+
+    public void setIsSwipeable(final boolean isSwipeable) {
+        this.isSwipeable = isSwipeable;
     }
 
     abstract public void onClickNotSelectMode(View view);
