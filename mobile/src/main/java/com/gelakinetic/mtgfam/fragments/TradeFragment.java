@@ -117,9 +117,6 @@ public class TradeFragment extends FamiliarListFragment {
         mListRight = new ArrayList<>();
         CardDataAdapter listAdapterRight = new CardDataAdapter(mListRight, RIGHT);
 
-        listAdapterLeft.setOtherAdapter(listAdapterRight);
-        listAdapterRight.setOtherAdapter(listAdapterLeft);
-
         /* Call to set up our shared UI elements */
         initializeMembers(
                 myFragmentView,
@@ -389,11 +386,11 @@ public class TradeFragment extends FamiliarListFragment {
         StringBuilder sb = new StringBuilder();
 
         /* Add all the cards to the StringBuilder from the left, tallying the price */
-        int totalPrice = 0;
+        float totalPrice = 0;
         for (MtgCard card : mListLeft) {
-            totalPrice += card.toTradeShareString(sb, getString(R.string.wishlist_foil));
+            totalPrice += (card.toTradeShareString(sb, getString(R.string.wishlist_foil)) / 100.0f);
         }
-        sb.append(String.format(Locale.US, "$%d.%02d%n", totalPrice / 100, totalPrice % 100));
+        sb.append(String.format(Locale.US, PRICE_FORMAT + "%n", totalPrice));
 
         /* Simple divider */
         sb.append("--------\n");
@@ -401,9 +398,9 @@ public class TradeFragment extends FamiliarListFragment {
         /* Add all the cards to the StringBuilder from the right, tallying the price */
         totalPrice = 0;
         for (MtgCard card : mListRight) {
-            totalPrice += card.toTradeShareString(sb, getString(R.string.wishlist_foil));
+            totalPrice += (card.toTradeShareString(sb, getString(R.string.wishlist_foil)) / 100.0f);
         }
-        sb.append(String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100));
+        sb.append(String.format(Locale.US, PRICE_FORMAT, totalPrice));
 
         /* Send the Intent on it's merry way */
         Intent sendIntent = new Intent();
@@ -588,7 +585,7 @@ public class TradeFragment extends FamiliarListFragment {
     public void updateTotalPrices(int side) {
         if (this.isAdded()) {
             if (side == LEFT || side == BOTH) {
-                int totalPrice = 0;
+                float totalPrice = 0;
                 int totalCards = 0;
                 boolean hasBadValues = false;
                 /* Iterate through the list and either sum the price or mark it as
@@ -597,7 +594,7 @@ public class TradeFragment extends FamiliarListFragment {
                     if (!getCardDataAdapter(LEFT).isItemPendingRemoval(mListLeft.indexOf(data))) {
                         if (data.hasPrice()) {
                             totalCards += data.numberOf;
-                            totalPrice += data.numberOf * data.price;
+                            totalPrice += data.numberOf * (data.price / 100.0f);
                         } else {
                             hasBadValues = true;
                         }
@@ -610,13 +607,13 @@ public class TradeFragment extends FamiliarListFragment {
                         ContextCompat.getColor(getContext(),
                                 getResourceIdFromAttr(R.attr.color_text));
                 final String leftPrice =
-                        String.format(Locale.US, "%d.%02d", totalPrice / 100, totalPrice % 100)
+                        String.format(Locale.US, PRICE_FORMAT, totalPrice)
                                 + " (" + totalCards + ")";
                 mTotalPriceLeft.setText(leftPrice);
                 mTotalPriceLeft.setTextColor(color);
             }
             if (side == RIGHT || side == BOTH) {
-                int totalPrice = 0;
+                float totalPrice = 0;
                 int totalCards = 0;
                 boolean hasBadValues = false;
                 /* Iterate through the list and either sum the price or mark it as "bad,"
@@ -625,7 +622,7 @@ public class TradeFragment extends FamiliarListFragment {
                     if (!getCardDataAdapter(RIGHT).isItemPendingRemoval(mListRight.indexOf(data))) {
                         if (data.hasPrice()) {
                             totalCards += data.numberOf;
-                            totalPrice += data.numberOf * data.price;
+                            totalPrice += data.numberOf * (data.price / 100.0f);
                         } else {
                             hasBadValues = true;
                         }
@@ -639,12 +636,17 @@ public class TradeFragment extends FamiliarListFragment {
                                 getResourceIdFromAttr(R.attr.color_text)
                         );
                 final String rightPrice =
-                        String.format(Locale.US, "$%d.%02d", totalPrice / 100, totalPrice % 100)
+                        String.format(Locale.US, PRICE_FORMAT, totalPrice)
                                 + " (" + totalCards + ")";
                 mTotalPriceRight.setText(rightPrice);
                 mTotalPriceRight.setTextColor(color);
             }
         }
+    }
+
+    @Override
+    boolean shouldShowPrice() {
+        return true;
     }
 
     /**
@@ -776,17 +778,11 @@ public class TradeFragment extends FamiliarListFragment {
     public class CardDataAdapter
             extends FamiliarListFragment.CardDataAdapter<MtgCard, CardDataAdapter.ViewHolder> {
 
-        private CardDataAdapter otherAdapter;
-
         private final int side;
 
         CardDataAdapter(ArrayList<MtgCard> values, int side) {
             super(values);
             this.side = side;
-        }
-
-        void setOtherAdapter(CardDataAdapter adapter) {
-            otherAdapter = adapter;
         }
 
         @Override
@@ -824,17 +820,6 @@ public class TradeFragment extends FamiliarListFragment {
                 }
             }
 
-        }
-
-        @Override
-        public void onItemDismissed(final int position) {
-            super.onItemDismissed(position);
-            updateTotalPrices(BOTH);
-        }
-
-        @Override
-        public void onUndoDelete(final int position) {
-            updateTotalPrices(BOTH);
         }
 
         @Override

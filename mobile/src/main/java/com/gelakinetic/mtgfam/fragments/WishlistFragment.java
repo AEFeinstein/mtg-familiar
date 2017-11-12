@@ -71,7 +71,6 @@ public class WishlistFragment extends FamiliarListFragment {
     /* Preferences */
     private boolean mShowCardInfo;
     private boolean mShowIndividualPrices;
-    private boolean mShowTotalWishlistPrice;
 
     /* The wishlist and adapter */
     public ArrayList<CompressedWishlistInfo> mCompressedWishlist;
@@ -202,7 +201,6 @@ public class WishlistFragment extends FamiliarListFragment {
         /* Get the relevant preferences */
         mPriceSetting = Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
         mShowIndividualPrices = PreferenceAdapter.getShowIndividualWishlistPrices(getContext());
-        mShowTotalWishlistPrice = PreferenceAdapter.getShowTotalWishlistPrice(getContext());
         mShowCardInfo = PreferenceAdapter.getVerboseWishlist(getContext());
 
         /* Clear, then read the wishlist. This is done in onResume() in case the user quick-searched for a card, and
@@ -211,7 +209,7 @@ public class WishlistFragment extends FamiliarListFragment {
         getCardDataAdapter(0).notifyDataSetChanged();
 
         /* Show the total price, if desired */
-        if (mShowTotalWishlistPrice) {
+        if (shouldShowPrice()) {
             mTotalPriceField.setVisibility(View.VISIBLE);
             mTotalPriceDivider.setVisibility(View.VISIBLE);
         } else {
@@ -277,7 +275,7 @@ public class WishlistFragment extends FamiliarListFragment {
                         mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
                     }
                     /* Look up the new price */
-                    if (mShowIndividualPrices || mShowTotalWishlistPrice) {
+                    if (mShowIndividualPrices || shouldShowPrice()) {
                         loadPrice(card.mName, card.setCode, card.mNumber);
                     }
                 }
@@ -474,7 +472,7 @@ public class WishlistFragment extends FamiliarListFragment {
                                 }
                             }
                         }
-                        sumTotalPrice();
+                        updateTotalPrices(0);
                     }
                     mPriceFetchRequests--;
                     if (mPriceFetchRequests == 0) {
@@ -490,8 +488,8 @@ public class WishlistFragment extends FamiliarListFragment {
     /**
      * Add together the price of all the cards in the wishlist and display it
      */
-    public void sumTotalPrice() {
-        if (mShowTotalWishlistPrice) {
+    public void updateTotalPrices(int side) {
+        if (shouldShowPrice()) {
             float totalPrice = 0;
 
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
@@ -517,8 +515,13 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
                 }
             }
-            mTotalPriceField.setText(String.format(Locale.US, "$%.02f", totalPrice));
+            mTotalPriceField.setText(String.format(Locale.US, PRICE_FORMAT, totalPrice));
         }
+    }
+
+    @Override
+    boolean shouldShowPrice() {
+        return PreferenceAdapter.getShowTotalWishlistPrice(getContext());
     }
 
     /**
@@ -687,7 +690,7 @@ public class WishlistFragment extends FamiliarListFragment {
                                 priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
                                 priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
                             } else {
-                                priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mFoilAverage));
+                                priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mFoilAverage));
                             }
                         } else {
                             boolean priceFound = false;
@@ -695,19 +698,19 @@ public class WishlistFragment extends FamiliarListFragment {
                                 switch (mPriceSetting) {
                                     case LOW_PRICE:
                                         if (isi.mPrice.mLow != 0) {
-                                            priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mLow));
+                                            priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mLow));
                                             priceFound = true;
                                         }
                                         break;
                                     case AVG_PRICE:
                                         if (isi.mPrice.mAverage != 0) {
-                                            priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mAverage));
+                                            priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mAverage));
                                             priceFound = true;
                                         }
                                         break;
                                     case HIGH_PRICE:
                                         if (isi.mPrice.mHigh != 0) {
-                                            priceText.setText(String.format(Locale.US, "%dx $%.02f", isi.mNumberOf, isi.mPrice.mHigh));
+                                            priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mHigh));
                                             priceFound = true;
                                         }
                                         break;

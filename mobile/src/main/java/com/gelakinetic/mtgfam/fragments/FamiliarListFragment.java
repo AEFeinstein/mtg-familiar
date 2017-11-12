@@ -65,6 +65,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public static final int FOIL_PRICE = 3;
     public int mPriceSetting;
     int mPriceFetchRequests = 0;
+    static final String PRICE_FORMAT = "$%.02f";
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
@@ -231,6 +232,17 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     }
 
     /**
+     * TODO
+     */
+    abstract void updateTotalPrices(int side);
+
+    /**
+     * TODO
+     * @return
+     */
+    abstract boolean shouldShowPrice();
+
+    /**
      * Specific implementation for list-based Familiar Fragments.
      *
      * @param <T>  type that is stored in the ArrayList
@@ -279,10 +291,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             return false;
         }
 
-        public void onUndoDelete(final int position) {
-            // Do nothing by default.
-        }
-
         public abstract String getItemName(final int position);
 
         abstract class ViewHolder extends SelectableItemAdapter.ViewHolder {
@@ -305,8 +313,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         // Unselect the item
                         setItemSelected(itemView, position, false, true);
 
+                        int numSelected = 0;
+                        for (CardDataAdapter adapter : mCardDataAdapters) {
+                            numSelected += adapter.getNumSelectedItems();
+                        }
                         // If there are no more items
-                        if (getNumSelectedItems() < 1) {
+                        if (numSelected < 1) {
                             // Finish select mode
                             mActionMode.finish();
                             setInSelectMode(false);
@@ -345,6 +357,9 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                 case R.id.deck_delete_selected: {
                                     adaptersDeleteSelectedItems();
                                     mode.finish();
+                                    if(shouldShowPrice()) {
+                                        updateTotalPrices(TradeFragment.BOTH);
+                                    }
                                     return true;
                                 }
                                 // Only for the decklist
@@ -369,7 +384,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                             adaptersDeselectAll();
                         }
                     });
-                    setInSelectMode(true);
+
+                    for (CardDataAdapter adapter : mCardDataAdapters) {
+                        adapter.setInSelectMode(true);
+                    }
 
                     // Then select the item
                     setItemSelected(itemView, getAdapterPosition(), true, true);
@@ -383,6 +401,18 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             }
         }
 
-    }
+        @Override
+        public void onItemDismissed(final int position) {
+            super.onItemDismissed(position);
+            if(shouldShowPrice()) {
+                updateTotalPrices(TradeFragment.BOTH);
+            }
+        }
 
+        void onUndoDelete(final int position) {
+            if(shouldShowPrice()) {
+                updateTotalPrices(TradeFragment.BOTH);
+            }
+        }
+    }
 }

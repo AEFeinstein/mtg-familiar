@@ -100,7 +100,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                                     PreferenceAdapter.setTradePrice(getContext(),
                                             String.valueOf(getParentWishlistFragment().mPriceSetting));
                                     getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
-                                    getParentWishlistFragment().sumTotalPrice();
+                                    getParentWishlistFragment().updateTotalPrices(0);
                                 }
                                 dialog.dismiss();
                                 return true;
@@ -119,7 +119,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                                 WishlistHelpers.ResetCards(getActivity());
                                 getParentWishlistFragment().mCompressedWishlist.clear();
                                 getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
-                                getParentWishlistFragment().sumTotalPrice();
+                                getParentWishlistFragment().updateTotalPrices(0);
                                 /* Clear input too */
                                 getParentWishlistFragment().clearCardNameInput();
                                 getParentWishlistFragment().clearCardNumberInput();

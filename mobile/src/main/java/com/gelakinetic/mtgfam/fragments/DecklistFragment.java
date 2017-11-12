@@ -68,9 +68,6 @@ import java.util.Locale;
  */
 public class DecklistFragment extends FamiliarListFragment {
 
-    /* Preferences */
-    private boolean mShowTotalDecklistPrice;
-
     /* UI Elements */
     public TextView mDeckName;
     public TextView mDeckCards;
@@ -221,7 +218,7 @@ public class DecklistFragment extends FamiliarListFragment {
         clearHeaders();
 
         /* Load the card's price */
-        if (mShowTotalDecklistPrice) {
+        if (shouldShowPrice()) {
             loadPrice(card.mName, card.setCode, card.mNumber);
         }
 
@@ -257,7 +254,6 @@ public class DecklistFragment extends FamiliarListFragment {
 
         super.onResume();
         mPriceSetting = Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext()));
-        mShowTotalDecklistPrice = PreferenceAdapter.getShowTotalDecklistPrice(getContext());
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
         getCardDataAdapter(0).notifyDataSetChanged();
@@ -343,7 +339,7 @@ public class DecklistFragment extends FamiliarListFragment {
                         } else {
                             mCompressedDecklist.add(wrapped);
                         }
-                        if (mShowTotalDecklistPrice) {
+                        if (shouldShowPrice()) {
                             loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
                         }
                     }
@@ -631,7 +627,7 @@ public class DecklistFragment extends FamiliarListFragment {
                                 }
                             }
                         }
-                        sumTotalPrice();
+                        updateTotalPrices(0);
                     }
                     mPriceFetchRequests--;
                     if (mPriceFetchRequests == 0) {
@@ -647,7 +643,7 @@ public class DecklistFragment extends FamiliarListFragment {
     /**
      * Add together the price of all the cards in the wishlist and display it.
      */
-    private void sumTotalPrice() {
+    void updateTotalPrices(int side) {
 
         /* default */
         float totalPrice = 0;
@@ -677,8 +673,13 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
             }
         }
-        mTotalPriceField.setText(String.format(Locale.US, "$%.02f", totalPrice));
+        mTotalPriceField.setText(String.format(Locale.US, PRICE_FORMAT, totalPrice));
 
+    }
+
+    @Override
+    boolean shouldShowPrice() {
+        return PreferenceAdapter.getShowTotalDecklistPrice(getContext());
     }
 
     /**
