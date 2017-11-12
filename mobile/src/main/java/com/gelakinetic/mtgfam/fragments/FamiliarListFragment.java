@@ -115,6 +115,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         }
 
         // Set up the recycler views and adapters
+        mCardDataAdapters.clear();
         for (int i = 0; i < recyclerViewIds.length; i++) {
             RecyclerView recyclerView = fragmentView.findViewById(recyclerViewIds[i]);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -164,9 +165,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         mActionMenuResId = ActionMenuResId;
 
         // Set up total price views
+        mTotalPriceFields.clear();
         for (int resId : priceViewIds) {
             mTotalPriceFields.add((TextView) fragmentView.findViewById(resId));
         }
+        mTotalPriceDividers.clear();
         if (null != priceDividerIds) {
             for (int resId : priceDividerIds) {
                 mTotalPriceDividers.add(fragmentView.findViewById(resId));
