@@ -40,13 +40,10 @@ import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.apache.commons.io.IOUtils;
 
@@ -174,13 +171,13 @@ public class TradeFragment extends FamiliarListFragment {
             case LEFT: {
                 mListLeft.add(0, card);
                 getCardDataAdapter(LEFT).notifyItemInserted(0);
-                loadPrice(card, (CardDataAdapter) getCardDataAdapter(LEFT));
+                loadPrice(card);
                 break;
             }
             case RIGHT: {
                 mListRight.add(0, card);
                 getCardDataAdapter(RIGHT).notifyItemInserted(0);
-                loadPrice(card, (CardDataAdapter) getCardDataAdapter(RIGHT));
+                loadPrice(card);
                 break;
             }
             default: {
@@ -304,12 +301,12 @@ public class TradeFragment extends FamiliarListFragment {
                     if (card.mSide == LEFT) {
                         mListLeft.add(card);
                         if (!card.customPrice) {
-                            loadPrice(card, (CardDataAdapter) getCardDataAdapter(LEFT));
+                            loadPrice(card);
                         }
                     } else if (card.mSide == RIGHT) {
                         mListRight.add(card);
                         if (!card.customPrice) {
-                            loadPrice(card, (CardDataAdapter) getCardDataAdapter(RIGHT));
+                            loadPrice(card);
                         }
                     }
                 } catch (NumberFormatException | IndexOutOfBoundsException e) {
@@ -445,129 +442,19 @@ public class TradeFragment extends FamiliarListFragment {
 
     }
 
-    /**
-     * Request the price of a card asynchronously from the network. Save all the returned prices.
-     *
-     * @param data    The card to fetch a price for
-     * @param adapter The adapter to notify when a price is downloaded
-     */
-    public void loadPrice(final MtgCard data, final CardDataAdapter adapter) {
-        /* If the priceInfo is already loaded, don't bother performing a query */
-        if (data.priceInfo != null) {
-            if (data.foil) {
-                data.price = (int) (data.priceInfo.mFoilAverage * 100);
-            } else {
-                switch (getPriceSetting()) {
-                    case LOW_PRICE: {
-                        data.price = (int) (data.priceInfo.mLow * 100);
-                        break;
-                    }
-                    default:
-                    case AVG_PRICE: {
-                        data.price = (int) (data.priceInfo.mAverage * 100);
-                        break;
-                    }
-                    case HIGH_PRICE: {
-                        data.price = (int) (data.priceInfo.mHigh * 100);
-                        break;
-                    }
-                    case FOIL_PRICE: {
-                        data.price = (int) (data.priceInfo.mFoilAverage * 100);
-                        break;
-                    }
-                }
-            }
-        } else {
-            /* priceInfo is null, perform a query */
-            PriceFetchRequest priceRequest = new PriceFetchRequest(data.mName, data.setCode,
-                    data.mNumber, -1, getActivity());
-            mPriceFetchRequests++;
-            getFamiliarActivity().setLoading();
-            getFamiliarActivity().mSpiceManager.execute(priceRequest,
-                    data.mName + "-" + data.setCode, DurationInMillis.ONE_DAY,
-                    new RequestListener<PriceInfo>() {
+    @Override
+    protected void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException) {
+        data.message = spiceException.getLocalizedMessage();
+        data.priceInfo = null;
+    }
 
-                        /**
-                         * This is called when the lookup fails. Set the error message and notify
-                         * the adapter.
-                         *
-                         * @param spiceException The exception thrown when trying to download the
-                         *                       price
-                         */
-                        @Override
-                        public void onRequestFailure(SpiceException spiceException) {
-                            if (TradeFragment.this.isAdded()) {
-                                data.message = spiceException.getLocalizedMessage();
-                                data.priceInfo = null;
-                                adapter.notifyDataSetChanged();
-                                mPriceFetchRequests--;
-                                if (mPriceFetchRequests == 0) {
-                                    getFamiliarActivity().clearLoading();
-                                }
-                            }
-                        }
-
-                        /**
-                         * This is called when the lookup succeeds. Save all the prices and set the
-                         * current price.
-                         *
-                         * @param result The PriceInfo object with the low, average, high, and foil
-                         *               prices
-                         */
-                        @Override
-                        public void onRequestSuccess(final PriceInfo result) {
-                            /* Sanity check */
-                            if (result == null) {
-                                data.priceInfo = null;
-                            } else {
-                                /* Set the PriceInfo object */
-                                data.priceInfo = result;
-
-                                /* Only reset the price to the downloaded one if the old price
-                                   isn't custom */
-                                if (!data.customPrice) {
-                                    if (data.foil) {
-                                        data.price = (int) (result.mFoilAverage * 100);
-                                    } else {
-                                        switch (getPriceSetting()) {
-                                            case LOW_PRICE: {
-                                                data.price = (int) (result.mLow * 100);
-                                                break;
-                                            }
-                                            default:
-                                            case AVG_PRICE: {
-                                                data.price = (int) (result.mAverage * 100);
-                                                break;
-                                            }
-                                            case HIGH_PRICE: {
-                                                data.price = (int) (result.mHigh * 100);
-                                                break;
-                                            }
-                                            case FOIL_PRICE: {
-                                                data.price = (int) (result.mFoilAverage * 100);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                /* Clear the message */
-                                data.message = null;
-                            }
-                            /* Notify the adapter and update total prices */
-                            updateTotalPrices(BOTH);
-                            adapter.notifyDataSetChanged();
-                            mPriceFetchRequests--;
-                            if (mPriceFetchRequests == 0 && TradeFragment.this.isAdded()) {
-                                getFamiliarActivity().clearLoading();
-                            }
-                            try {
-                                sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
-                            } catch (NullPointerException e) {
-                                /* couldn't get the preference, so don't bother sorting */
-                            }
-                        }
-                    }
-            );
+    @Override
+    protected void onCardPriceLookupSuccess(MtgCard data, PriceInfo result) {
+        updateTotalPrices(BOTH);
+        try {
+            sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
+        } catch (NullPointerException e) {
+            /* couldn't get the preference, so don't bother sorting */
         }
     }
 

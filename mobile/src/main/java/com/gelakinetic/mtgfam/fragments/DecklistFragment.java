@@ -46,15 +46,12 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
 
@@ -218,7 +215,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Load the card's price */
         if (shouldShowPrice()) {
-            loadPrice(card.mName, card.setCode, card.mNumber);
+            loadPrice(card);
         }
 
         /* Sort the decklist */
@@ -338,7 +335,7 @@ public class DecklistFragment extends FamiliarListFragment {
                             mCompressedDecklist.add(wrapped);
                         }
                         if (shouldShowPrice()) {
-                            loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
+                            loadPrice(card.first);
                         }
                     }
                 }
@@ -551,91 +548,43 @@ public class DecklistFragment extends FamiliarListFragment {
 
     }
 
-    /**
-     * Load the price for a given card. This handles all the spice stuff.
-     *
-     * @param mCardName   The name of the card to find a price for
-     * @param mSetCode    The set code of the card to find a price for
-     * @param mCardNumber The collector's number
-     */
-    private void loadPrice(final String mCardName, final String mSetCode, String mCardNumber) {
-
-        PriceFetchRequest priceRequest =
-                new PriceFetchRequest(mCardName, mSetCode, mCardNumber, -1, getActivity());
-        mPriceFetchRequests++;
-        getFamiliarActivity().setLoading();
-        getFamiliarActivity().mSpiceManager.execute(priceRequest, mCardName + "-" +
-                mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-
-            /**
-             * Loading the price for this card failed and threw a spiceException.
-             *
-             `             * @param spiceException The exception thrown when trying to load this card's price
-             */
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-
-                /* because this can return when the fragment is in the background */
-                if (DecklistFragment.this.isAdded()) {
-                    /* Find the compressed wishlist info for this card */
-                    for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                        if (cdi.header == null && cdi.mName.equals(mCardName)) {
-                            /* Find all foil and non foil compressed items with the same set code */
-                            for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                                if (isi.mSetCode.equals(mSetCode)) {
+    @Override
+    protected void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException) {
+        /* Find the compressed wishlist info for this card */
+        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+            if (cdi.header == null && cdi.mName.equals(data.mName)) {
+                /* Find all foil and non foil compressed items with the same set code */
+                for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
+                    if (isi.mSetCode.equals(data.setCode)) {
                                     /* Set the price as null and the message as the exception */
-                                    isi.mMessage = spiceException.getLocalizedMessage();
-                                    isi.mPrice = null;
-                                }
-                            }
-                        }
-                    }
-                    mPriceFetchRequests--;
-                    if (mPriceFetchRequests == 0) {
-                        getFamiliarActivity().clearLoading();
-                    }
-                    getCardDataAdapter(0).notifyDataSetChanged();
-                }
-
-            }
-
-            /**
-             * Loading the price for this card succeeded. Set it.
-             *
-             * @param result The price for this card
-             */
-            @Override
-            public void onRequestSuccess(final PriceInfo result) {
-
-                /* because this can return when the fragment is in the background */
-                if (DecklistFragment.this.isAdded()) {
-                    /* Find the compressed wishlist info for this card */
-                    for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                        if (cdi.header == null && cdi.mName.equals(mCardName)) {
-                            /* Find all foil and non foil compressed items with the same set code */
-                            for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                                if (isi.mSetCode.equals(mSetCode)) {
-                                    /* Set the whole price info object */
-                                    if (result != null) {
-                                        isi.mPrice = result;
-                                    }
-                                    /* The message will never be shown with a valid price,
-                                     * so set it as DNE */
-                                    isi.mMessage = getString(R.string.card_view_price_not_found);
-                                }
-                            }
-                        }
-                        updateTotalPrices(0);
-                    }
-                    mPriceFetchRequests--;
-                    if (mPriceFetchRequests == 0) {
-                        getFamiliarActivity().clearLoading();
+                        isi.mMessage = spiceException.getLocalizedMessage();
+                        isi.mPrice = null;
                     }
                 }
             }
+        }
+    }
 
-        });
-
+    @Override
+    protected void onCardPriceLookupSuccess(MtgCard data, PriceInfo result) {
+        /* Find the compressed wishlist info for this card */
+        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+            if (cdi.header == null && cdi.mName.equals(data.mName)) {
+                /* Find all foil and non foil compressed items with the same set code */
+                for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
+                    if (isi.mSetCode.equals(data.setCode)) {
+                        /* Set the whole price info object */
+                        if (result != null) {
+                            isi.mPrice = result;
+                        }
+                        /* The message will never be shown with a valid price,
+                         * so set it as DNE */
+                        isi.mMessage = getString(R.string.card_view_price_not_found);
+                    }
+                }
+            }
+            updateTotalPrices(0);
+        }
     }
 
     /**

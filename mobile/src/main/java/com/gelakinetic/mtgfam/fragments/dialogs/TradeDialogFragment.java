@@ -152,7 +152,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         lSide.get(positionForDialog).foil = b;
                         if (!lSide.get(positionForDialog).customPrice) {
-                            getParentTradeFragment().loadPrice(lSide.get(positionForDialog), aaSide);
+                            getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
                             priceText.setText(lSide.get(positionForDialog).hasPrice() ?
                                     lSide.get(positionForDialog).getPriceString().substring(1) : "");
                         }
@@ -176,7 +176,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     public void onClick(View v) {
                         lSide.get(positionForDialog).customPrice = false;
                         /* This loads the price if necessary, or uses cached info */
-                        getParentTradeFragment().loadPrice(lSide.get(positionForDialog), aaSide);
+                        getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
                         int price = lSide.get(positionForDialog).price;
                         priceText.setText(String.format(Locale.US, "%d.%02d", price / 100, price % 100));
 
@@ -404,7 +404,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                                 /* Reload and notify the adapter */
-                                getParentTradeFragment().loadPrice(data, adapter);
+                                getParentTradeFragment().loadPrice(data);
                                 adapter.notifyDataSetChanged();
                             }
                         })
@@ -427,7 +427,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     for (MtgCard data : getParentTradeFragment().mListLeft) {
                                         if (!data.customPrice) {
                                             data.message = getString(R.string.wishlist_loading);
-                                            getParentTradeFragment().loadPrice(data, (TradeFragment.CardDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT));
+                                            getParentTradeFragment().loadPrice(data);
                                         }
                                     }
                                     getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
@@ -435,7 +435,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     for (MtgCard data : getParentTradeFragment().mListRight) {
                                         if (!data.customPrice) {
                                             data.message = getString(R.string.wishlist_loading);
-                                            getParentTradeFragment().loadPrice(data, (TradeFragment.CardDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT));
+                                            getParentTradeFragment().loadPrice(data);
                                         }
                                     }
                                     getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
