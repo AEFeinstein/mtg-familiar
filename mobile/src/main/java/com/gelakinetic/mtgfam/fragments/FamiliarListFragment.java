@@ -213,7 +213,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 priceView.setVisibility(View.GONE);
             }
             for (View view : mTotalPriceDividers) {
-                view.setVisibility(View.VISIBLE);
+                view.setVisibility(View.GONE);
             }
         }
     }
