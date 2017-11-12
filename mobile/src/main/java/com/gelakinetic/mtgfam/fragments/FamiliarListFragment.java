@@ -19,22 +19,15 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
-import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
-import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -43,14 +36,11 @@ import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.SelectableItemAdapter;
 import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -81,10 +71,10 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     private ArrayList<TextView> mTotalPriceFields = new ArrayList<>();
     private ArrayList<View> mTotalPriceDividers = new ArrayList<>();
     private int mActionMenuResId;
-    private ActionMode mActionMode;
+    public ActionMode mActionMode;
 
     /* Data adapters */
-    private ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
+    public ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
 
     /**
      * Initializes common members. Must be called in onCreate
@@ -222,13 +212,13 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         return mCardDataAdapters.get(adapterIdx);
     }
 
-    void adaptersDeleteSelectedItems() {
+    public void adaptersDeleteSelectedItems() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deleteSelectedItems();
         }
     }
 
-    void adaptersDeselectAll() {
+    public void adaptersDeselectAll() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deselectAll();
         }
@@ -432,12 +422,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      *
      * @param side The side to update (only valid for trade)
      */
-    abstract void updateTotalPrices(int side);
+    public abstract void updateTotalPrices(int side);
 
     /**
      * @return true if the total price should be shown, false otherwise
      */
-    abstract boolean shouldShowPrice();
+    public abstract boolean shouldShowPrice();
 
     /**
      * @return the current price setting
@@ -448,178 +438,4 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param priceSetting The price setting to write to preferences
      */
     public abstract void setPriceSetting(int priceSetting);
-
-    /**
-     * Specific implementation for list-based Familiar Fragments.
-     *
-     * @param <T>  type that is stored in the ArrayList
-     * @param <VH> ViewHolder that is used by the adapter
-     */
-    public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataAdapter.ViewHolder>
-            extends SelectableItemAdapter<T, VH> {
-
-        @Override
-        @CallSuper
-        public void onBindViewHolder(VH holder, int position) {
-            if (!isInSelectMode()) {
-                /* Sometimes an item will be selected after we exit select mode */
-                setItemSelected(holder.itemView, position, false, false);
-            } else {
-                setItemSelected(holder.itemView, position, getItem(position).isSelected(), false);
-            }
-        }
-
-        CardDataAdapter(ArrayList<T> values) {
-            super(values, PreferenceAdapter.getUndoTimeout(getContext()));
-        }
-
-        @Override
-        public boolean pendingRemoval(final int position) {
-            if (super.pendingRemoval(position)) {
-                Snackbar undoBar = Snackbar.make(
-                        getFamiliarActivity().findViewById(R.id.fragment_container),
-                        getString(R.string.cardlist_item_deleted) + " " + getItemName(position),
-                        getPendingTimeout()
-                );
-                undoBar.setAction(R.string.cardlist_undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Runnable pendingRemovalRunnable = getAndRemovePendingRunnable(position);
-                        onUndoDelete(position);
-                        if (pendingRemovalRunnable != null) {
-                            removePending(pendingRemovalRunnable);
-                        }
-                        notifyItemChanged(position);
-                    }
-                });
-                undoBar.show();
-                return true;
-            }
-            return false;
-        }
-
-        public abstract String getItemName(final int position);
-
-        abstract class ViewHolder extends SelectableItemAdapter.ViewHolder {
-
-            protected TextView mCardName;
-
-            ViewHolder(ViewGroup view, @LayoutRes final int layoutRowId) {
-                // The inflated view is set to itemView
-                super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));
-                mCardName = itemView.findViewById(R.id.card_name);
-            }
-
-            abstract void onClickNotSelectMode(View view);
-
-            @Override
-            public void onClick(View view) {
-                if (isInSelectMode()) {
-                    int position = getAdapterPosition();
-                    if (itemView.isSelected()) {
-                        // Unselect the item
-                        setItemSelected(itemView, position, false, true);
-
-                        int numSelected = 0;
-                        for (CardDataAdapter adapter : mCardDataAdapters) {
-                            numSelected += adapter.getNumSelectedItems();
-                        }
-                        // If there are no more items
-                        if (numSelected < 1) {
-                            // Finish select mode
-                            mActionMode.finish();
-                            setInSelectMode(false);
-                        }
-                    } else {
-                        // Select the item
-                        setItemSelected(itemView, position, true, true);
-                    }
-                } else {
-                    onClickNotSelectMode(view);
-                }
-            }
-
-            @Override
-            public boolean onLongClick(View view) {
-                if (!isInSelectMode()) {
-                    // Start select mode
-                    mActionMode = getFamiliarActivity().startSupportActionMode(new ActionMode.Callback() {
-
-                        @Override
-                        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                            MenuInflater inflater = mode.getMenuInflater();
-                            inflater.inflate(mActionMenuResId, menu); // action_mode_menu or decklist_select_menu
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                            switch (item.getItemId()) {
-                                // All lists have this one
-                                case R.id.deck_delete_selected: {
-                                    adaptersDeleteSelectedItems();
-                                    mode.finish();
-                                    if (shouldShowPrice()) {
-                                        updateTotalPrices(TradeFragment.BOTH);
-                                    }
-                                    return true;
-                                }
-                                // Only for the decklist
-                                case R.id.deck_import_selected: {
-                                    ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
-                                            ((DecklistFragment.CardDataAdapter) getCardDataAdapter(0)).getSelectedItems();
-                                    for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-                                        WishlistHelpers.addItemToWishlist(getContext(),
-                                                info.convertToWishlist());
-                                    }
-                                    mode.finish();
-                                    return true;
-                                }
-                                default: {
-                                    return false;
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onDestroyActionMode(ActionMode mode) {
-                            adaptersDeselectAll();
-                        }
-                    });
-
-                    for (CardDataAdapter adapter : mCardDataAdapters) {
-                        adapter.setInSelectMode(true);
-                    }
-
-                    // Then select the item
-                    setItemSelected(itemView, getAdapterPosition(), true, true);
-
-                    // This click was handled
-                    return true;
-                }
-
-                // The click was not handled
-                return false;
-            }
-        }
-
-        @Override
-        public void onItemDismissed(final int position) {
-            super.onItemDismissed(position);
-            if (shouldShowPrice()) {
-                updateTotalPrices(TradeFragment.BOTH);
-            }
-        }
-
-        void onUndoDelete(final int position) {
-            if (shouldShowPrice()) {
-                updateTotalPrices(TradeFragment.BOTH);
-            }
-        }
-    }
 }

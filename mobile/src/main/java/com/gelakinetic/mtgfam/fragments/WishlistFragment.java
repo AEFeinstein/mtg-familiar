@@ -41,6 +41,8 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
+import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
+import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
@@ -106,7 +108,7 @@ public class WishlistFragment extends FamiliarListFragment {
         initializeMembers(
                 myFragmentView,
                 new int[]{R.id.cardlist},
-                new FamiliarListFragment.CardDataAdapter[]{new WishlistFragment.CardDataAdapter(mCompressedWishlist)},
+                new CardDataAdapter[]{new WishlistDataAdapter(mCompressedWishlist)},
                 new int[]{R.id.priceText}, new int[]{R.id.divider_total_price}, addCardListener,
                 R.menu.action_mode_menu);
 
@@ -458,7 +460,7 @@ public class WishlistFragment extends FamiliarListFragment {
     }
 
     @Override
-    boolean shouldShowPrice() {
+    public boolean shouldShowPrice() {
         return PreferenceAdapter.getShowTotalWishlistPrice(getContext());
     }
 
@@ -492,15 +494,55 @@ public class WishlistFragment extends FamiliarListFragment {
         getCardDataAdapter(0).notifyDataSetChanged();
     }
 
+    class WishlistViewHolder extends CardDataViewHolder {
+
+        /* Card Information */
+        final TextView mCardType;
+        final TextView mCardText;
+        final TextView mCardPower;
+        final TextView mCardSlash;
+        final TextView mCardToughness;
+        final TextView mCardCost;
+
+        /* For adding individual wishlist sets */
+        final LinearLayout mWishlistSets;
+
+        WishlistViewHolder(ViewGroup view) {
+            super(view, R.layout.result_list_card_row, WishlistFragment.this.getCardDataAdapter(0), WishlistFragment.this, R.menu.action_mode_menu);
+
+            mCardType = itemView.findViewById(R.id.cardtype);
+            mCardText = itemView.findViewById(R.id.cardability);
+            mCardPower = itemView.findViewById(R.id.cardp);
+            mCardSlash = itemView.findViewById(R.id.cardslash);
+            mCardToughness = itemView.findViewById(R.id.cardt);
+            mCardCost = itemView.findViewById(R.id.cardcost);
+            mWishlistSets = itemView.findViewById(R.id.wishlist_sets);
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClickNotSelectMode(View view) {
+            // Make sure the wishlist is written first in the proper order
+            sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+            WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+            sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
+
+            // Then show the dialog
+            showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD,
+                    mCardName.getText().toString());
+        }
+
+    }
+
     /**
      * The adapter that drives the wish list
      */
-    public class CardDataAdapter
-            extends FamiliarListFragment
-            .CardDataAdapter<CompressedWishlistInfo, CardDataAdapter.ViewHolder> {
+    public class WishlistDataAdapter
+            extends CardDataAdapter<CompressedWishlistInfo, WishlistViewHolder> {
 
-        CardDataAdapter(ArrayList<CompressedWishlistInfo> values) {
-            super(values);
+        WishlistDataAdapter(ArrayList<CompressedWishlistInfo> values) {
+            super(values, WishlistFragment.this);
         }
 
         @Override
@@ -509,12 +551,12 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(parent);
+        public WishlistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new WishlistViewHolder(parent);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(WishlistViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             /* Get all the wishlist info for this entry */
@@ -682,48 +724,5 @@ public class WishlistFragment extends FamiliarListFragment {
                 }
             }
         }
-
-        class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
-
-            /* Card Information */
-            final TextView mCardType;
-            final TextView mCardText;
-            final TextView mCardPower;
-            final TextView mCardSlash;
-            final TextView mCardToughness;
-            final TextView mCardCost;
-
-            /* For adding individual wishlist sets */
-            final LinearLayout mWishlistSets;
-
-            ViewHolder(ViewGroup view) {
-                super(view, R.layout.result_list_card_row);
-
-                mCardType = itemView.findViewById(R.id.cardtype);
-                mCardText = itemView.findViewById(R.id.cardability);
-                mCardPower = itemView.findViewById(R.id.cardp);
-                mCardSlash = itemView.findViewById(R.id.cardslash);
-                mCardToughness = itemView.findViewById(R.id.cardt);
-                mCardCost = itemView.findViewById(R.id.cardcost);
-                mWishlistSets = itemView.findViewById(R.id.wishlist_sets);
-                itemView.setOnClickListener(this);
-                itemView.setOnLongClickListener(this);
-            }
-
-            @Override
-            public void onClickNotSelectMode(View view) {
-                // Make sure the wishlist is written first in the proper order
-                sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
-                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
-                sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
-
-                // Then show the dialog
-                showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD,
-                        mCardName.getText().toString());
-            }
-
-        }
-
     }
-
 }

@@ -40,6 +40,8 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
+import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
@@ -123,7 +125,7 @@ public class DecklistFragment extends FamiliarListFragment {
         initializeMembers(
                 myFragmentView,
                 new int[]{R.id.cardlist},
-                new CardDataAdapter[]{new CardDataAdapter(mCompressedDecklist)},
+                new CardDataAdapter[]{new DecklistDataAdapter(mCompressedDecklist)},
                 new int[]{R.id.decklistPrice}, null, addCardListener,
                 R.menu.decklist_select_menu);
 
@@ -233,8 +235,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Update the number of cards listed */
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
 
         /* Redraw the new decklist with the new card */
         setHeaderValues();
@@ -253,8 +255,8 @@ public class DecklistFragment extends FamiliarListFragment {
         readAndCompressDecklist(null, mCurrentDeck);
         getCardDataAdapter(0).notifyDataSetChanged();
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
     }
 
     /**
@@ -354,8 +356,8 @@ public class DecklistFragment extends FamiliarListFragment {
             Collections.sort(mCompressedDecklist, mDecklistChain);
             setHeaderValues();
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                    ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                    ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
         }
@@ -515,7 +517,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
                 if (!cdi.mName.equals("") /* We only want entries that have a card attached */
                         && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
-                        && ((CardDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
+                        && ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
                     if (cdi.mIsSideboard /* it is in the sideboard */
                             /* The sideboard header isn't already there */
                             && !insertHeaderAt(i, cardHeaders[0])) {
@@ -590,7 +592,7 @@ public class DecklistFragment extends FamiliarListFragment {
     /**
      * Add together the price of all the cards in the wishlist and display it.
      */
-    void updateTotalPrices(int side) {
+    public void updateTotalPrices(int side) {
 
         /* default */
         float totalPrice = 0;
@@ -624,7 +626,7 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    boolean shouldShowPrice() {
+    public boolean shouldShowPrice() {
         return PreferenceAdapter.getShowTotalDecklistPrice(getContext());
     }
 
@@ -638,26 +640,49 @@ public class DecklistFragment extends FamiliarListFragment {
         PreferenceAdapter.setDeckPrice(getContext(), Integer.toString(priceSetting));
     }
 
+    class DecklistViewHolder extends CardDataViewHolder {
+
+        private final TextView mCardNumberOf;
+        private final TextView mCardCost;
+
+        DecklistViewHolder(ViewGroup view) {
+            super(view, R.layout.decklist_card_row, DecklistFragment.this.getCardDataAdapter(0), DecklistFragment.this, R.menu.decklist_select_menu);
+
+            mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
+            mCardCost = itemView.findViewById(R.id.decklistRowCost);
+
+        }
+
+        @Override
+        public void onClickNotSelectMode(View view) {
+                /* if we aren't in select mode, open a dialog to edit this card */
+            final CompressedDecklistInfo item = (CompressedDecklistInfo) mAdapter.getItem(getAdapterPosition());
+            showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
+                    item.mName, item.mIsSideboard);
+        }
+
+    }
+
     /**
      * The adapter that drives the deck list.
      */
-    public class CardDataAdapter
-            extends FamiliarListFragment.CardDataAdapter<CompressedDecklistInfo, CardDataAdapter.ViewHolder> {
+    public class DecklistDataAdapter
+            extends CardDataAdapter<CompressedDecklistInfo, DecklistViewHolder> {
 
         /**
          * Create the adapter.
          *
          * @param values the data set
          */
-        CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
-            super(values);
+        DecklistDataAdapter(ArrayList<CompressedDecklistInfo> values) {
+            super(values, DecklistFragment.this);
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(
+        public DecklistViewHolder onCreateViewHolder(
                 ViewGroup parent,
                 int viewType) {
-            return new ViewHolder(parent);
+            return new DecklistViewHolder(parent);
         }
 
 
@@ -668,7 +693,7 @@ public class DecklistFragment extends FamiliarListFragment {
          * @param position where the holder is
          */
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(DecklistViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             final CompressedDecklistInfo info = getItem(position);
@@ -815,31 +840,5 @@ public class DecklistFragment extends FamiliarListFragment {
             DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
 
         }
-
-        class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
-
-            private final TextView mCardNumberOf;
-            private final TextView mCardCost;
-
-            ViewHolder(ViewGroup view) {
-
-                super(view, R.layout.decklist_card_row);
-
-                mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
-                mCardCost = itemView.findViewById(R.id.decklistRowCost);
-
-            }
-
-            @Override
-            public void onClickNotSelectMode(View view) {
-                /* if we aren't in select mode, open a dialog to edit this card */
-                final CompressedDecklistInfo item = getItem(getAdapterPosition());
-                showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
-                        item.mName, item.mIsSideboard);
-            }
-
-        }
-
     }
-
 }

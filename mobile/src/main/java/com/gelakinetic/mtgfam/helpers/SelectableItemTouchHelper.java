@@ -49,8 +49,8 @@ public class SelectableItemTouchHelper extends SimpleCallback {
 
     @Override
     public int getSwipeDirs(RecyclerView parent, ViewHolder holder) {
-        if (holder instanceof SelectableItemAdapter.ViewHolder) {
-            if (!((SelectableItemAdapter.ViewHolder) holder).getIsSwipeable()) {
+        if (holder instanceof SelectableItemViewHolder) {
+            if (!((SelectableItemViewHolder) holder).getIsSwipeable()) {
                 return 0;
             }
         }

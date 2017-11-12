@@ -23,8 +23,6 @@ import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,7 @@ import java.util.List;
  * @param <T>  type of what is held in the ArrayList
  * @param <VH> the ViewHolder that is used for the adapter
  */
-public abstract class SelectableItemAdapter<T extends SelectableItem, VH extends SelectableItemAdapter.ViewHolder>
+public abstract class SelectableItemAdapter<T extends SelectableItem, VH extends SelectableItemViewHolder>
         extends RecyclerView.Adapter<VH> {
 
     private final List<T> items;
@@ -206,7 +204,7 @@ public abstract class SelectableItemAdapter<T extends SelectableItem, VH extends
         return items.get(position).isSelected();
     }
 
-    protected T getItem(int position) {
+    public T getItem(int position) {
         return items.get(position);
     }
 
@@ -222,28 +220,5 @@ public abstract class SelectableItemAdapter<T extends SelectableItem, VH extends
 
     protected int getPendingTimeout() {
         return pendingTimeout;
-    }
-
-    /**
-     * ViewHolder implementing the needed listeners and defining swipeable and its get/setters.
-     */
-    public abstract class ViewHolder
-            extends RecyclerView.ViewHolder
-            implements OnClickListener, OnLongClickListener {
-
-        private boolean isSwipeable = true;
-
-        public ViewHolder(View view) {
-            super(view);
-        }
-
-        boolean getIsSwipeable() {
-            return isSwipeable;
-        }
-
-        public void setIsSwipeable(final boolean isSwipeable) {
-            this.isSwipeable = isSwipeable;
-        }
-
     }
 }

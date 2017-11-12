@@ -37,6 +37,8 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
+import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
+import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -105,10 +107,10 @@ public class TradeFragment extends FamiliarListFragment {
         assert myFragmentView != null;
 
         mListLeft = new ArrayList<>();
-        CardDataAdapter listAdapterLeft = new CardDataAdapter(mListLeft, LEFT);
+        CardDataAdapter listAdapterLeft = new TradeDataAdapter(mListLeft, LEFT);
 
         mListRight = new ArrayList<>();
-        CardDataAdapter listAdapterRight = new CardDataAdapter(mListRight, RIGHT);
+        CardDataAdapter listAdapterRight = new TradeDataAdapter(mListRight, RIGHT);
 
         /* Call to set up our shared UI elements */
         initializeMembers(
@@ -524,7 +526,7 @@ public class TradeFragment extends FamiliarListFragment {
     }
 
     @Override
-    boolean shouldShowPrice() {
+    public boolean shouldShowPrice() {
         return true;
     }
 
@@ -661,26 +663,58 @@ public class TradeFragment extends FamiliarListFragment {
 
     }
 
+    class TradeViewHolder extends CardDataViewHolder {
+
+        private final TextView mCardSet;
+        private final TextView mCardNumberOf;
+        private final ImageView mCardFoil;
+        private final TextView mCardPrice;
+        private int mSide;
+
+        TradeViewHolder(ViewGroup view, int side) {
+
+            super(view, R.layout.trader_row, TradeFragment.this.getCardDataAdapter(side), TradeFragment.this, R.menu.action_mode_menu);
+
+            mCardSet = itemView.findViewById(R.id.traderRowSet);
+            mCardNumberOf = itemView.findViewById(R.id.traderNumber);
+            mCardFoil = itemView.findViewById(R.id.traderRowFoil);
+            mCardPrice = itemView.findViewById(R.id.traderRowPrice);
+
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+
+            mSide = side;
+        }
+
+        @Override
+        public void onClickNotSelectMode(View view) {
+            showDialog(
+                    TradeDialogFragment.DIALOG_UPDATE_CARD,
+                    mSide,
+                    getAdapterPosition()
+            );
+        }
+    }
+
     /**
      * Adapter to display the cards in each list.
      */
-    public class CardDataAdapter
-            extends FamiliarListFragment.CardDataAdapter<MtgCard, CardDataAdapter.ViewHolder> {
+    public class TradeDataAdapter extends CardDataAdapter<MtgCard, TradeViewHolder> {
 
         private final int side;
 
-        CardDataAdapter(ArrayList<MtgCard> values, int side) {
-            super(values);
+        TradeDataAdapter(ArrayList<MtgCard> values, int side) {
+            super(values, TradeFragment.this);
             this.side = side;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return new ViewHolder(viewGroup);
+        public TradeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            return new TradeViewHolder(viewGroup, side);
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(TradeViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             final MtgCard item = getItem(position);
@@ -716,36 +750,6 @@ public class TradeFragment extends FamiliarListFragment {
             return getItem(position).mName;
         }
 
-        class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
-
-            private final TextView mCardSet;
-            private final TextView mCardNumberOf;
-            private final ImageView mCardFoil;
-            private final TextView mCardPrice;
-
-            ViewHolder(ViewGroup view) {
-
-                super(view, R.layout.trader_row);
-
-                mCardSet = itemView.findViewById(R.id.traderRowSet);
-                mCardNumberOf = itemView.findViewById(R.id.traderNumber);
-                mCardFoil = itemView.findViewById(R.id.traderRowFoil);
-                mCardPrice = itemView.findViewById(R.id.traderRowPrice);
-
-                itemView.setOnClickListener(this);
-                itemView.setOnLongClickListener(this);
-
-            }
-
-            @Override
-            public void onClickNotSelectMode(View view) {
-                showDialog(
-                        TradeDialogFragment.DIALOG_UPDATE_CARD,
-                        side,
-                        getAdapterPosition()
-                );
-            }
-        }
 
     }
 

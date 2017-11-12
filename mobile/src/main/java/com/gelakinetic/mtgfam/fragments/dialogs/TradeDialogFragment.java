@@ -108,7 +108,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             case DIALOG_UPDATE_CARD: {
                 /* Get some final references */
                 final ArrayList<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
-                final TradeFragment.CardDataAdapter aaSide = (TradeFragment.CardDataAdapter) (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT) : getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT));
+                final TradeFragment.TradeDataAdapter aaSide = (TradeFragment.TradeDataAdapter) (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT) : getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT));
                 if (positionForDialog >= lSide.size() || positionForDialog < 0) {
                     return DontShowDialog();
                 }
@@ -365,7 +365,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                                 /* Figure out what we're updating */
                                 MtgCard data;
-                                TradeFragment.CardDataAdapter adapter;
+                                TradeFragment.TradeDataAdapter adapter;
 
                                 /* Make sure positionForDialog is in bounds */
                                 int max;
@@ -380,10 +380,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                                 if (sideForDialog == TradeFragment.LEFT) {
                                     data = getParentTradeFragment().mListLeft.get(positionForDialog);
-                                    adapter = (TradeFragment.CardDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
+                                    adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
                                 } else {
                                     data = getParentTradeFragment().mListRight.get(positionForDialog);
-                                    adapter = (TradeFragment.CardDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
+                                    adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
                                 }
 
                                 /* Change the card's information, and reload the price */
