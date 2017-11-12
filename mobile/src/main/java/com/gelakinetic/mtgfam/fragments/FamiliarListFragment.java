@@ -21,7 +21,6 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.MenuRes;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,7 +69,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     private boolean mCheckboxFoilLocked = false;
     private ArrayList<TextView> mTotalPriceFields = new ArrayList<>();
     private ArrayList<View> mTotalPriceDividers = new ArrayList<>();
-    private int mActionMenuResId;
     public ActionMode mActionMode;
 
     /* Data adapters */
@@ -86,13 +84,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param priceViewIds    the resource IDs for all the total price views to be managed
      * @param priceDividerIds the resource IDs for all the total price dividers to be managed
      * @param addCardListener the listener to attach to mNameField, or null
-     * @param ActionMenuResId the action menu to inflate
      */
     void initializeMembers(View fragmentView, @LayoutRes int[] recyclerViewIds,
                            CardDataAdapter[] adapters, @IdRes int[] priceViewIds,
                            @IdRes int[] priceDividerIds,
-                           TextView.OnEditorActionListener addCardListener,
-                           @MenuRes final int ActionMenuResId) {
+                           TextView.OnEditorActionListener addCardListener) {
 
         // Set up the name field
         mNameField = fragmentView.findViewById(R.id.name_search);
@@ -160,9 +156,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         // And hide the camera button
         fragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
-
-        // Set which menu to inflate for the action menu
-        mActionMenuResId = ActionMenuResId;
 
         // Set up total price views
         mTotalPriceFields.clear();

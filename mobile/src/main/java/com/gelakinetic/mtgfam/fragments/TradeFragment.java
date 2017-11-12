@@ -119,8 +119,8 @@ public class TradeFragment extends FamiliarListFragment {
                 new CardDataAdapter[]{listAdapterLeft, listAdapterRight},
                 new int[]{R.id.priceTextLeft, R.id.priceTextRight},
                 new int[]{R.id.priceDividerLeft, R.id.priceDividerRight},
-                null,
-                R.menu.action_mode_menu);
+                null
+        );
 
         /* Click listeners to add cards */
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(

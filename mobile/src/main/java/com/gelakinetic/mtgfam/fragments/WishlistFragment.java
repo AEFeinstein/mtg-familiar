@@ -109,8 +109,8 @@ public class WishlistFragment extends FamiliarListFragment {
                 myFragmentView,
                 new int[]{R.id.cardlist},
                 new CardDataAdapter[]{new WishlistDataAdapter(mCompressedWishlist)},
-                new int[]{R.id.priceText}, new int[]{R.id.divider_total_price}, addCardListener,
-                R.menu.action_mode_menu);
+                new int[]{R.id.priceText}, new int[]{R.id.divider_total_price}, addCardListener
+        );
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
             @Override

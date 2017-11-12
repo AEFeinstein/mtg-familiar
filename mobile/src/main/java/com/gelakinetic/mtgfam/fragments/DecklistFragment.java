@@ -126,8 +126,8 @@ public class DecklistFragment extends FamiliarListFragment {
                 myFragmentView,
                 new int[]{R.id.cardlist},
                 new CardDataAdapter[]{new DecklistDataAdapter(mCompressedDecklist)},
-                new int[]{R.id.decklistPrice}, null, addCardListener,
-                R.menu.decklist_select_menu);
+                new int[]{R.id.decklistPrice}, null, addCardListener
+        );
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
 
