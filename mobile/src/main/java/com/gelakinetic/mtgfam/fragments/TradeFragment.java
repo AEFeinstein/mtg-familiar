@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -125,7 +124,8 @@ public class TradeFragment extends FamiliarListFragment {
         initializeMembers(
                 myFragmentView,
                 new int[]{R.id.tradeListLeft, R.id.tradeListRight},
-                new CardDataAdapter[]{listAdapterLeft, listAdapterRight}, null);
+                new CardDataAdapter[]{listAdapterLeft, listAdapterRight}, null,
+                R.menu.action_mode_menu);
 
         /* Total price fields */
         mTotalPriceLeft = myFragmentView.findViewById(R.id.priceTextLeft); // TODO merge
@@ -151,41 +151,6 @@ public class TradeFragment extends FamiliarListFragment {
                     }
 
                 });
-
-        mActionModeCallback = new ActionMode.Callback() {
-
-            @Override
-            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-                MenuInflater inflater = actionMode.getMenuInflater();
-                inflater.inflate(R.menu.action_mode_menu, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.deck_delete_selected: {
-                        adaptersDeleteSelectedItems();
-                        mActionMode.finish();
-                        return true;
-                    }
-                    default: {
-                        return false;
-                    }
-                }
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode actionMode) {
-                adaptersDeselectAll();
-            }
-
-        };
 
         return myFragmentView;
     }
@@ -899,29 +864,12 @@ public class TradeFragment extends FamiliarListFragment {
             }
 
             @Override
-            public void onClick(View view) {
-
-                if (!isInSelectMode() && !otherAdapter.isInSelectMode()) {
-                    showDialog(
-                            TradeDialogFragment.DIALOG_UPDATE_CARD,
-                            side,
-                            getAdapterPosition()
-                    );
-                } else {
-                    super.onClick(view);
-                }
-
-            }
-
-            /**
-             * If the other adapter is in select mode, don't enter select mode
-             *
-             * @param view view being clicked
-             * @return onLongClick
-             */
-            @Override
-            public boolean onLongClick(View view) {
-                return !otherAdapter.isInSelectMode() && super.onLongClick(view);
+            public void onClickNotSelectMode(View view) {
+                showDialog(
+                        TradeDialogFragment.DIALOG_UPDATE_CARD,
+                        side,
+                        getAdapterPosition()
+                );
             }
         }
 

@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.MenuRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
@@ -38,10 +42,12 @@ import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SelectableItemAdapter;
 import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import java.util.ArrayList;
@@ -52,14 +58,13 @@ import java.util.ArrayList;
  */
 public abstract class FamiliarListFragment extends FamiliarFragment {
 
-    /* Preferences */
-    public int mPriceSetting;
-
-    /* Pricing Constants */
+    /* Pricing */
     public static final int LOW_PRICE = 0;
     public static final int AVG_PRICE = 1;
     public static final int HIGH_PRICE = 2;
     public static final int FOIL_PRICE = 3;
+    public int mPriceSetting;
+    int mPriceFetchRequests = 0;
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
@@ -67,13 +72,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     private CheckBox mCheckboxFoil;
     private boolean mCheckboxFoilLocked = false;
     TextView mTotalPriceField;
+    private int mActionMenuResId;
+    private ActionMode mActionMode;
 
-    int mPriceFetchRequests = 0;
-
+    /* Data adapters */
     private ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
-
-    ActionMode mActionMode;
-    ActionMode.Callback mActionModeCallback;
 
     /**
      * Initializes common members. Must be called in onCreate
@@ -83,8 +86,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param adapters        the adapters for all the recycler views. Must have the same number of
      *                        elements as recyclerViewIds
      * @param addCardListener the listener to attach to mNameField, or null
+     * @param ActionMenuResId the action menu to inflate
      */
-    void initializeMembers(View fragmentView, int[] recyclerViewIds, CardDataAdapter[] adapters, TextView.OnEditorActionListener addCardListener) {
+    void initializeMembers(View fragmentView, @LayoutRes int[] recyclerViewIds,
+                           CardDataAdapter[] adapters, TextView.OnEditorActionListener addCardListener,
+                           @MenuRes final int ActionMenuResId) {
 
         // Set up the name field
         mNameField = fragmentView.findViewById(R.id.name_search);
@@ -151,6 +157,9 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         // And hide the camera button
         fragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
+
+        // Set which menu to inflate for the action menu
+        mActionMenuResId = ActionMenuResId;
     }
 
     @Override
@@ -241,7 +250,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             }
         }
 
-        public CardDataAdapter(ArrayList<T> values) {
+        CardDataAdapter(ArrayList<T> values) {
             super(values, PreferenceAdapter.getUndoTimeout(getContext()));
         }
 
@@ -278,13 +287,15 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         abstract class ViewHolder extends SelectableItemAdapter.ViewHolder {
 
-            final TextView mCardName;
+            protected TextView mCardName;
 
             ViewHolder(ViewGroup view, @LayoutRes final int layoutRowId) {
                 // The inflated view is set to itemView
                 super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));
                 mCardName = itemView.findViewById(R.id.card_name);
             }
+
+            abstract void onClickNotSelectMode(View view);
 
             @Override
             public void onClick(View view) {
@@ -304,6 +315,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         // Select the item
                         setItemSelected(itemView, position, true, true);
                     }
+                } else {
+                    onClickNotSelectMode(view);
                 }
             }
 
@@ -311,7 +324,51 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             public boolean onLongClick(View view) {
                 if (!isInSelectMode()) {
                     // Start select mode
-                    mActionMode = getFamiliarActivity().startSupportActionMode(mActionModeCallback);
+                    mActionMode = getFamiliarActivity().startSupportActionMode(new ActionMode.Callback() {
+
+                        @Override
+                        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                            MenuInflater inflater = mode.getMenuInflater();
+                            inflater.inflate(mActionMenuResId, menu); // action_mode_menu or decklist_select_menu
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                            switch (item.getItemId()) {
+                                // All lists have this one
+                                case R.id.deck_delete_selected: {
+                                    adaptersDeleteSelectedItems();
+                                    mode.finish();
+                                    return true;
+                                }
+                                // Only for the decklist
+                                case R.id.deck_import_selected: {
+                                    ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
+                                            ((DecklistFragment.CardDataAdapter) getCardDataAdapter(0)).getSelectedItems();
+                                    for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
+                                        WishlistHelpers.addItemToWishlist(getContext(),
+                                                info.convertToWishlist());
+                                    }
+                                    mode.finish();
+                                    return true;
+                                }
+                                default: {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onDestroyActionMode(ActionMode mode) {
+                            adaptersDeselectAll();
+                        }
+                    });
                     setInSelectMode(true);
 
                     // Then select the item

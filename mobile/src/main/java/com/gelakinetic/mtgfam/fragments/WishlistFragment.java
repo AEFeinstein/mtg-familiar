@@ -24,7 +24,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.view.ActionMode;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -113,7 +112,8 @@ public class WishlistFragment extends FamiliarListFragment {
                 myFragmentView,
                 new int[]{R.id.cardlist},
                 new FamiliarListFragment.CardDataAdapter[]{new WishlistFragment.CardDataAdapter(mCompressedWishlist)},
-                addCardListener);
+                addCardListener,
+                R.menu.action_mode_menu);
 
         /* Grab other elements */
         mTotalPriceField = myFragmentView.findViewById(R.id.priceText);
@@ -125,39 +125,6 @@ public class WishlistFragment extends FamiliarListFragment {
                 addCardToWishlist();
             }
         });
-
-        mActionModeCallback = new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.action_mode_menu, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.deck_delete_selected: {
-                        adaptersDeleteSelectedItems();
-                        mActionMode.finish();
-                        return true;
-                    }
-                    default: {
-                        return false;
-                    }
-                }
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                adaptersDeselectAll();
-            }
-        };
 
         return myFragmentView;
     }
@@ -793,13 +760,9 @@ public class WishlistFragment extends FamiliarListFragment {
             }
 
             @Override
-            public void onClick(View view) {
-                if (!isInSelectMode()) {
-                    showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD,
-                            mCardName.getText().toString());
-                } else {
-                    super.onClick(view);
-                }
+            public void onClickNotSelectMode(View view) {
+                showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD,
+                        mCardName.getText().toString());
             }
 
         }

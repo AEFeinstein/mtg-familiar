@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.view.ActionMode;
 import android.text.Html;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -50,7 +49,6 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -132,7 +130,8 @@ public class DecklistFragment extends FamiliarListFragment {
                 myFragmentView,
                 new int[]{R.id.cardlist},
                 new CardDataAdapter[]{new CardDataAdapter(mCompressedDecklist)},
-                addCardListener);
+                addCardListener,
+                R.menu.decklist_select_menu);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
 
@@ -166,51 +165,6 @@ public class DecklistFragment extends FamiliarListFragment {
         mDecklistChain.addComparator(new CardHelpers.CardComparatorCMC());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
-
-        mActionModeCallback = new ActionMode.Callback() {
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.decklist_select_menu, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.deck_import_selected: {
-                        ArrayList<CompressedDecklistInfo> selectedItems =
-                                ((CardDataAdapter) getCardDataAdapter(0)).getSelectedItems();
-                        for (CompressedDecklistInfo info : selectedItems) {
-                            WishlistHelpers.addItemToWishlist(getContext(),
-                                    info.convertToWishlist());
-                        }
-                        mActionMode.finish();
-                        return true;
-                    }
-                    case R.id.deck_delete_selected: {
-                        adaptersDeleteSelectedItems();
-                        mActionMode.finish();
-                        return true;
-                    }
-                    default: {
-                        return false;
-                    }
-                }
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                adaptersDeselectAll();
-            }
-
-        };
 
         return myFragmentView;
     }
@@ -920,17 +874,11 @@ public class DecklistFragment extends FamiliarListFragment {
             }
 
             @Override
-            public void onClick(View view) {
-
-                if (!isInSelectMode()) {
-                    /* if we aren't in select mode, open a dialog to edit this card */
-                    final CompressedDecklistInfo item = getItem(getAdapterPosition());
-                    showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
-                            item.mName, item.mIsSideboard);
-                } else {
-                    super.onClick(view);
-                }
-
+            public void onClickNotSelectMode(View view) {
+                /* if we aren't in select mode, open a dialog to edit this card */
+                final CompressedDecklistInfo item = getItem(getAdapterPosition());
+                showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
+                        item.mName, item.mIsSideboard);
             }
 
         }
