@@ -64,14 +64,13 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /* UI Elements */
     private AutoCompleteTextView mNameField;
     private EditText mNumberOfField;
-    public CheckBox mCheckboxFoil;
+    private CheckBox mCheckboxFoil;
+    private boolean mCheckboxFoilLocked = false;
     TextView mTotalPriceField;
 
     int mPriceFetchRequests = 0;
 
     private ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
-
-    boolean mCheckboxFoilLocked = false;
 
     ActionMode mActionMode;
     ActionMode.Callback mActionModeCallback;
@@ -204,6 +203,22 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      */
     public void clearCardNumberInput() {
         mNumberOfField.setText("1");
+    }
+
+    /**
+     * @return true if the foil checkbox is checked, false otherwise
+     */
+    boolean checkboxFoilIsChecked() {
+        return mCheckboxFoil.isChecked();
+    }
+
+    /**
+     * Unchecks the foil checkbox if it isn't locked
+     */
+    public void uncheckFoilCheckbox() {
+        if (!mCheckboxFoilLocked) {
+            mCheckboxFoil.setChecked(false);
+        }
     }
 
     /**

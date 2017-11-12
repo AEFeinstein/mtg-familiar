@@ -185,7 +185,7 @@ public class WishlistFragment extends FamiliarListFragment {
             return;
         }
 
-        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null, mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
+        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
         if (card == null) {
             return;
         }
@@ -217,10 +217,8 @@ public class WishlistFragment extends FamiliarListFragment {
         /* Clean up for the next add */
         clearCardNumberInput();
         clearCardNameInput();
-        /* Only unselect the checkbox if it isn't locked */
-        if (!mCheckboxFoilLocked) {
-            mCheckboxFoil.setChecked(false);
-        }
+        uncheckFoilCheckbox();
+
         /* Redraw the new wishlist with the new card */
         getCardDataAdapter(0).notifyDataSetChanged();
 

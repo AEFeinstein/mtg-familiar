@@ -123,7 +123,7 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                                 /* Clear input too */
                                 getParentWishlistFragment().clearCardNameInput();
                                 getParentWishlistFragment().clearCardNumberInput();
-                                getParentWishlistFragment().mCheckboxFoil.setChecked(false);
+                                getParentWishlistFragment().uncheckFoilCheckbox();
                                 dialog.dismiss();
                             }
                         })

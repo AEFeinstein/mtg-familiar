@@ -111,7 +111,6 @@ public class TradeFragment extends FamiliarListFragment {
         View myFragmentView = inflater.inflate(R.layout.trader_frag, container, false);
 
         assert myFragmentView != null;
-        mCheckboxFoil = myFragmentView.findViewById(R.id.list_foil);
 
         mListLeft = new ArrayList<>();
         CardDataAdapter listAdapterLeft = new CardDataAdapter(mListLeft, LEFT);
@@ -205,7 +204,7 @@ public class TradeFragment extends FamiliarListFragment {
 
         final String cardName = getCardNameInput().toString();
         final int numberOf = Integer.parseInt(getCardNumberInput().toString());
-        final boolean isFoil = mCheckboxFoil.isChecked();
+        final boolean isFoil = checkboxFoilIsChecked();
         final MtgCard card = CardHelpers.makeMtgCard(getContext(), cardName, null, isFoil, numberOf);
 
         if (card == null) {
@@ -235,9 +234,7 @@ public class TradeFragment extends FamiliarListFragment {
         clearCardNameInput();
         clearCardNumberInput();
 
-        if (!mCheckboxFoilLocked) {
-            mCheckboxFoil.setChecked(false);
-        }
+        uncheckFoilCheckbox();
 
         sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
 

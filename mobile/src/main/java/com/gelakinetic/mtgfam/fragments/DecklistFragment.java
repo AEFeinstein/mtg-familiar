@@ -232,7 +232,7 @@ public class DecklistFragment extends FamiliarListFragment {
         final String name = String.valueOf(getCardNameInput());
         final String numberOf = String.valueOf(getCardNumberInput());
         final MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null,
-                mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
+                checkboxFoilIsChecked(), Integer.parseInt(numberOf));
 
         /* If for some reason the card was null, we can just leave */
         if (card == null) {
@@ -282,9 +282,7 @@ public class DecklistFragment extends FamiliarListFragment {
         clearCardNameInput();
 
         /* Uncheck the foil box if it isn't locked */
-        if (!mCheckboxFoilLocked) {
-            mCheckboxFoil.setChecked(false);
-        }
+        uncheckFoilCheckbox();
 
         /* Update the number of cards listed */
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,

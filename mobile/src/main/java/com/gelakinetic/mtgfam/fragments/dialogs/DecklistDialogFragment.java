@@ -256,6 +256,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 );
                                 getParentDecklistFragment().clearCardNameInput();
                                 getParentDecklistFragment().clearCardNumberInput();
+                                getParentDecklistFragment().uncheckFoilCheckbox();
                                 dialog.dismiss();
 
                             }
