@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.support.annotation.CallSuper;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
 import android.support.design.widget.Snackbar;
@@ -72,7 +73,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     private EditText mNumberOfField;
     private CheckBox mCheckboxFoil;
     private boolean mCheckboxFoilLocked = false;
-    TextView mTotalPriceField;
+    private ArrayList<TextView> mTotalPriceFields = new ArrayList<>();
+    private ArrayList<View> mTotalPriceDividers = new ArrayList<>();
     private int mActionMenuResId;
     private ActionMode mActionMode;
 
@@ -86,11 +88,15 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param recyclerViewIds the resource IDs of all the recycler views to be managed
      * @param adapters        the adapters for all the recycler views. Must have the same number of
      *                        elements as recyclerViewIds
+     * @param priceViewIds    the resource IDs for all the total price views to be managed
+     * @param priceDividerIds the resource IDs for all the total price dividers to be managed
      * @param addCardListener the listener to attach to mNameField, or null
      * @param ActionMenuResId the action menu to inflate
      */
     void initializeMembers(View fragmentView, @LayoutRes int[] recyclerViewIds,
-                           CardDataAdapter[] adapters, TextView.OnEditorActionListener addCardListener,
+                           CardDataAdapter[] adapters, @IdRes int[] priceViewIds,
+                           @IdRes int[] priceDividerIds,
+                           TextView.OnEditorActionListener addCardListener,
                            @MenuRes final int ActionMenuResId) {
 
         // Set up the name field
@@ -161,6 +167,16 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         // Set which menu to inflate for the action menu
         mActionMenuResId = ActionMenuResId;
+
+        // Set up total price views
+        for (int resId : priceViewIds) {
+            mTotalPriceFields.add((TextView) fragmentView.findViewById(resId));
+        }
+        if (null != priceDividerIds) {
+            for (int resId : priceDividerIds) {
+                mTotalPriceDividers.add(fragmentView.findViewById(resId));
+            }
+        }
     }
 
     @Override
@@ -168,6 +184,28 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         super.onPause();
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.removePendingNow();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        /* Show the total price, if desired */
+        if (shouldShowPrice()) {
+            for (TextView priceView : mTotalPriceFields) {
+                priceView.setVisibility(View.VISIBLE);
+            }
+            for (View view : mTotalPriceDividers) {
+                view.setVisibility(View.VISIBLE);
+            }
+        } else {
+            for (TextView priceView : mTotalPriceFields) {
+                priceView.setVisibility(View.GONE);
+            }
+            for (View view : mTotalPriceDividers) {
+                view.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -228,6 +266,20 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public void uncheckFoilCheckbox() {
         if (!mCheckboxFoilLocked) {
             mCheckboxFoil.setChecked(false);
+        }
+    }
+
+    /**
+     * Sets the total price text and color for the given field
+     *
+     * @param priceText The text to set
+     * @param color     The color to write the text in
+     * @param side      An index to the view to update
+     */
+    void setTotalPrice(String priceText, Integer color, int side) {
+        mTotalPriceFields.get(side).setText(priceText);
+        if (null != color) {
+            mTotalPriceFields.get(side).setTextColor(color);
         }
     }
 

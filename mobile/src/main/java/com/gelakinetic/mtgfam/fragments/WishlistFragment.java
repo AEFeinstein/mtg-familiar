@@ -74,7 +74,6 @@ public class WishlistFragment extends FamiliarListFragment {
 
     /* The wishlist and adapter */
     public ArrayList<CompressedWishlistInfo> mCompressedWishlist;
-    private View mTotalPriceDivider;
     private int mOrderAddedIdx = 0;
 
     /**
@@ -111,12 +110,8 @@ public class WishlistFragment extends FamiliarListFragment {
                 myFragmentView,
                 new int[]{R.id.cardlist},
                 new FamiliarListFragment.CardDataAdapter[]{new WishlistFragment.CardDataAdapter(mCompressedWishlist)},
-                addCardListener,
+                new int[]{R.id.priceText}, new int[]{R.id.divider_total_price}, addCardListener,
                 R.menu.action_mode_menu);
-
-        /* Grab other elements */
-        mTotalPriceField = myFragmentView.findViewById(R.id.priceText);
-        mTotalPriceDivider = myFragmentView.findViewById(R.id.divider_total_price);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,15 +202,6 @@ public class WishlistFragment extends FamiliarListFragment {
          * added it to the wishlist from the CardViewFragment */
         readAndCompressWishlist(null);
         getCardDataAdapter(0).notifyDataSetChanged();
-
-        /* Show the total price, if desired */
-        if (shouldShowPrice()) {
-            mTotalPriceField.setVisibility(View.VISIBLE);
-            mTotalPriceDivider.setVisibility(View.VISIBLE);
-        } else {
-            mTotalPriceField.setVisibility(View.GONE);
-            mTotalPriceDivider.setVisibility(View.GONE);
-        }
     }
 
     /**
@@ -515,7 +501,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
                 }
             }
-            mTotalPriceField.setText(String.format(Locale.US, PRICE_FORMAT, totalPrice));
+            setTotalPrice(String.format(Locale.US, PRICE_FORMAT, totalPrice), null, 0);
         }
     }
 

@@ -80,10 +80,6 @@ public class TradeFragment extends FamiliarListFragment {
     /* Right List and Company */
     public ArrayList<MtgCard> mListRight;
 
-    /* Total Price Views */
-    private TextView mTotalPriceLeft;
-    private TextView mTotalPriceRight;
-
     public String mCurrentTrade = "";
 
     private int mOrderAddedIdx = 0;
@@ -121,12 +117,11 @@ public class TradeFragment extends FamiliarListFragment {
         initializeMembers(
                 myFragmentView,
                 new int[]{R.id.tradeListLeft, R.id.tradeListRight},
-                new CardDataAdapter[]{listAdapterLeft, listAdapterRight}, null,
+                new CardDataAdapter[]{listAdapterLeft, listAdapterRight},
+                new int[]{R.id.priceTextLeft, R.id.priceTextRight},
+                new int[]{R.id.priceDividerLeft, R.id.priceDividerRight},
+                null,
                 R.menu.action_mode_menu);
-
-        /* Total price fields */
-        mTotalPriceLeft = myFragmentView.findViewById(R.id.priceTextLeft); // TODO merge
-        mTotalPriceRight = myFragmentView.findViewById(R.id.priceTextRight);
 
         /* Click listeners to add cards */
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(
@@ -609,8 +604,7 @@ public class TradeFragment extends FamiliarListFragment {
                 final String leftPrice =
                         String.format(Locale.US, PRICE_FORMAT, totalPrice)
                                 + " (" + totalCards + ")";
-                mTotalPriceLeft.setText(leftPrice);
-                mTotalPriceLeft.setTextColor(color);
+                setTotalPrice(leftPrice, color, TradeFragment.LEFT);
             }
             if (side == RIGHT || side == BOTH) {
                 float totalPrice = 0;
@@ -638,8 +632,7 @@ public class TradeFragment extends FamiliarListFragment {
                 final String rightPrice =
                         String.format(Locale.US, PRICE_FORMAT, totalPrice)
                                 + " (" + totalCards + ")";
-                mTotalPriceRight.setText(rightPrice);
-                mTotalPriceRight.setTextColor(color);
+                setTotalPrice(rightPrice, color, TradeFragment.RIGHT);
             }
         }
     }

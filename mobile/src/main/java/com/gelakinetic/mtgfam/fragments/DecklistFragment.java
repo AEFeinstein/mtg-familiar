@@ -127,7 +127,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 myFragmentView,
                 new int[]{R.id.cardlist},
                 new CardDataAdapter[]{new CardDataAdapter(mCompressedDecklist)},
-                addCardListener,
+                new int[]{R.id.decklistPrice}, null, addCardListener,
                 R.menu.decklist_select_menu);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
@@ -152,7 +152,6 @@ public class DecklistFragment extends FamiliarListFragment {
         mDeckName.setText(R.string.decklist_unnamed_deck);
         mDeckCards = myFragmentView.findViewById(R.id.decklistCards);
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
-        mTotalPriceField = myFragmentView.findViewById(R.id.decklistPrice);
 
         mDecklistChain = new ComparatorChain<>();
         mDecklistChain.addComparator(new CardHelpers.CardComparatorSideboard());
@@ -673,8 +672,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
             }
         }
-        mTotalPriceField.setText(String.format(Locale.US, PRICE_FORMAT, totalPrice));
-
+        setTotalPrice(String.format(Locale.US, PRICE_FORMAT, totalPrice), null, 0);
     }
 
     @Override
