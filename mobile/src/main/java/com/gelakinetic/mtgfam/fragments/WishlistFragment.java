@@ -712,6 +712,12 @@ public class WishlistFragment extends FamiliarListFragment {
 
             @Override
             public void onClickNotSelectMode(View view) {
+                // Make sure the wishlist is written first in the proper order
+                sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
+                WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);
+                sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
+
+                // Then show the dialog
                 showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD,
                         mCardName.getText().toString());
             }
