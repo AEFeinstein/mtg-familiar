@@ -134,10 +134,6 @@ public class DecklistFragment extends FamiliarListFragment {
                 new CardDataAdapter[]{new CardDataAdapter(mCompressedDecklist)},
                 addCardListener);
 
-        /* Default the number of cards field */
-        mNumberOfField.setText("1");
-        mNumberOfField.setOnEditorActionListener(addCardListener);
-
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -229,12 +225,12 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Don't allow the fields to be empty */
         if (getCardNameInput() == null || getCardNameInput().length() == 0 ||
-                mNumberOfField.getText() == null || mNumberOfField.getText().length() == 0) {
+                getCardNumberInput() == null || getCardNumberInput().length() == 0) {
             return;
         }
 
         final String name = String.valueOf(getCardNameInput());
-        final String numberOf = String.valueOf(mNumberOfField.getText());
+        final String numberOf = String.valueOf(getCardNumberInput());
         final MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null,
                 mCheckboxFoil.isChecked(), Integer.parseInt(numberOf));
 
@@ -282,7 +278,7 @@ public class DecklistFragment extends FamiliarListFragment {
         DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
 
         /* Clean up for the next add */
-        mNumberOfField.setText("1");
+        clearCardNumberInput();
         clearCardNameInput();
 
         /* Uncheck the foil box if it isn't locked */

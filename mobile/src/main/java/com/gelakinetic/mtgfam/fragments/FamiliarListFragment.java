@@ -63,7 +63,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
-    public EditText mNumberOfField;
+    private EditText mNumberOfField;
     public CheckBox mCheckboxFoil;
     TextView mTotalPriceField;
 
@@ -79,13 +79,13 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * Initializes common members. Must be called in onCreate
      *
-     * @param fragmentView      the view of the fragment calling this method
-     * @param recyclerViewIds   the resource IDs of all the recycler views to be managed
-     * @param adapters          the adapters for all the recycler views. Must have the same number of
-     *                          elements as recyclerViewIds
-     * @param nameFieldListener the listener to attach to mNameField, or null
+     * @param fragmentView    the view of the fragment calling this method
+     * @param recyclerViewIds the resource IDs of all the recycler views to be managed
+     * @param adapters        the adapters for all the recycler views. Must have the same number of
+     *                        elements as recyclerViewIds
+     * @param addCardListener the listener to attach to mNameField, or null
      */
-    void initializeMembers(View fragmentView, int[] recyclerViewIds, CardDataAdapter[] adapters, TextView.OnEditorActionListener nameFieldListener) {
+    void initializeMembers(View fragmentView, int[] recyclerViewIds, CardDataAdapter[] adapters, TextView.OnEditorActionListener addCardListener) {
 
         // Set up the name field
         mNameField = fragmentView.findViewById(R.id.name_search);
@@ -96,12 +96,16 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         new int[]{R.id.text1}, mNameField,
                         false)
         );
-        if (null != nameFieldListener) {
-            mNameField.setOnEditorActionListener(nameFieldListener);
+        if (null != addCardListener) {
+            mNameField.setOnEditorActionListener(addCardListener);
         }
 
         // Set up the number of field
         mNumberOfField = fragmentView.findViewById(R.id.number_input);
+        clearCardNumberInput();
+        if (null != addCardListener) {
+            mNumberOfField.setOnEditorActionListener(addCardListener);
+        }
 
         // Set up the recycler views and adapters
         for (int i = 0; i < recyclerViewIds.length; i++) {
@@ -186,6 +190,20 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      */
     public void clearCardNameInput() {
         mNameField.setText("");
+    }
+
+    /**
+     * @return The current text in mNumberOfField
+     */
+    Editable getCardNumberInput() {
+        return mNumberOfField.getText();
+    }
+
+    /**
+     * Clears mNameField
+     */
+    public void clearCardNumberInput() {
+        mNumberOfField.setText("1");
     }
 
     /**

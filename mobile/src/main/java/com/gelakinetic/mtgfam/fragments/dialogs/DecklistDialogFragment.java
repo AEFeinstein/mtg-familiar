@@ -254,6 +254,8 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                         getActivity(),
                                         getParentDecklistFragment().mCompressedDecklist
                                 );
+                                getParentDecklistFragment().clearCardNameInput();
+                                getParentDecklistFragment().clearCardNumberInput();
                                 dialog.dismiss();
 
                             }

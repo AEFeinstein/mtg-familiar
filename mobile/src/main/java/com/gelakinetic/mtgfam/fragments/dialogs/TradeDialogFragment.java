@@ -565,6 +565,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
                                 getParentTradeFragment().mCheckboxFoil.setChecked(false);
                                 getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
+                                getParentTradeFragment().clearCardNameInput();
+                                getParentTradeFragment().clearCardNumberInput();
                                 dialog.dismiss();
                             }
                         })

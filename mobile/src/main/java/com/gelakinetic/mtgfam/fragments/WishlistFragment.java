@@ -115,10 +115,6 @@ public class WishlistFragment extends FamiliarListFragment {
                 new FamiliarListFragment.CardDataAdapter[]{new WishlistFragment.CardDataAdapter(mCompressedWishlist)},
                 addCardListener);
 
-        /* Default the number of cards field */
-        mNumberOfField.setText("1");
-        mNumberOfField.setOnEditorActionListener(addCardListener);
-
         /* Grab other elements */
         mTotalPriceField = myFragmentView.findViewById(R.id.priceText);
         mTotalPriceDivider = myFragmentView.findViewById(R.id.divider_total_price);
@@ -184,7 +180,7 @@ public class WishlistFragment extends FamiliarListFragment {
         if (name == null || name.equals("")) {
             return;
         }
-        String numberOf = (String.valueOf(mNumberOfField.getText()));
+        String numberOf = (String.valueOf(getCardNumberInput()));
         if (numberOf == null || numberOf.equals("")) {
             return;
         }
@@ -219,7 +215,7 @@ public class WishlistFragment extends FamiliarListFragment {
         sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
 
         /* Clean up for the next add */
-        mNumberOfField.setText("1");
+        clearCardNumberInput();
         clearCardNameInput();
         /* Only unselect the checkbox if it isn't locked */
         if (!mCheckboxFoilLocked) {
