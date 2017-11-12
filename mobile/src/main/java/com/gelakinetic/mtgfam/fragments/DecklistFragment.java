@@ -598,24 +598,26 @@ public class DecklistFragment extends FamiliarListFragment {
         float totalPrice = 0;
 
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-            if (cdi.header == null) {
-                for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                    if (isi.mPrice != null) {
-                        if (isi.mIsFoil) {
-                            totalPrice += isi.mPrice.mFoilAverage * isi.mNumberOf;
-                        } else {
-                            switch (getPriceSetting()) {
-                                case LOW_PRICE:
-                                    totalPrice += isi.mPrice.mLow * isi.mNumberOf;
-                                    break;
-                                case AVG_PRICE:
-                                    totalPrice += isi.mPrice.mAverage * isi.mNumberOf;
-                                    break;
-                                case HIGH_PRICE:
-                                    totalPrice += isi.mPrice.mHigh * isi.mNumberOf;
-                                    break;
-                                default:
-                                    break;
+            if (!getCardDataAdapter(0).isItemPendingRemoval(mCompressedDecklist.indexOf(cdi))) {
+                if (cdi.header == null) {
+                    for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
+                        if (isi.mPrice != null) {
+                            if (isi.mIsFoil) {
+                                totalPrice += isi.mPrice.mFoilAverage * isi.mNumberOf;
+                            } else {
+                                switch (getPriceSetting()) {
+                                    case LOW_PRICE:
+                                        totalPrice += isi.mPrice.mLow * isi.mNumberOf;
+                                        break;
+                                    case AVG_PRICE:
+                                        totalPrice += isi.mPrice.mAverage * isi.mNumberOf;
+                                        break;
+                                    case HIGH_PRICE:
+                                        totalPrice += isi.mPrice.mHigh * isi.mNumberOf;
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                     }

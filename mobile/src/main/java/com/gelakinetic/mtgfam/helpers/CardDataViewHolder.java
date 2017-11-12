@@ -32,8 +32,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarListFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
+
+import java.util.ArrayList;
 
 public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener {
@@ -123,13 +126,13 @@ public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
                         }
                         // Only for the decklist
                         case R.id.deck_import_selected: {
-//                            ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
-//                                    ((DecklistFragment.CardDataAdapter) mFragment.getCardDataAdapter(0)).getSelectedItems();
-//                            for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-//                                WishlistHelpers.addItemToWishlist(mFragment.getContext(),
-//                                        info.convertToWishlist());
-//                            }
-//                            mode.finish();
+                            ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
+                                    ((DecklistFragment.DecklistDataAdapter) mFragment.getCardDataAdapter(0)).getSelectedItems();
+                            for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
+                                WishlistHelpers.addItemToWishlist(mFragment.getContext(),
+                                        info.convertToWishlist());
+                            }
+                            mode.finish();
                             return true;
                         }
                         default: {

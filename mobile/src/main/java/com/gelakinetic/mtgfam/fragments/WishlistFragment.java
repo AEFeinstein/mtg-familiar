@@ -433,23 +433,25 @@ public class WishlistFragment extends FamiliarListFragment {
             float totalPrice = 0;
 
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                for (IndividualSetInfo isi : cwi.mInfo) {
-                    if (isi.mPrice != null) {
-                        if (isi.mIsFoil) {
-                            totalPrice += (isi.mPrice.mFoilAverage * isi.mNumberOf);
-                        } else {
-                            switch (getPriceSetting()) {
-                                case LOW_PRICE:
-                                    totalPrice += (isi.mPrice.mLow * isi.mNumberOf);
-                                    break;
-                                case AVG_PRICE:
-                                    totalPrice += (isi.mPrice.mAverage * isi.mNumberOf);
-                                    break;
-                                case HIGH_PRICE:
-                                    totalPrice += (isi.mPrice.mHigh * isi.mNumberOf);
-                                    break;
-                                default:
-                                    break;
+                if (!getCardDataAdapter(0).isItemPendingRemoval(mCompressedWishlist.indexOf(cwi))) {
+                    for (IndividualSetInfo isi : cwi.mInfo) {
+                        if (isi.mPrice != null) {
+                            if (isi.mIsFoil) {
+                                totalPrice += (isi.mPrice.mFoilAverage * isi.mNumberOf);
+                            } else {
+                                switch (getPriceSetting()) {
+                                    case LOW_PRICE:
+                                        totalPrice += (isi.mPrice.mLow * isi.mNumberOf);
+                                        break;
+                                    case AVG_PRICE:
+                                        totalPrice += (isi.mPrice.mAverage * isi.mNumberOf);
+                                        break;
+                                    case HIGH_PRICE:
+                                        totalPrice += (isi.mPrice.mHigh * isi.mNumberOf);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                     }
