@@ -35,7 +35,7 @@ import java.util.Locale;
 /**
  * Encapsulate all information about a magic card
  */
-public class MtgCard extends Card implements SelectableItem {
+public class MtgCard extends Card {
     private static final String DELIMITER = "%";
 
     /* Wish and trade list fields */
@@ -370,12 +370,10 @@ public class MtgCard extends Card implements SelectableItem {
         return mIndex;
     }
 
-    @Override
     public boolean isSelected() {
         return selected;
     }
 
-    @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
     }

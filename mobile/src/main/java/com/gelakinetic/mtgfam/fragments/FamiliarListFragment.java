@@ -19,21 +19,14 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
-import android.support.annotation.CallSuper;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.MenuRes;
-import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -42,13 +35,15 @@ import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.SelectableItemAdapter;
-import com.gelakinetic.mtgfam.helpers.SelectableItemTouchHelper;
-import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
+import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
+import com.gelakinetic.mtgfam.helpers.PriceInfo;
+import com.gelakinetic.mtgfam.helpers.CardDataTouchHelper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
 
@@ -63,20 +58,21 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public static final int AVG_PRICE = 1;
     public static final int HIGH_PRICE = 2;
     public static final int FOIL_PRICE = 3;
-    public int mPriceSetting;
-    int mPriceFetchRequests = 0;
+    static final String PRICE_FORMAT = "$%.02f";
+
+    private int mPriceFetchRequests = 0;
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
     private EditText mNumberOfField;
     private CheckBox mCheckboxFoil;
     private boolean mCheckboxFoilLocked = false;
-    TextView mTotalPriceField;
-    private int mActionMenuResId;
-    private ActionMode mActionMode;
+    private ArrayList<TextView> mTotalPriceFields = new ArrayList<>();
+    private ArrayList<View> mTotalPriceDividers = new ArrayList<>();
+    public ActionMode mActionMode;
 
     /* Data adapters */
-    private ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
+    public ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
 
     /**
      * Initializes common members. Must be called in onCreate
@@ -85,12 +81,14 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param recyclerViewIds the resource IDs of all the recycler views to be managed
      * @param adapters        the adapters for all the recycler views. Must have the same number of
      *                        elements as recyclerViewIds
+     * @param priceViewIds    the resource IDs for all the total price views to be managed
+     * @param priceDividerIds the resource IDs for all the total price dividers to be managed
      * @param addCardListener the listener to attach to mNameField, or null
-     * @param ActionMenuResId the action menu to inflate
      */
     void initializeMembers(View fragmentView, @LayoutRes int[] recyclerViewIds,
-                           CardDataAdapter[] adapters, TextView.OnEditorActionListener addCardListener,
-                           @MenuRes final int ActionMenuResId) {
+                           CardDataAdapter[] adapters, @IdRes int[] priceViewIds,
+                           @IdRes int[] priceDividerIds,
+                           TextView.OnEditorActionListener addCardListener) {
 
         // Set up the name field
         mNameField = fragmentView.findViewById(R.id.name_search);
@@ -113,13 +111,14 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         }
 
         // Set up the recycler views and adapters
+        mCardDataAdapters.clear();
         for (int i = 0; i < recyclerViewIds.length; i++) {
             RecyclerView recyclerView = fragmentView.findViewById(recyclerViewIds[i]);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapters[i]);
 
             ItemTouchHelper.SimpleCallback callback =
-                    new SelectableItemTouchHelper(adapters[i], ItemTouchHelper.LEFT);
+                    new CardDataTouchHelper(adapters[i], ItemTouchHelper.LEFT);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -158,15 +157,42 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         // And hide the camera button
         fragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
 
-        // Set which menu to inflate for the action menu
-        mActionMenuResId = ActionMenuResId;
+        // Set up total price views
+        mTotalPriceFields.clear();
+        for (int resId : priceViewIds) {
+            mTotalPriceFields.add((TextView) fragmentView.findViewById(resId));
+        }
+        mTotalPriceDividers.clear();
+        if (null != priceDividerIds) {
+            for (int resId : priceDividerIds) {
+                mTotalPriceDividers.add(fragmentView.findViewById(resId));
+            }
+        }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        for (CardDataAdapter adapter : mCardDataAdapters) {
-            adapter.removePendingNow();
+    public void onResume() {
+        super.onResume();
+
+        if (null == mNameField) {
+            throw new IllegalStateException("A class extending FamiliarListFragment must call initializeMembers()");
+        }
+
+        /* Show the total price, if desired */
+        if (shouldShowPrice()) {
+            for (TextView priceView : mTotalPriceFields) {
+                priceView.setVisibility(View.VISIBLE);
+            }
+            for (View view : mTotalPriceDividers) {
+                view.setVisibility(View.VISIBLE);
+            }
+        } else {
+            for (TextView priceView : mTotalPriceFields) {
+                priceView.setVisibility(View.GONE);
+            }
+            for (View view : mTotalPriceDividers) {
+                view.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -174,13 +200,13 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         return mCardDataAdapters.get(adapterIdx);
     }
 
-    void adaptersDeleteSelectedItems() {
+    public void adaptersDeleteSelectedItems() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deleteSelectedItems();
         }
     }
 
-    void adaptersDeselectAll() {
+    public void adaptersDeselectAll() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deselectAll();
         }
@@ -231,158 +257,173 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     }
 
     /**
-     * Specific implementation for list-based Familiar Fragments.
+     * Sets the total price text and color for the given field
      *
-     * @param <T>  type that is stored in the ArrayList
-     * @param <VH> ViewHolder that is used by the adapter
+     * @param priceText The text to set
+     * @param color     The color to write the text in
+     * @param side      An index to the view to update
      */
-    public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataAdapter.ViewHolder>
-            extends SelectableItemAdapter<T, VH> {
+    void setTotalPrice(String priceText, Integer color, int side) {
+        mTotalPriceFields.get(side).setText(priceText);
+        if (null != color) {
+            mTotalPriceFields.get(side).setTextColor(color);
+        }
+    }
 
-        @Override
-        @CallSuper
-        public void onBindViewHolder(VH holder, int position) {
-            if (!isInSelectMode()) {
-                /* Sometimes an item will be selected after we exit select mode */
-                setItemSelected(holder.itemView, position, false, false);
+    /**
+     * Load the price for a given card. This handles all the spice stuff
+     *
+     * @param data A card to load price info for
+     */
+    public void loadPrice(final MtgCard data) {
+
+        /* If the priceInfo is already loaded, don't bother performing a query */
+        if (data.priceInfo != null) {
+            if (data.foil) {
+                data.price = (int) (data.priceInfo.mFoilAverage * 100);
             } else {
-                setItemSelected(holder.itemView, position, getItem(position).isSelected(), false);
-            }
-        }
-
-        CardDataAdapter(ArrayList<T> values) {
-            super(values, PreferenceAdapter.getUndoTimeout(getContext()));
-        }
-
-        @Override
-        public boolean pendingRemoval(final int position) {
-            if (super.pendingRemoval(position)) {
-                Snackbar undoBar = Snackbar.make(
-                        getFamiliarActivity().findViewById(R.id.fragment_container),
-                        getString(R.string.cardlist_item_deleted) + " " + getItemName(position),
-                        getPendingTimeout()
-                );
-                undoBar.setAction(R.string.cardlist_undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Runnable pendingRemovalRunnable = getAndRemovePendingRunnable(position);
-                        onUndoDelete(position);
-                        if (pendingRemovalRunnable != null) {
-                            removePending(pendingRemovalRunnable);
-                        }
-                        notifyItemChanged(position);
+                switch (getPriceSetting()) {
+                    case LOW_PRICE: {
+                        data.price = (int) (data.priceInfo.mLow * 100);
+                        break;
                     }
-                });
-                undoBar.show();
-                return true;
-            }
-            return false;
-        }
-
-        public void onUndoDelete(final int position) {
-            // Do nothing by default.
-        }
-
-        public abstract String getItemName(final int position);
-
-        abstract class ViewHolder extends SelectableItemAdapter.ViewHolder {
-
-            protected TextView mCardName;
-
-            ViewHolder(ViewGroup view, @LayoutRes final int layoutRowId) {
-                // The inflated view is set to itemView
-                super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));
-                mCardName = itemView.findViewById(R.id.card_name);
-            }
-
-            abstract void onClickNotSelectMode(View view);
-
-            @Override
-            public void onClick(View view) {
-                if (isInSelectMode()) {
-                    int position = getAdapterPosition();
-                    if (itemView.isSelected()) {
-                        // Unselect the item
-                        setItemSelected(itemView, position, false, true);
-
-                        // If there are no more items
-                        if (getNumSelectedItems() < 1) {
-                            // Finish select mode
-                            mActionMode.finish();
-                            setInSelectMode(false);
-                        }
-                    } else {
-                        // Select the item
-                        setItemSelected(itemView, position, true, true);
+                    default:
+                    case AVG_PRICE: {
+                        data.price = (int) (data.priceInfo.mAverage * 100);
+                        break;
                     }
-                } else {
-                    onClickNotSelectMode(view);
+                    case HIGH_PRICE: {
+                        data.price = (int) (data.priceInfo.mHigh * 100);
+                        break;
+                    }
+                    case FOIL_PRICE: {
+                        data.price = (int) (data.priceInfo.mFoilAverage * 100);
+                        break;
+                    }
                 }
             }
+        } else {
+            PriceFetchRequest priceRequest = new PriceFetchRequest(data.mName, data.setCode, data.mNumber, -1, getActivity());
+            mPriceFetchRequests++;
+            getFamiliarActivity().setLoading();
+            getFamiliarActivity().mSpiceManager.execute(priceRequest, data.mName + "-" +
+                    data.setCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
 
-            @Override
-            public boolean onLongClick(View view) {
-                if (!isInSelectMode()) {
-                    // Start select mode
-                    mActionMode = getFamiliarActivity().startSupportActionMode(new ActionMode.Callback() {
-
-                        @Override
-                        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                            MenuInflater inflater = mode.getMenuInflater();
-                            inflater.inflate(mActionMenuResId, menu); // action_mode_menu or decklist_select_menu
-                            return true;
+                /**
+                 * Loading the price for this card failed and threw a spiceException
+                 *
+                 * @param spiceException The exception thrown when trying to load this card's price
+                 */
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                /* because this can return when the fragment is in the background */
+                    if (FamiliarListFragment.this.isAdded()) {
+                        onCardPriceLookupFailure(data, spiceException);
+                        mPriceFetchRequests--;
+                        if (mPriceFetchRequests == 0) {
+                            getFamiliarActivity().clearLoading();
                         }
-
-                        @Override
-                        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                            return false;
+                        for (CardDataAdapter adapter : mCardDataAdapters) {
+                            adapter.notifyDataSetChanged();
                         }
+                    }
+                }
 
-                        @Override
-                        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                            switch (item.getItemId()) {
-                                // All lists have this one
-                                case R.id.deck_delete_selected: {
-                                    adaptersDeleteSelectedItems();
-                                    mode.finish();
-                                    return true;
-                                }
-                                // Only for the decklist
-                                case R.id.deck_import_selected: {
-                                    ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
-                                            ((DecklistFragment.CardDataAdapter) getCardDataAdapter(0)).getSelectedItems();
-                                    for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-                                        WishlistHelpers.addItemToWishlist(getContext(),
-                                                info.convertToWishlist());
+                /**
+                 * Loading the price for this card succeeded. Set it.
+                 *
+                 * @param result The price for this card
+                 */
+                @Override
+                public void onRequestSuccess(final PriceInfo result) {
+                    /* Sanity check */
+                    if (result == null) {
+                        data.priceInfo = null;
+                    } else {
+                        /* Set the PriceInfo object */
+                        data.priceInfo = result;
+
+                        /* Only reset the price to the downloaded one if the old price isn't custom */
+                        if (!data.customPrice) {
+                            if (data.foil) {
+                                data.price = (int) (result.mFoilAverage * 100);
+                            } else {
+                                switch (getPriceSetting()) {
+                                    case LOW_PRICE: {
+                                        data.price = (int) (result.mLow * 100);
+                                        break;
                                     }
-                                    mode.finish();
-                                    return true;
-                                }
-                                default: {
-                                    return false;
+                                    default:
+                                    case AVG_PRICE: {
+                                        data.price = (int) (result.mAverage * 100);
+                                        break;
+                                    }
+                                    case HIGH_PRICE: {
+                                        data.price = (int) (result.mHigh * 100);
+                                        break;
+                                    }
+                                    case FOIL_PRICE: {
+                                        data.price = (int) (result.mFoilAverage * 100);
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        /* Clear the message */
+                        data.message = null;
+                    }
 
-                        @Override
-                        public void onDestroyActionMode(ActionMode mode) {
-                            adaptersDeselectAll();
+                    /* because this can return when the fragment is in the background */
+                    if (FamiliarListFragment.this.isAdded()) {
+                        onCardPriceLookupSuccess(data, result);
+                        mPriceFetchRequests--;
+                        if (mPriceFetchRequests == 0) {
+                            getFamiliarActivity().clearLoading();
                         }
-                    });
-                    setInSelectMode(true);
-
-                    // Then select the item
-                    setItemSelected(itemView, getAdapterPosition(), true, true);
-
-                    // This click was handled
-                    return true;
+                        for (CardDataAdapter adapter : mCardDataAdapters) {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
                 }
-
-                // The click was not handled
-                return false;
-            }
+            });
         }
-
     }
 
+    /**
+     * Called when a price load fails. Should contain fragment-specific code
+     *
+     * @param data           The card for which the price lookup failed
+     * @param spiceException The exception that occured
+     */
+    protected abstract void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException);
+
+    /**
+     * Called when a price load succeeds. Should contain fragment-specific code
+     *
+     * @param data   The card for which the price lookup succeeded
+     * @param result The price information
+     */
+    protected abstract void onCardPriceLookupSuccess(MtgCard data, PriceInfo result);
+
+    /**
+     * Updates the total prices shown for the lists
+     *
+     * @param side The side to update (only valid for trade)
+     */
+    public abstract void updateTotalPrices(int side);
+
+    /**
+     * @return true if the total price should be shown, false otherwise
+     */
+    public abstract boolean shouldShowPrice();
+
+    /**
+     * @return the current price setting
+     */
+    public abstract int getPriceSetting();
+
+    /**
+     * @param priceSetting The price setting to write to preferences
+     */
+    public abstract void setPriceSetting(int priceSetting);
 }

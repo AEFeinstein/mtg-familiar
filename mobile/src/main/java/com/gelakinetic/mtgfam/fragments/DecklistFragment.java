@@ -40,21 +40,20 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.DecklistDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
+import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
 
@@ -67,9 +66,6 @@ import java.util.Locale;
  * This fragment shows a deck, and allows you to add to and modify it.
  */
 public class DecklistFragment extends FamiliarListFragment {
-
-    /* Preferences */
-    private boolean mShowTotalDecklistPrice;
 
     /* UI Elements */
     public TextView mDeckName;
@@ -129,9 +125,9 @@ public class DecklistFragment extends FamiliarListFragment {
         initializeMembers(
                 myFragmentView,
                 new int[]{R.id.cardlist},
-                new CardDataAdapter[]{new CardDataAdapter(mCompressedDecklist)},
-                addCardListener,
-                R.menu.decklist_select_menu);
+                new CardDataAdapter[]{new DecklistDataAdapter(mCompressedDecklist)},
+                new int[]{R.id.decklistPrice}, null, addCardListener
+        );
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
 
@@ -155,7 +151,6 @@ public class DecklistFragment extends FamiliarListFragment {
         mDeckName.setText(R.string.decklist_unnamed_deck);
         mDeckCards = myFragmentView.findViewById(R.id.decklistCards);
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
-        mTotalPriceField = myFragmentView.findViewById(R.id.decklistPrice);
 
         mDecklistChain = new ComparatorChain<>();
         mDecklistChain.addComparator(new CardHelpers.CardComparatorSideboard());
@@ -221,8 +216,8 @@ public class DecklistFragment extends FamiliarListFragment {
         clearHeaders();
 
         /* Load the card's price */
-        if (mShowTotalDecklistPrice) {
-            loadPrice(card.mName, card.setCode, card.mNumber);
+        if (shouldShowPrice()) {
+            loadPrice(card);
         }
 
         /* Sort the decklist */
@@ -240,8 +235,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Update the number of cards listed */
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
 
         /* Redraw the new decklist with the new card */
         setHeaderValues();
@@ -256,14 +251,12 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        mPriceSetting = Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext()));
-        mShowTotalDecklistPrice = PreferenceAdapter.getShowTotalDecklistPrice(getContext());
         mCompressedDecklist.clear();
         readAndCompressDecklist(null, mCurrentDeck);
         getCardDataAdapter(0).notifyDataSetChanged();
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
     }
 
     /**
@@ -343,8 +336,8 @@ public class DecklistFragment extends FamiliarListFragment {
                         } else {
                             mCompressedDecklist.add(wrapped);
                         }
-                        if (mShowTotalDecklistPrice) {
-                            loadPrice(card.first.mName, card.first.setCode, card.first.mNumber);
+                        if (shouldShowPrice()) {
+                            loadPrice(card.first);
                         }
                     }
                 }
@@ -363,8 +356,8 @@ public class DecklistFragment extends FamiliarListFragment {
             Collections.sort(mCompressedDecklist, mDecklistChain);
             setHeaderValues();
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                    ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                    ((CardDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
         }
@@ -524,7 +517,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 final CompressedDecklistInfo cdi = mCompressedDecklist.get(i);
                 if (!cdi.mName.equals("") /* We only want entries that have a card attached */
                         && (i == 0 || mCompressedDecklist.get(i - 1).header == null)
-                        && ((CardDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
+                        && ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalNumberOfType(j) > 0) {
                     if (cdi.mIsSideboard /* it is in the sideboard */
                             /* The sideboard header isn't already there */
                             && !insertHeaderAt(i, cardHeaders[0])) {
@@ -557,97 +550,49 @@ public class DecklistFragment extends FamiliarListFragment {
 
     }
 
-    /**
-     * Load the price for a given card. This handles all the spice stuff.
-     *
-     * @param mCardName   The name of the card to find a price for
-     * @param mSetCode    The set code of the card to find a price for
-     * @param mCardNumber The collector's number
-     */
-    private void loadPrice(final String mCardName, final String mSetCode, String mCardNumber) {
-
-        PriceFetchRequest priceRequest =
-                new PriceFetchRequest(mCardName, mSetCode, mCardNumber, -1, getActivity());
-        mPriceFetchRequests++;
-        getFamiliarActivity().setLoading();
-        getFamiliarActivity().mSpiceManager.execute(priceRequest, mCardName + "-" +
-                mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-
-            /**
-             * Loading the price for this card failed and threw a spiceException.
-             *
-             `             * @param spiceException The exception thrown when trying to load this card's price
-             */
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-
-                /* because this can return when the fragment is in the background */
-                if (DecklistFragment.this.isAdded()) {
-                    /* Find the compressed wishlist info for this card */
-                    for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                        if (cdi.header == null && cdi.mName.equals(mCardName)) {
-                            /* Find all foil and non foil compressed items with the same set code */
-                            for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                                if (isi.mSetCode.equals(mSetCode)) {
+    @Override
+    protected void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException) {
+        /* Find the compressed wishlist info for this card */
+        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+            if (cdi.header == null && cdi.mName.equals(data.mName)) {
+                /* Find all foil and non foil compressed items with the same set code */
+                for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
+                    if (isi.mSetCode.equals(data.setCode)) {
                                     /* Set the price as null and the message as the exception */
-                                    isi.mMessage = spiceException.getLocalizedMessage();
-                                    isi.mPrice = null;
-                                }
-                            }
-                        }
-                    }
-                    mPriceFetchRequests--;
-                    if (mPriceFetchRequests == 0) {
-                        getFamiliarActivity().clearLoading();
-                    }
-                    getCardDataAdapter(0).notifyDataSetChanged();
-                }
-
-            }
-
-            /**
-             * Loading the price for this card succeeded. Set it.
-             *
-             * @param result The price for this card
-             */
-            @Override
-            public void onRequestSuccess(final PriceInfo result) {
-
-                /* because this can return when the fragment is in the background */
-                if (DecklistFragment.this.isAdded()) {
-                    /* Find the compressed wishlist info for this card */
-                    for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                        if (cdi.header == null && cdi.mName.equals(mCardName)) {
-                            /* Find all foil and non foil compressed items with the same set code */
-                            for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                                if (isi.mSetCode.equals(mSetCode)) {
-                                    /* Set the whole price info object */
-                                    if (result != null) {
-                                        isi.mPrice = result;
-                                    }
-                                    /* The message will never be shown with a valid price,
-                                     * so set it as DNE */
-                                    isi.mMessage = getString(R.string.card_view_price_not_found);
-                                }
-                            }
-                        }
-                        sumTotalPrice();
-                    }
-                    mPriceFetchRequests--;
-                    if (mPriceFetchRequests == 0) {
-                        getFamiliarActivity().clearLoading();
+                        isi.mMessage = spiceException.getLocalizedMessage();
+                        isi.mPrice = null;
                     }
                 }
             }
+        }
+    }
 
-        });
-
+    @Override
+    protected void onCardPriceLookupSuccess(MtgCard data, PriceInfo result) {
+        /* Find the compressed wishlist info for this card */
+        for (CompressedDecklistInfo cdi : mCompressedDecklist) {
+            if (cdi.header == null && cdi.mName.equals(data.mName)) {
+                /* Find all foil and non foil compressed items with the same set code */
+                for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
+                    if (isi.mSetCode.equals(data.setCode)) {
+                        /* Set the whole price info object */
+                        if (result != null) {
+                            isi.mPrice = result;
+                        }
+                        /* The message will never be shown with a valid price,
+                         * so set it as DNE */
+                        isi.mMessage = getString(R.string.card_view_price_not_found);
+                    }
+                }
+            }
+            updateTotalPrices(0);
+        }
     }
 
     /**
      * Add together the price of all the cards in the wishlist and display it.
      */
-    private void sumTotalPrice() {
+    public void updateTotalPrices(int side) {
 
         /* default */
         float totalPrice = 0;
@@ -659,7 +604,7 @@ public class DecklistFragment extends FamiliarListFragment {
                         if (isi.mIsFoil) {
                             totalPrice += isi.mPrice.mFoilAverage * isi.mNumberOf;
                         } else {
-                            switch (mPriceSetting) {
+                            switch (getPriceSetting()) {
                                 case LOW_PRICE:
                                     totalPrice += isi.mPrice.mLow * isi.mNumberOf;
                                     break;
@@ -677,32 +622,99 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
             }
         }
-        mTotalPriceField.setText(String.format(Locale.US, "$%.02f", totalPrice));
+        setTotalPrice(String.format(Locale.US, PRICE_FORMAT, totalPrice), null, 0);
+    }
+
+    @Override
+    public boolean shouldShowPrice() {
+        return PreferenceAdapter.getShowTotalDecklistPrice(getContext());
+    }
+
+    @Override
+    public int getPriceSetting() {
+        return Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext()));
+    }
+
+    @Override
+    public void setPriceSetting(int priceSetting) {
+        PreferenceAdapter.setDeckPrice(getContext(), Integer.toString(priceSetting));
+    }
+
+    class DecklistViewHolder extends CardDataViewHolder {
+
+        private final TextView mCardNumberOf;
+        private final TextView mCardCost;
+
+        DecklistViewHolder(ViewGroup view) {
+            super(view, R.layout.decklist_card_row, DecklistFragment.this.getCardDataAdapter(0), DecklistFragment.this, R.menu.decklist_select_menu);
+
+            mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
+            mCardCost = itemView.findViewById(R.id.decklistRowCost);
+
+        }
+
+        @Override
+        public void onClickNotSelectMode(View view) {
+                /* if we aren't in select mode, open a dialog to edit this card */
+            final CompressedDecklistInfo item = (CompressedDecklistInfo) mAdapter.getItem(getAdapterPosition());
+            showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
+                    item.mName, item.mIsSideboard);
+        }
 
     }
 
     /**
      * The adapter that drives the deck list.
      */
-    public class CardDataAdapter
-            extends FamiliarListFragment.CardDataAdapter<CompressedDecklistInfo, CardDataAdapter.ViewHolder> {
+    public class DecklistDataAdapter
+            extends CardDataAdapter<CompressedDecklistInfo, DecklistViewHolder> {
 
         /**
          * Create the adapter.
          *
          * @param values the data set
          */
-        CardDataAdapter(ArrayList<CompressedDecklistInfo> values) {
-            super(values);
+        DecklistDataAdapter(ArrayList<CompressedDecklistInfo> values) {
+            super(values, DecklistFragment.this);
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(
+        public DecklistViewHolder onCreateViewHolder(
                 ViewGroup parent,
                 int viewType) {
-            return new ViewHolder(parent);
+            return new DecklistViewHolder(parent);
         }
 
+        @Override
+        protected void onItemReadded() {
+            // Resort the decklist
+            Collections.sort(mCompressedDecklist, mDecklistChain);
+
+            // Reset the headers
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
+            clearHeaders();
+            setHeaderValues();
+
+            // Call super to notify the adapter, etc
+            super.onItemReadded();
+        }
+
+        @Override
+        protected void onItemRemoved(int position) {
+            // Reset the headers
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
+            clearHeaders();
+            setHeaderValues();
+
+            // Call super to notify the adapter, etc
+            super.onItemRemoved(position);
+        }
+
+        @Override
+        protected void onItemRemovedFinal() {
+            // After the snackbar times out, write the decklist to the disk
+            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
+        }
 
         /**
          * On binding the view holder.
@@ -711,61 +723,54 @@ public class DecklistFragment extends FamiliarListFragment {
          * @param position where the holder is
          */
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(DecklistViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             final CompressedDecklistInfo info = getItem(position);
 
-            if (isItemPendingRemoval(position)) {
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
-            } else { /* if the item IS NOT pending removal */
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
-                if (info.header == null) {
+            holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
+            if (info.header == null) {
 
                     /* Enable the on click listener */
-                    holder.itemView.setOnClickListener(holder);
-                    holder.itemView.setOnLongClickListener(holder);
+                holder.itemView.setOnClickListener(holder);
+                holder.itemView.setOnLongClickListener(holder);
 
                     /* Do the selection stuff */
-                    if (isItemSelected(position)) {
-                        setItemSelected(holder.itemView, position, true, false);
-                        holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_menu_done, 0, 0, 0);
-                        holder.mCardNumberOf.setText("");
-                    } else {
-                        setItemSelected(holder.itemView, position, false, false);
-                        holder.mCardNumberOf
-                                .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                        holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
-                    }
+                if (info.isSelected()) {
+                    holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_menu_done, 0, 0, 0);
+                    holder.mCardNumberOf.setText("");
+                } else {
+                    holder.mCardNumberOf
+                            .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
+                }
 
                     /* set up the card's views */
-                    holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
-                    View separator = holder.itemView.findViewById(R.id.decklistSeparator);
-                    separator.setVisibility(View.GONE);
-                    Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                    holder.mCardName.setText(info.mName);
-                    holder.mCardCost.setText(ImageGetterHelper
-                            .formatStringWithGlyphs(info.mManaCost, imageGetter));
-                    holder.setIsSwipeable(true);
-                } else {
+                holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
+                View separator = holder.itemView.findViewById(R.id.decklistSeparator);
+                separator.setVisibility(View.GONE);
+                Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
+                holder.mCardName.setText(info.mName);
+                holder.mCardCost.setText(ImageGetterHelper
+                        .formatStringWithGlyphs(info.mManaCost, imageGetter));
+                holder.setIsSwipeable(true);
+            } else {
                     /* The header uses the same layout, just set it up */
-                    holder.itemView.setOnClickListener(null);
-                    holder.itemView.setOnLongClickListener(null);
-                    final int typeIndex = Arrays.asList(
-                            getResources().getStringArray(R.array.decklist_card_headers)
-                    ).indexOf(info.header) - 1;
-                    holder.itemView.findViewById(R.id.decklistSeparator)
-                            .setVisibility(View.VISIBLE);
-                    holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
-                    ((TextView) holder.itemView.findViewById(R.id.decklistHeaderType))
-                            .setText(info.header);
-                    ((TextView) holder.itemView.findViewById(R.id.decklistHeaderNumber))
-                            .setText(String.valueOf(getTotalNumberOfType(typeIndex)));
-                    holder.setIsSwipeable(false);
-                }
+                holder.itemView.setOnClickListener(null);
+                holder.itemView.setOnLongClickListener(null);
+                final int typeIndex = Arrays.asList(
+                        getResources().getStringArray(R.array.decklist_card_headers)
+                ).indexOf(info.header) - 1;
+                holder.itemView.findViewById(R.id.decklistSeparator)
+                        .setVisibility(View.VISIBLE);
+                holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
+                ((TextView) holder.itemView.findViewById(R.id.decklistHeaderType))
+                        .setText(info.header);
+                ((TextView) holder.itemView.findViewById(R.id.decklistHeaderNumber))
+                        .setText(String.valueOf(getTotalNumberOfType(typeIndex)));
+                holder.setIsSwipeable(false);
             }
-
         }
 
         /**
@@ -785,15 +790,12 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (cdi.header != null) {
                     continue;
                 }
-                final int position = itemsIndexOf(cdi);
-                /* The card is NOT pending removal */
-                if (!isItemPendingRemoval(position)
-                        /* The type is not above -1 OR is not in the sideboard */
-                        && (!(typeIndex > -1) || !cdi.mIsSideboard)
+                if (    /* The type is not above -1 OR is not in the sideboard */
+                        (!(typeIndex > -1) || !cdi.mIsSideboard)
                         /* The type is above -1 OR the card is in the sideboard */
-                        && (typeIndex > -1 || cdi.mIsSideboard)
+                                && (typeIndex > -1 || cdi.mIsSideboard)
                         /* The card is in the sideboard OR the card is the wanted type */
-                        && (cdi.mIsSideboard || cdi.mType.contains(types[typeIndex]))) {
+                                && (cdi.mIsSideboard || cdi.mType.contains(types[typeIndex]))) {
                     /* There of course are edge cases */
                     final boolean lookForEnchant = types[typeIndex > -1 ? typeIndex : 0]
                             .equals(types[5]);
@@ -828,61 +830,5 @@ public class DecklistFragment extends FamiliarListFragment {
             return totalCards;
 
         }
-
-        @Override
-        public boolean pendingRemoval(int position) {
-
-            super.pendingRemoval(position);
-
-            clearHeaders();
-            setHeaderValues();
-
-            return true;
-
-        }
-
-        @Override
-        public String getItemName(int position) {
-            return getItem(position).mName;
-        }
-
-        @Override
-        public void remove(int position) {
-
-            super.remove(position);
-
-            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
-            clearHeaders();
-            notifyItemRemoved(position);
-            setHeaderValues();
-            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
-
-        }
-
-        class ViewHolder extends FamiliarListFragment.CardDataAdapter.ViewHolder {
-
-            private final TextView mCardNumberOf;
-            private final TextView mCardCost;
-
-            ViewHolder(ViewGroup view) {
-
-                super(view, R.layout.decklist_card_row);
-
-                mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
-                mCardCost = itemView.findViewById(R.id.decklistRowCost);
-
-            }
-
-            @Override
-            public void onClickNotSelectMode(View view) {
-                /* if we aren't in select mode, open a dialog to edit this card */
-                final CompressedDecklistInfo item = getItem(getAdapterPosition());
-                showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
-                        item.mName, item.mIsSideboard);
-            }
-
-        }
-
     }
-
 }
