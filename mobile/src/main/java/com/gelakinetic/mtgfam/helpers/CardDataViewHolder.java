@@ -41,9 +41,9 @@ import java.util.ArrayList;
 public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener {
 
-    protected final CardDataAdapter mAdapter;
+    private final CardDataAdapter mAdapter;
     private final FamiliarListFragment mFragment;
-    public TextView mCardName;
+    private TextView mCardName;
     private int mActionMenuResId;
 
     private boolean isSwipeable = true;
@@ -66,6 +66,14 @@ public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
     }
 
     abstract public void onClickNotSelectMode(View view);
+
+    public String getCardName() {
+        return mCardName.getText().toString();
+    }
+
+    public void setCardName(String name) {
+        mCardName.setText(name);
+    }
 
     @Override
     public void onClick(View view) {

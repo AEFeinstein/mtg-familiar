@@ -730,7 +730,7 @@ public class TradeFragment extends FamiliarListFragment {
             final MtgCard item = getItem(position);
 
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
-            holder.mCardName.setText(item.mName);
+            holder.setCardName(item.mName);
             holder.mCardSet.setText(item.setName);
             holder.mCardNumberOf.setText(item.hasPrice() ? item.numberOf + "x" : "");
             holder.mCardFoil.setVisibility(item.foil ? View.VISIBLE : View.GONE);

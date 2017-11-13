@@ -656,7 +656,7 @@ public class DecklistFragment extends FamiliarListFragment {
         @Override
         public void onClickNotSelectMode(View view) {
                 /* if we aren't in select mode, open a dialog to edit this card */
-            final CompressedDecklistInfo item = (CompressedDecklistInfo) mAdapter.getItem(getAdapterPosition());
+            final CompressedDecklistInfo item = mCompressedDecklist.get(getAdapterPosition());
             showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
                     item.mName, item.mIsSideboard);
         }
@@ -751,7 +751,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 View separator = holder.itemView.findViewById(R.id.decklistSeparator);
                 separator.setVisibility(View.GONE);
                 Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                holder.mCardName.setText(info.mName);
+                holder.setCardName(info.mName);
                 holder.mCardCost.setText(ImageGetterHelper
                         .formatStringWithGlyphs(info.mManaCost, imageGetter));
                 holder.setIsSwipeable(true);

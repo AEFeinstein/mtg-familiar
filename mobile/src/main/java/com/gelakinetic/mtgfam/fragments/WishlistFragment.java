@@ -529,8 +529,7 @@ public class WishlistFragment extends FamiliarListFragment {
             sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
 
             // Then show the dialog
-            showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD,
-                    mCardName.getText().toString());
+            showDialog(WishlistDialogFragment.DIALOG_UPDATE_CARD, getCardName());
         }
 
     }
@@ -581,7 +580,7 @@ public class WishlistFragment extends FamiliarListFragment {
             holder.mWishlistSets.removeAllViews();
 
                 /* Set the card name, always */
-            holder.mCardName.setText(info.mName);
+            holder.setCardName(info.mName);
 
                 /* Show or hide full card information */
             holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
