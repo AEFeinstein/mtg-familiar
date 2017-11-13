@@ -171,14 +171,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        for (CardDataAdapter adapter : mCardDataAdapters) {
-            adapter.removePendingNow();
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 

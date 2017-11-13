@@ -19,11 +19,10 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import android.os.Handler;
 import android.support.annotation.CallSuper;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.View;
 
 import com.gelakinetic.mtgfam.R;
@@ -42,27 +41,33 @@ import java.util.List;
 public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataViewHolder>
         extends RecyclerView.Adapter<VH> {
 
+    private final FamiliarListFragment mFragment;
 
     private final List<T> items;
+    private final ArrayList<T> undoBuffer;
 
     private boolean inSelectMode;
 
-    private final Handler handler;
-    private final SparseArray<Runnable> pendingRunnables;
-
-    private final int pendingTimeout;
-    private final FamiliarListFragment mFragment;
-
+    /**
+     * TODO
+     *
+     * @param values
+     * @param fragment
+     */
     public CardDataAdapter(ArrayList<T> values, FamiliarListFragment fragment) {
         items = values;
-        handler = new Handler();
         inSelectMode = false;
-        pendingRunnables = new SparseArray<>();
-        pendingTimeout = PreferenceAdapter.getUndoTimeout(fragment.getContext());
+        undoBuffer = new ArrayList<>();
 
         mFragment = fragment;
     }
 
+    /**
+     * TODO
+     *
+     * @param holder
+     * @param position
+     */
     @Override
     @CallSuper
     public void onBindViewHolder(VH holder, int position) {
@@ -74,93 +79,140 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
         }
     }
 
-    public boolean pendingRemoval(final int position) {
-        if (pendingRunnables.indexOfKey(position) < 0) {
-            notifyItemChanged(position);
-            Runnable pendingRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    remove(position);
-                }
-            };
-            handler.postDelayed(pendingRunnable, pendingTimeout);
-            pendingRunnables.put(position, pendingRunnable);
-            Snackbar undoBar = Snackbar.make(
-                    mFragment.getFamiliarActivity().findViewById(R.id.fragment_container),
-                    mFragment.getString(R.string.cardlist_item_deleted) + " " + getItemName(position),
-                    getPendingTimeout()
-            );
-            undoBar.setAction(R.string.cardlist_undo, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Runnable pendingRemovalRunnable = getAndRemovePendingRunnable(position);
-                    onUndoDelete(position);
-                    if (pendingRemovalRunnable != null) {
-                        removePending(pendingRemovalRunnable);
-                    }
-                    notifyItemChanged(position);
-                }
-            });
-            undoBar.show();
-            return true;
-        }
-        return false;
-    }
-
-    public abstract String getItemName(final int position);
-
-    public void onItemDismissed(final int position) {
-        pendingRemoval(position);
-        notifyItemChanged(position);
-        if (mFragment.shouldShowPrice()) {
-            mFragment.updateTotalPrices(TradeFragment.BOTH);
-        }
-    }
-
-    void onUndoDelete(final int position) {
-        if (mFragment.shouldShowPrice()) {
-            mFragment.updateTotalPrices(TradeFragment.BOTH);
-        }
-    }
-
-
     /**
-     * Properly go about removing an item from the list.
+     * TODO
      *
-     * @param position where the item to remove is
+     * @param position
+     * @return
      */
-    public void remove(final int position) {
-
-        try {
-            final T item = items.get(position);
-            if (pendingRunnables.indexOfKey(position) > -1) {
-                pendingRunnables.remove(position);
-            }
-            if (items.contains(item)) {
-                items.remove(position);
-                notifyItemRemoved(position);
-            }
-        } catch (IndexOutOfBoundsException oob) {
-            /* Happens from time to time, shouldn't worry about it */
+    @Nullable
+    private String getItemName(final int position) {
+        if (position < items.size()) {
+            return items.get(position).mName;
         }
-
+        return null;
     }
 
     /**
-     * Execute any pending Runnables NOW. This generally means we are moving away from this
-     * fragment.
+     * TODO
+     *
+     * @return
      */
-    public void removePendingNow() {
-        for (int i = 0; i < pendingRunnables.size(); i++) {
-            Runnable runnable = pendingRunnables.valueAt(i);
-            handler.removeCallbacks(runnable);
-            runnable.run();
-        }
-        pendingRunnables.clear();
+    @Override
+    public int getItemCount() {
+        return items.size();
     }
 
-    protected void removePending(Runnable pendingRemovalRunnable) {
-        handler.removeCallbacks(pendingRemovalRunnable);
+    /**
+     * TODO
+     *
+     * @param position
+     * @return
+     */
+    @Nullable
+    public T getItem(int position) {
+        if (position < items.size()) {
+            return items.get(position);
+        }
+        return null;
+    }
+
+    /**
+     * TODO
+     *
+     * @param item
+     * @return
+     */
+    protected int itemsIndexOf(T item) {
+        return items.indexOf(item);
+    }
+
+    /**
+     * TODO
+     *
+     * @param position
+     */
+    void swipeRemoveItem(final int position) {
+        // Remove the item from the list and add it to a temporary array
+        String removedName = getItemName(position);
+        undoBuffer.add(items.remove(position));
+
+        onItemRemoved(position);
+
+        Snackbar.make(mFragment.getFamiliarActivity().findViewById(R.id.fragment_container),
+                mFragment.getString(R.string.cardlist_item_deleted) + " " + removedName,
+                PreferenceAdapter.getUndoTimeout(mFragment.getContext()))
+                .setAction(R.string.cardlist_undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // The user clicked Undo. Add the items back, then clear them from
+                        // the undo buffer
+                        items.addAll(undoBuffer);
+                        undoBuffer.clear();
+                        // Notify the adapter, this may have fragment specific code
+                        onItemAdded();
+                    }
+                })
+                .addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        super.onDismissed(transientBottomBar, event);
+                        switch (event) {
+                            case Snackbar.Callback.DISMISS_EVENT_MANUAL:
+                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
+                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT: {
+                                // Snackbar timed out or was dismissed by the user, so wipe the
+                                // undoBuffer forever
+                                undoBuffer.clear();
+                                onItemRemovedFinal();
+                                break;
+                            }
+                            case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE: {
+                                // Snackbar was dismissed by action click, handled above or
+                                // Hidden by a new snackbar, ignore it
+                                break;
+                            }
+                        }
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * TODO
+     */
+    @CallSuper
+    protected void onItemAdded() {
+        notifyDataSetChanged();
+
+        // And update all prices if necessary
+        if (mFragment.shouldShowPrice()) {
+            mFragment.updateTotalPrices(TradeFragment.BOTH);
+        }
+    }
+
+    /**
+     * TODO
+     *
+     * @param position
+     */
+    @CallSuper
+    protected void onItemRemoved(int position) {
+        // Tell the adapter the item was removed
+        notifyItemRemoved(position);
+
+        // Update the price if necessary
+        if (mFragment.shouldShowPrice()) {
+            mFragment.updateTotalPrices(TradeFragment.BOTH);
+        }
+    }
+
+    /**
+     * TODO
+     */
+    protected void onItemRemovedFinal() {
+
     }
 
     /**
@@ -168,7 +220,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      *
      * @return inSelectMode
      */
-    public boolean isInSelectMode() {
+    boolean isInSelectMode() {
         return inSelectMode;
     }
 
@@ -177,11 +229,16 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      *
      * @param inSelectMode if we are in select mode or not
      */
-    public void setInSelectMode(final boolean inSelectMode) {
+    void setInSelectMode(final boolean inSelectMode) {
         this.inSelectMode = inSelectMode;
     }
 
-    public ArrayList<T> getSelectedItems() {
+    /**
+     * TODO
+     *
+     * @return
+     */
+    protected ArrayList<T> getSelectedItems() {
 
         ArrayList<T> selectedItemsLocal = new ArrayList<>();
         for (T item : items) {
@@ -193,6 +250,9 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
 
     }
 
+    /**
+     * TODO
+     */
     public void deleteSelectedItems() {
         for (int i = items.size() - 1; i >= 0; i--) {
             if (items.get(i).isSelected()) {
@@ -201,10 +261,9 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
         }
     }
 
-    public boolean isItemPendingRemoval(final int position) {
-        return pendingRunnables.indexOfKey(position) > -1;
-    }
-
+    /**
+     * TODO
+     */
     public void deselectAll() {
 
         for (T item : items) {
@@ -215,11 +274,14 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
 
     }
 
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
-
+    /**
+     * TODO
+     *
+     * @param view
+     * @param position
+     * @param selected
+     * @param shouldNotify
+     */
     protected void setItemSelected(View view, int position, boolean selected, boolean shouldNotify) {
         view.setSelected(selected);
         if (selected) {
@@ -235,7 +297,22 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
         }
     }
 
-    protected int getNumSelectedItems() {
+    /**
+     * TODO
+     *
+     * @param position
+     * @return
+     */
+    protected boolean isItemSelected(int position) {
+        return items.get(position).isSelected();
+    }
+
+    /**
+     * TODO
+     *
+     * @return
+     */
+    int getNumSelectedItems() {
         int numSelected = 0;
         for (T item : items) {
             if (item.isSelected()) {
@@ -243,27 +320,5 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
             }
         }
         return numSelected;
-    }
-
-    protected boolean isItemSelected(int position) {
-        return items.get(position).isSelected();
-    }
-
-    public T getItem(int position) {
-        return items.get(position);
-    }
-
-    protected int itemsIndexOf(T item) {
-        return items.indexOf(item);
-    }
-
-    protected Runnable getAndRemovePendingRunnable(int position) {
-        Runnable runnable = pendingRunnables.get(position);
-        pendingRunnables.remove(position);
-        return runnable;
-    }
-
-    protected int getPendingTimeout() {
-        return pendingTimeout;
     }
 }

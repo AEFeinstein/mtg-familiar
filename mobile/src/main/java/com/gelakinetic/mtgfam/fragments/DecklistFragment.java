@@ -598,26 +598,24 @@ public class DecklistFragment extends FamiliarListFragment {
         float totalPrice = 0;
 
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-            if (!getCardDataAdapter(0).isItemPendingRemoval(mCompressedDecklist.indexOf(cdi))) {
-                if (cdi.header == null) {
-                    for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                        if (isi.mPrice != null) {
-                            if (isi.mIsFoil) {
-                                totalPrice += isi.mPrice.mFoilAverage * isi.mNumberOf;
-                            } else {
-                                switch (getPriceSetting()) {
-                                    case LOW_PRICE:
-                                        totalPrice += isi.mPrice.mLow * isi.mNumberOf;
-                                        break;
-                                    case AVG_PRICE:
-                                        totalPrice += isi.mPrice.mAverage * isi.mNumberOf;
-                                        break;
-                                    case HIGH_PRICE:
-                                        totalPrice += isi.mPrice.mHigh * isi.mNumberOf;
-                                        break;
-                                    default:
-                                        break;
-                                }
+            if (cdi.header == null) {
+                for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
+                    if (isi.mPrice != null) {
+                        if (isi.mIsFoil) {
+                            totalPrice += isi.mPrice.mFoilAverage * isi.mNumberOf;
+                        } else {
+                            switch (getPriceSetting()) {
+                                case LOW_PRICE:
+                                    totalPrice += isi.mPrice.mLow * isi.mNumberOf;
+                                    break;
+                                case AVG_PRICE:
+                                    totalPrice += isi.mPrice.mAverage * isi.mNumberOf;
+                                    break;
+                                case HIGH_PRICE:
+                                    totalPrice += isi.mPrice.mHigh * isi.mNumberOf;
+                                    break;
+                                default:
+                                    break;
                             }
                         }
                     }
@@ -687,6 +685,36 @@ public class DecklistFragment extends FamiliarListFragment {
             return new DecklistViewHolder(parent);
         }
 
+        @Override
+        protected void onItemAdded() {
+            // Resort the decklist
+            Collections.sort(mCompressedDecklist, mDecklistChain);
+
+            // Reset the headers
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
+            clearHeaders();
+            setHeaderValues();
+
+            // Call super to notify the adapter, etc
+            super.onItemAdded();
+        }
+
+        @Override
+        protected void onItemRemoved(int position) {
+            // Reset the headers
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
+            clearHeaders();
+            setHeaderValues();
+
+            // Call super to notify the adapter, etc
+            super.onItemRemoved(position);
+        }
+
+        @Override
+        protected void onItemRemovedFinal() {
+            // After the snackbar times out, write the decklist to the disk
+            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
+        }
 
         /**
          * On binding the view holder.
@@ -700,56 +728,51 @@ public class DecklistFragment extends FamiliarListFragment {
 
             final CompressedDecklistInfo info = getItem(position);
 
-            if (isItemPendingRemoval(position)) {
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.GONE);
-            } else { /* if the item IS NOT pending removal */
-                holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
-                if (info.header == null) {
+            holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
+            if (info.header == null) {
 
                     /* Enable the on click listener */
-                    holder.itemView.setOnClickListener(holder);
-                    holder.itemView.setOnLongClickListener(holder);
+                holder.itemView.setOnClickListener(holder);
+                holder.itemView.setOnLongClickListener(holder);
 
                     /* Do the selection stuff */
-                    if (isItemSelected(position)) {
-                        setItemSelected(holder.itemView, position, true, false);
-                        holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_menu_done, 0, 0, 0);
-                        holder.mCardNumberOf.setText("");
-                    } else {
-                        setItemSelected(holder.itemView, position, false, false);
-                        holder.mCardNumberOf
-                                .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                        holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
-                    }
+                if (isItemSelected(position)) {
+                    setItemSelected(holder.itemView, position, true, false);
+                    holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_menu_done, 0, 0, 0);
+                    holder.mCardNumberOf.setText("");
+                } else {
+                    setItemSelected(holder.itemView, position, false, false);
+                    holder.mCardNumberOf
+                            .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
+                }
 
                     /* set up the card's views */
-                    holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
-                    View separator = holder.itemView.findViewById(R.id.decklistSeparator);
-                    separator.setVisibility(View.GONE);
-                    Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                    holder.mCardName.setText(info.mName);
-                    holder.mCardCost.setText(ImageGetterHelper
-                            .formatStringWithGlyphs(info.mManaCost, imageGetter));
-                    holder.setIsSwipeable(true);
-                } else {
+                holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
+                View separator = holder.itemView.findViewById(R.id.decklistSeparator);
+                separator.setVisibility(View.GONE);
+                Html.ImageGetter imageGetter = ImageGetterHelper.GlyphGetter(getActivity());
+                holder.mCardName.setText(info.mName);
+                holder.mCardCost.setText(ImageGetterHelper
+                        .formatStringWithGlyphs(info.mManaCost, imageGetter));
+                holder.setIsSwipeable(true);
+            } else {
                     /* The header uses the same layout, just set it up */
-                    holder.itemView.setOnClickListener(null);
-                    holder.itemView.setOnLongClickListener(null);
-                    final int typeIndex = Arrays.asList(
-                            getResources().getStringArray(R.array.decklist_card_headers)
-                    ).indexOf(info.header) - 1;
-                    holder.itemView.findViewById(R.id.decklistSeparator)
-                            .setVisibility(View.VISIBLE);
-                    holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
-                    ((TextView) holder.itemView.findViewById(R.id.decklistHeaderType))
-                            .setText(info.header);
-                    ((TextView) holder.itemView.findViewById(R.id.decklistHeaderNumber))
-                            .setText(String.valueOf(getTotalNumberOfType(typeIndex)));
-                    holder.setIsSwipeable(false);
-                }
+                holder.itemView.setOnClickListener(null);
+                holder.itemView.setOnLongClickListener(null);
+                final int typeIndex = Arrays.asList(
+                        getResources().getStringArray(R.array.decklist_card_headers)
+                ).indexOf(info.header) - 1;
+                holder.itemView.findViewById(R.id.decklistSeparator)
+                        .setVisibility(View.VISIBLE);
+                holder.itemView.findViewById(R.id.card_row).setVisibility(View.GONE);
+                ((TextView) holder.itemView.findViewById(R.id.decklistHeaderType))
+                        .setText(info.header);
+                ((TextView) holder.itemView.findViewById(R.id.decklistHeaderNumber))
+                        .setText(String.valueOf(getTotalNumberOfType(typeIndex)));
+                holder.setIsSwipeable(false);
             }
-
         }
 
         /**
@@ -770,14 +793,12 @@ public class DecklistFragment extends FamiliarListFragment {
                     continue;
                 }
                 final int position = itemsIndexOf(cdi);
-                /* The card is NOT pending removal */
-                if (!isItemPendingRemoval(position)
-                        /* The type is not above -1 OR is not in the sideboard */
-                        && (!(typeIndex > -1) || !cdi.mIsSideboard)
+                if (    /* The type is not above -1 OR is not in the sideboard */
+                        (!(typeIndex > -1) || !cdi.mIsSideboard)
                         /* The type is above -1 OR the card is in the sideboard */
-                        && (typeIndex > -1 || cdi.mIsSideboard)
+                                && (typeIndex > -1 || cdi.mIsSideboard)
                         /* The card is in the sideboard OR the card is the wanted type */
-                        && (cdi.mIsSideboard || cdi.mType.contains(types[typeIndex]))) {
+                                && (cdi.mIsSideboard || cdi.mType.contains(types[typeIndex]))) {
                     /* There of course are edge cases */
                     final boolean lookForEnchant = types[typeIndex > -1 ? typeIndex : 0]
                             .equals(types[5]);
@@ -810,36 +831,6 @@ public class DecklistFragment extends FamiliarListFragment {
                 totalCards += getItem(i).getTotalNumber();
             }
             return totalCards;
-
-        }
-
-        @Override
-        public boolean pendingRemoval(int position) {
-
-            super.pendingRemoval(position);
-
-            clearHeaders();
-            setHeaderValues();
-
-            return true;
-
-        }
-
-        @Override
-        public String getItemName(int position) {
-            return getItem(position).mName;
-        }
-
-        @Override
-        public void remove(int position) {
-
-            super.remove(position);
-
-            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
-            clearHeaders();
-            notifyItemRemoved(position);
-            setHeaderValues();
-            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
 
         }
     }

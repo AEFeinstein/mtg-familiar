@@ -438,8 +438,6 @@ public class TradeFragment extends FamiliarListFragment {
     public void onPause() {
 
         super.onPause();
-        getCardDataAdapter(RIGHT).removePendingNow();
-        getCardDataAdapter(LEFT).removePendingNow();
         saveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
 
     }
@@ -474,13 +472,11 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as
                    "bad," (incomplete) */
                 for (MtgCard data : mListLeft) {
-                    if (!getCardDataAdapter(LEFT).isItemPendingRemoval(mListLeft.indexOf(data))) {
-                        totalCards += data.numberOf;
-                        if (data.hasPrice()) {
-                            totalPrice += data.numberOf * (data.price / 100.0f);
-                        } else {
-                            hasBadValues = true;
-                        }
+                    totalCards += data.numberOf;
+                    if (data.hasPrice()) {
+                        totalPrice += data.numberOf * (data.price / 100.0f);
+                    } else {
+                        hasBadValues = true;
                     }
                 }
 
@@ -501,13 +497,11 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as "bad,"
                    (incomplete) */
                 for (MtgCard data : mListRight) {
-                    if (!getCardDataAdapter(RIGHT).isItemPendingRemoval(mListRight.indexOf(data))) {
-                        totalCards += data.numberOf;
-                        if (data.hasPrice()) {
-                            totalPrice += data.numberOf * (data.price / 100.0f);
-                        } else {
-                            hasBadValues = true;
-                        }
+                    totalCards += data.numberOf;
+                    if (data.hasPrice()) {
+                        totalPrice += data.numberOf * (data.price / 100.0f);
+                    } else {
+                        hasBadValues = true;
                     }
                 }
 
@@ -714,43 +708,46 @@ public class TradeFragment extends FamiliarListFragment {
         }
 
         @Override
+        protected void onItemAdded() {
+            TradeComparator tradeComparator = new TradeComparator(PreferenceAdapter.getTradeSortOrder(getContext()));
+            switch (side) {
+                case LEFT: {
+                    Collections.sort(mListLeft, tradeComparator);
+                    break;
+                }
+                case RIGHT: {
+                    Collections.sort(mListRight, tradeComparator);
+                    break;
+                }
+            }
+            super.onItemAdded();
+        }
+
+        @Override
         public void onBindViewHolder(TradeViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             final MtgCard item = getItem(position);
 
-            if (isItemPendingRemoval(position)) {
-                holder.itemView.findViewById(R.id.trade_row).setVisibility(View.GONE);
-            } else {
-                setItemSelected(holder.itemView, position, isItemSelected(position), false);
-                holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
-                holder.mCardName.setText(item.mName);
-                holder.mCardSet.setText(item.setName);
-                holder.mCardNumberOf.setText(item.hasPrice() ? item.numberOf + "x" : "");
-                holder.mCardFoil.setVisibility(item.foil ? View.VISIBLE : View.GONE);
-                holder.mCardPrice.setText(item.hasPrice() ? item.getPriceString() : item.message);
-                if (item.hasPrice()) {
-                    if (item.customPrice) {
-                        holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
-                                R.color.material_green_500));
-                    } else {
-                        holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
-                                getResourceIdFromAttr(R.attr.color_text)));
-                    }
+            setItemSelected(holder.itemView, position, isItemSelected(position), false);
+            holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
+            holder.mCardName.setText(item.mName);
+            holder.mCardSet.setText(item.setName);
+            holder.mCardNumberOf.setText(item.hasPrice() ? item.numberOf + "x" : "");
+            holder.mCardFoil.setVisibility(item.foil ? View.VISIBLE : View.GONE);
+            holder.mCardPrice.setText(item.hasPrice() ? item.getPriceString() : item.message);
+            if (item.hasPrice()) {
+                if (item.customPrice) {
+                    holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
+                            R.color.material_green_500));
                 } else {
                     holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
-                            R.color.material_red_500));
+                            getResourceIdFromAttr(R.attr.color_text)));
                 }
+            } else {
+                holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
+                        R.color.material_red_500));
             }
-
         }
-
-        @Override
-        public String getItemName(int position) {
-            return getItem(position).mName;
-        }
-
-
     }
-
 }
