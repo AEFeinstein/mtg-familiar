@@ -551,12 +551,12 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         @Override
-        protected void onItemAdded() {
+        protected void onItemReadded() {
             // Sort the wishlist
             sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
 
             // Call super to notify the adapter, etc
-            super.onItemAdded();
+            super.onItemReadded();
         }
 
         @Override

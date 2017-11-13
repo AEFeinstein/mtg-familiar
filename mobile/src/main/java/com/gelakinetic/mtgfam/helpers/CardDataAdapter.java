@@ -49,10 +49,10 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     private boolean inSelectMode;
 
     /**
-     * TODO
+     * Default constructor
      *
-     * @param values
-     * @param fragment
+     * @param values   The values which will back this adapter
+     * @param fragment The fragment this adapter will be shown in
      */
     public CardDataAdapter(ArrayList<T> values, FamiliarListFragment fragment) {
         items = values;
@@ -63,40 +63,26 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
+     * This method updates the contents of the RecyclerView.ViewHolder.itemView to reflect the item
+     * at the given position.
      *
-     * @param holder
-     * @param position
+     * @param holder   The ViewHolder which should be updated to represent the contents of the item
+     *                 at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
      */
     @Override
     @CallSuper
     public void onBindViewHolder(VH holder, int position) {
         if (!isInSelectMode()) {
-                /* Sometimes an item will be selected after we exit select mode */
+            /* Sometimes an item will be selected after we exit select mode */
             setItemSelected(holder.itemView, position, false, false);
         } else {
-            setItemSelected(holder.itemView, position, getItem(position).isSelected(), false);
+            setItemSelected(holder.itemView, position, items.get(position).isSelected(), false);
         }
     }
 
     /**
-     * TODO
-     *
-     * @param position
-     * @return
-     */
-    @Nullable
-    private String getItemName(final int position) {
-        if (position < items.size()) {
-            return items.get(position).mName;
-        }
-        return null;
-    }
-
-    /**
-     * TODO
-     *
-     * @return
+     * @return The number of items in the list behind this adapter
      */
     @Override
     public int getItemCount() {
@@ -104,10 +90,10 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
+     * Returns the item at the given position
      *
-     * @param position
-     * @return
+     * @param position The position to get
+     * @return The item at that position
      */
     @Nullable
     public T getItem(int position) {
@@ -118,23 +104,14 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
+     * Called when an item is swiped away. This will remove the item, set up the "Undo" snackbar
+     * and notify the fragment
      *
-     * @param item
-     * @return
-     */
-    protected int itemsIndexOf(T item) {
-        return items.indexOf(item);
-    }
-
-    /**
-     * TODO
-     *
-     * @param position
+     * @param position The position of the item that was removed
      */
     void swipeRemoveItem(final int position) {
         // Remove the item from the list and add it to a temporary array
-        String removedName = getItemName(position);
+        String removedName = items.get(position).mName;
         undoBuffer.add(items.remove(position));
 
         onItemRemoved(position);
@@ -150,7 +127,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                         items.addAll(undoBuffer);
                         undoBuffer.clear();
                         // Notify the adapter, this may have fragment specific code
-                        onItemAdded();
+                        onItemReadded();
                     }
                 })
                 .addCallback(new Snackbar.Callback() {
@@ -180,10 +157,11 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
+     * This function is called if the prior action was undone, and items are readded back to the
+     * list. It may be overridden to do fragment-specific stuff.
      */
     @CallSuper
-    protected void onItemAdded() {
+    protected void onItemReadded() {
         notifyDataSetChanged();
 
         // And update all prices if necessary
@@ -193,9 +171,10 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
+     * This function is called if an item was swiped away. It may be overridden to do
+     * fragment-specific stuff.
      *
-     * @param position
+     * @param position The position of the item which was removed
      */
     @CallSuper
     protected void onItemRemoved(int position) {
@@ -209,7 +188,8 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
+     * This function is called when the undo option times out and the removed item is gone forever.
+     * It may be overridden to do fragment-specific stuff.
      */
     protected void onItemRemovedFinal() {
 
@@ -234,9 +214,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
-     *
-     * @return
+     * @return An ArrayList of all the currently selected items.
      */
     protected ArrayList<T> getSelectedItems() {
 
@@ -251,7 +229,8 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
+     * Deletes all currently selected items, starting from the back to avoid
+     * ConcurrentModificationExceptions or skipping over items
      */
     public void deleteSelectedItems() {
         for (int i = items.size() - 1; i >= 0; i--) {
@@ -259,10 +238,11 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                 items.remove(i);
             }
         }
+        notifyDataSetChanged();
     }
 
     /**
-     * TODO
+     * Deselects all items
      */
     public void deselectAll() {
 
@@ -271,25 +251,25 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
         }
         setInSelectMode(false);
         notifyDataSetChanged();
-
     }
 
     /**
-     * TODO
+     * Sets a given item as selected or not
      *
-     * @param view
-     * @param position
-     * @param selected
-     * @param shouldNotify
+     * @param view         The view which was selected
+     * @param position     The position of the item which was selected
+     * @param selected     true if the item was selected, false if it was not
+     * @param shouldNotify true to notify the system to redraw the list, false if it's handled
+     *                     elsewhere
      */
-    protected void setItemSelected(View view, int position, boolean selected, boolean shouldNotify) {
+    void setItemSelected(View view, int position, boolean selected, boolean shouldNotify) {
         view.setSelected(selected);
+        view.invalidate();
         if (selected) {
             items.get(position).setSelected(true);
         } else {
             items.get(position).setSelected(false);
         }
-        view.invalidate();
 
         // Notify of any changes
         if (shouldNotify) {
@@ -298,19 +278,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     }
 
     /**
-     * TODO
-     *
-     * @param position
-     * @return
-     */
-    protected boolean isItemSelected(int position) {
-        return items.get(position).isSelected();
-    }
-
-    /**
-     * TODO
-     *
-     * @return
+     * @return The number of currently selected items
      */
     int getNumSelectedItems() {
         int numSelected = 0;

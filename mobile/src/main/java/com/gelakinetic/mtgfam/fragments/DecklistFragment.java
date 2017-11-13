@@ -686,7 +686,7 @@ public class DecklistFragment extends FamiliarListFragment {
         }
 
         @Override
-        protected void onItemAdded() {
+        protected void onItemReadded() {
             // Resort the decklist
             Collections.sort(mCompressedDecklist, mDecklistChain);
 
@@ -696,7 +696,7 @@ public class DecklistFragment extends FamiliarListFragment {
             setHeaderValues();
 
             // Call super to notify the adapter, etc
-            super.onItemAdded();
+            super.onItemReadded();
         }
 
         @Override
@@ -736,13 +736,11 @@ public class DecklistFragment extends FamiliarListFragment {
                 holder.itemView.setOnLongClickListener(holder);
 
                     /* Do the selection stuff */
-                if (isItemSelected(position)) {
-                    setItemSelected(holder.itemView, position, true, false);
+                if (info.isSelected()) {
                     holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_menu_done, 0, 0, 0);
                     holder.mCardNumberOf.setText("");
                 } else {
-                    setItemSelected(holder.itemView, position, false, false);
                     holder.mCardNumberOf
                             .setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
@@ -792,7 +790,6 @@ public class DecklistFragment extends FamiliarListFragment {
                 if (cdi.header != null) {
                     continue;
                 }
-                final int position = itemsIndexOf(cdi);
                 if (    /* The type is not above -1 OR is not in the sideboard */
                         (!(typeIndex > -1) || !cdi.mIsSideboard)
                         /* The type is above -1 OR the card is in the sideboard */

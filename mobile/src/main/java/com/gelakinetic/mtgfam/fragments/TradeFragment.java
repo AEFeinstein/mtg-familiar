@@ -708,7 +708,7 @@ public class TradeFragment extends FamiliarListFragment {
         }
 
         @Override
-        protected void onItemAdded() {
+        protected void onItemReadded() {
             TradeComparator tradeComparator = new TradeComparator(PreferenceAdapter.getTradeSortOrder(getContext()));
             switch (side) {
                 case LEFT: {
@@ -720,7 +720,7 @@ public class TradeFragment extends FamiliarListFragment {
                     break;
                 }
             }
-            super.onItemAdded();
+            super.onItemReadded();
         }
 
         @Override
@@ -729,7 +729,6 @@ public class TradeFragment extends FamiliarListFragment {
 
             final MtgCard item = getItem(position);
 
-            setItemSelected(holder.itemView, position, isItemSelected(position), false);
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
             holder.mCardName.setText(item.mName);
             holder.mCardSet.setText(item.setName);
