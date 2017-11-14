@@ -65,99 +65,103 @@ public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
         this.isSwipeable = isSwipeable;
     }
 
-    abstract public void onClickNotSelectMode(View view);
+    abstract public void onClickNotSelectMode(View view, int position);
 
     @Override
     public void onClick(View view) {
-        if (mAdapter.isInSelectMode()) {
-            int position = getAdapterPosition();
-            if (itemView.isSelected()) {
-                // Unselect the item
-                mAdapter.setItemSelected(itemView, position, false, true);
+        int position = getAdapterPosition();
+        if (RecyclerView.NO_POSITION != position) {
+            if (mAdapter.isInSelectMode()) {
+                if (itemView.isSelected()) {
+                    // Unselect the item
+                    mAdapter.setItemSelected(itemView, position, false, true);
 
-                int numSelected = 0;
-                for (CardDataAdapter adapter : mFragment.mCardDataAdapters) {
-                    numSelected += adapter.getNumSelectedItems();
-                }
-                // If there are no more items
-                if (numSelected < 1) {
-                    // Finish select mode
-                    mFragment.mActionMode.finish();
-                    mAdapter.setInSelectMode(false);
+                    int numSelected = 0;
+                    for (CardDataAdapter adapter : mFragment.mCardDataAdapters) {
+                        numSelected += adapter.getNumSelectedItems();
+                    }
+                    // If there are no more items
+                    if (numSelected < 1) {
+                        // Finish select mode
+                        mFragment.mActionMode.finish();
+                        mAdapter.setInSelectMode(false);
+                    }
+                } else {
+                    // Select the item
+                    mAdapter.setItemSelected(itemView, position, true, true);
                 }
             } else {
-                // Select the item
-                mAdapter.setItemSelected(itemView, position, true, true);
+                onClickNotSelectMode(view, position);
             }
-        } else {
-            onClickNotSelectMode(view);
         }
     }
 
     @Override
     public boolean onLongClick(View view) {
-        if (!mAdapter.isInSelectMode()) {
-            // Start select mode
-            mFragment.mActionMode = mFragment.getFamiliarActivity().startSupportActionMode(new ActionMode.Callback() {
+        int position = getAdapterPosition();
+        if (RecyclerView.NO_POSITION != position) {
+            if (!mAdapter.isInSelectMode()) {
+                // Start select mode
+                mFragment.mActionMode = mFragment.getFamiliarActivity().startSupportActionMode(new ActionMode.Callback() {
 
-                @Override
-                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                    MenuInflater inflater = mode.getMenuInflater();
-                    inflater.inflate(mActionMenuResId, menu); // action_mode_menu or decklist_select_menu
-                    return true;
-                }
+                    @Override
+                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                        MenuInflater inflater = mode.getMenuInflater();
+                        inflater.inflate(mActionMenuResId, menu); // action_mode_menu or decklist_select_menu
+                        return true;
+                    }
 
-                @Override
-                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                    return false;
-                }
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                        return false;
+                    }
 
-                @Override
-                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                    switch (item.getItemId()) {
-                        // All lists have this one
-                        case R.id.deck_delete_selected: {
-                            mFragment.adaptersDeleteSelectedItems();
-                            mode.finish();
-                            if (mFragment.shouldShowPrice()) {
-                                mFragment.updateTotalPrices(TradeFragment.BOTH);
+                    @Override
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                        switch (item.getItemId()) {
+                            // All lists have this one
+                            case R.id.deck_delete_selected: {
+                                mFragment.adaptersDeleteSelectedItems();
+                                mode.finish();
+                                if (mFragment.shouldShowPrice()) {
+                                    mFragment.updateTotalPrices(TradeFragment.BOTH);
+                                }
+                                return true;
                             }
-                            return true;
-                        }
-                        // Only for the decklist
-                        case R.id.deck_import_selected: {
-                            ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
-                                    ((DecklistFragment.DecklistDataAdapter) mFragment.getCardDataAdapter(0)).getSelectedItems();
-                            for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-                                WishlistHelpers.addItemToWishlist(mFragment.getContext(),
-                                        info.convertToWishlist());
+                            // Only for the decklist
+                            case R.id.deck_import_selected: {
+                                ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
+                                        ((DecklistFragment.DecklistDataAdapter) mFragment.getCardDataAdapter(0)).getSelectedItems();
+                                for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
+                                    WishlistHelpers.addItemToWishlist(mFragment.getContext(),
+                                            info.convertToWishlist());
+                                }
+                                mode.finish();
+                                return true;
                             }
-                            mode.finish();
-                            return true;
-                        }
-                        default: {
-                            return false;
+                            default: {
+                                return false;
+                            }
                         }
                     }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode mode) {
+                        mFragment.adaptersDeselectAll();
+                    }
+                });
+
+                for (CardDataAdapter adapter : mFragment.mCardDataAdapters) {
+                    adapter.setInSelectMode(true);
                 }
 
-                @Override
-                public void onDestroyActionMode(ActionMode mode) {
-                    mFragment.adaptersDeselectAll();
-                }
-            });
+                // Then select the item
+                mAdapter.setItemSelected(itemView, position, true, true);
 
-            for (CardDataAdapter adapter : mFragment.mCardDataAdapters) {
-                adapter.setInSelectMode(true);
+                // This click was handled
+                return true;
             }
-
-            // Then select the item
-            mAdapter.setItemSelected(itemView, getAdapterPosition(), true, true);
-
-            // This click was handled
-            return true;
         }
-
         // The click was not handled
         return false;
     }

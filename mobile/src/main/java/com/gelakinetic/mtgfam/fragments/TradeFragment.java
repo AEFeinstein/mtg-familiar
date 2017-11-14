@@ -681,11 +681,11 @@ public class TradeFragment extends FamiliarListFragment {
         }
 
         @Override
-        public void onClickNotSelectMode(View view) {
+        public void onClickNotSelectMode(View view, int position) {
             showDialog(
                     TradeDialogFragment.DIALOG_UPDATE_CARD,
                     mSide,
-                    getAdapterPosition()
+                    position
             );
         }
     }

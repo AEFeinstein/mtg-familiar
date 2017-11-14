@@ -44,7 +44,10 @@ public class CardDataTouchHelper extends SimpleCallback {
 
     @Override
     public void onSwiped(ViewHolder viewHolder, int direction) {
-        adapter.swipeRemoveItem(viewHolder.getAdapterPosition());
+        int position = viewHolder.getAdapterPosition();
+        if (RecyclerView.NO_POSITION != position) {
+            adapter.swipeRemoveItem(position);
+        }
     }
 
     @Override
