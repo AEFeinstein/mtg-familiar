@@ -297,6 +297,8 @@ public class CardDbAdapter {
     public static final int BANNED = 1;
     public static final int RESTRICTED = 2;
 
+    public static final String ILLEGAL_SETS[] = {"UG", "UNH", "UN3", "ARS", "PCP", "PP2"};
+
     /* The various types of multi-cards */
     public enum MultiCardType {
         NOPE,
@@ -1220,7 +1222,17 @@ public class CardDbAdapter {
                     /* Cards like 'Dryad Arbor'. */
                     "OR " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " LIKE '%Land Creature%')";
             /* Filter out 'UN-'sets*/
-            statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " IN ('UG', 'UNH')";
+            statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " IN (";
+            boolean first = true;
+            for (String illegalSet : ILLEGAL_SETS) {
+                if (first) {
+                    first = false;
+                } else {
+                    statement += ", ";
+                }
+                statement += "'" + illegalSet + "'";
+            }
+            statement += ")";
         }
 
         if (criteria.rarity != null) {
@@ -1263,9 +1275,10 @@ public class CardDbAdapter {
                         + " )";
             } else {
                 /* Otherwise filter silver bordered cards, giant cards */
-                statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UNH'" +
-                        " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = 'UG'" +
-                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Plane'" +
+                for (String illegalSet : ILLEGAL_SETS) {
+                    statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" + illegalSet + "'";
+                }
+                statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Plane'" +
                         " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Conspiracy'" +
                         " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE '%Scheme'" +
                         " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Vanguard'";
@@ -1809,8 +1822,11 @@ public class CardDbAdapter {
                     + KEY_NAME
                     + " = "
                     + mCardName
-                    + ") WHEN 'UG' THEN 1 WHEN 'UNH' THEN 1 WHEN 'ARS' THEN 1 WHEN 'PCP' THEN 1 "
-                    + "WHEN 'PP2' THEN 1 ELSE NULL END, "
+                    + ") ";
+            for (String illegalSet : ILLEGAL_SETS) {
+                sql += "WHEN '" + illegalSet + "' THEN 1 ";
+            }
+            sql += "ELSE NULL END, "
                     + "CASE (SELECT 1 FROM " + DATABASE_TABLE_CARDS
                     + " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS
                     + " ls ON ls." + KEY_SET + " = c." + KEY_SET + " WHERE ls."
