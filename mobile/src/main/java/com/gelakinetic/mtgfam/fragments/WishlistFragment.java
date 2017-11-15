@@ -109,8 +109,8 @@ public class WishlistFragment extends FamiliarListFragment {
                 myFragmentView,
                 new int[]{R.id.cardlist},
                 new CardDataAdapter[]{new WishlistDataAdapter(mCompressedWishlist)},
-                new int[]{R.id.priceText}, new int[]{R.id.divider_total_price}, addCardListener
-        );
+                new int[]{R.id.priceText}, new int[]{R.id.divider_total_price},
+                R.menu.action_mode_menu, addCardListener);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -508,7 +508,7 @@ public class WishlistFragment extends FamiliarListFragment {
         final LinearLayout mWishlistSets;
 
         WishlistViewHolder(ViewGroup view) {
-            super(view, R.layout.result_list_card_row, WishlistFragment.this.getCardDataAdapter(0), WishlistFragment.this, R.menu.action_mode_menu);
+            super(view, R.layout.result_list_card_row, WishlistFragment.this.getCardDataAdapter(0), WishlistFragment.this);
 
             mCardType = itemView.findViewById(R.id.cardtype);
             mCardText = itemView.findViewById(R.id.cardability);

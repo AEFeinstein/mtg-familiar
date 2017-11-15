@@ -120,6 +120,12 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                 mFragment.getString(R.string.cardlist_item_deleted) + " " + removedName,
                 PreferenceAdapter.getUndoTimeout(mFragment.getContext()))
                 .setAction(R.string.cardlist_undo, new View.OnClickListener() {
+                    /**
+                     * When "Undo" is clicked, readd the removed items to the underlying list,
+                     * remove them from the undo list, and notify the adapter that it was changed
+                     *
+                     * @param v unused, the view that was clicked
+                     */
                     @Override
                     public void onClick(View v) {
                         // The user clicked Undo. Add the items back, then clear them from
@@ -131,6 +137,15 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                     }
                 })
                 .addCallback(new Snackbar.Callback() {
+                    /**
+                     * When the snackbar is dismissed, depending on how it was dismissed, either
+                     * clear the undo buffer of all items and notify the adapter, or ignore it
+                     *
+                     * @param transientBottomBar The transient bottom bar which has been dismissed.
+                     * @param event The event which caused the dismissal. One of either:
+                     *              DISMISS_EVENT_SWIPE, DISMISS_EVENT_ACTION, DISMISS_EVENT_TIMEOUT,
+                     *              DISMISS_EVENT_MANUAL or DISMISS_EVENT_CONSECUTIVE.
+                     */
                     @Override
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         super.onDismissed(transientBottomBar, event);
@@ -209,14 +224,14 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      *
      * @param inSelectMode if we are in select mode or not
      */
-    void setInSelectMode(final boolean inSelectMode) {
+    public void setInSelectMode(final boolean inSelectMode) {
         this.inSelectMode = inSelectMode;
     }
 
     /**
      * @return An ArrayList of all the currently selected items.
      */
-    protected ArrayList<T> getSelectedItems() {
+    public ArrayList<T> getSelectedItems() {
 
         ArrayList<T> selectedItemsLocal = new ArrayList<>();
         for (T item : items) {
@@ -280,7 +295,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     /**
      * @return The number of currently selected items
      */
-    int getNumSelectedItems() {
+    public int getNumSelectedItems() {
         int numSelected = 0;
         for (T item : items) {
             if (item.isSelected()) {

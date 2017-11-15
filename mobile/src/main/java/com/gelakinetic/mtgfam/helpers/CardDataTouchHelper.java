@@ -19,7 +19,6 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
-import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -30,26 +29,54 @@ import android.support.v7.widget.helper.ItemTouchHelper.SimpleCallback;
  */
 public class CardDataTouchHelper extends SimpleCallback {
 
-    private final CardDataAdapter adapter;
+    private final CardDataAdapter mAdapter;
 
-    public CardDataTouchHelper(final CardDataAdapter adapter, final int swipeDirs) {
-        super(0, swipeDirs);
-        this.adapter = adapter;
+    /**
+     * Call the super constructor and save the mAdapter for this callback
+     *
+     * @param adapter The adapter for this helper, will be called if an item is swiped
+     */
+    public CardDataTouchHelper(final CardDataAdapter adapter) {
+        super(0, ItemTouchHelper.LEFT);
+        this.mAdapter = adapter;
     }
 
+    /**
+     * Do nothing when an item is moved
+     *
+     * @param recyclerView The RecyclerView to which ItemTouchHelper is attached to.
+     * @param viewHolder   The ViewHolder which is being dragged by the user.
+     * @param target       The ViewHolder over which the currently active item is being dragged.
+     * @return false, because we do nothing
+     */
     @Override
     public boolean onMove(RecyclerView recyclerView, ViewHolder viewHolder, ViewHolder target) {
         return false;
     }
 
+    /**
+     * Called when an item is swiped. Swiped items should be removed
+     *
+     * @param viewHolder The ViewHolder which has been swiped by the user.
+     * @param direction  The direction to which the ViewHolder is swiped. It will be LEFT, the only
+     *                   direction registered by the constructor
+     */
     @Override
     public void onSwiped(ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
         if (RecyclerView.NO_POSITION != position) {
-            adapter.swipeRemoveItem(position);
+            mAdapter.swipeRemoveItem(position);
         }
     }
 
+    /**
+     * Return the swipeable directions for a given ViewHolder. May be 0 if the ViewHolder isn't
+     * swipeable
+     *
+     * @param parent The RecyclerView to which the ItemTouchHelper is attached to.
+     * @param holder The RecyclerView for which the swipe direction is queried.
+     * @return 0 if the view is not swipeable, otherwise super
+     */
     @Override
     public int getSwipeDirs(RecyclerView parent, ViewHolder holder) {
         if (holder instanceof CardDataViewHolder) {
@@ -59,26 +86,4 @@ public class CardDataTouchHelper extends SimpleCallback {
         }
         return super.getSwipeDirs(parent, holder);
     }
-
-    @Override
-    public void onChildDraw(
-            Canvas canvas,
-            RecyclerView recyclerView,
-            ViewHolder viewHolder,
-            float dX,
-            float dY,
-            int actionState,
-            boolean isCurrentlyActive) {
-
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            final float alpha = 1.0f - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
-            viewHolder.itemView.setAlpha(alpha);
-            viewHolder.itemView.setTranslationX(dX);
-        } else {
-            super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState,
-                    isCurrentlyActive);
-        }
-
-    }
-
 }

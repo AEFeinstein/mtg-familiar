@@ -118,9 +118,8 @@ public class TradeFragment extends FamiliarListFragment {
                 new int[]{R.id.tradeListLeft, R.id.tradeListRight},
                 new CardDataAdapter[]{listAdapterLeft, listAdapterRight},
                 new int[]{R.id.priceTextLeft, R.id.priceTextRight},
-                new int[]{R.id.priceDividerLeft, R.id.priceDividerRight},
-                null
-        );
+                new int[]{R.id.priceDividerLeft, R.id.priceDividerRight}, R.menu.action_mode_menu,
+                null);
 
         /* Click listeners to add cards */
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(
@@ -663,11 +662,11 @@ public class TradeFragment extends FamiliarListFragment {
         private final TextView mCardNumberOf;
         private final ImageView mCardFoil;
         private final TextView mCardPrice;
-        private int mSide;
+        private final int mSide;
 
         TradeViewHolder(ViewGroup view, int side) {
 
-            super(view, R.layout.trader_row, TradeFragment.this.getCardDataAdapter(side), TradeFragment.this, R.menu.action_mode_menu);
+            super(view, R.layout.trader_row, TradeFragment.this.getCardDataAdapter(side), TradeFragment.this);
 
             mCardSet = itemView.findViewById(R.id.traderRowSet);
             mCardNumberOf = itemView.findViewById(R.id.traderNumber);

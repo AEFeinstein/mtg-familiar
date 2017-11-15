@@ -126,8 +126,8 @@ public class DecklistFragment extends FamiliarListFragment {
                 myFragmentView,
                 new int[]{R.id.cardlist},
                 new CardDataAdapter[]{new DecklistDataAdapter(mCompressedDecklist)},
-                new int[]{R.id.decklistPrice}, null, addCardListener
-        );
+                new int[]{R.id.decklistPrice}, null, R.menu.decklist_select_menu,
+                addCardListener);
 
         myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
 
@@ -646,7 +646,7 @@ public class DecklistFragment extends FamiliarListFragment {
         private final TextView mCardCost;
 
         DecklistViewHolder(ViewGroup view) {
-            super(view, R.layout.decklist_card_row, DecklistFragment.this.getCardDataAdapter(0), DecklistFragment.this, R.menu.decklist_select_menu);
+            super(view, R.layout.decklist_card_row, DecklistFragment.this.getCardDataAdapter(0), DecklistFragment.this);
 
             mCardNumberOf = itemView.findViewById(R.id.decklistRowNumber);
             mCardCost = itemView.findViewById(R.id.decklistRowCost);

@@ -20,61 +20,88 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.support.annotation.LayoutRes;
-import android.support.annotation.MenuRes;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarListFragment;
-import com.gelakinetic.mtgfam.fragments.TradeFragment;
-
-import java.util.ArrayList;
 
 public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener {
 
     private final CardDataAdapter mAdapter;
     private final FamiliarListFragment mFragment;
-    private TextView mCardName;
-    private int mActionMenuResId;
-
+    private final TextView mCardName;
     private boolean isSwipeable = true;
 
-    public CardDataViewHolder(ViewGroup view, @LayoutRes final int layoutRowId, CardDataAdapter adapter, FamiliarListFragment fragment, @MenuRes int actionMenuResId) {
+    /**
+     * Constructor
+     *
+     * @param view        The root ViewGroup
+     * @param layoutRowId The layout to inflate for this ViewHolder
+     * @param adapter     The adapter which displays this ViewHolder
+     * @param fragment    The fragment which contains the list which contains this ViewHolder
+     */
+    public CardDataViewHolder(ViewGroup view, @LayoutRes final int layoutRowId, CardDataAdapter adapter,
+                              FamiliarListFragment fragment) {
         // The inflated view is set to itemView
         super(LayoutInflater.from(view.getContext()).inflate(layoutRowId, view, false));
         mCardName = itemView.findViewById(R.id.card_name);
         mAdapter = adapter;
         mFragment = fragment;
-        mActionMenuResId = actionMenuResId;
     }
 
+    /**
+     * @return true if this ViewHolder is swipeable, false otherwise
+     */
     boolean getIsSwipeable() {
         return isSwipeable;
     }
 
+    /**
+     * Sets if this ViewHolder is swipeable or not
+     *
+     * @param isSwipeable true if it may be swiped, false otherwise
+     */
     public void setIsSwipeable(final boolean isSwipeable) {
         this.isSwipeable = isSwipeable;
     }
 
+    /**
+     * This function will be called if this ViewHolder is clicked while the adapter is not in
+     * select mode
+     *
+     * @param view     The View that was clicked
+     * @param position The position of the View that was clicked in the adapter
+     */
     abstract public void onClickNotSelectMode(View view, int position);
 
+    /**
+     * @return The card name for the object displayed in this ViewHolder, from the TextView
+     */
     public String getCardName() {
         return mCardName.getText().toString();
     }
 
+    /**
+     * Sets the card name in the TextView for this ViewHolder
+     *
+     * @param name The card name to set
+     */
     public void setCardName(String name) {
         mCardName.setText(name);
     }
 
+    /**
+     * When the ViewHolder is clicked, if the adapter is in select mode, it will either select or
+     * unselect the ViewHolder. If all ViewHolders are unselected, select mode will be exited.
+     * If the adapter isn't in select mode, it will call onClickNotSelectMode()
+     *
+     * @param view The view that was clicked
+     */
     @Override
     public void onClick(View view) {
         int position = getAdapterPosition();
@@ -84,15 +111,10 @@ public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
                     // Unselect the item
                     mAdapter.setItemSelected(itemView, position, false, true);
 
-                    int numSelected = 0;
-                    for (CardDataAdapter adapter : mFragment.mCardDataAdapters) {
-                        numSelected += adapter.getNumSelectedItems();
-                    }
                     // If there are no more items
-                    if (numSelected < 1) {
+                    if (mFragment.adaptersGetAllSelected() < 1) {
                         // Finish select mode
-                        mFragment.mActionMode.finish();
-                        mAdapter.setInSelectMode(false);
+                        mFragment.finishActionMode();
                     }
                 } else {
                     // Select the item
@@ -104,64 +126,20 @@ public abstract class CardDataViewHolder extends RecyclerView.ViewHolder
         }
     }
 
+    /**
+     * When the ViewHolder is long clicked, it will start the parent adapter's select mode and
+     * select the long clicked ViewHolder
+     *
+     * @param view The View that was long clicked
+     * @return true if this long click was handled, false otherwise
+     */
     @Override
     public boolean onLongClick(View view) {
         int position = getAdapterPosition();
         if (RecyclerView.NO_POSITION != position) {
             if (!mAdapter.isInSelectMode()) {
                 // Start select mode
-                mFragment.mActionMode = mFragment.getFamiliarActivity().startSupportActionMode(new ActionMode.Callback() {
-
-                    @Override
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        MenuInflater inflater = mode.getMenuInflater();
-                        inflater.inflate(mActionMenuResId, menu); // action_mode_menu or decklist_select_menu
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        switch (item.getItemId()) {
-                            // All lists have this one
-                            case R.id.deck_delete_selected: {
-                                mFragment.adaptersDeleteSelectedItems();
-                                mode.finish();
-                                if (mFragment.shouldShowPrice()) {
-                                    mFragment.updateTotalPrices(TradeFragment.BOTH);
-                                }
-                                return true;
-                            }
-                            // Only for the decklist
-                            case R.id.deck_import_selected: {
-                                ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
-                                        ((DecklistFragment.DecklistDataAdapter) mFragment.getCardDataAdapter(0)).getSelectedItems();
-                                for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-                                    WishlistHelpers.addItemToWishlist(mFragment.getContext(),
-                                            info.convertToWishlist());
-                                }
-                                mode.finish();
-                                return true;
-                            }
-                            default: {
-                                return false;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onDestroyActionMode(ActionMode mode) {
-                        mFragment.adaptersDeselectAll();
-                    }
-                });
-
-                for (CardDataAdapter adapter : mFragment.mCardDataAdapters) {
-                    adapter.setInSelectMode(true);
-                }
+                mFragment.startActionMode();
 
                 // Then select the item
                 mAdapter.setItemSelected(itemView, position, true, true);

@@ -21,11 +21,15 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.MenuRes;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
@@ -36,10 +40,12 @@ import android.widget.TextView;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
+import com.gelakinetic.mtgfam.helpers.CardDataTouchHelper;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
-import com.gelakinetic.mtgfam.helpers.CardDataTouchHelper;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -67,12 +73,13 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     private EditText mNumberOfField;
     private CheckBox mCheckboxFoil;
     private boolean mCheckboxFoilLocked = false;
-    private ArrayList<TextView> mTotalPriceFields = new ArrayList<>();
-    private ArrayList<View> mTotalPriceDividers = new ArrayList<>();
-    public ActionMode mActionMode;
+    private final ArrayList<TextView> mTotalPriceFields = new ArrayList<>();
+    private final ArrayList<View> mTotalPriceDividers = new ArrayList<>();
+    private ActionMode mActionMode;
 
     /* Data adapters */
-    public ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
+    private final ArrayList<CardDataAdapter> mCardDataAdapters = new ArrayList<>();
+    private int mActionMenuResId;
 
     /**
      * Initializes common members. Must be called in onCreate
@@ -83,11 +90,12 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      *                        elements as recyclerViewIds
      * @param priceViewIds    the resource IDs for all the total price views to be managed
      * @param priceDividerIds the resource IDs for all the total price dividers to be managed
+     * @param actionMenuResId the resource ID for the action menu inflated when selecting items
      * @param addCardListener the listener to attach to mNameField, or null
      */
     void initializeMembers(View fragmentView, @LayoutRes int[] recyclerViewIds,
                            CardDataAdapter[] adapters, @IdRes int[] priceViewIds,
-                           @IdRes int[] priceDividerIds,
+                           @IdRes int[] priceDividerIds, @MenuRes int actionMenuResId,
                            TextView.OnEditorActionListener addCardListener) {
 
         // Set up the name field
@@ -118,7 +126,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             recyclerView.setAdapter(adapters[i]);
 
             ItemTouchHelper.SimpleCallback callback =
-                    new CardDataTouchHelper(adapters[i], ItemTouchHelper.LEFT);
+                    new CardDataTouchHelper(adapters[i]);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
             itemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -168,14 +176,21 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 mTotalPriceDividers.add(fragmentView.findViewById(resId));
             }
         }
+
+        mActionMenuResId = actionMenuResId;
     }
 
+    /**
+     * When a FamiliarListFragment resumes, throw an exception if it hasn't been initialized
+     * properly and set the visibility for total price views
+     */
     @Override
     public void onResume() {
         super.onResume();
 
         if (null == mNameField) {
-            throw new IllegalStateException("A class extending FamiliarListFragment must call initializeMembers()");
+            throw new IllegalStateException("A class extending FamiliarListFragment must call" +
+                    "initializeMembers()");
         }
 
         /* Show the total price, if desired */
@@ -196,19 +211,150 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         }
     }
 
+    /**
+     * Returns the adapter at the given index.
+     *
+     * @param adapterIdx Index for the desired adapter. Usually 0 for single lists, but trades have
+     *                   two adapters
+     * @return The adapter at that index
+     */
     public CardDataAdapter getCardDataAdapter(int adapterIdx) {
         return mCardDataAdapters.get(adapterIdx);
     }
 
+    /**
+     * Deletes the currently selected items from all the adapters
+     */
     public void adaptersDeleteSelectedItems() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deleteSelectedItems();
         }
     }
 
+    /**
+     * Deselects all currently selected items from all the adapters
+     */
     public void adaptersDeselectAll() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deselectAll();
+        }
+    }
+
+    /**
+     * Sets all adapters in select mode
+     */
+    public void adaptersSetAllSelectedMode() {
+        for (CardDataAdapter adapter : mCardDataAdapters) {
+            adapter.setInSelectMode(true);
+        }
+    }
+
+    /**
+     * @return The number of items currently selected by all adapters
+     */
+    public int adaptersGetAllSelected() {
+        int numSelected = 0;
+        for (CardDataAdapter adapter : mCardDataAdapters) {
+            numSelected += adapter.getNumSelectedItems();
+        }
+        return numSelected;
+    }
+
+    /**
+     * Starts the action mode, i.e. select mode In this mode, multiple items in the list may be
+     * selected for deletion, sharing, etc.
+     */
+    public void startActionMode() {
+
+        mActionMode = getFamiliarActivity().startSupportActionMode(new ActionMode.Callback() {
+
+            /**
+             * Called when the action mode is created. Inflates the menu
+             *
+             * @param mode ActionMode being created
+             * @param menu Menu used to populate action buttons
+             * @return true because the menu was inflated
+             */
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(mActionMenuResId, menu);
+                return true;
+            }
+
+            /**
+             * Called to refresh the menu whenever it's invalidated
+             *
+             * @param mode ActionMode being prepared
+             * @param menu Menu used to populate action buttons
+             * @return false because nothing changed
+             */
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            /**
+             * Called when an action item in a menu is clicked. This has to handle all of the
+             * different menus inflated. Currently this is just R.menu.decklist_select_menu and
+             * R.menu.action_mode_menu
+             *
+             * @param mode The current ActionMode
+             * @param item The item that was clicked
+             * @return true if this callback handled the event, false if the standard MenuItem
+             * invocation should continue.
+             */
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    // All lists have this one
+                    case R.id.deck_delete_selected: {
+                        adaptersDeleteSelectedItems();
+                        mode.finish();
+                        if (shouldShowPrice()) {
+                            updateTotalPrices(TradeFragment.BOTH);
+                        }
+                        return true;
+                    }
+                    // Only for the decklist
+                    case R.id.deck_import_selected: {
+                        ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
+                                ((DecklistFragment.DecklistDataAdapter) getCardDataAdapter(0)).getSelectedItems();
+                        for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
+                            WishlistHelpers.addItemToWishlist(getContext(),
+                                    info.convertToWishlist());
+                        }
+                        mode.finish();
+                        return true;
+                    }
+                    default: {
+                        return false;
+                    }
+                }
+            }
+
+            /**
+             * Called when an action mode is about to be exited and destroyed.
+             *
+             * @param mode The ActionMode being destroyed
+             */
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                adaptersDeselectAll();
+            }
+        });
+
+        adaptersSetAllSelectedMode();
+    }
+
+    /**
+     * Called to finish the action mode, i.e. select mode. Make sure that all adapters leave select
+     * mode
+     */
+    public void finishActionMode() {
+        mActionMode.finish();
+        for (CardDataAdapter adapter : mCardDataAdapters) {
+            adapter.setInSelectMode(false);
         }
     }
 
