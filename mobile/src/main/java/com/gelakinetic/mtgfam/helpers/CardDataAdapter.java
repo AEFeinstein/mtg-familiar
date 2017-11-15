@@ -114,7 +114,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
         String removedName = items.get(position).mName;
         undoBuffer.add(items.remove(position));
 
-        onItemRemoved(position);
+        onItemRemoved();
 
         Snackbar.make(mFragment.getFamiliarActivity().findViewById(R.id.fragment_container),
                 mFragment.getString(R.string.cardlist_item_deleted) + " " + removedName,
@@ -128,12 +128,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                      */
                     @Override
                     public void onClick(View v) {
-                        // The user clicked Undo. Add the items back, then clear them from
-                        // the undo buffer
-                        items.addAll(undoBuffer);
-                        undoBuffer.clear();
-                        // Notify the adapter, this may have fragment specific code
-                        onItemReadded();
+                        undoDelete();
                     }
                 })
                 .addCallback(new Snackbar.Callback() {
@@ -153,10 +148,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                             case Snackbar.Callback.DISMISS_EVENT_MANUAL:
                             case Snackbar.Callback.DISMISS_EVENT_SWIPE:
                             case Snackbar.Callback.DISMISS_EVENT_TIMEOUT: {
-                                // Snackbar timed out or was dismissed by the user, so wipe the
-                                // undoBuffer forever
-                                undoBuffer.clear();
-                                onItemRemovedFinal();
+                                finalizeDelete();
                                 break;
                             }
                             case Snackbar.Callback.DISMISS_EVENT_ACTION:
@@ -188,11 +180,9 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     /**
      * This function is called if an item was swiped away. It may be overridden to do
      * fragment-specific stuff.
-     *
-     * @param position The position of the item which was removed
      */
     @CallSuper
-    protected void onItemRemoved(int position) {
+    protected void onItemRemoved() {
         // Tell the adapter the item was removed
         notifyDataSetChanged();
 
@@ -245,15 +235,17 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
 
     /**
      * Deletes all currently selected items, starting from the back to avoid
-     * ConcurrentModificationExceptions or skipping over items
+     * ConcurrentModificationExceptions or skipping over items. The deleted items are stored in
+     * the undo buffer in case the user wants them back before the timeout
      */
-    public void deleteSelectedItems() {
+    public void deleteSelectedItemsWithUndo() {
         for (int i = items.size() - 1; i >= 0; i--) {
             if (items.get(i).isSelected()) {
+                undoBuffer.add(items.get(i));
                 items.remove(i);
             }
         }
-        notifyDataSetChanged();
+        this.onItemRemoved();
     }
 
     /**
@@ -303,5 +295,29 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
             }
         }
         return numSelected;
+    }
+
+    /**
+     * Undoes the last deleted action by readding the deleted cards to the list and removing them
+     * from the undo buffer. Also notifies the adapter that items were readded
+     */
+    public void undoDelete() {
+        // The user clicked Undo. Add the items back, then clear them from
+        // the undo buffer
+        items.addAll(undoBuffer);
+        undoBuffer.clear();
+        // Notify the adapter, this may have fragment specific code
+        onItemReadded();
+    }
+
+    /**
+     * Finalizes the last delete action by clearing the undo buffer and notifying the fragment that
+     * the delete is permanent
+     */
+    public void finalizeDelete() {
+        // Snackbar timed out or was dismissed by the user, so wipe the
+        // undoBuffer forever
+        undoBuffer.clear();
+        onItemRemovedFinal();
     }
 }

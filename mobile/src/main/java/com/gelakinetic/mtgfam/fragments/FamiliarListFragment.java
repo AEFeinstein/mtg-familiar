@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,7 @@ import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataTouchHelper;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
@@ -223,15 +225,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     }
 
     /**
-     * Deletes the currently selected items from all the adapters
-     */
-    public void adaptersDeleteSelectedItems() {
-        for (CardDataAdapter adapter : mCardDataAdapters) {
-            adapter.deleteSelectedItems();
-        }
-    }
-
-    /**
      * Deselects all currently selected items from all the adapters
      */
     public void adaptersDeselectAll() {
@@ -309,7 +302,63 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                 switch (item.getItemId()) {
                     // All lists have this one
                     case R.id.deck_delete_selected: {
-                        adaptersDeleteSelectedItems();
+                        // Remove all selected items, put them in the undo buffer
+                        for (CardDataAdapter adapter : mCardDataAdapters) {
+                            adapter.deleteSelectedItemsWithUndo();
+                        }
+
+                        // Make a snackbar to undo this delete
+                        Snackbar.make(getFamiliarActivity().findViewById(R.id.fragment_container),
+                                "",
+                                PreferenceAdapter.getUndoTimeout(getContext()))
+                                .setAction(R.string.cardlist_undo, new View.OnClickListener() {
+                                    /**
+                                     * When "Undo" is clicked, readd the removed items to the underlying list,
+                                     * remove them from the undo list, and notify the adapter that it was changed
+                                     *
+                                     * @param v unused, the view that was clicked
+                                     */
+                                    @Override
+                                    public void onClick(View v) {
+                                        for (CardDataAdapter adapter : mCardDataAdapters) {
+                                            adapter.undoDelete();
+                                        }
+                                    }
+                                })
+                                .addCallback(new Snackbar.Callback() {
+                                    /**
+                                     * When the snackbar is dismissed, depending on how it was dismissed, either
+                                     * clear the undo buffer of all items and notify the adapter, or ignore it
+                                     *
+                                     * @param transientBottomBar The transient bottom bar which has been dismissed.
+                                     * @param event The event which caused the dismissal. One of either:
+                                     *              DISMISS_EVENT_SWIPE, DISMISS_EVENT_ACTION, DISMISS_EVENT_TIMEOUT,
+                                     *              DISMISS_EVENT_MANUAL or DISMISS_EVENT_CONSECUTIVE.
+                                     */
+                                    @Override
+                                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                                        super.onDismissed(transientBottomBar, event);
+                                        switch (event) {
+                                            case Snackbar.Callback.DISMISS_EVENT_MANUAL:
+                                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
+                                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT: {
+                                                // Snackbar timed out or was dismissed by the user, so wipe the
+                                                // undoBuffer forever
+                                                for (CardDataAdapter adapter : mCardDataAdapters) {
+                                                    adapter.finalizeDelete();
+                                                }
+                                                break;
+                                            }
+                                            case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE: {
+                                                // Snackbar was dismissed by action click, handled above or
+                                                // Hidden by a new snackbar, ignore it
+                                                break;
+                                            }
+                                        }
+                                    }
+                                })
+                                .show();
                         mode.finish();
                         if (shouldShowPrice()) {
                             updateTotalPrices(TradeFragment.BOTH);

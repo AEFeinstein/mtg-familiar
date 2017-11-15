@@ -699,15 +699,20 @@ public class DecklistFragment extends FamiliarListFragment {
         }
 
         @Override
-        protected void onItemRemoved(int position) {
+        protected void onItemRemoved() {
             // Reset the headers
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
             clearHeaders();
             Collections.sort(mCompressedDecklist, mDecklistChain);
             setHeaderValues();
 
+            // Update the number of cards listed
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+
             // Call super to notify the adapter, etc
-            super.onItemRemoved(position);
+            super.onItemRemoved();
         }
 
         @Override
