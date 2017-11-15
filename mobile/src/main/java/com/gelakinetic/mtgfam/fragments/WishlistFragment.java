@@ -522,7 +522,7 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         @Override
-        public void onClickNotSelectMode(View view) {
+        public void onClickNotSelectMode(View view, int position) {
             // Make sure the wishlist is written first in the proper order
             sortWishlist(SortOrderDialogFragment.KEY_ORDER + " " + SortOrderDialogFragment.SQL_ASC);
             WishlistHelpers.WriteCompressedWishlist(getActivity(), mCompressedWishlist);

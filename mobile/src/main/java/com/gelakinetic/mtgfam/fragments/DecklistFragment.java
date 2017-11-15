@@ -654,9 +654,9 @@ public class DecklistFragment extends FamiliarListFragment {
         }
 
         @Override
-        public void onClickNotSelectMode(View view) {
-                /* if we aren't in select mode, open a dialog to edit this card */
-            final CompressedDecklistInfo item = mCompressedDecklist.get(getAdapterPosition());
+        public void onClickNotSelectMode(View view, int position) {
+            /* if we aren't in select mode, open a dialog to edit this card */
+            final CompressedDecklistInfo item = mCompressedDecklist.get(position);
             showDialog(DecklistDialogFragment.DIALOG_UPDATE_CARD,
                     item.mName, item.mIsSideboard);
         }
