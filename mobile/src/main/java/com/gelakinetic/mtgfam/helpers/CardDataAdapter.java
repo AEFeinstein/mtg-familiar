@@ -194,7 +194,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
     @CallSuper
     protected void onItemRemoved(int position) {
         // Tell the adapter the item was removed
-        notifyItemRemoved(position);
+        notifyDataSetChanged();
 
         // Update the price if necessary
         if (mFragment.shouldShowPrice()) {

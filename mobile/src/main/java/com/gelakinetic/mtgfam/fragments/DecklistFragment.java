@@ -477,7 +477,6 @@ public class DecklistFragment extends FamiliarListFragment {
             if (mCompressedDecklist.get(i).header != null) { /* We found our header */
                 /* Now remove it, and then back up a step */
                 mCompressedDecklist.remove(i);
-                getCardDataAdapter(0).notifyItemRemoved(i);
                 i--;
             }
         }
@@ -497,7 +496,6 @@ public class DecklistFragment extends FamiliarListFragment {
         header.header = headerText;
         if (!mCompressedDecklist.contains(header)) {
             mCompressedDecklist.add(position, header);
-            getCardDataAdapter(0).notifyItemInserted(position);
             return true;
         }
         return false;
@@ -693,6 +691,7 @@ public class DecklistFragment extends FamiliarListFragment {
             // Reset the headers
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
             clearHeaders();
+            Collections.sort(mCompressedDecklist, mDecklistChain);
             setHeaderValues();
 
             // Call super to notify the adapter, etc
@@ -704,6 +703,7 @@ public class DecklistFragment extends FamiliarListFragment {
             // Reset the headers
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
             clearHeaders();
+            Collections.sort(mCompressedDecklist, mDecklistChain);
             setHeaderValues();
 
             // Call super to notify the adapter, etc
