@@ -49,6 +49,7 @@ public class MtgCard extends Card {
     public int mSide;
     public PriceInfo priceInfo;
     private int mIndex;
+    private boolean selected = false;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -367,5 +368,13 @@ public class MtgCard extends Card {
 
     public int getIndex() {
         return mIndex;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

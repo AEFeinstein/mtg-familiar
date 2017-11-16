@@ -24,6 +24,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,7 +220,10 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             holder.mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    mItemList.get(holder.getAdapterPosition()).mAscending = b;
+                    int position = holder.getAdapterPosition();
+                    if (RecyclerView.NO_POSITION != position) {
+                        mItemList.get(position).mAscending = b;
+                    }
                 }
             });
             holder.itemView.setTag(mItemList.get(position));

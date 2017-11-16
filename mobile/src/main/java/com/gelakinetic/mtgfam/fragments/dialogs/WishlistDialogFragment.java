@@ -92,15 +92,15 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .title(R.string.pref_trade_price_title)
                         .items(getString(R.string.trader_Low),
                                 getString(R.string.trader_Average), getString(R.string.trader_High))
-                        .itemsCallbackSingleChoice(getParentWishlistFragment().mPriceSetting, new MaterialDialog.ListCallbackSingleChoice() {
+                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentWishlistFragment().mPriceSetting != which) {
-                                    getParentWishlistFragment().mPriceSetting = which;
+                                if (getParentWishlistFragment().getPriceSetting() != which) {
+                                    getParentWishlistFragment().setPriceSetting(which);
                                     PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentWishlistFragment().mPriceSetting));
-                                    getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
-                                    getParentWishlistFragment().sumTotalPrice();
+                                            String.valueOf(getParentWishlistFragment().getPriceSetting()));
+                                    getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                                    getParentWishlistFragment().updateTotalPrices(0);
                                 }
                                 dialog.dismiss();
                                 return true;
@@ -118,12 +118,12 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 WishlistHelpers.ResetCards(getActivity());
                                 getParentWishlistFragment().mCompressedWishlist.clear();
-                                getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
-                                getParentWishlistFragment().sumTotalPrice();
+                                getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                                getParentWishlistFragment().updateTotalPrices(0);
                                 /* Clear input too */
-                                getParentWishlistFragment().mNameField.setText("");
-                                getParentWishlistFragment().mNumberOfField.setText("1");
-                                getParentWishlistFragment().mCheckboxFoil.setChecked(false);
+                                getParentWishlistFragment().clearCardNameInput();
+                                getParentWishlistFragment().clearCardNumberInput();
+                                getParentWishlistFragment().uncheckFoilCheckbox();
                                 dialog.dismiss();
                             }
                         })
