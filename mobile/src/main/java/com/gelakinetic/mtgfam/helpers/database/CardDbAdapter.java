@@ -2013,6 +2013,7 @@ public class CardDbAdapter {
 
     /**
      * Helper function to determine what kind of multicard a card is based on set and number.
+     * TODO add option for kamigawa flip? Determine type based on text search for supplemental sets?
      *
      * @param number  The card number
      * @param setCode The set the card is in
@@ -2025,7 +2026,9 @@ public class CardDbAdapter {
                     setCode.compareTo("SOI") == 0 ||
                     setCode.compareTo("EMN") == 0 ||
                     setCode.compareTo("ORI") == 0 ||
-                    setCode.compareTo("XLN") == 0) {
+                    setCode.compareTo("XLN") == 0||
+                    setCode.compareTo("RIX") == 0||
+                    setCode.compareTo("V17") == 0) {
                 return MultiCardType.TRANSFORM;
             } else if (setCode.compareTo("DGM") == 0) {
                 return MultiCardType.FUSE;
