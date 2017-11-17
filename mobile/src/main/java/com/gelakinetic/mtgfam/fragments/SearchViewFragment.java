@@ -378,12 +378,12 @@ public class SearchViewFragment extends FamiliarFragment {
             }
 
             private String[] tokenStringsFromTypes(String[] types) {
-                ArrayList<String> tokenStrings = new ArrayList<>();
-                for (String type : types) {
-                    tokenStrings.add(type);
-                    tokenStrings.add(CardDbAdapter.EXCLUDE_TOKEN + type);
+                String tokenStrings[] = new String[types.length * 2];
+                System.arraycopy(types, 0, tokenStrings, 0, types.length);
+                for (int i = 0; i < types.length; i++) {
+                    tokenStrings[types.length + i] = CardDbAdapter.EXCLUDE_TOKEN + types[i];
                 }
-                return(tokenStrings.toArray(new String[tokenStrings.size()]));
+                return tokenStrings;
             }
 
             @Override
