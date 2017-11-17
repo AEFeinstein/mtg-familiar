@@ -17,7 +17,12 @@
   ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<vector android:height="24dp" android:viewportHeight="17.462"
-    android:viewportWidth="17.462" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/drawer_item_icon_dark"  android:pathData="M13.582,0L1.942,0C0.868,0 0,0.868 0,1.94v13.582c0,1.072 0.87,1.94 1.94,1.94h13.582c1.072,0 1.94,-0.868 1.94,-1.94L17.462,3.882zM8.732,15.522c-1.606,0 -2.91,-1.305 -2.91,-2.91 0,-1.606 1.304,-2.91 2.91,-2.91 1.605,0 2.91,1.304 2.91,2.91 0,1.605 -1.305,2.91 -2.91,2.91zM11.642,5.822h-9.7L1.942,1.94h9.7z"/>
+<vector android:height="24dp"
+    android:viewportHeight="17.462"
+    android:viewportWidth="17.462"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/drawer_item_icon_dark"
+        android:pathData="M13.582,0L1.942,0C0.868,0 0,0.868 0,1.94v13.582c0,1.072 0.87,1.94 1.94,1.94h13.582c1.072,0 1.94,-0.868 1.94,-1.94L17.462,3.882zM8.732,15.522c-1.606,0 -2.91,-1.305 -2.91,-2.91 0,-1.606 1.304,-2.91 2.91,-2.91 1.605,0 2.91,1.304 2.91,2.91 0,1.605 -1.305,2.91 -2.91,2.91zM11.642,5.822h-9.7L1.942,1.94h9.7z" />
 </vector>

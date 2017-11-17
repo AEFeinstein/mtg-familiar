@@ -17,8 +17,15 @@
   ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<vector android:height="24dp" android:viewportHeight="26.5"
-    android:viewportWidth="26.5" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/glyph_foreground" android:pathData="M13.216,13.235m-13.23,0a13.23,13.23 0,1 1,26.46 0a13.23,13.23 0,1 1,-26.46 0"/>
-    <path android:fillColor="@android:color/white" android:pathData="m20.876,6.429 l-3.347,1.963c1.63,2.53 2.445,4.869 2.445,7.012 0,1.762 -0.521,3.17 -1.561,4.234 -1.043,1.058 -2.44,1.593 -4.199,1.593 -2.937,0 -6.276,-1.535 -10.007,-4.604l2.672,-2.638c2.553,2.318 4.953,3.474 7.208,3.474 0.794,0 1.376,-0.148 1.667,-0.45 0.318,-0.299 0.45,-0.857 0.45,-1.672 0,-1.63 -0.503,-3.069 -1.482,-4.313l-2.381,3.347l0,-9.129z"/>
+<vector android:height="24dp"
+    android:viewportHeight="26.5"
+    android:viewportWidth="26.5"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/glyph_foreground"
+        android:pathData="M13.216,13.235m-13.23,0a13.23,13.23 0,1 1,26.46 0a13.23,13.23 0,1 1,-26.46 0" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="m20.876,6.429 l-3.347,1.963c1.63,2.53 2.445,4.869 2.445,7.012 0,1.762 -0.521,3.17 -1.561,4.234 -1.043,1.058 -2.44,1.593 -4.199,1.593 -2.937,0 -6.276,-1.535 -10.007,-4.604l2.672,-2.638c2.553,2.318 4.953,3.474 7.208,3.474 0.794,0 1.376,-0.148 1.667,-0.45 0.318,-0.299 0.45,-0.857 0.45,-1.672 0,-1.63 -0.503,-3.069 -1.482,-4.313l-2.381,3.347l0,-9.129z" />
 </vector>

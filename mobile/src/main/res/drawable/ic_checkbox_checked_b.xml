@@ -17,8 +17,15 @@
   ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<vector android:height="32dp" android:viewportHeight="27.1"
-    android:viewportWidth="27.1" android:width="32dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/icon_black" android:pathData="M6.514,13.525a6.988,7.025 89.997,1 0,14.049 0a6.988,7.025 89.997,1 0,-14.049 0z"/>
-    <path android:fillColor="?attr/colorCheckbox" android:pathData="M19.428,5.934l-11.853,0c-0.847,0 -1.693,0.762 -1.693,1.693l0,11.853c0,0.931 0.847,1.693 1.693,1.693l11.853,0c0.974,0 1.693,-0.762 1.693,-1.693l0,-11.853c0,-0.931 -0.72,-1.693 -1.693,-1.693zM11.808,17.787l-4.233,-4.233 1.27,-1.27 2.963,3.09 6.477,-6.435 1.185,1.27z"/>
+<vector android:height="32dp"
+    android:viewportHeight="27.1"
+    android:viewportWidth="27.1"
+    android:width="32dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/icon_black"
+        android:pathData="M6.514,13.525a6.988,7.025 89.997,1 0,14.049 0a6.988,7.025 89.997,1 0,-14.049 0z" />
+    <path
+        android:fillColor="?attr/colorCheckbox"
+        android:pathData="M19.428,5.934l-11.853,0c-0.847,0 -1.693,0.762 -1.693,1.693l0,11.853c0,0.931 0.847,1.693 1.693,1.693l11.853,0c0.974,0 1.693,-0.762 1.693,-1.693l0,-11.853c0,-0.931 -0.72,-1.693 -1.693,-1.693zM11.808,17.787l-4.233,-4.233 1.27,-1.27 2.963,3.09 6.477,-6.435 1.185,1.27z" />
 </vector>

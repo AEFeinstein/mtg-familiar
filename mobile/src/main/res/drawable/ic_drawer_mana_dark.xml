@@ -17,7 +17,12 @@
   ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<vector android:height="24dp" android:viewportHeight="17.462"
-    android:viewportWidth="17.463" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/drawer_item_icon_dark" android:pathData="M8.124,9.99L3.86,16.222h2.255v1.24H0.345v-1.24h2.008L7.376,8.89 2.283,1.24H0.343V0H7.33v1.24H5.273L9.01,6.877l3.844,-5.637h-2.242V0h6.506v1.24H14.36L9.748,7.977l5.502,8.246h1.868v1.24h-6.915v-1.24h2.08L8.122,9.99"/>
+<vector android:height="24dp"
+    android:viewportHeight="17.462"
+    android:viewportWidth="17.463"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/drawer_item_icon_dark"
+        android:pathData="M8.124,9.99L3.86,16.222h2.255v1.24H0.345v-1.24h2.008L7.376,8.89 2.283,1.24H0.343V0H7.33v1.24H5.273L9.01,6.877l3.844,-5.637h-2.242V0h6.506v1.24H14.36L9.748,7.977l5.502,8.246h1.868v1.24h-6.915v-1.24h2.08L8.122,9.99" />
 </vector>
