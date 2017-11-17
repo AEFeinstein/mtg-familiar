@@ -307,8 +307,8 @@ public class CardDbAdapter {
         SPLIT,
     }
 
-    /* Used to search for NOT a string, rather than that string */
-    private static final String EXCLUDE_TOKEN = "!";
+    /** Used to search for NOT a string, rather than that string */
+    public static final String EXCLUDE_TOKEN = "!";
     private static final int EXCLUDE_TOKEN_START = 1;
 
     /* Use a hash map to increase performance for CardSearchProvider queries */

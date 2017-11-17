@@ -357,11 +357,13 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
 
                     if (mSupertypes == null) {
-                        mSupertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, true, database);
+                        String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, true, database);
+                        mSupertypes = tokenStringsFromTypes(supertypes);
                     }
 
                     if (mSubtypes == null) {
-                        mSubtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, true, database);
+                        String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, true, database);
+                        mSubtypes = tokenStringsFromTypes(subtypes);
                     }
 
                     if (mArtists == null) {
@@ -373,6 +375,15 @@ public class SearchViewFragment extends FamiliarFragment {
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 return null;
+            }
+
+            private String[] tokenStringsFromTypes(String[] types) {
+                ArrayList<String> tokenStrings = new ArrayList<>();
+                for (String type : types) {
+                    tokenStrings.add(type);
+                    tokenStrings.add(CardDbAdapter.EXCLUDE_TOKEN + type);
+                }
+                return(tokenStrings.toArray(new String[tokenStrings.size()]));
             }
 
             @Override
