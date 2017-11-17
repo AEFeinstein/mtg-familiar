@@ -150,7 +150,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Card info, used to build the URL to fetch the picture */
     private String mCardNumber;
-    private String mSetCode;
+    public String mSetCode;
     public String mCardName;
     private int mCardCMC;
     private String mMagicCardsInfoSetCode;
@@ -902,6 +902,10 @@ public class CardViewFragment extends FamiliarFragment {
             }
             case R.id.addtowishlist: {
                 showDialog(CardViewDialogFragment.WISH_LIST_COUNTS);
+                return true;
+            }
+            case R.id.addtodecklist: {
+                showDialog(CardViewDialogFragment.ADD_TO_DECKLIST);
                 return true;
             }
             case R.id.sharecard: {

@@ -41,7 +41,12 @@
     <item
         android:id="@+id/addtowishlist"
         android:icon="@drawable/ic_menu_wishlist"
-        android:title="@string/main_wishlist"
+        android:title="@string/result_list_Add_to_wishlist"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/addtodecklist"
+        android:icon="@drawable/ic_menu_decklist"
+        android:title="@string/result_list_Add_to_decklist"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/legality"

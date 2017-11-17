@@ -31,6 +31,7 @@ import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
+import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -46,8 +47,11 @@ import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
+import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +75,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
     public static final int GET_LEGALITY = 7;
     public static final int SHARE_CARD = 8;
     public static final int TRANSLATE_CARD = 9;
+    public static final int ADD_TO_DECKLIST = 10;
 
     /**
      * @return the currently viewed CardViewFragment in the CardViewPagerFragment
@@ -264,6 +269,64 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
                 return dialog;
+            }
+            case ADD_TO_DECKLIST: {
+                if (null == getParentCardViewFragment()) {
+                    return DontShowDialog();
+                }
+
+                final String cardName = getParentCardViewFragment().mCardName;
+                final String cardSet = getParentCardViewFragment().mSetCode;
+                final String[] deckNames = getFiles(DecklistFragment.DECK_EXTENSION);
+
+                /* If there are no files, don't show the dialog */
+                if (deckNames.length == 0) {
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.decklist_toast_no_decks,
+                            ToastWrapper.LENGTH_LONG);
+                    return DontShowDialog();
+                }
+
+                return new MaterialDialog.Builder(this.getActivity())
+                        .title(R.string.decklist_select_dialog_title)
+                        .negativeText(R.string.dialog_cancel)
+                        .items((CharSequence[]) deckNames)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+
+                            @Override
+                            public void onSelection(
+                                    MaterialDialog dialog,
+                                    View itemView,
+                                    int position,
+                                    CharSequence text) {
+
+                                // Read the decklist
+                                String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
+                                ArrayList<Pair<MtgCard, Boolean>> decklist =
+                                        DecklistHelpers.ReadDecklist(getContext(), deckFileName);
+
+                                // Look through the decklist for any existing matches
+                                boolean entryIncremented = false;
+                                for (Pair<MtgCard, Boolean> deckEntry : decklist) {
+                                    if (!deckEntry.second && // not in the sideboard
+                                            deckEntry.first.mName.equals(cardName) &&
+                                            deckEntry.first.setCode.equals(cardSet)) {
+                                        // Increment the card already in the deck
+                                        deckEntry.first.numberOf++;
+                                        entryIncremented = true;
+                                        break;
+                                    }
+                                }
+                                if (!entryIncremented) {
+                                    // Add a new card to the deck
+                                    decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                }
+
+                                // Write the decklist back
+                                DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
+                            }
+
+                        })
+                        .build();
             }
             case SHARE_CARD: {
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
