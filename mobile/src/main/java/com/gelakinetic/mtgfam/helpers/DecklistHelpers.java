@@ -23,7 +23,6 @@ import android.content.Context;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
@@ -81,6 +80,9 @@ public class DecklistHelpers {
             ArrayList<CompressedDecklistInfo> mCompressedDecklist,
             String fileName) {
 
+        if (null == mCtx) {
+            return;
+        }
         try {
 
             final String newFileName =
@@ -110,22 +112,6 @@ public class DecklistHelpers {
             ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
 
-    }
-
-    /**
-     * Write the decklist passed as a parameter to the autosave file.
-     *
-     * @param mCtx                A context to open the file and pop toasts with
-     * @param mCompressedDecklist The decklist to write
-     */
-    public static void WriteCompressedDecklist(
-            Context mCtx,
-            ArrayList<CompressedDecklistInfo> mCompressedDecklist) {
-        WriteCompressedDecklist(
-                mCtx,
-                mCompressedDecklist,
-                DecklistFragment.AUTOSAVE_NAME + DecklistFragment.DECK_EXTENSION
-        );
     }
 
     /**

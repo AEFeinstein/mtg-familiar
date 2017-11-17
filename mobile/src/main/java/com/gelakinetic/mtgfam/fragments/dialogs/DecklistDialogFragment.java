@@ -252,7 +252,8 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 getParentDecklistFragment().mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
                                 DecklistHelpers.WriteCompressedDecklist(
                                         getActivity(),
-                                        getParentDecklistFragment().mCompressedDecklist
+                                        getParentDecklistFragment().mCompressedDecklist,
+                                        getParentDecklistFragment().getCurrentDeckName()
                                 );
                                 getParentDecklistFragment().clearCardNameInput();
                                 getParentDecklistFragment().clearCardNumberInput();

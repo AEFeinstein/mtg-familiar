@@ -165,6 +165,15 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     /**
+     * Save the current deck when the fragment is paused
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        DecklistHelpers.WriteCompressedDecklist(this.getContext(), mCompressedDecklist, getCurrentDeckName());
+    }
+
+    /**
      * This function takes care of adding a card to the decklist from this fragment. It makes sure
      * that fields are not null or have bad information.
      *
@@ -224,7 +233,7 @@ public class DecklistFragment extends FamiliarListFragment {
         Collections.sort(mCompressedDecklist, mDecklistChain);
 
         /* Save the decklist */
-        DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
+        DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
 
         /* Clean up for the next add */
         clearCardNumberInput();
@@ -450,15 +459,11 @@ public class DecklistFragment extends FamiliarListFragment {
                 return true;
             }
             case R.id.deck_menu_save: {
-                final StringBuilder deckName = new StringBuilder(mCurrentDeck);
-                if (deckName.toString().equals("")) {
-                    deckName.append(DecklistFragment.AUTOSAVE_NAME);
-                }
-                final String savedToast = getString(R.string.decklist_saved_toast, deckName);
-                deckName.append(DecklistFragment.DECK_EXTENSION);
+                String currentDeckName = getCurrentDeckName();
                 DecklistHelpers.WriteCompressedDecklist(getContext(), mCompressedDecklist,
-                        deckName.toString());
-                ToastWrapper.makeAndShowText(getActivity(), savedToast, ToastWrapper.LENGTH_SHORT);
+                        currentDeckName);
+                ToastWrapper.makeAndShowText(getActivity(), getString(R.string.decklist_saved_toast,
+                        currentDeckName), ToastWrapper.LENGTH_SHORT);
                 return true;
             }
             default: {
@@ -466,6 +471,18 @@ public class DecklistFragment extends FamiliarListFragment {
             }
         }
 
+    }
+
+    /**
+     * @return The name of the currently loaded deck, may be the autosave name
+     */
+    public String getCurrentDeckName() {
+        final StringBuilder deckName = new StringBuilder(mCurrentDeck);
+        if (deckName.toString().equals("")) {
+            deckName.append(DecklistFragment.AUTOSAVE_NAME);
+        }
+        deckName.append(DecklistFragment.DECK_EXTENSION);
+        return deckName.toString();
     }
 
     /**
@@ -718,7 +735,7 @@ public class DecklistFragment extends FamiliarListFragment {
         @Override
         protected void onItemRemovedFinal() {
             // After the snackbar times out, write the decklist to the disk
-            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist);
+            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
         }
 
         /**
