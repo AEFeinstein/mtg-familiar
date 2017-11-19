@@ -460,10 +460,15 @@ public class CardDbAdapter {
                             " ORDER BY " + colKey;
             cursor = database.rawQuery(query, null);
 
+            // If the cursor is null, return an empty array
+            if (null == cursor) {
+                return new String[]{};
+            }
+
             /* Skip over any empty entries in the column */
             int colIndex = cursor.getColumnIndex(colKey);
             cursor.moveToFirst();
-            while (cursor.getString(colIndex).equals("")) {
+            while ("".equals(cursor.getString(colIndex))) {
                 cursor.moveToNext();
             }
 
@@ -2026,8 +2031,8 @@ public class CardDbAdapter {
                     setCode.compareTo("SOI") == 0 ||
                     setCode.compareTo("EMN") == 0 ||
                     setCode.compareTo("ORI") == 0 ||
-                    setCode.compareTo("XLN") == 0||
-                    setCode.compareTo("RIX") == 0||
+                    setCode.compareTo("XLN") == 0 ||
+                    setCode.compareTo("RIX") == 0 ||
                     setCode.compareTo("V17") == 0) {
                 return MultiCardType.TRANSFORM;
             } else if (setCode.compareTo("DGM") == 0) {
