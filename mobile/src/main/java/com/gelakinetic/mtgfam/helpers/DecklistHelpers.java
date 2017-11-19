@@ -162,21 +162,25 @@ public class DecklistHelpers {
         StringBuilder readableDecklist = new StringBuilder();
 
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-            for (IndividualSetInfo isi : cdi.mInfo) {
-                if (cdi.mIsSideboard) {
-                    readableDecklist.append("SB: ");
-                }
-                readableDecklist
-                        .append(isi.mNumberOf)
-                        .append(' ')
-                        .append(cdi.mName);
-                if (isi.mIsFoil) {
+            if (null != cdi.header) {
+                readableDecklist.append(cdi.header).append("\r\n");
+            } else {
+                for (IndividualSetInfo isi : cdi.mInfo) {
+                    if (cdi.mIsSideboard) {
+                        readableDecklist.append("SB: ");
+                    }
                     readableDecklist
-                            .append(" (")
-                            .append(ctx.getString(R.string.wishlist_foil))
-                            .append(")");
+                            .append(isi.mNumberOf)
+                            .append(' ')
+                            .append(cdi.mName);
+                    if (isi.mIsFoil) {
+                        readableDecklist
+                                .append(" (")
+                                .append(ctx.getString(R.string.wishlist_foil))
+                                .append(")");
+                    }
+                    readableDecklist.append(" ").append(isi.mSetCode).append("\r\n");
                 }
-                readableDecklist.append(" ").append(isi.mSetCode).append("\r\n");
             }
         }
         return readableDecklist.toString();
