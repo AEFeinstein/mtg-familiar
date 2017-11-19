@@ -162,6 +162,7 @@ public class ImageResizer extends ImageWorker {
         // inBitmap only works with mutable bitmaps so force the decoder to
         // return mutable bitmaps.
         options.inMutable = true;
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888; // This cannot be HARDWARE
 
         if (cache != null) {
             // Try and find a bitmap to use for inBitmap
