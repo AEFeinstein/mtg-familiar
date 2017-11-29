@@ -24,6 +24,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -50,7 +51,7 @@ public class CardSearchProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
     }
 
-    private SQLiteDatabase mDatabase;
+    private SQLiteDatabase mDatabase = null;
 
     /**
      * In lieu of a constructor
@@ -61,7 +62,11 @@ public class CardSearchProvider extends ContentProvider {
     public synchronized boolean onCreate() {
         assert getContext() != null;
         /* Don't use the DatabaseManager, since the OS may open and close this one with reckless abandon */
-        mDatabase = (new DatabaseHelper(getContext()).getReadableDatabase());
+        try {
+            mDatabase = (new DatabaseHelper(getContext()).getReadableDatabase());
+        } catch (SQLException e) {
+            mDatabase = null;
+        }
         return true;
     }
 
@@ -85,6 +90,9 @@ public class CardSearchProvider extends ContentProvider {
     @Override
     public synchronized Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                                      String sortOrder) {
+        if (mDatabase == null) {
+            return null;
+        }
         String query;
         // Use the UriMatcher to see what kind of query we have and format the db query accordingly
         try {
