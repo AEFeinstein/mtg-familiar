@@ -463,10 +463,15 @@ public class CardDbAdapter {
                             " ORDER BY " + colKey;
             cursor = database.rawQuery(query, null);
 
+            // If the cursor is null, return an empty array
+            if (null == cursor) {
+                return new String[]{};
+            }
+
             /* Skip over any empty entries in the column */
             int colIndex = cursor.getColumnIndex(colKey);
             cursor.moveToFirst();
-            while (cursor.getString(colIndex).equals("")) {
+            while ("".equals(cursor.getString(colIndex))) {
                 cursor.moveToNext();
             }
 

@@ -79,6 +79,10 @@ public class WishlistHelpers {
      * @param mCompressedWishlist The wishlist to write to the file
      */
     public static void WriteCompressedWishlist(Context mCtx, ArrayList<CompressedWishlistInfo> mCompressedWishlist) {
+        if (null == mCtx) {
+            // Context is null, don't try to write the wishlist
+            return;
+        }
         try {
             FileOutputStream fos = mCtx.openFileOutput(WISHLIST_NAME, Context.MODE_PRIVATE);
 
