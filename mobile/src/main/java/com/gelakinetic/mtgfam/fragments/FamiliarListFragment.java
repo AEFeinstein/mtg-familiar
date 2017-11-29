@@ -28,6 +28,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -112,6 +113,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         if (null != addCardListener) {
             mNameField.setOnEditorActionListener(addCardListener);
         }
+        mNameField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         // Set up the number of field
         mNumberOfField = fragmentView.findViewById(R.id.number_input);

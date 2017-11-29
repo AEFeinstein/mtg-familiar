@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -311,6 +312,14 @@ public class SearchViewFragment extends FamiliarFragment {
                 startNewFragment(rlFrag, args);
             }
         });
+
+        /* Disable system level autocomplete for fields which do it already */
+        mNameField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mArtistField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mSupertypeField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mSubtypeField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mSetField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mManaCostTextView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         /* Get a bunch of database info in a background task */
         new AsyncTask<Void, Void, Void>() {
