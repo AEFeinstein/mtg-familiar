@@ -686,6 +686,12 @@ public class SearchViewFragment extends FamiliarFragment {
                 case "X":
                     pow = CardDbAdapter.X;
                     break;
+                case "?":
+                    pow = CardDbAdapter.QUESTION_MARK;
+                    break;
+                case "∞":
+                    pow = CardDbAdapter.INFINITY;
+                    break;
             }
         }
         searchCriteria.powChoice = pow;
@@ -714,7 +720,12 @@ public class SearchViewFragment extends FamiliarFragment {
                 case "X":
                     tou = CardDbAdapter.X;
                     break;
-            }
+                case "?":
+                    tou = CardDbAdapter.QUESTION_MARK;
+                    break;
+                case "∞":
+                    tou = CardDbAdapter.INFINITY;
+                    break;            }
         }
         searchCriteria.touChoice = tou;
         searchCriteria.touLogic = logicChoices[mTouLogic.getSelectedItemPosition()];
@@ -879,6 +890,10 @@ public class SearchViewFragment extends FamiliarFragment {
                     mPowChoice.setSelection(ptList.indexOf("*^2"));
                 else if (p == CardDbAdapter.X)
                     mPowChoice.setSelection(ptList.indexOf("X"));
+                else if (p == CardDbAdapter.QUESTION_MARK)
+                    mPowChoice.setSelection(ptList.indexOf("?"));
+                else if (p == CardDbAdapter.INFINITY)
+                    mPowChoice.setSelection(ptList.indexOf("∞"));
                 else {
                     if (p == (int) p) {
                         mPowChoice.setSelection(ptList.indexOf(((int) p) + ""));
@@ -902,6 +917,10 @@ public class SearchViewFragment extends FamiliarFragment {
                     mTouChoice.setSelection(ptList.indexOf("*^2"));
                 else if (t == CardDbAdapter.X)
                     mTouChoice.setSelection(ptList.indexOf("X"));
+                else if (t == CardDbAdapter.QUESTION_MARK)
+                    mTouChoice.setSelection(ptList.indexOf("?"));
+                else if (t == CardDbAdapter.INFINITY)
+                    mTouChoice.setSelection(ptList.indexOf("∞"));
                 else {
                     if (t == (int) t) {
                         mTouChoice.setSelection(ptList.indexOf(((int) t) + ""));

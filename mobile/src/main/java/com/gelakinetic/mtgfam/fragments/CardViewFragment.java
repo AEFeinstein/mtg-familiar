@@ -472,52 +472,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mPowTouTextView.setText(Integer.toString(loyalty));
                 }
             } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
-
-                String powTouStr = "";
-
-                if (p == CardDbAdapter.STAR)
-                    powTouStr += "*";
-                else if (p == CardDbAdapter.ONE_PLUS_STAR)
-                    powTouStr += "1+*";
-                else if (p == CardDbAdapter.TWO_PLUS_STAR)
-                    powTouStr += "2+*";
-                else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-                    powTouStr += "7-*";
-                else if (p == CardDbAdapter.STAR_SQUARED)
-                    powTouStr += "*^2";
-                else if (p == CardDbAdapter.X)
-                    powTouStr += "X";
-                else {
-                    if (p == (int) p) {
-                        powTouStr += (int) p;
-                    } else {
-                        powTouStr += p;
-                    }
-                }
-
-                powTouStr += "/";
-
-                if (t == CardDbAdapter.STAR)
-                    powTouStr += "*";
-                else if (t == CardDbAdapter.ONE_PLUS_STAR)
-                    powTouStr += "1+*";
-                else if (t == CardDbAdapter.TWO_PLUS_STAR)
-                    powTouStr += "2+*";
-                else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-                    powTouStr += "7-*";
-                else if (t == CardDbAdapter.STAR_SQUARED)
-                    powTouStr += "*^2";
-                else if (t == CardDbAdapter.X)
-                    powTouStr += "X";
-                else {
-                    if (t == (int) t) {
-                        powTouStr += (int) t;
-                    } else {
-                        powTouStr += t;
-                    }
-                }
-
-                mPowTouTextView.setText(powTouStr);
+                mPowTouTextView.setText(CardDbAdapter.getPrintedPT(p) + "/" + CardDbAdapter.getPrintedPT(t));
             } else {
                 mPowTouTextView.setText("");
             }

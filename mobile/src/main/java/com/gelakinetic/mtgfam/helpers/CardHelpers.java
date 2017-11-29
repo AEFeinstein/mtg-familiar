@@ -734,39 +734,4 @@ public class CardHelpers {
         return null;
 
     }
-
-    /**
-     * Convert the database's power/toughness format to text.
-     * todo: should this be done by the MtgCard or CardDbAdapter?
-     *
-     * @param data the id of the power or toughness type
-     * @return string representation of the power or toughness
-     */
-    public static String adaptCardPT(final float data) {
-
-        if (data != CardDbAdapter.NO_ONE_CARES) {
-            if (data == CardDbAdapter.STAR) {
-                return "*";
-            } else if (data == CardDbAdapter.ONE_PLUS_STAR) {
-                return "1+*";
-            } else if (data == CardDbAdapter.TWO_PLUS_STAR) {
-                return "2+*";
-            } else if (data == CardDbAdapter.SEVEN_MINUS_STAR) {
-                return "7-*";
-            } else if (data == CardDbAdapter.STAR_SQUARED) {
-                return "*^2";
-            } else if (data == CardDbAdapter.X) {
-                return "X";
-            } else {
-                if (data == (int) data) {
-                    return Integer.toString((int) data);
-                } else {
-                    return Float.toString(data);
-                }
-            }
-        }
-        return "";
-
-    }
-
 }

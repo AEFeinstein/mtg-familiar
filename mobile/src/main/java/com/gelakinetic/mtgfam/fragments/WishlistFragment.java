@@ -599,8 +599,8 @@ public class WishlistFragment extends FamiliarListFragment {
                 holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mManaCost, imgGetter));
                 holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mText, imgGetter));
                 try {
-                    String power = CardHelpers.adaptCardPT(info.mPower);
-                    String toughness = CardHelpers.adaptCardPT(info.mToughness);
+                    String power = CardDbAdapter.getPrintedPT(info.mPower);
+                    String toughness = CardDbAdapter.getPrintedPT(info.mToughness);
                     holder.mCardPower.setText(power);
                     holder.mCardToughness.setText(toughness);
                     holder.mCardPower.setVisibility(View.VISIBLE);

@@ -177,55 +177,15 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                 case CardDbAdapter.KEY_POWER:
                     float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
                     if (p != CardDbAdapter.NO_ONE_CARES) {
-                        String pow;
                         hidePT = false;
-                        if (p == CardDbAdapter.STAR)
-                            pow = "*";
-                        else if (p == CardDbAdapter.ONE_PLUS_STAR)
-                            pow = "1+*";
-                        else if (p == CardDbAdapter.TWO_PLUS_STAR)
-                            pow = "2+*";
-                        else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-                            pow = "7-*";
-                        else if (p == CardDbAdapter.STAR_SQUARED)
-                            pow = "*^2";
-                        else if (p == CardDbAdapter.X)
-                            pow = "X";
-                        else {
-                            if (p == (int) p) {
-                                pow = Integer.toString((int) p);
-                            } else {
-                                pow = Float.valueOf(p).toString();
-                            }
-                        }
-                        textField.setText(pow);
+                        textField.setText(CardDbAdapter.getPrintedPT(p));
                     }
                     break;
                 case CardDbAdapter.KEY_TOUGHNESS:
                     float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
                     if (t != CardDbAdapter.NO_ONE_CARES) {
                         hidePT = false;
-                        String tou;
-                        if (t == CardDbAdapter.STAR)
-                            tou = "*";
-                        else if (t == CardDbAdapter.ONE_PLUS_STAR)
-                            tou = "1+*";
-                        else if (t == CardDbAdapter.TWO_PLUS_STAR)
-                            tou = "2+*";
-                        else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-                            tou = "7-*";
-                        else if (t == CardDbAdapter.STAR_SQUARED)
-                            tou = "*^2";
-                        else if (t == CardDbAdapter.X)
-                            tou = "X";
-                        else {
-                            if (t == (int) t) {
-                                tou = Integer.toString((int) t);
-                            } else {
-                                tou = Float.toString(t);
-                            }
-                        }
-                        textField.setText(tou);
+                        textField.setText(CardDbAdapter.getPrintedPT(t));
                     }
                     break;
                 case CardDbAdapter.KEY_LOYALTY:

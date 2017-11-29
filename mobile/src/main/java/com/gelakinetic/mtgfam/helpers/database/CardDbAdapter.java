@@ -286,6 +286,8 @@ public class CardDbAdapter {
     public static final int STAR_SQUARED = -1004;
     public static final int NO_ONE_CARES = -1005;
     public static final int X = -1006;
+    public static final float QUESTION_MARK = -1007;
+    public static final float INFINITY = 999999999; // pronounce it like an astronaut would
 
     /* The options for printings for a query */
     public static final int MOST_RECENT_PRINTING = 0;
@@ -2026,8 +2028,8 @@ public class CardDbAdapter {
                     setCode.compareTo("SOI") == 0 ||
                     setCode.compareTo("EMN") == 0 ||
                     setCode.compareTo("ORI") == 0 ||
-                    setCode.compareTo("XLN") == 0||
-                    setCode.compareTo("RIX") == 0||
+                    setCode.compareTo("XLN") == 0 ||
+                    setCode.compareTo("RIX") == 0 ||
                     setCode.compareTo("V17") == 0) {
                 return MultiCardType.TRANSFORM;
             } else if (setCode.compareTo("DGM") == 0) {
@@ -2037,6 +2039,41 @@ public class CardDbAdapter {
             }
         }
         return MultiCardType.NOPE;
+    }
+
+
+    /**
+     * Return the text representation of numeric or non-numeric powers and toughnesses
+     *
+     * @param stat The numeric representation of a power or toughness
+     * @return The string representation of the given stat
+     */
+    public static String getPrintedPT(float stat) {
+        if (stat == CardDbAdapter.STAR) {
+            return "*";
+        } else if (stat == CardDbAdapter.ONE_PLUS_STAR) {
+            return "1+*";
+        } else if (stat == CardDbAdapter.TWO_PLUS_STAR) {
+            return "2+*";
+        } else if (stat == CardDbAdapter.SEVEN_MINUS_STAR) {
+            return "7-*";
+        } else if (stat == CardDbAdapter.STAR_SQUARED) {
+            return "*^2";
+        } else if (stat == CardDbAdapter.X) {
+            return "X";
+        } else if (stat == CardDbAdapter.QUESTION_MARK) {
+            return "?";
+        } else if (stat == CardDbAdapter.INFINITY) {
+            return "∞";
+        } else if (stat == CardDbAdapter.NO_ONE_CARES) {
+            return "";
+        } else {
+            if (stat == (int) stat) {
+                return Integer.toString((int) stat);
+            } else {
+                return Float.toString(stat);
+            }
+        }
     }
 
     /**********************************************************************************************
