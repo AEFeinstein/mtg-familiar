@@ -599,8 +599,15 @@ public class WishlistFragment extends FamiliarListFragment {
                 holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mManaCost, imgGetter));
                 holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mText, imgGetter));
                 try {
-                    String power = CardDbAdapter.getPrintedPT(info.mPower);
-                    String toughness = CardDbAdapter.getPrintedPT(info.mToughness);
+                    boolean shouldShowSign = false;
+                    for (IndividualSetInfo isi : info.mInfo) {
+                        if (isi.mSetCode.equals("UST")) {
+                            shouldShowSign = info.mText.contains("Augment {");
+                            break;
+                        }
+                    }
+                    String power = CardDbAdapter.getPrintedPTL(info.mPower, shouldShowSign);
+                    String toughness = CardDbAdapter.getPrintedPTL(info.mToughness, shouldShowSign);
                     holder.mCardPower.setText(power);
                     holder.mCardToughness.setText(toughness);
                     holder.mCardPower.setVisibility(View.VISIBLE);
@@ -613,13 +620,9 @@ public class WishlistFragment extends FamiliarListFragment {
                     /* Show the loyalty, if the card has any (traitor...) */
                 float loyalty = info.mLoyalty;
                 if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
-                    if (loyalty == CardDbAdapter.X) {
-                        holder.mCardToughness.setText("X");
-                    } else if (loyalty == (int) loyalty) {
-                        holder.mCardToughness.setText(Integer.toString((int) loyalty));
-                    } else {
-                        holder.mCardToughness.setText(Float.toString(loyalty));
-                    }
+                    holder.mCardPower.setVisibility(View.GONE);
+                    holder.mCardSlash.setVisibility(View.GONE);
+                    holder.mCardToughness.setText(CardDbAdapter.getPrintedPTL(loyalty, false));
                     holder.mCardToughness.setVisibility(View.VISIBLE);
                 }
             } else {

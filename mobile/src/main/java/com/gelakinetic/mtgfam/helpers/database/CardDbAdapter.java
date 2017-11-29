@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -2045,10 +2046,11 @@ public class CardDbAdapter {
     /**
      * Return the text representation of numeric or non-numeric powers and toughnesses
      *
-     * @param stat The numeric representation of a power or toughness
+     * @param stat        The numeric representation of a power or toughness
+     * @param displaySign True to display the sign, false otherwise
      * @return The string representation of the given stat
      */
-    public static String getPrintedPT(float stat) {
+    public static String getPrintedPTL(float stat, boolean displaySign) {
         if (stat == CardDbAdapter.STAR) {
             return "*";
         } else if (stat == CardDbAdapter.ONE_PLUS_STAR) {
@@ -2069,9 +2071,15 @@ public class CardDbAdapter {
             return "";
         } else {
             if (stat == (int) stat) {
-                return Integer.toString((int) stat);
+                if (displaySign) {
+                    return String.format(Locale.US, "%+d", (int) stat);
+                }
+                return String.format(Locale.US, "%d", (int) stat);
             } else {
-                return Float.toString(stat);
+                if (displaySign) {
+                    return String.format(Locale.US, "%+.1f", stat);
+                }
+                return String.format(Locale.US, "%.1f", stat);
             }
         }
     }

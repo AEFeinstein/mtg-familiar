@@ -466,13 +466,10 @@ public class CardViewFragment extends FamiliarFragment {
             float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
             float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
             if (loyalty != CardDbAdapter.NO_ONE_CARES) {
-                if (loyalty == CardDbAdapter.X) {
-                    mPowTouTextView.setText("X");
-                } else {
-                    mPowTouTextView.setText(Integer.toString(loyalty));
-                }
+                mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(loyalty, false));
             } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
-                mPowTouTextView.setText(CardDbAdapter.getPrintedPT(p) + "/" + CardDbAdapter.getPrintedPT(t));
+                boolean shouldShowSign = sAbility.contains("Augment {") && mSetTextView.getText().equals("UST");
+                mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign) + "/" + CardDbAdapter.getPrintedPTL(t, shouldShowSign));
             } else {
                 mPowTouTextView.setText("");
             }

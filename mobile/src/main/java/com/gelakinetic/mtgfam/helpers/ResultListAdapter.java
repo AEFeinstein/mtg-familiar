@@ -174,33 +174,36 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     textField.setText(csq);
                     break;
                 }
-                case CardDbAdapter.KEY_POWER:
+                case CardDbAdapter.KEY_POWER: {
                     float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
+                    boolean shouldShowSign =
+                            cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
+                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY)).contains("Augment {");
                     if (p != CardDbAdapter.NO_ONE_CARES) {
                         hidePT = false;
-                        textField.setText(CardDbAdapter.getPrintedPT(p));
+                        textField.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign));
                     }
                     break;
-                case CardDbAdapter.KEY_TOUGHNESS:
+                }
+                case CardDbAdapter.KEY_TOUGHNESS: {
                     float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
+                    boolean shouldShowSign =
+                            cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
+                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY)).contains("Augment {");
                     if (t != CardDbAdapter.NO_ONE_CARES) {
                         hidePT = false;
-                        textField.setText(CardDbAdapter.getPrintedPT(t));
+                        textField.setText(CardDbAdapter.getPrintedPTL(t, shouldShowSign));
                     }
                     break;
-                case CardDbAdapter.KEY_LOYALTY:
+                }
+                case CardDbAdapter.KEY_LOYALTY: {
                     float l = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
                     if (l != CardDbAdapter.NO_ONE_CARES) {
                         hideLoyalty = false;
-                        if (l == CardDbAdapter.X) {
-                            ((TextView) textField.findViewById(R.id.cardt)).setText("X");
-                        } else if (l == (int) l) {
-                            ((TextView) textField.findViewById(R.id.cardt)).setText(Integer.toString((int) l));
-                        } else {
-                            ((TextView) textField.findViewById(R.id.cardt)).setText(Float.toString(l));
-                        }
+                        ((TextView) textField.findViewById(R.id.cardt)).setText(CardDbAdapter.getPrintedPTL(l, false));
                     }
                     break;
+                }
             }
         }
 
