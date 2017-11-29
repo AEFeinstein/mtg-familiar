@@ -1236,6 +1236,10 @@ public class CardViewFragment extends FamiliarFragment {
             }
 
             try {
+                // Don't attempt scaling if there's no host fragment
+                if(null == getHost()) {
+                    return null;
+                }
                 /* 16dp */
                 mBorder = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 34, getResources().getDisplayMetrics());
