@@ -81,8 +81,8 @@ android {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 52
-        versionName "3.4.5"
+        versionCode 53
+        versionName "3.4.6"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
