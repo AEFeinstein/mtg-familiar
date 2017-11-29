@@ -19,18 +19,25 @@
 
 package com.gelakinetic.GathererScraper.JsonTypes;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class Manifest {
 
     public long mTimestamp;
-    public ArrayList<ManifestEntry> mPatches = new ArrayList<>();
+    public final ArrayList<ManifestEntry> mPatches = new ArrayList<>();
 
-    public class ManifestEntry {
+    public class ManifestEntry implements Comparable<ManifestEntry> {
         public String mName;
         public String mURL;
         public String mCode;
         public String mDigest;
+
+        @Override
+        public int compareTo(@NonNull ManifestEntry o) {
+            return mName.compareTo(o.mName);
+        }
     }
 
 }

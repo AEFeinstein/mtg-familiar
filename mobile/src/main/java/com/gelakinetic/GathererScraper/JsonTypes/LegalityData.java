@@ -28,9 +28,9 @@ public class LegalityData {
 
     public class Format {
         public String mName;
-        public ArrayList<String> mSets = new ArrayList<>();
-        public ArrayList<String> mRestrictedlist = new ArrayList<>();
-        public ArrayList<String> mBanlist = new ArrayList<>();
+        public final ArrayList<String> mSets = new ArrayList<>();
+        public final ArrayList<String> mRestrictedlist = new ArrayList<>();
+        public final ArrayList<String> mBanlist = new ArrayList<>();
     }
 }
 

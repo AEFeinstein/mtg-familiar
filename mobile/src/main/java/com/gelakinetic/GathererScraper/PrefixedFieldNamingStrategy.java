@@ -32,7 +32,7 @@ public class PrefixedFieldNamingStrategy implements FieldNamingStrategy {
     /**
      * The prefix to be match on the field's name
      */
-    private String mPrefix;
+    private final String mPrefix;
 
     /**
      * Create a PrefixedFieldNamingStrategy object that check for a prefix on the field's name,

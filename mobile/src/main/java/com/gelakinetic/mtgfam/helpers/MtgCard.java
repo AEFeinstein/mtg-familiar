@@ -29,6 +29,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -73,7 +74,7 @@ public class MtgCard extends Card {
         mMultiverseId = 0;
         mColorIdentity = "";
         mWatermark = "";
-        mForeignPrintings = new ForeignPrinting[]{};
+        mForeignPrintings = new ArrayList<>();
     }
 
     public MtgCard(Card card) {
@@ -95,8 +96,7 @@ public class MtgCard extends Card {
             this.mMultiverseId = card.mMultiverseId;
             this.mColorIdentity = card.mColorIdentity;
             this.mWatermark = card.mWatermark;
-            this.mForeignPrintings = new ForeignPrinting[card.mForeignPrintings.length];
-            System.arraycopy(card.mForeignPrintings, 0, this.mForeignPrintings, 0, card.mForeignPrintings.length);
+            this.mForeignPrintings = new ArrayList<>(card.mForeignPrintings);
         }
     }
 

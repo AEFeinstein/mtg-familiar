@@ -19,7 +19,7 @@
 
 package com.gelakinetic.GathererScraper.JsonTypes;
 
-import java.util.Collection;
+import java.util.ArrayList;
 
 /**
  * This class contains all information of a patch.
@@ -31,6 +31,6 @@ public class Patch {
     public Expansion mExpansion;
 
     // The patch's cards
-    public Collection<Card> mCards;
+    public ArrayList<Card> mCards;
 
 }
