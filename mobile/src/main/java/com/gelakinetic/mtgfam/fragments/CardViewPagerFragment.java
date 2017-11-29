@@ -60,6 +60,19 @@ public class CardViewPagerFragment extends FamiliarFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setHasOptionsMenu(false);
+
+        /* add a fragment */
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Random rand = new Random(System.currentTimeMillis());
+//                Bundle args = new Bundle();
+//                args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{1 + rand.nextInt(1000)});
+//                args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+//                CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+//                startNewFragment(cvpFrag, args);
+//            }
+//        }, 3000);
     }
 
     /**
