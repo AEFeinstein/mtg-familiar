@@ -299,7 +299,7 @@ public class CardDbAdapter {
     public static final int BANNED = 1;
     public static final int RESTRICTED = 2;
 
-    public static final String ILLEGAL_SETS[] = {"UG", "UNH", "UN3", "ARS", "PCP", "PP2"};
+    public static final String ILLEGAL_SETS[] = {"UG", "UNH", "UST", "ARS", "PCP", "PP2"};
 
     /* The various types of multi-cards */
     public enum MultiCardType {
@@ -309,7 +309,7 @@ public class CardDbAdapter {
         SPLIT,
     }
 
-    /** Used to search for NOT a string, rather than that string */
+    /* Used to search for NOT a string, rather than that string */
     public static final String EXCLUDE_TOKEN = "!";
     private static final int EXCLUDE_TOKEN_START = 1;
 
