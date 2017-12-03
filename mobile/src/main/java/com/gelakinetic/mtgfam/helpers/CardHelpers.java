@@ -454,6 +454,21 @@ public class CardHelpers {
 
         }
 
+        /**
+         * Apply IndividualSetInfo to this CompressedCardInfo. This is useful for modifying card
+         * data before writing it to a file
+         *
+         * @param isi The IndividualSetInfo to apply
+         */
+        void applyIndividualInfo(IndividualSetInfo isi) {
+            this.mExpansion = isi.mSet;
+            this.setCode = isi.mSetCode;
+            this.mNumber = isi.mNumber;
+            this.foil = isi.mIsFoil;
+            this.numberOf = isi.mNumberOf;
+            this.mRarity = isi.mRarity;
+        }
+
     }
 
     /**

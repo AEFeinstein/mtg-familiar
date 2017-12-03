@@ -89,11 +89,7 @@ public class WishlistHelpers {
             /* For each compressed card, make an MtgCard and write it to the wishlist */
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                 for (IndividualSetInfo isi : cwi.mInfo) {
-                    cwi.mExpansion = isi.mSet;
-                    cwi.setCode = isi.mSetCode;
-                    cwi.mNumber = isi.mNumber;
-                    cwi.foil = isi.mIsFoil;
-                    cwi.numberOf = isi.mNumberOf;
+                    cwi.applyIndividualInfo(isi);
                     fos.write(cwi.toWishlistString().getBytes());
                 }
             }
@@ -113,11 +109,7 @@ public class WishlistHelpers {
     public static void addItemToWishlist(final Context context, final CompressedWishlistInfo wishlistInfo) {
         final ArrayList<MtgCard> currentWishlist = ReadWishlist(context);
         for (IndividualSetInfo isi : wishlistInfo.mInfo) {
-            wishlistInfo.mExpansion = isi.mSet;
-            wishlistInfo.setCode = isi.mSetCode;
-            wishlistInfo.mNumber = isi.mNumber;
-            wishlistInfo.foil = isi.mIsFoil;
-            wishlistInfo.numberOf = isi.mNumberOf;
+            wishlistInfo.applyIndividualInfo(isi);
             if (currentWishlist.contains(wishlistInfo)) {
                 final int existingIndex = currentWishlist.indexOf(wishlistInfo);
                 currentWishlist.get(existingIndex).numberOf += wishlistInfo.numberOf;

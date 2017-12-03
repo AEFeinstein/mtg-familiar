@@ -93,11 +93,7 @@ public class DecklistHelpers {
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                 if (cdi.mName != null) {
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                        cdi.mExpansion = isi.mSet;
-                        cdi.setCode = isi.mSetCode;
-                        cdi.mNumber = isi.mNumber;
-                        cdi.foil = isi.mIsFoil;
-                        cdi.numberOf = isi.mNumberOf;
+                        cdi.applyIndividualInfo(isi);
                         String cardString = cdi.toWishlistString();
                         /* If the card is a sideboard card, add the sideboard marking */
                         if (cdi.mIsSideboard) {
