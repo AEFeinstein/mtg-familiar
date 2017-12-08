@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
@@ -775,29 +794,29 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.apply();
     }
 
-    public static synchronized int getImageCacheSize(@Nullable Context context) {
-        if (null == context) {
-            return 12;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_imageCacheSize), 12);
-    }
-
-    static synchronized int getNumTutorCardsSearches(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_num_tutor_cards_searches), 0);
-    }
-
-    static synchronized void setNumTutorCardsSearches(@Nullable Context context, int NumTutorCardsSearches) {
+    private static synchronized void setImageCacheSize(@Nullable Context context, int cacheSize) {
         if (null == context) {
             return;
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_num_tutor_cards_searches),
-                NumTutorCardsSearches);
+        edit.putInt(context.getString(R.string.key_imageCacheSize), cacheSize);
         edit.apply();
+    }
+
+    public static synchronized int getImageCacheSize(@Nullable Context context) {
+        final int MIN_CACHE_MB = 50;
+        if (null == context) {
+            return MIN_CACHE_MB;
+        }
+        int cacheSize = PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_imageCacheSize), MIN_CACHE_MB);
+
+        /* Make sure the cache is at least 50 MB */
+        if (cacheSize < MIN_CACHE_MB) {
+            setImageCacheSize(context, MIN_CACHE_MB);
+            return MIN_CACHE_MB;
+        }
+        return cacheSize;
     }
 
     public static synchronized int getDatabaseVersion(@Nullable Context context) {
@@ -976,4 +995,13 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "1");
     }
 
+    public static synchronized void setDeckPrice(@Nullable Context context, String deckPrice) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_deckPrice), deckPrice);
+        edit.apply();
+    }
 }

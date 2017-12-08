@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -56,7 +57,7 @@ import java.util.List;
  *
  * @author mgod
  */
-public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView implements TextView.OnEditorActionListener {
+public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoCompleteTextView implements TextView.OnEditorActionListener {
     //Logging
     public static final String TAG = "TokenAutoComplete";
 
@@ -1037,6 +1038,43 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
         });
     }
 
+    public void clearTextAndTokens() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                //To make sure all the appropriate callbacks happen, we just want to piggyback on the
+                //existing code that handles deleting spans when the text changes
+                Editable text = getText();
+                if (text == null) {
+                    return;
+                }
+
+                // Remove all hidden tokens
+                ArrayList<TokenImageSpan> toRemove = new ArrayList<>();
+                for (TokenImageSpan span : hiddenSpans) {
+                    toRemove.add(span);
+                }
+                for (TokenImageSpan span : toRemove) {
+                    hiddenSpans.remove(span);
+                    // Remove it from the state and fire the callback
+                    spanWatcher.onSpanRemoved(text, span, 0, 0);
+                }
+
+                updateCountSpan();
+
+                // Then remove all visible tokens
+                TokenImageSpan[] spans = text.getSpans(0, text.length(), TokenImageSpan.class);
+                for (TokenImageSpan span : spans) {
+                    removeSpan(span);
+                }
+
+                // Finally clear any stray non-tokenized text
+                Parcelable state = TokenCompleteTextView.this.onSaveInstanceState();
+                TokenCompleteTextView.this.onRestoreInstanceState(state);
+            }
+        });
+    }
+
     /**
      * Set the count span the current number of hidden objects
      */
@@ -1375,11 +1413,11 @@ public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView
                 spanEnd--;
 
                 //Delete any extra split chars
-                if (spanEnd >= 0 && isSplitChar(text.charAt(spanEnd))) {
+                if (spanEnd >= 0 && spanEnd < text.length() && isSplitChar(text.charAt(spanEnd))) {
                     text.delete(spanEnd, spanEnd + 1);
                 }
 
-                if (spanStart >= 0 && isSplitChar(text.charAt(spanStart))) {
+                if (spanStart >= 0 && spanStart < text.length() && isSplitChar(text.charAt(spanStart))) {
                     text.delete(spanStart, spanStart + 1);
                 }
             }

@@ -1,5 +1,31 @@
-<vector android:height="24dp" android:viewportHeight="26.5"
-    android:viewportWidth="26.5" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/glyph_grey" android:pathData="m26.45,13.23c0,7.303 -5.922,13.23 -13.23,13.23 -7.303,0 -13.23,-5.927 -13.23,-13.23 0,-7.303 5.927,-13.23 13.23,-13.23 7.308,0 13.23,5.927 13.23,13.23z"/>
-    <path android:fillColor="@color/glyph_foreground" android:pathData="m19.666,21.168l-14.225,0l0,-0.714l11.28,-15.143l-5.022,0c-0.826,0.016 -1.461,0.106 -1.905,0.259 -0.445,0.159 -0.857,0.458 -1.236,0.9 -0.034,0.037 -0.064,0.069 -0.087,0.106 -0.026,0.026 -0.053,0.064 -0.087,0.095 -0.066,0.106 -0.127,0.185 -0.185,0.265 -0.058,0.079 -0.111,0.159 -0.159,0.238 -0.019,0.053 -0.042,0.106 -0.079,0.159 -0.026,0.053 -0.064,0.106 -0.095,0.159 -0.034,0.106 -0.074,0.212 -0.124,0.318 -0.053,0.106 -0.106,0.238 -0.185,0.397l-0.9,-0.026L6.655,4.313l13.495,0l0,0.662l-11.378,15.188l4.922,0c0.741,0.021 1.323,0 1.773,-0.045 0.423,-0.053 0.847,-0.159 1.217,-0.328l0.132,-0.053 0.106,-0.053c0.212,-0.132 0.45,-0.265 0.662,-0.397 0.212,-0.159 0.423,-0.318 0.635,-0.529l0.423,-0.476c0.159,-0.185 0.291,-0.37 0.476,-0.582l0.635,-0.926l0.926,0l-1.111,4.366z"/>
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector android:height="24dp"
+    android:viewportHeight="26.5"
+    android:viewportWidth="26.5"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/glyph_grey"
+        android:pathData="m26.45,13.23c0,7.303 -5.922,13.23 -13.23,13.23 -7.303,0 -13.23,-5.927 -13.23,-13.23 0,-7.303 5.927,-13.23 13.23,-13.23 7.308,0 13.23,5.927 13.23,13.23z" />
+    <path
+        android:fillColor="@color/glyph_foreground"
+        android:pathData="m19.666,21.168l-14.225,0l0,-0.714l11.28,-15.143l-5.022,0c-0.826,0.016 -1.461,0.106 -1.905,0.259 -0.445,0.159 -0.857,0.458 -1.236,0.9 -0.034,0.037 -0.064,0.069 -0.087,0.106 -0.026,0.026 -0.053,0.064 -0.087,0.095 -0.066,0.106 -0.127,0.185 -0.185,0.265 -0.058,0.079 -0.111,0.159 -0.159,0.238 -0.019,0.053 -0.042,0.106 -0.079,0.159 -0.026,0.053 -0.064,0.106 -0.095,0.159 -0.034,0.106 -0.074,0.212 -0.124,0.318 -0.053,0.106 -0.106,0.238 -0.185,0.397l-0.9,-0.026L6.655,4.313l13.495,0l0,0.662l-11.378,15.188l4.922,0c0.741,0.021 1.323,0 1.773,-0.045 0.423,-0.053 0.847,-0.159 1.217,-0.328l0.132,-0.053 0.106,-0.053c0.212,-0.132 0.45,-0.265 0.662,-0.397 0.212,-0.159 0.423,-0.318 0.635,-0.529l0.423,-0.476c0.159,-0.185 0.291,-0.37 0.476,-0.582l0.635,-0.926l0.926,0l-1.111,4.366z" />
 </vector>

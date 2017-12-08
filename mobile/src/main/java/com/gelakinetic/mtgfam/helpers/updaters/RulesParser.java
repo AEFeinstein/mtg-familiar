@@ -1,4 +1,25 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers.updaters;
+
+import android.content.Context;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 
@@ -52,12 +73,13 @@ class RulesParser {
      * the file and its date is newer than this.mLastUpdated, true will be returned. Otherwise, it will return false. If
      * true is returned, this.rulesUrl will be populated.
      *
+     * @param context a context to open the HttpInputStream with
      * @return Whether or this the rules need updating.
      */
-    public boolean needsToUpdate(PrintWriter logWriter) {
+    public boolean needsToUpdate(Context context, PrintWriter logWriter) {
 
         try {
-            this.mInputStream = FamiliarActivity.getHttpInputStream(SOURCE, logWriter);
+            this.mInputStream = FamiliarActivity.getHttpInputStream(SOURCE, logWriter, context);
             if (this.mInputStream == null) {
                 throw new IOException("No Stream");
             }

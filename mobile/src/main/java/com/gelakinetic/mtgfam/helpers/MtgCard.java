@@ -1,18 +1,18 @@
-/**
- * Copyright 2011 Adam Feinstein
- * <p/>
+/*
+ * Copyright 2017 Adam Feinstein
+ *
  * This file is part of MTG Familiar.
- * <p/>
+ *
  * MTG Familiar is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * MTG Familiar is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,6 +29,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -49,6 +50,7 @@ public class MtgCard extends Card {
     public int mSide;
     public PriceInfo priceInfo;
     private int mIndex;
+    private boolean selected = false;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -72,11 +74,11 @@ public class MtgCard extends Card {
         mMultiverseId = 0;
         mColorIdentity = "";
         mWatermark = "";
-        mForeignPrintings = new ForeignPrinting[]{};
+        mForeignPrintings = new ArrayList<>();
     }
 
     public MtgCard(Card card) {
-        if(card != null) {
+        if (card != null) {
             this.mName = card.mName;
             this.mExpansion = card.mExpansion;
             this.mType = card.mType;
@@ -94,8 +96,7 @@ public class MtgCard extends Card {
             this.mMultiverseId = card.mMultiverseId;
             this.mColorIdentity = card.mColorIdentity;
             this.mWatermark = card.mWatermark;
-            this.mForeignPrintings = new ForeignPrinting[card.mForeignPrintings.length];
-            System.arraycopy(card.mForeignPrintings, 0, this.mForeignPrintings, 0, card.mForeignPrintings.length);
+            this.mForeignPrintings = new ArrayList<>(card.mForeignPrintings);
         }
     }
 
@@ -116,34 +117,6 @@ public class MtgCard extends Card {
     /************************************************
      *             MtgCards and Trading             *
      ************************************************/
-
-    /**
-     * Constructor used when creating a new card for the trade list. Only populates relevant information
-     *
-     * @param name     This card's mName
-     * @param tcgName  The tcgplayer.com mExpansion mName
-     * @param setCode  The mExpansion code
-     * @param numberOf The mNumber of these cards being traded
-     * @param message  A message associated with this card
-     * @param number   This card's mNumber within the mExpansion
-     * @param foil     Whether or not this card is foil
-     * @param color    This card's mColor
-     * @param cmc      This card's converted mana cost
-     */
-    public MtgCard(String name, String tcgName, String setCode, int numberOf, String message, String number, boolean foil, String color, int cmc) {
-        this.mName = name;
-        this.mNumber = number;
-        this.setCode = setCode;
-        this.setName = tcgName;
-        this.numberOf = numberOf;
-        this.price = 0;
-        this.message = message;
-        this.mRarity = (char) (int) '-';
-        this.customPrice = false;
-        this.foil = foil;
-        this.mColor = color;
-        this.mCmc = cmc;
-    }
 
     /**
      * Returns the string representation of this MtgCard for saving trades
@@ -395,5 +368,13 @@ public class MtgCard extends Card {
 
     public int getIndex() {
         return mIndex;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

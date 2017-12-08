@@ -1,10 +1,31 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -56,30 +77,45 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed TradeFragment
      */
+    @Nullable
     private TradeFragment getParentTradeFragment() {
-        return (TradeFragment) getFamiliarFragment();
+        try {
+            return (TradeFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
         /* We're setting this to false if we return null, so we should reset it every time to be safe */
         setShowsDialog(true);
         mDialogId = getArguments().getInt(ID_KEY);
         final int sideForDialog = getArguments().getInt(ID_SIDE);
         final int positionForDialog = getArguments().getInt(ID_POSITION);
+
+        if (null == getParentTradeFragment()) {
+            return DontShowDialog();
+        }
+
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
                 /* Get some final references */
                 final ArrayList<MtgCard> lSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListLeft : getParentTradeFragment().mListRight);
-                final TradeFragment.CardDataAdapter aaSide = (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().mListAdapterLeft : getParentTradeFragment().mListAdapterRight);
-                if(positionForDialog >= lSide.size()) {
+                final TradeFragment.TradeDataAdapter aaSide = (TradeFragment.TradeDataAdapter) (sideForDialog == TradeFragment.LEFT ? getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT) : getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT));
+                if (positionForDialog >= lSide.size() || positionForDialog < 0) {
                     return DontShowDialog();
                 }
                 final boolean oldFoil = lSide.get(positionForDialog).foil;
 
                 /* Inflate the view and pull out UI elements */
-                View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
+                @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
                         null, false);
                 assert view != null;
                 final CheckBox foilCheckbox = view.findViewById(R.id.traderDialogFoil);
@@ -116,7 +152,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         lSide.get(positionForDialog).foil = b;
                         if (!lSide.get(positionForDialog).customPrice) {
-                            getParentTradeFragment().loadPrice(lSide.get(positionForDialog), aaSide);
+                            getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
                             priceText.setText(lSide.get(positionForDialog).hasPrice() ?
                                     lSide.get(positionForDialog).getPriceString().substring(1) : "");
                         }
@@ -140,7 +176,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     public void onClick(View v) {
                         lSide.get(positionForDialog).customPrice = false;
                         /* This loads the price if necessary, or uses cached info */
-                        getParentTradeFragment().loadPrice(lSide.get(positionForDialog), aaSide);
+                        getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
                         int price = lSide.get(positionForDialog).price;
                         priceText.setText(String.format(Locale.US, "%d.%02d", price / 100, price % 100));
 
@@ -238,7 +274,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     if (data.foil) {
                                         oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
                                     } else {
-                                        switch (getParentTradeFragment().mPriceSetting) {
+                                        switch (getParentTradeFragment().getPriceSetting()) {
                                             case TradeFragment.LOW_PRICE: {
                                                 oldPrice = (int) (data.priceInfo.mLow * 100);
                                                 break;
@@ -274,6 +310,17 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_CHANGE_SET: {
+                /* Make sure positionForDialog is in bounds */
+                int max;
+                if (sideForDialog == TradeFragment.LEFT) {
+                    max = getParentTradeFragment().mListLeft.size();
+                } else {
+                    max = getParentTradeFragment().mListRight.size();
+                }
+                if (positionForDialog < 0 || positionForDialog >= max) {
+                    return DontShowDialog();
+                }
+
                 /* Get the card */
                 MtgCard data = (sideForDialog == TradeFragment.LEFT ?
                         getParentTradeFragment().mListLeft.get(positionForDialog) : getParentTradeFragment().mListRight.get(positionForDialog));
@@ -318,13 +365,25 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                                 /* Figure out what we're updating */
                                 MtgCard data;
-                                TradeFragment.CardDataAdapter adapter;
+                                TradeFragment.TradeDataAdapter adapter;
+
+                                /* Make sure positionForDialog is in bounds */
+                                int max;
+                                if (sideForDialog == TradeFragment.LEFT) {
+                                    max = getParentTradeFragment().mListLeft.size();
+                                } else {
+                                    max = getParentTradeFragment().mListRight.size();
+                                }
+                                if (positionForDialog < 0 || positionForDialog >= max) {
+                                    return;
+                                }
+
                                 if (sideForDialog == TradeFragment.LEFT) {
                                     data = getParentTradeFragment().mListLeft.get(positionForDialog);
-                                    adapter = getParentTradeFragment().mListAdapterLeft;
+                                    adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
                                 } else {
                                     data = getParentTradeFragment().mListRight.get(positionForDialog);
-                                    adapter = getParentTradeFragment().mListAdapterRight;
+                                    adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
                                 }
 
                                 /* Change the card's information, and reload the price */
@@ -345,7 +404,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                                 /* Reload and notify the adapter */
-                                getParentTradeFragment().loadPrice(data, adapter);
+                                getParentTradeFragment().loadPrice(data);
                                 adapter.notifyDataSetChanged();
                             }
                         })
@@ -355,35 +414,35 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Build the dialog with some choices */
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
-                        .items(new CharSequence[]{getString(R.string.trader_Low),
+                        .items(getString(R.string.trader_Low),
                                 getString(R.string.trader_Average),
-                                getString(R.string.trader_High)})
-                        .itemsCallbackSingleChoice(getParentTradeFragment().mPriceSetting, new MaterialDialog.ListCallbackSingleChoice() {
+                                getString(R.string.trader_High))
+                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentTradeFragment().mPriceSetting != which) {
-                                    getParentTradeFragment().mPriceSetting = which;
+                                if (getParentTradeFragment().getPriceSetting() != which) {
+                                    getParentTradeFragment().setPriceSetting(which);
 
                                     /* Update ALL the prices! */
                                     for (MtgCard data : getParentTradeFragment().mListLeft) {
                                         if (!data.customPrice) {
                                             data.message = getString(R.string.wishlist_loading);
-                                            getParentTradeFragment().loadPrice(data, getParentTradeFragment().mListAdapterLeft);
+                                            getParentTradeFragment().loadPrice(data);
                                         }
                                     }
-                                    getParentTradeFragment().mListAdapterLeft.notifyDataSetChanged();
+                                    getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
 
                                     for (MtgCard data : getParentTradeFragment().mListRight) {
                                         if (!data.customPrice) {
                                             data.message = getString(R.string.wishlist_loading);
-                                            getParentTradeFragment().loadPrice(data, getParentTradeFragment().mListAdapterRight);
+                                            getParentTradeFragment().loadPrice(data);
                                         }
                                     }
-                                    getParentTradeFragment().mListAdapterRight.notifyDataSetChanged();
+                                    getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
 
                                     /* And also update the preference */
                                     PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentTradeFragment().mPriceSetting));
+                                            String.valueOf(getParentTradeFragment().getPriceSetting()));
 
                                     getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                                 }
@@ -395,7 +454,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
             }
             case DIALOG_SAVE_TRADE: {
                 /* Inflate a view to type in the trade's name, and show it in an AlertDialog */
-                View textEntryView = getActivity().getLayoutInflater()
+                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -440,8 +499,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (tradeNames.length == 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
-                            .show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -457,8 +515,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 getParentTradeFragment().mCurrentTrade = tradeNames[position];
 
                                 /* Alert things to update */
-                                getParentTradeFragment().mListAdapterLeft.notifyDataSetChanged();
-                                getParentTradeFragment().mListAdapterRight.notifyDataSetChanged();
+                                getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
+                                getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
                                 getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                             }
                         })
@@ -470,8 +528,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (tradeNames.length == 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG)
-                            .show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -485,8 +542,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 File toDelete = new File(getActivity().getFilesDir(), tradeNames[position] +
                                         TradeFragment.TRADE_EXTENSION);
                                 if (!toDelete.delete()) {
-                                    ToastWrapper.makeText(getActivity(), toDelete.getName() + " " +
-                                            getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG).show();
+                                    ToastWrapper.makeAndShowText(getActivity(), toDelete.getName() + " " +
+                                            getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG);
                                 }
                             }
                         })
@@ -504,10 +561,12 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 getParentTradeFragment().mCurrentTrade = "";
                                 getParentTradeFragment().mListRight.clear();
                                 getParentTradeFragment().mListLeft.clear();
-                                getParentTradeFragment().mListAdapterRight.notifyDataSetChanged();
-                                getParentTradeFragment().mListAdapterLeft.notifyDataSetChanged();
-                                getParentTradeFragment().mCheckboxFoil.setChecked(false);
+                                getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
+                                getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
                                 getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
+                                getParentTradeFragment().clearCardNameInput();
+                                getParentTradeFragment().clearCardNumberInput();
+                                getParentTradeFragment().uncheckFoilCheckbox();
                                 dialog.dismiss();
                             }
                         })
@@ -516,7 +575,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             default: {
-                return DontShowDialog();
+                savedInstanceState.putInt("id", mDialogId);
+                return super.onCreateDialog(savedInstanceState);
             }
         }
     }

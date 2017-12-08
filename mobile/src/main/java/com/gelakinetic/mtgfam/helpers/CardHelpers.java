@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers;
 
 import android.annotation.SuppressLint;
@@ -9,6 +28,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,7 +70,7 @@ public class CardHelpers {
      * @param mCardName      The name of the card
      * @param fragment       The fragment which hosts the dialog and receives onWishlistChanged()
      * @param showCardButton Whether the button to launch the CardViewFragment should be shown
-     * @param isSideboard
+     * @param isSideboard    true if this card goes in the sidebard, false for the maindeck
      * @return A dialog which edits the wishlist
      */
     public static Dialog getDialog(
@@ -62,7 +82,7 @@ public class CardHelpers {
         final Context ctx = fragment.getActivity();
 
         /* Create the custom view */
-        View customView = fragment.getActivity().getLayoutInflater()
+        @SuppressLint("InflateParams") View customView = fragment.getActivity().getLayoutInflater()
                 .inflate(R.layout.wishlist_dialog, null, false);
         assert customView != null;
 
@@ -84,13 +104,16 @@ public class CardHelpers {
                                 SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false)
                                         .openDatabase(false);
                                 /* Get the card ID, and send it to a new CardViewFragment */
-                                args.putLongArray(
-                                        CardViewPagerFragment.CARD_ID_ARRAY,
-                                        new long[]{CardDbAdapter.fetchIdByName(mCardName, db)}
-                                );
-                                args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-                                CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
-                                fragment.startNewFragment(cvpFrag, args);
+                                long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
+                                if (cardId > 0) {
+                                    args.putLongArray(
+                                            CardViewPagerFragment.CARD_ID_ARRAY,
+                                            new long[]{cardId}
+                                    );
+                                    args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+                                    CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+                                    fragment.startNewFragment(cvpFrag, args);
+                                }
                             } catch (FamiliarDbException e) {
                                 fragment.handleFamiliarDbException(false);
                             }
@@ -171,8 +194,12 @@ public class CardHelpers {
                 String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
                 /* Inflate a row and fill it with stuff */
-                View listDialogRow =
-                        createDialogRow(fragment, setName, targetCardNumberOfs.get(setCode), false);
+                View listDialogRow = createDialogRow(
+                        fragment,
+                        setName,
+                        targetCardNumberOfs.get(setCode),
+                        false,
+                        linearLayout);
                 linearLayout.addView(listDialogRow);
                 potentialSetCodes.add(setCode);
                 potentialRarities.add(rarity);
@@ -184,8 +211,8 @@ public class CardHelpers {
                             fragment,
                             setName,
                             targetFoilCardNumberOfs.get(setCode),
-                            true
-                    );
+                            true,
+                            linearLayout);
                     linearLayout.addView(wishlistRowFoil);
                     potentialSetCodes.add(setCode);
                     potentialRarities.add(rarity);
@@ -309,16 +336,18 @@ public class CardHelpers {
      * @param setName            the set of the card
      * @param targetCardNumberOf the number of the card
      * @param isFoil             if the card is foil or not
+     * @param viewGroup          the viewGroup to inflate the row into
      * @return a View that displays an idividual printing of a card
      */
     private static View createDialogRow(
             FamiliarFragment fragment,
             String setName,
             String targetCardNumberOf,
-            boolean isFoil) {
+            boolean isFoil,
+            ViewGroup viewGroup) {
 
         View dialogRow = fragment.getActivity().getLayoutInflater()
-                .inflate(R.layout.wishlist_dialog_row, null, false);
+                .inflate(R.layout.wishlist_dialog_row, viewGroup, false);
         assert dialogRow != null;
         ((TextView) dialogRow.findViewById(R.id.cardset)).setText(setName);
         String numberOf = targetCardNumberOf;
@@ -423,6 +452,21 @@ public class CardHelpers {
             }
             return totalCopies;
 
+        }
+
+        /**
+         * Apply IndividualSetInfo to this CompressedCardInfo. This is useful for modifying card
+         * data before writing it to a file
+         *
+         * @param isi The IndividualSetInfo to apply
+         */
+        void applyIndividualInfo(IndividualSetInfo isi) {
+            this.mExpansion = isi.mSet;
+            this.setCode = isi.mSetCode;
+            this.mNumber = isi.mNumber;
+            this.foil = isi.mIsFoil;
+            this.numberOf = isi.mNumberOf;
+            this.mRarity = isi.mRarity;
         }
 
     }
@@ -584,102 +628,6 @@ public class CardHelpers {
     }
 
     /**
-     * Comparator based on price.
-     */
-    public static class CardComparatorPrice
-            implements Comparator<CompressedCardInfo>, Serializable {
-
-        /* Price setting constants */
-        private static final int LOW_PRICE = 0;
-        private static final int AVG_PRICE = 1;
-        private static final int HIGH_PRICE = 2;
-
-        private final int mPriceSetting;
-
-        public CardComparatorPrice(int mPriceSetting) {
-            this.mPriceSetting = mPriceSetting;
-        }
-
-        @Override
-        public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
-
-            double sumWish1 = 0;
-            double sumWish2 = 0;
-
-            for (IndividualSetInfo isi : card1.mInfo) {
-                try {
-                    if (isi.mIsFoil) {
-                        sumWish1 += (isi.mPrice.mFoilAverage * isi.mNumberOf);
-                    } else {
-                        switch (mPriceSetting) {
-                            case LOW_PRICE:
-                                sumWish1 += (isi.mPrice.mLow * isi.mNumberOf);
-                                break;
-                            case AVG_PRICE:
-                                sumWish1 += (isi.mPrice.mAverage * isi.mNumberOf);
-                                break;
-                            case HIGH_PRICE:
-                                sumWish1 += (isi.mPrice.mHigh * isi.mNumberOf);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    /* eat it, no price is loaded */
-                }
-            }
-
-            for (IndividualSetInfo isi : card2.mInfo) {
-                try {
-                    if (isi.mIsFoil) {
-                        sumWish2 += (isi.mPrice.mFoilAverage * isi.mNumberOf);
-                    } else {
-                        switch (mPriceSetting) {
-                            case LOW_PRICE:
-                                sumWish2 += (isi.mPrice.mLow * isi.mNumberOf);
-                                break;
-                            case AVG_PRICE:
-                                sumWish2 += (isi.mPrice.mAverage * isi.mNumberOf);
-                                break;
-                            case HIGH_PRICE:
-                                sumWish2 += (isi.mPrice.mHigh * isi.mNumberOf);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                } catch (NullPointerException e) {
-                    /* eat it, no price is loaded */
-                }
-            }
-
-            /* If the price difference is less than a penny */
-            if (Math.abs(sumWish1 - sumWish2) < 0.01) {
-                return card1.mName.compareTo(card2.mName);
-            } else if (sumWish1 > sumWish2) {
-                return 1;
-            }
-            return -1;
-
-        }
-
-    }
-
-    /**
-     * Comparator based on the first set of a card.
-     */
-    private static class CardComparatorSet
-            implements Comparator<CompressedCardInfo>, Serializable {
-
-        @Override
-        public int compare(CompressedCardInfo card1, CompressedCardInfo card2) {
-            return card1.mInfo.get(0).mSet.compareTo(card2.mInfo.get(0).mSet);
-        }
-
-    }
-
-    /**
      * Construct a MtgCard based on the given parameters.
      *
      * @param context  context the method is being called from
@@ -725,6 +673,14 @@ public class CardHelpers {
             Cursor cardCursor;
             if (cardSet == null) {
                 cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+
+                /* Make sure at least one card was found */
+                if (cardCursor.getCount() == 0) {
+                    ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
+                            ToastWrapper.LENGTH_LONG);
+                    DatabaseManager.getInstance(activity, false).closeDatabase(false);
+                    return null;
+                }
                 /* If we don't specify the set, and we are trying to find a foil card, choose the
                  * latest foil printing. If there are no eligible printings, select the latest */
                 if (isFoil) {
@@ -741,12 +697,15 @@ public class CardHelpers {
             } else {
                 cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, fields, database);
             }
+
+            /* Make sure at least one card was found */
             if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeText(activity, activity.getString(R.string.toast_no_card),
-                        ToastWrapper.LENGTH_LONG).show();
+                ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
+                        ToastWrapper.LENGTH_LONG);
                 DatabaseManager.getInstance(activity, false).closeDatabase(false);
                 return null;
             }
+
             /* Don't rely on the user's given name, get it from the DB just to be sure */
             card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
@@ -790,39 +749,4 @@ public class CardHelpers {
         return null;
 
     }
-
-    /**
-     * Convert the database's power/toughness format to text.
-     * todo: should this be done by the MtgCard or CardDbAdapter?
-     *
-     * @param data the id of the power or toughness type
-     * @return string representation of the power or toughness
-     */
-    public static String adaptCardPT(final float data) {
-
-        if (data != CardDbAdapter.NO_ONE_CARES) {
-            if (data == CardDbAdapter.STAR) {
-                return "*";
-            } else if (data == CardDbAdapter.ONE_PLUS_STAR) {
-                return "1+*";
-            } else if (data == CardDbAdapter.TWO_PLUS_STAR) {
-                return "2+*";
-            } else if (data == CardDbAdapter.SEVEN_MINUS_STAR) {
-                return "7-*";
-            } else if (data == CardDbAdapter.STAR_SQUARED) {
-                return "*^2";
-            } else if (data == CardDbAdapter.X) {
-                return "X";
-            } else {
-                if (data == (int) data) {
-                    return Integer.toString((int) data);
-                } else {
-                    return Float.toString(data);
-                }
-            }
-        }
-        return "";
-
-    }
-
 }

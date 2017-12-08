@@ -1,9 +1,30 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -32,27 +53,42 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed RulesFragment
      */
+    @Nullable
     private RulesFragment getParentRulesFragment() {
-        return (RulesFragment) getFamiliarFragment();
+        try {
+            return (RulesFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (searchArgs != null) {
+        if (searchArgs != null && getParentFamiliarFragment() != null) {
             RulesFragment frag = new RulesFragment();
-            getFamiliarFragment().startNewFragment(frag, searchArgs);
+            getParentFamiliarFragment().startNewFragment(frag, searchArgs);
         }
     }
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
         searchArgs = null;
+
+        if (null == getParentRulesFragment()) {
+            return DontShowDialog();
+        }
+
         switch (DIALOG_SEARCH) {
             case DIALOG_SEARCH: {
                         /* Inflate a view to type in the player's name, and show it in an AlertDialog */
-                View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
+                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
                         null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -91,8 +127,8 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                                 }
                                 String keyword = nameInput.getText().toString();
                                 if (keyword.length() < 3) {
-                                    ToastWrapper.makeText(getActivity(),
-                                            R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG).show();
+                                    ToastWrapper.makeAndShowText(getActivity(),
+                                            R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG);
                                 } else {
                                     searchArgs = new Bundle();
                                     searchArgs.putString(RulesFragment.KEYWORD_KEY, keyword);

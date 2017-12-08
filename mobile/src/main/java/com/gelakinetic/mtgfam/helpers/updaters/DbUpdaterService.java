@@ -1,18 +1,18 @@
-/**
+/*
  * Copyright 2012 Michael Shick
- * <p/>
+ *
  * This file is part of MTG Familiar.
- * <p/>
+ *
  * MTG Familiar is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * MTG Familiar is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -180,7 +180,7 @@ public class DbUpdaterService extends IntentService {
                 switchToChecking();
 
                 /* Look for new cards */
-                Manifest manifest = parser.readUpdateJsonStream(logWriter);
+                Manifest manifest = parser.readUpdateJsonStream(getApplicationContext(), logWriter);
 
                 if (manifest != null) {
                     /* Make an arraylist of all the current set codes */
@@ -232,7 +232,7 @@ public class DbUpdaterService extends IntentService {
                                 try {
                                     /* Change the notification to the specific set */
                                     switchToUpdating(String.format(getString(R.string.update_updating_set), set.mName));
-                                    InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter);
+                                    InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter, getApplicationContext());
                                     if (streamToRead != null) {
                                         ArrayList<Card> cardsToAdd = new ArrayList<>();
                                         ArrayList<Expansion> setsToAdd = new ArrayList<>();
@@ -261,7 +261,7 @@ public class DbUpdaterService extends IntentService {
                                         for (Card card : cardsToAdd) {
                                             CardDbAdapter.createCard(card, database);
                                             cardsAdded++;
-                                            mProgress = (int) (100 * (cardsAdded / (float)cardsToAdd.size()));
+                                            mProgress = (int) (100 * (cardsAdded / (float) cardsToAdd.size()));
                                         }
                                         /* Close the database */
                                         DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
@@ -291,7 +291,7 @@ public class DbUpdaterService extends IntentService {
 
                 RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
 
-                if (rp.needsToUpdate(logWriter)) {
+                if (rp.needsToUpdate(getApplicationContext(), logWriter)) {
                     switchToUpdating(getString(R.string.update_updating_rules));
                     if (rp.parseRules(logWriter)) {
                         ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();

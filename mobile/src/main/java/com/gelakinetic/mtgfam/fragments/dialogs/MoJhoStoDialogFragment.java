@@ -1,12 +1,31 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
@@ -28,7 +47,12 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
+        /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
         mDialogId = getArguments().getInt(ID_KEY);
@@ -90,9 +114,13 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
                     scaleFactor = (windowWidth - border) / (float) imageWidth;
                 }
 
-                        /* Scale the drawable */
-                image.setLayoutParams(new LinearLayout.LayoutParams((int) (imageWidth * scaleFactor),
-                        (int) (imageHeight * scaleFactor)));
+                /* Scale the drawable */
+                ViewGroup.LayoutParams params = image.getLayoutParams();
+                if (null != params) {
+                    params.width = (int) (imageWidth * scaleFactor);
+                    params.height = (int) (imageHeight * scaleFactor);
+                    image.setLayoutParams(params);
+                }
 
                 return dialog;
             }

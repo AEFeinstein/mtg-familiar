@@ -1,9 +1,30 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +59,15 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
 
         setShowsDialog(true);
 
         /* Inflate the view */
-        View view = getFamiliarFragment().getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
+        @SuppressLint("InflateParams") View view = getActivity().getLayoutInflater().inflate(R.layout.sort_dialog_frag, null, false);
         assert view != null;
 
         /* Create an arraylist of all the sorting options */
@@ -114,17 +138,17 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
 
         /* Get the sort view and set it up */
         DragListView sortView = view.findViewById(R.id.sort_list_view);
-        sortView.setLayoutManager(new LinearLayoutManager(getFamiliarFragment().getActivity()));
+        sortView.setLayoutManager(new LinearLayoutManager(getActivity()));
         sortItemAdapter adapter = new sortItemAdapter(options);
         sortView.setAdapter(adapter, true);
         sortView.setCanDragHorizontally(false);
 
         /* Create the dialog */
-        MaterialDialog.Builder adb = new MaterialDialog.Builder(getFamiliarFragment().getActivity());
+        MaterialDialog.Builder adb = new MaterialDialog.Builder(getActivity());
         adb.customView(view, false);
         adb.title(getResources().getString(R.string.wishlist_sort_by));
         adb.negativeText(R.string.dialog_cancel);
-        adb.positiveText(getFamiliarFragment().getActivity().getResources().getString(R.string.dialog_ok));
+        adb.positiveText(getActivity().getResources().getString(R.string.dialog_ok));
         adb.onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -143,8 +167,9 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
                     }
                     first = false;
                 }
-                getFamiliarFragment().receiveSortOrder(orderByStr);
-                dismiss();
+                if (null != getParentFamiliarFragment()) {
+                    getParentFamiliarFragment().receiveSortOrder(orderByStr);
+                }
             }
         });
 
@@ -195,7 +220,10 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
             holder.mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    mItemList.get(holder.getAdapterPosition()).mAscending = b;
+                    int position = holder.getAdapterPosition();
+                    if (RecyclerView.NO_POSITION != position) {
+                        mItemList.get(position).mAscending = b;
+                    }
                 }
             });
             holder.itemView.setTag(mItemList.get(position));
@@ -209,7 +237,7 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
          * @return This position's ID
          */
         @Override
-        public long getItemId(int position) {
+        public long getUniqueItemId(int position) {
             return mItemList.get(position).mId;
         }
 

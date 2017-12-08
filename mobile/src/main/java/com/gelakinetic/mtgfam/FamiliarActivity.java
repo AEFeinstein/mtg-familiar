@@ -1,17 +1,20 @@
 /*
- * Copyright 2013 The Android Open Source Project
+ * Copyright 2017 Adam Feinstein
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This file is part of MTG Familiar.
  *
- * http:/* www.apache.org/licenses/LICENSE-2.0
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam;
@@ -54,6 +57,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -89,7 +93,6 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.TutorCards;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -151,7 +154,7 @@ public class FamiliarActivity extends AppCompatActivity {
     private static final int MESSAGE_INIT_DISK_CACHE = 1;
     private static final int MESSAGE_FLUSH = 2;
     private static final int MESSAGE_CLOSE = 3;
-    private static final String IMAGE_CACHE_DIR = "images";
+    private static final String IMAGE_CACHE_DIR = "familiar_image_cache";
     /* Spice setup */
     public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
     /* What the drawer menu will be */
@@ -205,8 +208,10 @@ public class FamiliarActivity extends AppCompatActivity {
                 startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
             } else if (s.equals(getString(R.string.key_imageCacheSize))) {
                 /* Close the old cache */
-                mImageCache.flush();
-                mImageCache.close();
+                if (mImageCache != null) {
+                    mImageCache.flush();
+                    mImageCache.close();
+                }
 
                 /* Set up the image cache */
                 ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
@@ -288,20 +293,19 @@ public class FamiliarActivity extends AppCompatActivity {
     };
     private DrawerEntryArrayAdapter mPagesAdapter;
 
-    private final TutorCards mTutorCards = new TutorCards(this);
-
     /**
      * Open an inputStream to the HTML content at the given URL.
      *
      * @param stringUrl The URL to open a stream to, in String form
      * @param logWriter A PrintWriter to log debug info to. Can be null
+     * @param ctx       A context to build the User Agent with
      * @return An InputStream to the content at the URL, or null
      * @throws IOException Thrown if something goes terribly wrong
      */
     public static
     @Nullable
-    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter) throws IOException {
-        return getHttpInputStream(new URL(stringUrl), logWriter, 0);
+    InputStream getHttpInputStream(String stringUrl, PrintWriter logWriter, Context ctx) throws IOException {
+        return getHttpInputStream(new URL(stringUrl), logWriter, ctx, 0);
     }
 
     /**
@@ -309,13 +313,14 @@ public class FamiliarActivity extends AppCompatActivity {
      *
      * @param url       The URL to open a stream to
      * @param logWriter A PrintWriter to log debug info to. Can be null
+     * @param ctx       A context to build the User Agent with
      * @return An InputStream to the content at the URL, or null
      * @throws IOException Thrown if something goes terribly wrong
      */
     public static
     @Nullable
-    InputStream getHttpInputStream(URL url, PrintWriter logWriter) throws IOException {
-        return getHttpInputStream(url, logWriter, 0);
+    InputStream getHttpInputStream(URL url, PrintWriter logWriter, Context ctx) throws IOException {
+        return getHttpInputStream(url, logWriter, ctx, 0);
     }
 
     /**
@@ -324,13 +329,14 @@ public class FamiliarActivity extends AppCompatActivity {
      *
      * @param url            The URL to open a stream to
      * @param logWriter      A PrintWriter to log debug info to. Can be null
+     * @param ctx            A context to build the User Agent with
      * @param recursionLevel The redirect recursion level. Starts at 0, doesn't go past 10
      * @return An InputStream to the content at the URL, or null
      * @throws IOException Thrown if something goes terribly wrong
      */
     private static
     @Nullable
-    InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter,
+    InputStream getHttpInputStream(URL url, @Nullable PrintWriter logWriter, Context ctx,
                                    int recursionLevel) throws IOException {
 
         /* Don't allow infinite recursion */
@@ -341,6 +347,14 @@ public class FamiliarActivity extends AppCompatActivity {
         /* Make the URL & connection objects, follow redirects, timeout after 5s */
         HttpURLConnection.setFollowRedirects(true);
         HttpURLConnection connection = (HttpURLConnection) (url).openConnection();
+        String version = "";
+        try {
+            version = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        connection.setRequestProperty("User-Agent", ctx.getString(R.string.app_name) + "/" + version);
         connection.setConnectTimeout(5000);
         connection.setInstanceFollowRedirects(true);
 
@@ -397,7 +411,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
             if (nextUrl != null) {
                 /* If there is a URL to follow, follow it */
-                return getHttpInputStream(nextUrl, logWriter, recursionLevel + 1);
+                return getHttpInputStream(nextUrl, logWriter, ctx, recursionLevel + 1);
             } else {
                 /* Otherwise return null */
                 return null;
@@ -436,7 +450,7 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Called whenever we call supportInvalidateOptionsMenu(). This hides action bar items when the
+     * Called whenever we call invalidateOptionsMenu(). This hides action bar items when the
      * drawer is open.
      *
      * @param menu The menu to hide or show items in
@@ -527,7 +541,7 @@ public class FamiliarActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         /* set up the drawer's list view with items and click listener */
-        mPagesAdapter = new DrawerEntryArrayAdapter(this, mPageEntries);
+        mPagesAdapter = new DrawerEntryArrayAdapter(this);
 
         mDrawerList.setAdapter(mPagesAdapter);
         mDrawerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -601,7 +615,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.addToBackStack(null);
                         ft.replace(R.id.fragment_container, new PrefsFragment(), FamiliarActivity.FRAGMENT_TAG);
-                        ft.commit();
+                        ft.commitAllowingStateLoss();
                         shouldCloseDrawer = true;
                         break;
                     }
@@ -692,7 +706,7 @@ public class FamiliarActivity extends AppCompatActivity {
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
                 if ((mIsMenuVisible && slideOffset > 0) || (slideOffset == 0 && !mIsMenuVisible)) {
-                    supportInvalidateOptionsMenu();
+                    invalidateOptionsMenu();
                 }
             }
         };
@@ -721,7 +735,10 @@ public class FamiliarActivity extends AppCompatActivity {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
                 int lastVersion = PreferenceAdapter.getLastVersion(this);
-                if (pInfo.versionCode != lastVersion) {
+                if (pInfo.versionCode != lastVersion &&
+                        !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
+                        !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
+                        !(lastVersion == 52 && pInfo.versionCode == 53)) { // Don't show 52 -> 53, it was just a quick bugfix release
                     /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices
                      * will exist*/
                     try {
@@ -742,16 +759,16 @@ public class FamiliarActivity extends AppCompatActivity {
                         File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
                         if (mtr.exists()) {
                             if (!mtr.delete()) {
-                                ToastWrapper.makeText(this, mtr.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG).show();
+                                ToastWrapper.makeAndShowText(this, mtr.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG);
                             }
                             if (!ipg.delete()) {
-                                ToastWrapper.makeText(this, ipg.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG).show();
+                                ToastWrapper.makeAndShowText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG);
                             }
                             if (!jar.delete()) {
-                                ToastWrapper.makeText(this, jar.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG).show();
+                                ToastWrapper.makeAndShowText(this, jar.getName() + " " + getString(R.string.not_deleted),
+                                        ToastWrapper.LENGTH_LONG);
                             }
                         }
                     }
@@ -798,7 +815,12 @@ public class FamiliarActivity extends AppCompatActivity {
 
             Uri data = intent.getData();
             Bundle args = new Bundle();
-            assert data != null;
+
+            if (null == data || null == data.getAuthority()) {
+                ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                this.finish();
+                return false;
+            }
 
             boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
             if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
@@ -834,7 +856,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     /* empty cursor, just return */
-                    ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
                     this.finish();
                     shouldSelectItem = false;
                 } finally {
@@ -881,14 +903,14 @@ public class FamiliarActivity extends AppCompatActivity {
                                     new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                         } else {
                             /* empty cursor, just return */
-                            ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
+                            ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
                             this.finish();
                             shouldSelectItem = false;
                         }
                         cursor.close();
                     } else if (!screenLaunched) {
                         /* null cursor, just return */
-                        ToastWrapper.makeText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG).show();
+                        ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
                         this.finish();
                         shouldSelectItem = false;
                     }
@@ -1114,16 +1136,10 @@ public class FamiliarActivity extends AppCompatActivity {
             if (!shouldClearFragmentStack) {
                 ft.addToBackStack(null);
             }
-            ft.commit();
+            ft.commitAllowingStateLoss();
 
             /* Color the icon when the fragment changes */
-            View drawerListItemView = mDrawerList.getChildAt(position);
-            if (drawerListItemView != null) {
-                TextView textView = drawerListItemView.findViewById(R.id.drawer_entry_name);
-                if (textView != null) {
-                    mPagesAdapter.colorDrawerEntry(textView);
-                }
-            }
+            mPagesAdapter.colorDrawerEntry(mPageEntries[position].getTextView());
         }
     }
 
@@ -1215,7 +1231,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param keyCode The value in event.getKeyCode().
      * @param event   Description of the key event.
      * @return If you handled the event, return true. If you want to allow the event to be handled
-     *         by the next receiver, return false.
+     * by the next receiver, return false.
      */
     @Override
     public boolean onKeyUp(int keyCode, @NotNull KeyEvent event) {
@@ -1240,9 +1256,10 @@ public class FamiliarActivity extends AppCompatActivity {
     public void hideKeyboard() {
         try {
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            assert getCurrentFocus() != null;
-            inputManager
-                    .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            if (null != inputManager && null != getCurrentFocus()) {
+                inputManager
+                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
         } catch (NullPointerException e) {
             /* eat it */
         }
@@ -1256,7 +1273,8 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     @NotNull
     public android.app.FragmentManager getFragmentManager() {
-        throw new IllegalAccessError("Use .getSupportFragmentManager()");
+        Log.e("Suggestion", "Use .getSupportFragmentManager()");
+        return super.getFragmentManager();
     }
 
     /**
@@ -1280,11 +1298,16 @@ public class FamiliarActivity extends AppCompatActivity {
             Fragment prev = fragmentManager.findFragmentByTag(FamiliarActivity.DIALOG_TAG);
             if (prev != null) {
                 if (prev instanceof DialogFragment) {
-                    ((DialogFragment) prev).dismiss();
+                    try {
+                        ((DialogFragment) prev).dismissAllowingStateLoss();
+                    } catch (IllegalStateException e) {
+                        // Don't remove the dialog I guess
+                        return;
+                    }
                 }
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.remove(prev);
-                ft.commit();
+                ft.commitAllowingStateLoss();
             }
         }
     }
@@ -1350,8 +1373,7 @@ public class FamiliarActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        mTutorCards.onActivityResult(requestCode, resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
 
         /* The ringtone picker in the preference fragment and RoundTimerFragment will send a result
          * here */
@@ -1470,23 +1492,29 @@ public class FamiliarActivity extends AppCompatActivity {
      * @param context         the context where this is being called
      * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
      * @return -1 if there is no network connection, or the type of network, like
-     *         ConnectivityManager.TYPE_WIFI
+     * ConnectivityManager.TYPE_WIFI
      */
     public static int getNetworkState(Context context, boolean shouldShowToast) {
         try {
             ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (null == conMan) {
+                if (shouldShowToast) {
+                    ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                }
+                return -1;
+            }
             for (NetworkInfo ni : conMan.getAllNetworkInfo()) {
                 if (ni.isConnected()) {
                     return ni.getType();
                 }
             }
             if (shouldShowToast) {
-                ToastWrapper.makeText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
             }
             return -1;
         } catch (NullPointerException e) {
             if (shouldShowToast) {
-                ToastWrapper.makeText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
             }
             return -1;
         }
@@ -1563,43 +1591,26 @@ public class FamiliarActivity extends AppCompatActivity {
     }
 
     /**
-     * Checks to see if there is network connectivity, and if there is, starts the visual
-     * search process.
-     */
-    public void startTutorCardsSearch() {
-        if (getNetworkState(FamiliarActivity.this, true) != -1) {
-            mTutorCards.startTutorCardsSearch();
-        }
-    }
-
-    /**
-     * When TutorCards returns a response over the network to a query, this function is called
-     * with the multiverse ID of the card in the image as a parameter.
-     *
-     * @param multiverseId The multiverse ID returned by the TutorCards query
-     */
-    public void receiveTutorCardsResult(long multiverseId) {
-        try {
-            ((FamiliarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container))
-                    .receiveTutorCardsResult(multiverseId);
-        } catch (NullPointerException e) {
-            /* Ignore it */
-        }
-        clearLoading();
-    }
-
-    /**
      * This nested class encapsulates the necessary information for an entry in the drawer menu.
      */
     public class DrawerEntry {
         final int mNameResource;
         final int mIconAttr;
         final boolean mIsDivider;
+        TextView textView;
 
         public DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
             mNameResource = nameResource;
             mIconAttr = iconResource;
             mIsDivider = isHeader;
+        }
+
+        public void setTextView(TextView textView) {
+            this.textView = textView;
+        }
+
+        public TextView getTextView() {
+            return textView;
         }
     }
 
@@ -1608,7 +1619,6 @@ public class FamiliarActivity extends AppCompatActivity {
      * both entries and headers.
      */
     public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
-        private final DrawerEntry[] values;
         private Drawable mHighlightedDrawable;
 
         /**
@@ -1616,11 +1626,9 @@ public class FamiliarActivity extends AppCompatActivity {
          * used to populate the views.
          *
          * @param context The application's context, used to inflate views later.
-         * @param values  An array of DrawerEntries which will populate the list
          */
-        public DrawerEntryArrayAdapter(Context context, DrawerEntry[] values) {
-            super(context, R.layout.drawer_list_item, values);
-            this.values = values;
+        public DrawerEntryArrayAdapter(Context context) {
+            super(context, R.layout.drawer_list_item, mPageEntries);
         }
 
         /**
@@ -1636,7 +1644,7 @@ public class FamiliarActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             int layout;
-            if (values[position].mIsDivider) {
+            if (mPageEntries[position].mIsDivider) {
                 layout = R.layout.drawer_list_divider;
             } else {
                 layout = R.layout.drawer_list_item;
@@ -1646,7 +1654,7 @@ public class FamiliarActivity extends AppCompatActivity {
             }
 
             assert convertView != null;
-            if (values[position].mIsDivider) {
+            if (mPageEntries[position].mIsDivider) {
                 /* Make sure the recycled view is the right type, inflate a new one if necessary */
                 if (convertView.findViewById(R.id.divider) == null) {
                     convertView = getLayoutInflater().inflate(layout, parent, false);
@@ -1660,11 +1668,13 @@ public class FamiliarActivity extends AppCompatActivity {
                     convertView = getLayoutInflater().inflate(layout, parent, false);
                 }
                 assert convertView != null;
-                ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setText(values[position].mNameResource);
-                ((TextView) convertView.findViewById(R.id.drawer_entry_name)).setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(values[position].mIconAttr), 0, 0, 0);
+                TextView textView = convertView.findViewById(R.id.drawer_entry_name);
+                mPageEntries[position].setTextView(textView);
+                textView.setText(mPageEntries[position].mNameResource);
+                textView.setCompoundDrawablesWithIntrinsicBounds(getResourceIdFromAttr(mPageEntries[position].mIconAttr), 0, 0, 0);
                 /* Color the initial icon */
                 if (mCurrentFrag == position) {
-                    colorDrawerEntry(((TextView) convertView.findViewById(R.id.drawer_entry_name)));
+                    colorDrawerEntry(textView);
                 } else {
                     ((TextView) convertView.findViewById(R.id.drawer_entry_name)).getCompoundDrawables()[0].setColorFilter(null);
                 }
@@ -1682,8 +1692,10 @@ public class FamiliarActivity extends AppCompatActivity {
             if (mHighlightedDrawable != null) {
                 mHighlightedDrawable.setColorFilter(null);
             }
-            mHighlightedDrawable = textView.getCompoundDrawables()[0];
-            mHighlightedDrawable.setColorFilter(ContextCompat.getColor(FamiliarActivity.this, getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
+            if (textView != null) {
+                mHighlightedDrawable = textView.getCompoundDrawables()[0];
+                mHighlightedDrawable.setColorFilter(ContextCompat.getColor(FamiliarActivity.this, getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
+            }
         }
     }
 

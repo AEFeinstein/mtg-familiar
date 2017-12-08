@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.app.Dialog;
@@ -11,6 +30,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -293,6 +313,14 @@ public class SearchViewFragment extends FamiliarFragment {
             }
         });
 
+        /* Disable system level autocomplete for fields which do it already */
+        mNameField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mArtistField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mSupertypeField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mSubtypeField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mSetField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mManaCostTextView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
         /* Get a bunch of database info in a background task */
         new AsyncTask<Void, Void, Void>() {
 
@@ -338,11 +366,13 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
 
                     if (mSupertypes == null) {
-                        mSupertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, true, database);
+                        String[] supertypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUPERTYPE, true, database);
+                        mSupertypes = tokenStringsFromTypes(supertypes);
                     }
 
                     if (mSubtypes == null) {
-                        mSubtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, true, database);
+                        String[] subtypes = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_SUBTYPE, true, database);
+                        mSubtypes = tokenStringsFromTypes(subtypes);
                     }
 
                     if (mArtists == null) {
@@ -354,6 +384,15 @@ public class SearchViewFragment extends FamiliarFragment {
                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 return null;
+            }
+
+            private String[] tokenStringsFromTypes(String[] types) {
+                String tokenStrings[] = new String[types.length * 2];
+                System.arraycopy(types, 0, tokenStrings, 0, types.length);
+                for (int i = 0; i < types.length; i++) {
+                    tokenStrings[types.length + i] = CardDbAdapter.EXCLUDE_TOKEN + types[i];
+                }
+                return tokenStrings;
             }
 
             @Override
@@ -397,14 +436,6 @@ public class SearchViewFragment extends FamiliarFragment {
             }
         });
 
-        myFragmentView.findViewById(R.id.camera_button).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SearchViewFragment.this.getFamiliarActivity().startTutorCardsSearch();
-                    }
-                }
-        );
         myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
         return myFragmentView;
     }
@@ -514,21 +545,15 @@ public class SearchViewFragment extends FamiliarFragment {
                 subtype += " " + type;
             }
         }
-        String sets = null;
-        for (String set : mSetField.getObjects()) {
-            if (sets == null) {
-                sets = set;
-            } else {
-                sets += "-" + set;
-            }
-        }
-        searchCriteria.type = supertype.trim() + " - " + subtype.trim();
+
+        searchCriteria.superTypes = mSupertypeField.getObjects();
+        searchCriteria.subTypes = mSubtypeField.getObjects();
         searchCriteria.flavor = mFlavorField.getText().toString().trim();
         searchCriteria.artist = mArtistField.getText().toString().trim();
         searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString().trim();
-        searchCriteria.set = sets;
-        searchCriteria.mc = mManaCostTextView.getStringFromObjects();
-        searchCriteria.mcLogic = (Comparison) mManaComparisonSpinner.getSelectedItem();
+        searchCriteria.sets = mSetField.getObjects();
+        searchCriteria.manaCost = mManaCostTextView.getObjects();
+        searchCriteria.manaCostLogic = (Comparison) mManaComparisonSpinner.getSelectedItem();
 
         if (searchCriteria.name.length() == 0) {
             searchCriteria.name = null;
@@ -536,8 +561,11 @@ public class SearchViewFragment extends FamiliarFragment {
         if (searchCriteria.text.length() == 0) {
             searchCriteria.text = null;
         }
-        if (searchCriteria.type.length() == 0) {
-            searchCriteria.type = null;
+        if (searchCriteria.superTypes.size() == 0) {
+            searchCriteria.superTypes = null;
+        }
+        if (searchCriteria.subTypes.size() == 0) {
+            searchCriteria.subTypes = null;
         }
         if (searchCriteria.flavor.length() == 0) {
             searchCriteria.flavor = null;
@@ -547,6 +575,12 @@ public class SearchViewFragment extends FamiliarFragment {
         }
         if (searchCriteria.collectorsNumber.length() == 0) {
             searchCriteria.collectorsNumber = null;
+        }
+        if (searchCriteria.manaCost.size() == 0) {
+            searchCriteria.manaCost = null;
+        }
+        if (searchCriteria.sets.size() == 0) {
+            searchCriteria.sets = null;
         }
 
         /* Build a color string. capital letters means the user is search for that color */
@@ -661,6 +695,12 @@ public class SearchViewFragment extends FamiliarFragment {
                 case "X":
                     pow = CardDbAdapter.X;
                     break;
+                case "?":
+                    pow = CardDbAdapter.QUESTION_MARK;
+                    break;
+                case "∞":
+                    pow = CardDbAdapter.INFINITY;
+                    break;
             }
         }
         searchCriteria.powChoice = pow;
@@ -689,7 +729,12 @@ public class SearchViewFragment extends FamiliarFragment {
                 case "X":
                     tou = CardDbAdapter.X;
                     break;
-            }
+                case "?":
+                    tou = CardDbAdapter.QUESTION_MARK;
+                    break;
+                case "∞":
+                    tou = CardDbAdapter.INFINITY;
+                    break;            }
         }
         searchCriteria.touChoice = tou;
         searchCriteria.touLogic = logicChoices[mTouLogic.getSelectedItemPosition()];
@@ -776,7 +821,7 @@ public class SearchViewFragment extends FamiliarFragment {
             os.writeObject(searchCriteria);
             os.close();
         } catch (IOException e) {
-            ToastWrapper.makeText(this.getActivity(), R.string.search_toast_cannot_save, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_save, ToastWrapper.LENGTH_LONG);
         }
     }
 
@@ -791,19 +836,23 @@ public class SearchViewFragment extends FamiliarFragment {
             oInputStream.close();
 
             mNameField.setText(criteria.name);
-            String delimiter = " - ";
-            String[] type = criteria.type.split(delimiter);
-            if (type.length > 0 && type[0] != null) {
-                mSupertypeField.addObject(type[0]);
-            }
-            if (type.length > 1 && type[1] != null) {
-                /* Concatenate all strings after the first delimiter
-                 * in case there's a hyphen in the subtype
-                 */
-                for (int i = 1; i < type.length; i++) {
-                    mSubtypeField.addObject(type[i]);
+
+            if (null != criteria.superTypes && criteria.superTypes.size() > 0) {
+                for (String supertype : criteria.superTypes) {
+                    mSupertypeField.addObject(supertype);
                 }
+            } else {
+                mSupertypeField.clearTextAndTokens();
             }
+
+            if (null != criteria.subTypes && criteria.subTypes.size() > 0) {
+                for (String subtype : criteria.subTypes) {
+                    mSubtypeField.addObject(subtype);
+                }
+            } else {
+                mSubtypeField.clearTextAndTokens();
+            }
+
             mTextField.setText(criteria.text);
             mArtistField.setText(criteria.artist);
             mFlavorField.setText(criteria.flavor);
@@ -850,6 +899,10 @@ public class SearchViewFragment extends FamiliarFragment {
                     mPowChoice.setSelection(ptList.indexOf("*^2"));
                 else if (p == CardDbAdapter.X)
                     mPowChoice.setSelection(ptList.indexOf("X"));
+                else if (p == CardDbAdapter.QUESTION_MARK)
+                    mPowChoice.setSelection(ptList.indexOf("?"));
+                else if (p == CardDbAdapter.INFINITY)
+                    mPowChoice.setSelection(ptList.indexOf("∞"));
                 else {
                     if (p == (int) p) {
                         mPowChoice.setSelection(ptList.indexOf(((int) p) + ""));
@@ -873,6 +926,10 @@ public class SearchViewFragment extends FamiliarFragment {
                     mTouChoice.setSelection(ptList.indexOf("*^2"));
                 else if (t == CardDbAdapter.X)
                     mTouChoice.setSelection(ptList.indexOf("X"));
+                else if (t == CardDbAdapter.QUESTION_MARK)
+                    mTouChoice.setSelection(ptList.indexOf("?"));
+                else if (t == CardDbAdapter.INFINITY)
+                    mTouChoice.setSelection(ptList.indexOf("∞"));
                 else {
                     if (t == (int) t) {
                         mTouChoice.setSelection(ptList.indexOf(((int) t) + ""));
@@ -885,20 +942,22 @@ public class SearchViewFragment extends FamiliarFragment {
             mCmcChoice.setSelection(Arrays.asList(getResources().getStringArray(R.array.cmc_spinner))
                     .indexOf(String.valueOf(criteria.cmc)));
 
-            if (criteria.set != null) {
+            if (criteria.sets != null && criteria.sets.size() > 0) {
                 /* Get a list of the persisted sets */
-                for (String set : criteria.set.split("-")) {
+                for (String set : criteria.sets) {
                     mSetField.addObject(set);
                 }
             } else {
                 mSetField.clearTextAndTokens();
             }
-            if (criteria.mc != null) {
-                mManaCostTextView.setObjectsFromString(criteria.mc);
+            if (criteria.manaCost != null && criteria.manaCost.size() > 0) {
+                for (String mana : criteria.manaCost) {
+                    mManaCostTextView.addObject(mana);
+                }
             } else {
                 mManaCostTextView.clearTextAndTokens();
             }
-            mManaComparisonSpinner.setSelection(criteria.mcLogic.ordinal());
+            mManaComparisonSpinner.setSelection(criteria.manaCostLogic.ordinal());
             if (mFormatNames != null) {
                 mSelectedFormat = Arrays.asList(mFormatNames).indexOf(criteria.format);
             }
@@ -923,7 +982,7 @@ public class SearchViewFragment extends FamiliarFragment {
             checkDialogButtonColors();
 
         } catch (IOException | ClassNotFoundException e) {
-            ToastWrapper.makeText(this.getActivity(), R.string.search_toast_cannot_load, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_load, ToastWrapper.LENGTH_LONG);
         }
     }
 
@@ -1034,19 +1093,4 @@ public class SearchViewFragment extends FamiliarFragment {
         inflater.inflate(R.menu.search_menu, menu);
     }
 
-    /**
-     * Called when there is a result from Tutor.cards visual search
-     * It starts the ResultListFragment with the multiverseId to show
-     * the card
-     *
-     * @param multiverseId The multiverse ID of the card the query returned
-     */
-    @Override
-    public void receiveTutorCardsResult(long multiverseId) {
-
-        Bundle args = new Bundle();
-        args.putSerializable(ResultListFragment.CARD_ID, multiverseId);
-        ResultListFragment rlFrag = new ResultListFragment();
-        startNewFragment(rlFrag, args);
-    }
 }

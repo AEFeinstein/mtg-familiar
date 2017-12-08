@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.content.ClipData;
@@ -267,12 +286,14 @@ public class RulesFragment extends FamiliarFragment {
                                 // Gets a handle to the clipboard service.
                                 ClipboardManager clipboard = (ClipboardManager)
                                         getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                                // Creates a new text clip to put on the clipboard
-                                ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
-                                // Set the clipboard's primary clip.
-                                clipboard.setPrimaryClip(clip);
-                                // Alert the user
-                                ToastWrapper.makeText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT).show();
+                                if (null != clipboard) {
+                                    // Creates a new text clip to put on the clipboard
+                                    ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
+                                    // Set the clipboard's primary clip.
+                                    clipboard.setPrimaryClip(clip);
+                                    // Alert the user
+                                    ToastWrapper.makeAndShowText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT);
+                                }
                             }
                             return true;
                         }
@@ -281,7 +302,7 @@ public class RulesFragment extends FamiliarFragment {
                     /* Cursor had a size of 0, boring */
                     cursor.close();
                     if (!isBanned) {
-                        ToastWrapper.makeText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT).show();
+                        ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
                         getFragmentManager().popBackStack();
                     }
                 }
@@ -292,7 +313,7 @@ public class RulesFragment extends FamiliarFragment {
             }
         } else {
             if (!isBanned) { /* Cursor is null. weird. */
-                ToastWrapper.makeText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
                 getFragmentManager().popBackStack();
             }
         }
@@ -741,7 +762,7 @@ public class RulesFragment extends FamiliarFragment {
             View v = convertView;
             if (v == null) {
                 LayoutInflater inf = getActivity().getLayoutInflater();
-                v = inf.inflate(mLayoutResourceId, null);
+                v = inf.inflate(mLayoutResourceId, parent, false);
             }
             assert v != null;
             DisplayItem data = mItems.get(position);

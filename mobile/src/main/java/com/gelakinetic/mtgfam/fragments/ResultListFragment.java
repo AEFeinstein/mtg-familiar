@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
@@ -188,8 +207,8 @@ public class ResultListFragment extends FamiliarFragment {
             }
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
-                ToastWrapper.makeText(this.getActivity(), getString(R.string.search_toast_no_results), ToastWrapper.LENGTH_SHORT
-                ).show();
+                ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, ToastWrapper.LENGTH_SHORT
+                );
                 if (!getActivity().isTaskRoot()) {
                     getActivity().finish();
                 } else {
@@ -205,8 +224,8 @@ public class ResultListFragment extends FamiliarFragment {
                 }
             } else {
                 if (savedInstanceState == null) {
-                    ToastWrapper.makeText(this.getActivity(), String.format(getResources().getQuantityString(R.plurals.search_toast_results, mCursor.getCount()),
-                            mCursor.getCount()), ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), String.format(getResources().getQuantityString(R.plurals.search_toast_results, mCursor.getCount()),
+                            mCursor.getCount()), ToastWrapper.LENGTH_LONG);
                 }
             }
         }
@@ -224,8 +243,11 @@ public class ResultListFragment extends FamiliarFragment {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String cardName = ((TextView)view.findViewById(R.id.card_name)).getText().toString();
-                String cardSet = ((TextView)view.findViewById(R.id.cardset)).getText().toString();
+                String cardName = ((TextView) view.findViewById(R.id.card_name)).getText().toString();
+                String cardSet = null;
+                if(view.findViewById(R.id.cardset).getVisibility() == View.VISIBLE) {
+                    cardSet = ((TextView) view.findViewById(R.id.cardset)).getText().toString();
+                }
                 showDialog(ResultListDialogFragment.QUICK_ADD, cardName, cardSet);
                 return true;
             }

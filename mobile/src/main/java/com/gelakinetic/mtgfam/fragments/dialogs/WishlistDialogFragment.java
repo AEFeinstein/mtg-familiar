@@ -1,8 +1,28 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -31,21 +51,38 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed DiceFragment
      */
+    @Nullable
     private WishlistFragment getParentWishlistFragment() {
-        return (WishlistFragment) getFamiliarFragment();
+        try {
+            return (WishlistFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
         setShowsDialog(true);
         mDialogId = getArguments().getInt(ID_KEY);
         String cardName = getArguments().getString(NAME_KEY);
+
+        if (null == getParentWishlistFragment()) {
+            return DontShowDialog();
+        }
+
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
                 Dialog dialog = CardHelpers.getDialog(cardName, getParentWishlistFragment(), true, false);
                 if (dialog == null) {
-                    getParentWishlistFragment().handleFamiliarDbException(false);
+                    if (null != getParentWishlistFragment()) {
+                        getParentWishlistFragment().handleFamiliarDbException(false);
+                    }
                     return DontShowDialog();
                 }
                 return dialog;
@@ -55,15 +92,15 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .title(R.string.pref_trade_price_title)
                         .items(getString(R.string.trader_Low),
                                 getString(R.string.trader_Average), getString(R.string.trader_High))
-                        .itemsCallbackSingleChoice(getParentWishlistFragment().mPriceSetting, new MaterialDialog.ListCallbackSingleChoice() {
+                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentWishlistFragment().mPriceSetting != which) {
-                                    getParentWishlistFragment().mPriceSetting = which;
+                                if (getParentWishlistFragment().getPriceSetting() != which) {
+                                    getParentWishlistFragment().setPriceSetting(which);
                                     PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentWishlistFragment().mPriceSetting));
-                                    getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
-                                    getParentWishlistFragment().sumTotalPrice();
+                                            String.valueOf(getParentWishlistFragment().getPriceSetting()));
+                                    getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                                    getParentWishlistFragment().updateTotalPrices(0);
                                 }
                                 dialog.dismiss();
                                 return true;
@@ -81,12 +118,12 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 WishlistHelpers.ResetCards(getActivity());
                                 getParentWishlistFragment().mCompressedWishlist.clear();
-                                getParentWishlistFragment().mListAdapter.notifyDataSetChanged();
-                                getParentWishlistFragment().sumTotalPrice();
+                                getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
+                                getParentWishlistFragment().updateTotalPrices(0);
                                 /* Clear input too */
-                                getParentWishlistFragment().mNameField.setText("");
-                                getParentWishlistFragment().mNumberOfField.setText("1");
-                                getParentWishlistFragment().mCheckboxFoil.setChecked(false);
+                                getParentWishlistFragment().clearCardNameInput();
+                                getParentWishlistFragment().clearCardNumberInput();
+                                getParentWishlistFragment().uncheckFoilCheckbox();
                                 dialog.dismiss();
                             }
                         })

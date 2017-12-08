@@ -1,14 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-     Copyright 2011 Adam Feinstein and April King. This file is part of MTG 
-	Familiar. MTG Familiar is free software: you can redistribute it and/or modify 
-	it under the terms of the GNU General Public License as published by the 
-	Free Software Foundation, either version 3 of the License, or (at your option) 
-	any later version. MTG Familiar is distributed in the hope that it will be 
-	useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-	or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for 
-	more details. You should have received a copy of the GNU General Public License 
-	along with MTG Familiar. If not, see <http://www.gnu.org/licenses/>.
--->
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 Adam Feinstein and April King
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -157,13 +165,13 @@
             android:title="@string/pref_cat_card_cache">
 
             <com.robobunny.preferences.SeekBarPreference
-                android:defaultValue="12"
+                android:defaultValue="50"
                 android:key="@string/key_imageCacheSize"
-                android:max="100"
+                android:max="500"
                 android:summary="@string/pref_image_cache_size_summary"
                 android:title="@string/pref_image_cache_size_title"
                 robobunny:interval="1"
-                robobunny:min="1"
+                robobunny:min="50"
                 robobunny:unitsRight="MB" />
 
         </PreferenceCategory>
@@ -267,8 +275,7 @@
     <!-- Trade and wishlist preferences -->
     <PreferenceScreen android:title="@string/pref_screen_trade_wishlist">
 
-        <PreferenceCategory
-            xmlns:robobunny="http://robobunny.com"
+        <PreferenceCategory xmlns:robobunny="http://robobunny.com"
             android:title="@string/pref_cat_list_general">
 
             <com.robobunny.preferences.SeekBarPreference

@@ -1,10 +1,28 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 
@@ -26,7 +44,7 @@ public class DecklistHelpers {
      *
      * @param mCtx      A context to open the file and pop toasts with
      * @param lDecklist The decklist to write to the file
-     * @param fileName
+     * @param fileName  The name of the file to write the decklist to
      */
     public static void WriteDecklist(
             Context mCtx,
@@ -45,7 +63,7 @@ public class DecklistHelpers {
             }
             fos.close();
         } catch (IOException ioe) {
-            ToastWrapper.makeText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
 
     }
@@ -62,6 +80,9 @@ public class DecklistHelpers {
             ArrayList<CompressedDecklistInfo> mCompressedDecklist,
             String fileName) {
 
+        if (null == mCtx) {
+            return;
+        }
         try {
 
             final String newFileName =
@@ -72,11 +93,7 @@ public class DecklistHelpers {
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
                 if (cdi.mName != null) {
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                        cdi.mExpansion = isi.mSet;
-                        cdi.setCode = isi.mSetCode;
-                        cdi.mNumber = isi.mNumber;
-                        cdi.foil = isi.mIsFoil;
-                        cdi.numberOf = isi.mNumberOf;
+                        cdi.applyIndividualInfo(isi);
                         String cardString = cdi.toWishlistString();
                         /* If the card is a sideboard card, add the sideboard marking */
                         if (cdi.mIsSideboard) {
@@ -88,25 +105,9 @@ public class DecklistHelpers {
             }
             fos.close();
         } catch (IOException ioe) {
-            ToastWrapper.makeText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
 
-    }
-
-    /**
-     * Write the decklist passed as a parameter to the autosave file.
-     *
-     * @param mCtx
-     * @param mCompressedDecklist
-     */
-    public static void WriteCompressedDecklist(
-            Context mCtx,
-            ArrayList<CompressedDecklistInfo> mCompressedDecklist) {
-        WriteCompressedDecklist(
-                mCtx,
-                mCompressedDecklist,
-                DecklistFragment.AUTOSAVE_NAME + DecklistFragment.DECK_EXTENSION
-        );
     }
 
     /**
@@ -121,6 +122,8 @@ public class DecklistHelpers {
 
         try {
             String line;
+            // Sanitize the deckname before loading in case it was saved improperly on an earlier version of Familiar
+            deckName = deckName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
             BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)));
             try {
                 boolean isSideboard;
@@ -140,7 +143,7 @@ public class DecklistHelpers {
                 br.close();
             }
         } catch (NumberFormatException nfe) {
-            ToastWrapper.makeText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         } catch (IOException ioe) {
             /* Catches file not found exception when decklist doesn't exist */
         }
@@ -155,21 +158,25 @@ public class DecklistHelpers {
         StringBuilder readableDecklist = new StringBuilder();
 
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-            for (IndividualSetInfo isi : cdi.mInfo) {
-                if (cdi.mIsSideboard) {
-                    readableDecklist.append("SB: ");
-                }
-                readableDecklist
-                        .append(isi.mNumberOf)
-                        .append(' ')
-                        .append(cdi.mName);
-                if (isi.mIsFoil) {
+            if (null != cdi.header) {
+                readableDecklist.append(cdi.header).append("\r\n");
+            } else {
+                for (IndividualSetInfo isi : cdi.mInfo) {
+                    if (cdi.mIsSideboard) {
+                        readableDecklist.append("SB: ");
+                    }
                     readableDecklist
-                            .append(" (")
-                            .append(ctx.getString(R.string.wishlist_foil))
-                            .append(")");
+                            .append(isi.mNumberOf)
+                            .append(' ')
+                            .append(cdi.mName);
+                    if (isi.mIsFoil) {
+                        readableDecklist
+                                .append(" (")
+                                .append(ctx.getString(R.string.wishlist_foil))
+                                .append(")");
+                    }
+                    readableDecklist.append(" ").append(isi.mSetCode).append("\r\n");
                 }
-                readableDecklist.append(" ").append(isi.mSetCode).append("\r\n");
             }
         }
         return readableDecklist.toString();

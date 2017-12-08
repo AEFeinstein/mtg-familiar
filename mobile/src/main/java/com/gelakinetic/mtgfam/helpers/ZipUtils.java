@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers;
 
 import android.Manifest;
@@ -39,7 +58,7 @@ public class ZipUtils {
 
         /* Make sure external storage exists */
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            ToastWrapper.makeText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG);
             return;
         }
 
@@ -69,16 +88,16 @@ public class ZipUtils {
         }
         try {
             zipIt(zipOut, files, activity);
-            ToastWrapper.makeText(activity, activity.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
-                    ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(activity, activity.getString(R.string.main_export_success) + " " + zipOut.getAbsolutePath(),
+                    ToastWrapper.LENGTH_SHORT);
         } catch (ZipException e) {
             if (e.getMessage().equals("No entries")) {
-                ToastWrapper.makeText(activity, activity.getString(R.string.main_export_no_data), ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(activity, R.string.main_export_no_data, ToastWrapper.LENGTH_SHORT);
             } else {
-                ToastWrapper.makeText(activity, activity.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(activity, R.string.main_export_fail, ToastWrapper.LENGTH_SHORT);
             }
         } catch (IOException e) {
-            ToastWrapper.makeText(activity, activity.getString(R.string.main_export_fail), ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(activity, R.string.main_export_fail, ToastWrapper.LENGTH_SHORT);
         }
     }
 
@@ -91,7 +110,7 @@ public class ZipUtils {
 
         /* Make sure external storage exists */
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            ToastWrapper.makeText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(activity, R.string.card_view_no_external_storage, ToastWrapper.LENGTH_LONG);
             return;
         }
 
@@ -111,9 +130,9 @@ public class ZipUtils {
         File zipIn = new File(sdCard, BACKUP_FILE_NAME);
         try {
             unZipIt(new ZipFile(zipIn), activity);
-            ToastWrapper.makeText(activity, activity.getString(R.string.main_import_success), ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(activity, R.string.main_import_success, ToastWrapper.LENGTH_SHORT);
         } catch (IOException e) {
-            ToastWrapper.makeText(activity, activity.getString(R.string.main_import_fail), ToastWrapper.LENGTH_SHORT).show();
+            ToastWrapper.makeAndShowText(activity, R.string.main_import_fail, ToastWrapper.LENGTH_SHORT);
         }
     }
 

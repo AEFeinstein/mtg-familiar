@@ -1,8 +1,29 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,19 +57,31 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed DiceFragment
      */
+    @Nullable
     private GatheringsFragment getParentGatheringsFragment() {
-        return (GatheringsFragment) getFamiliarFragment();
+        try {
+            return (GatheringsFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
 
                 /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
         mDialogId = getArguments().getInt(ID_KEY);
+
+        if (null == getParentGatheringsFragment()) {
+            return DontShowDialog();
+        }
 
         switch (mDialogId) {
             case DIALOG_SAVE_GATHERING: {
@@ -56,12 +89,12 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             name already exists, prompt the user to overwrite it or not. */
 
                 if (getParentGatheringsFragment().AreAnyFieldsEmpty()) {
-                    ToastWrapper.makeText(getActivity(), R.string.gathering_empty_field, ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(getActivity(), R.string.gathering_empty_field, ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
                 LayoutInflater factory = LayoutInflater.from(this.getActivity());
-                final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry,
+                @SuppressLint("InflateParams") final View textEntryView = factory.inflate(R.layout.alert_dialog_text_entry,
                         null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -86,8 +119,8 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                                 assert nameInput.getText() != null;
                                 String gatheringName = nameInput.getText().toString().trim();
                                 if (gatheringName.length() <= 0) {
-                                    ToastWrapper.makeText(getActivity(), R.string.gathering_toast_no_name,
-                                            ToastWrapper.LENGTH_LONG).show();
+                                    ToastWrapper.makeAndShowText(getActivity(), R.string.gathering_toast_no_name,
+                                            ToastWrapper.LENGTH_LONG);
                                     return;
                                 }
 
@@ -138,8 +171,8 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
             case DIALOG_DELETE_GATHERING: {
                         /* Show all gatherings, and delete the selected one */
                 if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.gathering_toast_no_gatherings,
+                            ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -159,7 +192,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                                 GatheringsIO.DeleteGathering(dfGatherings[position], getActivity().getFilesDir(),
                                         getActivity());
-                                getActivity().supportInvalidateOptionsMenu();
+                                getActivity().invalidateOptionsMenu();
                             }
                         })
                         .build();
@@ -187,7 +220,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
                                 getParentGatheringsFragment().mLinearLayout.removeViewAt(position);
-                                getActivity().supportInvalidateOptionsMenu();
+                                getActivity().invalidateOptionsMenu();
                             }
                         })
                         .build();
@@ -195,8 +228,8 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
             case DIALOG_LOAD_GATHERING: {
                         /* Load a gathering, if there is a gathering to load */
                 if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.gathering_toast_no_gatherings,
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.gathering_toast_no_gatherings,
+                            ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -226,7 +259,7 @@ public class GatheringsDialogFragment extends FamiliarDialogFragment {
                                 for (GatheringsPlayerData player : players) {
                                     getParentGatheringsFragment().AddPlayerRow(player);
                                 }
-                                getActivity().supportInvalidateOptionsMenu();
+                                getActivity().invalidateOptionsMenu();
                             }
                         })
                         .build();

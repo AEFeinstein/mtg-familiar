@@ -1,5 +1,31 @@
-<vector android:height="24dp" android:viewportHeight="26.5"
-    android:viewportWidth="26.5" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/glyph_grey" android:pathData="M13.231,13.23m-13.229,0a13.229,13.229 126.141,1 1,26.458 0a13.229,13.229 126.141,1 1,-26.458 0"/>
-    <path android:fillColor="@color/glyph_foreground" android:pathData="m17.006,17.823l0,1.778c0,2.037 0.714,3.051 2.143,3.051l0.614,0l0,1.164L11.114,23.816l0,-1.164l0.688,0c1.402,0 2.106,-1.005 2.106,-2.99l0,-1.799l-8.678,0l0,-1.799l9.154,-13.361l2.609,0l0,13.652l0.217,0c0.892,0 1.545,-0.688 1.958,-2.064l1.085,0l-0.503,3.598zM13.918,16.297l0,-10.98l-7.382,10.954z"/>
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector android:height="24dp"
+    android:viewportHeight="26.5"
+    android:viewportWidth="26.5"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/glyph_grey"
+        android:pathData="M13.231,13.23m-13.229,0a13.229,13.229 126.141,1 1,26.458 0a13.229,13.229 126.141,1 1,-26.458 0" />
+    <path
+        android:fillColor="@color/glyph_foreground"
+        android:pathData="m17.006,17.823l0,1.778c0,2.037 0.714,3.051 2.143,3.051l0.614,0l0,1.164L11.114,23.816l0,-1.164l0.688,0c1.402,0 2.106,-1.005 2.106,-2.99l0,-1.799l-8.678,0l0,-1.799l9.154,-13.361l2.609,0l0,13.652l0.217,0c0.892,0 1.545,-0.688 1.958,-2.064l1.085,0l-0.503,3.598zM13.918,16.297l0,-10.98l-7.382,10.954z" />
 </vector>

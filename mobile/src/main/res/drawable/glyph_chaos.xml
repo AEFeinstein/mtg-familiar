@@ -1,9 +1,28 @@
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="28.62dp"
-        android:height="24dp"
-        android:viewportWidth="31.6796"
-        android:viewportHeight="26.458332">
+    android:width="28.62dp"
+    android:height="24dp"
+    android:viewportWidth="31.6796"
+    android:viewportHeight="26.458332">
     <path
         android:fillColor="?attr/color_text"
-        android:pathData="m20.205,-0c-9.729,0.444 1.127,8.731 -4.36,13.097l-0.079,0.032c-3.844,1.556 -8.123,-4.683 -8.247,1.873 2.011,-3.043 2.937,-0.071 6.271,-0.259 -1.614,2.143 -0.82,5.734 -3.545,6.318 -4.948,1.066 -8.546,-4.932 -8.255,-8.697 0.661,-8.361 7.223,-12.163 13.732,-11.774 -8.625,-1.72 -15.928,5.376 -15.716,12.74 0.238,8.44 4.71,12.573 11.589,13.129 9.71,-0.444 -1.138,-8.731 4.366,-13.097l0.079,-0.032c3.836,-1.556 8.123,4.683 8.229,-1.873 -2.037,3.043 -2.963,0.071 -6.297,0.259 1.614,-2.143 0.82,-5.734 3.519,-6.316 4.921,-1.058 8.546,4.948 8.229,8.705 -0.661,8.361 -7.223,12.171 -13.732,11.774 8.599,1.72 15.901,-5.371 15.69,-12.726 -0.238,-8.44 -4.736,-12.568 -11.615,-13.123z"/>
+        android:pathData="m20.205,-0c-9.729,0.444 1.127,8.731 -4.36,13.097l-0.079,0.032c-3.844,1.556 -8.123,-4.683 -8.247,1.873 2.011,-3.043 2.937,-0.071 6.271,-0.259 -1.614,2.143 -0.82,5.734 -3.545,6.318 -4.948,1.066 -8.546,-4.932 -8.255,-8.697 0.661,-8.361 7.223,-12.163 13.732,-11.774 -8.625,-1.72 -15.928,5.376 -15.716,12.74 0.238,8.44 4.71,12.573 11.589,13.129 9.71,-0.444 -1.138,-8.731 4.366,-13.097l0.079,-0.032c3.836,-1.556 8.123,4.683 8.229,-1.873 -2.037,3.043 -2.963,0.071 -6.297,0.259 1.614,-2.143 0.82,-5.734 3.519,-6.316 4.921,-1.058 8.546,4.948 8.229,8.705 -0.661,8.361 -7.223,12.171 -13.732,11.774 8.599,1.72 15.901,-5.371 15.69,-12.726 -0.238,-8.44 -4.736,-12.568 -11.615,-13.123z" />
 </vector>

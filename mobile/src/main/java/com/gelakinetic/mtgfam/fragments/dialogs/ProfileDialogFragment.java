@@ -1,9 +1,30 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,18 +50,33 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed ProfileFragment
      */
+    @Nullable
     private ProfileFragment getParentProfileFragment() {
-        return (ProfileFragment) getFamiliarFragment();
+        try {
+            return (ProfileFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-                /* We're setting this to false if we return null, so we should reset it every time to be safe */
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
+        /* We're setting this to false if we return null, so we should reset it every time to be safe */
         setShowsDialog(true);
+
+        if (null == getParentProfileFragment()) {
+            return DontShowDialog();
+        }
+
         switch (DIALOG_DCI_NUMBER) {
             case DIALOG_DCI_NUMBER: {
-                View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                @SuppressLint("InflateParams") View view = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
 
                 final EditText dciEditText = view.findViewById(R.id.text_entry);
@@ -66,32 +102,35 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                                 String strNumber = dciEditText.getText().toString();
 
                                 if (strNumber.isEmpty()) {
-                                    ToastWrapper.makeText(getActivity(),
-                                            getString(R.string.profile_invalid_dci),
-                                            ToastWrapper.LENGTH_SHORT).show();
+                                    ToastWrapper.makeAndShowText(getActivity(),
+                                            R.string.profile_invalid_dci,
+                                            ToastWrapper.LENGTH_SHORT);
 
                                     return;
                                 }
 
                                 PreferenceAdapter.setDCINumber(getContext(), strNumber);
-                                getParentProfileFragment().mDCINumber = strNumber;
-                                getParentProfileFragment().checkDCINumber();
-                                dismiss();
+                                if (null != getParentProfileFragment()) {
+                                    getParentProfileFragment().mDCINumber = strNumber;
+                                    getParentProfileFragment().checkDCINumber();
+                                }
                             }
                         })
                         .negativeText(R.string.dialog_cancel)
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentProfileFragment().checkDCINumber();
-                                dismiss();
+                                if (null != getParentProfileFragment()) {
+                                    getParentProfileFragment().checkDCINumber();
+                                }
                             }
                         })
                         .customView(view, false)
                         .build();
             }
             default: {
-                return DontShowDialog();
+                savedInstanceState.putInt("id", mDialogId);
+                return super.onCreateDialog(savedInstanceState);
             }
         }
     }

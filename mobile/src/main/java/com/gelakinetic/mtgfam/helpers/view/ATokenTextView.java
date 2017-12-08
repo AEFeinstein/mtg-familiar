@@ -1,43 +1,33 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers.view;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 
 import com.tokenautocomplete.TokenCompleteTextView;
 
 public abstract class ATokenTextView extends TokenCompleteTextView<String> {
-    private class TokenListener implements TokenCompleteTextView.TokenListener<String> {
-        private TokenCompleteTextView.TokenListener<String> tokenListener;
 
-        @Override
-        public void onTokenAdded(String token) {
-            if (this.tokenListener != null) {
-                tokenListener.onTokenAdded(token);
-            }
-        }
-
-        @Override
-        public void onTokenRemoved(String token) {
-            if (ATokenTextView.this.getObjects().isEmpty()) {
-                String value = ATokenTextView.this.getText().toString();
-                if (hasNonSplitChar(value)) {
-                    ATokenTextView.this.clearText();
-                }
-            }
-            if (this.tokenListener != null) {
-                tokenListener.onTokenRemoved(token);
-            }
-        }
-
-        private void setTokenListener(TokenCompleteTextView.TokenListener<String> tokenListener) {
-            this.tokenListener = tokenListener;
-        }
-    }
-
-    private final ATokenTextView.TokenListener tokenListenerWrapper = new ATokenTextView.TokenListener();
     private boolean handleDismiss = false;
 
     public ATokenTextView(Context context, AttributeSet attrs) {
@@ -45,7 +35,6 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
         this.performBestGuess(false);
         this.allowCollapse(true);
         this.setTokenClickStyle(TokenClickStyle.Delete);
-        super.setTokenListener(tokenListenerWrapper);
     }
 
     @Override
@@ -54,7 +43,9 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
     }
 
     @Override
-    public boolean enoughToFilter() { return true; }
+    public boolean enoughToFilter() {
+        return true;
+    }
 
     @Override
     public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
@@ -94,36 +85,5 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
         if (handleDismiss) {
             super.dismissDropDown();
         }
-    }
-
-    @Override
-    public void setTokenListener(TokenCompleteTextView.TokenListener<String> l) {
-        tokenListenerWrapper.setTokenListener(l);
-    }
-
-    public void clearTextAndTokens() {
-        if (this.getObjects().isEmpty()) {
-            this.clearText();
-        } else {
-            for (String token : this.getObjects()) {
-                this.removeObject(token);
-            }
-        }
-    }
-
-    private boolean hasNonSplitChar(String s) {
-        for(char c : s.toCharArray()){
-            // These two chars are used for splitting tokens in TokenCompleteTextView
-            // Unfortunately the array splitChar[] is private there.
-            if(c != ',' && c != ';') {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void clearText() {
-        final Parcelable state = this.onSaveInstanceState();
-        this.onRestoreInstanceState(state);
     }
 }

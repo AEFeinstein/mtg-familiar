@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlarmManager;
@@ -33,11 +52,11 @@ import java.util.Calendar;
  * This fragment starts and stops the round timer. When it is started, it commits the end time as a shared preference,
  * sets a series of PendingIntents with the AlarmManager, creates a notification, and tells the FamiliarActivity to
  * display the time in the ActionBar.
- * <p/>
+ *
  * Future activities and fragments will determine if the timer is running by checking the shared preference. If it is -1
  * the timer is no longer running. It will automatically be set to -1 when the final PendingIntent fires, or if it has
  * expired and then checked.
- * <p/>
+ *
  * This means that the round timer persists through literally anything, even getting automatically restarted in place
  * after a force close (if the app is opened again). The FamiliarActivity will take care of recreating the notification
  * and PendingIntents.
@@ -69,6 +88,10 @@ public class RoundTimerFragment extends FamiliarFragment {
      */
     public static void setOrCancelAlarms(Context context, long endTime, boolean set) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        if (null == am) {
+            return;
+        }
 
         PendingIntent AlarmPendingIntent = PendingIntent.getBroadcast(context, TIMER_RING_ALARM, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_RING_ALARM),
