@@ -1,18 +1,18 @@
-/**
+/*
  * Copyright 2014 Devin Collins
- * <p/>
+ *
  * This file is part of MTG Familiar.
- * <p/>
+ *
  * MTG Familiar is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * MTG Familiar is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.ProfileDialogFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 /**
  * This fragment contains a players profile information such as their DCI number and anything else
@@ -73,7 +74,7 @@ public class ProfileFragment extends FamiliarFragment {
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "free3of9.ttf");
         mBarcodeTextView.setTypeface(tf);
 
-        mDCINumber = getFamiliarActivity().mPreferenceAdapter.getDCINumber();
+        mDCINumber = PreferenceAdapter.getDCINumber(getContext());
 
         checkDCINumber();
 
@@ -103,7 +104,7 @@ public class ProfileFragment extends FamiliarFragment {
                 showDialog();
                 return true;
             case R.id.profile_menu_remove_dci:
-                getFamiliarActivity().mPreferenceAdapter.setDCINumber("");
+                PreferenceAdapter.setDCINumber(getContext(), "");
                 mDCINumber = "";
                 checkDCINumber();
                 return true;
@@ -159,7 +160,7 @@ public class ProfileFragment extends FamiliarFragment {
         } else {
             showDCINumber();
         }
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     private void hideDCINumber() {

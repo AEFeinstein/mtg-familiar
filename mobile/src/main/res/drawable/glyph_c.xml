@@ -1,7 +1,32 @@
-<vector android:height="24dp" android:viewportHeight="26.5"
-    android:viewportWidth="26.5" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/glyph_grey" android:pathData="M13.24,13.233m-9.354,-9.354a13.229,13.229 85.068,1 1,18.709 18.709a13.229,13.229 85.068,1 1,-18.709 -18.709"/>
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector android:height="24dp"
+    android:viewportHeight="26.5"
+    android:viewportWidth="26.5"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/glyph_grey"
+        android:pathData="M13.24,13.233m-9.354,-9.354a13.229,13.229 85.068,1 1,18.709 18.709a13.229,13.229 85.068,1 1,-18.709 -18.709" />
     <path
         android:pathData="M13.23,5.308C11.606,8.441 8.432,11.614 5.313,13.228C8.443,14.853 11.617,18.028 13.23,21.144C14.855,18.014 18.03,14.84 21.147,13.228C18.017,11.604 14.842,8.428 13.23,5.308z"
-        android:strokeColor="@color/glyph_foreground" android:strokeWidth="2.01080799"/>
+        android:strokeColor="@color/glyph_foreground"
+        android:strokeWidth="2.01080799" />
 </vector>

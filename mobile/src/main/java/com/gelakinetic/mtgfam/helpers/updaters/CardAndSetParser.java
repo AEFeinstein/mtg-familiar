@@ -1,23 +1,25 @@
-/**
- * Copyright 2011 Adam Feinstein
- * <p/>
+/*
+ * Copyright 2017 Adam Feinstein
+ *
  * This file is part of MTG Familiar.
- * <p/>
+ *
  * MTG Familiar is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * MTG Familiar is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.helpers.updaters;
+
+import android.content.Context;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
@@ -61,16 +63,15 @@ class CardAndSetParser {
     /**
      * If a set has a patch, and doesn't exist in the database, this is called to parse an InputStream of JSON and add
      * it into the database.
-     * <p/>
+     *
      * The JSON uses single character keys, which is a silly thing I did in the name of compression. The patches are
      * zipped anyway, so it doesn't matter much, but we're stuck with it.
-     * <p/>
+     *
      * There is some special processing for weird power and toughness too
      *
      * @param reader     A JsonRead to parse from
      * @param cardsToAdd An array list to place cards before adding to the database
      * @param setsToAdd  An array list to place sets before adding to the database
-     * @throws IOException If something goes wrong with the InputStream, this will be thrown
      */
     public void readCardJsonStream(JsonReader reader, ArrayList<Card> cardsToAdd, ArrayList<Expansion> setsToAdd) {
 
@@ -91,13 +92,14 @@ class CardAndSetParser {
      * This method checks the hardcoded URL and downloads a list of patches to be checked
      *
      * @param logWriter A writer to print debug statements when things go wrong
+     * @param context   The context to manage preferences with
      * @return An ArrayList of String[] which contains the {Name, URL, Set Code} for each available patch
      */
-    public Manifest readUpdateJsonStream(PrintWriter logWriter) {
+    public Manifest readUpdateJsonStream(Context context, PrintWriter logWriter) {
         Manifest manifest;
 
         try {
-            InputStream stream = FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter);
+            InputStream stream = FamiliarActivity.getHttpInputStream(PATCHES_URL, logWriter, context);
             if (stream == null) {
                 throw new IOException("No Stream");
             }
@@ -120,26 +122,26 @@ class CardAndSetParser {
      * Parses the legality file and populates the database with the different formats, their respective sets, and their
      * banned and restricted lists
      *
-     * @param prefAdapter The preference adapter is used to get the last update time
-     * @param logWriter   A writer to print debug statements when things go wrong
+     * @param context   The context to manage preferences with
+     * @param logWriter A writer to print debug statements when things go wrong
      * @return An object with all of the legal info, to be added to the database in one fell swoop
      */
-    public LegalityData readLegalityJsonStream(PreferenceAdapter prefAdapter, PrintWriter logWriter) {
+    public LegalityData readLegalityJsonStream(Context context, PrintWriter logWriter) {
 
         LegalityData legalityData;
 
         try {
-            InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter);
+            InputStream stream = FamiliarActivity.getHttpInputStream(LEGALITY_URL, logWriter, context);
             if (stream == null) {
                 throw new IOException("No Stream");
             }
-            JsonReader reader = new JsonReader(new InputStreamReader(stream, "ISO-8859-1"));
+            JsonReader reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
             Gson gson = CardAndSetParser.getGson();
 
             legalityData = gson.fromJson(reader, LegalityData.class);
 
             mCurrentLegalityTimestamp = legalityData.mTimestamp;
-            long spDate = prefAdapter.getLegalityTimestamp();
+            long spDate = PreferenceAdapter.getLegalityTimestamp(context);
             if (spDate >= mCurrentLegalityTimestamp) {
                 legalityData = null; /* dates match, nothing new here. */
             }
@@ -155,10 +157,10 @@ class CardAndSetParser {
     /**
      * When the service is done, this method is called to commit the update dates to the shared preferences
      *
-     * @param prefAdapter The preferences to write to
+     * @param context the Context to manage preferences with
      */
-    public void commitDates(PreferenceAdapter prefAdapter) {
-        prefAdapter.setLegalityTimestamp(mCurrentLegalityTimestamp);
+    public void commitDates(Context context) {
+        PreferenceAdapter.setLegalityTimestamp(context, mCurrentLegalityTimestamp);
         mCurrentLegalityTimestamp = 0;
     }
 }

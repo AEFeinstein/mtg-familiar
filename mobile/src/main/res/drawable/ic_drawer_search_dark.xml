@@ -1,7 +1,32 @@
-<vector android:height="24dp" android:viewportHeight="17.462"
-    android:viewportWidth="17.462" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/drawer_item_icon_dark"  android:pathData="M3.756,0c-0.68,0 -1.246,0.566 -1.246,1.246v14.97c0,0.682 0.565,1.247 1.246,1.247h9.95c0.682,0 1.247,-0.565 1.247,-1.246v-14.97c0,-0.68 -0.564,-1.247 -1.245,-1.247zM3.756,1.096h9.95c0.094,0 0.15,0.058 0.15,0.15v14.97c0,0.094 -0.056,0.15 -0.15,0.15h-9.95c-0.093,0 -0.15,-0.056 -0.15,-0.15v-14.97c0,-0.092 0.057,-0.15 0.15,-0.15z"/>
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector android:height="24dp"
+    android:viewportHeight="17.462"
+    android:viewportWidth="17.462"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/drawer_item_icon_dark"
+        android:pathData="M3.756,0c-0.68,0 -1.246,0.566 -1.246,1.246v14.97c0,0.682 0.565,1.247 1.246,1.247h9.95c0.682,0 1.247,-0.565 1.247,-1.246v-14.97c0,-0.68 -0.564,-1.247 -1.245,-1.247zM3.756,1.096h9.95c0.094,0 0.15,0.058 0.15,0.15v14.97c0,0.094 -0.056,0.15 -0.15,0.15h-9.95c-0.093,0 -0.15,-0.056 -0.15,-0.15v-14.97c0,-0.092 0.057,-0.15 0.15,-0.15z" />
     <path
         android:pathData="M4.719,8.732a4.012,5.757 0,1 0,8.024 0a4.012,5.757 0,1 0,-8.024 0z"
-        android:strokeColor="@color/drawer_item_icon_dark" android:strokeWidth=".657"/>
+        android:strokeColor="@color/drawer_item_icon_dark"
+        android:strokeWidth=".657" />
 </vector>

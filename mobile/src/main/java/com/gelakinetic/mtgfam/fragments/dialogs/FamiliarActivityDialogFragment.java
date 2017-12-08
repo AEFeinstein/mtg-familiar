@@ -1,5 +1,25 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -21,6 +41,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +67,10 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
 
                 /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
@@ -71,14 +95,12 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the custom view, with some images below the text */
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
+                @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
                 assert dialogLayout != null;
                 TextView text = dialogLayout.findViewById(R.id.aboutfield);
                 text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_about_text)));
                 text.setMovementMethod(LinkMovementMethod.getInstance());
                 builder.customView(dialogLayout, false);
-
-                dialogLayout.findViewById(R.id.imageview3).setVisibility(View.GONE);
 
                 return builder.build();
             }
@@ -94,7 +116,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the custom view, with some images below the text */
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
+                @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
                 assert dialogLayout != null;
                 TextView text = dialogLayout.findViewById(R.id.aboutfield);
                 text.setText(ImageGetterHelper.formatHtmlString(getString(R.string.main_whats_new_text)));
@@ -102,7 +124,6 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 dialogLayout.findViewById(R.id.imageview1).setVisibility(View.GONE);
                 dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-                dialogLayout.findViewById(R.id.imageview3).setVisibility(View.GONE);
                 builder.customView(dialogLayout, false);
 
                 return builder.build();
@@ -124,7 +145,7 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
 
                 /* Set the custom view */
                 LayoutInflater inflater = this.getActivity().getLayoutInflater();
-                View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
+                @SuppressLint("InflateParams") View dialogLayout = inflater.inflate(R.layout.activity_dialog_about, null, false);
 
                 /* Set the text */
                 assert dialogLayout != null;
@@ -145,7 +166,6 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                     }
                 });
                 dialogLayout.findViewById(R.id.imageview2).setVisibility(View.GONE);
-                dialogLayout.findViewById(R.id.imageview3).setVisibility(View.GONE);
 
                 builder.customView(dialogLayout, false);
                 return builder.build();
@@ -177,7 +197,8 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
                 return builder.build();
             }
             default: {
-                return DontShowDialog();
+                savedInstanceState.putInt("id", mDialogId);
+                return super.onCreateDialog(savedInstanceState);
             }
         }
     }
@@ -194,18 +215,27 @@ public class FamiliarActivityDialogFragment extends FamiliarDialogFragment {
         try {
             final FamiliarActivity activity = getFamiliarActivity();
             if (mDialogId == DIALOG_CHANGE_LOG) {
-                if (activity.mPreferenceAdapter.getBounceDrawer()) {
+                if (PreferenceAdapter.getBounceDrawer(getContext())) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            activity.mDrawerLayout.openDrawer(activity.mDrawerList);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
-                                    activity.mPreferenceAdapter.setBounceDrawer();
-                                }
-                            }, 2000);
+                            if (null != activity &&
+                                    null != activity.mDrawerLayout &&
+                                    null != activity.mDrawerList) {
+                                activity.mDrawerLayout.openDrawer(activity.mDrawerList);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != activity) {
+                                            PreferenceAdapter.setBounceDrawer(activity);
+                                            if (null != activity.mDrawerLayout &&
+                                                    null != activity.mDrawerList) {
+                                                activity.mDrawerLayout.closeDrawer(activity.mDrawerList);
+                                            }
+                                        }
+                                    }
+                                }, 2000);
+                            }
                         }
                     }, 500);
                 }

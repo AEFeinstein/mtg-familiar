@@ -1,15 +1,34 @@
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="12dp"
-        android:height="24dp"
-        android:viewportWidth="13.2"
-        android:viewportHeight="26.5">
+    android:width="12dp"
+    android:height="24dp"
+    android:viewportWidth="13.2"
+    android:viewportHeight="26.5">
     <path
         android:pathData="m-0.001,0.007l0,26.46c7.303,0 13.23,-5.927 13.23,-13.23 0,-7.303 -5.927,-13.23 -13.23,-13.23z"
-        android:fillColor="@color/glyph_red"/>
+        android:fillColor="@color/glyph_red" />
     <path
         android:pathData="m9.18,18.037c-0.386,0.18 -1.191,0.439 -2.429,0.775 0.336,-0.519 0.966,-1.252 1.887,-2.196 0.921,-0.953 1.551,-1.728 1.887,-2.339 0.516,-0.9 0.775,-1.905 0.775,-3.011 0,-2.098 -0.9,-4.321 -2.752,-6.668 0.291,0.73 0.503,1.275 0.635,1.641 0.37,0.931 0.556,1.707 0.556,2.321 0,0.476 -0.106,0.82 -0.37,1.024 -1.349,-4.922 -4.472,-7.488 -9.314,-7.753l0,1.191c0.794,0.265 1.191,0.582 1.191,0.979 0,0.159 -0.397,0.344 -1.191,0.556l0,1.005l0.026,0c0.529,0 1.085,-0.185 1.72,-0.503 0.635,-0.344 1.111,-0.503 1.429,-0.503 0.688,0 1.217,0.344 1.667,1.032 0.397,0.582 0.582,1.217 0.582,1.958 0,0.556 -0.132,0.847 -0.397,0.847 -0.185,0 -0.476,-0.291 -0.873,-0.847l-0.609,-0.953c-0.026,0.159 -0.053,0.318 -0.053,0.45 0,0.926 0.423,1.799 1.297,2.62 0.873,0.794 1.773,1.244 2.725,1.27 -0.053,0.609 -0.212,1.217 -0.476,1.879 -0.318,0.847 -0.662,1.349 -1.085,1.508 -0.265,-0.265 -0.423,-0.662 -0.423,-1.138 0,-0.238 0.079,-0.582 0.238,-1.058 0.159,-0.476 0.212,-0.82 0.212,-1.005 -0.212,0.079 -0.476,0.318 -0.741,0.714 -0.265,0.397 -0.45,0.714 -0.476,0.979 -0.159,0.926 -0.185,1.746 -0.132,2.408 0.079,0.582 -0.185,1.217 -0.741,1.958 -0.556,0.714 -1.138,1.058 -1.72,1.058 -0.37,0 -0.714,-0.079 -1.032,-0.238 -0.397,-0.212 -0.609,-0.476 -0.609,-0.82 0,-0.529 0.503,-1.085 1.455,-1.641 1.349,-0.82 2.143,-2.408 2.355,-4.763 0.079,0 -0.503,0.344 -1.746,1.032 -0.953,0.529 -1.773,0.847 -2.487,0.953L0.16,24.35c2.805,-0.185 4.895,-0.688 6.324,-1.516 -0.344,0 -1.164,-0.016 -2.487,-0.048 -1.323,-0.053 -1.693,-0.053 -1.138,-0.053 -0.106,0 -0.238,-0.079 -0.397,-0.212 -0.159,-0.132 -0.238,-0.265 -0.238,-0.397 0,-0.37 0.476,-0.662 1.429,-0.847 0.635,-0.132 1.217,-0.212 1.746,-0.212 2.937,0 4.895,-1.191 5.901,-3.546 0.238,-0.582 0.37,-1.032 0.37,-1.323 -0.714,0.767 -1.482,1.349 -2.328,1.72z"
-        android:fillColor="@color/glyph_foreground"/>
+        android:fillColor="@color/glyph_foreground" />
     <path
         android:pathData="m1.681,8.456c0.415,-0.257 0.624,-0.582 0.624,-0.96 0,-0.786 -0.37,-1.177 -1.111,-1.177 -0.318,0 -0.603,0.159 -0.86,0.471 -0.119,0.143 -0.22,0.251 -0.31,0.331l0,1.651c0.14,0.045 0.28,0.071 0.423,0.071 0.407,0 0.82,-0.132 1.233,-0.397z"
-        android:fillColor="@color/glyph_foreground"/>
+        android:fillColor="@color/glyph_foreground" />
 </vector>

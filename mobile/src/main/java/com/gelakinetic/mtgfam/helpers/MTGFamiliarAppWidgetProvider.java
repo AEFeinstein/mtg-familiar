@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers;
 
 import android.annotation.TargetApi;
@@ -70,7 +89,6 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         setLayout();
         /* Perform this loop procedure for each App Widget that belongs to this provider */
-        PreferenceAdapter preferenceAdapter = new PreferenceAdapter(context);
         for (int appWidgetId : appWidgetIds) {
 
             /* Get the layout for the App Widget and attach an on-click listener to the buttons */
@@ -78,7 +96,7 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
 
             bindButtons(context, views);
 
-            int maxNumButtons = preferenceAdapter.getNumWidgetButtons(appWidgetId);
+            int maxNumButtons = PreferenceAdapter.getNumWidgetButtons(context, appWidgetId);
 
             /* 100 is a good number to start with when placing a 4x1 widget, since dimensions aren't visible here */
             showButtonsFromPreferences(context, views, maxNumButtons);
@@ -99,10 +117,9 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
         for (WidgetEntry entry : widgetEntries) {
 
             int vectorResource;
-            if(mLayout == R.layout.mtgfamiliar_appwidget_dark) {
+            if (mLayout == R.layout.mtgfamiliar_appwidget_dark) {
                 vectorResource = entry.vectorResourceDark;
-            }
-            else {
+            } else {
                 vectorResource = entry.vectorResourceLight;
             }
 
@@ -111,13 +128,15 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
                 views.setImageViewResource(entry.buttonResource, vectorResource);
             } else {
                 Drawable d = AppCompatResources.getDrawable(context, vectorResource);
-                Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
-                        d.getIntrinsicHeight(),
-                        Bitmap.Config.ARGB_8888);
-                Canvas c = new Canvas(b);
-                d.setBounds(0, 0, c.getWidth(), c.getHeight());
-                d.draw(c);
-                views.setImageViewBitmap(entry.buttonResource, b);
+                if (d != null) {
+                    Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(),
+                            d.getIntrinsicHeight(),
+                            Bitmap.Config.ARGB_8888);
+                    Canvas c = new Canvas(b);
+                    d.setBounds(0, 0, c.getWidth(), c.getHeight());
+                    d.draw(c);
+                    views.setImageViewBitmap(entry.buttonResource, b);
+                }
             }
 
             /* Set the listener */
@@ -137,7 +156,10 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
      */
     private void showButtonsFromPreferences(Context context, RemoteViews views, int maxNumButtons) {
         String[] entries = context.getResources().getStringArray(R.array.default_fragment_array_entries);
-        Set<String> buttons = (new PreferenceAdapter(context)).getWidgetButtons();
+        Set<String> buttons = PreferenceAdapter.getWidgetButtons(context);
+        if (null == buttons) {
+            return;
+        }
 
         int buttonsVisible = 0;
         if (maxNumButtons == 0) {
@@ -190,6 +212,6 @@ public abstract class MTGFamiliarAppWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
         /* Save the number of buttons visible for this widget id */
-        (new PreferenceAdapter(context)).setNumWidgetButtons(appWidgetId, maxNumButtons);
+        PreferenceAdapter.setNumWidgetButtons(context, appWidgetId, maxNumButtons);
     }
 }

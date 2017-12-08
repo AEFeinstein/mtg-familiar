@@ -1,18 +1,18 @@
-/**
- * Copyright 2011 Adam Feinstein
- * <p/>
+/*
+ * Copyright 2017 Adam Feinstein
+ *
  * This file is part of MTG Familiar.
- * <p/>
+ *
  * MTG Familiar is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * MTG Familiar is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -70,9 +71,9 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.AppIndexingWrapper;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
 import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -98,6 +99,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 
@@ -148,12 +150,13 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Card info, used to build the URL to fetch the picture */
     private String mCardNumber;
-    private String mSetCode;
+    public String mSetCode;
     public String mCardName;
     private int mCardCMC;
     private String mMagicCardsInfoSetCode;
     public int mMultiverseId;
     private String mCardType;
+    private String mSetName;
 
     /* Card info used to flip the card */
     private String mTransformCardNumber;
@@ -165,12 +168,6 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Easier than calling getActivity() all the time, and handles being nested */
     private FamiliarActivity mActivity;
-
-    /* State for reporting page views */
-    private boolean mHasReportedView = false;
-    private boolean mShouldReportView = false;
-    public String mDescription;
-    public String mSetName;
 
     /* Foreign name translations */
     public final ArrayList<Card.ForeignPrinting> mTranslatedNames = new ArrayList<>();
@@ -201,76 +198,6 @@ public class CardViewFragment extends FamiliarFragment {
         }
         if (mAsyncTask != null) {
             mAsyncTask.cancel(true);
-        }
-    }
-
-    /**
-     * Called when the fragment stops, attempt to report the close.
-     */
-    @Override
-    public void onStop() {
-        reportAppIndexEndIfAble();
-        super.onStop();
-    }
-
-    /**
-     * Reports this view to the Google app indexing API, once, when the fragment is viewed.
-     */
-    private void reportAppIndexViewIfAble() {
-        /* If this view hasn't been reported yet, and the name exists */
-        if (!mHasReportedView) {
-            if (mCardName != null) {
-                /* Connect your client */
-                getFamiliarActivity().mAppIndexingWrapper.connect();
-                AppIndexingWrapper
-                        .startAppIndexing(getFamiliarActivity().mAppIndexingWrapper, this);
-
-                /* Manage state */
-                mHasReportedView = true;
-                mShouldReportView = false;
-            } else {
-                mShouldReportView = true;
-            }
-        }
-    }
-
-    /**
-     * Ends the report to the Google app indexing API, once, when the fragment is no longer viewed.
-     */
-    private void reportAppIndexEndIfAble() {
-        /* If the view was previously reported, and the name exists */
-        if (mHasReportedView && mCardName != null) {
-            /* Call end() and disconnect the client */
-            AppIndexingWrapper.endAppIndexing(getFamiliarActivity().mAppIndexingWrapper, this);
-            getFamiliarActivity().mAppIndexingWrapper.disconnect();
-
-            /* manage state */
-            mHasReportedView = false;
-        }
-    }
-
-    /**
-     * Set a hint to the system about whether this fragment's UI is currently visible to the user.
-     * This hint defaults to true and is persistent across fragment instance state save and restore.
-     * <p/>
-     * An app may set this to false to indicate that the fragment's UI is scrolled out of visibility
-     * or is otherwise not directly visible to the user. This may be used by the system to
-     * prioritize operations such as fragment lifecycle updates or loader ordering behavior.
-     * <p/>
-     * In this case, it's used to report fragment views to Google app indexing.
-     *
-     * @param isVisibleToUser true if this fragment's UI is currently visible to the user (default),
-     *                        false if it is not.
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            /* If the fragment is visible to the user, attempt to report the view */
-            reportAppIndexViewIfAble();
-        } else {
-            /* The view isn't visible anymore, attempt to report it */
-            reportAppIndexEndIfAble();
         }
     }
 
@@ -333,7 +260,7 @@ public class CardViewFragment extends FamiliarFragment {
             public void onClick(View v) {
                 SearchCriteria setSearch = new SearchCriteria();
                 assert mSetTextView.getText() != null;
-                setSearch.set = mSetTextView.getText().toString();
+                setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
                 Bundle arguments = new Bundle();
                 arguments.putSerializable(SearchViewFragment.CRITERIA, setSearch);
                 ResultListFragment rlFrag = new ResultListFragment();
@@ -474,10 +401,7 @@ public class CardViewFragment extends FamiliarFragment {
             mCardCMC = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_CMC));
             mSetCode = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
 
-            /* Start building a description */
-            addToDescription(getString(R.string.search_name), mCardName);
             mSetName = CardDbAdapter.getSetNameFromCode(mSetCode, database);
-            addToDescription(getString(R.string.search_set), mSetName);
 
             mMagicCardsInfoSetCode =
                     CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
@@ -489,52 +413,39 @@ public class CardViewFragment extends FamiliarFragment {
                 case 'c':
                     mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
                             getResourceIdFromAttr(R.attr.color_common)));
-                    addToDescription(getString(R.string.search_rarity),
-                            getString(R.string.search_Common));
                     break;
                 case 'U':
                 case 'u':
                     mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
                             getResourceIdFromAttr(R.attr.color_uncommon)));
-                    addToDescription(getString(R.string.search_rarity),
-                            getString(R.string.search_Uncommon));
                     break;
                 case 'R':
                 case 'r':
                     mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
                             getResourceIdFromAttr(R.attr.color_rare)));
-                    addToDescription(getString(R.string.search_rarity),
-                            getString(R.string.search_Rare));
                     break;
                 case 'M':
                 case 'm':
                     mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
                             getResourceIdFromAttr(R.attr.color_mythic)));
-                    addToDescription(getString(R.string.search_rarity),
-                            getString(R.string.search_Mythic));
                     break;
                 case 'T':
                 case 't':
                     mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
                             getResourceIdFromAttr(R.attr.color_timeshifted)));
-                    addToDescription(getString(R.string.search_rarity),
-                            getString(R.string.search_Timeshifted));
                     break;
             }
 
             String sCost = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-            addToDescription(getString(R.string.search_mana_cost), sCost);
             CharSequence csCost = ImageGetterHelper.formatStringWithGlyphs(sCost, imgGetter);
             mCostTextView.setText(csCost);
 
             String sAbility = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-            addToDescription(getString(R.string.search_text), sAbility);
             CharSequence csAbility = ImageGetterHelper.formatStringWithGlyphs(sAbility, imgGetter);
             mAbilityTextView.setText(csAbility);
             mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
             String sFlavor = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            addToDescription(getString(R.string.search_flavor_text), sFlavor);
             CharSequence csFlavor = ImageGetterHelper.formatStringWithGlyphs(sFlavor, imgGetter);
             mFlavorTextView.setText(csFlavor);
 
@@ -551,70 +462,14 @@ public class CardViewFragment extends FamiliarFragment {
                             + ")";
             mNumberTextView.setText(numberAndRarity);
 
-            addToDescription(getString(R.string.search_type), CardDbAdapter.getTypeLine(cCardById));
-            addToDescription(getString(R.string.search_artist),
-                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
-            addToDescription(getString(R.string.search_collectors_number),
-                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)));
-
             int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
             float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
             float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
             if (loyalty != CardDbAdapter.NO_ONE_CARES) {
-                if (loyalty == CardDbAdapter.X) {
-                    mPowTouTextView.setText("X");
-                } else {
-                    mPowTouTextView.setText(Integer.toString(loyalty));
-                }
+                mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(loyalty, false));
             } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
-
-                String powTouStr = "";
-
-                if (p == CardDbAdapter.STAR)
-                    powTouStr += "*";
-                else if (p == CardDbAdapter.ONE_PLUS_STAR)
-                    powTouStr += "1+*";
-                else if (p == CardDbAdapter.TWO_PLUS_STAR)
-                    powTouStr += "2+*";
-                else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-                    powTouStr += "7-*";
-                else if (p == CardDbAdapter.STAR_SQUARED)
-                    powTouStr += "*^2";
-                else if (p == CardDbAdapter.X)
-                    powTouStr += "X";
-                else {
-                    if (p == (int) p) {
-                        powTouStr += (int) p;
-                    } else {
-                        powTouStr += p;
-                    }
-                }
-
-                powTouStr += "/";
-
-                if (t == CardDbAdapter.STAR)
-                    powTouStr += "*";
-                else if (t == CardDbAdapter.ONE_PLUS_STAR)
-                    powTouStr += "1+*";
-                else if (t == CardDbAdapter.TWO_PLUS_STAR)
-                    powTouStr += "2+*";
-                else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-                    powTouStr += "7-*";
-                else if (t == CardDbAdapter.STAR_SQUARED)
-                    powTouStr += "*^2";
-                else if (t == CardDbAdapter.X)
-                    powTouStr += "X";
-                else {
-                    if (t == (int) t) {
-                        powTouStr += (int) t;
-                    } else {
-                        powTouStr += t;
-                    }
-                }
-
-                addToDescription(getString(R.string.search_power), powTouStr);
-
-                mPowTouTextView.setText(powTouStr);
+                boolean shouldShowSign = sAbility.contains("Augment {") && mSetTextView.getText().equals("UST");
+                mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign) + "/" + CardDbAdapter.getPrintedPTL(t, shouldShowSign));
             } else {
                 mPowTouTextView.setText("");
             }
@@ -671,7 +526,7 @@ public class CardViewFragment extends FamiliarFragment {
             mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
 
             /* Do we load the image immediately to the main page, or do it in a dialog later? */
-            if (mActivity.mPreferenceAdapter.getPicFirst()) {
+            if (PreferenceAdapter.getPicFirst(getContext())) {
                 mImageScrollView.setVisibility(View.VISIBLE);
                 mTextScrollView.setVisibility(View.GONE);
 
@@ -766,32 +621,14 @@ public class CardViewFragment extends FamiliarFragment {
             cCardByName.close();
             /* If it exists in only one set, remove the button from the menu */
             if (mPrintings.size() == 1) {
-                mActivity.supportInvalidateOptionsMenu();
+                mActivity.invalidateOptionsMenu();
             }
-        } catch (FamiliarDbException e) {
+        } catch (FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
             DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             return;
         }
         DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-
-        if (mShouldReportView) {
-            reportAppIndexViewIfAble();
-        }
-    }
-
-    /**
-     * Used to build a meta description of this card, for app indexing.
-     *
-     * @param tag  A tag for this data
-     * @param data The data to add to the description
-     */
-    private void addToDescription(String tag, String data) {
-        if (mDescription == null) {
-            mDescription = tag + ": \"" + data + "\"";
-        } else {
-            mDescription += "\n" + tag + ": \"" + data + "\"";
-        }
     }
 
     /**
@@ -848,7 +685,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param item The context menu item that was selected.
      * @return boolean Return false to allow normal context menu processing to proceed, true to
-     *         consume it here.
+     * consume it here.
      */
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
@@ -896,10 +733,12 @@ public class CardViewFragment extends FamiliarFragment {
             if (copyText != null) {
                 ClipboardManager clipboard = (ClipboardManager) (this.mActivity.
                         getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-                String label = getResources().getString(R.string.app_name);
-                String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-                ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
-                clipboard.setPrimaryClip(cd);
+                if (null != clipboard) {
+                    String label = getResources().getString(R.string.app_name);
+                    String mimeTypes[] = {ClipDescription.MIMETYPE_TEXT_PLAIN};
+                    ClipData cd = new ClipData(label, mimeTypes, new ClipData.Item(copyText));
+                    clipboard.setPrimaryClip(cd);
+                }
             }
             return true;
         }
@@ -962,8 +801,8 @@ public class CardViewFragment extends FamiliarFragment {
                                     mActivity.clearLoading();
 
                                     CardViewFragment.this.removeDialog(getFragmentManager());
-                                    ToastWrapper.makeText(mActivity, spiceException.getMessage(),
-                                            ToastWrapper.LENGTH_SHORT).show();
+                                    ToastWrapper.makeAndShowText(mActivity, spiceException.getMessage(),
+                                            ToastWrapper.LENGTH_SHORT);
                                 }
                             }
 
@@ -976,9 +815,9 @@ public class CardViewFragment extends FamiliarFragment {
                                         mPriceInfo = result;
                                         showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
-                                        ToastWrapper.makeText(mActivity,
+                                        ToastWrapper.makeAndShowText(mActivity,
                                                 R.string.card_view_price_not_found,
-                                                ToastWrapper.LENGTH_SHORT).show();
+                                                ToastWrapper.LENGTH_SHORT);
                                     }
                                 }
                             }
@@ -1015,6 +854,10 @@ public class CardViewFragment extends FamiliarFragment {
             }
             case R.id.addtowishlist: {
                 showDialog(CardViewDialogFragment.WISH_LIST_COUNTS);
+                return true;
+            }
+            case R.id.addtodecklist: {
+                showDialog(CardViewDialogFragment.ADD_TO_DECKLIST);
                 return true;
             }
             case R.id.sharecard: {
@@ -1058,7 +901,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         MenuItem mi;
         /* If the image has been loaded to the main page, remove the menu option for image */
-        if (mActivity.mPreferenceAdapter.getPicFirst() && mCardBitmap != null) {
+        if (PreferenceAdapter.getPicFirst(getContext()) && mCardBitmap != null) {
             mi = menu.findItem(R.id.image);
             if (mi != null) {
                 menu.removeItem(mi.getItemId());
@@ -1158,11 +1001,10 @@ public class CardViewFragment extends FamiliarFragment {
                             getResources().getText(R.string.card_view_send_to)));
 
                 } catch (Exception e) {
-                    ToastWrapper.makeText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG)
-                            .show();
+                    ToastWrapper.makeAndShowText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG);
                 }
             } else if (mToastString != null) {
-                ToastWrapper.makeText(mActivity, mToastString, ToastWrapper.LENGTH_LONG).show();
+                ToastWrapper.makeAndShowText(mActivity, mToastString, ToastWrapper.LENGTH_LONG);
             }
         }
     }
@@ -1299,7 +1141,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mLoadTo = MAIN_PAGE;
             }
 
-            String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
+            String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
             if (cardLanguage == null) {
                 cardLanguage = "en";
             }
@@ -1319,11 +1161,11 @@ public class CardViewFragment extends FamiliarFragment {
                 /* Some trickery to figure out if we have a token */
                 boolean isToken = false;
                 if (mCardType.contains("Token") || /* try to take the easy way out */
-                    (mCardCMC == 0 && /* Tokens have a CMC of 0 */
+                        (mCardCMC == 0 && /* Tokens have a CMC of 0 */
                     /* The only tokens in Gatherer are from Duel Decks */
-                     mSetName.contains("Duel Decks") &&
+                                mSetName.contains("Duel Decks") &&
                      /* The only tokens in Gatherer are creatures */
-                     mCardType.contains("Creature"))) {
+                                mCardType.contains("Creature"))) {
                     isToken = true;
                 }
 
@@ -1363,9 +1205,7 @@ public class CardViewFragment extends FamiliarFragment {
                         }
 
                         /* Download the bitmap */
-                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null));
-                        /* Cache it */
-                        getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
+                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null, getContext()));
                     } catch (Exception e) {
                         /* Something went wrong */
                         try {
@@ -1388,10 +1228,21 @@ public class CardViewFragment extends FamiliarFragment {
                 return null;
             }
 
+            // Then try caching the image
             try {
+                getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
+            } catch (Exception e) {
+                // Cache failed
+            }
+
+            try {
+                // Don't attempt scaling if there's no host fragment
+                if(null == getHost()) {
+                    return null;
+                }
                 /* 16dp */
                 mBorder = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+                        TypedValue.COMPLEX_UNIT_DIP, 34, getResources().getDisplayMetrics());
                 if (mLoadTo == MAIN_PAGE) {
                     /* Block the worker thread until the size is figured out */
                     synchronized (getWindowSize) {
@@ -1500,7 +1351,7 @@ public class CardViewFragment extends FamiliarFragment {
          * @return uri of the card image
          */
         private String getScryfallImageUri(int multiverseId) {
-            return "https://api.scryfall.com/cards/multiverse/" + multiverseId + "?format=image";
+            return "https://api.scryfall.com/cards/multiverse/" + multiverseId + "?format=image&version=normal";
         }
 
         /**
@@ -1525,7 +1376,7 @@ public class CardViewFragment extends FamiliarFragment {
                         mCardImageView.setImageDrawable(mCardBitmap);
                     }
                     /* remove the image load button if it is the main page */
-                    mActivity.supportInvalidateOptionsMenu();
+                    mActivity.invalidateOptionsMenu();
                 } else if (mLoadTo == SHARE) {
 
                     /* Images must be saved before sharing */
@@ -1541,7 +1392,7 @@ public class CardViewFragment extends FamiliarFragment {
                     mImageScrollView.setVisibility(View.GONE);
                     mTextScrollView.setVisibility(View.VISIBLE);
                 }
-                ToastWrapper.makeText(mActivity, mError, ToastWrapper.LENGTH_LONG).show();
+                ToastWrapper.makeAndShowText(mActivity, mError, ToastWrapper.LENGTH_LONG);
             }
             mActivity.clearLoading();
         }
@@ -1582,7 +1433,7 @@ public class CardViewFragment extends FamiliarFragment {
             mRulingsArrayList = new ArrayList<>();
             try {
                 url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mMultiverseId);
-                is = FamiliarActivity.getHttpInputStream(url, null);
+                is = FamiliarActivity.getHttpInputStream(url, null, getContext());
                 if (is == null) {
                     throw new IOException("null stream");
                 }
@@ -1638,7 +1489,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             } else {
                 removeDialog(getFragmentManager());
-                ToastWrapper.makeText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT).show();
+                ToastWrapper.makeAndShowText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT);
             }
             mActivity.clearLoading();
         }
@@ -1670,8 +1521,8 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                 } else {
                     /* Permission denied */
-                    ToastWrapper.makeText(this.getContext(), getString(R.string.card_view_unable_to_save_image),
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this.getContext(), R.string.card_view_unable_to_save_image,
+                            ToastWrapper.LENGTH_LONG);
                 }
             }
         }
@@ -1744,7 +1595,7 @@ public class CardViewFragment extends FamiliarFragment {
             }
 
             /* If the card is displayed, there's a real good chance it's cached */
-            String cardLanguage = mActivity.mPreferenceAdapter.getCardLanguage();
+            String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
             if (cardLanguage == null) {
                 cardLanguage = "en";
             }

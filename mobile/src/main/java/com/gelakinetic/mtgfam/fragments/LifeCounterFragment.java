@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.content.Context;
@@ -28,6 +47,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.LifeCounterDialogFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.CommanderEntry;
 import com.gelakinetic.mtgfam.helpers.LcPlayer.HistoryEntry;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,11 +110,13 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 
         m9000Player = MediaPlayer.create(getActivity(), R.raw.over_9000);
-        m9000Player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            public void onCompletion(MediaPlayer mp) {
-                onUtteranceCompleted(LIFE_ANNOUNCE);
-            }
-        });
+        if (m9000Player != null) {
+            m9000Player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    onUtteranceCompleted(LIFE_ANNOUNCE);
+                }
+            });
+        }
     }
 
     /**
@@ -135,7 +157,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         assert myFragmentView != null;
         mGridLayout = myFragmentView.findViewById(R.id.playerList);
 
-        mDisplayMode = Integer.parseInt(getFamiliarActivity().mPreferenceAdapter.getDisplayMode());
+        mDisplayMode = Integer.parseInt(PreferenceAdapter.getDisplayMode(getContext()));
 
         mCommanderPlayerView = myFragmentView.findViewById(R.id.commander_player);
 
@@ -230,12 +252,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     @Override
     public void onPause() {
         super.onPause();
-        String playerData = "";
+        StringBuilder playerData = new StringBuilder();
         for (LcPlayer player : mPlayers) {
             player.onPause();
-            playerData += player.toString();
+            playerData.append(player.toString());
         }
-        getFamiliarActivity().mPreferenceAdapter.setPlayerData(playerData);
+        PreferenceAdapter.setPlayerData(getContext(), playerData.toString());
         mGridLayout.removeAllViews();
         mPlayers.clear();
 
@@ -255,7 +277,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
     public void onResume() {
         super.onResume();
 
-        String playerData = getFamiliarActivity().mPreferenceAdapter.getPlayerData();
+        String playerData = PreferenceAdapter.getPlayerData(getContext());
         if (playerData == null || playerData.length() == 0) {
             addPlayer();
             addPlayer();
@@ -272,7 +294,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         setStatDisplaying(mStatDisplaying);
 
-        if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
+        if (PreferenceAdapter.getKeepScreenOn(getContext())) {
             getActivity().getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
@@ -282,12 +304,16 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      */
     @Override
     public void onUserInactive() {
-        if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn() &&
-                getFamiliarActivity().mPreferenceAdapter.getDimScreen()) {
-            float dimLevel = (float) getFamiliarActivity().mPreferenceAdapter.getDimLevel() / (float) 100;
-            WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
-            layoutParams.screenBrightness = dimLevel;
-            getActivity().getWindow().setAttributes(layoutParams);
+        try {
+            if (PreferenceAdapter.getKeepScreenOn(getContext()) &&
+                    PreferenceAdapter.getDimScreen(getContext())) {
+                float dimLevel = (float) PreferenceAdapter.getDimLevel(getContext()) / (float) 100;
+                WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
+                layoutParams.screenBrightness = dimLevel;
+                getActivity().getWindow().setAttributes(layoutParams);
+            }
+        } catch (NullPointerException e) {
+            /* Can't dim the screen, oh well */
         }
     }
 
@@ -296,7 +322,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      */
     @Override
     public void onUserActive() {
-        if (getFamiliarActivity().mPreferenceAdapter.getKeepScreenOn()) {
+        if (PreferenceAdapter.getKeepScreenOn(getContext())) {
             WindowManager.LayoutParams layoutParams = getActivity().getWindow().getAttributes();
             layoutParams.screenBrightness = -1;
             getActivity().getWindow().setAttributes(layoutParams);
@@ -438,7 +464,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      */
     public void changeDisplayMode(boolean shouldDefaultLives) {
         /* update the preference */
-        getFamiliarActivity().mPreferenceAdapter.setDisplayMode(String.valueOf(mDisplayMode));
+        PreferenceAdapter.setDisplayMode(getContext(), String.valueOf(mDisplayMode));
 
         mGridLayout.removeAllViews();
 
@@ -514,7 +540,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             mCommanderButton.setVisibility(View.VISIBLE);
             mCommanderPlayerView.setVisibility(View.VISIBLE);
             mCommanderPlayerView.removeAllViews();
-            if (mPlayers.size() > 0) {
+            if (mPlayers.size() > 0 && null != mPlayers.get(0).mView) {
                 mCommanderPlayerView.addView(mPlayers.get(0).mView);
                 mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources()
                         .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
@@ -536,7 +562,11 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param player The player to be added
      */
     private void addPlayerView(final LcPlayer player) {
-        mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying));
+        try {
+            mGridLayout.addView(player.newView(mDisplayMode, mStatDisplaying, mGridLayout, mCommanderPlayerView));
+        } catch (IllegalArgumentException e) {
+            return;
+        }
         if (mDisplayMode == DISPLAY_COMMANDER) {
             player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -806,12 +836,12 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                         mAfterSearchClosedRunnable = new Runnable() {
                             @Override
                             public void run() {
-                                getActivity().supportInvalidateOptionsMenu();
+                                getActivity().invalidateOptionsMenu();
                             }
                         };
                     } else {
                         /* Redraw menu */
-                        getActivity().supportInvalidateOptionsMenu();
+                        getActivity().invalidateOptionsMenu();
                     }
                 }
             } else if (status == TextToSpeech.ERROR) {

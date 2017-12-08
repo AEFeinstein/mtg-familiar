@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam;
 
 import android.app.Activity;
@@ -23,20 +42,21 @@ import java.util.Set;
  */
 public class MtgAppWidgetConfigure extends Activity {
 
-    private PreferenceAdapter mPrefAdapter;
     private String[] mLaunchers;
     private Integer[] mSelectedIndices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPrefAdapter = new PreferenceAdapter(this);
 
         /* Get all the widget buttons */
         mLaunchers = getResources().getStringArray(R.array.default_fragment_array_entries);
 
         /* Figure out which ones are already selected */
-        Set<String> defaults = mPrefAdapter.getWidgetButtons();
+        Set<String> defaults = PreferenceAdapter.getWidgetButtons(this);
+        if (null == defaults) {
+            return;
+        }
         ArrayList<Integer> selectedIndicesTmp = new ArrayList<>();
         for (int i = 0; i < mLaunchers.length; i++) {
             if (defaults.contains(mLaunchers[i])) {
@@ -87,7 +107,7 @@ public class MtgAppWidgetConfigure extends Activity {
         for (Integer mSelectedIndex : mSelectedIndices) {
             selectedButtons.add(mLaunchers[mSelectedIndex]);
         }
-        mPrefAdapter.setWidgetButtons(selectedButtons);
+        PreferenceAdapter.setWidgetButtons(this, selectedButtons);
 
         /* Get the widget id */
         int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;

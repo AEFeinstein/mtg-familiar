@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportHeight="25.4"
+    android:viewportWidth="25.4">
+    <group android:translateY="-271.6">
+        <path
+            android:fillColor="?attr/colorControlNormal"
+            android:pathData="M6.4539091 274.77497c-0.6003636 0 -1.0852727 0.48491 -1.0852727 1.08528l0 13.06945c0 0.57727 0.4849091 1.08527 1.0852727 1.08527l8.6821819 0c0.600364 0 1.085273 -0.508 1.085273 -1.08527l0 -13.06945c0 -0.60037 -0.484909 -1.08528 -1.085273 -1.08528zm0 0.94673l8.6821819 0c0.06927 0 0.138545 0.0693 0.138545 0.13855l0 13.06945c0 0.0693 -0.06927 0.11546 -0.138545 0.11546l-8.6821819 0c-0.069273 0 -0.1385455 -0.0462 -0.1385455 -0.11546l0 -13.06945c0 -0.0693 0.069273 -0.13855 0.1385455 -0.13855z" />
+        <path
+            android:fillColor="?attr/colorControlNormal"
+            android:pathData="M10.795 277.08407c-1.0852727 0 -2.032 0.62345 -2.7016364 1.59327 -0.6696363 0.96982 -1.0852727 2.26291 -1.0852727 3.71763 0 1.43164 0.4156364 2.74782 1.0852727 3.71764 0.6696364 0.94673 1.6163637 1.59327 2.7016364 1.59327 1.085273 0 2.032 -0.64654 2.701636 -1.59327 0.669637 -0.96982 1.085273 -2.286 1.085273 -3.71764 0 -1.45472 -0.415636 -2.74781 -1.085273 -3.71763C12.827 277.70752 11.880273 277.08407 10.795 277.08407Zm0 0.57727c0.854364 0 1.639455 0.48491 2.239818 1.33927 0.600364 0.85436 0.969818 2.05509 0.969818 3.39436 0 1.31619 -0.369454 2.54 -0.969818 3.37128 -0.600363 0.85436 -1.385454 1.36236 -2.239818 1.36236 -0.8543636 0 -1.6394545 -0.508 -2.2398182 -1.36236 -0.6003636 -0.83128 -0.9698182 -2.05509 -0.9698182 -3.37128 0 -1.33927 0.3694546 -2.54 0.9698182 -3.39436 0.6003637 -0.85436 1.3854546 -1.33927 2.2398182 -1.33927z" />
+        <path
+            android:fillColor="?attr/colorControlNormal"
+            android:pathData="M17.168091 290.82316c0 0.0924 -0.04618 0.13854 -0.138546 0.13854l-9.7443632 0c0.069273 0.53109 0.508 0.94673 1.0621818 0.94673l8.6821814 0c0.600364 0 1.085273 -0.48491 1.085273 -1.08527l0 -13.04637c0 -0.55418 -0.415636 -0.99291 -0.946727 -1.06218z" />
+        <path
+            android:fillColor="?attr/colorControlNormal"
+            android:pathData="M19.061545 292.7397c0 0.0693 -0.04618 0.13855 -0.115454 0.13855l-9.7674546 0c0.069273 0.53109 0.5310909 0.94672 1.0852726 0.94672l8.682182 0c0.577273 0 1.085273 -0.4849 1.085273 -1.08527l0 -13.06945c0 -0.53109 -0.438728 -0.96982 -0.969819 -1.03909z" />
+    </group>
+</vector>

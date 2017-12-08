@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
@@ -16,11 +35,13 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.MoJhoStoDialogFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -132,9 +153,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (getFamiliarActivity().mPreferenceAdapter.getMojhostoFirstTime()) {
+        if (PreferenceAdapter.getMojhostoFirstTime(getContext())) {
             showDialog(MoJhoStoDialogFragment.DIALOG_RULES);
-            getFamiliarActivity().mPreferenceAdapter.setMojhostoFirstTime();
+            PreferenceAdapter.setMojhostoFirstTime(getContext());
         }
     }
 
@@ -199,17 +220,17 @@ public class MoJhoStoFragment extends FamiliarFragment {
      */
     private void getOneSpell(String type, int cmc) {
         try {
+            SearchCriteria criteria = new SearchCriteria();
             SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-            String logic = "=";
             if (type.equals(EQUIPMENT)) {
-                logic = "<=";
-                type = " - " + EQUIPMENT;
+                criteria.cmcLogic = "<=";
+                criteria.subTypes = Collections.singletonList(type);
+            } else {
+                criteria.cmcLogic = "=";
+                criteria.superTypes = Collections.singletonList(type);
             }
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
-            SearchCriteria criteria = new SearchCriteria();
-            criteria.type = type;
             criteria.cmc = cmc;
-            criteria.cmcLogic = logic;
             criteria.moJhoStoFilter = true;
             Cursor permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
@@ -250,7 +271,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
-            criteria.type = type;
+            criteria.superTypes = Collections.singletonList(type);
             Cursor spells = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
             if (spells == null) {

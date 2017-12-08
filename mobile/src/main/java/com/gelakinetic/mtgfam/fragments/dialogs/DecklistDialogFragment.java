@@ -1,10 +1,31 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -49,17 +70,32 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
     /**
      * @return The currently viewed DecklistFragment
      */
+    @Nullable
     private DecklistFragment getParentDecklistFragment() {
-        return (DecklistFragment) getFamiliarFragment();
+        try {
+            return (DecklistFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
+
         setShowsDialog(true);
         mDialogId = getArguments().getInt(ID_KEY);
         final String cardName = getArguments().getString(NAME_KEY);
         final boolean isSideboard = getArguments().getBoolean(SIDE_KEY);
+
+        if (null == getParentDecklistFragment()) {
+            return DontShowDialog();
+        }
+
         switch (mDialogId) {
             case DIALOG_UPDATE_CARD: {
                 Dialog dialog = CardHelpers.getDialog(
@@ -69,14 +105,16 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         isSideboard
                 );
                 if (dialog == null) {
-                    getParentDecklistFragment().handleFamiliarDbException(false);
+                    if (null != getParentDecklistFragment()) {
+                        getParentDecklistFragment().handleFamiliarDbException(false);
+                    }
                     return DontShowDialog();
                 }
                 return dialog;
             }
             case DIALOG_SAVE_DECK_AS: {
                 /* Inflate a view to type in the deck's name and show it in an AlertDialog */
-                View textEntryView = getActivity().getLayoutInflater()
+                @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater()
                         .inflate(R.layout.alert_dialog_text_entry, null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
@@ -133,8 +171,8 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.decklist_toast_no_decks,
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.decklist_toast_no_decks,
+                            ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -155,7 +193,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                         .readAndCompressDecklist(null, deckNames[position]);
                                 getParentDecklistFragment().mCurrentDeck = deckNames[position];
                                 /* Alert things to update */
-                                getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
 
                             }
 
@@ -168,11 +206,11 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                 /* if there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeText(
+                    ToastWrapper.makeAndShowText(
                             this.getActivity(),
                             R.string.decklist_toast_no_decks,
                             ToastWrapper.LENGTH_LONG
-                    ).show();
+                    );
                     return DontShowDialog();
                 }
 
@@ -191,12 +229,12 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 File toDelete = new File(getActivity().getFilesDir(),
                                         deckNames[position] + DecklistFragment.DECK_EXTENSION);
                                 if (!toDelete.delete()) {
-                                    ToastWrapper.makeText(
+                                    ToastWrapper.makeAndShowText(
                                             getActivity(),
                                             toDelete.getName() + " "
                                                     + getString(R.string.not_deleted),
                                             ToastWrapper.LENGTH_LONG
-                                    ).show();
+                                    );
                                 }
 
                             }
@@ -219,15 +257,19 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 /* do some cleaning up */
                                 getParentDecklistFragment().mCurrentDeck = "autosave";
                                 getParentDecklistFragment().mCompressedDecklist.clear();
-                                getParentDecklistFragment().mListAdapter.notifyDataSetChanged();
+                                getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                                 getParentDecklistFragment().mDeckName.setText(
                                         R.string.decklist_unnamed_deck
                                 );
                                 getParentDecklistFragment().mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, 0, 0));
                                 DecklistHelpers.WriteCompressedDecklist(
                                         getActivity(),
-                                        getParentDecklistFragment().mCompressedDecklist
+                                        getParentDecklistFragment().mCompressedDecklist,
+                                        getParentDecklistFragment().getCurrentDeckName()
                                 );
+                                getParentDecklistFragment().clearCardNameInput();
+                                getParentDecklistFragment().clearCardNumberInput();
+                                getParentDecklistFragment().uncheckFoilCheckbox();
                                 dialog.dismiss();
 
                             }

@@ -1,18 +1,18 @@
-/**
- * Copyright 2011 Adam Feinstein
- * <p/>
+/*
+ * Copyright 2017 Adam Feinstein
+ *
  * This file is part of MTG Familiar.
- * <p/>
+ *
  * MTG Familiar is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * MTG Familiar is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -174,73 +174,36 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                     textField.setText(csq);
                     break;
                 }
-                case CardDbAdapter.KEY_POWER:
+                case CardDbAdapter.KEY_POWER: {
                     float p = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
+                    boolean shouldShowSign =
+                            cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
+                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY)).contains("Augment {");
                     if (p != CardDbAdapter.NO_ONE_CARES) {
-                        String pow;
                         hidePT = false;
-                        if (p == CardDbAdapter.STAR)
-                            pow = "*";
-                        else if (p == CardDbAdapter.ONE_PLUS_STAR)
-                            pow = "1+*";
-                        else if (p == CardDbAdapter.TWO_PLUS_STAR)
-                            pow = "2+*";
-                        else if (p == CardDbAdapter.SEVEN_MINUS_STAR)
-                            pow = "7-*";
-                        else if (p == CardDbAdapter.STAR_SQUARED)
-                            pow = "*^2";
-                        else if (p == CardDbAdapter.X)
-                            pow = "X";
-                        else {
-                            if (p == (int) p) {
-                                pow = Integer.toString((int) p);
-                            } else {
-                                pow = Float.valueOf(p).toString();
-                            }
-                        }
-                        textField.setText(pow);
+                        textField.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign));
                     }
                     break;
-                case CardDbAdapter.KEY_TOUGHNESS:
+                }
+                case CardDbAdapter.KEY_TOUGHNESS: {
                     float t = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
+                    boolean shouldShowSign =
+                            cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)).equals("UST") &&
+                                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY)).contains("Augment {");
                     if (t != CardDbAdapter.NO_ONE_CARES) {
                         hidePT = false;
-                        String tou;
-                        if (t == CardDbAdapter.STAR)
-                            tou = "*";
-                        else if (t == CardDbAdapter.ONE_PLUS_STAR)
-                            tou = "1+*";
-                        else if (t == CardDbAdapter.TWO_PLUS_STAR)
-                            tou = "2+*";
-                        else if (t == CardDbAdapter.SEVEN_MINUS_STAR)
-                            tou = "7-*";
-                        else if (t == CardDbAdapter.STAR_SQUARED)
-                            tou = "*^2";
-                        else if (t == CardDbAdapter.X)
-                            tou = "X";
-                        else {
-                            if (t == (int) t) {
-                                tou = Integer.toString((int) t);
-                            } else {
-                                tou = Float.toString(t);
-                            }
-                        }
-                        textField.setText(tou);
+                        textField.setText(CardDbAdapter.getPrintedPTL(t, shouldShowSign));
                     }
                     break;
-                case CardDbAdapter.KEY_LOYALTY:
+                }
+                case CardDbAdapter.KEY_LOYALTY: {
                     float l = cursor.getFloat(cursor.getColumnIndex(mFrom[i]));
                     if (l != CardDbAdapter.NO_ONE_CARES) {
                         hideLoyalty = false;
-                        if (l == CardDbAdapter.X) {
-                            ((TextView) textField.findViewById(R.id.cardt)).setText("X");
-                        } else if (l == (int) l) {
-                            ((TextView) textField.findViewById(R.id.cardt)).setText(Integer.toString((int) l));
-                        } else {
-                            ((TextView) textField.findViewById(R.id.cardt)).setText(Float.toString(l));
-                        }
+                        ((TextView) textField.findViewById(R.id.cardt)).setText(CardDbAdapter.getPrintedPTL(l, false));
                     }
                     break;
+                }
             }
         }
 

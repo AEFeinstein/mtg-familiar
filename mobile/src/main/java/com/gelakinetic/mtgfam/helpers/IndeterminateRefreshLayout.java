@@ -1,17 +1,20 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright 2017 Adam Feinstein
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This file is part of MTG Familiar.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.gelakinetic.mtgfam.helpers;
@@ -39,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
  * indication of a refresh. If an activity wishes to show just the progress
  * animation, it should call setRefreshing(true). To disable the gesture and progress
  * animation, call setEnabled(false) on the view.
- * <p/>
+ *
  * <p> This layout should be made the parent of the view that will be refreshed as a
  * result of the gesture and can only support one direct child. This view will
  * also be made the target of the gesture and will be forced to match both the
@@ -52,7 +55,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
     private static final int[] LAYOUT_ATTRS = new int[]{android.R.attr.enabled};
     public boolean mRefreshing = false;
     private IndeterminateProgressBar mProgressBar; //the thing that shows progress is going
-    private View mTarget; //the content that gets pulled down
     private int mProgressBarHeight;
 
     /**
@@ -85,11 +87,6 @@ public class IndeterminateRefreshLayout extends ViewGroup {
      */
     public void setRefreshing(boolean refreshing) {
         if (mRefreshing != refreshing) {
-            try {
-                ensureTarget();
-            } catch (IllegalStateException e) {
-                return;
-            }
             mRefreshing = refreshing;
             if (mRefreshing) {
                 mProgressBar.start();
@@ -99,15 +96,15 @@ public class IndeterminateRefreshLayout extends ViewGroup {
         }
     }
 
-    private void ensureTarget() {
-        // Don't bother getting the parent height if the parent hasn't been laid out yet.
-        if (mTarget == null) {
-            if (getChildCount() > 1 && !isInEditMode()) {
-                throw new IllegalStateException(
-                        "IndeterminateRefreshLayout can host only one direct child");
-            }
-            mTarget = getChildAt(0);
+    private View getTargetView() {
+        if ((getChildCount() > 1 && !isInEditMode()) || getChildCount() == 0) {
+            // IndeterminateRefreshLayout can host only one direct child
+            // Also can't do much with zero children
+            return null;
+        } else if (getChildCount() == 1) {
+            return getChildAt(0);
         }
+        return null;
     }
 
     @Override
@@ -121,34 +118,36 @@ public class IndeterminateRefreshLayout extends ViewGroup {
         final int width = getMeasuredWidth();
         final int height = getMeasuredHeight();
         mProgressBar.setBounds(width, mProgressBarHeight);
-        if (getChildCount() == 0) {
-            return;
+        View targetView = getTargetView();
+        if (targetView != null) {
+            final int childLeft = getPaddingLeft();
+            final int childTop = getPaddingTop();
+            final int childWidth = width - getPaddingLeft() - getPaddingRight();
+            final int childHeight = height - getPaddingTop() - getPaddingBottom();
+            try {
+                targetView.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
+            } catch (IllegalStateException e) {
+                // eat it
+            }
         }
-        final View child = getChildAt(0);
-        final int childLeft = getPaddingLeft();
-        final int childTop = getPaddingTop();
-        final int childWidth = width - getPaddingLeft() - getPaddingRight();
-        final int childHeight = height - getPaddingTop() - getPaddingBottom();
-        assert child != null;
-        child.layout(childLeft, childTop, childLeft + childWidth, childTop + childHeight);
     }
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (getChildCount() > 1 && !isInEditMode()) {
-            throw new IllegalStateException("IndeterminateRefreshLayout can host only one direct child");
-        }
-        if (getChildCount() > 0) {
+        View targetView = getTargetView();
+        if (targetView != null) {
             int width = MeasureSpec.makeMeasureSpec(
                     getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
                     MeasureSpec.EXACTLY);
             int height = MeasureSpec.makeMeasureSpec(
                     getMeasuredHeight() - getPaddingTop() - getPaddingBottom(),
                     MeasureSpec.EXACTLY);
-            View child = getChildAt(0);
-            assert child != null;
-            child.measure(width, height);
+            try {
+                targetView.measure(width, height);
+            } catch (IllegalStateException e) {
+                // eat it
+            }
         }
     }
 

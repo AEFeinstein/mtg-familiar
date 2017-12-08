@@ -1,4 +1,28 @@
-<vector android:height="24dp" android:viewportHeight="17.462"
-    android:viewportWidth="17.462" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="@color/drawer_item_icon_light"  android:pathData="M8.73,8.73c2.413,0 4.367,-1.958 4.367,-4.364C13.097,1.954 11.143,0 8.73,0 6.32,0 4.367,1.954 4.367,4.366c0,2.406 1.953,4.365 4.365,4.365zM8.73,10.914C5.824,10.914 0,12.37 0,15.28v2.183h17.462L17.462,15.28c0,-2.91 -5.822,-4.366 -8.73,-4.366z"/>
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector android:height="24dp"
+    android:viewportHeight="17.462"
+    android:viewportWidth="17.462"
+    android:width="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="@color/drawer_item_icon_light"
+        android:pathData="M8.73,8.73c2.413,0 4.367,-1.958 4.367,-4.364C13.097,1.954 11.143,0 8.73,0 6.32,0 4.367,1.954 4.367,4.366c0,2.406 1.953,4.365 4.365,4.365zM8.73,10.914C5.824,10.914 0,12.37 0,15.28v2.183h17.462L17.462,15.28c0,-2.91 -5.822,-4.366 -8.73,-4.366z" />
 </vector>

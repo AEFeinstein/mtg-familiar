@@ -1,80 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/card_row_full"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectable_row">
+    android:background="?attr/selectable_row"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/card_row_full"
-        android:orientation="vertical"
+        android:id="@+id/decklistSeparator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/decklistSeparator"
-            android:orientation="horizontal"
+        <TextView
+            android:id="@+id/decklistHeaderType"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Header" />
+
+        <TextView
+            android:id="@+id/decklistHeaderNumber"
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                tools:text="Header"
-                android:id="@+id/decklistHeaderType"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                style="?android:attr/listSeparatorTextViewStyle" />
-
-            <TextView
-                tools:text="(##)"
-                android:id="@+id/decklistHeaderNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="?android:attr/listSeparatorTextViewStyle" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/card_row"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
-
-            <TextView
-                tools:text="99"
-                style="@style/text.medium"
-                android:minEms="2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/decklistRowNumber"
-                android:gravity="center"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp" />
-
-            <TextView
-                tools:text="Rift Bolt"
-                style="@style/text.medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/card_name"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp" />
-
-            <TextView
-                tools:text="{2}{R}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/decklistRowCost"
-                android:gravity="end|center_vertical"
-                android:layout_gravity="center_vertical"
-                android:paddingEnd="16dp"
-                android:paddingRight="16dp" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            tools:text="(##)" />
 
     </LinearLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/card_row"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/decklistRowNumber"
+            style="@style/text.medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:minEms="2"
+            android:paddingLeft="16dp"
+            android:paddingStart="16dp"
+            tools:text="99" />
+
+        <TextView
+            android:id="@+id/card_name"
+            style="@style/text.medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            tools:text="Rift Bolt" />
+
+        <TextView
+            android:id="@+id/decklistRowCost"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="end|center_vertical"
+            android:paddingEnd="16dp"
+            android:paddingRight="16dp"
+            tools:text="{2}{R}" />
+
+    </LinearLayout>
+
+</LinearLayout>

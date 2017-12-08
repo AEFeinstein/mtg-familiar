@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
@@ -21,6 +40,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -187,8 +207,8 @@ public class ResultListFragment extends FamiliarFragment {
             }
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
-                ToastWrapper.makeText(this.getActivity(), getString(R.string.search_toast_no_results), ToastWrapper.LENGTH_SHORT
-                ).show();
+                ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, ToastWrapper.LENGTH_SHORT
+                );
                 if (!getActivity().isTaskRoot()) {
                     getActivity().finish();
                 } else {
@@ -204,8 +224,8 @@ public class ResultListFragment extends FamiliarFragment {
                 }
             } else {
                 if (savedInstanceState == null) {
-                    ToastWrapper.makeText(this.getActivity(), String.format(getResources().getQuantityString(R.plurals.search_toast_results, mCursor.getCount()),
-                            mCursor.getCount()), ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), String.format(getResources().getQuantityString(R.plurals.search_toast_results, mCursor.getCount()),
+                            mCursor.getCount()), ToastWrapper.LENGTH_LONG);
                 }
             }
         }
@@ -223,8 +243,11 @@ public class ResultListFragment extends FamiliarFragment {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String cardName = ((TextView)view.findViewById(R.id.card_name)).getText().toString();
-                String cardSet = ((TextView)view.findViewById(R.id.cardset)).getText().toString();
+                String cardName = ((TextView) view.findViewById(R.id.card_name)).getText().toString();
+                String cardSet = null;
+                if(view.findViewById(R.id.cardset).getVisibility() == View.VISIBLE) {
+                    cardSet = ((TextView) view.findViewById(R.id.cardset)).getText().toString();
+                }
                 showDialog(ResultListDialogFragment.QUICK_ADD, cardName, cardSet);
                 return true;
             }
@@ -264,7 +287,7 @@ public class ResultListFragment extends FamiliarFragment {
             long id1 = args.getLong(CARD_ID_1);
             long id2 = args.getLong(CARD_ID_2);
             mCursor = CardDbAdapter.fetchCards(new long[]{id, id1, id2},
-                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder(), database);
+                    PreferenceAdapter.getSearchSortOrder(getContext()), database);
         } else {
 
             /* All the things we may want to display */
@@ -279,7 +302,7 @@ public class ResultListFragment extends FamiliarFragment {
                     criteria.setLogic == CardDbAdapter.FIRST_PRINTING);
 
             mCursor = CardDbAdapter.Search(criteria, true, returnTypes, consolidate,
-                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder(), database);
+                    PreferenceAdapter.getSearchSortOrder(getContext()), database);
         }
     }
 
@@ -304,26 +327,26 @@ public class ResultListFragment extends FamiliarFragment {
             ArrayList<Integer> toList = new ArrayList<>();
             fromList.add(CardDbAdapter.KEY_NAME);
             toList.add(R.id.card_name);
-            if (getFamiliarActivity().mPreferenceAdapter.getSetPref()) {
+            if (PreferenceAdapter.getSetPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_SET);
                 toList.add(R.id.cardset);
                 fromList.add(CardDbAdapter.KEY_RARITY);
                 toList.add(R.id.rarity);
             }
-            if (getFamiliarActivity().mPreferenceAdapter.getManaCostPref()) {
+            if (PreferenceAdapter.getManaCostPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_MANACOST);
                 toList.add(R.id.cardcost);
             }
-            if (getFamiliarActivity().mPreferenceAdapter.getTypePref()) {
+            if (PreferenceAdapter.getTypePref(getContext())) {
                 /* This will handle both sub and super type */
                 fromList.add(CardDbAdapter.KEY_SUPERTYPE);
                 toList.add(R.id.cardtype);
             }
-            if (getFamiliarActivity().mPreferenceAdapter.getAbilityPref()) {
+            if (PreferenceAdapter.getAbilityPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_ABILITY);
                 toList.add(R.id.cardability);
             }
-            if (getFamiliarActivity().mPreferenceAdapter.getPTPref()) {
+            if (PreferenceAdapter.getPTPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_POWER);
                 toList.add(R.id.cardp);
                 fromList.add(CardDbAdapter.KEY_TOUGHNESS);
@@ -449,7 +472,7 @@ public class ResultListFragment extends FamiliarFragment {
             SortOrderDialogFragment newFragment = new SortOrderDialogFragment();
             Bundle args = new Bundle();
             args.putString(SortOrderDialogFragment.SAVED_SORT_ORDER,
-                    getFamiliarActivity().mPreferenceAdapter.getSearchSortOrder());
+                    PreferenceAdapter.getSearchSortOrder(getContext()));
             newFragment.setArguments(args);
             newFragment.show(getFragmentManager(), FamiliarActivity.DIALOG_TAG);
         } else {
@@ -470,7 +493,7 @@ public class ResultListFragment extends FamiliarFragment {
      */
     public void receiveSortOrder(String orderByStr) {
 
-        getFamiliarActivity().mPreferenceAdapter.setSearchSortOrder(orderByStr);
+        PreferenceAdapter.setSearchSortOrder(getContext(), orderByStr);
 
         try {
             /* Close the old cursor */

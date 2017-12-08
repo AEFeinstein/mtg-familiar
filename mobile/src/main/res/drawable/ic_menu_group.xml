@@ -1,4 +1,28 @@
-<vector android:height="32dp" android:viewportHeight="96.0"
-    android:viewportWidth="96.0" android:width="32dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="?attr/colorControlNormal" android:pathData="M61,44.8c5.5,0 10,-4.4 10,-9.8 0,-5.6 -4.5,-10 -10,-10 -5.3,0 -9.7,4.4 -9.7,10 0,5.2 4.4,9.6 9.8,9.6zM35,44.8c5.3,0 9.7,-4.4 9.7,-9.8 0,-5.6 -4.4,-10 -9.8,-10 -5.8,0 -10,4.4 -10,10 0,5.2 4.2,9.6 10,9.6zM35,51.4c-7.7,0 -23,3.8 -23,11.4L12,71h45.8v-8.3c0,-7.6 -15.2,-11.4 -23,-11.4zM61,51.4c-1,0 -2,0 -3,0.2 3.7,2.7 6.4,6.4 6.4,11.2L64.4,71L84,71v-8.3c0,-7.6 -15.3,-11.4 -23,-11.4z"/>
+<!--
+  ~ Copyright 2017 Adam Feinstein
+  ~
+  ~ This file is part of MTG Familiar.
+  ~
+  ~ MTG Familiar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ MTG Familiar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector android:height="32dp"
+    android:viewportHeight="96.0"
+    android:viewportWidth="96.0"
+    android:width="32dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M61,44.8c5.5,0 10,-4.4 10,-9.8 0,-5.6 -4.5,-10 -10,-10 -5.3,0 -9.7,4.4 -9.7,10 0,5.2 4.4,9.6 9.8,9.6zM35,44.8c5.3,0 9.7,-4.4 9.7,-9.8 0,-5.6 -4.4,-10 -9.8,-10 -5.8,0 -10,4.4 -10,10 0,5.2 4.2,9.6 10,9.6zM35,51.4c-7.7,0 -23,3.8 -23,11.4L12,71h45.8v-8.3c0,-7.6 -15.2,-11.4 -23,-11.4zM61,51.4c-1,0 -2,0 -3,0.2 3.7,2.7 6.4,6.4 6.4,11.2L64.4,71L84,71v-8.3c0,-7.6 -15.3,-11.4 -23,-11.4z" />
 </vector>

@@ -1,18 +1,18 @@
-/**
+/*
  * Copyright 2012 Jonathan Bettger
- * <p/>
+ *
  * This file is part of MTG Familiar.
- * <p/>
+ *
  * MTG Familiar is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * MTG Familiar is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -149,7 +149,7 @@ public class GatheringsFragment extends FamiliarFragment {
             for (GatheringsPlayerData player : players) {
                 AddPlayerRow(player);
             }
-            getActivity().supportInvalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
             mCurrentGatheringName = savedInstanceState.getString(SAVED_NAME_KEY);
         }
     }
@@ -238,7 +238,7 @@ public class GatheringsFragment extends FamiliarFragment {
      */
     public void SaveGathering(String _gatheringName) {
         if (_gatheringName.length() <= 0) {
-            ToastWrapper.makeText(getActivity(), R.string.gathering_toast_no_name, ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(getActivity(), R.string.gathering_toast_no_name, ToastWrapper.LENGTH_LONG);
             return;
         }
 
@@ -263,7 +263,7 @@ public class GatheringsFragment extends FamiliarFragment {
 
         GatheringsIO.writeGatheringXML(players, _gatheringName, mDisplayModeSpinner.getSelectedItemPosition(),
                 getActivity().getFilesDir());
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     /**
@@ -316,14 +316,14 @@ public class GatheringsFragment extends FamiliarFragment {
                 /* eat it */
             }
         }
-        View newView = getLayoutInflater().inflate(R.layout.gathering_create_player_row, null, false);
+        View newView = getLayoutInflater().inflate(R.layout.gathering_create_player_row, mLinearLayout, false);
         assert newView != null;
 
         ((TextView) newView.findViewById(R.id.custom_name)).setText(_player.mName);
         ((TextView) newView.findViewById(R.id.starting_life)).setText(String.valueOf(_player.mStartingLife));
 
         mLinearLayout.addView(newView);
-        getActivity().supportInvalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
     }
 
     /**

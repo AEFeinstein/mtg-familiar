@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers.updaters;
 
 import android.content.Context;
@@ -36,17 +55,14 @@ class MTRIPGParser {
     private static final String IPG_LOCAL_FILE = "IPG.html";
     private static final String JAR_LOCAL_FILE = "JAR.html";
     private final Context mContext;
-    private final PreferenceAdapter mPrefAdapter;
     String mPrettyDate;
 
     /**
      * Default constructor
      *
-     * @param prefAdapter A PreferenceAdapter used for pulling fetching and committing update times
-     * @param context     This context is used to get file handles to write the HTML files later
+     * @param context This context is used to get file handles to write the HTML files later
      */
-    public MTRIPGParser(PreferenceAdapter prefAdapter, Context context) {
-        this.mPrefAdapter = prefAdapter;
+    public MTRIPGParser(Context context) {
         this.mContext = context;
     }
 
@@ -108,7 +124,7 @@ class MTRIPGParser {
                 default:
                     throw new FileNotFoundException("Invalid switch"); /* handled below */
             }
-            InputStream stream = FamiliarActivity.getHttpInputStream(urlString, logWriter);
+            InputStream stream = FamiliarActivity.getHttpInputStream(urlString, logWriter, mContext);
             if (stream != null) {
                 updated = parseDocument(mode, stream);
             }
@@ -137,15 +153,15 @@ class MTRIPGParser {
         boolean shouldUpdate;
         switch (mode) {
             case MODE_IPG: {
-                shouldUpdate = documentDate != mPrefAdapter.getLastIPGUpdate();
+                shouldUpdate = documentDate != PreferenceAdapter.getLastIPGUpdate(mContext);
                 break;
             }
             case MODE_MTR: {
-                shouldUpdate = documentDate != mPrefAdapter.getLastMTRUpdate();
+                shouldUpdate = documentDate != PreferenceAdapter.getLastMTRUpdate(mContext);
                 break;
             }
             case MODE_JAR: {
-                shouldUpdate = documentDate != mPrefAdapter.getLastJARUpdate();
+                shouldUpdate = documentDate != PreferenceAdapter.getLastJARUpdate(mContext);
                 break;
             }
             default: {
@@ -183,13 +199,13 @@ class MTRIPGParser {
 
             switch (mode) {
                 case MODE_IPG:
-                    mPrefAdapter.setLastIPGUpdate(documentDate);
+                    PreferenceAdapter.setLastIPGUpdate(mContext, documentDate);
                     break;
                 case MODE_MTR:
-                    mPrefAdapter.setLastMTRUpdate(documentDate);
+                    PreferenceAdapter.setLastMTRUpdate(mContext, documentDate);
                     break;
                 case MODE_JAR:
-                    mPrefAdapter.setLastJARUpdate(documentDate);
+                    PreferenceAdapter.setLastJARUpdate(mContext, documentDate);
                     break;
                 default:
                     throw new FileNotFoundException("Invalid switch"); /* handled below */

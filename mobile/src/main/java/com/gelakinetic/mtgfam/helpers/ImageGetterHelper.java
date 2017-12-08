@@ -1,18 +1,18 @@
-/**
- * Copyright 2011 Adam Feinstein
- * <p/>
+/*
+ * Copyright 2017 Adam Feinstein
+ *
  * This file is part of MTG Familiar.
- * <p/>
+ *
  * MTG Familiar is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p/>
+ *
  * MTG Familiar is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU General Public License
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -94,9 +94,8 @@ public class ImageGetterHelper {
                 Drawable d = null;
                 source = source.replace("/", "");
 
-                PreferenceAdapter pa = new PreferenceAdapter(context);
-                final int tapRes = pa.getTapSymbol();
-                final int wRes = pa.getWhiteSymbol();
+                final int tapRes = PreferenceAdapter.getTapSymbol(context);
+                final int wRes = PreferenceAdapter.getWhiteSymbol(context);
 
                 if (source.equalsIgnoreCase("w")) {
                     d = ContextCompat.getDrawable(context, wRes);//ContextCompat.getDrawable(context, R.drawable.glyph_w, null);

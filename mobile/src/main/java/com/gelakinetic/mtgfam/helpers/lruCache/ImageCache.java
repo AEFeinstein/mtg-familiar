@@ -641,7 +641,7 @@ public class ImageCache {
          * memory. Throws {@link IllegalArgumentException} if percent is < 0.01 or > .8.
          * memCacheSize is stored in kilobytes instead of bytes as this will eventually be passed
          * to construct a LruCache which takes an int in its constructor.
-         * <p/>
+         *
          * This value should be chosen carefully based on a number of factors
          * Refer to the corresponding Android Training class for more discussion:
          * http://developer.android.com/training/displaying-bitmaps/

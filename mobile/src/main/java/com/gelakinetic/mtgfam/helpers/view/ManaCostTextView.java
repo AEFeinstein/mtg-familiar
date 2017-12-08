@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers.view;
 
 import android.app.Activity;
@@ -21,13 +40,12 @@ import android.widget.TextView;
 import com.gelakinetic.mtgfam.R;
 import com.tokenautocomplete.FilteredArrayAdapter;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.LinkedHashMap;
 
 public class ManaCostTextView extends ATokenTextView {
     private static final LinkedHashMap<String, BitmapDrawable> MANA_DRAWABLES = new LinkedHashMap<>();
     private static final LinkedHashMap<String, Integer> MANA_SYMBOLS = new LinkedHashMap<>();
+
     static {
         MANA_SYMBOLS.put("0", R.drawable.glyph_0);
         MANA_SYMBOLS.put("1", R.drawable.glyph_1);
@@ -126,26 +144,6 @@ public class ManaCostTextView extends ATokenTextView {
         @Override
         protected boolean keepObject(String obj, String mask) {
             return obj.toUpperCase().contains(mask.toUpperCase());
-        }
-    }
-
-    /**
-     * Return the mana cost as a string.
-     * @return the mana cost string.
-     */
-    @NonNull
-    public String getStringFromObjects() {
-        String value = "";
-        for (String part : this.getObjects()) {
-            value += "{" + part + "}";
-        }
-        return value;
-    }
-
-    public void setObjectsFromString(@NotNull String value) {
-        /* Get a list of the persisted mana symbols */
-        for (String symbol : value.split("}")) {
-            this.addObject(symbol + "}");
         }
     }
 

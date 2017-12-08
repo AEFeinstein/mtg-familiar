@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
@@ -49,7 +68,7 @@ public class WishlistHelpers {
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
     }
 
@@ -60,24 +79,24 @@ public class WishlistHelpers {
      * @param mCompressedWishlist The wishlist to write to the file
      */
     public static void WriteCompressedWishlist(Context mCtx, ArrayList<CompressedWishlistInfo> mCompressedWishlist) {
+        if (null == mCtx) {
+            // Context is null, don't try to write the wishlist
+            return;
+        }
         try {
             FileOutputStream fos = mCtx.openFileOutput(WISHLIST_NAME, Context.MODE_PRIVATE);
 
             /* For each compressed card, make an MtgCard and write it to the wishlist */
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                 for (IndividualSetInfo isi : cwi.mInfo) {
-                    cwi.mExpansion = isi.mSet;
-                    cwi.setCode = isi.mSetCode;
-                    cwi.mNumber = isi.mNumber;
-                    cwi.foil = isi.mIsFoil;
-                    cwi.numberOf = isi.mNumberOf;
+                    cwi.applyIndividualInfo(isi);
                     fos.write(cwi.toWishlistString().getBytes());
                 }
             }
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
     }
 
@@ -90,11 +109,7 @@ public class WishlistHelpers {
     public static void addItemToWishlist(final Context context, final CompressedWishlistInfo wishlistInfo) {
         final ArrayList<MtgCard> currentWishlist = ReadWishlist(context);
         for (IndividualSetInfo isi : wishlistInfo.mInfo) {
-            wishlistInfo.mExpansion = isi.mSet;
-            wishlistInfo.setCode = isi.mSetCode;
-            wishlistInfo.mNumber = isi.mNumber;
-            wishlistInfo.foil = isi.mIsFoil;
-            wishlistInfo.numberOf = isi.mNumberOf;
+            wishlistInfo.applyIndividualInfo(isi);
             if (currentWishlist.contains(wishlistInfo)) {
                 final int existingIndex = currentWishlist.indexOf(wishlistInfo);
                 currentWishlist.get(existingIndex).numberOf += wishlistInfo.numberOf;
@@ -145,7 +160,7 @@ public class WishlistHelpers {
                 br.close();
             }
         } catch (NumberFormatException e) {
-            ToastWrapper.makeText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG).show();
+            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         } catch (IOException e) {
             /* Catches file not found exception when wishlist doesn't exist */
         }

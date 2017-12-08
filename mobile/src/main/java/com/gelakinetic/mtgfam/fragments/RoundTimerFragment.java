@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments;
 
 import android.app.AlarmManager;
@@ -24,6 +43,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.RoundTimerDialogFragment;
 import com.gelakinetic.mtgfam.helpers.NotificationHelper;
+import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.RoundTimerBroadcastReceiver;
 
 import java.util.Calendar;
@@ -32,11 +52,11 @@ import java.util.Calendar;
  * This fragment starts and stops the round timer. When it is started, it commits the end time as a shared preference,
  * sets a series of PendingIntents with the AlarmManager, creates a notification, and tells the FamiliarActivity to
  * display the time in the ActionBar.
- * <p/>
+ *
  * Future activities and fragments will determine if the timer is running by checking the shared preference. If it is -1
  * the timer is no longer running. It will automatically be set to -1 when the final PendingIntent fires, or if it has
  * expired and then checked.
- * <p/>
+ *
  * This means that the round timer persists through literally anything, even getting automatically restarted in place
  * after a force close (if the app is opened again). The FamiliarActivity will take care of recreating the notification
  * and PendingIntents.
@@ -68,6 +88,10 @@ public class RoundTimerFragment extends FamiliarFragment {
      */
     public static void setOrCancelAlarms(Context context, long endTime, boolean set) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        if (null == am) {
+            return;
+        }
 
         PendingIntent AlarmPendingIntent = PendingIntent.getBroadcast(context, TIMER_RING_ALARM, new Intent(context,
                         RoundTimerBroadcastReceiver.class).putExtra(ROUND_TIMER_INTENT, TIMER_RING_ALARM),
@@ -202,9 +226,9 @@ public class RoundTimerFragment extends FamiliarFragment {
         mTimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (getFamiliarActivity().mPreferenceAdapter.getRoundTimerEnd() != -1) {
+                if (PreferenceAdapter.getRoundTimerEnd(getContext()) != -1) {
                     /* Commit the endTime as -1 */
-                    getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(-1);
+                    PreferenceAdapter.setRoundTimerEnd(getContext(), -1);
                     /* Cancel the alarms */
                     setOrCancelAlarms(getActivity(), 0, false);
                     /* Stop the ActionBar timer display*/
@@ -225,7 +249,7 @@ public class RoundTimerFragment extends FamiliarFragment {
                     }
                     long endTime = System.currentTimeMillis() + timeInMillis;
                     /* Commit the end time */
-                    getFamiliarActivity().mPreferenceAdapter.setRoundTimerEnd(endTime);
+                    PreferenceAdapter.setRoundTimerEnd(getContext(), endTime);
 
                     /* Set the alarm, and any warning alarms if applicable */
                     setOrCancelAlarms(getActivity(), endTime, true);
@@ -239,7 +263,7 @@ public class RoundTimerFragment extends FamiliarFragment {
             }
         });
 
-        if (getFamiliarActivity().mPreferenceAdapter.getRoundTimerEnd() != -1) {
+        if (PreferenceAdapter.getRoundTimerEnd(getContext()) != -1) {
             mTimerButton.setText(R.string.timer_cancel);
         }
 
@@ -279,7 +303,7 @@ public class RoundTimerFragment extends FamiliarFragment {
         /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.set_timer_ringtone:
-                Uri soundFile = Uri.parse(getFamiliarActivity().mPreferenceAdapter.getTimerSound());
+                Uri soundFile = Uri.parse(PreferenceAdapter.getTimerSound(getContext()));
 
                 Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);

@@ -1,8 +1,28 @@
+/*
+ * Copyright 2017 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Pair;
 import android.view.View;
 
@@ -33,12 +53,20 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
+        if (!canCreateDialog()) {
+            setShowsDialog(false);
+            return DontShowDialog();
+        }
 
         /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
         mDialogId = getArguments().getInt(ID_KEY);
+
+        if (null == getParentResultListFragment()) {
+            return DontShowDialog();
+        }
+
         switch (mDialogId) {
             case QUICK_ADD: {
                 final String cardName = getArguments().getString(NAME_KEY);
@@ -60,7 +88,9 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 // Show the dialog to pick a deck
-                                getResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
+                                if (null != getParentResultListFragment()) {
+                                    getParentResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
+                                }
                             }
                         })
                         .build();
@@ -72,8 +102,8 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeText(this.getActivity(), R.string.decklist_toast_no_decks,
-                            ToastWrapper.LENGTH_LONG).show();
+                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.decklist_toast_no_decks,
+                            ToastWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -120,12 +150,18 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             default: {
-                return DontShowDialog();
+                savedInstanceState.putInt("id", mDialogId);
+                return super.onCreateDialog(savedInstanceState);
             }
         }
     }
 
-    private ResultListFragment getResultListFragment() {
-        return (ResultListFragment) getFamiliarFragment();
+    @Nullable
+    private ResultListFragment getParentResultListFragment() {
+        try {
+            return (ResultListFragment) getParentFamiliarFragment();
+        } catch (ClassCastException e) {
+            return null;
+        }
     }
 }
