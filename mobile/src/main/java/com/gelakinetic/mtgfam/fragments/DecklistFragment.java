@@ -466,6 +466,9 @@ public class DecklistFragment extends FamiliarListFragment {
                         currentDeckName), ToastWrapper.LENGTH_SHORT);
                 return true;
             }
+            case R.id.deck_menu_legality: {
+                showDialog(DecklistDialogFragment.DIALOG_GET_LEGALITY, null, false);
+            }
             default: {
                 return super.onOptionsItemSelected(item);
             }

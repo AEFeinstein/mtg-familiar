@@ -52,4 +52,11 @@
         android:icon="@drawable/ic_menu_share"
         android:title="@string/decklist_share"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/deck_menu_legality"
+        android:icon="@drawable/ic_menu_legality"
+        android:title="@string/card_view_legality"
+        app:showAsAction="ifRoom" />
+
 </menu>
