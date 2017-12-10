@@ -86,4 +86,11 @@ public abstract class ATokenTextView extends TokenCompleteTextView<String> {
             super.dismissDropDown();
         }
     }
+
+    public void clearTextAndTokens() {
+        this.clearCompletionText();
+        for (String str : this.getObjects()) {
+            this.removeObject(str);
+        }
+    }
 }

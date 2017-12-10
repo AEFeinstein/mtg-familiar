@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -57,7 +56,7 @@ import java.util.List;
  *
  * @author mgod
  */
-public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoCompleteTextView implements TextView.OnEditorActionListener {
+public abstract class TokenCompleteTextView<T> extends MultiAutoCompleteTextView implements TextView.OnEditorActionListener {
     //Logging
     public static final String TAG = "TokenAutoComplete";
 
@@ -110,6 +109,8 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
 
     private int tokenLimit = -1;
 
+    private transient String lastCompletionText = null;
+
     /**
      * Add the TextChangedListeners
      */
@@ -156,8 +157,10 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
         setTextIsSelectable(false);
         setLongClickable(false);
 
-        //In theory, get the soft keyboard to not supply suggestions. very unreliable < API 11
-        setInputType(getInputType() | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+        //In theory, get the soft keyboard to not supply suggestions. very unreliable
+        setInputType(getInputType() |
+                InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
+                InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
         setHorizontallyScrolling(false);
 
         // Listen to IME action keys
@@ -171,8 +174,9 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
                 // Token limit check
                 if (tokenLimit != -1 && objects.size() == tokenLimit) {
                     return "";
-                } else if (source.length() == 1) {//Detect split characters, remove them and complete the current token instead
-                    if (isSplitChar(source.charAt(0))) {
+                } else if (source.toString().trim().length() == 1) {
+                    //Detect split characters, remove them and complete the current token instead
+                    if (isSplitChar(source.toString().trim().charAt(0))) {
                         performCompletion();
                         return "";
                     }
@@ -318,6 +322,7 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
      * @param prefix prefix
      * @param color A single color value in the form 0xAARRGGBB.
      */
+    @SuppressWarnings("SameParameterValue")
     public void setPrefix(CharSequence prefix, int color) {
         SpannableString spannablePrefix = new SpannableString(prefix);
         spannablePrefix.setSpan(new ForegroundColorSpan(color), 0, spannablePrefix.length(), 0);
@@ -631,7 +636,9 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
         // Hide the keyboard
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getWindowToken(), 0);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -664,6 +671,7 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
         return handled || super.onKeyDown(keyCode, event);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private boolean deleteSelectedObject(boolean handled) {
         if (tokenClickStyle != null && tokenClickStyle.isSelectable()) {
             Editable text = getText();
@@ -946,6 +954,11 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
 
         String original = TextUtils.substring(editable, start, end);
 
+        //Keep track of  replacements for a bug workaround
+        if (original.length() > 0) {
+            lastCompletionText = original;
+        }
+
         if (editable != null) {
             if (tokenSpan == null) {
                 editable.replace(start, end, "");
@@ -975,6 +988,7 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
      * @param object     the object to add to the displayed tokens
      * @param sourceText the text used if this object is deleted
      */
+    @SuppressWarnings("SameParameterValue")
     public void addObject(final T object, final CharSequence sourceText) {
         post(new Runnable() {
             @Override
@@ -1034,43 +1048,6 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
                         removeSpan(span);
                     }
                 }
-            }
-        });
-    }
-
-    public void clearTextAndTokens() {
-        post(new Runnable() {
-            @Override
-            public void run() {
-                //To make sure all the appropriate callbacks happen, we just want to piggyback on the
-                //existing code that handles deleting spans when the text changes
-                Editable text = getText();
-                if (text == null) {
-                    return;
-                }
-
-                // Remove all hidden tokens
-                ArrayList<TokenImageSpan> toRemove = new ArrayList<>();
-                for (TokenImageSpan span : hiddenSpans) {
-                    toRemove.add(span);
-                }
-                for (TokenImageSpan span : toRemove) {
-                    hiddenSpans.remove(span);
-                    // Remove it from the state and fire the callback
-                    spanWatcher.onSpanRemoved(text, span, 0, 0);
-                }
-
-                updateCountSpan();
-
-                // Then remove all visible tokens
-                TokenImageSpan[] spans = text.getSpans(0, text.length(), TokenImageSpan.class);
-                for (TokenImageSpan span : spans) {
-                    removeSpan(span);
-                }
-
-                // Finally clear any stray non-tokenized text
-                Parcelable state = TokenCompleteTextView.this.onSaveInstanceState();
-                TokenCompleteTextView.this.onRestoreInstanceState(state);
             }
         });
     }
@@ -1278,15 +1255,18 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
     protected class TokenImageSpan extends ViewSpan implements NoCopySpan {
         private T token;
 
+        @SuppressWarnings("WeakerAccess")
         public TokenImageSpan(View d, T token, int maxWidth) {
             super(d, maxWidth);
             this.token = token;
         }
 
+        @SuppressWarnings("WeakerAccess")
         public T getToken() {
             return this.token;
         }
 
+        @SuppressWarnings("WeakerAccess")
         public void onClick() {
             Editable text = getText();
             if (text == null) return;
@@ -1413,11 +1393,11 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
                 spanEnd--;
 
                 //Delete any extra split chars
-                if (spanEnd >= 0 && spanEnd < text.length() && isSplitChar(text.charAt(spanEnd))) {
+                if (spanEnd >= 0 && isSplitChar(text.charAt(spanEnd))) {
                     text.delete(spanEnd, spanEnd + 1);
                 }
 
-                if (spanStart >= 0 && spanStart < text.length() && isSplitChar(text.charAt(spanStart))) {
+                if (spanStart >= 0 && isSplitChar(text.charAt(spanStart))) {
                     text.delete(spanStart, spanStart + 1);
                 }
             }
@@ -1705,6 +1685,29 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
             }
 
             return super.deleteSurroundingText(beforeLength, afterLength);
+        }
+
+        @Override
+        public boolean setComposingText(CharSequence text, int newCursorPosition) {
+            //There's an issue with some keyboards where they will try to insert the first word
+            //of the prefix as the composing text
+            CharSequence hint = getHint();
+            if (hint != null) {
+                String firstWord = hint.toString().trim().split(" ")[0];
+                if (firstWord.length() > 0 && firstWord.equals(text)) {
+                    text = ""; //It was trying to use th hint, so clear that text
+                }
+            }
+
+            //Also, some keyboards don't correctly respect the replacement if the replacement
+            //is the same number of characters as the replacement span (",, "), so 3 letters
+            //We need to ignore this value if it's available
+            if (lastCompletionText != null && text.length() == lastCompletionText.length() + 1 &&
+                    text.toString().startsWith(lastCompletionText)) {
+                text = text.subSequence(text.length() - 1, text.length());
+            }
+
+            return super.setComposingText(text, newCursorPosition);
         }
     }
 }
