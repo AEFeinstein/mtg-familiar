@@ -106,6 +106,7 @@ public class SearchViewFragment extends FamiliarFragment {
     private String[] mSupertypes = null;
     private String[] mSubtypes = null;
     private String[] mArtists = null;
+    private String[] mWatermarks = null;
 
     /* UI Elements */
     private AutoCompleteTextView mNameField;
@@ -143,6 +144,7 @@ public class SearchViewFragment extends FamiliarFragment {
     public Dialog mRarityDialog;
     private EditText mFlavorField;
     private AutoCompleteTextView mArtistField = null;
+    private AutoCompleteTextView mWatermarkField = null;
     private Spinner mTextSpinner;
     private Spinner mTypeSpinner;
     private Spinner mSetSpinner;
@@ -210,6 +212,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mSubtypeField = myFragmentView.findViewById(R.id.subtypesearch);
         mFlavorField = myFragmentView.findViewById(R.id.flavorsearch);
         mArtistField = myFragmentView.findViewById(R.id.artistsearch);
+        mWatermarkField = myFragmentView.findViewById(R.id.watermarksearch);
         mCollectorsNumberField = myFragmentView.findViewById(R.id.collectorsnumbersearch);
 
         Button searchButton = myFragmentView.findViewById(R.id.searchbutton);
@@ -297,6 +300,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mManaCostTextView.setOnEditorActionListener(doSearchListener);
         mFlavorField.setOnEditorActionListener(doSearchListener);
         mArtistField.setOnEditorActionListener(doSearchListener);
+        mWatermarkField.setOnEditorActionListener(doSearchListener);
         mCollectorsNumberField.setOnEditorActionListener(doSearchListener);
 
         /* set the autocomplete for card names */
@@ -316,6 +320,7 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Disable system level autocomplete for fields which do it already */
         mNameField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mArtistField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mWatermarkField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mSupertypeField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mSubtypeField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mSetField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -378,6 +383,10 @@ public class SearchViewFragment extends FamiliarFragment {
                     if (mArtists == null) {
                         mArtists = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_ARTIST, false, database);
                     }
+
+                    if (mWatermarks == null) {
+                        mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_WATERMARK, false, database);
+                    }
                 } catch (FamiliarDbException e) {
                     handleFamiliarDbException(true);
                 }
@@ -421,6 +430,12 @@ public class SearchViewFragment extends FamiliarFragment {
                                     SearchViewFragment.this.getActivity(), R.layout.list_item_1, mArtists);
                             mArtistField.setThreshold(1);
                             mArtistField.setAdapter(artistAdapter);
+
+                            /* set the autocomplete for watermarks */
+                            ArrayAdapter<String> watermarkAdapter = new ArrayAdapter<>(
+                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mWatermarks);
+                            mWatermarkField.setThreshold(1);
+                            mWatermarkField.setAdapter(watermarkAdapter);
                         }
                     });
                 } catch (NullPointerException e) {
@@ -522,6 +537,7 @@ public class SearchViewFragment extends FamiliarFragment {
         assert mSubtypeField.getText() != null;
         assert mFlavorField.getText() != null;
         assert mArtistField.getText() != null;
+        assert mWatermarkField.getText() != null;
         assert mSetField.getText() != null;
         assert mCollectorsNumberField.getText() != null;
         assert mManaCostTextView.getText() != null;
@@ -550,6 +566,7 @@ public class SearchViewFragment extends FamiliarFragment {
         searchCriteria.subTypes = mSubtypeField.getObjects();
         searchCriteria.flavor = mFlavorField.getText().toString().trim();
         searchCriteria.artist = mArtistField.getText().toString().trim();
+        searchCriteria.watermark = mWatermarkField.getText().toString().trim();
         searchCriteria.collectorsNumber = mCollectorsNumberField.getText().toString().trim();
         searchCriteria.sets = mSetField.getObjects();
         searchCriteria.manaCost = mManaCostTextView.getObjects();
@@ -765,6 +782,7 @@ public class SearchViewFragment extends FamiliarFragment {
         mSubtypeField.clearTextAndTokens();
         mTextField.setText("");
         mArtistField.setText("");
+        mWatermarkField.setText("");
         mFlavorField.setText("");
         mCollectorsNumberField.setText("");
         mSetField.clearTextAndTokens();
@@ -855,6 +873,7 @@ public class SearchViewFragment extends FamiliarFragment {
 
             mTextField.setText(criteria.text);
             mArtistField.setText(criteria.artist);
+            mWatermarkField.setText(criteria.watermark);
             mFlavorField.setText(criteria.flavor);
             mCollectorsNumberField.setText(criteria.collectorsNumber);
 

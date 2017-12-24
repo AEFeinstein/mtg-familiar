@@ -131,7 +131,7 @@ public class CardDbAdapter {
     public static final String KEY_MULTIVERSEID_SPANISH = "MULTIVERSEID_SPANISH";
     public static final String KEY_NAME_KOREAN = "NAME_KOREAN";
     public static final String KEY_MULTIVERSEID_KOREAN = "MULTIVERSEID_KOREAN";
-    private static final String KEY_WATERMARK = "WATERMARK";
+    public static final String KEY_WATERMARK = "WATERMARK";
 
     /* All the columns in DATABASE_TABLE_CARDS */
     public static final List<String> ALL_CARD_DATA_KEYS = Collections.unmodifiableList(Arrays.asList(
