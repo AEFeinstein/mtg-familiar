@@ -848,6 +848,11 @@ public class CardDbAdapter {
             }
         }
 
+        /* Check if the watermark matches exactly */
+        if (criteria.watermark != null) {
+            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_WATERMARK + " = " + sanitizeString(criteria.watermark, false) + ")";
+        }
+
         /*
          * Reuben's version Differences: Original code is verbose only, but mine allows for matching
          * exact text, all words, or just any one word.

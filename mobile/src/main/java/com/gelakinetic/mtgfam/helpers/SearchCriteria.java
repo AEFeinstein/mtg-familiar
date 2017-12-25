@@ -47,7 +47,6 @@ public class SearchCriteria implements Serializable {
     public String rarity = null;
     public String flavor = null;
     public String artist = null;
-    public String watermark = null;
     public int typeLogic = 0;
     public int textLogic = 0;
     public int setLogic = CardDbAdapter.MOST_RECENT_PRINTING;
@@ -57,4 +56,5 @@ public class SearchCriteria implements Serializable {
     public List<String> manaCost = null;
     public Comparison manaCostLogic;
     public boolean moJhoStoFilter;
+    public String watermark = null;
 }

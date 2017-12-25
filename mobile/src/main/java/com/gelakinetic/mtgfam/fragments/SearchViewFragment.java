@@ -751,7 +751,8 @@ public class SearchViewFragment extends FamiliarFragment {
                     break;
                 case "∞":
                     tou = CardDbAdapter.INFINITY;
-                    break;            }
+                    break;
+            }
         }
         searchCriteria.touChoice = tou;
         searchCriteria.touLogic = logicChoices[mTouLogic.getSelectedItemPosition()];
