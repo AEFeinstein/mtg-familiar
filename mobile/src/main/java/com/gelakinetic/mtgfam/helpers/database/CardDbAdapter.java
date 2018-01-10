@@ -288,7 +288,7 @@ public class CardDbAdapter {
     public static final int NO_ONE_CARES = -1005;
     public static final int X = -1006;
     public static final float QUESTION_MARK = -1007;
-    public static final float INFINITY = 999999999; // pronounce it like an astronaut would
+    public static final float INFINITY = 1000000000; // pronounce it like an astronaut would
 
     /* The options for printings for a query */
     public static final int MOST_RECENT_PRINTING = 0;
