@@ -125,7 +125,6 @@ dependencies {
         exclude module: 'commons-io'
     }
     implementation 'org.apache.commons:commons-collections4:4.1'
-    implementation 'cz.msebera.android:httpclient:4.4.1.2'
     implementation 'com.octo.android.robospice:robospice:1.4.14', {
         exclude module: 'commons-lang3'
         exclude module: 'commons-io'
