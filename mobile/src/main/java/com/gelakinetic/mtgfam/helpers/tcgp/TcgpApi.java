@@ -1,9 +1,29 @@
+/*
+ * Copyright 2018 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CatalogData;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CategorySearchManifest;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.GetProductInformationOptions;
+import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductInformation;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 import com.google.gson.Gson;
@@ -315,6 +335,49 @@ public class TcgpApi {
             inStream.close();
             conn.disconnect();
             return price;
+        }
+        // No access token
+        return null;
+    }
+
+    /**
+     * Given an array of productIds, request and return all of the product's non-price details
+     *
+     * @param productIds The productId of the card to query
+     * @return All the non-price details
+     * @throws IOException If something goes wrong with the network
+     */
+    public ProductDetails getProductDetails(long[] productIds) throws IOException {
+        // Make sure we have an access token first
+        if (null != mAccessToken) {
+
+            // Concatenate all the product IDs into one string
+            StringBuilder stringIds = new StringBuilder();
+            for (long id : productIds) {
+                if (stringIds.length() == 0) {
+                    stringIds = new StringBuilder(Long.toString(id));
+                } else {
+                    stringIds.append(',').append(Long.toString(id));
+                }
+            }
+
+            // Create the connection with default options and headers
+            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/products/" + stringIds.toString()).openConnection();
+            setDefaultOptions(conn, HttpMethod.GET);
+            addHeaders(conn);
+
+            // Get the response stream. This opens the connection
+            InputStream inStream = conn.getInputStream();
+
+            // Parse the json out of the response and save it
+            GsonBuilder builder = new GsonBuilder();
+            CatalogData.CatalogDataItem.setDateFormat(builder);
+            ProductDetails details = builder.create().fromJson(new InputStreamReader(inStream), ProductDetails.class);
+
+            // Clean up
+            inStream.close();
+            conn.disconnect();
+            return details;
         }
         // No access token
         return null;
