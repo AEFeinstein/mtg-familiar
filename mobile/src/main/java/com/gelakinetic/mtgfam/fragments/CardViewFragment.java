@@ -82,9 +82,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
@@ -104,6 +102,7 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.reactivex.functions.Consumer;
 
 /**
  * This class handles displaying card info.
@@ -792,27 +791,15 @@ public class CardViewFragment extends FamiliarFragment {
 
                 PriceFetchRequest priceRequest;
                 priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId, getActivity());
-                mActivity.mSpiceManager.execute(priceRequest,
-                        mCardName + "-" + mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-
+                mActivity.mMarketPriceStore.fetchMarketPrice(mCardName, mSetCode, mMultiverseId, mCardType, mCardNumber,
+                        new Consumer<MarketPriceInfo>() {
                             @Override
-                            public void onRequestFailure(SpiceException spiceException) {
+                            public void accept(MarketPriceInfo marketPriceInfo) throws Exception {
                                 if (CardViewFragment.this.isAdded()) {
                                     mActivity.clearLoading();
 
-                                    CardViewFragment.this.removeDialog(getFragmentManager());
-                                    ToastWrapper.makeAndShowText(mActivity, spiceException.getMessage(),
-                                            ToastWrapper.LENGTH_SHORT);
-                                }
-                            }
-
-                            @Override
-                            public void onRequestSuccess(final PriceInfo result) {
-                                if (CardViewFragment.this.isAdded()) {
-                                    mActivity.clearLoading();
-
-                                    if (result != null) {
-                                        mPriceInfo = result;
+                                    if (marketPriceInfo != null) {
+                                        mPriceInfo = null; // TODO use marketPriceInfo
                                         showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
                                         ToastWrapper.makeAndShowText(mActivity,
@@ -821,8 +808,50 @@ public class CardViewFragment extends FamiliarFragment {
                                     }
                                 }
                             }
-                        }
-                );
+                        },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                if (CardViewFragment.this.isAdded()) {
+                                    mActivity.clearLoading();
+
+                                    CardViewFragment.this.removeDialog(getFragmentManager());
+                                    ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
+                                            ToastWrapper.LENGTH_SHORT);
+                                }
+                            }
+                        });
+//                mActivity.mSpiceManager.execute(priceRequest,
+//                        mCardName + "-" + mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
+//
+//                            @Override
+//                            public void onRequestFailure(SpiceException spiceException) {
+//                                if (CardViewFragment.this.isAdded()) {
+//                                    mActivity.clearLoading();
+//
+//                                    CardViewFragment.this.removeDialog(getFragmentManager());
+//                                    ToastWrapper.makeAndShowText(mActivity, spiceException.getMessage(),
+//                                            ToastWrapper.LENGTH_SHORT);
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onRequestSuccess(final PriceInfo result) {
+//                                if (CardViewFragment.this.isAdded()) {
+//                                    mActivity.clearLoading();
+//
+//                                    if (result != null) {
+//                                        mPriceInfo = result;
+//                                        showDialog(CardViewDialogFragment.GET_PRICE);
+//                                    } else {
+//                                        ToastWrapper.makeAndShowText(mActivity,
+//                                                R.string.card_view_price_not_found,
+//                                                ToastWrapper.LENGTH_SHORT);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                );
 
                 return true;
             }
@@ -1237,7 +1266,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             try {
                 // Don't attempt scaling if there's no host fragment
-                if(null == getHost()) {
+                if (null == getHost()) {
                     return null;
                 }
                 /* 16dp */

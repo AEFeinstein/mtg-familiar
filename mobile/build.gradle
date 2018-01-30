@@ -168,6 +168,12 @@ dependencies {
         exclude module: 'jsr305'
         exclude module: 'jcip-annotations'
     }
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'com.nytimes.android:store3:3.0.0-beta' , {
+        exclude module: 'jsr305'
+        exclude module: 'jcip-annotations'
+    }
 }
 
 if (System.env.TRAVIS == 'true') {

@@ -98,6 +98,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetchService;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 import com.octo.android.robospice.SpiceManager;
 
@@ -157,6 +158,8 @@ public class FamiliarActivity extends AppCompatActivity {
     private static final String IMAGE_CACHE_DIR = "familiar_image_cache";
     /* Spice setup */
     public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
+    public MarketPriceFetchService mMarketPriceStore = new MarketPriceFetchService(this);
+
     /* What the drawer menu will be */
     private final DrawerEntry[] mPageEntries = {
             new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false),
