@@ -29,6 +29,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
+import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductInformation;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 import com.google.gson.Gson;
@@ -37,7 +38,6 @@ import com.nytimes.android.external.store3.base.Fetcher;
 import com.nytimes.android.external.store3.base.Persister;
 import com.nytimes.android.external.store3.base.RecordProvider;
 import com.nytimes.android.external.store3.base.RecordState;
-import com.nytimes.android.external.store3.base.impl.MemoryPolicy;
 import com.nytimes.android.external.store3.base.impl.Store;
 import com.nytimes.android.external.store3.base.impl.StoreBuilder;
 
@@ -89,7 +89,7 @@ public class MarketPriceFetchService {
             public Single<MarketPriceInfo> fetch(@Nonnull MarketPriceLookupParams params) {
                 Exception lastThrownException = null;
                 MarketPriceInfo infoToReturn = new MarketPriceInfo();
-                if (FamiliarActivity.getNetworkState(mContext, true) == -1) { // our context contains the activity that spawned the request
+                if (FamiliarActivity.getNetworkState(mContext, false) == -1) { // our context contains the activity that spawned the request
                     return Single.error(new Exception(mContext.getString(R.string.no_network)));
                 }
                 /* try the fetch up to eight times, for different accent mark & split card combos*/
@@ -128,7 +128,7 @@ public class MarketPriceFetchService {
                         CardDbAdapter.MultiCardType multiCardType = CardDbAdapter.isMultiCard(params.mCardNumber, params.mSetCode);
 
                         /* Get the TCGplayer.com set name, why can't everything be consistent? */
-                        String tcgName = CardDbAdapter.getTcgName(params.mSetCode, database);
+                        String tcgSetName = CardDbAdapter.getTcgName(params.mSetCode, database);
                         /* Figure out the tcgCardName, which is tricky for split cards */
                         String tcgCardName;
 
@@ -173,11 +173,26 @@ public class MarketPriceFetchService {
                         }
 
                         TcgpApi api = new TcgpApi();
-                        AccessToken token = api.getAccessToken("", "", "");
-                        ProductInformation information = api.getProductInformation(tcgName, tcgCardName);
+                        AccessToken token = api.getAccessToken(TcgpKeys.PUBLIC_KEY, TcgpKeys.PRIVATE_KEY, TcgpKeys.ACCESS_TOKEN);
+                        ProductInformation information = api.getProductInformation(tcgCardName, tcgSetName);
                         if (information.success) {
                             ProductMarketPrice price = api.getProductMarketPrice(information.results);
-                            // TODO fill in infoToReturn
+                            if(price.success) {
+                                for (ProductMarketPrice.MarketPrice marketPrice : price.results) {
+                                    // TODO check subtypes
+                                    if(marketPrice.subTypeName.equalsIgnoreCase("Foil")) {
+                                        infoToReturn.setFoilPrice(marketPrice);
+                                    }
+                                    else {
+                                        infoToReturn.setNormalPrice(marketPrice);
+                                    }
+                                }
+                                ProductDetails details = api.getProductDetails(information.results);
+                                if(details.success && details.results.length > 0) {
+                                    // TODO do better than 0th index?
+                                    infoToReturn.setUrl(details.results[0].url);
+                                }
+                            }
                             break;
                         }
 
@@ -294,7 +309,8 @@ public class MarketPriceFetchService {
         mStore = StoreBuilder.<MarketPriceLookupParams, MarketPriceInfo>key()
                 .fetcher(mFetcher)
                 .persister(mPersister)
-                .networkBeforeStale().memoryPolicy(MemoryPolicy.builder().setMemorySize(1).build())
+                .networkBeforeStale()
+//                .memoryPolicy(MemoryPolicy.builder().setMemorySize(1).setExpireAfterWrite(1).build())
                 .open();
     }
 

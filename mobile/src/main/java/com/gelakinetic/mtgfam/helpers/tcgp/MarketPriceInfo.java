@@ -19,14 +19,101 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
+import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
+
 /**
  * Created by Adam on 1/29/2018.
  */
 
 public class MarketPriceInfo {
 
-    public MarketPriceInfo() {
-
+    public enum CardType {
+        NORMAL,
+        FOIL
     }
-    // TODO add actual data
+
+    public enum PriceType {
+        LOW,
+        MID,
+        HIGH,
+        MARKET
+    }
+
+    class Price {
+        double low = 0;
+        double mid = 0;
+        double high = 0;
+        double market = 0;
+    }
+
+    Price mNormalPrice = null;
+    Price mFoilPrice = null;
+    String mProductUrl = null;
+
+    public void setUrl(String url) {
+        mProductUrl = url + "?pk=MTGFAMILIA";
+    }
+
+    public void setNormalPrice(ProductMarketPrice.MarketPrice marketPrice) {
+        mNormalPrice = new Price();
+        setPrice(mNormalPrice, marketPrice);
+    }
+
+    public void setFoilPrice(ProductMarketPrice.MarketPrice marketPrice) {
+        mFoilPrice = new Price();
+        setPrice(mFoilPrice, marketPrice);
+    }
+
+    private void setPrice(Price price, ProductMarketPrice.MarketPrice marketPrice) {
+        price.low = marketPrice.lowPrice;
+        price.mid = marketPrice.midPrice;
+        price.high = marketPrice.highPrice;
+        price.market = marketPrice.marketPrice;
+    }
+
+    public double getPrice(CardType cardType, PriceType priceType) {
+        switch (cardType) {
+            case NORMAL: {
+                switch (priceType) {
+                    case LOW: {
+                        return mNormalPrice.low;
+                    }
+                    case MID: {
+                        return mNormalPrice.mid;
+                    }
+                    case HIGH: {
+                        return mNormalPrice.high;
+                    }
+                    case MARKET: {
+                        return mNormalPrice.market;
+                    }
+                }
+            }
+            case FOIL: {
+                switch (priceType) {
+                    case LOW: {
+                        return mFoilPrice.low;
+                    }
+                    case MID: {
+                        return mFoilPrice.mid;
+                    }
+                    case HIGH: {
+                        return mFoilPrice.high;
+                    }
+                    case MARKET: {
+                        return mFoilPrice.market;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    public boolean hasFoilPrice() {
+        return mFoilPrice != null;
+    }
+
+    public String getUrl() {
+        return mProductUrl;
+    }
 }

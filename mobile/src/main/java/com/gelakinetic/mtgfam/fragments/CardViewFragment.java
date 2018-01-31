@@ -74,8 +74,6 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -145,7 +143,7 @@ public class CardViewFragment extends FamiliarFragment {
     public ArrayList<Ruling> mRulingsArrayList;
 
     /* Loaded in a Spice Service */
-    public PriceInfo mPriceInfo;
+    public MarketPriceInfo mPriceInfo;
 
     /* Card info, used to build the URL to fetch the picture */
     private String mCardNumber;
@@ -789,8 +787,6 @@ public class CardViewFragment extends FamiliarFragment {
             case R.id.price: {
                 mActivity.setLoading();
 
-                PriceFetchRequest priceRequest;
-                priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId, getActivity());
                 mActivity.mMarketPriceStore.fetchMarketPrice(mCardName, mSetCode, mMultiverseId, mCardType, mCardNumber,
                         new Consumer<MarketPriceInfo>() {
                             @Override
@@ -799,7 +795,7 @@ public class CardViewFragment extends FamiliarFragment {
                                     mActivity.clearLoading();
 
                                     if (marketPriceInfo != null) {
-                                        mPriceInfo = null; // TODO use marketPriceInfo
+                                        mPriceInfo = marketPriceInfo;
                                         showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
                                         ToastWrapper.makeAndShowText(mActivity,
@@ -821,37 +817,6 @@ public class CardViewFragment extends FamiliarFragment {
                                 }
                             }
                         });
-//                mActivity.mSpiceManager.execute(priceRequest,
-//                        mCardName + "-" + mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-//
-//                            @Override
-//                            public void onRequestFailure(SpiceException spiceException) {
-//                                if (CardViewFragment.this.isAdded()) {
-//                                    mActivity.clearLoading();
-//
-//                                    CardViewFragment.this.removeDialog(getFragmentManager());
-//                                    ToastWrapper.makeAndShowText(mActivity, spiceException.getMessage(),
-//                                            ToastWrapper.LENGTH_SHORT);
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onRequestSuccess(final PriceInfo result) {
-//                                if (CardViewFragment.this.isAdded()) {
-//                                    mActivity.clearLoading();
-//
-//                                    if (result != null) {
-//                                        mPriceInfo = result;
-//                                        showDialog(CardViewDialogFragment.GET_PRICE);
-//                                    } else {
-//                                        ToastWrapper.makeAndShowText(mActivity,
-//                                                R.string.card_view_price_not_found,
-//                                                ToastWrapper.LENGTH_SHORT);
-//                                    }
-//                                }
-//                            }
-//                        }
-//                );
 
                 return true;
             }

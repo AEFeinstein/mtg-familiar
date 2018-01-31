@@ -53,6 +53,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -182,18 +183,18 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 TextView f = v.findViewById(R.id.foil);
                 TextView priceLink = v.findViewById(R.id.pricelink);
 
-                l.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mLow));
-                m.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mAverage));
-                h.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mHigh));
+                l.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW)));
+                m.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID)));
+                h.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH)));
 
-                if (getParentCardViewFragment().mPriceInfo.mFoilAverage != 0) {
-                    f.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mFoilAverage));
+                if (getParentCardViewFragment().mPriceInfo.hasFoilPrice()) {
+                    f.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET)));
                 } else {
                     f.setVisibility(View.GONE);
                     v.findViewById(R.id.foil_label).setVisibility(View.GONE);
                 }
                 priceLink.setMovementMethod(LinkMovementMethod.getInstance());
-                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.mUrl + "\">" +
+                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.getUrl() + "\">" +
                         getString(R.string.card_view_price_dialog_link) + "</a>"));
 
                 MaterialDialog.Builder adb = new MaterialDialog.Builder(getActivity());
