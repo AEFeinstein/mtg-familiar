@@ -72,6 +72,17 @@ public class MarketPriceInfo {
     }
 
     public double getPrice(CardType cardType, PriceType priceType) {
+        /* Protection if a card only has foil or normal price, or if it didn't load */
+        if(null == mNormalPrice && null != mFoilPrice) {
+            cardType = CardType.FOIL;
+        }
+        else if(null == mFoilPrice && null != mNormalPrice) {
+            cardType = CardType.NORMAL;
+        }
+        else if(null == mFoilPrice && null == mNormalPrice) {
+            return 0;
+        }
+        /* Return the requested price */
         switch (cardType) {
             case NORMAL: {
                 switch (priceType) {
