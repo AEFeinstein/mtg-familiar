@@ -42,10 +42,9 @@ import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
 
@@ -442,13 +441,13 @@ public class TradeFragment extends FamiliarListFragment {
     }
 
     @Override
-    protected void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException) {
-        data.message = spiceException.getLocalizedMessage();
+    protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
+        data.message = exception.getLocalizedMessage();
         data.priceInfo = null;
     }
 
     @Override
-    protected void onCardPriceLookupSuccess(MtgCard data, PriceInfo result) {
+    protected void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result) {
         updateTotalPrices(BOTH);
         try {
             sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));

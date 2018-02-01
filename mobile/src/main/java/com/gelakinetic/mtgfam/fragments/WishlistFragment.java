@@ -48,14 +48,13 @@ import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -389,14 +388,14 @@ public class WishlistFragment extends FamiliarListFragment {
     }
 
     @Override
-    protected void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException) {
+    protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
         for (CompressedWishlistInfo cwi : mCompressedWishlist) {
             if (cwi.mName.equals(data.mName)) {
                 /* Find all foil and non foil compressed items with the same set code */
                 for (IndividualSetInfo isi : cwi.mInfo) {
                     if (isi.mSetCode.equals(data.setCode)) {
                         /* Set the price as null and the message as the exception */
-                        isi.mMessage = spiceException.getLocalizedMessage();
+                        isi.mMessage = exception.getLocalizedMessage();
                         isi.mPrice = null;
                     }
                 }
@@ -405,7 +404,7 @@ public class WishlistFragment extends FamiliarListFragment {
     }
 
     @Override
-    protected void onCardPriceLookupSuccess(MtgCard data, PriceInfo result) {
+    protected void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result) {
         for (CompressedWishlistInfo cwi : mCompressedWishlist) {
             if (cwi.mName.equals(data.mName)) {
                 /* Find all foil and non foil compressed items with the same set code */
@@ -436,17 +435,17 @@ public class WishlistFragment extends FamiliarListFragment {
                 for (IndividualSetInfo isi : cwi.mInfo) {
                     if (isi.mPrice != null) {
                         if (isi.mIsFoil) {
-                            totalPrice += (isi.mPrice.mFoilAverage * isi.mNumberOf);
+                            totalPrice += (isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * isi.mNumberOf);
                         } else {
                             switch (getPriceSetting()) {
                                 case LOW_PRICE:
-                                    totalPrice += (isi.mPrice.mLow * isi.mNumberOf);
+                                    totalPrice += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * isi.mNumberOf);
                                     break;
                                 case AVG_PRICE:
-                                    totalPrice += (isi.mPrice.mAverage * isi.mNumberOf);
+                                    totalPrice += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * isi.mNumberOf);
                                     break;
                                 case HIGH_PRICE:
-                                    totalPrice += (isi.mPrice.mHigh * isi.mNumberOf);
+                                    totalPrice += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * isi.mNumberOf);
                                     break;
                                 default:
                                     break;
@@ -686,31 +685,31 @@ public class WishlistFragment extends FamiliarListFragment {
                 TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);
                 if (mShowIndividualPrices) {
                     if (isi.mIsFoil) {
-                        if (isi.mPrice == null || isi.mPrice.mFoilAverage == 0) {
+                        if (isi.mPrice == null || isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) == 0) {
                             priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
                             priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
                         } else {
-                            priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mFoilAverage));
+                            priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET)));
                         }
                     } else {
                         boolean priceFound = false;
                         if (isi.mPrice != null) {
                             switch (getPriceSetting()) {
                                 case LOW_PRICE:
-                                    if (isi.mPrice.mLow != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mLow));
+                                    if (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) != 0) {
+                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW)));
                                         priceFound = true;
                                     }
                                     break;
                                 case AVG_PRICE:
-                                    if (isi.mPrice.mAverage != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mAverage));
+                                    if (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) != 0) {
+                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID)));
                                         priceFound = true;
                                     }
                                     break;
                                 case HIGH_PRICE:
-                                    if (isi.mPrice.mHigh != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.mHigh));
+                                    if (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) != 0) {
+                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH)));
                                         priceFound = true;
                                     }
                                     break;

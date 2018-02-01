@@ -48,12 +48,11 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
 
@@ -569,7 +568,7 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    protected void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException) {
+    protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
         /* Find the compressed wishlist info for this card */
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             if (cdi.header == null && cdi.mName.equals(data.mName)) {
@@ -577,7 +576,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     if (isi.mSetCode.equals(data.setCode)) {
                                     /* Set the price as null and the message as the exception */
-                        isi.mMessage = spiceException.getLocalizedMessage();
+                        isi.mMessage = exception.getLocalizedMessage();
                         isi.mPrice = null;
                     }
                 }
@@ -586,7 +585,7 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    protected void onCardPriceLookupSuccess(MtgCard data, PriceInfo result) {
+    protected void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result) {
         /* Find the compressed wishlist info for this card */
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             if (cdi.header == null && cdi.mName.equals(data.mName)) {
@@ -620,17 +619,17 @@ public class DecklistFragment extends FamiliarListFragment {
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     if (isi.mPrice != null) {
                         if (isi.mIsFoil) {
-                            totalPrice += isi.mPrice.mFoilAverage * isi.mNumberOf;
+                            totalPrice += isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * isi.mNumberOf;
                         } else {
                             switch (getPriceSetting()) {
                                 case LOW_PRICE:
-                                    totalPrice += isi.mPrice.mLow * isi.mNumberOf;
+                                    totalPrice += isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * isi.mNumberOf;
                                     break;
                                 case AVG_PRICE:
-                                    totalPrice += isi.mPrice.mAverage * isi.mNumberOf;
+                                    totalPrice += isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * isi.mNumberOf;
                                     break;
                                 case HIGH_PRICE:
-                                    totalPrice += isi.mPrice.mHigh * isi.mNumberOf;
+                                    totalPrice += isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * isi.mNumberOf;
                                     break;
                                 default:
                                     break;

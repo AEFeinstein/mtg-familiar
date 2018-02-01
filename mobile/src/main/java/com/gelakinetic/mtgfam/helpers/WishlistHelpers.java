@@ -27,6 +27,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -211,19 +212,19 @@ public class WishlistHelpers {
                 if (sharePrice && isi.mPrice != null) {
                     double price = 0;
                     if (isi.mIsFoil) {
-                        price = isi.mPrice.mFoilAverage;
+                        price = isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET);
                     } else {
                         switch (priceOption) {
                             case LOW_PRICE: {
-                                price = isi.mPrice.mLow;
+                                price = isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW);
                                 break;
                             }
                             case AVG_PRICE: {
-                                price = isi.mPrice.mAverage;
+                                price = isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID);
                                 break;
                             }
                             case HIGH_PRICE: {
-                                price = isi.mPrice.mHigh;
+                                price = isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH);
                                 break;
                             }
                         }
@@ -315,17 +316,17 @@ public class WishlistHelpers {
             for (IndividualSetInfo isi : mInfo) {
                 try {
                     if (isi.mIsFoil) {
-                        sumWish += (isi.mPrice.mFoilAverage * isi.mNumberOf);
+                        sumWish += (isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * isi.mNumberOf);
                     } else {
                         switch (priceSetting) {
                             case LOW_PRICE:
-                                sumWish += (isi.mPrice.mLow * isi.mNumberOf);
+                                sumWish += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * isi.mNumberOf);
                                 break;
                             case AVG_PRICE:
-                                sumWish += (isi.mPrice.mAverage * isi.mNumberOf);
+                                sumWish += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * isi.mNumberOf);
                                 break;
                             case HIGH_PRICE:
-                                sumWish += (isi.mPrice.mHigh * isi.mNumberOf);
+                                sumWish += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * isi.mNumberOf);
                                 break;
                         }
                     }

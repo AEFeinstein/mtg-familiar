@@ -47,6 +47,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import com.gelakinetic.mtgfam.helpers.util.FragmentHelpers;
 
 import java.io.Serializable;
@@ -380,7 +381,7 @@ public class CardHelpers {
         public String mNumber;
 
         public Boolean mIsFoil;
-        public PriceInfo mPrice;
+        public MarketPriceInfo mPrice;
         public String mMessage;
         public Integer mNumberOf;
         public Character mRarity;

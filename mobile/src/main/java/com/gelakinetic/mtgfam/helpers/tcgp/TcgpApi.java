@@ -100,7 +100,11 @@ public class TcgpApi {
     public static final int CATEGORY_ID_MAGIC = 1;
 
     private static final String TCGP_VERSION = "v1.7.1";
-    private AccessToken mAccessToken;
+    private String mAccessToken;
+
+    public void setToken(String tokenStr) {
+        mAccessToken = tokenStr;
+    }
 
     enum HttpMethod {
         GET, POST,
@@ -129,7 +133,7 @@ public class TcgpApi {
      * @param conn The httpGet or httpPost to add the header to
      */
     private void addHeaders(HttpURLConnection conn) {
-        conn.setRequestProperty("Authorization", "bearer " + mAccessToken.access_token);
+        conn.setRequestProperty("Authorization", "bearer " + mAccessToken);
         conn.setRequestProperty("Accept", "application/json");
         conn.setRequestProperty("Content-Type", "application/json");
     }
@@ -142,7 +146,7 @@ public class TcgpApi {
      * @param publicKey   Supplied by TCGPlayer.com, also referred to as the "client_id"
      * @param privateKey  Supplied by TCGPlayer.com, also referred to as the "client_secret"
      * @param accessToken Supplied by TCGPlayer.com, also referred to as the "X-Tcg-Access-Token"
-     * @return An AccessToken object with the token, expiry date, etc, or null if something went wrong
+     * @return An AccessToken object with the token, expiry date, etc, or null if a token is already loaded
      * @throws IOException If something goes wrong with the network
      */
     public AccessToken getAccessToken(String publicKey, String privateKey, String accessToken) throws IOException {
@@ -168,15 +172,18 @@ public class TcgpApi {
             // Parse the json out of the response and save it
             GsonBuilder builder = new GsonBuilder();
             AccessToken.setDateFormat(builder);
-            this.mAccessToken = builder.create().fromJson(new InputStreamReader(inStream), AccessToken.class);
+            AccessToken token = builder.create().fromJson(new InputStreamReader(inStream), AccessToken.class);
+            this.mAccessToken = token.access_token;
 
             // Clean up
             inStream.close();
             conn.disconnect();
+
+            return token;
         }
 
         // Return the saved access token
-        return this.mAccessToken;
+        return null;
     }
 
     /**

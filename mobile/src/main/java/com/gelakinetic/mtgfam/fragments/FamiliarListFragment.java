@@ -46,15 +46,13 @@ import com.gelakinetic.mtgfam.helpers.CardDataTouchHelper;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * This class is for extension by any Fragment that has a custom list of cards at it's base that
@@ -477,122 +475,111 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         /* If the priceInfo is already loaded, don't bother performing a query */
         if (data.priceInfo != null) {
             if (data.foil) {
-                data.price = (int) (data.priceInfo.mFoilAverage * 100);
+                data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
             } else {
                 switch (getPriceSetting()) {
                     case LOW_PRICE: {
-                        data.price = (int) (data.priceInfo.mLow * 100);
+                        data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
                         break;
                     }
                     default:
                     case AVG_PRICE: {
-                        data.price = (int) (data.priceInfo.mAverage * 100);
+                        data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
                         break;
                     }
                     case HIGH_PRICE: {
-                        data.price = (int) (data.priceInfo.mHigh * 100);
+                        data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
                         break;
                     }
                     case FOIL_PRICE: {
-                        data.price = (int) (data.priceInfo.mFoilAverage * 100);
+                        data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
                         break;
                     }
                 }
             }
         } else {
-            PriceFetchRequest priceRequest = new PriceFetchRequest(data.mName, data.setCode, data.mNumber, -1, getActivity());
             mPriceFetchRequests++;
             getFamiliarActivity().setLoading();
-            getFamiliarActivity().mSpiceManager.execute(priceRequest, data.mName + "-" +
-                    data.setCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-
-                /**
-                 * Loading the price for this card failed and threw a spiceException
-                 *
-                 * @param spiceException The exception thrown when trying to load this card's price
-                 */
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                /* because this can return when the fragment is in the background */
-                    if (FamiliarListFragment.this.isAdded()) {
-                        onCardPriceLookupFailure(data, spiceException);
-                        mPriceFetchRequests--;
-                        if (mPriceFetchRequests == 0) {
-                            getFamiliarActivity().clearLoading();
-                        }
-                        for (CardDataAdapter adapter : mCardDataAdapters) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-
-                /**
-                 * Loading the price for this card succeeded. Set it.
-                 *
-                 * @param result The price for this card
-                 */
-                @Override
-                public void onRequestSuccess(final PriceInfo result) {
-                    /* Sanity check */
-                    if (result == null) {
-                        data.priceInfo = null;
-                    } else {
-                        /* Set the PriceInfo object */
-                        data.priceInfo = result;
-
-                        /* Only reset the price to the downloaded one if the old price isn't custom */
-                        if (!data.customPrice) {
-                            if (data.foil) {
-                                data.price = (int) (result.mFoilAverage * 100);
+            getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data,
+                    new Consumer<MarketPriceInfo>() {
+                        @Override
+                        public void accept(MarketPriceInfo result) throws Exception {
+                            /* Sanity check */
+                            if (result == null) {
+                                data.priceInfo = null;
                             } else {
-                                switch (getPriceSetting()) {
-                                    case LOW_PRICE: {
-                                        data.price = (int) (result.mLow * 100);
-                                        break;
+                                /* Set the PriceInfo object */
+                                data.priceInfo = result;
+
+                                /* Only reset the price to the downloaded one if the old price isn't custom */
+                                if (!data.customPrice) {
+                                    if (data.foil) {
+                                        data.price = (int) (result.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
+                                    } else {
+                                        switch (getPriceSetting()) {
+                                            case LOW_PRICE: {
+                                                data.price = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
+                                                break;
+                                            }
+                                            default:
+                                            case AVG_PRICE: {
+                                                data.price = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
+                                                break;
+                                            }
+                                            case HIGH_PRICE: {
+                                                data.price = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
+                                                break;
+                                            }
+                                            case FOIL_PRICE: {
+                                                data.price = (int) (result.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
+                                                break;
+                                            }
+
+                                        }
                                     }
-                                    default:
-                                    case AVG_PRICE: {
-                                        data.price = (int) (result.mAverage * 100);
-                                        break;
-                                    }
-                                    case HIGH_PRICE: {
-                                        data.price = (int) (result.mHigh * 100);
-                                        break;
-                                    }
-                                    case FOIL_PRICE: {
-                                        data.price = (int) (result.mFoilAverage * 100);
-                                        break;
-                                    }
+                                }
+                                /* Clear the message */
+                                data.message = null;
+                            }
+
+                            /* because this can return when the fragment is in the background */
+                            if (FamiliarListFragment.this.isAdded()) {
+                                onCardPriceLookupSuccess(data, result);
+                                mPriceFetchRequests--;
+                                if (mPriceFetchRequests == 0) {
+                                    getFamiliarActivity().clearLoading();
+                                }
+                                for (CardDataAdapter adapter : mCardDataAdapters) {
+                                    adapter.notifyDataSetChanged();
                                 }
                             }
                         }
-                        /* Clear the message */
-                        data.message = null;
-                    }
-
-                    /* because this can return when the fragment is in the background */
-                    if (FamiliarListFragment.this.isAdded()) {
-                        onCardPriceLookupSuccess(data, result);
-                        mPriceFetchRequests--;
-                        if (mPriceFetchRequests == 0) {
-                            getFamiliarActivity().clearLoading();
+                    },
+                    new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            if (FamiliarListFragment.this.isAdded()) {
+                                onCardPriceLookupFailure(data, throwable);
+                                mPriceFetchRequests--;
+                                if (mPriceFetchRequests == 0) {
+                                    getFamiliarActivity().clearLoading();
+                                }
+                                for (CardDataAdapter adapter : mCardDataAdapters) {
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
                         }
-                        for (CardDataAdapter adapter : mCardDataAdapters) {
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            });
+                    });
         }
     }
 
     /**
      * Called when a price load fails. Should contain fragment-specific code
      *
-     * @param data           The card for which the price lookup failed
-     * @param spiceException The exception that occured
+     * @param data      The card for which the price lookup failed
+     * @param exception The exception that occured
      */
-    protected abstract void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException);
+    protected abstract void onCardPriceLookupFailure(MtgCard data, Throwable exception);
 
     /**
      * Called when a price load succeeds. Should contain fragment-specific code
@@ -600,7 +587,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param data   The card for which the price lookup succeeded
      * @param result The price information
      */
-    protected abstract void onCardPriceLookupSuccess(MtgCard data, PriceInfo result);
+    protected abstract void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result);
 
     /**
      * Updates the total prices shown for the lists

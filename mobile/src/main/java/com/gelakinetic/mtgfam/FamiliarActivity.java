@@ -90,7 +90,6 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchService;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
@@ -100,7 +99,6 @@ import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetchService;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
-import com.octo.android.robospice.SpiceManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -157,7 +155,6 @@ public class FamiliarActivity extends AppCompatActivity {
     private static final int MESSAGE_CLOSE = 3;
     private static final String IMAGE_CACHE_DIR = "familiar_image_cache";
     /* Spice setup */
-    public final SpiceManager mSpiceManager = new SpiceManager(PriceFetchService.class);
     public MarketPriceFetchService mMarketPriceStore = new MarketPriceFetchService(this);
 
     /* What the drawer menu will be */
@@ -432,7 +429,6 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mSpiceManager.start(this);
     }
 
     /**
@@ -441,7 +437,6 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mSpiceManager.shouldStop();
         ToastWrapper.cancelToast();
     }
 
@@ -742,13 +737,6 @@ public class FamiliarActivity extends AppCompatActivity {
                         !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
                         !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
                         !(lastVersion == 52 && pInfo.versionCode == 53)) { // Don't show 52 -> 53, it was just a quick bugfix release
-                    /* Clear the spice cache on upgrade. This way, no cached values w/o foil prices
-                     * will exist*/
-                    try {
-                        mSpiceManager.removeAllDataFromCache();
-                    } catch (NullPointerException e) {
-                        /* eat it. tasty */
-                    }
                     if (lastVersion != 0) {
                         showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }

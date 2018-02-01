@@ -73,6 +73,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -787,7 +788,13 @@ public class CardViewFragment extends FamiliarFragment {
             case R.id.price: {
                 mActivity.setLoading();
 
-                mActivity.mMarketPriceStore.fetchMarketPrice(mCardName, mSetCode, mMultiverseId, mCardType, mCardNumber,
+                MtgCard card = new MtgCard();
+                card.mName = mCardName;
+                card.setCode = mSetCode;
+                card.mMultiverseId = mMultiverseId;
+                card.mType = mCardType;
+                card.mNumber = mCardNumber;
+                mActivity.mMarketPriceStore.fetchMarketPrice(card,
                         new Consumer<MarketPriceInfo>() {
                             @Override
                             public void accept(MarketPriceInfo marketPriceInfo) throws Exception {

@@ -32,6 +32,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -1004,4 +1005,40 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.putString(context.getString(R.string.key_deckPrice), deckPrice);
         edit.apply();
     }
+
+    public static synchronized String getTcgpApiToken(@Nullable Context context) {
+        if (null == context) {
+            return "1";
+        }
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_TcgpToken), "");
+    }
+
+    public static synchronized void setTcgpApiToken(@Nullable Context context, String token) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_TcgpToken), token);
+        edit.apply();
+    }
+
+    public static synchronized Date getTcgpApiTokenExpirationDate(@Nullable Context context) {
+        if (null == context) {
+            return new Date(0);
+        }
+        long time = PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getString(R.string.key_TcgpTokenExpirationDate), 0);
+        return new Date(time);
+    }
+
+    public static synchronized void setTcgpApiTokenExpirationDate(@Nullable Context context, Date date) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putLong(context.getString(R.string.key_TcgpTokenExpirationDate), date.getTime());
+        edit.apply();
+    }
+
 }

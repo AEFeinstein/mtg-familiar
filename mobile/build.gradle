@@ -125,14 +125,6 @@ dependencies {
         exclude module: 'commons-io'
     }
     implementation 'org.apache.commons:commons-collections4:4.1'
-    implementation 'com.octo.android.robospice:robospice:1.4.14', {
-        exclude module: 'commons-lang3'
-        exclude module: 'commons-io'
-    }
-    implementation 'com.octo.android.robospice:robospice-cache:1.4.14', {
-        exclude module: 'commons-lang3'
-        exclude module: 'commons-io'
-    }
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:support-v13:26.1.0'
     implementation 'com.android.support:appcompat-v7:26.1.0'

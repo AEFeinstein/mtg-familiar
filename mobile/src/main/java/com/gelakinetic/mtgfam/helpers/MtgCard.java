@@ -28,6 +28,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public class MtgCard extends Card {
     public boolean customPrice = false; /* default is false as all cards should first grab internet prices. */
     public boolean foil = false;
     public int mSide;
-    public PriceInfo priceInfo;
+    public MarketPriceInfo priceInfo;
     private int mIndex;
     private boolean selected = false;
 

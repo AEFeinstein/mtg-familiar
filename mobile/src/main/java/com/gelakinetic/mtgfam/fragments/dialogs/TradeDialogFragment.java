@@ -44,6 +44,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -272,24 +273,24 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 int oldPrice;
                                 if (data.priceInfo != null) {
                                     if (data.foil) {
-                                        oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
+                                        oldPrice = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
                                     } else {
                                         switch (getParentTradeFragment().getPriceSetting()) {
                                             case TradeFragment.LOW_PRICE: {
-                                                oldPrice = (int) (data.priceInfo.mLow * 100);
+                                                oldPrice = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
                                                 break;
                                             }
                                             default:
                                             case TradeFragment.AVG_PRICE: {
-                                                oldPrice = (int) (data.priceInfo.mAverage * 100);
+                                                oldPrice = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
                                                 break;
                                             }
                                             case TradeFragment.HIGH_PRICE: {
-                                                oldPrice = (int) (data.priceInfo.mHigh * 100);
+                                                oldPrice = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
                                                 break;
                                             }
                                             case TradeFragment.FOIL_PRICE: {
-                                                oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
+                                                oldPrice = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
                                                 break;
                                             }
                                         }

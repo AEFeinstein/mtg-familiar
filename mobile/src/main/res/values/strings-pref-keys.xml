@@ -87,4 +87,6 @@
     <string name="key_undoTimeout" translatable="false">undo_timeout</string>
     <string name="key_showTotalPriceDecklistPref" translatable="false">showTotalPriceDecklistPref</string>
     <string name="key_deckPrice" translatable="false">deckPrice</string>
+    <string name="key_TcgpToken" translatable="false">tcgp_token</string>
+    <string name="key_TcgpTokenExpirationDate" translatable="false">tcgp_token_expiration_date</string>
 </resources>
