@@ -207,7 +207,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     mCompressedDecklist.get(firstIndex);
             for (int i = 0; i < firstCard.mInfo.size(); i++) {
                 CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
-                if (firstIsi.mSetCode.equals(card.mExpansion) && firstIsi.mIsFoil.equals(card.foil)) {
+                if (firstIsi.mSetCode.equals(card.mExpansion) && firstIsi.mIsFoil.equals(card.mIsFoil)) {
                     firstIsi.mNumberOf++;
                     added = true;
                     break;
@@ -334,7 +334,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
                 if (!card.first.mName.isEmpty()) {
                     /* Translate the set code to TCG name of course it's not saved */
-                    card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.mExpansion, database);
+                    card.first.mSetName = CardDbAdapter.getSetNameFromCode(card.first.mExpansion, database);
                     if (changedCardName == null || changedCardName.equals(card.first.mName)) {
                         CompressedDecklistInfo wrapped =
                                 new CompressedDecklistInfo(card.first, card.second);

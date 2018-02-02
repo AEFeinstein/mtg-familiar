@@ -473,26 +473,26 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     public void loadPrice(final MtgCard data) {
 
         /* If the priceInfo is already loaded, don't bother performing a query */
-        if (data.priceInfo != null) {
-            if (data.foil) {
-                data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
+        if (data.mPriceInfo != null) {
+            if (data.mIsFoil) {
+                data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
             } else {
                 switch (getPriceSetting()) {
                     case LOW_PRICE: {
-                        data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
+                        data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
                         break;
                     }
                     default:
                     case AVG_PRICE: {
-                        data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
+                        data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
                         break;
                     }
                     case HIGH_PRICE: {
-                        data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
+                        data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
                         break;
                     }
                     case FOIL_PRICE: {
-                        data.price = (int) (data.priceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
+                        data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
                         break;
                     }
                 }
@@ -506,32 +506,32 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         public void accept(MarketPriceInfo result) throws Exception {
                             /* Sanity check */
                             if (result == null) {
-                                data.priceInfo = null;
+                                data.mPriceInfo = null;
                             } else {
                                 /* Set the PriceInfo object */
-                                data.priceInfo = result;
+                                data.mPriceInfo = result;
 
                                 /* Only reset the price to the downloaded one if the old price isn't custom */
-                                if (!data.customPrice) {
-                                    if (data.foil) {
-                                        data.price = (int) (result.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
+                                if (!data.mIsCustomPrice) {
+                                    if (data.mIsFoil) {
+                                        data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
                                     } else {
                                         switch (getPriceSetting()) {
                                             case LOW_PRICE: {
-                                                data.price = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
+                                                data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
                                                 break;
                                             }
                                             default:
                                             case AVG_PRICE: {
-                                                data.price = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
+                                                data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
                                                 break;
                                             }
                                             case HIGH_PRICE: {
-                                                data.price = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
+                                                data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
                                                 break;
                                             }
                                             case FOIL_PRICE: {
-                                                data.price = (int) (result.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
+                                                data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
                                                 break;
                                             }
 
@@ -539,7 +539,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                     }
                                 }
                                 /* Clear the message */
-                                data.message = null;
+                                data.mMessage = null;
                             }
 
                             /* because this can return when the fragment is in the background */

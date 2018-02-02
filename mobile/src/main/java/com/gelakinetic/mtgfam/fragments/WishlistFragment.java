@@ -155,7 +155,7 @@ public class WishlistFragment extends FamiliarListFragment {
             CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped));
             boolean added = false;
             for (IndividualSetInfo isi : cwi.mInfo) {
-                if (isi.mSetCode.equals(card.mExpansion) && isi.mIsFoil.equals(card.foil)) {
+                if (isi.mSetCode.equals(card.mExpansion) && isi.mIsFoil.equals(card.mIsFoil)) {
                     added = true;
                     isi.mNumberOf++;
                 }
@@ -217,7 +217,7 @@ public class WishlistFragment extends FamiliarListFragment {
             boolean cardNumberFixed = false;
             /* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
-                card.setName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
+                card.mSetName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
 
                 /* If the number is empty because of a prior bug, get it from the database */
                 if (card.mNumber.equals("")) {

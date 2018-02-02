@@ -312,7 +312,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                             deckEntry.first.mName.equals(cardName) &&
                                             deckEntry.first.mExpansion.equals(cardSet)) {
                                         // Increment the card already in the deck
-                                        deckEntry.first.numberOf++;
+                                        deckEntry.first.mNumberOf++;
                                         entryIncremented = true;
                                         break;
                                     }

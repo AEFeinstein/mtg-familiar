@@ -41,16 +41,16 @@ public class MtgCard extends Card {
     private static final String DELIMITER = "%";
 
     /* Wish and trade list fields */
-    public String setName;
-    public int numberOf;
-    public int price; /* In cents */
-    public String message;
-    public boolean customPrice = false; /* default is false as all cards should first grab internet prices. */
-    public boolean foil = false;
+    public String mSetName;
+    public int mNumberOf;
+    public int mPrice; /* In cents */
+    public String mMessage;
+    public boolean mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
+    public boolean mIsFoil = false;
     public int mSide;
-    public MarketPriceInfo priceInfo;
+    public MarketPriceInfo mPriceInfo;
     private int mIndex;
-    private boolean selected = false;
+    private boolean mIsSelected = false;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -104,14 +104,14 @@ public class MtgCard extends Card {
      * @return true if this card has a price, false otherwise
      */
     public boolean hasPrice() {
-        return (this.priceInfo != null || (this.customPrice && this.price != 0));
+        return (this.mPriceInfo != null || (this.mIsCustomPrice && this.mPrice != 0));
     }
 
     /**
      * @return Returns the current price of this card in string form
      */
     public String getPriceString() {
-        return String.format(Locale.US, "$%d.%02d", this.price / 100, this.price % 100);
+        return String.format(Locale.US, "$%d.%02d", this.mPrice / 100, this.mPrice % 100);
     }
 
     /************************************************
@@ -128,10 +128,10 @@ public class MtgCard extends Card {
         return side + DELIMITER +
                 this.mName + DELIMITER +
                 this.mExpansion + DELIMITER +
-                this.numberOf + DELIMITER +
-                this.customPrice + DELIMITER +
-                this.price + DELIMITER +
-                this.foil + DELIMITER +
+                this.mNumberOf + DELIMITER +
+                this.mIsCustomPrice + DELIMITER +
+                this.mPrice + DELIMITER +
+                this.mIsFoil + DELIMITER +
                 this.mCmc + DELIMITER +
                 this.mColor + '\n';
     }
@@ -168,16 +168,16 @@ public class MtgCard extends Card {
                 /* Eat it and use the old mExpansion code. */
             }
         }
-        card.numberOf = Integer.parseInt(parts[3]);
+        card.mNumberOf = Integer.parseInt(parts[3]);
 
         /* These parts may not exist */
-        card.customPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
+        card.mIsCustomPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
         if (parts.length > 5) {
-            card.price = Integer.parseInt(parts[5]);
+            card.mPrice = Integer.parseInt(parts[5]);
         } else {
-            card.price = 0;
+            card.mPrice = 0;
         }
-        card.foil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
+        card.mIsFoil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
 
         if (parts.length > 7) {
             card.mCmc = Integer.parseInt(parts[7]);
@@ -198,12 +198,12 @@ public class MtgCard extends Card {
 
         /* Defaults regardless */
         try {
-            card.setName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
+            card.mSetName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
         } catch (FamiliarDbException | NullPointerException e) {
-            card.setName = null;
+            card.mSetName = null;
         }
         DatabaseManager.getInstance(context, false).closeDatabase(false);
-        card.message = "loading";
+        card.mMessage = "loading";
         return card;
     }
 
@@ -216,20 +216,20 @@ public class MtgCard extends Card {
      */
     public int toTradeShareString(StringBuilder sb, String foilStr) {
         int totalPrice = 0;
-        sb.append(this.numberOf);
+        sb.append(this.mNumberOf);
         sb.append(" ");
         sb.append(this.mName);
         sb.append(" [");
-        sb.append(this.setName);
+        sb.append(this.mSetName);
         sb.append("] ");
-        if (this.foil) {
+        if (this.mIsFoil) {
             sb.append("(");
             sb.append(foilStr);
             sb.append(") ");
         }
         if (this.hasPrice()) {
-            sb.append(String.format(Locale.US, "$%d.%02d", this.price / 100, this.price % 100));
-            totalPrice = (this.price * this.numberOf);
+            sb.append(String.format(Locale.US, "$%d.%02d", this.mPrice / 100, this.mPrice % 100));
+            totalPrice = (this.mPrice * this.mNumberOf);
         }
 
         sb.append("\n");
@@ -248,10 +248,10 @@ public class MtgCard extends Card {
     public String toWishlistString() {
         return this.mName + DELIMITER +
                 this.mExpansion + DELIMITER +
-                this.numberOf + DELIMITER +
+                this.mNumberOf + DELIMITER +
                 this.mNumber + DELIMITER +
                 ((int) this.mRarity) + DELIMITER +
-                this.foil + '\n';
+                this.mIsFoil + '\n';
     }
 
 
@@ -279,7 +279,7 @@ public class MtgCard extends Card {
             }
             DatabaseManager.getInstance(mCtx, false).closeDatabase(false);
         }
-        newCard.numberOf = Integer.parseInt(parts[2]);
+        newCard.mNumberOf = Integer.parseInt(parts[2]);
 
         /* "foil" didn't exist in earlier versions, so it may not be part of the string */
         if (parts.length > 3) {
@@ -298,8 +298,8 @@ public class MtgCard extends Card {
         if (parts.length > 5) {
             foil = Boolean.parseBoolean(parts[5]);
         }
-        newCard.foil = foil;
-        newCard.message = mCtx.getString(R.string.wishlist_loading);
+        newCard.mIsFoil = foil;
+        newCard.mMessage = mCtx.getString(R.string.wishlist_loading);
 
         return newCard;
     }
@@ -371,10 +371,10 @@ public class MtgCard extends Card {
     }
 
     public boolean isSelected() {
-        return selected;
+        return mIsSelected;
     }
 
     public void setSelected(boolean selected) {
-        this.selected = selected;
+        this.mIsSelected = selected;
     }
 }

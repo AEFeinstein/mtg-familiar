@@ -113,7 +113,7 @@ public class WishlistHelpers {
             wishlistInfo.applyIndividualInfo(isi);
             if (currentWishlist.contains(wishlistInfo)) {
                 final int existingIndex = currentWishlist.indexOf(wishlistInfo);
-                currentWishlist.get(existingIndex).numberOf += wishlistInfo.numberOf;
+                currentWishlist.get(existingIndex).mNumberOf += wishlistInfo.mNumberOf;
             } else {
                 currentWishlist.add(wishlistInfo);
             }
@@ -247,11 +247,11 @@ public class WishlistHelpers {
         final Map<String, String> targetFoilNumberOfs = new HashMap<>();
         for (MtgCard card : wishlist) {
             if (card.mName.equals(cardName)) {
-                if (card.foil) {
-                    targetFoilNumberOfs.put(card.mExpansion, String.valueOf(card.numberOf));
+                if (card.mIsFoil) {
+                    targetFoilNumberOfs.put(card.mExpansion, String.valueOf(card.mNumberOf));
                     continue;
                 }
-                targetCardNumberOfs.put(card.mExpansion, String.valueOf(card.numberOf));
+                targetCardNumberOfs.put(card.mExpansion, String.valueOf(card.mNumberOf));
             }
         }
         return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);

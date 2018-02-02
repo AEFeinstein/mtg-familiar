@@ -294,18 +294,18 @@ public class TradeFragment extends FamiliarListFragment {
                     MtgCard card = MtgCard.fromTradeString(line, getActivity());
                     card.setIndex(mOrderAddedIdx++);
 
-                    if (card.setName == null) {
+                    if (card.mSetName == null) {
                         handleFamiliarDbException(false);
                         return;
                     }
                     if (card.mSide == LEFT) {
                         mListLeft.add(card);
-                        if (!card.customPrice) {
+                        if (!card.mIsCustomPrice) {
                             loadPrice(card);
                         }
                     } else if (card.mSide == RIGHT) {
                         mListRight.add(card);
-                        if (!card.customPrice) {
+                        if (!card.mIsCustomPrice) {
                             loadPrice(card);
                         }
                     }
@@ -442,8 +442,8 @@ public class TradeFragment extends FamiliarListFragment {
 
     @Override
     protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
-        data.message = exception.getLocalizedMessage();
-        data.priceInfo = null;
+        data.mMessage = exception.getLocalizedMessage();
+        data.mPriceInfo = null;
     }
 
     @Override
@@ -470,9 +470,9 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as
                    "bad," (incomplete) */
                 for (MtgCard data : mListLeft) {
-                    totalCards += data.numberOf;
+                    totalCards += data.mNumberOf;
                     if (data.hasPrice()) {
-                        totalPrice += data.numberOf * (data.price / 100.0f);
+                        totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
                     } else {
                         hasBadValues = true;
                     }
@@ -495,9 +495,9 @@ public class TradeFragment extends FamiliarListFragment {
                 /* Iterate through the list and either sum the price or mark it as "bad,"
                    (incomplete) */
                 for (MtgCard data : mListRight) {
-                    totalCards += data.numberOf;
+                    totalCards += data.mNumberOf;
                     if (data.hasPrice()) {
-                        totalPrice += data.numberOf * (data.price / 100.0f);
+                        totalPrice += data.mNumberOf * (data.mPrice / 100.0f);
                     } else {
                         hasBadValues = true;
                     }
@@ -621,7 +621,7 @@ public class TradeFragment extends FamiliarListFragment {
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
-                            retVal = Double.compare(card1.price, card2.price);
+                            retVal = Double.compare(card1.mPrice, card2.mPrice);
                             break;
                         }
                         case SortOrderDialogFragment.KEY_ORDER: {
@@ -729,12 +729,12 @@ public class TradeFragment extends FamiliarListFragment {
 
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
             holder.setCardName(item.mName);
-            holder.mCardSet.setText(item.setName);
-            holder.mCardNumberOf.setText(item.hasPrice() ? item.numberOf + "x" : "");
-            holder.mCardFoil.setVisibility(item.foil ? View.VISIBLE : View.GONE);
-            holder.mCardPrice.setText(item.hasPrice() ? item.getPriceString() : item.message);
+            holder.mCardSet.setText(item.mSetName);
+            holder.mCardNumberOf.setText(item.hasPrice() ? item.mNumberOf + "x" : "");
+            holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
+            holder.mCardPrice.setText(item.hasPrice() ? item.getPriceString() : item.mMessage);
             if (item.hasPrice()) {
-                if (item.customPrice) {
+                if (item.mIsCustomPrice) {
                     holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
                             R.color.material_green_500));
                 } else {

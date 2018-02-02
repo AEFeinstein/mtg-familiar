@@ -272,11 +272,11 @@ public class CardHelpers {
                             try {
                                 Button numberInput = view.findViewById(R.id.number_button);
                                 assert numberInput.getText() != null;
-                                card.numberOf = Integer.parseInt(numberInput.getText().toString());
+                                card.mNumberOf = Integer.parseInt(numberInput.getText().toString());
                             } catch (NumberFormatException e) {
-                                card.numberOf = 0;
+                                card.mNumberOf = 0;
                             }
-                            card.foil = view.findViewById(R.id.wishlistDialogFoil)
+                            card.mIsFoil = view.findViewById(R.id.wishlistDialogFoil)
                                     .getVisibility() == View.VISIBLE;
                             card.mRarity = potentialRarities.get(i);
                             card.mNumber = potentialNumbers.get(i);
@@ -288,17 +288,17 @@ public class CardHelpers {
                                 if (card.mName.equals(list.get(j).first.mName)
                                         && isSideboard == list.get(j).second
                                         && card.mExpansion.equals(list.get(j).first.mExpansion)
-                                        && card.foil == list.get(j).first.foil) {
-                                    if (card.numberOf == 0) {
+                                        && card.mIsFoil == list.get(j).first.mIsFoil) {
+                                    if (card.mNumberOf == 0) {
                                         list.remove(j);
                                         j--;
                                     } else {
-                                        list.get(j).first.numberOf = card.numberOf;
+                                        list.get(j).first.mNumberOf = card.mNumberOf;
                                     }
                                     added = true;
                                 }
                             }
-                            if (!added && card.numberOf > 0) {
+                            if (!added && card.mNumberOf > 0) {
                                 list.add(new Pair<>(card, false));
                             }
 
@@ -421,13 +421,13 @@ public class CardHelpers {
             IndividualSetInfo isi = new IndividualSetInfo();
 
             if (card != null) {
-                isi.mSet = card.setName;
+                isi.mSet = card.mSetName;
                 isi.mSetCode = card.mExpansion;
                 isi.mNumber = card.mNumber;
-                isi.mIsFoil = card.foil;
+                isi.mIsFoil = card.mIsFoil;
                 isi.mPrice = null;
-                isi.mMessage = card.message;
-                isi.mNumberOf = card.numberOf;
+                isi.mMessage = card.mMessage;
+                isi.mNumberOf = card.mNumberOf;
                 isi.mRarity = card.mRarity;
             }
 
@@ -462,11 +462,11 @@ public class CardHelpers {
          * @param isi The IndividualSetInfo to apply
          */
         void applyIndividualInfo(IndividualSetInfo isi) {
-            this.setName = isi.mSet;
+            this.mSetName = isi.mSet;
             this.mExpansion = isi.mSetCode;
             this.mNumber = isi.mNumber;
-            this.foil = isi.mIsFoil;
-            this.numberOf = isi.mNumberOf;
+            this.mIsFoil = isi.mIsFoil;
+            this.mNumberOf = isi.mNumberOf;
             this.mRarity = isi.mRarity;
         }
 
@@ -650,8 +650,8 @@ public class CardHelpers {
             SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false);
             /* Make the new MTGCard */
             MtgCard card = new MtgCard();
-            card.foil = isFoil;
-            card.numberOf = numberOf;
+            card.mIsFoil = isFoil;
+            card.mNumberOf = numberOf;
             /* Find out what kind of fragment we are in, so we can pull less stuff if we can */
             /* trade, wishlist, and decklist all use "name_search" */
             List<String> fields;
@@ -668,7 +668,7 @@ public class CardHelpers {
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME);
             } else {
                 fields = CardDbAdapter.ALL_CARD_DATA_KEYS;
-                card.message = activity.getString(R.string.wishlist_loading);
+                card.mMessage = activity.getString(R.string.wishlist_loading);
             }
             /* Get extra information from the database */
             Cursor cardCursor;
@@ -710,7 +710,7 @@ public class CardHelpers {
             /* Don't rely on the user's given name, get it from the DB just to be sure */
             card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            card.setName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
+            card.mSetName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
             card.mNumber = cardCursor.getString(cardCursor
                     .getColumnIndex(CardDbAdapter.KEY_NUMBER));
             card.mCmc = cardCursor.getInt((cardCursor
@@ -737,7 +737,7 @@ public class CardHelpers {
 
             /* Override choice is the card can't be foil */
             if (!CardDbAdapter.canBeFoil(card.mExpansion, database)) {
-                card.foil = false;
+                card.mIsFoil = false;
             }
             /* clean up */
             cardCursor.close();
