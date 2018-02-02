@@ -268,7 +268,7 @@ public class CardHelpers {
                             /* build the card object */
                             MtgCard card = new MtgCard();
                             card.mName = mCardName;
-                            card.setCode = potentialSetCodes.get(i);
+                            card.mExpansion = potentialSetCodes.get(i);
                             try {
                                 Button numberInput = view.findViewById(R.id.number_button);
                                 assert numberInput.getText() != null;
@@ -287,7 +287,7 @@ public class CardHelpers {
                             for (int j = 0; j < list.size(); j++) {
                                 if (card.mName.equals(list.get(j).first.mName)
                                         && isSideboard == list.get(j).second
-                                        && card.setCode.equals(list.get(j).first.setCode)
+                                        && card.mExpansion.equals(list.get(j).first.mExpansion)
                                         && card.foil == list.get(j).first.foil) {
                                     if (card.numberOf == 0) {
                                         list.remove(j);
@@ -422,7 +422,7 @@ public class CardHelpers {
 
             if (card != null) {
                 isi.mSet = card.setName;
-                isi.mSetCode = card.setCode;
+                isi.mSetCode = card.mExpansion;
                 isi.mNumber = card.mNumber;
                 isi.mIsFoil = card.foil;
                 isi.mPrice = null;
@@ -462,8 +462,8 @@ public class CardHelpers {
          * @param isi The IndividualSetInfo to apply
          */
         void applyIndividualInfo(IndividualSetInfo isi) {
-            this.mExpansion = isi.mSet;
-            this.setCode = isi.mSetCode;
+            this.setName = isi.mSet;
+            this.mExpansion = isi.mSetCode;
             this.mNumber = isi.mNumber;
             this.foil = isi.mIsFoil;
             this.numberOf = isi.mNumberOf;
@@ -709,8 +709,8 @@ public class CardHelpers {
 
             /* Don't rely on the user's given name, get it from the DB just to be sure */
             card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            card.setCode = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
+            card.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
+            card.setName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
             card.mNumber = cardCursor.getString(cardCursor
                     .getColumnIndex(CardDbAdapter.KEY_NUMBER));
             card.mCmc = cardCursor.getInt((cardCursor
@@ -736,7 +736,7 @@ public class CardHelpers {
             }
 
             /* Override choice is the card can't be foil */
-            if (!CardDbAdapter.canBeFoil(card.setCode, database)) {
+            if (!CardDbAdapter.canBeFoil(card.mExpansion, database)) {
                 card.foil = false;
             }
             /* clean up */

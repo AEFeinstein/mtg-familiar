@@ -663,11 +663,11 @@ public class CardDbAdapter {
                 } else {
                     sql += " OR ";
                 }
-                if (cwi.setCode != null && !cwi.setCode.equals("")) {
+                if (cwi.mExpansion != null && !cwi.mExpansion.equals("")) {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
                             sanitizeString(cwi.mName, false) +
                             " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" +
-                            cwi.setCode + "')";
+                            cwi.mExpansion + "')";
                 } else {
                     sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " +
                             sanitizeString(cwi.mName, true) + ")";

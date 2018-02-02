@@ -194,11 +194,11 @@ public class DecklistHelpers {
         for (Pair<MtgCard, Boolean> card : decklist) {
             if (card.first.mName.equals(mCardName) && card.second == isSideboard) {
                 if (card.first.foil) {
-                    targetFoilNumberOfs.put(card.first.setCode,
+                    targetFoilNumberOfs.put(card.first.mExpansion,
                             String.valueOf(card.first.numberOf));
                     continue;
                 }
-                targetCardNumberOfs.put(card.first.setCode, String.valueOf(card.first.numberOf));
+                targetCardNumberOfs.put(card.first.mExpansion, String.valueOf(card.first.numberOf));
             }
         }
         return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);

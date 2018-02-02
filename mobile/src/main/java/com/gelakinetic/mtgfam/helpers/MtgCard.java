@@ -42,7 +42,6 @@ public class MtgCard extends Card {
 
     /* Wish and trade list fields */
     public String setName;
-    public String setCode;
     public int numberOf;
     public int price; /* In cents */
     public String message;
@@ -128,7 +127,7 @@ public class MtgCard extends Card {
     public String toTradeString(int side) {
         return side + DELIMITER +
                 this.mName + DELIMITER +
-                this.setCode + DELIMITER +
+                this.mExpansion + DELIMITER +
                 this.numberOf + DELIMITER +
                 this.customPrice + DELIMITER +
                 this.price + DELIMITER +
@@ -159,12 +158,12 @@ public class MtgCard extends Card {
         /* Parse these parts out of the string */
         card.mSide = Integer.parseInt(parts[0]);
         card.mName = parts[1];
-        card.setCode = parts[2];
+        card.mExpansion = parts[2];
 
         /* Correct the mExpansion code for Duel Deck Anthologies */
-        if (card.setCode.equals("DD3")) {
+        if (card.mExpansion.equals("DD3")) {
             try {
-                card.setCode = CardDbAdapter.getCorrectSetCode(card.mName, card.setCode, database);
+                card.mExpansion = CardDbAdapter.getCorrectSetCode(card.mName, card.mExpansion, database);
             } catch (FamiliarDbException | NullPointerException e) {
                 /* Eat it and use the old mExpansion code. */
             }
@@ -199,7 +198,7 @@ public class MtgCard extends Card {
 
         /* Defaults regardless */
         try {
-            card.setName = CardDbAdapter.getSetNameFromCode(card.setCode, database);
+            card.setName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
         } catch (FamiliarDbException | NullPointerException e) {
             card.setName = null;
         }
@@ -248,7 +247,7 @@ public class MtgCard extends Card {
      */
     public String toWishlistString() {
         return this.mName + DELIMITER +
-                this.setCode + DELIMITER +
+                this.mExpansion + DELIMITER +
                 this.numberOf + DELIMITER +
                 this.mNumber + DELIMITER +
                 ((int) this.mRarity) + DELIMITER +
@@ -268,13 +267,13 @@ public class MtgCard extends Card {
         String[] parts = line.split(MtgCard.DELIMITER);
 
         newCard.mName = parts[0];
-        newCard.setCode = parts[1];
+        newCard.mExpansion = parts[1];
 
         /* Correct the mExpansion code for Duel Deck Anthologies */
-        if (newCard.setCode.equals("DD3")) {
+        if (newCard.mExpansion.equals("DD3")) {
             try {
                 SQLiteDatabase database = DatabaseManager.getInstance(mCtx, false).openDatabase(false);
-                newCard.setCode = CardDbAdapter.getCorrectSetCode(newCard.mName, newCard.setCode, database);
+                newCard.mExpansion = CardDbAdapter.getCorrectSetCode(newCard.mName, newCard.mExpansion, database);
             } catch (FamiliarDbException e) {
                 /* Eat it and use the old mExpansion code. */
             }

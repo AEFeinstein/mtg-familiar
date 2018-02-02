@@ -131,7 +131,7 @@ public class MarketPriceFetchService {
                     try {
                         /* If the card number wasn't given, figure it out */
                         if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
-                            Cursor c = CardDbAdapter.fetchCardByNameAndSet(params.mName, params.setCode, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
+                            Cursor c = CardDbAdapter.fetchCardByNameAndSet(params.mName, params.mExpansion, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
 
                             if (params.mNumber == null || params.mNumber.equals("")) {
                                 params.mNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
@@ -142,7 +142,7 @@ public class MarketPriceFetchService {
                             }
 
                             if (params.mMultiverseId == -1) {
-                                params.mMultiverseId = CardDbAdapter.getMultiverseIdFromNameAndSet(params.mName, params.setCode, database);
+                                params.mMultiverseId = CardDbAdapter.getMultiverseIdFromNameAndSet(params.mName, params.mExpansion, database);
                                 if (params.mMultiverseId == -1) {
                                     c.close();
                                     throw new FamiliarDbException(null);
@@ -151,10 +151,10 @@ public class MarketPriceFetchService {
                             c.close();
                         }
 
-                        CardDbAdapter.MultiCardType multiCardType = CardDbAdapter.isMultiCard(params.mNumber, params.setCode);
+                        CardDbAdapter.MultiCardType multiCardType = CardDbAdapter.isMultiCard(params.mNumber, params.mExpansion);
 
                         /* Get the TCGplayer.com set name, why can't everything be consistent? */
-                        String tcgSetName = CardDbAdapter.getTcgName(params.setCode, database);
+                        String tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
                         /* Figure out the tcgCardName, which is tricky for split cards */
                         String tcgCardName;
 
@@ -164,11 +164,11 @@ public class MarketPriceFetchService {
                             switch (retry % (MAX_NUM_RETRIES / 2)) {
                                 case 0:
                                     /* Try just the a side */
-                                    tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.setCode, params.mNumber.replace("b", "a"), database);
+                                    tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.mExpansion, params.mNumber.replace("b", "a"), database);
                                     break;
                                 case 3:
                                     /* Try just the b side */
-                                    tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.setCode, params.mNumber.replace("a", "b"), database);
+                                    tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.mExpansion, params.mNumber.replace("a", "b"), database);
                                     break;
                                 case 2:
                                     /* Try the combined name in one direction */
@@ -248,7 +248,7 @@ public class MarketPriceFetchService {
              * @return
              */
             private File getCacheFile(MtgCard cacheKey) {
-                return new File(mContext.getCacheDir(), (KEY_PREFIX + cacheKey.mName + "-" + cacheKey.setCode).replaceAll("\\W+", ""));
+                return new File(mContext.getCacheDir(), (KEY_PREFIX + cacheKey.mName + "-" + cacheKey.mExpansion).replaceAll("\\W+", ""));
             }
 
             /**

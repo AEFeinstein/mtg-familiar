@@ -207,7 +207,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     mCompressedDecklist.get(firstIndex);
             for (int i = 0; i < firstCard.mInfo.size(); i++) {
                 CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
-                if (firstIsi.mSetCode.equals(card.setCode) && firstIsi.mIsFoil.equals(card.foil)) {
+                if (firstIsi.mSetCode.equals(card.mExpansion) && firstIsi.mIsFoil.equals(card.foil)) {
                     firstIsi.mNumberOf++;
                     added = true;
                     break;
@@ -334,7 +334,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
                 if (!card.first.mName.isEmpty()) {
                     /* Translate the set code to TCG name of course it's not saved */
-                    card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
+                    card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.mExpansion, database);
                     if (changedCardName == null || changedCardName.equals(card.first.mName)) {
                         CompressedDecklistInfo wrapped =
                                 new CompressedDecklistInfo(card.first, card.second);
@@ -574,7 +574,7 @@ public class DecklistFragment extends FamiliarListFragment {
             if (cdi.header == null && cdi.mName.equals(data.mName)) {
                 /* Find all foil and non foil compressed items with the same set code */
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                    if (isi.mSetCode.equals(data.setCode)) {
+                    if (isi.mSetCode.equals(data.mExpansion)) {
                                     /* Set the price as null and the message as the exception */
                         isi.mMessage = exception.getLocalizedMessage();
                         isi.mPrice = null;
@@ -591,7 +591,7 @@ public class DecklistFragment extends FamiliarListFragment {
             if (cdi.header == null && cdi.mName.equals(data.mName)) {
                 /* Find all foil and non foil compressed items with the same set code */
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                    if (isi.mSetCode.equals(data.setCode)) {
+                    if (isi.mSetCode.equals(data.mExpansion)) {
                         /* Set the whole price info object */
                         if (result != null) {
                             isi.mPrice = result;

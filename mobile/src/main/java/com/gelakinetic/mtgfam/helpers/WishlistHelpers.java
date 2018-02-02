@@ -248,10 +248,10 @@ public class WishlistHelpers {
         for (MtgCard card : wishlist) {
             if (card.mName.equals(cardName)) {
                 if (card.foil) {
-                    targetFoilNumberOfs.put(card.setCode, String.valueOf(card.numberOf));
+                    targetFoilNumberOfs.put(card.mExpansion, String.valueOf(card.numberOf));
                     continue;
                 }
-                targetCardNumberOfs.put(card.setCode, String.valueOf(card.numberOf));
+                targetCardNumberOfs.put(card.mExpansion, String.valueOf(card.numberOf));
             }
         }
         return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);

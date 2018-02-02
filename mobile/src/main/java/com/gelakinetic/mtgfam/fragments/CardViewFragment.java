@@ -790,7 +790,7 @@ public class CardViewFragment extends FamiliarFragment {
 
                 MtgCard card = new MtgCard();
                 card.mName = mCardName;
-                card.setCode = mSetCode;
+                card.mExpansion = mSetCode;
                 card.mMultiverseId = mMultiverseId;
                 card.mType = mCardType;
                 card.mNumber = mCardNumber;

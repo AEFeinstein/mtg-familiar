@@ -136,7 +136,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Only show the foil checkbox if the card can be foil */
                 try {
                     SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                    if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).setCode, database)) {
+                    if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).mExpansion, database)) {
                         view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
                     } else {
                         view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
@@ -195,7 +195,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                             /* Get the card ID, and send it to a new CardViewPagerFragment */
                             Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
-                                    lSide.get(positionForDialog).setCode, Collections.singletonList(
+                                    lSide.get(positionForDialog).mExpansion, Collections.singletonList(
                                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
 
                             Bundle args = new Bundle();
@@ -388,7 +388,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 }
 
                                 /* Change the card's information, and reload the price */
-                                data.setCode = (aSetCodes[position]);
+                                data.mExpansion = (aSetCodes[position]);
                                 data.setName = (aSets[position]);
                                 data.message = (getString(R.string.wishlist_loading));
                                 data.priceInfo = null;
@@ -396,7 +396,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 /* See if the new set can be foil */
                                 try {
                                     SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                                    if (!CardDbAdapter.canBeFoil(data.setCode, database)) {
+                                    if (!CardDbAdapter.canBeFoil(data.mExpansion, database)) {
                                         data.foil = false;
                                     }
                                 } catch (FamiliarDbException e) {
