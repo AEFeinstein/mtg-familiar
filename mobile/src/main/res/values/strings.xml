@@ -218,7 +218,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="card_view_price_dialog_low">"Low:"</string>
     <string name="card_view_price_dialog_medium">"Average:"</string>
     <string name="card_view_price_dialog_high">"High:"</string>
-    <string name="card_view_price_dialog_foil">"Foil Average:"</string>
     <string name="card_view_price_dialog_link">"Click here for all prices and trend info"</string>
     <string name="card_view_no_rulings">"No rulings for this card"</string>
     <string name="card_view_gatherer_page">"Gatherer Page"</string>
@@ -561,5 +560,6 @@ Good luck, and have fun!
 
     <!-- Only used for app translation, not card names -->
     <string name="pref_Slovak">"Slovak"</string>
+    <string name="card_view_price_dialog_market">Market:</string>
 
 </resources>

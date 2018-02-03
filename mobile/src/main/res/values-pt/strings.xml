@@ -209,7 +209,6 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
     <string name="card_view_price_dialog_low">"Baixa:"</string>
     <string name="card_view_price_dialog_medium">"Média:"</string>
     <string name="card_view_price_dialog_high">"Alta:"</string>
-    <string name="card_view_price_dialog_foil">"Foil média:"</string>
     <string name="card_view_price_dialog_link">"Clique aqui para ver todos os preços e tendências"</string>
     <string name="card_view_no_rulings">"Não existem regras para este carta"</string>
     <string name="card_view_gatherer_page">"Ver Gatherer"</string>

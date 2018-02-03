@@ -219,7 +219,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="card_view_price_dialog_low">"Nízka:"</string>
     <string name="card_view_price_dialog_medium">"Priemerná:"</string>
     <string name="card_view_price_dialog_high">"Vysoká:"</string>
-    <string name="card_view_price_dialog_foil">"Foil priemerná:"</string>
     <string name="card_view_price_dialog_link">"Kliknite sem pre všetky informácie o cenách a trendoch"</string>
     <string name="card_view_no_rulings">"Žiadne pravidlá pre túto kartu"</string>
     <string name="card_view_gatherer_page">"Stránka Gatherer"</string>

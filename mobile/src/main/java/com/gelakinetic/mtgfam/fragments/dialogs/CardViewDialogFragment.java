@@ -177,22 +177,30 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 @SuppressLint("InflateParams") View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
 
                 assert v != null; /* Because Android Studio */
-                TextView l = v.findViewById(R.id.low);
-                TextView m = v.findViewById(R.id.med);
-                TextView h = v.findViewById(R.id.high);
-                TextView f = v.findViewById(R.id.foil);
-                TextView priceLink = v.findViewById(R.id.pricelink);
 
-                l.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW)));
-                m.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID)));
-                h.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH)));
-
-                if (getParentCardViewFragment().mPriceInfo.hasFoilPrice()) {
-                    f.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET)));
+                final String priceFormat = "$%1$,.2f";
+                MarketPriceInfo price = getParentCardViewFragment().mPriceInfo;
+                if (price.hasNormalPrice()) {
+                    ((TextView) v.findViewById(R.id.normal_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW)));
+                    ((TextView) v.findViewById(R.id.normal_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID)));
+                    ((TextView) v.findViewById(R.id.normal_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH)));
+                    ((TextView) v.findViewById(R.id.normal_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MARKET)));
                 } else {
-                    f.setVisibility(View.GONE);
-                    v.findViewById(R.id.foil_label).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_prices).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
                 }
+
+                if (price.hasFoilPrice()) {
+                    ((TextView) v.findViewById(R.id.foil_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.LOW)));
+                    ((TextView) v.findViewById(R.id.foil_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MID)));
+                    ((TextView) v.findViewById(R.id.foil_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.HIGH)));
+                    ((TextView) v.findViewById(R.id.foil_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET)));
+                } else {
+                    v.findViewById(R.id.foil_prices).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
+                }
+
+                TextView priceLink = v.findViewById(R.id.pricelink);
                 priceLink.setMovementMethod(LinkMovementMethod.getInstance());
                 priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.getUrl() + "\">" +
                         getString(R.string.card_view_price_dialog_link) + "</a>"));

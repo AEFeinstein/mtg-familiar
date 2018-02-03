@@ -211,7 +211,6 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
     <string name="card_view_price_dialog_low">"Basso:"</string>
     <string name="card_view_price_dialog_medium">"Medio:"</string>
     <string name="card_view_price_dialog_high">"Alto:"</string>
-    <string name="card_view_price_dialog_foil">"Prezzo medio Foil:"</string>
     <string name="card_view_price_dialog_link">"Clicca qui per tutte le informazioni sui prezzi e le tendenze"</string>
     <string name="card_view_no_rulings">"Nessun regolamento per questa carta"</string>
     <string name="card_view_gatherer_page">"Vai al Gatherer"</string>

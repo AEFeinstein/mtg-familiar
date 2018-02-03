@@ -73,13 +73,11 @@ public class MarketPriceInfo {
 
     public double getPrice(CardType cardType, PriceType priceType) {
         /* Protection if a card only has foil or normal price, or if it didn't load */
-        if(null == mNormalPrice && null != mFoilPrice) {
+        if (null == mNormalPrice && null != mFoilPrice) {
             cardType = CardType.FOIL;
-        }
-        else if(null == mFoilPrice && null != mNormalPrice) {
+        } else if (null == mFoilPrice && null != mNormalPrice) {
             cardType = CardType.NORMAL;
-        }
-        else if(null == mFoilPrice && null == mNormalPrice) {
+        } else if (null == mFoilPrice && null == mNormalPrice) {
             return 0;
         }
         /* Return the requested price */
@@ -123,6 +121,11 @@ public class MarketPriceInfo {
     public boolean hasFoilPrice() {
         return mFoilPrice != null;
     }
+
+    public boolean hasNormalPrice() {
+        return mNormalPrice != null;
+    }
+
 
     public String getUrl() {
         return mProductUrl;
