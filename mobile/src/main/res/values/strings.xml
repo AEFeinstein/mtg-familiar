@@ -303,6 +303,7 @@ Mana pool will also be cleared."</string>
     <string name="trader_Low">"Low"</string>
     <string name="trader_Average">"Average"</string>
     <string name="trader_High">"High"</string>
+    <string name="trader_Market">"Market"</string>
     <string name="trader_sort">"Sort Trade"</string>
     <string name="trader_share">"Share Trade"</string>
     <string name="trade_share_title">"Trade"</string>
@@ -398,8 +399,6 @@ Good luck, and have fun!
 
     <!-- Preferences -->
     <string name="pref_screen_general">"General Settings"</string>
-    <string name="pref_screen_search">"Search &amp; Results"</string>
-    <string name="pref_screen_trade_wishlist">"Trade &amp; Wishlist"</string>
     <string name="pref_cat_default_fragment">"Default Page"</string>
     <string name="pref_default_fragment_mode_summary">"The first thing you see when you open the app"</string>
     <string name="pref_cat_updates">"Database Updates"</string>

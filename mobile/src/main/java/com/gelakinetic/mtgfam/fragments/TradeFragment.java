@@ -523,8 +523,8 @@ public class TradeFragment extends FamiliarListFragment {
     }
 
     @Override
-    public int getPriceSetting() {
-        return Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
+    public MarketPriceInfo.PriceType getPriceSetting() {
+        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(PreferenceAdapter.getTradePrice(getContext())));
     }
 
     @Override

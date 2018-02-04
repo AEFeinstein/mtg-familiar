@@ -272,29 +272,13 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                  * to the cached price */
                                 int oldPrice;
                                 if (data.mPriceInfo != null) {
+                                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
                                     if (data.mIsFoil) {
-                                        oldPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
-                                    } else {
-                                        switch (getParentTradeFragment().getPriceSetting()) {
-                                            case TradeFragment.LOW_PRICE: {
-                                                oldPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
-                                                break;
-                                            }
-                                            default:
-                                            case TradeFragment.AVG_PRICE: {
-                                                oldPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
-                                                break;
-                                            }
-                                            case TradeFragment.HIGH_PRICE: {
-                                                oldPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
-                                                break;
-                                            }
-                                            case TradeFragment.FOIL_PRICE: {
-                                                oldPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
-                                                break;
-                                            }
-                                        }
+                                        type = MarketPriceInfo.CardType.FOIL;
                                     }
+
+                                    oldPrice = (int) (data.mPriceInfo.getPrice(type, getParentTradeFragment().getPriceSetting()) * 100);
+
                                     if (oldPrice != data.mPrice) {
                                         data.mIsCustomPrice = true;
                                     }
@@ -415,13 +399,11 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Build the dialog with some choices */
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
-                        .items(getString(R.string.trader_Low),
-                                getString(R.string.trader_Average),
-                                getString(R.string.trader_High))
-                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
+                        .items(getResources().getStringArray(R.array.trade_option_entries))
+                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting().toInt(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentTradeFragment().getPriceSetting() != which) {
+                                if (getParentTradeFragment().getPriceSetting().toInt() != which) {
                                     getParentTradeFragment().setPriceSetting(which);
 
                                     /* Update ALL the prices! */

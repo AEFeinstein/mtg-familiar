@@ -434,23 +434,11 @@ public class WishlistFragment extends FamiliarListFragment {
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                 for (IndividualSetInfo isi : cwi.mInfo) {
                     if (isi.mPrice != null) {
+                        MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
                         if (isi.mIsFoil) {
-                            totalPrice += (isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * isi.mNumberOf);
-                        } else {
-                            switch (getPriceSetting()) {
-                                case LOW_PRICE:
-                                    totalPrice += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * isi.mNumberOf);
-                                    break;
-                                case AVG_PRICE:
-                                    totalPrice += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * isi.mNumberOf);
-                                    break;
-                                case HIGH_PRICE:
-                                    totalPrice += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * isi.mNumberOf);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            type = MarketPriceInfo.CardType.FOIL;
                         }
+                        totalPrice += (isi.mPrice.getPrice(type, getPriceSetting()) * isi.mNumberOf);
                     }
                 }
             }
@@ -464,8 +452,8 @@ public class WishlistFragment extends FamiliarListFragment {
     }
 
     @Override
-    public int getPriceSetting() {
-        return Integer.parseInt(PreferenceAdapter.getTradePrice(getContext()));
+    public MarketPriceInfo.PriceType getPriceSetting() {
+        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(PreferenceAdapter.getTradePrice(getContext())));
     }
 
     @Override
@@ -684,45 +672,18 @@ public class WishlistFragment extends FamiliarListFragment {
                     /* Show individual prices and number of each card, or message if price does not exist, if desired */
                 TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);
                 if (mShowIndividualPrices) {
+                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
                     if (isi.mIsFoil) {
-                        if (isi.mPrice == null || isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) == 0) {
-                            priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
-                            priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
-                        } else {
-                            priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET)));
-                        }
+                        type = MarketPriceInfo.CardType.FOIL;
+                    }
+
+                    double price = 0;
+                    if (isi.mPrice == null || (price = isi.mPrice.getPrice(type, getPriceSetting())) == 0) {
+                        priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
+                        priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
                     } else {
-                        boolean priceFound = false;
-                        if (isi.mPrice != null) {
-                            switch (getPriceSetting()) {
-                                case LOW_PRICE:
-                                    if (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW)));
-                                        priceFound = true;
-                                    }
-                                    break;
-                                case AVG_PRICE:
-                                    if (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID)));
-                                        priceFound = true;
-                                    }
-                                    break;
-                                case HIGH_PRICE:
-                                    if (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) != 0) {
-                                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH)));
-                                        priceFound = true;
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                            priceText.setTextColor(ContextCompat.getColor(getContext(),
-                                    getResourceIdFromAttr(R.attr.color_text)));
-                        }
-                        if (!priceFound) {
-                            priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
-                            priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
-                        }
+                        priceText.setText(String.format(Locale.US, "%dx " + PRICE_FORMAT, isi.mNumberOf, price));
+                        priceText.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
                     }
                 } else {
                         /* Just show the number of */

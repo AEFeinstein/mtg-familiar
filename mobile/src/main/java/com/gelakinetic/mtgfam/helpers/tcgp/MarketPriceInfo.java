@@ -36,7 +36,48 @@ public class MarketPriceInfo {
         LOW,
         MID,
         HIGH,
-        MARKET
+        MARKET;
+
+        /**
+         * Convert a price type to an integer
+         * This must match the values in trade_option_entries and trade_option_values
+         *
+         * @return The integer representation of the type
+         */
+        public int toInt() {
+            switch (this) {
+                case LOW:
+                    return 0;
+                case MID:
+                    return 1;
+                case HIGH:
+                    return 2;
+                default:
+                case MARKET:
+                    return 3;
+            }
+        }
+
+        /**
+         * Convert an integer to a price type
+         * This must match the values in trade_option_entries and trade_option_values
+         *
+         * @param i The integer to convert
+         * @return The PriceType representation of this integer
+         */
+        public static PriceType fromInt(int i) {
+            switch (i) {
+                case 0:
+                    return MarketPriceInfo.PriceType.LOW;
+                case 1:
+                    return MarketPriceInfo.PriceType.MID;
+                case 2:
+                    return MarketPriceInfo.PriceType.HIGH;
+                default:
+                case 3:
+                    return MarketPriceInfo.PriceType.MARKET;
+            }
+        }
     }
 
     class Price {

@@ -90,12 +90,11 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
             case DIALOG_PRICE_SETTING: {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
-                        .items(getString(R.string.trader_Low),
-                                getString(R.string.trader_Average), getString(R.string.trader_High))
-                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
+                        .items(getResources().getStringArray(R.array.trade_option_entries))
+                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting().toInt(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentWishlistFragment().getPriceSetting() != which) {
+                                if (getParentWishlistFragment().getPriceSetting().toInt() != which) {
                                     getParentWishlistFragment().setPriceSetting(which);
                                     PreferenceAdapter.setTradePrice(getContext(),
                                             String.valueOf(getParentWishlistFragment().getPriceSetting()));

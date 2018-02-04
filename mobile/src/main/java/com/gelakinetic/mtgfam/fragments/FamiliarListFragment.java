@@ -61,10 +61,6 @@ import io.reactivex.functions.Consumer;
 public abstract class FamiliarListFragment extends FamiliarFragment {
 
     /* Pricing */
-    public static final int LOW_PRICE = 0;
-    public static final int AVG_PRICE = 1;
-    public static final int HIGH_PRICE = 2;
-    public static final int FOIL_PRICE = 3;
     static final String PRICE_FORMAT = "$%.02f";
 
     private int mPriceFetchRequests = 0;
@@ -474,29 +470,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         /* If the priceInfo is already loaded, don't bother performing a query */
         if (data.mPriceInfo != null) {
+            MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
             if (data.mIsFoil) {
-                data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
-            } else {
-                switch (getPriceSetting()) {
-                    case LOW_PRICE: {
-                        data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
-                        break;
-                    }
-                    default:
-                    case AVG_PRICE: {
-                        data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
-                        break;
-                    }
-                    case HIGH_PRICE: {
-                        data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
-                        break;
-                    }
-                    case FOIL_PRICE: {
-                        data.mPrice = (int) (data.mPriceInfo.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
-                        break;
-                    }
-                }
+                type = MarketPriceInfo.CardType.FOIL;
             }
+            data.mPrice = (int) (data.mPriceInfo.getPrice(type, getPriceSetting()) * 100);
         } else {
             mPriceFetchRequests++;
             getFamiliarActivity().setLoading();
@@ -513,30 +491,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
                                 /* Only reset the price to the downloaded one if the old price isn't custom */
                                 if (!data.mIsCustomPrice) {
+                                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
                                     if (data.mIsFoil) {
-                                        data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
-                                    } else {
-                                        switch (getPriceSetting()) {
-                                            case LOW_PRICE: {
-                                                data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * 100);
-                                                break;
-                                            }
-                                            default:
-                                            case AVG_PRICE: {
-                                                data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * 100);
-                                                break;
-                                            }
-                                            case HIGH_PRICE: {
-                                                data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * 100);
-                                                break;
-                                            }
-                                            case FOIL_PRICE: {
-                                                data.mPrice = (int) (result.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * 100);
-                                                break;
-                                            }
-
-                                        }
+                                        type = MarketPriceInfo.CardType.FOIL;
                                     }
+                                    data.mPrice = (int) (result.getPrice(type, getPriceSetting()) * 100);
                                 }
                                 /* Clear the message */
                                 data.mMessage = null;
@@ -604,7 +563,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * @return the current price setting
      */
-    public abstract int getPriceSetting();
+    public abstract MarketPriceInfo.PriceType getPriceSetting();
 
     /**
      * @param priceSetting The price setting to write to preferences

@@ -618,23 +618,11 @@ public class DecklistFragment extends FamiliarListFragment {
             if (cdi.header == null) {
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     if (isi.mPrice != null) {
+                        MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
                         if (isi.mIsFoil) {
-                            totalPrice += isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * isi.mNumberOf;
-                        } else {
-                            switch (getPriceSetting()) {
-                                case LOW_PRICE:
-                                    totalPrice += isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * isi.mNumberOf;
-                                    break;
-                                case AVG_PRICE:
-                                    totalPrice += isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * isi.mNumberOf;
-                                    break;
-                                case HIGH_PRICE:
-                                    totalPrice += isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * isi.mNumberOf;
-                                    break;
-                                default:
-                                    break;
-                            }
+                            type = MarketPriceInfo.CardType.FOIL;
                         }
+                        totalPrice += isi.mPrice.getPrice(type, getPriceSetting()) * isi.mNumberOf;
                     }
                 }
             }
@@ -648,8 +636,8 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    public int getPriceSetting() {
-        return Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext()));
+    public MarketPriceInfo.PriceType getPriceSetting() {
+        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext())));
     }
 
     @Override

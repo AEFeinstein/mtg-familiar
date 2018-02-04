@@ -41,10 +41,6 @@ import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import static com.gelakinetic.mtgfam.fragments.WishlistFragment.AVG_PRICE;
-import static com.gelakinetic.mtgfam.fragments.WishlistFragment.HIGH_PRICE;
-import static com.gelakinetic.mtgfam.fragments.WishlistFragment.LOW_PRICE;
-
 /**
  * This class has helpers used for reading, writing, and modifying the wishlist from different fragments
  */
@@ -180,7 +176,7 @@ public class WishlistHelpers {
      */
     public static String GetSharableWishlist(ArrayList<CompressedWishlistInfo> mCompressedWishlist,
                                              Context ctx, boolean shareText, boolean sharePrice,
-                                             int priceOption) {
+                                             MarketPriceInfo.PriceType priceOption) {
         StringBuilder readableWishlist = new StringBuilder();
 
         /* For each wishlist entry */
@@ -211,24 +207,11 @@ public class WishlistHelpers {
                 /* Attempt to append the price */
                 if (sharePrice && isi.mPrice != null) {
                     double price = 0;
+                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
                     if (isi.mIsFoil) {
-                        price = isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET);
-                    } else {
-                        switch (priceOption) {
-                            case LOW_PRICE: {
-                                price = isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW);
-                                break;
-                            }
-                            case AVG_PRICE: {
-                                price = isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID);
-                                break;
-                            }
-                            case HIGH_PRICE: {
-                                price = isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH);
-                                break;
-                            }
-                        }
+                        type = MarketPriceInfo.CardType.FOIL;
                     }
+                    price = isi.mPrice.getPrice(type, priceOption);
                     if (price != 0) {
                         readableWishlist
                                 .append(", $")
@@ -310,26 +293,16 @@ public class WishlistHelpers {
          * @param priceSetting LOW_PRICE, AVG_PRICE, or HIGH_PRICE
          * @return The sum price of all cards in this object
          */
-        public double getTotalPrice(int priceSetting) {
+        public double getTotalPrice(MarketPriceInfo.PriceType priceSetting) {
             double sumWish = 0;
 
             for (IndividualSetInfo isi : mInfo) {
                 try {
+                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
                     if (isi.mIsFoil) {
-                        sumWish += (isi.mPrice.getPrice(MarketPriceInfo.CardType.FOIL, MarketPriceInfo.PriceType.MARKET) * isi.mNumberOf);
-                    } else {
-                        switch (priceSetting) {
-                            case LOW_PRICE:
-                                sumWish += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.LOW) * isi.mNumberOf);
-                                break;
-                            case AVG_PRICE:
-                                sumWish += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.MID) * isi.mNumberOf);
-                                break;
-                            case HIGH_PRICE:
-                                sumWish += (isi.mPrice.getPrice(MarketPriceInfo.CardType.NORMAL, MarketPriceInfo.PriceType.HIGH) * isi.mNumberOf);
-                                break;
-                        }
+                        type = MarketPriceInfo.CardType.FOIL;
                     }
+                    sumWish += (isi.mPrice.getPrice(type, priceSetting) * isi.mNumberOf);
                 } catch (NullPointerException e) {
                     /* eat it, no price is loaded */
                 }
@@ -345,7 +318,7 @@ public class WishlistHelpers {
     public static class WishlistComparator implements Comparator<CompressedWishlistInfo> {
 
         final ArrayList<SortOption> options = new ArrayList<>();
-        int mPriceSetting = 0;
+        MarketPriceInfo.PriceType mPriceSetting = MarketPriceInfo.PriceType.MARKET;
 
         /**
          * Constructor. It parses an "order by" string into search options. The first options have
@@ -354,7 +327,7 @@ public class WishlistHelpers {
          * @param orderByStr   The string to parse. It uses SQLite syntax: "KEY asc,KEY2 desc" etc
          * @param priceSetting The current price setting (LO/AVG/HIGH) used to sort by prices
          */
-        public WishlistComparator(String orderByStr, int priceSetting) {
+        public WishlistComparator(String orderByStr, MarketPriceInfo.PriceType priceSetting) {
             int idx = 0;
             for (String option : orderByStr.split(",")) {
                 String key = option.split(" ")[0];
