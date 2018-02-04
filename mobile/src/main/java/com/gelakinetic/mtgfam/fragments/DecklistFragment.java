@@ -495,20 +495,23 @@ public class DecklistFragment extends FamiliarListFragment {
                     if ("".equals(fileName)) {
                         fileName = "unnamed_deck";
                     }
-                    File file = new File(Environment.getExternalStorageDirectory(), "MTGFamiliar" + File.pathSeparator + fileName + ".dec");
+                    File file = new File(Environment.getExternalStorageDirectory(),
+                            "MTGFamiliar");
                     if (!file.mkdirs()) {
-                        Toast.makeText(
-                                getContext(),
-                                getString(R.string.main_unable_to_create_directory,
-                                        file.getAbsolutePath()),
-                                Toast.LENGTH_LONG).show();
+                        ToastWrapper.makeAndShowText(getContext(),
+                                getString(R.string.main_unable_to_create_directory, file),
+                                Toast.LENGTH_LONG);
                         return false;
                     }
+                    file = new File(file, fileName + ".dec");
                     FileOutputStream outputStream;
                     try {
                         outputStream = new FileOutputStream(file);
                         outputStream.write(deck.toString().getBytes());
                         outputStream.close();
+                        ToastWrapper.makeAndShowText(getContext(),
+                                getString(R.string.decklist_saved_to_toast, file.getPath()),
+                                Toast.LENGTH_SHORT);
                     } catch (Exception e) {
                         // todo: deal with whatever exceptions need dealing with
                     }
