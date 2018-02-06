@@ -32,6 +32,7 @@ import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -95,9 +96,8 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                                 if (getParentWishlistFragment().getPriceSetting().toInt() != which) {
-                                    getParentWishlistFragment().setPriceSetting(which);
-                                    PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentWishlistFragment().getPriceSetting()));
+                                    getParentWishlistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromInt(which));
+                                    PreferenceAdapter.setWishlistPrice(getContext(), getParentWishlistFragment().getPriceSetting());
                                     getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                                     getParentWishlistFragment().updateTotalPrices(0);
                                 }

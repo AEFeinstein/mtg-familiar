@@ -272,12 +272,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                  * to the cached price */
                                 int oldPrice;
                                 if (data.mPriceInfo != null) {
-                                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
-                                    if (data.mIsFoil) {
-                                        type = MarketPriceInfo.CardType.FOIL;
-                                    }
-
-                                    oldPrice = (int) (data.mPriceInfo.getPrice(type, getParentTradeFragment().getPriceSetting()) * 100);
+                                    oldPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getParentTradeFragment().getPriceSetting()) * 100);
 
                                     if (oldPrice != data.mPrice) {
                                         data.mIsCustomPrice = true;
@@ -404,7 +399,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                                 if (getParentTradeFragment().getPriceSetting().toInt() != which) {
-                                    getParentTradeFragment().setPriceSetting(which);
+                                    getParentTradeFragment().setPriceSetting(MarketPriceInfo.PriceType.fromInt(which));
 
                                     /* Update ALL the prices! */
                                     for (MtgCard data : getParentTradeFragment().mListLeft) {
@@ -424,8 +419,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                     getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
 
                                     /* And also update the preference */
-                                    PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentTradeFragment().getPriceSetting()));
+                                    PreferenceAdapter.setTradePrice(getContext(), getParentTradeFragment().getPriceSetting());
 
                                     getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                                 }

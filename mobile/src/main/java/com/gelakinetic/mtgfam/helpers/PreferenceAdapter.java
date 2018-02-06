@@ -30,6 +30,7 @@ import android.support.annotation.Nullable;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -612,20 +613,40 @@ public class PreferenceAdapter {
     }
 
     /* Trade price */
-    public static synchronized String getTradePrice(@Nullable Context context) {
+    public static synchronized MarketPriceInfo.PriceType getTradePrice(@Nullable Context context) {
         if (null == context) {
-            return "1";
+            return MarketPriceInfo.PriceType.MARKET;
         }
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tradePrice), "1");
+        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tradePrice), "3")));
     }
 
-    public static synchronized void setTradePrice(@Nullable Context context, String tradePrice) {
+    public static synchronized void setTradePrice(@Nullable Context context, MarketPriceInfo.PriceType tradePrice) {
         if (null == context) {
             return;
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(context.getString(R.string.key_tradePrice), tradePrice);
+        edit.putString(context.getString(R.string.key_tradePrice), Integer.toString(tradePrice.toInt()));
+        edit.apply();
+    }
+
+    /* Wishlist price */
+    public static synchronized MarketPriceInfo.PriceType getWishlistPrice(@Nullable Context context) {
+        if (null == context) {
+            return MarketPriceInfo.PriceType.MARKET;
+        }
+        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_wishlistPrice), "3")));
+    }
+
+    public static synchronized void setWishlistPrice(@Nullable Context context, MarketPriceInfo.PriceType wishlistPrice) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_wishlistPrice), Integer.toString(wishlistPrice.toInt()));
         edit.apply();
     }
 
@@ -989,20 +1010,22 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.key_showTotalPriceDecklistPref), false);
     }
 
-    public static synchronized String getDeckPrice(@Nullable Context context) {
+    /* Deck price */
+    public static synchronized MarketPriceInfo.PriceType getDeckPrice(@Nullable Context context) {
         if (null == context) {
-            return "1";
+            return MarketPriceInfo.PriceType.MARKET;
         }
-        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "1");
+        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(
+                PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "3")));
     }
 
-    public static synchronized void setDeckPrice(@Nullable Context context, String deckPrice) {
+    public static synchronized void setDeckPrice(@Nullable Context context, MarketPriceInfo.PriceType tradePrice) {
         if (null == context) {
             return;
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(context.getString(R.string.key_deckPrice), deckPrice);
+        edit.putString(context.getString(R.string.key_deckPrice), Integer.toString(tradePrice.toInt()));
         edit.apply();
     }
 

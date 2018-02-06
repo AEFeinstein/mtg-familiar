@@ -207,11 +207,7 @@ public class WishlistHelpers {
                 /* Attempt to append the price */
                 if (sharePrice && isi.mPrice != null) {
                     double price = 0;
-                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
-                    if (isi.mIsFoil) {
-                        type = MarketPriceInfo.CardType.FOIL;
-                    }
-                    price = isi.mPrice.getPrice(type, priceOption);
+                    price = isi.mPrice.getPrice(isi.mIsFoil, priceOption);
                     if (price != 0) {
                         readableWishlist
                                 .append(", $")
@@ -298,11 +294,7 @@ public class WishlistHelpers {
 
             for (IndividualSetInfo isi : mInfo) {
                 try {
-                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
-                    if (isi.mIsFoil) {
-                        type = MarketPriceInfo.CardType.FOIL;
-                    }
-                    sumWish += (isi.mPrice.getPrice(type, priceSetting) * isi.mNumberOf);
+                    sumWish += (isi.mPrice.getPrice(isi.mIsFoil, priceSetting) * isi.mNumberOf);
                 } catch (NullPointerException e) {
                     /* eat it, no price is loaded */
                 }

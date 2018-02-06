@@ -618,11 +618,7 @@ public class DecklistFragment extends FamiliarListFragment {
             if (cdi.header == null) {
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     if (isi.mPrice != null) {
-                        MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
-                        if (isi.mIsFoil) {
-                            type = MarketPriceInfo.CardType.FOIL;
-                        }
-                        totalPrice += isi.mPrice.getPrice(type, getPriceSetting()) * isi.mNumberOf;
+                        totalPrice += isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()) * isi.mNumberOf;
                     }
                 }
             }
@@ -637,12 +633,12 @@ public class DecklistFragment extends FamiliarListFragment {
 
     @Override
     public MarketPriceInfo.PriceType getPriceSetting() {
-        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext())));
+        return PreferenceAdapter.getDeckPrice(getContext());
     }
 
     @Override
-    public void setPriceSetting(int priceSetting) {
-        PreferenceAdapter.setDeckPrice(getContext(), Integer.toString(priceSetting));
+    public void setPriceSetting(MarketPriceInfo.PriceType priceSetting) {
+        PreferenceAdapter.setDeckPrice(getContext(), priceSetting);
     }
 
     class DecklistViewHolder extends CardDataViewHolder {

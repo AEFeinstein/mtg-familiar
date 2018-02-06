@@ -470,11 +470,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         /* If the priceInfo is already loaded, don't bother performing a query */
         if (data.mPriceInfo != null) {
-            MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
-            if (data.mIsFoil) {
-                type = MarketPriceInfo.CardType.FOIL;
-            }
-            data.mPrice = (int) (data.mPriceInfo.getPrice(type, getPriceSetting()) * 100);
+            data.mPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getPriceSetting()) * 100);
         } else {
             mPriceFetchRequests++;
             getFamiliarActivity().setLoading();
@@ -491,11 +487,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
                                 /* Only reset the price to the downloaded one if the old price isn't custom */
                                 if (!data.mIsCustomPrice) {
-                                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
-                                    if (data.mIsFoil) {
-                                        type = MarketPriceInfo.CardType.FOIL;
-                                    }
-                                    data.mPrice = (int) (result.getPrice(type, getPriceSetting()) * 100);
+                                    data.mPrice = (int) (result.getPrice(data.mIsFoil, getPriceSetting()) * 100);
                                 }
                                 /* Clear the message */
                                 data.mMessage = null;
@@ -568,5 +560,5 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * @param priceSetting The price setting to write to preferences
      */
-    public abstract void setPriceSetting(int priceSetting);
+    public abstract void setPriceSetting(MarketPriceInfo.PriceType priceSetting);
 }

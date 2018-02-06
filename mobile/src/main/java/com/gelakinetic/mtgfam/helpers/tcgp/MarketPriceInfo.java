@@ -27,11 +27,6 @@ import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 
 public class MarketPriceInfo {
 
-    public enum CardType {
-        NORMAL,
-        FOIL
-    }
-
     public enum PriceType {
         LOW,
         MID,
@@ -112,51 +107,38 @@ public class MarketPriceInfo {
         price.market = marketPrice.marketPrice;
     }
 
-    public double getPrice(CardType cardType, PriceType priceType) {
+    public double getPrice(boolean isFoil, PriceType priceType) {
         /* Protection if a card only has foil or normal price, or if it didn't load */
         if (null == mNormalPrice && null != mFoilPrice) {
-            cardType = CardType.FOIL;
+            isFoil = true;
         } else if (null == mFoilPrice && null != mNormalPrice) {
-            cardType = CardType.NORMAL;
-        } else if (null == mFoilPrice && null == mNormalPrice) {
+            isFoil = false;
+        } else if (null == mFoilPrice) {
             return 0;
         }
+
+        Price toReturn;
+        if (isFoil) {
+            toReturn = mFoilPrice;
+        } else {
+            toReturn = mNormalPrice;
+        }
         /* Return the requested price */
-        switch (cardType) {
-            case NORMAL: {
-                switch (priceType) {
-                    case LOW: {
-                        return mNormalPrice.low;
-                    }
-                    case MID: {
-                        return mNormalPrice.mid;
-                    }
-                    case HIGH: {
-                        return mNormalPrice.high;
-                    }
-                    case MARKET: {
-                        return mNormalPrice.market;
-                    }
-                }
+        switch (priceType) {
+            case LOW: {
+                return toReturn.low;
             }
-            case FOIL: {
-                switch (priceType) {
-                    case LOW: {
-                        return mFoilPrice.low;
-                    }
-                    case MID: {
-                        return mFoilPrice.mid;
-                    }
-                    case HIGH: {
-                        return mFoilPrice.high;
-                    }
-                    case MARKET: {
-                        return mFoilPrice.market;
-                    }
-                }
+            case MID: {
+                return toReturn.mid;
+            }
+            case HIGH: {
+                return toReturn.high;
+            }
+            default:
+            case MARKET: {
+                return toReturn.market;
             }
         }
-        return 0;
     }
 
     public boolean hasFoilPrice() {
@@ -166,7 +148,6 @@ public class MarketPriceInfo {
     public boolean hasNormalPrice() {
         return mNormalPrice != null;
     }
-
 
     public String getUrl() {
         return mProductUrl;

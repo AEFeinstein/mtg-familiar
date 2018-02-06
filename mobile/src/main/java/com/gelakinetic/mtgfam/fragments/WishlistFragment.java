@@ -434,11 +434,7 @@ public class WishlistFragment extends FamiliarListFragment {
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
                 for (IndividualSetInfo isi : cwi.mInfo) {
                     if (isi.mPrice != null) {
-                        MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
-                        if (isi.mIsFoil) {
-                            type = MarketPriceInfo.CardType.FOIL;
-                        }
-                        totalPrice += (isi.mPrice.getPrice(type, getPriceSetting()) * isi.mNumberOf);
+                        totalPrice += (isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()) * isi.mNumberOf);
                     }
                 }
             }
@@ -453,12 +449,12 @@ public class WishlistFragment extends FamiliarListFragment {
 
     @Override
     public MarketPriceInfo.PriceType getPriceSetting() {
-        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(PreferenceAdapter.getTradePrice(getContext())));
+        return PreferenceAdapter.getWishlistPrice(getContext());
     }
 
     @Override
-    public void setPriceSetting(int priceSetting) {
-        PreferenceAdapter.setTradePrice(getContext(), Integer.toString(priceSetting));
+    public void setPriceSetting(MarketPriceInfo.PriceType priceSetting) {
+        PreferenceAdapter.setWishlistPrice(getContext(), priceSetting);
     }
 
     /**
@@ -672,13 +668,8 @@ public class WishlistFragment extends FamiliarListFragment {
                     /* Show individual prices and number of each card, or message if price does not exist, if desired */
                 TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);
                 if (mShowIndividualPrices) {
-                    MarketPriceInfo.CardType type = MarketPriceInfo.CardType.NORMAL;
-                    if (isi.mIsFoil) {
-                        type = MarketPriceInfo.CardType.FOIL;
-                    }
-
                     double price = 0;
-                    if (isi.mPrice == null || (price = isi.mPrice.getPrice(type, getPriceSetting())) == 0) {
+                    if (isi.mPrice == null || (price = isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting())) == 0) {
                         priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
                         priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
                     } else {

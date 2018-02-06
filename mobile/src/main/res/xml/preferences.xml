@@ -250,7 +250,7 @@
         <PreferenceCategory android:title="@string/pref_cat_trade_window">
 
             <ListPreference
-                android:defaultValue="1"
+                android:defaultValue="3"
                 android:entries="@array/trade_option_entries"
                 android:entryValues="@array/trade_option_values"
                 android:key="@string/key_tradePrice"
@@ -282,7 +282,13 @@
                 android:summary="@string/pref_wishlist_details_summary"
                 android:title="@string/pref_wishlist_details_title" />
 
-            <!-- TODO add wishlist price -->
+            <ListPreference
+                android:defaultValue="3"
+                android:entries="@array/trade_option_entries"
+                android:entryValues="@array/trade_option_values"
+                android:key="@string/key_wishlistPrice"
+                android:summary="@string/pref_wishlist_price_summary"
+                android:title="@string/pref_trade_price_title" />
 
         </PreferenceCategory>
     </PreferenceScreen>
@@ -298,7 +304,7 @@
                 android:title="@string/pref_wishlist_totals_title" />
 
             <ListPreference
-                android:defaultValue="1"
+                android:defaultValue="3"
                 android:entries="@array/trade_option_entries"
                 android:entryValues="@array/trade_option_values"
                 android:key="@string/key_deckPrice"

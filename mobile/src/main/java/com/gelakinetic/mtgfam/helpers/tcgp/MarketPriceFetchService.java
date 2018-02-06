@@ -369,7 +369,12 @@ public class MarketPriceFetchService {
                                 try {
                                     onSuccess.accept(marketPriceInfo);
                                 } catch (Exception e) {
-                                    /* Eat it */
+                                    /* Snatch defeat from the jaws of victory */
+                                    try {
+                                        onError.accept(e);
+                                    } catch (Exception e2) {
+                                        /* eat it */
+                                    }
                                 }
                             }
                         });
