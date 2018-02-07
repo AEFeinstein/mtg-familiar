@@ -43,9 +43,11 @@ import com.nytimes.android.external.store3.base.impl.Store;
 import com.nytimes.android.external.store3.base.impl.StoreBuilder;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
 
 import javax.annotation.Nonnull;
@@ -103,10 +105,15 @@ public class MarketPriceFetcher {
                     if (tokenStr.isEmpty() || expirationDate.before(new Date())) {
                         /* Request a token. This will initialize the TcgpApi object */
                         AccessToken token;
-                        token = api.getAccessToken(TcgpKeys.PUBLIC_KEY, TcgpKeys.PRIVATE_KEY, TcgpKeys.ACCESS_TOKEN);
-                        /* Save the token and expiration date */
-                        PreferenceAdapter.setTcgpApiToken(mActivity, token.access_token);
-                        PreferenceAdapter.setTcgpApiTokenExpirationDate(mActivity, token.expires);
+                        try {
+                            TcgpKeys keys = new Gson().fromJson(new InputStreamReader(mActivity.getAssets().open("tcgp_keys.json")), TcgpKeys.class);
+                            token = api.getAccessToken(keys.PUBLIC_KEY, keys.PRIVATE_KEY, keys.ACCESS_TOKEN);
+                            /* Save the token and expiration date */
+                            PreferenceAdapter.setTcgpApiToken(mActivity, token.access_token);
+                            PreferenceAdapter.setTcgpApiTokenExpirationDate(mActivity, token.expires);
+                        } catch (FileNotFoundException e) {
+                            return Single.error(new Exception("No API Keys"));
+                        }
                     } else {
                         /* Make sure the token hasn't expired */
                         api.setToken(tokenStr);

@@ -75,12 +75,12 @@ task pmd(type: Pmd, group: "verification") {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.gelakinetic.mtgfam"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 53
         versionName "3.4.6"
         vectorDrawables.useSupportLibrary = true
@@ -106,13 +106,17 @@ android {
         abortOnError false
         disable 'MissingTranslation'
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
 
     findbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
     findbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.0.5'
-    androidTestImplementation 'com.android.support:support-annotations:26.1.0'
+    androidTestImplementation 'com.android.support:support-annotations:27.0.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
 
@@ -121,17 +125,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.47'
     implementation 'org.apache.commons:commons-lang3:3.6'
-    implementation 'org.apache.commons:commons-io:1.3.2', {
-        exclude module: 'commons-io'
-    }
+    implementation 'org.apache.commons:commons-io:1.3.2'
     implementation 'org.apache.commons:commons-collections4:4.1'
-    implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.android.support:support-v13:26.1.0'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:cardview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:gridlayout-v7:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.android.support:support-v13:27.0.2'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:cardview-v7:27.0.2'
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.android.support:gridlayout-v7:27.0.2'
+    implementation 'com.android.support:recyclerview-v7:27.0.2'
     implementation 'com.github.woxthebox:draglistview:1.5.0', {
         exclude module: 'recyclerview-v7'
     }
@@ -162,9 +164,15 @@ dependencies {
     }
 
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
-    implementation 'com.nytimes.android:store3:3.0.0' , {
+    implementation 'com.nytimes.android:cache3:3.0.0', {
         exclude module: 'jsr305'
         exclude module: 'jcip-annotations'
+        exclude module: 'rxjava'
+    }
+    implementation 'com.nytimes.android:store3:3.0.0', {
+        exclude module: 'jsr305'
+        exclude module: 'jcip-annotations'
+        exclude module: 'rxjava'
     }
 }
 
