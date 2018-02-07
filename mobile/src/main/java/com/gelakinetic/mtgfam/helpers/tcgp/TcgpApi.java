@@ -155,7 +155,7 @@ public class TcgpApi {
         if (null == mAccessToken) {
             // Create the connection with default options
             HttpURLConnection conn = (HttpURLConnection)
-                    new URL("http://api.tcgplayer.com/token").openConnection();
+                    new URL("https://api.tcgplayer.com/token").openConnection();
             setDefaultOptions(conn, HttpMethod.POST);
 
             // Set the header, special for the token request
@@ -202,7 +202,7 @@ public class TcgpApi {
 //
 //            // Create the connection with default options and headers
 //            HttpURLConnection conn = (HttpURLConnection) new URL(
-//                    "http://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/categories" +
+//                    "https://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/categories" +
 //                            "?offset=0&limit=999&sortOrder=categoryId&sortDesc=false").openConnection();
 //            setDefaultOptions(conn, HttpMethod.GET);
 //            addHeaders(conn);
@@ -238,7 +238,7 @@ public class TcgpApi {
 //        if (null != mAccessToken) {
 //
 //            // Create the connection with default options and headers
-//            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/"
+//            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.tcgplayer.com/"
 //                    + TCGP_VERSION + "/catalog/categories/" + categoryId + "/search/manifest")
 //                    .openConnection();
 //            setDefaultOptions(conn, HttpMethod.GET);
@@ -283,7 +283,7 @@ public class TcgpApi {
         if (null != mAccessToken) {
 
             // Create the connection with default options and headers
-            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/" +
+            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.tcgplayer.com/" +
                     TCGP_VERSION + "/catalog/categories/" + CATEGORY_ID_MAGIC + "/search")
                     .openConnection();
             setDefaultOptions(conn, HttpMethod.POST);
@@ -336,7 +336,7 @@ public class TcgpApi {
 
             // Create the connection with default options and headers
             HttpURLConnection conn = (HttpURLConnection) new URL(
-                    "http://api.tcgplayer.com/" + TCGP_VERSION + "/pricing/product/" +
+                    "https://api.tcgplayer.com/" + TCGP_VERSION + "/pricing/product/" +
                             stringIds.toString()).openConnection();
             setDefaultOptions(conn, HttpMethod.GET);
             addHeaders(conn);
@@ -379,7 +379,7 @@ public class TcgpApi {
             }
 
             // Create the connection with default options and headers
-            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/" +
+            HttpURLConnection conn = (HttpURLConnection) new URL("https://api.tcgplayer.com/" +
                     TCGP_VERSION + "/catalog/products/" + stringIds.toString()).openConnection();
             setDefaultOptions(conn, HttpMethod.GET);
             addHeaders(conn);
