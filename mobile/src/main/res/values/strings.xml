@@ -47,6 +47,7 @@
     <string name="not_deleted">"not deleted"</string>
     <string name="no_network">"Network is not available"</string>
     <string name="filter_title_view_card">"View Card"</string>
+    <string name="price_error_unknown">"Error fetching price"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"PAGES"</string>

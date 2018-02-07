@@ -57,25 +57,21 @@ import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.Single;
 import io.reactivex.functions.Consumer;
 
-/**
- * Created by Adam on 1/29/2018.
- */
-
 public class MarketPriceFetcher {
 
     private static final String KEY_PREFIX = "price_";
     private static final int MAX_NUM_RETRIES = 8;
 
-    Activity mContext;
-    Store<MarketPriceInfo, MtgCard> mStore;
+    private final Activity mContext;
+    private final Store<MarketPriceInfo, MtgCard> mStore;
 
-    abstract class RecordingPersister<R, K> implements RecordProvider<K>, Persister<R, K> {
+    abstract class RecordingPersister<Rec, Key> implements RecordProvider<Key>, Persister<Rec, Key> {
     }
 
     /**
-     * TODO doc
+     * Constructor. Set up a MarketPriceFetcher with the given Activity as a Context
      *
-     * @param context
+     * @param context The Activity context used for strings, preferences, and the like
      */
     public MarketPriceFetcher(Activity context) {
         /* Save the context */
@@ -84,15 +80,16 @@ public class MarketPriceFetcher {
         /* Create the fetcher which actually gets the data */
         Fetcher<MarketPriceInfo, MtgCard> mFetcher = new Fetcher<MarketPriceInfo, MtgCard>() {
             /**
-             * TODO doc
-             * @param params
-             * @return
+             * This method fetches the price from TCGPlayer.com's API. It makes network calls, so
+             * it must not be called from the UI thread
+             *
+             * @param params The card to fetch price info for
+             * @return A Single with either the price info or a thrown exception
              */
             @Nonnull
             @Override
             public Single<MarketPriceInfo> fetch(@Nonnull MtgCard params) {
                 Exception lastThrownException = null;
-                MarketPriceInfo infoToReturn = new MarketPriceInfo();
                 if (FamiliarActivity.getNetworkState(mContext, false) == -1) { /* our context contains the activity that spawned the request */
                     return Single.error(new Exception(mContext.getString(R.string.no_network)));
                 }
@@ -105,7 +102,7 @@ public class MarketPriceFetcher {
                     /* If we don't have a token or it expired */
                     if (tokenStr.isEmpty() || expirationDate.before(new Date())) {
                         /* Request a token. This will initialize the TcgpApi object */
-                        AccessToken token = null;
+                        AccessToken token;
                         token = api.getAccessToken(TcgpKeys.PUBLIC_KEY, TcgpKeys.PRIVATE_KEY, TcgpKeys.ACCESS_TOKEN);
                         /* Save the token and expiration date */
                         PreferenceAdapter.setTcgpApiToken(mContext, token.access_token);
@@ -203,18 +200,13 @@ public class MarketPriceFetcher {
                         if (information.success && information.results.length > 0) {
                             ProductMarketPrice price = api.getProductMarketPrice(information.results);
                             if (price.success && price.results.length > 0) {
-                                for (ProductMarketPrice.MarketPrice marketPrice : price.results) {
-                                    if (marketPrice.subTypeName.equalsIgnoreCase("Foil")) {
-                                        infoToReturn.setFoilPrice(marketPrice);
-                                    } else if (marketPrice.subTypeName.equalsIgnoreCase("Normal")) {
-                                        infoToReturn.setNormalPrice(marketPrice);
-                                    }
-                                }
                                 ProductDetails details = api.getProductDetails(information.results);
                                 if (details.success && details.results.length > 0) {
-                                    infoToReturn.setUrl(details.results[0].url);
-                                    /* Got everything, break out of the while loop */
-                                    break;
+                                    /* database close if all is good */
+                                    DatabaseManager.getInstance(mContext, false).closeDatabase(false);
+
+                                    /* Return a new MarketPriceInfo */
+                                    return Single.just(new MarketPriceInfo(price.results, details.results));
                                 }
                             }
                         }
@@ -228,11 +220,12 @@ public class MarketPriceFetcher {
                     }
                     retry--;
                 }
-                DatabaseManager.getInstance(mContext, false).closeDatabase(false);         /* database close if something failed */
+                /* database close if something failed */
+                DatabaseManager.getInstance(mContext, false).closeDatabase(false);
                 if (null != lastThrownException) {
                     return Single.error(lastThrownException);
                 } else {
-                    return Single.just(infoToReturn); /* Actual price */
+                    return Single.error(new Exception(mContext.getString(R.string.price_error_unknown)));
                 }
             }
         };
@@ -243,18 +236,22 @@ public class MarketPriceFetcher {
             private static final int MAX_TIME_IN_CACHE_MS = 86400000; /* One day's worth of ms */
 
             /**
-             * TODO doc
-             * @param cacheKey
-             * @return
+             * Given a key, return a cache file
+             *
+             * @param cacheKey The cache key, a MtgCard object
+             * @return A File for this key
              */
             private File getCacheFile(MtgCard cacheKey) {
                 return new File(mContext.getCacheDir(), (KEY_PREFIX + cacheKey.mName + "-" + cacheKey.mExpansion).replaceAll("\\W+", ""));
             }
 
             /**
-             * TODO doc
-             * @param cacheKey
-             * @return
+             * Given a cache key, return whether it's FRESH or STALE. A record is stale after 24hrs
+             * MISSING is another record state, but the calling function doesn't check against it,
+             * so don't use it
+             *
+             * @param cacheKey The cache key, a MtgCard object
+             * @return RecordState.FRESH or RecordState.STALE
              */
             @Nonnull
             @Override
@@ -279,9 +276,11 @@ public class MarketPriceFetcher {
             }
 
             /**
-             * TODO doc
-             * @param cacheKey
-             * @return
+             * Read the cache file associated with the given key and return the cached
+             * MarketPriceInfo if possible
+             *
+             * @param cacheKey The cache key, a MtgCard object
+             * @return A Maybe either with the read MarketPriceInfo or an exception
              */
             @Nonnull
             @Override
@@ -306,10 +305,11 @@ public class MarketPriceFetcher {
             }
 
             /**
-             * TODO doc
-             * @param cacheKey
-             * @param marketPriceInfo
-             * @return
+             * Write a MarketPriceInfo to the cache with the given key
+             *
+             * @param cacheKey The cache key, a MtgCard object
+             * @param marketPriceInfo A MarketPriceInfo to write
+             * @return a Single with true if the write succeeded, or false if it didn't
              */
             @Nonnull
             @Override
@@ -333,37 +333,52 @@ public class MarketPriceFetcher {
                 .fetcher(mFetcher)
                 .persister(mPersister)
                 .networkBeforeStale()
-/* .memoryPolicy(MemoryPolicy.builder().setMemorySize(1).setExpireAfterWrite(1).build()) */
                 .open();
     }
 
     /**
-     * TODO doc
+     * This function fetches the price for a given MtgCard and calls the appropriate callbacks.
+     * It ensures the network operations are called on a non-UI thread and the result callbacks are
+     * called on the UI thread.
+     * <p>
      * TODO call unsubscribe on fragment exits
+     * TODO pull in loading animations here
      *
-     * @param card
-     * @param onSuccess
-     * @param onError
+     * @param card      A MtgCard to fetch data for. It must have a mName and mExpansion populated
+     * @param onSuccess A Consumer callback to be called when the price is fetched
+     * @param onError   A Consumer callback to be called when an error occurs
      */
     public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
                                  final Consumer<Throwable> onError) {
-//        if (null == mName || mName.isEmpty() ||
-//                null == setCode || setCode.isEmpty() ||
-//                null == mType || mType.isEmpty() ||
-//                null == mNumber || mNumber.isEmpty() ||
-//                0 == mMultiverseId) {
-//            throw new IllegalArgumentException("fetchMarketPrice given incomplete info");
-//        }
+
+        if (null == card.mName || card.mName.isEmpty() || null == card.mExpansion || card.mExpansion.isEmpty()) {
+            throw new IllegalArgumentException("card must have a name and expansion to fetch price");
+        }
 
         /* Start a new thread to perform the fetch */
         new Thread(new Runnable() {
+            /**
+             * This runnable gets the card price from either the cache or network, and runs on a
+             * non-UI thread
+             */
             @Override
             public void run() {
                 mStore.get(card).subscribe(new Consumer<MarketPriceInfo>() {
+                    /**
+                     * This callback is called when a MarketPriceInfo is fetched either from the
+                     * network or cache. The callback runs on a non-UI thread, but invokes the given
+                     * callback on a UI thread
+                     *
+                     * @param marketPriceInfo The fetched MarketPriceInfo
+                     * @throws Exception If something goes terribly wrong
+                     */
                     @Override
                     public void accept(final MarketPriceInfo marketPriceInfo) throws Exception {
                         /* Run the results on the UI thread */
                         mContext.runOnUiThread(new Runnable() {
+                            /**
+                             * This runs the given success callback on the UI thread
+                             */
                             @Override
                             public void run() {
                                 try {
@@ -380,10 +395,21 @@ public class MarketPriceFetcher {
                         });
                     }
                 }, new Consumer<Throwable>() {
+                    /**
+                     * This callback is called when an exception is thrown when fetching a
+                     * MarketPriceInfo. The callback runs on a non-UI thread, but invokes the given
+                     * callback on a UI thread
+                     *
+                     * @param throwable The Throwable that caused the process to fail
+                     * @throws Exception If something goes terribly wrong
+                     */
                     @Override
                     public void accept(final Throwable throwable) throws Exception {
                         /* Run the erros on the UI thread */
                         mContext.runOnUiThread(new Runnable() {
+                            /**
+                             * This runs the given error callback on the UI thread
+                             */
                             @Override
                             public void run() {
                                 try {

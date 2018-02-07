@@ -21,16 +21,12 @@ package com.gelakinetic.mtgfam.helpers.tcgp;
 
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CatalogData;
-import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.CategorySearchManifest;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.GetProductInformationOptions;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductInformation;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -111,11 +107,14 @@ public class TcgpApi {
     }
 
     /**
-     * TODO doc
+     * Set the default options for a HttpURLConnection
      *
-     * @param conn
+     * @param conn   The connection to set options for
+     * @param method Whether this is a GET or a POST
+     * @throws ProtocolException if the method cannot be reset
      */
-    private void setDefaultOptions(HttpURLConnection conn, HttpMethod method) throws ProtocolException {
+    private void setDefaultOptions(HttpURLConnection conn, HttpMethod method)
+            throws ProtocolException {
         if (HttpMethod.GET == method) {
             conn.setDoOutput(false);
             conn.setRequestMethod("GET");
@@ -139,22 +138,24 @@ public class TcgpApi {
     }
 
     /**
-     * This function requests an access token from TCGPlayer.com by providing the private keys. TODO A access token
-     * should only be requested if we don't have a valid one stored. TODO When an access token is received, the token
-     * and expiration date should be saved for later use.
+     * This function requests an access token from TCGPlayer.com by providing the private keys.
+     * An access token should only be requested if we don't have a valid one stored. When an access
+     * token is received, the token and expiration date should be saved for later use.
      *
      * @param publicKey   Supplied by TCGPlayer.com, also referred to as the "client_id"
      * @param privateKey  Supplied by TCGPlayer.com, also referred to as the "client_secret"
      * @param accessToken Supplied by TCGPlayer.com, also referred to as the "X-Tcg-Access-Token"
-     * @return An AccessToken object with the token, expiry date, etc, or null if a token is already loaded
+     * @return An AccessToken object or null if a token is already loaded
      * @throws IOException If something goes wrong with the network
      */
-    public AccessToken getAccessToken(String publicKey, String privateKey, String accessToken) throws IOException {
+    public AccessToken getAccessToken(String publicKey, String privateKey, String accessToken)
+            throws IOException {
 
         // Only request an access token if we don't have one already
         if (null == mAccessToken) {
             // Create the connection with default options
-            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/token").openConnection();
+            HttpURLConnection conn = (HttpURLConnection)
+                    new URL("http://api.tcgplayer.com/token").openConnection();
             setDefaultOptions(conn, HttpMethod.POST);
 
             // Set the header, special for the token request
@@ -163,7 +164,8 @@ public class TcgpApi {
             conn.setRequestProperty("X-Tcg-Access-Token", accessToken);
 
             // Set the body and send the POST
-            String payload = "grant_type=client_credentials&client_id=" + publicKey + "&client_secret=" + privateKey;
+            String payload = "grant_type=client_credentials&client_id=" + publicKey +
+                    "&client_secret=" + privateKey;
             conn.getOutputStream().write(payload.getBytes(Charset.forName("UTF-8")));
 
             // Get the response stream
@@ -172,7 +174,8 @@ public class TcgpApi {
             // Parse the json out of the response and save it
             GsonBuilder builder = new GsonBuilder();
             AccessToken.setDateFormat(builder);
-            AccessToken token = builder.create().fromJson(new InputStreamReader(inStream), AccessToken.class);
+            AccessToken token = builder.create()
+                    .fromJson(new InputStreamReader(inStream), AccessToken.class);
             this.mAccessToken = token.access_token;
 
             // Clean up
@@ -186,89 +189,86 @@ public class TcgpApi {
         return null;
     }
 
-    /**
-     * Request and return the catalog data from TCGPlayer.com. This data contains all product categories, including
-     * Magic, and product category metadata
-     *
-     * @return All of the catalog data or null if something went wrong
-     * @throws IOException If something goes wrong with the network
-     */
-    public CatalogData getCatalogData() throws IOException {
-        // Make sure we have an access token first
-        if (null != mAccessToken) {
-
-            // Parameters for the URL
-            int offset = 0;
-            int limit = 999;
-            String sortOrder = "categoryId";
-            boolean sortDesc = false;
-
-            // Create the connection with default options and headers
-            HttpURLConnection conn = (HttpURLConnection) new URL(
-                    "http://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/categories" + "?offset=" + offset + "&limit="
-                            + limit + "&sortOrder=" + sortOrder + "&sortDesc=" + sortDesc).openConnection();
-            setDefaultOptions(conn, HttpMethod.GET);
-            addHeaders(conn);
-
-            // Get the response stream. This opens the connection
-            InputStream inStream = conn.getInputStream();
-
-            // Parse the json out of the response and save it
-            GsonBuilder builder = new GsonBuilder();
-            CatalogData.CatalogDataItem.setDateFormat(builder);
-            CatalogData catalogData = builder.create().fromJson(new InputStreamReader(inStream), CatalogData.class);
-
-            // Clean up
-            inStream.close();
-            conn.disconnect();
-            return catalogData;
-        }
-        // No access token
-        return null;
-    }
-
-    /**
-     * Request and return a search manifest describing all of the sorting options and filters that are available for the
-     * given category
-     *
-     * @param categoryId The category to get a search manifest for
-     * @return The search manifest
-     * @throws IOException If something goes wrong with the network
-     */
-    public CategorySearchManifest getCategorySearchManifest(int categoryId) throws IOException {
-        // Make sure we have an access token first
-        if (null != mAccessToken) {
-
-            // Create the connection with default options and headers
-            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/" + TCGP_VERSION
-                    + "/catalog/categories/" + categoryId + "/search/manifest").openConnection();
-            setDefaultOptions(conn, HttpMethod.GET);
-            addHeaders(conn);
-
-            // Get the response stream. This opens the connection
-            InputStream inStream = conn.getInputStream();
-
-            // Parse the json out of the response and save it
-            Gson gson = new Gson();
-            JsonParser parser = new JsonParser();
-            JsonObject jo = parser.parse(new InputStreamReader(inStream)).getAsJsonObject();
-            JsonArray results = jo.get("results").getAsJsonArray();
-
-            CategorySearchManifest manifest = new CategorySearchManifest(jo.get("success").getAsBoolean(),
-                    gson.fromJson(jo.get("errors"), String[].class),
-                    gson.fromJson(results.get(0).getAsJsonObject().get("sorting"),
-                            CategorySearchManifest.TextValuePair[].class),
-                    gson.fromJson(results.get(0).getAsJsonObject().get("filters"),
-                            CategorySearchManifest.FilterOptions[].class));
-
-            // Clean up
-            inStream.close();
-            conn.disconnect();
-            return manifest;
-        }
-        // No access token
-        return null;
-    }
+//    /**
+//     * Request and return the catalog data from TCGPlayer.com. This data contains all product
+//     * categories, including Magic, and product category metadata
+//     *
+//     * @return All of the catalog data or null if something went wrong
+//     * @throws IOException If something goes wrong with the network
+//     */
+//    public CatalogData getCatalogData() throws IOException {
+//        // Make sure we have an access token first
+//        if (null != mAccessToken) {
+//
+//            // Create the connection with default options and headers
+//            HttpURLConnection conn = (HttpURLConnection) new URL(
+//                    "http://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/categories" +
+//                            "?offset=0&limit=999&sortOrder=categoryId&sortDesc=false").openConnection();
+//            setDefaultOptions(conn, HttpMethod.GET);
+//            addHeaders(conn);
+//
+//            // Get the response stream. This opens the connection
+//            InputStream inStream = conn.getInputStream();
+//
+//            // Parse the json out of the response and save it
+//            GsonBuilder builder = new GsonBuilder();
+//            CatalogData.CatalogDataItem.setDateFormat(builder);
+//            CatalogData catalogData = builder.create()
+//                    .fromJson(new InputStreamReader(inStream), CatalogData.class);
+//
+//            // Clean up
+//            inStream.close();
+//            conn.disconnect();
+//            return catalogData;
+//        }
+//        // No access token
+//        return null;
+//    }
+//
+//    /**
+//     * Request and return a search manifest describing all of the sorting options and filters that
+//     * are available for the given category
+//     *
+//     * @param categoryId The category to get a search manifest for
+//     * @return The search manifest
+//     * @throws IOException If something goes wrong with the network
+//     */
+//    public CategorySearchManifest getCategorySearchManifest(int categoryId) throws IOException {
+//        // Make sure we have an access token first
+//        if (null != mAccessToken) {
+//
+//            // Create the connection with default options and headers
+//            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/"
+//                    + TCGP_VERSION + "/catalog/categories/" + categoryId + "/search/manifest")
+//                    .openConnection();
+//            setDefaultOptions(conn, HttpMethod.GET);
+//            addHeaders(conn);
+//
+//            // Get the response stream. This opens the connection
+//            InputStream inStream = conn.getInputStream();
+//
+//            // Parse the json out of the response and save it
+//            Gson gson = new Gson();
+//            JsonParser parser = new JsonParser();
+//            JsonObject jo = parser.parse(new InputStreamReader(inStream)).getAsJsonObject();
+//            JsonArray results = jo.get("results").getAsJsonArray();
+//
+//            CategorySearchManifest manifest = new CategorySearchManifest(
+//                    jo.get("success").getAsBoolean(),
+//                    gson.fromJson(jo.get("errors"), String[].class),
+//                    gson.fromJson(results.get(0).getAsJsonObject().get("sorting"),
+//                            CategorySearchManifest.TextValuePair[].class),
+//                    gson.fromJson(results.get(0).getAsJsonObject().get("filters"),
+//                            CategorySearchManifest.FilterOptions[].class));
+//
+//            // Clean up
+//            inStream.close();
+//            conn.disconnect();
+//            return manifest;
+//        }
+//        // No access token
+//        return null;
+//    }
 
     /**
      * Given a list of card names and expansions, request and return the product IDs for each
@@ -277,13 +277,14 @@ public class TcgpApi {
      * @param expansion The expansion of the card to get product information for
      * @throws IOException If something goes wrong with the network
      */
-    public ProductInformation getProductInformation(String name, String expansion) throws IOException {
+    public ProductInformation getProductInformation(String name, String expansion)
+            throws IOException {
         // Make sure we have an access token first
         if (null != mAccessToken) {
 
             // Create the connection with default options and headers
-            HttpURLConnection conn = (HttpURLConnection) new URL(
-                    "http://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/categories/" + CATEGORY_ID_MAGIC + "/search")
+            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/" +
+                    TCGP_VERSION + "/catalog/categories/" + CATEGORY_ID_MAGIC + "/search")
                     .openConnection();
             setDefaultOptions(conn, HttpMethod.POST);
             addHeaders(conn);
@@ -293,8 +294,8 @@ public class TcgpApi {
                     new GetProductInformationOptions.NameValuesPair[]{
                             new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name}),
                             new GetProductInformationOptions.NameValuesPair("SetName", new String[]{expansion})});
-            conn.getOutputStream().write(
-                    new Gson().toJson(options, GetProductInformationOptions.class).getBytes(Charset.forName("UTF-8")));
+            conn.getOutputStream().write(new Gson().toJson(options, GetProductInformationOptions.class)
+                    .getBytes(Charset.forName("UTF-8")));
 
             // Get the response stream. This opens the connection
             InputStream inStream = conn.getInputStream();
@@ -335,8 +336,8 @@ public class TcgpApi {
 
             // Create the connection with default options and headers
             HttpURLConnection conn = (HttpURLConnection) new URL(
-                    "http://api.tcgplayer.com/" + TCGP_VERSION + "/pricing/product/" + stringIds.toString())
-                    .openConnection();
+                    "http://api.tcgplayer.com/" + TCGP_VERSION + "/pricing/product/" +
+                            stringIds.toString()).openConnection();
             setDefaultOptions(conn, HttpMethod.GET);
             addHeaders(conn);
 
@@ -344,7 +345,8 @@ public class TcgpApi {
             InputStream inStream = conn.getInputStream();
 
             // Parse the json out of the response and save it
-            ProductMarketPrice price = new Gson().fromJson(new InputStreamReader(inStream), ProductMarketPrice.class);
+            ProductMarketPrice price = new Gson()
+                    .fromJson(new InputStreamReader(inStream), ProductMarketPrice.class);
 
             // Clean up
             inStream.close();
@@ -377,9 +379,8 @@ public class TcgpApi {
             }
 
             // Create the connection with default options and headers
-            HttpURLConnection conn = (HttpURLConnection) new URL(
-                    "http://api.tcgplayer.com/" + TCGP_VERSION + "/catalog/products/" + stringIds.toString())
-                    .openConnection();
+            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.tcgplayer.com/" +
+                    TCGP_VERSION + "/catalog/products/" + stringIds.toString()).openConnection();
             setDefaultOptions(conn, HttpMethod.GET);
             addHeaders(conn);
 
@@ -389,7 +390,8 @@ public class TcgpApi {
             // Parse the json out of the response and save it
             GsonBuilder builder = new GsonBuilder();
             CatalogData.CatalogDataItem.setDateFormat(builder);
-            ProductDetails details = builder.create().fromJson(new InputStreamReader(inStream), ProductDetails.class);
+            ProductDetails details = builder.create()
+                    .fromJson(new InputStreamReader(inStream), ProductDetails.class);
 
             // Clean up
             inStream.close();

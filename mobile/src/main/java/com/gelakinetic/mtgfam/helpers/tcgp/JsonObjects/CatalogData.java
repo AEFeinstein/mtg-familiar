@@ -60,7 +60,7 @@ public class CatalogData {
             popularity = 0;
         }
 
-        public final static void setDateFormat(GsonBuilder builder) {
+        public static void setDateFormat(GsonBuilder builder) {
             // 2017-03-01T11:03:09.737
             builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         }

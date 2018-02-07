@@ -19,11 +19,8 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
+import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
-
-/**
- * Created by Adam on 1/29/2018.
- */
 
 public class MarketPriceInfo {
 
@@ -76,37 +73,69 @@ public class MarketPriceInfo {
     }
 
     class Price {
-        double low = 0;
-        double mid = 0;
-        double high = 0;
-        double market = 0;
+        final double low;
+        final double mid;
+        final double high;
+        final double market;
+
+        /**
+         * Create a simpler Price object from a more complicated MarketPrice
+         *
+         * @param price The MarketPrice to copy prices from
+         */
+        public Price(ProductMarketPrice.MarketPrice price) {
+            low = price.lowPrice;
+            mid = price.midPrice;
+            high = price.highPrice;
+            market = price.marketPrice;
+        }
     }
 
-    Price mNormalPrice = null;
-    Price mFoilPrice = null;
-    String mProductUrl = null;
+    private final Price mNormalPrice;
+    private final Price mFoilPrice;
+    private final String mProductUrl;
 
-    public void setUrl(String url) {
-        mProductUrl = url + "?pk=MTGFAMILIA";
+    /**
+     * Create a MarketPriceInfo object from data retrieved from the TCGPlayer.com API
+     *
+     * @param results The MarketPrice results retrieved from the API. This contains prices.
+     * @param details The Details retrieved from the API. This contains the URL.
+     */
+    public MarketPriceInfo(ProductMarketPrice.MarketPrice[] results, ProductDetails.Details[] details) {
+        ProductMarketPrice.MarketPrice foilPrice = null;
+        ProductMarketPrice.MarketPrice normalPrice = null;
+        for (ProductMarketPrice.MarketPrice marketPrice : results) {
+            if (marketPrice.subTypeName.equalsIgnoreCase("Foil")) {
+                foilPrice = marketPrice;
+            } else if (marketPrice.subTypeName.equalsIgnoreCase("Normal")) {
+                normalPrice = marketPrice;
+            }
+        }
+
+        if (null != normalPrice) {
+            mNormalPrice = new Price(normalPrice);
+        } else {
+            mNormalPrice = null;
+        }
+
+        if (null != foilPrice) {
+            mFoilPrice = new Price(foilPrice);
+        } else {
+            mFoilPrice = null;
+        }
+
+        /* Set the URL from the details */
+        mProductUrl = details[0].url + "?pk=MTGFAMILIA";
     }
 
-    public void setNormalPrice(ProductMarketPrice.MarketPrice marketPrice) {
-        mNormalPrice = new Price();
-        setPrice(mNormalPrice, marketPrice);
-    }
-
-    public void setFoilPrice(ProductMarketPrice.MarketPrice marketPrice) {
-        mFoilPrice = new Price();
-        setPrice(mFoilPrice, marketPrice);
-    }
-
-    private void setPrice(Price price, ProductMarketPrice.MarketPrice marketPrice) {
-        price.low = marketPrice.lowPrice;
-        price.mid = marketPrice.midPrice;
-        price.high = marketPrice.highPrice;
-        price.market = marketPrice.marketPrice;
-    }
-
+    /**
+     * Get a price from this object. If only foil or normal options are available, that price
+     * will be returned regardless of the isFoil parameter
+     *
+     * @param isFoil    true to return the foil type, false to return the normal price (if those prices exist)
+     * @param priceType LOW, MID, HIGH, or MARKET
+     * @return The double price in dollars, or 0 of none was found
+     */
     public double getPrice(boolean isFoil, PriceType priceType) {
         /* Protection if a card only has foil or normal price, or if it didn't load */
         if (null == mNormalPrice && null != mFoilPrice) {
@@ -141,14 +170,23 @@ public class MarketPriceInfo {
         }
     }
 
+    /**
+     * @return true if this card has a foil price, false otherwise
+     */
     public boolean hasFoilPrice() {
         return mFoilPrice != null;
     }
 
+    /**
+     * @return true if this card has a normal price, false otherwise
+     */
     public boolean hasNormalPrice() {
         return mNormalPrice != null;
     }
 
+    /**
+     * @return The URL to the TCGPlayer.com page for this MarketPriceInfo
+     */
     public String getUrl() {
         return mProductUrl;
     }

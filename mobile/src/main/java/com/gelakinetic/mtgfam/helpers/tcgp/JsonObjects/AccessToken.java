@@ -43,7 +43,7 @@ public class AccessToken {
         expires = null;
     }
 
-    public final static void setDateFormat(GsonBuilder builder) {
+    public static void setDateFormat(GsonBuilder builder) {
         // Sun, 04 Feb 2018 23:30:02 GMT
         builder.setDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
     }
