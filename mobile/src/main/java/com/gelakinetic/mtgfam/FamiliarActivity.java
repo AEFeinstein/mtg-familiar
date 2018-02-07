@@ -97,7 +97,7 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
-import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetchService;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetcher;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 
 import org.jetbrains.annotations.NotNull;
@@ -155,7 +155,7 @@ public class FamiliarActivity extends AppCompatActivity {
     private static final int MESSAGE_CLOSE = 3;
     private static final String IMAGE_CACHE_DIR = "familiar_image_cache";
     /* Spice setup */
-    public MarketPriceFetchService mMarketPriceStore = new MarketPriceFetchService(this);
+    public MarketPriceFetcher mMarketPriceStore = new MarketPriceFetcher(this);
 
     /* What the drawer menu will be */
     private final DrawerEntry[] mPageEntries = {

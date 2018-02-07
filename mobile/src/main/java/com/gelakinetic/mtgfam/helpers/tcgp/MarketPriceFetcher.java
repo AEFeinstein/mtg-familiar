@@ -61,7 +61,7 @@ import io.reactivex.functions.Consumer;
  * Created by Adam on 1/29/2018.
  */
 
-public class MarketPriceFetchService {
+public class MarketPriceFetcher {
 
     private static final String KEY_PREFIX = "price_";
     private static final int MAX_NUM_RETRIES = 8;
@@ -77,7 +77,7 @@ public class MarketPriceFetchService {
      *
      * @param context
      */
-    public MarketPriceFetchService(Activity context) {
+    public MarketPriceFetcher(Activity context) {
         /* Save the context */
         mContext = context;
 
