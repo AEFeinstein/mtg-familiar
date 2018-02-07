@@ -340,8 +340,6 @@ public class MarketPriceFetcher {
      * This function fetches the price for a given MtgCard and calls the appropriate callbacks.
      * It ensures the network operations are called on a non-UI thread and the result callbacks are
      * called on the UI thread.
-     * <p>
-     * TODO call unsubscribe on fragment exits
      *
      * @param card      A MtgCard to fetch data for. It must have a mName and mExpansion populated
      * @param onSuccess A Consumer callback to be called when the price is fetched
