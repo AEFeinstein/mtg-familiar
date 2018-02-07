@@ -111,7 +111,7 @@ public class ManaCostTextView extends ATokenTextView {
         if (bitmapDrawable == null) {
             int resId = MANA_SYMBOLS.get(symbol);
             final Bitmap bitmap = getBitmapFromVectorDrawable(getContext(), resId);
-            float bitmapHeight = ViewUtil.convertDpToPixel(16, this.getContext());
+            float bitmapHeight = ViewUtil.convertDpToPixel(15, this.getContext());
             float bitmapWidth = ViewUtil.scaleDimension(bitmap.getHeight(), bitmapHeight,
                     bitmap.getWidth());
             final Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) bitmapWidth,
