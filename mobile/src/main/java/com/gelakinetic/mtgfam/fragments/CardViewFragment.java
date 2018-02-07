@@ -786,8 +786,6 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.price: {
-                mActivity.setLoading();
-
                 MtgCard card = new MtgCard();
                 card.mName = mCardName;
                 card.mExpansion = mSetCode;
@@ -799,8 +797,6 @@ public class CardViewFragment extends FamiliarFragment {
                             @Override
                             public void accept(MarketPriceInfo marketPriceInfo) throws Exception {
                                 if (CardViewFragment.this.isAdded()) {
-                                    mActivity.clearLoading();
-
                                     if (marketPriceInfo != null) {
                                         mPriceInfo = marketPriceInfo;
                                         showDialog(CardViewDialogFragment.GET_PRICE);
@@ -816,8 +812,6 @@ public class CardViewFragment extends FamiliarFragment {
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 if (CardViewFragment.this.isAdded()) {
-                                    mActivity.clearLoading();
-
                                     CardViewFragment.this.removeDialog(getFragmentManager());
                                     ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
                                             ToastWrapper.LENGTH_SHORT);

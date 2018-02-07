@@ -63,8 +63,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /* Pricing */
     static final String PRICE_FORMAT = "$%.02f";
 
-    private int mPriceFetchRequests = 0;
-
     /* UI Elements */
     private AutoCompleteTextView mNameField;
     private EditText mNumberOfField;
@@ -472,8 +470,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         if (data.mPriceInfo != null) {
             data.mPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getPriceSetting()) * 100);
         } else {
-            mPriceFetchRequests++;
-            getFamiliarActivity().setLoading();
             getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data,
                     new Consumer<MarketPriceInfo>() {
                         @Override
@@ -496,10 +492,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                             /* because this can return when the fragment is in the background */
                             if (FamiliarListFragment.this.isAdded()) {
                                 onCardPriceLookupSuccess(data, result);
-                                mPriceFetchRequests--;
-                                if (mPriceFetchRequests == 0) {
-                                    getFamiliarActivity().clearLoading();
-                                }
                                 for (CardDataAdapter adapter : mCardDataAdapters) {
                                     adapter.notifyDataSetChanged();
                                 }
@@ -511,10 +503,6 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         public void accept(Throwable throwable) throws Exception {
                             if (FamiliarListFragment.this.isAdded()) {
                                 onCardPriceLookupFailure(data, throwable);
-                                mPriceFetchRequests--;
-                                if (mPriceFetchRequests == 0) {
-                                    getFamiliarActivity().clearLoading();
-                                }
                                 for (CardDataAdapter adapter : mCardDataAdapters) {
                                     adapter.notifyDataSetChanged();
                                 }

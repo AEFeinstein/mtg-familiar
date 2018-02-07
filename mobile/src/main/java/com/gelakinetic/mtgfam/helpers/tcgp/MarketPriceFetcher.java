@@ -19,7 +19,6 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -62,8 +61,9 @@ public class MarketPriceFetcher {
     private static final String KEY_PREFIX = "price_";
     private static final int MAX_NUM_RETRIES = 8;
 
-    private final Activity mContext;
+    private final FamiliarActivity mActivity;
     private final Store<MarketPriceInfo, MtgCard> mStore;
+    private int mNumPriceRequests = 0;
 
     abstract class RecordingPersister<Rec, Key> implements RecordProvider<Key>, Persister<Rec, Key> {
     }
@@ -73,9 +73,9 @@ public class MarketPriceFetcher {
      *
      * @param context The Activity context used for strings, preferences, and the like
      */
-    public MarketPriceFetcher(Activity context) {
+    public MarketPriceFetcher(FamiliarActivity context) {
         /* Save the context */
-        mContext = context;
+        mActivity = context;
 
         /* Create the fetcher which actually gets the data */
         Fetcher<MarketPriceInfo, MtgCard> mFetcher = new Fetcher<MarketPriceInfo, MtgCard>() {
@@ -90,14 +90,14 @@ public class MarketPriceFetcher {
             @Override
             public Single<MarketPriceInfo> fetch(@Nonnull MtgCard params) {
                 Exception lastThrownException = null;
-                if (FamiliarActivity.getNetworkState(mContext, false) == -1) { /* our context contains the activity that spawned the request */
-                    return Single.error(new Exception(mContext.getString(R.string.no_network)));
+                if (FamiliarActivity.getNetworkState(mActivity, false) == -1) { /* our context contains the activity that spawned the request */
+                    return Single.error(new Exception(mActivity.getString(R.string.no_network)));
                 }
 
                 /* Initialize the API */
                 TcgpApi api = new TcgpApi();
-                String tokenStr = PreferenceAdapter.getTcgpApiToken(mContext);
-                Date expirationDate = PreferenceAdapter.getTcgpApiTokenExpirationDate(mContext);
+                String tokenStr = PreferenceAdapter.getTcgpApiToken(mActivity);
+                Date expirationDate = PreferenceAdapter.getTcgpApiTokenExpirationDate(mActivity);
                 try {
                     /* If we don't have a token or it expired */
                     if (tokenStr.isEmpty() || expirationDate.before(new Date())) {
@@ -105,8 +105,8 @@ public class MarketPriceFetcher {
                         AccessToken token;
                         token = api.getAccessToken(TcgpKeys.PUBLIC_KEY, TcgpKeys.PRIVATE_KEY, TcgpKeys.ACCESS_TOKEN);
                         /* Save the token and expiration date */
-                        PreferenceAdapter.setTcgpApiToken(mContext, token.access_token);
-                        PreferenceAdapter.setTcgpApiTokenExpirationDate(mContext, token.expires);
+                        PreferenceAdapter.setTcgpApiToken(mActivity, token.access_token);
+                        PreferenceAdapter.setTcgpApiTokenExpirationDate(mActivity, token.expires);
                     } else {
                         /* Make sure the token hasn't expired */
                         api.setToken(tokenStr);
@@ -120,7 +120,7 @@ public class MarketPriceFetcher {
                 /* then the same for multicard ordering */
                 SQLiteDatabase database;
                 try {
-                    database = DatabaseManager.getInstance(mContext, false).openDatabase(false);
+                    database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
                 } catch (FamiliarDbException e) {
                     return Single.error(e);
                 }
@@ -203,7 +203,7 @@ public class MarketPriceFetcher {
                                 ProductDetails details = api.getProductDetails(information.results);
                                 if (details.success && details.results.length > 0) {
                                     /* database close if all is good */
-                                    DatabaseManager.getInstance(mContext, false).closeDatabase(false);
+                                    DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
 
                                     /* Return a new MarketPriceInfo */
                                     return Single.just(new MarketPriceInfo(price.results, details.results));
@@ -221,11 +221,11 @@ public class MarketPriceFetcher {
                     retry--;
                 }
                 /* database close if something failed */
-                DatabaseManager.getInstance(mContext, false).closeDatabase(false);
+                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                 if (null != lastThrownException) {
                     return Single.error(lastThrownException);
                 } else {
-                    return Single.error(new Exception(mContext.getString(R.string.price_error_unknown)));
+                    return Single.error(new Exception(mActivity.getString(R.string.price_error_unknown)));
                 }
             }
         };
@@ -242,7 +242,7 @@ public class MarketPriceFetcher {
              * @return A File for this key
              */
             private File getCacheFile(MtgCard cacheKey) {
-                return new File(mContext.getCacheDir(), (KEY_PREFIX + cacheKey.mName + "-" + cacheKey.mExpansion).replaceAll("\\W+", ""));
+                return new File(mActivity.getCacheDir(), (KEY_PREFIX + cacheKey.mName + "-" + cacheKey.mExpansion).replaceAll("\\W+", ""));
             }
 
             /**
@@ -342,7 +342,6 @@ public class MarketPriceFetcher {
      * called on the UI thread.
      * <p>
      * TODO call unsubscribe on fragment exits
-     * TODO pull in loading animations here
      *
      * @param card      A MtgCard to fetch data for. It must have a mName and mExpansion populated
      * @param onSuccess A Consumer callback to be called when the price is fetched
@@ -354,6 +353,10 @@ public class MarketPriceFetcher {
         if (null == card.mName || card.mName.isEmpty() || null == card.mExpansion || card.mExpansion.isEmpty()) {
             throw new IllegalArgumentException("card must have a name and expansion to fetch price");
         }
+
+        /* Show the loading animation */
+        mNumPriceRequests++;
+        mActivity.setLoading();
 
         /* Start a new thread to perform the fetch */
         new Thread(new Runnable() {
@@ -375,12 +378,16 @@ public class MarketPriceFetcher {
                     @Override
                     public void accept(final MarketPriceInfo marketPriceInfo) throws Exception {
                         /* Run the results on the UI thread */
-                        mContext.runOnUiThread(new Runnable() {
+                        mActivity.runOnUiThread(new Runnable() {
                             /**
                              * This runs the given success callback on the UI thread
                              */
                             @Override
                             public void run() {
+                                mNumPriceRequests--;
+                                if (0 == mNumPriceRequests) {
+                                    mActivity.clearLoading();
+                                }
                                 try {
                                     onSuccess.accept(marketPriceInfo);
                                 } catch (Exception e) {
@@ -406,12 +413,17 @@ public class MarketPriceFetcher {
                     @Override
                     public void accept(final Throwable throwable) throws Exception {
                         /* Run the erros on the UI thread */
-                        mContext.runOnUiThread(new Runnable() {
+                        mActivity.runOnUiThread(new Runnable() {
                             /**
                              * This runs the given error callback on the UI thread
                              */
                             @Override
                             public void run() {
+                                mNumPriceRequests--;
+                                if (0 == mNumPriceRequests) {
+                                    mActivity.clearLoading();
+                                }
+
                                 try {
                                     onError.accept(throwable);
                                 } catch (Exception e) {
