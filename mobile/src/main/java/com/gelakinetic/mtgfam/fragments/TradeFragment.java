@@ -730,10 +730,10 @@ public class TradeFragment extends FamiliarListFragment {
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
             holder.setCardName(item.mName);
             holder.mCardSet.setText(item.mSetName);
-            holder.mCardNumberOf.setText(item.hasPrice() ? item.mNumberOf + "x" : "");
+            holder.mCardNumberOf.setText(item.mNumberOf + "x ");
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
-            holder.mCardPrice.setText(item.hasPrice() ? item.getPriceString() : item.mMessage);
             if (item.hasPrice()) {
+                holder.mCardPrice.setText(item.getPriceString());
                 if (item.mIsCustomPrice) {
                     holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
                             R.color.material_green_500));
@@ -742,6 +742,7 @@ public class TradeFragment extends FamiliarListFragment {
                             getResourceIdFromAttr(R.attr.color_text)));
                 }
             } else {
+                holder.mCardPrice.setText(item.mMessage);
                 holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.material_red_500));
             }

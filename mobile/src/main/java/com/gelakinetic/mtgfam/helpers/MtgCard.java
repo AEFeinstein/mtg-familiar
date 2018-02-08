@@ -203,7 +203,7 @@ public class MtgCard extends Card {
             card.mSetName = null;
         }
         DatabaseManager.getInstance(context, false).closeDatabase(false);
-        card.mMessage = "loading";
+        card.mMessage = context.getString(R.string.wishlist_loading);
         return card;
     }
 

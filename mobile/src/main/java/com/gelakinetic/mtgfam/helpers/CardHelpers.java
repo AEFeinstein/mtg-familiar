@@ -668,8 +668,9 @@ public class CardHelpers {
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME);
             } else {
                 fields = CardDbAdapter.ALL_CARD_DATA_KEYS;
-                card.mMessage = activity.getString(R.string.wishlist_loading);
             }
+            /* Note the card price is loading */
+            card.mMessage = activity.getString(R.string.wishlist_loading);
             /* Get extra information from the database */
             Cursor cardCursor;
             if (cardSet == null) {
