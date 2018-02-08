@@ -91,7 +91,7 @@ public class MarketPriceFetcher {
             @Nonnull
             @Override
             public Single<MarketPriceInfo> fetch(@Nonnull MtgCard params) {
-                Exception lastThrownException = null;
+                Exception lastThrownException = new Exception(mActivity.getString(R.string.price_error_unknown));
                 if (FamiliarActivity.getNetworkState(mActivity, false) == -1) { /* our context contains the activity that spawned the request */
                     return Single.error(new Exception(mActivity.getString(R.string.no_network)));
                 }
@@ -112,14 +112,14 @@ public class MarketPriceFetcher {
                             PreferenceAdapter.setTcgpApiToken(mActivity, token.access_token);
                             PreferenceAdapter.setTcgpApiTokenExpirationDate(mActivity, token.expires);
                         } catch (FileNotFoundException e) {
-                            return Single.error(new Exception("No API Keys"));
+                            return Single.error(new Exception(mActivity.getString(R.string.price_error_api_key)));
                         }
                     } else {
                         /* Make sure the token hasn't expired */
                         api.setToken(tokenStr);
                     }
                 } catch (IOException e) {
-                    return Single.error(e);
+                    return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
                 }
 
                 /* try the fetch up to eight times, for different accent mark & split card combos*/
@@ -129,9 +129,12 @@ public class MarketPriceFetcher {
                 try {
                     database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
                 } catch (FamiliarDbException e) {
-                    return Single.error(e);
+                    return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
                 }
                 while (retry > 0) {
+                    String tcgSetName = null;
+                    String tcgCardName = null;
+                    CardDbAdapter.MultiCardType multiCardType = null;
                     try {
                         /* If the card number wasn't given, figure it out */
                         if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
@@ -155,12 +158,10 @@ public class MarketPriceFetcher {
                             c.close();
                         }
 
-                        CardDbAdapter.MultiCardType multiCardType = CardDbAdapter.isMultiCard(params.mNumber, params.mExpansion);
+                        multiCardType = CardDbAdapter.isMultiCard(params.mNumber, params.mExpansion);
 
                         /* Get the TCGplayer.com set name, why can't everything be consistent? */
-                        String tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
-                        /* Figure out the tcgCardName, which is tricky for split cards */
-                        String tcgCardName;
+                        tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
 
                         /* Set up retries for multicard ordering */
                         if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
@@ -191,7 +192,6 @@ public class MarketPriceFetcher {
                             /* This isn't a multicard */
                             tcgCardName = params.mName;
                         }
-
                         /* Retry with accent marks removed */
                         if (retry <= MAX_NUM_RETRIES / 2) {
                             tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
@@ -201,39 +201,43 @@ public class MarketPriceFetcher {
                         if (params.mType.startsWith("Basic Land")) {
                             tcgCardName += " (" + params.mNumber + ")";
                         }
+                    } catch (FamiliarDbException e) {
+                        lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
+                    }
 
-                        /* Query the API, one step at a time */
-                        ProductInformation information = api.getProductInformation(tcgCardName, tcgSetName);
-                        if (information.success && information.results.length > 0) {
-                            ProductMarketPrice price = api.getProductMarketPrice(information.results);
-                            if (price.success && price.results.length > 0) {
-                                ProductDetails details = api.getProductDetails(information.results);
-                                if (details.success && details.results.length > 0) {
-                                    /* database close if all is good */
-                                    DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+                    if (null != tcgCardName && null != tcgSetName) {
+                        try {
+                            /* Query the API, one step at a time */
+                            ProductInformation information = api.getProductInformation(tcgCardName, tcgSetName);
+                            if (information.success && information.results.length > 0) {
+                                ProductMarketPrice price = api.getProductMarketPrice(information.results);
+                                if (price.success && price.results.length > 0) {
+                                    ProductDetails details = api.getProductDetails(information.results);
+                                    if (details.success && details.results.length > 0) {
+                                        /* database close if all is good */
+                                        DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
 
-                                    /* Return a new MarketPriceInfo */
-                                    return Single.just(new MarketPriceInfo(price.results, details.results));
+                                        /* Return a new MarketPriceInfo */
+                                        return Single.just(new MarketPriceInfo(price.results, details.results));
+                                    }
                                 }
                             }
+                        } catch (IOException e) {
+                            lastThrownException = new Exception(mActivity.getString(R.string.price_error_network));
                         }
+                    } else {
+                        lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
+                    }
 
-                        /* If this is a single card, skip over a bunch of retry cases */
-                        if (retry == MAX_NUM_RETRIES && multiCardType == CardDbAdapter.MultiCardType.NOPE) {
-                            retry = 2;
-                        }
-                    } catch (Exception e) {
-                        lastThrownException = e;
+                    /* If this is a single card, skip over a bunch of retry cases */
+                    if (retry == MAX_NUM_RETRIES && multiCardType == CardDbAdapter.MultiCardType.NOPE) {
+                        retry = 2;
                     }
                     retry--;
                 }
                 /* database close if something failed */
                 DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
-                if (null != lastThrownException) {
-                    return Single.error(lastThrownException);
-                } else {
-                    return Single.error(new Exception(mActivity.getString(R.string.price_error_unknown)));
-                }
+                return Single.error(lastThrownException);
             }
         };
 

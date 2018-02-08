@@ -658,7 +658,6 @@ public class TradeFragment extends FamiliarListFragment {
     class TradeViewHolder extends CardDataViewHolder {
 
         private final TextView mCardSet;
-        private final TextView mCardNumberOf;
         private final ImageView mCardFoil;
         private final TextView mCardPrice;
         private final int mSide;
@@ -668,7 +667,6 @@ public class TradeFragment extends FamiliarListFragment {
             super(view, R.layout.trader_row, TradeFragment.this.getCardDataAdapter(side), TradeFragment.this);
 
             mCardSet = itemView.findViewById(R.id.traderRowSet);
-            mCardNumberOf = itemView.findViewById(R.id.traderNumber);
             mCardFoil = itemView.findViewById(R.id.traderRowFoil);
             mCardPrice = itemView.findViewById(R.id.traderRowPrice);
 
@@ -730,10 +728,9 @@ public class TradeFragment extends FamiliarListFragment {
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
             holder.setCardName(item.mName);
             holder.mCardSet.setText(item.mSetName);
-            holder.mCardNumberOf.setText(item.mNumberOf + "x ");
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {
-                holder.mCardPrice.setText(item.getPriceString());
+                holder.mCardPrice.setText(item.mNumberOf + "x " + item.getPriceString());
                 if (item.mIsCustomPrice) {
                     holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
                             R.color.material_green_500));
@@ -742,7 +739,7 @@ public class TradeFragment extends FamiliarListFragment {
                             getResourceIdFromAttr(R.attr.color_text)));
                 }
             } else {
-                holder.mCardPrice.setText(item.mMessage);
+                holder.mCardPrice.setText(item.mNumberOf + "x " + item.mMessage);
                 holder.mCardPrice.setTextColor(ContextCompat.getColor(getContext(),
                         R.color.material_red_500));
             }

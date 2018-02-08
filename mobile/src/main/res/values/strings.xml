@@ -48,6 +48,9 @@
     <string name="no_network">"Network is not available"</string>
     <string name="filter_title_view_card">"View Card"</string>
     <string name="price_error_unknown">"Error fetching price"</string>
+    <string name="price_error_network">"Error fetching price [network]"</string>
+    <string name="price_error_database">"Error fetching price [database]"</string>
+    <string name="price_error_api_key">"Error fetching price [API keys]"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"PAGES"</string>
