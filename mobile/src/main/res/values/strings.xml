@@ -156,6 +156,7 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="search_rarities">"Rarities"</string>
     <string name="search_flavor_text">"Flavor Text"</string>
     <string name="search_artist">"Artist"</string>
+    <string name="search_watermark">Watermark</string>
     <string name="search_search">"Search!"</string>
     <string name="search_randomize">"Randomize!"</string>
     <string name="search_clear_fields">"Clear Fields"</string>

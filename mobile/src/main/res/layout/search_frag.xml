@@ -544,6 +544,16 @@
                 android:drawSelectorOnTop="false"
                 android:entries="@array/set_spinner" />
 
+            <AutoCompleteTextView
+                android:id="@+id/watermarksearch"
+                style="@style/forty_eight"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/search_watermark"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
 
             <EditText
                 android:id="@+id/flavorsearch"

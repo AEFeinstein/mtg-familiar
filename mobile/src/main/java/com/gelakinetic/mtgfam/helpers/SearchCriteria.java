@@ -56,4 +56,5 @@ public class SearchCriteria implements Serializable {
     public List<String> manaCost = null;
     public Comparison manaCostLogic;
     public boolean moJhoStoFilter;
+    public String watermark = null;
 }
