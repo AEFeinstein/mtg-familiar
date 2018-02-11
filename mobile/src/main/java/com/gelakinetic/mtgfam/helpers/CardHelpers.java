@@ -52,6 +52,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -602,4 +603,25 @@ public class CardHelpers {
         }
 
     }
+
+    /**
+     * Generates a CSV from a list of {@link MtgCard}.
+     * @param mtgCards a list of MtgCards.
+     * @return a CSV formatted String of the cards from the list.
+     */
+    public static String cardListToCSV(List<? extends MtgCard> mtgCards) {
+        // todo: Deckbox and PucaTrade use CSV also, but slightly different headers
+        final String csvHeader = "Tradelist Count,Name,Edition,Foil\n";
+        StringBuilder csvFile = new StringBuilder(csvHeader);
+        for (MtgCard card : mtgCards) {
+            csvFile.append(card.numberOf).append(",");
+            csvFile.append(card.mName).append(",");
+            // todo: we need to check set names, they aren't exactly uniformly named in the
+            // databases for the websites
+            csvFile.append(card.setName).append(",");
+            csvFile.append(card.foil ? "F" : "").append("\n");
+        }
+        return csvFile.toString();
+    }
+
 }

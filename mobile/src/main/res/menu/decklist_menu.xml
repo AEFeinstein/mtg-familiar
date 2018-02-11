@@ -71,6 +71,10 @@
                 android:id="@+id/deck_menu_export_dec"
                 android:title="@string/decklist_export_dec" />
 
+            <item
+                android:id="@+id/deck_menu_export_cardsphere"
+                android:title="@string/decklist_export_cardsphere" />
+
         </menu>
 
     </item>
