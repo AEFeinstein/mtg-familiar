@@ -566,5 +566,6 @@ Good luck, and have fun!
 
     <string name="main_unable_to_create_directory">Unable to create directory at %s.</string>
     <string name="decklist_saved_to_toast">Deck saved to %s.</string>
+    <string name="decklist_export_cardsphere">Cardsphere CSV</string>
 
 </resources>
