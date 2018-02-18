@@ -23,15 +23,12 @@ import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -50,14 +47,12 @@ import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,6 +67,8 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
+import com.gelakinetic.mtgfam.helpers.FamiliarGlideTarget;
+import com.gelakinetic.mtgfam.helpers.GlideApp;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
@@ -81,7 +78,6 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -101,7 +97,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -140,7 +135,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
     public AsyncTask mAsyncTask;
-    public RecyclingBitmapDrawable mCardBitmap;
+    public BitmapDrawable mCardBitmap;
     public String[] mLegalities;
     public String[] mFormats;
     public ArrayList<Ruling> mRulingsArrayList;
@@ -296,6 +291,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /**
      * Release all image resources and invoke the garbage collector.
+     * TODO check if this is still necessary with glide
      */
     @SuppressFBWarnings(value = "DM_GC", justification = "Memory Leak without this")
     private void releaseImageResources(boolean isSplit) {
@@ -530,12 +526,23 @@ public class CardViewFragment extends FamiliarFragment {
                 mImageScrollView.setVisibility(View.VISIBLE);
                 mTextScrollView.setVisibility(View.GONE);
 
-                mActivity.setLoading();
-                if (mAsyncTask != null) {
-                    mAsyncTask.cancel(true);
-                }
-                mAsyncTask = new FetchPictureTask();
-                ((FetchPictureTask) mAsyncTask).execute(MAIN_PAGE);
+                // Get screen dimensions
+                int mBorder = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 34, getResources().getDisplayMetrics());
+                Rect rectangle = new Rect();
+                mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
+                assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
+                int mHeight = ((rectangle.bottom - rectangle.top) -
+                        mActivity.getSupportActionBar().getHeight()) - mBorder;
+                int mWidth = (rectangle.right - rectangle.left) - mBorder;
+
+                // Load the image with Glide
+                GlideApp
+                        .with(this)
+                        .load("http://img.scryfall.com/cards/large/en/roe/212.jpg").placeholder(R.drawable.mjs_jhoira)
+                        .override(mWidth, mHeight)
+                        .fitCenter()
+                        .into(new FamiliarGlideTarget(mActivity, mCardImageView));
             } else {
                 mImageScrollView.setVisibility(View.GONE);
                 mTextScrollView.setVisibility(View.VISIBLE);
@@ -779,12 +786,7 @@ public class CardViewFragment extends FamiliarFragment {
                     return true;
                 }
 
-                mActivity.setLoading();
-                if (mAsyncTask != null) {
-                    mAsyncTask.cancel(true);
-                }
-                mAsyncTask = new FetchPictureTask();
-                ((FetchPictureTask) mAsyncTask).execute(DIALOG);
+                showDialog(CardViewDialogFragment.GET_IMAGE);
                 return true;
             }
             case R.id.price: {
@@ -924,12 +926,7 @@ public class CardViewFragment extends FamiliarFragment {
      * Called from the share dialog to load and share this card's image.
      */
     public void runShareImageTask() {
-        mActivity.setLoading();
-        if (mAsyncTask != null) {
-            mAsyncTask.cancel(true);
-        }
-        mAsyncTask = new FetchPictureTask();
-        ((FetchPictureTask) mAsyncTask).execute(SHARE);
+        // TODO reimplement
     }
 
     /**
@@ -1082,330 +1079,6 @@ public class CardViewFragment extends FamiliarFragment {
                 /* eat it */
             }
             mActivity.clearLoading();
-        }
-    }
-
-    /**
-     * This private class retrieves a picture of the card from the internet.
-     */
-    private class FetchPictureTask extends AsyncTask<Integer, Void, Void> {
-
-        int mHeight;
-        int mWidth;
-        int mBorder;
-
-        private String mError;
-        private int mLoadTo;
-        private String mImageKey;
-
-        /* Get the size of the window on the UI thread, not the worker thread */
-        final Runnable getWindowSize = new Runnable() {
-            @Override
-            public void run() {
-                Rect rectangle = new Rect();
-                mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
-
-                assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
-                mHeight = ((rectangle.bottom - rectangle.top) -
-                        mActivity.getSupportActionBar().getHeight()) - mBorder;
-                mWidth = (rectangle.right - rectangle.left) - mBorder;
-
-                synchronized (this) {
-                    this.notify();
-                }
-            }
-        };
-
-        /**
-         * If the preferred langauge is English, get the card image from Scryfall.
-         * If that fails, check www.MagicCards.info for the card image in the user's preferred
-         * language.
-         * If that fails, try Scryfall again in English.
-         * If that fails, check www.MagicCards.info for the card image in English.
-         * If that fails, check www.gatherer.wizards.com for the card image.
-         * If that fails, give up.
-         * There is a non-standard URL building for planes and schemes for www.MagicCards.info.
-         * It also re-sizes the image.
-         *
-         * @param params unused
-         * @return unused
-         */
-        @SuppressWarnings("SpellCheckingInspection")
-        @SuppressFBWarnings(value = "DM_GC", justification = "Memory leak without the GC")
-        @Override
-        protected Void doInBackground(Integer... params) {
-
-            if (params != null && params.length > 0) {
-                mLoadTo = params[0];
-            } else {
-                mLoadTo = MAIN_PAGE;
-            }
-
-            String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
-            if (cardLanguage == null) {
-                cardLanguage = "en";
-            }
-
-            mImageKey = Integer.toString(mMultiverseId) + cardLanguage;
-
-            /* Check disk cache in background thread */
-            Bitmap bitmap;
-            try {
-                bitmap = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(mImageKey);
-            } catch (NullPointerException e) {
-                bitmap = null;
-            }
-
-            if (bitmap == null) { /* Not found in disk cache */
-
-                /* Some trickery to figure out if we have a token */
-                boolean isToken = false;
-                if (mCardType.contains("Token") || /* try to take the easy way out */
-                        (mCardCMC == 0 && /* Tokens have a CMC of 0 */
-                    /* The only tokens in Gatherer are from Duel Decks */
-                                mSetName.contains("Duel Decks") &&
-                     /* The only tokens in Gatherer are creatures */
-                                mCardType.contains("Creature"))) {
-                    isToken = true;
-                }
-
-                boolean bRetry = true;
-
-                boolean triedMtgi = false;
-                boolean triedGatherer = false;
-                boolean triedScryfall = false;
-
-                while (bRetry) {
-
-                    bRetry = false;
-                    mError = null;
-
-                    try {
-                        URL u;
-                        if (!cardLanguage.equalsIgnoreCase("en") && !isToken) {
-                            /* Non-English have to come from magiccards.info. Try there first */
-                            u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
-                            /* If this fails, try next time with the English version */
-                            cardLanguage = "en";
-                        } else if (!triedScryfall && !isToken) {
-                            /* Try downloading the image from Scryfall next */
-                            u = new URL(getScryfallImageUri(mMultiverseId));
-                            /* If this fails, try next time with the Magiccards.info version */
-                            triedScryfall = true;
-                        } else if (!triedMtgi && !isToken) {
-                            /* Try downloading the image from magiccards.info next */
-                            u = new URL(getMtgiPicUrl(mCardName, mMagicCardsInfoSetCode, mCardNumber, cardLanguage));
-                            /* If this fails, try next time with the gatherer version */
-                            triedMtgi = true;
-                        } else {
-                            /* Try downloading the image from gatherer */
-                            u = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
-                            /* If this fails, give up */
-                            triedGatherer = true;
-                        }
-
-                        /* Download the bitmap */
-                        bitmap = BitmapFactory.decodeStream(FamiliarActivity.getHttpInputStream(u, null, getContext()));
-                    } catch (Exception e) {
-                        /* Something went wrong */
-                        try {
-                            mError = getString(R.string.card_view_image_not_found);
-                        } catch (RuntimeException re) {
-                            /* in case the fragment isn't attached to an activity */
-                            mError = e.toString();
-                        }
-
-                        /* Gatherer is always tried last. If that fails, give up */
-                        if (!triedGatherer) {
-                            bRetry = true;
-                        }
-                    }
-                }
-            }
-
-            /* Image download failed, just return null */
-            if (bitmap == null) {
-                return null;
-            }
-
-            // Then try caching the image
-            try {
-                getFamiliarActivity().mImageCache.addBitmapToCache(mImageKey, new BitmapDrawable(mActivity.getResources(), bitmap));
-            } catch (Exception e) {
-                // Cache failed
-            }
-
-            try {
-                // Don't attempt scaling if there's no host fragment
-                if(null == getHost()) {
-                    return null;
-                }
-                /* 16dp */
-                mBorder = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 34, getResources().getDisplayMetrics());
-                if (mLoadTo == MAIN_PAGE) {
-                    /* Block the worker thread until the size is figured out */
-                    synchronized (getWindowSize) {
-                        getActivity().runOnUiThread(getWindowSize);
-                        getWindowSize.wait();
-                    }
-                } else if (mLoadTo == DIALOG) {
-                    Display display = ((WindowManager) mActivity
-                            .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-                    Point p = new Point();
-                    display.getSize(p);
-                    mHeight = p.y - mBorder;
-                    mWidth = p.x - mBorder;
-                } else if (mLoadTo == SHARE) {
-                    /* Don't scale shared images */
-                    mWidth = bitmap.getWidth();
-                    mHeight = bitmap.getHeight();
-                }
-
-                float screenAspectRatio = (float) mHeight / (float) (mWidth);
-                float cardAspectRatio = (float) bitmap.getHeight() / (float) bitmap.getWidth();
-
-                float scale;
-                if (screenAspectRatio > cardAspectRatio) {
-                    scale = (mWidth) / (float) bitmap.getWidth();
-                } else {
-                    scale = (mHeight) / (float) bitmap.getHeight();
-                }
-
-                int newWidth = Math.round(bitmap.getWidth() * scale);
-                int newHeight = Math.round(bitmap.getHeight() * scale);
-
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-                mCardBitmap = new RecyclingBitmapDrawable(mActivity.getResources(), scaledBitmap);
-            } catch (InterruptedException e) {
-                /* Some error resizing. Out of memory? */
-            }
-
-            /* Recycle the non-scaled bitmap to avoid memory leaks */
-            bitmap.recycle();
-            java.lang.System.gc();
-            return null;
-        }
-
-        /**
-         * Jumps through hoops and returns a correctly formatted URL for magiccards.info's image.
-         *
-         * @param cardName              The name of the card
-         * @param magicCardsInfoSetCode The set of the card
-         * @param cardNumber            The number of the card
-         * @param cardLanguage          The language of the card
-         * @return a URL to the card's image
-         */
-        private String getMtgiPicUrl(
-                String cardName,
-                String magicCardsInfoSetCode,
-                String cardNumber,
-                String cardLanguage) {
-
-            final String mtgiExtras = "http://magiccards.info/extras/";
-            String picURL;
-            if (mCardType.toLowerCase().contains(getString(R.string.search_Ongoing).toLowerCase()) ||
-                    /* extra space to not confuse with planeswalker */
-                    mCardType.toLowerCase().contains(getString(R.string.search_Plane).toLowerCase() + " ") ||
-                    mCardType.toLowerCase().contains(getString(R.string.search_Phenomenon).toLowerCase()) ||
-                    mCardType.toLowerCase().contains(getString(R.string.search_Scheme).toLowerCase())) {
-                switch (mSetCode) {
-                    case "PC2":
-                        picURL = mtgiExtras + "plane/planechase-2012-edition/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-")
-                                .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                        break;
-                    case "PCH":
-                        if (cardName.equalsIgnoreCase("tazeem")) {
-                            cardName = "tazeem-release-promo";
-                        } else if (cardName.equalsIgnoreCase("celestine reef")) {
-                            cardName = "celestine-reef-pre-release-promo";
-                        } else if (cardName.equalsIgnoreCase("horizon boughs")) {
-                            cardName = "horizon-boughs-gateway-promo";
-                        }
-                        picURL = mtgiExtras + "plane/planechase/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-")
-                                .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                        break;
-                    case "ARC":
-                        picURL = mtgiExtras + "scheme/archenemy/" + cardName + ".jpg";
-                        picURL = picURL.replace(" ", "-")
-                                .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
-                        break;
-                    default:
-                        picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + magicCardsInfoSetCode + "/" +
-                                cardNumber + ".jpg";
-                        break;
-                }
-            } else {
-                picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + magicCardsInfoSetCode + "/" +
-                        cardNumber + ".jpg";
-            }
-            return picURL.toLowerCase(Locale.ENGLISH);
-        }
-
-        /**
-         * Easily gets the uri for the image for a card by multiverseid.
-         *
-         * @param multiverseId the multiverse id of the card
-         * @return uri of the card image
-         */
-        private String getScryfallImageUri(int multiverseId) {
-            return "https://api.scryfall.com/cards/multiverse/" + multiverseId + "?format=image&version=normal";
-        }
-
-        /**
-         * When the task has finished, if there was no error, remove the progress dialog and show
-         * the image. If the image was supposed to load to the main screen, and it failed to load,
-         * fall back to text view
-         *
-         * @param result unused
-         */
-        @Override
-        protected void onPostExecute(Void result) {
-            if (mError == null) {
-                if (mLoadTo == DIALOG) {
-                    try {
-                        showDialog(CardViewDialogFragment.GET_IMAGE);
-                    } catch (IllegalStateException e) {
-                        /* eat it */
-                    }
-                } else if (mLoadTo == MAIN_PAGE) {
-                    removeDialog(getFragmentManager());
-                    if (mCardImageView != null) {
-                        mCardImageView.setImageDrawable(mCardBitmap);
-                    }
-                    /* remove the image load button if it is the main page */
-                    mActivity.invalidateOptionsMenu();
-                } else if (mLoadTo == SHARE) {
-
-                    /* Images must be saved before sharing */
-                    if (mAsyncTask != null) {
-                        mAsyncTask.cancel(true);
-                    }
-                    mAsyncTask = new saveCardImageTask();
-                    ((saveCardImageTask) mAsyncTask).execute(SHARE);
-                }
-            } else {
-                removeDialog(getFragmentManager());
-                if (mLoadTo == MAIN_PAGE && mImageScrollView != null) {
-                    mImageScrollView.setVisibility(View.GONE);
-                    mTextScrollView.setVisibility(View.VISIBLE);
-                }
-                ToastWrapper.makeAndShowText(mActivity, mError, ToastWrapper.LENGTH_LONG);
-            }
-            mActivity.clearLoading();
-        }
-
-        /**
-         * If the task is canceled, fall back to text view.
-         */
-        @Override
-        protected void onCancelled() {
-            if (mLoadTo == MAIN_PAGE && mImageScrollView != null) {
-                mImageScrollView.setVisibility(View.GONE);
-                mTextScrollView.setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -1600,9 +1273,10 @@ public class CardViewFragment extends FamiliarFragment {
                 cardLanguage = "en";
             }
             String imageKey = Integer.toString(mMultiverseId) + cardLanguage;
-            Bitmap bmpImage;
+            Bitmap bmpImage = null;
             try {
-                bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+                // TODO reimplement
+                // bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey); TODO reimplement
             } catch (NullPointerException e) {
                 bmpImage = null;
             }
@@ -1611,7 +1285,8 @@ public class CardViewFragment extends FamiliarFragment {
             if (bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
                 imageKey = Integer.toString(mMultiverseId) + "en";
                 try {
-                    bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
+                    // TODO reimplement
+                    // bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey); TODO reimplement
                 } catch (NullPointerException e) {
                     bmpImage = null;
                 }

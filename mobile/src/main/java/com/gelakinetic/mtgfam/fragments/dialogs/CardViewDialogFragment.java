@@ -24,7 +24,9 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,8 +34,11 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.Pair;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -50,6 +55,8 @@ import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.FamiliarGlideTarget;
+import com.gelakinetic.mtgfam.helpers.GlideApp;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -113,9 +120,6 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
         switch (mDialogId) {
             case GET_IMAGE: {
-                if (getParentCardViewFragment().mCardBitmap == null) {
-                    return DontShowDialog();
-                }
 
                 Dialog dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -123,7 +127,25 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 dialog.setContentView(R.layout.card_view_image_dialog);
 
                 ImageView dialogImageView = dialog.findViewById(R.id.cardimage);
-                dialogImageView.setImageDrawable(getParentCardViewFragment().mCardBitmap);
+
+                // Find the dimension to scale to
+                int mBorder = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 34, getResources().getDisplayMetrics());
+                Display display = ((WindowManager) getActivity()
+                        .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                Point p = new Point();
+                display.getSize(p);
+                int mHeight = p.y - mBorder;
+                int mWidth = p.x - mBorder;
+
+                // Load the image with Glide
+                // TODO set up cache params
+                GlideApp
+                        .with(this)
+                        .load("http://img.scryfall.com/cards/large/en/roe/212.jpg").placeholder(R.drawable.mjs_jhoira)
+                        .override(mWidth, mHeight)
+                        .fitCenter()
+                        .into(new FamiliarGlideTarget(getFamiliarActivity(), dialogImageView));
 
                 dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
