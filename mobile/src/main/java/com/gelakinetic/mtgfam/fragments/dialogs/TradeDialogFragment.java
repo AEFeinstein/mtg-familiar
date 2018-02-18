@@ -395,11 +395,11 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
                         .items(getResources().getStringArray(R.array.trade_option_entries))
-                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting().toInt(), new MaterialDialog.ListCallbackSingleChoice() {
+                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting().ordinal(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentTradeFragment().getPriceSetting().toInt() != which) {
-                                    getParentTradeFragment().setPriceSetting(MarketPriceInfo.PriceType.fromInt(which));
+                                if (getParentTradeFragment().getPriceSetting().ordinal() != which) {
+                                    getParentTradeFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
 
                                     /* Update ALL the prices! */
                                     for (MtgCard data : getParentTradeFragment().mListLeft) {

@@ -617,7 +617,7 @@ public class PreferenceAdapter {
         if (null == context) {
             return MarketPriceInfo.PriceType.MARKET;
         }
-        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(
+        return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
                 PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_tradePrice), "3")));
     }
 
@@ -627,7 +627,7 @@ public class PreferenceAdapter {
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(context.getString(R.string.key_tradePrice), Integer.toString(tradePrice.toInt()));
+        edit.putString(context.getString(R.string.key_tradePrice), Integer.toString(tradePrice.ordinal()));
         edit.apply();
     }
 
@@ -636,7 +636,7 @@ public class PreferenceAdapter {
         if (null == context) {
             return MarketPriceInfo.PriceType.MARKET;
         }
-        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(
+        return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
                 PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_wishlistPrice), "3")));
     }
 
@@ -646,7 +646,7 @@ public class PreferenceAdapter {
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(context.getString(R.string.key_wishlistPrice), Integer.toString(wishlistPrice.toInt()));
+        edit.putString(context.getString(R.string.key_wishlistPrice), Integer.toString(wishlistPrice.ordinal()));
         edit.apply();
     }
 
@@ -1015,7 +1015,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         if (null == context) {
             return MarketPriceInfo.PriceType.MARKET;
         }
-        return MarketPriceInfo.PriceType.fromInt(Integer.parseInt(
+        return MarketPriceInfo.PriceType.fromOrdinal(Integer.parseInt(
                 PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_deckPrice), "3")));
     }
 
@@ -1025,7 +1025,7 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putString(context.getString(R.string.key_deckPrice), Integer.toString(tradePrice.toInt()));
+        edit.putString(context.getString(R.string.key_deckPrice), Integer.toString(tradePrice.ordinal()));
         edit.apply();
     }
 
