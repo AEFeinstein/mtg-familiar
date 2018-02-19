@@ -57,6 +57,7 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
     @Override
     public void onLoadFailed(@Nullable Drawable errorDrawable) {
         mActivity.clearLoading();
+        mActivity.removeDialogFragment(mActivity.getSupportFragmentManager()); // TODO test this
         ToastWrapper.makeAndShowText(mActivity, R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
         // TODO try loading next URL, only show toast when all have been exhausted
     }

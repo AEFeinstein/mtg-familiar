@@ -24,4 +24,5 @@ import com.bumptech.glide.module.AppGlideModule;
 
 @GlideModule
 public final class FamiliarGlideModule extends AppGlideModule {
+    // TODO setup cache params
 }

@@ -29,6 +29,8 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -41,6 +43,7 @@ public class MtgCard extends Card {
 
     /* Wish and trade list fields */
     public String setName;
+    public String setNameMtgi;
     public String setCode;
     public int numberOf;
     public int price; /* In cents */
@@ -376,5 +379,135 @@ public class MtgCard extends Card {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    /**
+     * Gets an image URL for this card. Multiple image sources are used, so there may be multiple
+     * attempts. Return the URL based on the attempt number
+     *
+     * @param attempt      The attempt number, should increment by one for each attempt
+     * @param cardLanguage The language to get the image for
+     * @param ctx          A context to use
+     * @return The URL for this attempt
+     * @throws MalformedURLException If we screw up building the URL
+     */
+    public URL getImageUrl(int attempt, String cardLanguage, Context ctx) throws MalformedURLException {
+
+        // Some trickery to figure out if we have a token
+        boolean isToken = false;
+        if (mType.contains("Token") || // try to take the easy way out
+                (mCmc == 0 && // Tokens have a CMC of 0
+                        // The only tokens in Gatherer are from Duel Decks
+                        setName.contains("Duel Decks") &&
+                        // The only tokens in Gatherer are creatures
+                        mType.contains("Creature"))) {
+            isToken = true;
+        }
+
+        // If the card is english or a token, skip over the foreign MTGI attempt
+        if (cardLanguage.equalsIgnoreCase("en") || isToken) {
+            attempt++;
+        }
+
+        // If the card is a token, skip over the other MTGI attempt too
+        if (isToken && attempt >= 2) {
+            attempt++;
+        }
+
+        // Try getting a URL
+        switch (attempt) {
+            case 0: {
+                // Try magiccards.info, foreign
+                return getMtgiPicUrl(cardLanguage, ctx);
+            }
+            case 1: {
+                // Try scryfall
+                return getScryfallImageUrl();
+            }
+            case 2: {
+                // Try magiccards.info, but english this time
+                return getMtgiPicUrl("en", ctx);
+            }
+            case 3: {
+                // try gatherer
+                return getGathererImageUrl();
+            }
+            default: {
+                // Return null, indicating we're out of attempts
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Jumps through hoops and returns a correctly formatted URL for magiccards.info's image.
+     *
+     * @param cardLanguage The language of the card
+     * @param ctx          A context to get strings with
+     * @return a URL to the card's image
+     * @throws MalformedURLException If we screw up building the URL
+     */
+    private URL getMtgiPicUrl(String cardLanguage, Context ctx) throws MalformedURLException {
+
+        final String mtgiExtras = "http://magiccards.info/extras/";
+        String picURL;
+        if (mType.toLowerCase().contains(ctx.getString(R.string.search_Ongoing).toLowerCase()) ||
+                    /* extra space to not confuse with planeswalker */
+                mType.toLowerCase().contains(ctx.getString(R.string.search_Plane).toLowerCase() + " ") ||
+                mType.toLowerCase().contains(ctx.getString(R.string.search_Phenomenon).toLowerCase()) ||
+                mType.toLowerCase().contains(ctx.getString(R.string.search_Scheme).toLowerCase())) {
+            switch (mExpansion) {
+                case "PC2":
+                    picURL = mtgiExtras + "plane/planechase-2012-edition/" + mName + ".jpg";
+                    picURL = picURL.replace(" ", "-")
+                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                    break;
+                case "PCH":
+                    String cardNameTmp = mName;
+                    if (cardNameTmp.equalsIgnoreCase("tazeem")) {
+                        cardNameTmp = "tazeem-release-promo";
+                    } else if (cardNameTmp.equalsIgnoreCase("celestine reef")) {
+                        cardNameTmp = "celestine-reef-pre-release-promo";
+                    } else if (cardNameTmp.equalsIgnoreCase("horizon boughs")) {
+                        cardNameTmp = "horizon-boughs-gateway-promo";
+                    }
+                    picURL = mtgiExtras + "plane/planechase/" + cardNameTmp + ".jpg";
+                    picURL = picURL.replace(" ", "-")
+                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                    break;
+                case "ARC":
+                    picURL = mtgiExtras + "scheme/archenemy/" + mName + ".jpg";
+                    picURL = picURL.replace(" ", "-")
+                            .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
+                    break;
+                default:
+                    picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + setNameMtgi + "/" +
+                            mNumber + ".jpg";
+                    break;
+            }
+        } else {
+            picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + setNameMtgi + "/" + mNumber + ".jpg";
+        }
+        return new URL(picURL.toLowerCase(Locale.ENGLISH));
+    }
+
+    /**
+     * Easily gets the URL for the Scryfall image for a card by multiverseid.
+     *
+     * @return URL of the card image
+     * @throws MalformedURLException If we screw up building the URL
+     */
+    private URL getScryfallImageUrl() throws MalformedURLException {
+        return new URL("https://api.scryfall.com/cards/multiverse/" + mMultiverseId + "?format=image&version=normal");
+    }
+
+    /**
+     * Easily gets the URL for the Gatherer image for a card by multiverse ID
+     *
+     * @return URL of the card image
+     * @throws MalformedURLException If we screw up building the URL
+     */
+    private URL getGathererImageUrl() throws MalformedURLException {
+        return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
     }
 }

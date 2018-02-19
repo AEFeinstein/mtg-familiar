@@ -139,13 +139,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 int mWidth = p.x - mBorder;
 
                 // Load the image with Glide
-                // TODO set up cache params
-                GlideApp
-                        .with(this)
-                        .load("http://img.scryfall.com/cards/large/en/roe/212.jpg").placeholder(R.drawable.mjs_jhoira)
-                        .override(mWidth, mHeight)
-                        .fitCenter()
-                        .into(new FamiliarGlideTarget(getFamiliarActivity(), dialogImageView));
+                getParentCardViewFragment().loadImageWithGlide(dialogImageView);
 
                 dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -273,7 +267,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
                 textViewUrl.setText(Html.fromHtml(
                         "<a href=http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
-                                getParentCardViewFragment().mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
+                                getParentCardViewFragment().mCard.mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
                 ));
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
@@ -285,7 +279,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 if (null == getParentCardViewFragment()) {
                     return DontShowDialog();
                 }
-                Dialog dialog = CardHelpers.getDialog(getParentCardViewFragment().mCardName, getParentCardViewFragment(), false, false);
+                Dialog dialog = CardHelpers.getDialog(getParentCardViewFragment().mCard.mName, getParentCardViewFragment(), false, false);
                 if (dialog == null) {
                     getParentCardViewFragment().handleFamiliarDbException(false);
                     return DontShowDialog();
@@ -297,8 +291,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                final String cardName = getParentCardViewFragment().mCardName;
-                final String cardSet = getParentCardViewFragment().mSetCode;
+                final String cardName = getParentCardViewFragment().mCard.mName;
+                final String cardSet = getParentCardViewFragment().mCard.mExpansion;
                 final String[] deckNames = getFiles(DecklistFragment.DECK_EXTENSION);
 
                 /* If there are no files, don't show the dialog */
@@ -392,7 +386,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
             }
             case TRANSLATE_CARD: {
                 /* Make sure the translations exist */
-                if (null == getParentCardViewFragment() || getParentCardViewFragment().mTranslatedNames.isEmpty()) {
+                if (null == getParentCardViewFragment() || getParentCardViewFragment().mCard.mForeignPrintings.isEmpty()) {
                     /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
@@ -403,7 +397,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 /* prepare the list of all translations */
                 List<HashMap<String, String>> fillMaps = new ArrayList<>();
-                for (Card.ForeignPrinting fp : getParentCardViewFragment().mTranslatedNames) {
+                for (Card.ForeignPrinting fp : getParentCardViewFragment().mCard.mForeignPrintings) {
                     HashMap<String, String> map = new HashMap<>();
 
                     /* Translate the language code into a readable language label */
