@@ -212,7 +212,6 @@ Media licenced under the &lt;a href=\"http://creativecommons.org/licenses/by-sa/
     <string name="card_view_price_dialog_low">"Niska:"</string>
     <string name="card_view_price_dialog_medium">"Średnia"</string>
     <string name="card_view_price_dialog_high">"Wysoka"</string>
-    <string name="card_view_price_dialog_foil">"Średnia foliowana"</string>
     <string name="card_view_price_dialog_link">"Naciśnij tutaj, aby zobaczyć informację o cenie i tendencji"</string>
     <string name="card_view_no_rulings">"Brak zasad dla tej karty"</string>
     <string name="card_view_gatherer_page">"Strona karty"</string>

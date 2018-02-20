@@ -48,12 +48,11 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
 
@@ -208,7 +207,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     mCompressedDecklist.get(firstIndex);
             for (int i = 0; i < firstCard.mInfo.size(); i++) {
                 CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
-                if (firstIsi.mSetCode.equals(card.setCode) && firstIsi.mIsFoil.equals(card.foil)) {
+                if (firstIsi.mSetCode.equals(card.mExpansion) && firstIsi.mIsFoil.equals(card.mIsFoil)) {
                     firstIsi.mNumberOf++;
                     added = true;
                     break;
@@ -335,7 +334,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
                 if (!card.first.mName.isEmpty()) {
                     /* Translate the set code to TCG name of course it's not saved */
-                    card.first.setName = CardDbAdapter.getSetNameFromCode(card.first.setCode, database);
+                    card.first.mSetName = CardDbAdapter.getSetNameFromCode(card.first.mExpansion, database);
                     if (changedCardName == null || changedCardName.equals(card.first.mName)) {
                         CompressedDecklistInfo wrapped =
                                 new CompressedDecklistInfo(card.first, card.second);
@@ -569,15 +568,15 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    protected void onCardPriceLookupFailure(MtgCard data, SpiceException spiceException) {
+    protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
         /* Find the compressed wishlist info for this card */
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             if (cdi.header == null && cdi.mName.equals(data.mName)) {
                 /* Find all foil and non foil compressed items with the same set code */
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                    if (isi.mSetCode.equals(data.setCode)) {
+                    if (isi.mSetCode.equals(data.mExpansion)) {
                                     /* Set the price as null and the message as the exception */
-                        isi.mMessage = spiceException.getLocalizedMessage();
+                        isi.mMessage = exception.getLocalizedMessage();
                         isi.mPrice = null;
                     }
                 }
@@ -586,13 +585,13 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    protected void onCardPriceLookupSuccess(MtgCard data, PriceInfo result) {
+    protected void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result) {
         /* Find the compressed wishlist info for this card */
         for (CompressedDecklistInfo cdi : mCompressedDecklist) {
             if (cdi.header == null && cdi.mName.equals(data.mName)) {
                 /* Find all foil and non foil compressed items with the same set code */
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
-                    if (isi.mSetCode.equals(data.setCode)) {
+                    if (isi.mSetCode.equals(data.mExpansion)) {
                         /* Set the whole price info object */
                         if (result != null) {
                             isi.mPrice = result;
@@ -619,23 +618,7 @@ public class DecklistFragment extends FamiliarListFragment {
             if (cdi.header == null) {
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     if (isi.mPrice != null) {
-                        if (isi.mIsFoil) {
-                            totalPrice += isi.mPrice.mFoilAverage * isi.mNumberOf;
-                        } else {
-                            switch (getPriceSetting()) {
-                                case LOW_PRICE:
-                                    totalPrice += isi.mPrice.mLow * isi.mNumberOf;
-                                    break;
-                                case AVG_PRICE:
-                                    totalPrice += isi.mPrice.mAverage * isi.mNumberOf;
-                                    break;
-                                case HIGH_PRICE:
-                                    totalPrice += isi.mPrice.mHigh * isi.mNumberOf;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
+                        totalPrice += isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting()) * isi.mNumberOf;
                     }
                 }
             }
@@ -649,13 +632,13 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    public int getPriceSetting() {
-        return Integer.parseInt(PreferenceAdapter.getDeckPrice(getContext()));
+    public MarketPriceInfo.PriceType getPriceSetting() {
+        return PreferenceAdapter.getDeckPrice(getContext());
     }
 
     @Override
-    public void setPriceSetting(int priceSetting) {
-        PreferenceAdapter.setDeckPrice(getContext(), Integer.toString(priceSetting));
+    public void setPriceSetting(MarketPriceInfo.PriceType priceSetting) {
+        PreferenceAdapter.setDeckPrice(getContext(), priceSetting);
     }
 
     class DecklistViewHolder extends CardDataViewHolder {

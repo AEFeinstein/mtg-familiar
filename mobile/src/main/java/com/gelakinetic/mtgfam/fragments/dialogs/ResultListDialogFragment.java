@@ -130,9 +130,9 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                                 for (Pair<MtgCard, Boolean> deckEntry : decklist) {
                                     if (!deckEntry.second && // not in the sideboard
                                             deckEntry.first.mName.equals(cardName) &&
-                                            deckEntry.first.setCode.equals(cardSet)) {
+                                            deckEntry.first.mExpansion.equals(cardSet)) {
                                         // Increment the card already in the deck
-                                        deckEntry.first.numberOf++;
+                                        deckEntry.first.mNumberOf++;
                                         entryIncremented = true;
                                         break;
                                     }

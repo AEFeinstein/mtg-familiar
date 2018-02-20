@@ -125,7 +125,7 @@ Besonderer Dank geht an Richard Garfield und alle Mitarbeiter von&lt;a href=http
 &lt;br&gt;
 Magic the Gathering und Magic the Gathering Karten sind ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/octo-online/robospice&gt;Robospice&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; wird verwendet used unter der MIT License&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -223,7 +223,6 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
     <string name="card_view_price_dialog_low">"Tief:"</string>
     <string name="card_view_price_dialog_medium">"Durchschnitt:"</string>
     <string name="card_view_price_dialog_high">"Hoch:"</string>
-    <string name="card_view_price_dialog_foil">"Foil-Durchschnitt:"</string>
 
     <!-- I'm changing "click" to "press" (drücken statt klicken), because this app is used on tablets and phones. -->
     <string name="card_view_price_dialog_link">"Hier drücken für alle Preise und Tendenzen"</string>

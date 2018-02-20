@@ -74,16 +74,12 @@ import com.gelakinetic.mtgfam.helpers.GlideApp;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
@@ -103,6 +99,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.reactivex.functions.Consumer;
 
 /**
  * This class handles displaying card info.
@@ -144,7 +141,7 @@ public class CardViewFragment extends FamiliarFragment {
     public ArrayList<Ruling> mRulingsArrayList;
 
     /* Loaded in a Spice Service */
-    public PriceInfo mPriceInfo;
+    public MarketPriceInfo mPriceInfo;
 
     /* Card info, used to build the URL to fetch the picture */
     public MtgCard mCard;
@@ -385,8 +382,8 @@ public class CardViewFragment extends FamiliarFragment {
             mCard.mName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
             mCard.mCmc = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_CMC));
             mCard.mExpansion = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
-            mCard.setName = CardDbAdapter.getSetNameFromCode(mCard.mExpansion, database);
-            mCard.setNameMtgi = CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)), database);
+            mCard.mSetName = CardDbAdapter.getSetNameFromCode(mCard.mExpansion, database);
+            mCard.mSetNameMtgi = CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)), database);
 
             mCard.mNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
@@ -800,31 +797,13 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.price: {
-                mActivity.setLoading();
-
-                PriceFetchRequest priceRequest;
-                priceRequest = new PriceFetchRequest(mCard.mName, mCard.mExpansion, mCard.mNumber, mCard.mMultiverseId, getActivity());
-                mActivity.mSpiceManager.execute(priceRequest,
-                        mCard.mName + "-" + mCard.mExpansion, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-
+                mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
+                        new Consumer<MarketPriceInfo>() {
                             @Override
-                            public void onRequestFailure(SpiceException spiceException) {
+                            public void accept(MarketPriceInfo marketPriceInfo) throws Exception {
                                 if (CardViewFragment.this.isAdded()) {
-                                    mActivity.clearLoading();
-
-                                    CardViewFragment.this.removeDialog(getFragmentManager());
-                                    ToastWrapper.makeAndShowText(mActivity, spiceException.getMessage(),
-                                            ToastWrapper.LENGTH_SHORT);
-                                }
-                            }
-
-                            @Override
-                            public void onRequestSuccess(final PriceInfo result) {
-                                if (CardViewFragment.this.isAdded()) {
-                                    mActivity.clearLoading();
-
-                                    if (result != null) {
-                                        mPriceInfo = result;
+                                    if (marketPriceInfo != null) {
+                                        mPriceInfo = marketPriceInfo;
                                         showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
                                         ToastWrapper.makeAndShowText(mActivity,
@@ -833,8 +812,17 @@ public class CardViewFragment extends FamiliarFragment {
                                     }
                                 }
                             }
-                        }
-                );
+                        },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                if (CardViewFragment.this.isAdded()) {
+                                    CardViewFragment.this.removeDialog(getFragmentManager());
+                                    ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
+                                            ToastWrapper.LENGTH_SHORT);
+                                }
+                            }
+                        });
 
                 return true;
             }

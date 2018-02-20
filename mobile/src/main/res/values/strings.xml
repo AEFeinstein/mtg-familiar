@@ -47,6 +47,10 @@
     <string name="not_deleted">"not deleted"</string>
     <string name="no_network">"Network is not available"</string>
     <string name="filter_title_view_card">"View Card"</string>
+    <string name="price_error_unknown">"Error fetching price"</string>
+    <string name="price_error_network">"Error fetching price [network]"</string>
+    <string name="price_error_database">"Error fetching price [database]"</string>
+    <string name="price_error_api_key">"Error fetching price [API keys]"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"PAGES"</string>
@@ -112,7 +116,7 @@ Special thanks to Richard Garfield and the rest of the folks at &lt;a href=http:
 &lt;br&gt;
 Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/octo-online/robospice&gt;Robospice&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; used under the MIT License&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -219,7 +223,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="card_view_price_dialog_low">"Low:"</string>
     <string name="card_view_price_dialog_medium">"Average:"</string>
     <string name="card_view_price_dialog_high">"High:"</string>
-    <string name="card_view_price_dialog_foil">"Foil Average:"</string>
     <string name="card_view_price_dialog_link">"Click here for all prices and trend info"</string>
     <string name="card_view_no_rulings">"No rulings for this card"</string>
     <string name="card_view_gatherer_page">"Gatherer Page"</string>
@@ -305,6 +308,7 @@ Mana pool will also be cleared."</string>
     <string name="trader_Low">"Low"</string>
     <string name="trader_Average">"Average"</string>
     <string name="trader_High">"High"</string>
+    <string name="trader_Market">"Market"</string>
     <string name="trader_sort">"Sort Trade"</string>
     <string name="trader_share">"Share Trade"</string>
     <string name="trade_share_title">"Trade"</string>
@@ -400,8 +404,6 @@ Good luck, and have fun!
 
     <!-- Preferences -->
     <string name="pref_screen_general">"General Settings"</string>
-    <string name="pref_screen_search">"Search &amp; Results"</string>
-    <string name="pref_screen_trade_wishlist">"Trade &amp; Wishlist"</string>
     <string name="pref_cat_default_fragment">"Default Page"</string>
     <string name="pref_default_fragment_mode_summary">"The first thing you see when you open the app"</string>
     <string name="pref_cat_updates">"Database Updates"</string>
@@ -433,6 +435,7 @@ Good luck, and have fun!
     <string name="pref_trade_price_title">"Price Setting"</string>
     <string name="pref_trade_price_summary">"TCGplayer price to use when trading cards"</string>
     <string name="pref_deck_price_summary">"TCGPlayer price to use in the deck builder"</string>
+    <string name="pref_wishlist_price_summary">"TCGPlayer price to use in the wishlist"</string>
     <string name="pref_cat_result_list">"Result List"</string>
     <string name="pref_consolidate_title">"Consolidate Results"</string>
     <string name="pref_consolidate_summary">"Only show the most recent printing of a card"</string>
@@ -562,5 +565,6 @@ Good luck, and have fun!
 
     <!-- Only used for app translation, not card names -->
     <string name="pref_Slovak">"Slovak"</string>
+    <string name="card_view_price_dialog_market">Market:</string>
 
 </resources>
