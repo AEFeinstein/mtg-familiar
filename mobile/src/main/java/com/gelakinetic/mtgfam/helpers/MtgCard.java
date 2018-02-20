@@ -399,7 +399,7 @@ public class MtgCard extends Card {
         if (mType.contains("Token") || // try to take the easy way out
                 (mCmc == 0 && // Tokens have a CMC of 0
                         // The only tokens in Gatherer are from Duel Decks
-                        setName.contains("Duel Decks") &&
+                        mSetName.contains("Duel Decks") &&
                         // The only tokens in Gatherer are creatures
                         mType.contains("Creature"))) {
             isToken = true;
@@ -482,12 +482,12 @@ public class MtgCard extends Card {
                             .replace("?", "").replace(",", "").replace("'", "").replace("!", "");
                     break;
                 default:
-                    picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + setNameMtgi + "/" +
+                    picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mSetNameMtgi + "/" +
                             mNumber + ".jpg";
                     break;
             }
         } else {
-            picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + setNameMtgi + "/" + mNumber + ".jpg";
+            picURL = "http://magiccards.info/scans/" + cardLanguage + "/" + mSetNameMtgi + "/" + mNumber + ".jpg";
         }
         return new URL(picURL.toLowerCase(Locale.ENGLISH));
     }
