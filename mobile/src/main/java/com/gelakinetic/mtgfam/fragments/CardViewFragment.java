@@ -510,7 +510,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mTextScrollView.setVisibility(View.GONE);
 
                 // Load the image with Glide
-                loadImageWithGlide(mCardImageView);
+                loadImageWithGlide(mCardImageView, 0);
             } else {
                 mImageScrollView.setVisibility(View.GONE);
                 mTextScrollView.setVisibility(View.VISIBLE);
@@ -610,8 +610,9 @@ public class CardViewFragment extends FamiliarFragment {
      * TODO doc
      *
      * @param cardImageView
+     * @param attempt
      */
-    public void loadImageWithGlide(ImageView cardImageView) {
+    public void loadImageWithGlide(ImageView cardImageView, int attempt) {
 
         // Get screen dimensions
         int mBorder = (int) TypedValue.applyDimension(
@@ -619,9 +620,9 @@ public class CardViewFragment extends FamiliarFragment {
         Rect rectangle = new Rect();
         mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
         assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
-        int mHeight = ((rectangle.bottom - rectangle.top) -
+        int height = ((rectangle.bottom - rectangle.top) -
                 mActivity.getSupportActionBar().getHeight()) - mBorder;
-        int mWidth = (rectangle.right - rectangle.left) - mBorder;
+        int width = (rectangle.right - rectangle.left) - mBorder;
 
         // Get the language this card should be in
         String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
@@ -629,19 +630,23 @@ public class CardViewFragment extends FamiliarFragment {
             cardLanguage = "en";
         }
 
-        // TODO attempt retries
-
-        try {
+        // Get this attempt's URL
+        URL url = mCard.getImageUrl(attempt, cardLanguage, getContext());
+        if (null == url) {
+            // No more URLs, If we're out of retries, clear everything and show a toast
+            getFamiliarActivity().clearLoading();
+            removeDialog(getFragmentManager());
+            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
+        } else {
+            // Otherwise try to load the image
             GlideApp
                     .with(this)
-                    .load(mCard.getImageUrl(0, cardLanguage, getContext()).toString())
+                    .load(url.toString())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .signature(new ObjectKey(mCard.mMultiverseId + "_" + cardLanguage))
-                    .override(mWidth, mHeight)
+                    .override(width, height)
                     .fitCenter()
-                    .into(new FamiliarGlideTarget(mActivity, cardImageView));
-        } catch (MalformedURLException e) {
-            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
+                    .into(new FamiliarGlideTarget(this, cardImageView, attempt));
         }
     }
 

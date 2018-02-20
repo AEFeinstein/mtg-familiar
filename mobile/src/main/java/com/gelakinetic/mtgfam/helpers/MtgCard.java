@@ -392,7 +392,7 @@ public class MtgCard extends Card {
      * @return The URL for this attempt
      * @throws MalformedURLException If we screw up building the URL
      */
-    public URL getImageUrl(int attempt, String cardLanguage, Context ctx) throws MalformedURLException {
+    public URL getImageUrl(int attempt, String cardLanguage, Context ctx) {
 
         // Some trickery to figure out if we have a token
         boolean isToken = false;
@@ -416,27 +416,32 @@ public class MtgCard extends Card {
         }
 
         // Try getting a URL
-        switch (attempt) {
-            case 0: {
-                // Try magiccards.info, foreign
-                return getMtgiPicUrl(cardLanguage, ctx);
+        try {
+            switch (attempt) {
+                case 0: {
+                    // Try magiccards.info, foreign
+                    return getMtgiPicUrl(cardLanguage, ctx);
+                }
+                case 1: {
+                    // Try scryfall
+                    return getScryfallImageUrl();
+                }
+                case 2: {
+                    // Try magiccards.info, but english this time
+                    return getMtgiPicUrl("en", ctx);
+                }
+                case 3: {
+                    // try gatherer
+                    return getGathererImageUrl();
+                }
+                default: {
+                    // Return null, indicating we're out of attempts
+                    return null;
+                }
             }
-            case 1: {
-                // Try scryfall
-                return getScryfallImageUrl();
-            }
-            case 2: {
-                // Try magiccards.info, but english this time
-                return getMtgiPicUrl("en", ctx);
-            }
-            case 3: {
-                // try gatherer
-                return getGathererImageUrl();
-            }
-            default: {
-                // Return null, indicating we're out of attempts
-                return null;
-            }
+        } catch (MalformedURLException e) {
+            // Return null, indicating a bad URL
+            return null;
         }
     }
 

@@ -26,39 +26,38 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.gelakinetic.mtgfam.FamiliarActivity;
-import com.gelakinetic.mtgfam.R;
+import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 
 public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
-    final FamiliarActivity mActivity;
-    final ImageView mImageView;
+    private final CardViewFragment mFragment;
+    private final ImageView mImageView;
+    private final int mAttempt;
 
-    public FamiliarGlideTarget(FamiliarActivity activity, ImageView imageView) {
-        mActivity = activity;
+    public FamiliarGlideTarget(CardViewFragment fragment, ImageView imageView, int attempt) {
+        mFragment = fragment;
         mImageView = imageView;
+        mAttempt = attempt;
     }
 
     @Override
     public void onLoadStarted(@Nullable Drawable placeholder) {
-        mActivity.setLoading();
+        mFragment.getFamiliarActivity().setLoading();
     }
 
     @Override
     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
         mImageView.setImageDrawable(resource);
-        mActivity.clearLoading();
+        mFragment.getFamiliarActivity().clearLoading();
     }
 
     @Override
     public void onLoadCleared(@Nullable Drawable placeholder) {
-        mActivity.clearLoading();
+        mFragment.getFamiliarActivity().clearLoading();
     }
 
     @Override
     public void onLoadFailed(@Nullable Drawable errorDrawable) {
-        mActivity.clearLoading();
-        mActivity.removeDialogFragment(mActivity.getSupportFragmentManager()); // TODO test this
-        ToastWrapper.makeAndShowText(mActivity, R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
-        // TODO try loading next URL, only show toast when all have been exhausted
+        // Try to load the next URL
+        mFragment.loadImageWithGlide(mImageView, mAttempt + 1);
     }
 }

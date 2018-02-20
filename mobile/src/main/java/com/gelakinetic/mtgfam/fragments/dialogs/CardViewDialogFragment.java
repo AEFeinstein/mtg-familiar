@@ -140,7 +140,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 int mWidth = p.x - mBorder;
 
                 // Load the image with Glide
-                getParentCardViewFragment().loadImageWithGlide(dialogImageView);
+                getParentCardViewFragment().loadImageWithGlide(dialogImageView, 0);
 
                 dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
