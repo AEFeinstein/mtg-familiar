@@ -91,7 +91,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,7 +113,7 @@ public class CardViewFragment extends FamiliarFragment {
     /* Where the card image is loaded to */
     public static final int MAIN_PAGE = 1;
     private static final int DIALOG = 2;
-    private static final int SHARE = 3;
+    public static final int SHARE = 3;
     /* Used to store the String when copying to clipboard */
     private String mCopyString;
     /* UI elements, to be filled in */
@@ -155,7 +154,10 @@ public class CardViewFragment extends FamiliarFragment {
     public LinkedHashSet<Long> mCardIds;
 
     /* Easier than calling getActivity() all the time, and handles being nested */
-    private FamiliarActivity mActivity;
+    public FamiliarActivity mActivity;
+
+    /* When requesting a permission, save what to do after the permission is granted */
+    private int mSaveImageWhereTo = MAIN_PAGE;
 
     /**
      * Kill any AsyncTask if it is still running.
@@ -256,11 +258,7 @@ public class CardViewFragment extends FamiliarFragment {
         mCardImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (mAsyncTask != null) {
-                    mAsyncTask.cancel(true);
-                }
-                mAsyncTask = new saveCardImageTask();
-                ((saveCardImageTask) mAsyncTask).execute(MAIN_PAGE);
+                saveImageWithGlide(MAIN_PAGE, 0);
                 return true;
             }
         });
@@ -369,11 +367,11 @@ public class CardViewFragment extends FamiliarFragment {
             return;
         }
 
-        ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
+        ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(mActivity);
 
         try {
             SQLiteDatabase database =
-                    DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                    DatabaseManager.getInstance(mActivity, false).openDatabase(false);
             Cursor cCardById;
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
@@ -523,7 +521,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             mColorIndicatorLayout.removeAllViews();
             ColorIndicatorView civ =
-                    new ColorIndicatorView(this.getActivity(), dimension, dimension / 15,
+                    new ColorIndicatorView(this.mActivity, dimension, dimension / 15,
                             cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)),
                             sCost);
             if (civ.shouldInidcatorBeShown()) {
@@ -600,17 +598,18 @@ public class CardViewFragment extends FamiliarFragment {
             }
         } catch (FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+            DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
             return;
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+        DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
     }
 
     /**
-     * TODO doc
+     * Load and resize an image of this card using Glide
      *
-     * @param cardImageView
-     * @param attempt
+     * @param cardImageView The ImageView to load the image into
+     * @param attempt       The attempt number. Should start at 0, if the load fails it will
+     *                      increment and try again recursively (ish)
      */
     public void loadImageWithGlide(ImageView cardImageView, int attempt) {
 
@@ -648,6 +647,186 @@ public class CardViewFragment extends FamiliarFragment {
                     .fitCenter()
                     .into(new FamiliarGlideTarget(this, cardImageView, attempt));
         }
+    }
+
+    /**
+     * Load and save or share an image of this card using Glide
+     *
+     * @param whereTo What to do with this image. Either SHARE to share it, or MAIN_PAGE to save it
+     *                to the disk
+     * @param attempt The attempt number. Should start at 0, if the load fails it will increment and
+     *                try again recursively (ish)
+     */
+    public void saveImageWithGlide(int whereTo, int attempt) {
+
+        // Check that there's memory to save the image to
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_no_external_storage, ToastWrapper.LENGTH_SHORT);
+            return;
+        }
+
+        // Check if permission is granted
+        if (ContextCompat.checkSelfPermission(CardViewFragment.this.mActivity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // Request the permission
+            ActivityCompat.requestPermissions(CardViewFragment.this.mActivity,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE);
+            // Wait for the permission to be granted
+            mSaveImageWhereTo = whereTo;
+            return;
+        }
+
+        // Get the language this card should be in
+        String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
+        if (cardLanguage == null) {
+            cardLanguage = "en";
+        }
+
+        // Get a File where the image should be saved
+        File imageFile;
+        try {
+            imageFile = getSavedImageFile();
+        } catch (Exception e) {
+            ToastWrapper.makeAndShowText(getContext(), e.getMessage(), ToastWrapper.LENGTH_SHORT);
+            return;
+        }
+
+        // Check if the saved image already exists
+        if (imageFile.exists()) {
+            if (SHARE == whereTo) {
+                // Image is already saved, just share it
+                shareImage();
+            } else {
+                // Or display the path where it's saved
+                String strPath = imageFile.getAbsolutePath();
+                ToastWrapper.makeAndShowText(getContext(), getString(R.string.card_view_image_saved) + strPath, ToastWrapper.LENGTH_LONG);
+            }
+            return;
+        }
+
+        // Try downloading the image
+        URL url = mCard.getImageUrl(attempt, cardLanguage, getContext());
+        if (null == url) {
+            // No more URLs, If we're out of retries, clear everything and show a toast
+            getFamiliarActivity().clearLoading();
+            removeDialog(getFragmentManager());
+            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
+        } else {
+            // Otherwise try to load the image
+            GlideApp
+                    .with(this)
+                    .load(url.toString())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .signature(new ObjectKey(mCard.mMultiverseId + "_" + cardLanguage))
+                    .into(new FamiliarGlideTarget(this, new FamiliarGlideTarget.DrawableLoadedCallback() {
+                        /**
+                         * When Glide loads the resource either from cache or the network, save it
+                         * to a file then optionally launch the intent to share it
+                         *
+                         * @param resource The Drawable Glide loaded, hopefully a BitmapDrawable
+                         */
+                        @Override
+                        protected void onDrawableLoaded(Drawable resource) {
+                            if (resource instanceof BitmapDrawable) {
+                                // Save the image
+                                BitmapDrawable bitmapDrawable = (BitmapDrawable) resource;
+
+                                try {
+                                    // Create the file
+                                    if (!imageFile.createNewFile()) {
+                                        // Couldn't create the file
+                                        ToastWrapper.makeAndShowText(getContext(), R.string.card_view_unable_to_create_file, ToastWrapper.LENGTH_SHORT);
+                                        return;
+                                    }
+
+                                    // Now that the file is created, write to it
+                                    FileOutputStream fStream = new FileOutputStream(imageFile);
+                                    boolean bCompressed = bitmapDrawable.getBitmap().compress(Bitmap.CompressFormat.JPEG, 90, fStream);
+                                    fStream.flush();
+                                    fStream.close();
+
+                                    // Couldn't save the image for some reason
+                                    if (!bCompressed) {
+                                        ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
+                                        return;
+                                    }
+                                } catch (IOException e) {
+                                    // Couldn't save it for some reason
+                                    ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
+                                    return;
+                                }
+
+                                // Notify the system that a new image was saved
+                                getFamiliarActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                        Uri.fromFile(imageFile)));
+
+                                // Now that the image is saved, launch the intent
+                                if (SHARE == whereTo) {
+                                    // Image is already saved, just share it
+                                    shareImage();
+                                } else {
+                                    // Or display the path where it's saved
+                                    String strPath = imageFile.getAbsolutePath();
+                                    ToastWrapper.makeAndShowText(getContext(), getString(R.string.card_view_image_saved) + strPath, ToastWrapper.LENGTH_LONG);
+                                }
+                            }
+                        }
+                    }, whereTo, attempt));
+        }
+    }
+
+    /**
+     * Launch the intent to share a saved image
+     */
+    private void shareImage() {
+        /* Start the intent to share the image */
+        try {
+            Uri uri = FileProvider.getUriForFile(mActivity,
+                    BuildConfig.APPLICATION_ID + ".FileProvider", getSavedImageFile());
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            shareIntent.setType("image/jpeg");
+            startActivity(Intent.createChooser(shareIntent,
+                    getResources().getText(R.string.card_view_send_to)));
+        } catch (Exception e) {
+            ToastWrapper.makeAndShowText(mActivity, e.getMessage(), ToastWrapper.LENGTH_SHORT);
+        }
+    }
+
+    /**
+     * Returns the File used to save this card's image.
+     *
+     * @return A File, either with the image already or blank
+     * @throws Exception If something goes wrong
+     */
+    private File getSavedImageFile() throws Exception {
+
+        String strPath;
+        try {
+            strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                    .getCanonicalPath() + "/MTGFamiliar";
+        } catch (IOException ex) {
+            throw new Exception(getString(R.string.card_view_no_pictures_folder));
+        }
+
+        File fPath = new File(strPath);
+
+        if (!fPath.exists()) {
+            if (!fPath.mkdir()) {
+                throw new Exception(getString(R.string.card_view_unable_to_create_dir));
+            }
+
+            if (!fPath.isDirectory()) {
+                throw new Exception(getString(R.string.card_view_unable_to_create_dir));
+            }
+        }
+
+        fPath = new File(strPath, mCard.mName + "_" + mCard.mExpansion + ".jpg");
+
+        return fPath;
     }
 
     /**
@@ -926,13 +1105,6 @@ public class CardViewFragment extends FamiliarFragment {
     }
 
     /**
-     * Called from the share dialog to load and share this card's image.
-     */
-    public void runShareImageTask() {
-        // TODO reimplement
-    }
-
-    /**
      * This inner class encapsulates a ruling and the date it was made.
      */
     public static class Ruling {
@@ -946,66 +1118,6 @@ public class CardViewFragment extends FamiliarFragment {
 
         public String toString() {
             return date + ": " + ruling;
-        }
-    }
-
-    public class saveCardImageTask extends AsyncTask<Integer, Void, Void> {
-
-        String mToastString = null;
-        private Integer mWhereTo;
-
-        @Override
-        protected Void doInBackground(Integer... params) {
-
-            if (params != null && params.length > 0) {
-                mWhereTo = params[0];
-            } else {
-                mWhereTo = MAIN_PAGE;
-            }
-
-            if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                mToastString = getString(R.string.card_view_no_external_storage);
-                return null;
-            }
-
-            /* Check if permission is granted */
-            if (ContextCompat.checkSelfPermission(CardViewFragment.this.mActivity,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                /* Request the permission */
-                ActivityCompat.requestPermissions(CardViewFragment.this.mActivity,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        FamiliarActivity.REQUEST_WRITE_EXTERNAL_STORAGE_IMAGE);
-            } else {
-                /* Permission already granted */
-                mToastString = saveImage();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (mWhereTo == SHARE) {
-                try {
-
-                    /* Start the intent to share the image */
-                    Uri uri = FileProvider.getUriForFile(mActivity,
-                            BuildConfig.APPLICATION_ID + ".FileProvider", getSavedImageFile(false));
-                    Intent shareIntent = new Intent();
-                    shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                    shareIntent.setType("image/jpeg");
-                    startActivity(Intent.createChooser(shareIntent,
-                            getResources().getText(R.string.card_view_send_to)));
-
-                } catch (Exception e) {
-                    ToastWrapper.makeAndShowText(mActivity, e.getMessage(), ToastWrapper.LENGTH_LONG);
-                }
-            } else if (mToastString != null) {
-                ToastWrapper.makeAndShowText(mActivity, mToastString, ToastWrapper.LENGTH_LONG);
-            }
         }
     }
 
@@ -1026,7 +1138,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             try {
                 SQLiteDatabase database =
-                        DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                        DatabaseManager.getInstance(mActivity, false).openDatabase(false);
                 Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
                 mLegalities = new String[cFormats.getCount()];
@@ -1065,7 +1177,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mLegalities = null;
             }
 
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+            DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
             return null;
         }
 
@@ -1189,12 +1301,7 @@ public class CardViewFragment extends FamiliarFragment {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     /* Permission granted, run the task again */
-                    if (mAsyncTask instanceof saveCardImageTask) {
-                        int whereTo = ((saveCardImageTask) mAsyncTask).mWhereTo;
-                        mAsyncTask.cancel(true);
-                        mAsyncTask = new saveCardImageTask();
-                        ((saveCardImageTask) mAsyncTask).execute(whereTo);
-                    }
+                    saveImageWithGlide(mSaveImageWhereTo, 0);
                 } else {
                     /* Permission denied */
                     ToastWrapper.makeAndShowText(this.getContext(), R.string.card_view_unable_to_save_image,
@@ -1202,122 +1309,5 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
         }
-    }
-
-    /**
-     * Returns the File used to save this card's image.
-     *
-     * @param shouldDelete true if the file should be deleted before returned, false otherwise
-     * @return A File, either with the image already or blank
-     * @throws Exception If something goes wrong
-     */
-    private File getSavedImageFile(boolean shouldDelete) throws Exception {
-
-        String strPath;
-        try {
-            strPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-                    .getCanonicalPath() + "/MTGFamiliar";
-        } catch (IOException ex) {
-            throw new Exception(getString(R.string.card_view_no_pictures_folder));
-        }
-
-        File fPath = new File(strPath);
-
-        if (!fPath.exists()) {
-            if (!fPath.mkdir()) {
-                throw new Exception(getString(R.string.card_view_unable_to_create_dir));
-            }
-
-            if (!fPath.isDirectory()) {
-                throw new Exception(getString(R.string.card_view_unable_to_create_dir));
-            }
-        }
-
-        fPath = new File(strPath, mCard.mName + "_" + mCard.mExpansion + ".jpg");
-
-        if (shouldDelete) {
-            if (fPath.exists()) {
-                if (!fPath.delete()) {
-                    throw new Exception(getString(R.string.card_view_unable_to_create_file));
-                }
-            }
-        }
-
-        return fPath;
-    }
-
-    /**
-     * Saves the current card image to external storage.
-     *
-     * @return A status string, to be displayed in a toast on the UI thread
-     */
-    private String saveImage() {
-        File fPath;
-
-        try {
-            fPath = getSavedImageFile(true);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-
-        String strPath = fPath.getAbsolutePath();
-
-        if (fPath.exists()) {
-            return getString(R.string.card_view_image_saved) + strPath;
-        }
-        try {
-            if (!fPath.createNewFile()) {
-                return getString(R.string.card_view_unable_to_create_file);
-            }
-
-            /* If the card is displayed, there's a real good chance it's cached */
-            String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
-            if (cardLanguage == null) {
-                cardLanguage = "en";
-            }
-            String imageKey = Integer.toString(mCard.mMultiverseId) + cardLanguage;
-            Bitmap bmpImage = null;
-            try {
-                // TODO reimplement
-                // bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
-            } catch (NullPointerException e) {
-                bmpImage = null;
-            }
-
-            /* Check if this is an english only image */
-            if (bmpImage == null && !cardLanguage.equalsIgnoreCase("en")) {
-                imageKey = Integer.toString(mCard.mMultiverseId) + "en";
-                try {
-                    // TODO reimplement
-                    // bmpImage = getFamiliarActivity().mImageCache.getBitmapFromDiskCache(imageKey);
-                } catch (NullPointerException e) {
-                    bmpImage = null;
-                }
-            }
-
-            /* nope, not here */
-            if (bmpImage == null) {
-                return getString(R.string.card_view_no_image);
-            }
-
-            FileOutputStream fStream = new FileOutputStream(fPath);
-
-            boolean bCompressed = bmpImage.compress(Bitmap.CompressFormat.JPEG, 90, fStream);
-            fStream.flush();
-            fStream.close();
-
-            if (!bCompressed) {
-                return getString(R.string.card_view_unable_to_save_image);
-            }
-
-        } catch (IOException ex) {
-            return getString(R.string.card_view_save_failure);
-        }
-
-        /* Notify the system that a new image was saved */
-        getFamiliarActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.fromFile(fPath)));
-
-        return getString(R.string.card_view_image_saved) + strPath;
     }
 }
