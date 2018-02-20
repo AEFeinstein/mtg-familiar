@@ -71,6 +71,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.FamiliarGlideTarget;
 import com.gelakinetic.mtgfam.helpers.GlideApp;
+import com.gelakinetic.mtgfam.helpers.GlideRequests;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -97,7 +98,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -158,6 +158,10 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* When requesting a permission, save what to do after the permission is granted */
     private int mSaveImageWhereTo = MAIN_PAGE;
+
+    /* Objects dealing with loading images so they can be released later */
+    private GlideRequests mGlideRequestManager = null;
+    private FamiliarGlideTarget mGlideTarget = null;
 
     /**
      * Kill any AsyncTask if it is still running.
@@ -265,6 +269,19 @@ public class CardViewFragment extends FamiliarFragment {
 
         setInfoFromBundle(this.getArguments());
 
+        /* Uncomment this to test memory issues due to loading images
+        final long cardId = this.getArguments().getLong(CARD_ID);
+        Log.e("LOAD", cardId + "");
+        Handler myHandler = new Handler();
+        myHandler.postDelayed(() -> {
+            //TODO search another card
+            Bundle args = new Bundle();
+            args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cardId + 1});
+            CardViewPagerFragment cardViewPagerFragment = new CardViewPagerFragment();
+            startNewFragment(cardViewPagerFragment, args);
+        }, 2500);
+        */
+
         return myFragmentView;
     }
 
@@ -279,32 +296,21 @@ public class CardViewFragment extends FamiliarFragment {
 
     /**
      * Release all image resources and invoke the garbage collector.
-     * TODO check if this is still necessary with glide
      */
-    @SuppressFBWarnings(value = "DM_GC", justification = "Memory Leak without this")
     private void releaseImageResources(boolean isSplit) {
 
-        if (mCardImageView != null) {
-
-            /* Release the drawable from the ImageView */
-            Drawable drawable = mCardImageView.getDrawable();
-            if (drawable != null) {
-                drawable.setCallback(null);
-                Bitmap drawableBitmap = ((BitmapDrawable) drawable).getBitmap();
-                if (drawableBitmap != null) {
-                    drawableBitmap.recycle();
-                }
-            }
-
-            /* Release the ImageView */
-            mCardImageView.setImageDrawable(null);
-            mCardImageView.setImageBitmap(null);
-
-            if (!isSplit) {
-                mCardImageView = null;
-            }
+        // Have Glide release any image resources
+        if (null != mGlideRequestManager && null != mGlideTarget) {
+            mGlideRequestManager.clear(mGlideTarget);
         }
 
+        // Clear the image view too
+        if (mCardImageView != null) {
+            mCardImageView.setImageDrawable(null);
+            mCardImageView.setImageBitmap(null);
+        }
+
+        // For non-split cards, null out all UI elements
         if (!isSplit) {
             mNameTextView = null;
             mCostTextView = null;
@@ -322,9 +328,6 @@ public class CardViewFragment extends FamiliarFragment {
             mCardImageView = null;
             mColorIndicatorLayout = null;
         }
-
-        /* Invoke the garbage collector */
-        java.lang.System.gc();
     }
 
     /**
@@ -638,8 +641,10 @@ public class CardViewFragment extends FamiliarFragment {
             ToastWrapper.makeAndShowText(getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
         } else {
             // Otherwise try to load the image
-            GlideApp
-                    .with(this)
+            if (null == mGlideRequestManager) {
+                mGlideRequestManager = GlideApp.with(this);
+            }
+            mGlideTarget = mGlideRequestManager
                     .load(url.toString())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .signature(new ObjectKey(mCard.mMultiverseId + "_" + cardLanguage))
@@ -714,8 +719,10 @@ public class CardViewFragment extends FamiliarFragment {
             ToastWrapper.makeAndShowText(getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
         } else {
             // Otherwise try to load the image
-            GlideApp
-                    .with(this)
+            if (null == mGlideRequestManager) {
+                mGlideRequestManager = GlideApp.with(this);
+            }
+            mGlideTarget = mGlideRequestManager
                     .load(url.toString())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .signature(new ObjectKey(mCard.mMultiverseId + "_" + cardLanguage))
