@@ -274,7 +274,7 @@ public class CardViewFragment extends FamiliarFragment {
         Log.e("LOAD", cardId + "");
         Handler myHandler = new Handler();
         myHandler.postDelayed(() -> {
-            //TODO search another card
+            // search another card
             Bundle args = new Bundle();
             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cardId + 1});
             CardViewPagerFragment cardViewPagerFragment = new CardViewPagerFragment();
