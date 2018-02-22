@@ -209,11 +209,11 @@ public class MarketPriceFetcher {
                         try {
                             /* Query the API, one step at a time */
                             ProductInformation information = api.getProductInformation(tcgCardName, tcgSetName);
-                            if (information.success && information.results.length > 0) {
+                            if (information.results.length > 0) {
                                 ProductMarketPrice price = api.getProductMarketPrice(information.results);
-                                if (price.success && price.results.length > 0) {
+                                if (price.results.length > 0) {
                                     ProductDetails details = api.getProductDetails(information.results);
-                                    if (details.success && details.results.length > 0) {
+                                    if (details.results.length > 0) {
                                         /* database close if all is good */
                                         DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
 
