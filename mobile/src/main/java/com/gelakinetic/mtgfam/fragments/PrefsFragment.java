@@ -20,9 +20,11 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.github.machinarius.preferencefragment.PreferenceFragment;
@@ -30,6 +32,8 @@ import com.github.machinarius.preferencefragment.PreferenceFragment;
 import java.util.Locale;
 
 public class PrefsFragment extends PreferenceFragment {
+
+    private int mOldCacheVal;
 
     public static void checkOverrideSystemLanguage(Context context) {
 
@@ -54,7 +58,19 @@ public class PrefsFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mOldCacheVal = PreferenceAdapter.getImageCacheSize(getContext());
         /* Load the preferences from an XML resource */
         addPreferencesFromResource(R.xml.preferences);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // If the cache size changed, restart the app to set the cache val
+        if (PreferenceAdapter.getImageCacheSize(getContext()) != mOldCacheVal && null != getActivity()) {
+            getActivity().finish();
+            startActivity(new Intent(getContext(), FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
+        }
     }
 }
