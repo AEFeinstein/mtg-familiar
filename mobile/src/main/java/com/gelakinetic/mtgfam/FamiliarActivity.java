@@ -747,6 +747,23 @@ public class FamiliarActivity extends AppCompatActivity {
                             }
                         }
                     }
+
+                    // When upgrading to version 54, clear out both the internal and external cache
+                    if (pInfo.versionCode == 54) {
+                        File cacheDir = getCacheDir();
+                        if (cacheDir.exists()) {
+                            for (File cachedFile : cacheDir.listFiles()) {
+                                cachedFile.delete();
+                            }
+                        }
+
+                        cacheDir = getExternalCacheDir();
+                        if (cacheDir.exists()) {
+                            for (File cachedFile : cacheDir.listFiles()) {
+                                cachedFile.delete();
+                            }
+                        }
+                    }
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 /* Eat it, don't show change log */
@@ -764,7 +781,6 @@ public class FamiliarActivity extends AppCompatActivity {
                 startService(new Intent(this, DbUpdaterService.class));
             }
         }
-        // TODO delete old image cache?
     }
 
     private boolean processIntent(Intent intent) {
