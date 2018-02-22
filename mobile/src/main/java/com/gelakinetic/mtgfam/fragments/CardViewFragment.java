@@ -643,6 +643,11 @@ public class CardViewFragment extends FamiliarFragment {
             // Otherwise try to load the image
             if (null == mGlideRequestManager) {
                 mGlideRequestManager = GlideApp.with(this);
+            } else {
+                if (null != mGlideTarget) {
+                    mGlideRequestManager.clear(mGlideTarget);
+                    mGlideTarget = null;
+                }
             }
             mGlideTarget = mGlideRequestManager
                     .load(url.toString())
@@ -721,6 +726,11 @@ public class CardViewFragment extends FamiliarFragment {
             // Otherwise try to load the image
             if (null == mGlideRequestManager) {
                 mGlideRequestManager = GlideApp.with(this);
+            } else {
+                if (null != mGlideTarget) {
+                    mGlideRequestManager.clear(mGlideTarget);
+                    mGlideTarget = null;
+                }
             }
             mGlideTarget = mGlideRequestManager
                     .load(url.toString())
