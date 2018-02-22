@@ -390,9 +390,8 @@ public class MtgCard extends Card {
      * @param cardLanguage The language to get the image for
      * @param ctx          A context to use
      * @return The URL for this attempt
-     * @throws MalformedURLException If we screw up building the URL
      */
-    public URL getImageUrl(int attempt, String cardLanguage, Context ctx) {
+    public String getImageUrlString(int attempt, String cardLanguage, Context ctx) {
 
         // Some trickery to figure out if we have a token
         boolean isToken = false;
@@ -420,26 +419,26 @@ public class MtgCard extends Card {
             switch (attempt) {
                 case 0: {
                     // Try magiccards.info, foreign
-                    return getMtgiPicUrl(cardLanguage, ctx);
+                    return getMtgiPicUrl(cardLanguage, ctx).toString();
                 }
                 case 1: {
                     // Try scryfall
-                    return getScryfallImageUrl();
+                    return getScryfallImageUrl().toString();
                 }
                 case 2: {
                     // Try magiccards.info, but english this time
-                    return getMtgiPicUrl("en", ctx);
+                    return getMtgiPicUrl("en", ctx).toString();
                 }
                 case 3: {
                     // try gatherer
-                    return getGathererImageUrl();
+                    return getGathererImageUrl().toString();
                 }
                 default: {
                     // Return null, indicating we're out of attempts
                     return null;
                 }
             }
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | NullPointerException e) {
             // Return null, indicating a bad URL
             return null;
         }

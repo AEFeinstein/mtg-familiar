@@ -59,8 +59,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.ObjectKey;
+import com.bumptech.glide.request.target.Target;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.BuildConfig;
@@ -71,6 +72,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.FamiliarGlideTarget;
 import com.gelakinetic.mtgfam.helpers.GlideApp;
+import com.gelakinetic.mtgfam.helpers.GlideRequest;
 import com.gelakinetic.mtgfam.helpers.GlideRequests;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -161,7 +163,8 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Objects dealing with loading images so they can be released later */
     private GlideRequests mGlideRequestManager = null;
-    private FamiliarGlideTarget mGlideTarget = null;
+    private Target mGlideTarget = null;
+    private Drawable mDrawableForDialog = null;
 
     /**
      * Kill any AsyncTask if it is still running.
@@ -262,7 +265,7 @@ public class CardViewFragment extends FamiliarFragment {
         mCardImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                saveImageWithGlide(MAIN_PAGE, 0);
+                saveImageWithGlide(MAIN_PAGE);
                 return true;
             }
         });
@@ -328,6 +331,8 @@ public class CardViewFragment extends FamiliarFragment {
             mCardImageView = null;
             mColorIndicatorLayout = null;
         }
+
+        mDrawableForDialog = null; // TODO test this
     }
 
     /**
@@ -511,7 +516,7 @@ public class CardViewFragment extends FamiliarFragment {
                 mTextScrollView.setVisibility(View.GONE);
 
                 // Load the image with Glide
-                loadImageWithGlide(mCardImageView, 0);
+                loadImageWithGlide(mCardImageView);
             } else {
                 mImageScrollView.setVisibility(View.GONE);
                 mTextScrollView.setVisibility(View.VISIBLE);
@@ -611,10 +616,8 @@ public class CardViewFragment extends FamiliarFragment {
      * Load and resize an image of this card using Glide
      *
      * @param cardImageView The ImageView to load the image into
-     * @param attempt       The attempt number. Should start at 0, if the load fails it will
-     *                      increment and try again recursively (ish)
      */
-    public void loadImageWithGlide(ImageView cardImageView, int attempt) {
+    public void loadImageWithGlide(ImageView cardImageView) {
 
         // Get screen dimensions
         int mBorder = (int) TypedValue.applyDimension(
@@ -626,37 +629,8 @@ public class CardViewFragment extends FamiliarFragment {
                 mActivity.getSupportActionBar().getHeight()) - mBorder;
         int width = (rectangle.right - rectangle.left) - mBorder;
 
-        // Get the language this card should be in
-        String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
-        if (cardLanguage == null) {
-            cardLanguage = "en";
-        }
-
-        // Get this attempt's URL
-        URL url = mCard.getImageUrl(attempt, cardLanguage, getContext());
-        if (null == url) {
-            // No more URLs, If we're out of retries, clear everything and show a toast
-            getFamiliarActivity().clearLoading();
-            removeDialog(getFragmentManager());
-            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
-        } else {
-            // Otherwise try to load the image
-            if (null == mGlideRequestManager) {
-                mGlideRequestManager = GlideApp.with(this);
-            } else {
-                if (null != mGlideTarget) {
-                    mGlideRequestManager.clear(mGlideTarget);
-                    mGlideTarget = null;
-                }
-            }
-            mGlideTarget = mGlideRequestManager
-                    .load(url.toString())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .signature(new ObjectKey(mCard.mMultiverseId + "_" + cardLanguage))
-                    .override(width, height)
-                    .fitCenter()
-                    .into(new FamiliarGlideTarget(this, cardImageView, attempt));
-        }
+        // Load the image
+        runGlideTarget(new FamiliarGlideTarget(this, cardImageView), width, height);
     }
 
     /**
@@ -664,10 +638,8 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param whereTo What to do with this image. Either SHARE to share it, or MAIN_PAGE to save it
      *                to the disk
-     * @param attempt The attempt number. Should start at 0, if the load fails it will increment and
-     *                try again recursively (ish)
      */
-    public void saveImageWithGlide(int whereTo, int attempt) {
+    public void saveImageWithGlide(int whereTo) {
 
         // Check that there's memory to save the image to
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -685,12 +657,6 @@ public class CardViewFragment extends FamiliarFragment {
             // Wait for the permission to be granted
             mSaveImageWhereTo = whereTo;
             return;
-        }
-
-        // Get the language this card should be in
-        String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
-        if (cardLanguage == null) {
-            cardLanguage = "en";
         }
 
         // Get a File where the image should be saved
@@ -715,82 +681,157 @@ public class CardViewFragment extends FamiliarFragment {
             return;
         }
 
-        // Try downloading the image
-        URL url = mCard.getImageUrl(attempt, cardLanguage, getContext());
-        if (null == url) {
-            // No more URLs, If we're out of retries, clear everything and show a toast
-            getFamiliarActivity().clearLoading();
-            removeDialog(getFragmentManager());
-            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
-        } else {
-            // Otherwise try to load the image
-            if (null == mGlideRequestManager) {
-                mGlideRequestManager = GlideApp.with(this);
-            } else {
-                if (null != mGlideTarget) {
-                    mGlideRequestManager.clear(mGlideTarget);
-                    mGlideTarget = null;
+        runGlideTarget(new FamiliarGlideTarget(this, new FamiliarGlideTarget.DrawableLoadedCallback() {
+            /**
+             * When Glide loads the resource either from cache or the network, save it
+             * to a file then optionally launch the intent to share it
+             *
+             * @param resource The Drawable Glide loaded, hopefully a BitmapDrawable
+             */
+            @Override
+            protected void onDrawableLoaded(Drawable resource) {
+                if (resource instanceof BitmapDrawable) {
+                    // Save the image
+                    BitmapDrawable bitmapDrawable = (BitmapDrawable) resource;
+
+                    try {
+                        // Create the file
+                        if (!imageFile.createNewFile()) {
+                            // Couldn't create the file
+                            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_unable_to_create_file, ToastWrapper.LENGTH_SHORT);
+                            return;
+                        }
+
+                        // Now that the file is created, write to it
+                        FileOutputStream fStream = new FileOutputStream(imageFile);
+                        boolean bCompressed = bitmapDrawable.getBitmap().compress(Bitmap.CompressFormat.JPEG, 90, fStream);
+                        fStream.flush();
+                        fStream.close();
+
+                        // Couldn't save the image for some reason
+                        if (!bCompressed) {
+                            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
+                            return;
+                        }
+                    } catch (IOException e) {
+                        // Couldn't save it for some reason
+                        ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
+                        return;
+                    }
+
+                    // Notify the system that a new image was saved
+                    getFamiliarActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                            Uri.fromFile(imageFile)));
+
+                    // Now that the image is saved, launch the intent
+                    if (SHARE == whereTo) {
+                        // Image is already saved, just share it
+                        shareImage();
+                    } else {
+                        // Or display the path where it's saved
+                        String strPath = imageFile.getAbsolutePath();
+                        ToastWrapper.makeAndShowText(getContext(), getString(R.string.card_view_image_saved) + strPath, ToastWrapper.LENGTH_LONG);
+                    }
                 }
             }
-            mGlideTarget = mGlideRequestManager
-                    .load(url.toString())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .signature(new ObjectKey(mCard.mMultiverseId + "_" + cardLanguage))
-                    .into(new FamiliarGlideTarget(this, new FamiliarGlideTarget.DrawableLoadedCallback() {
-                        /**
-                         * When Glide loads the resource either from cache or the network, save it
-                         * to a file then optionally launch the intent to share it
-                         *
-                         * @param resource The Drawable Glide loaded, hopefully a BitmapDrawable
-                         */
-                        @Override
-                        protected void onDrawableLoaded(Drawable resource) {
-                            if (resource instanceof BitmapDrawable) {
-                                // Save the image
-                                BitmapDrawable bitmapDrawable = (BitmapDrawable) resource;
+        }, whereTo), 0, 0);
+    }
 
-                                try {
-                                    // Create the file
-                                    if (!imageFile.createNewFile()) {
-                                        // Couldn't create the file
-                                        ToastWrapper.makeAndShowText(getContext(), R.string.card_view_unable_to_create_file, ToastWrapper.LENGTH_SHORT);
-                                        return;
-                                    }
-
-                                    // Now that the file is created, write to it
-                                    FileOutputStream fStream = new FileOutputStream(imageFile);
-                                    boolean bCompressed = bitmapDrawable.getBitmap().compress(Bitmap.CompressFormat.JPEG, 90, fStream);
-                                    fStream.flush();
-                                    fStream.close();
-
-                                    // Couldn't save the image for some reason
-                                    if (!bCompressed) {
-                                        ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
-                                        return;
-                                    }
-                                } catch (IOException e) {
-                                    // Couldn't save it for some reason
-                                    ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
-                                    return;
-                                }
-
-                                // Notify the system that a new image was saved
-                                getFamiliarActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                        Uri.fromFile(imageFile)));
-
-                                // Now that the image is saved, launch the intent
-                                if (SHARE == whereTo) {
-                                    // Image is already saved, just share it
-                                    shareImage();
-                                } else {
-                                    // Or display the path where it's saved
-                                    String strPath = imageFile.getAbsolutePath();
-                                    ToastWrapper.makeAndShowText(getContext(), getString(R.string.card_view_image_saved) + strPath, ToastWrapper.LENGTH_LONG);
-                                }
-                            }
-                        }
-                    }, whereTo, attempt));
+    /**
+     * Helper function to create and run a glide target. Handles creating the request manager, if
+     * it doesn't exist
+     *
+     * @param familiarGlideTarget The target to load the image into
+     * @param width               0 to do nothing or a positive number to resize the image
+     * @param height              0 to do nothing or a positive number to resize the image
+     */
+    private void runGlideTarget(FamiliarGlideTarget familiarGlideTarget, int width, int height) {
+        // Get the language this card should be in
+        String cardLanguage = PreferenceAdapter.getCardLanguage(getContext());
+        if (cardLanguage == null) {
+            cardLanguage = "en";
         }
+
+        // Try downloading the image TODO test this
+        if (null == mGlideRequestManager) {
+            mGlideRequestManager = GlideApp.with(this);
+        } else {
+            if (null != mGlideTarget) {
+                mGlideRequestManager.clear(mGlideTarget);
+                mGlideTarget = null;
+            }
+        }
+
+        boolean onlyCheckCache = false;
+        if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
+            // Only check the cache
+            onlyCheckCache = true;
+            // TODO if the load fails, display the text
+        }
+
+        // Create the request. Note, the attempt numbers here should match the attempt numbers in MtgCard.getImageUrlString()
+        mGlideTarget =
+                getGlideRequest(0, cardLanguage, width, height, onlyCheckCache,
+                        getGlideRequest(1, cardLanguage, width, height, onlyCheckCache,
+                                getGlideRequest(2, cardLanguage, width, height, onlyCheckCache,
+                                        getGlideRequest(3, cardLanguage, width, height, onlyCheckCache, null))))
+                        .into(familiarGlideTarget);
+    }
+
+    /**
+     * Helper function to build a single glide request
+     *
+     * @param attempt        The number of this attempt
+     * @param cardLanguage   The language of the card to load
+     * @param width          0 to do nothing or a positive number to resize the image
+     * @param height         0 to do nothing or a positive number to resize the image
+     * @param onlyCheckCache true to only check the cache, false to check the network too
+     * @param errorRequest   A request to call if this one errors out, or null
+     * @return The built glide request
+     */
+    GlideRequest<Drawable> getGlideRequest(int attempt, String cardLanguage, int width, int height,
+                                           boolean onlyCheckCache, RequestBuilder<Drawable> errorRequest) {
+        // Build the initial request
+        GlideRequest<Drawable> request = mGlideRequestManager
+                .load(mCard.getImageUrlString(attempt, cardLanguage, getContext()))
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+        // Only check the cache if requested
+        if (onlyCheckCache) {
+            request = request.onlyRetrieveFromCache(true);
+        }
+
+        // Add the error handler if given
+        if (null != errorRequest) {
+            request = request.error(errorRequest);
+        }
+
+        // Resize the request if given
+        if (0 != width && 0 != height) {
+            request = request
+                    .override(width, height)
+                    .fitCenter();
+        }
+
+        // Return the request
+        return request;
+    }
+
+    /**
+     * Set a temporary drawable from a Glide loader to be shown in a Dialog which
+     * hasn't been created yet
+     *
+     * @param drawable The drawable to save
+     */
+    public void setImageDrawableForDialog(Drawable drawable) {
+        mDrawableForDialog = drawable;
+    }
+
+    /**
+     * @return A temporary drawable loaded by Glide to be shown in a Dialog
+     */
+    public Drawable getImageDrawable() {
+        return mDrawableForDialog;
     }
 
     /**
@@ -851,7 +892,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param id the ID of the dialog to show
      */
-    private void showDialog(final int id) throws IllegalStateException {
+    public void showDialog(final int id) throws IllegalStateException {
         /* DialogFragment.show() will take care of adding the fragment in a transaction. We also
          * want to remove any currently showing dialog, so make our own transaction and take care of
          * that here. */
@@ -990,11 +1031,7 @@ public class CardViewFragment extends FamiliarFragment {
         /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.image: {
-                if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
-                    return true;
-                }
-
-                showDialog(CardViewDialogFragment.GET_IMAGE);
+                loadImageWithGlide(null);
                 return true;
             }
             case R.id.price: {
@@ -1318,7 +1355,7 @@ public class CardViewFragment extends FamiliarFragment {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     /* Permission granted, run the task again */
-                    saveImageWithGlide(mSaveImageWhereTo, 0);
+                    saveImageWithGlide(mSaveImageWhereTo);
                 } else {
                     /* Permission denied */
                     ToastWrapper.makeAndShowText(this.getContext(), R.string.card_view_unable_to_save_image,

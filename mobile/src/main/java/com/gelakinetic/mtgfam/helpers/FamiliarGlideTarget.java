@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
+import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 
 public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
 
@@ -41,7 +42,6 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
 
     private final CardViewFragment mFragment;
     private final ImageView mImageView;
-    private final int mAttempt;
     private final DrawableLoadedCallback mDrawableLoadedCallback;
     private final int mWhereTo;
 
@@ -50,13 +50,10 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
      *
      * @param fragment  The fragment that hosts the ImageView
      * @param imageView The ImageView to load into
-     * @param attempt   The attempt number. Should start at 0 and will increment through the
-     *                  different image sources
      */
-    public FamiliarGlideTarget(CardViewFragment fragment, ImageView imageView, int attempt) {
+    public FamiliarGlideTarget(CardViewFragment fragment, ImageView imageView) {
         mFragment = fragment;
         mImageView = imageView;
-        mAttempt = attempt;
         mDrawableLoadedCallback = null;
         mWhereTo = 0;
     }
@@ -68,14 +65,11 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
      * @param callback A callback to be called when the image is loaded
      * @param whereTo  What to do with the loaded image, either MAIN_PAGE to save it or SHARE to
      *                 share it
-     * @param attempt  The attempt number. Should start at 0 and will increment through the
-     *                 different image sources
      */
     public FamiliarGlideTarget(CardViewFragment fragment, DrawableLoadedCallback callback,
-                               int whereTo, int attempt) {
+                               int whereTo) {
         mFragment = fragment;
         mImageView = null;
-        mAttempt = attempt;
         mDrawableLoadedCallback = callback;
         mWhereTo = whereTo;
     }
@@ -101,9 +95,15 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
     public void onResourceReady(@NonNull Drawable resource,
                                 @Nullable Transition<? super Drawable> transition) {
         if (null != mImageView) {
+            // Load directly to the fragment
             mImageView.setImageDrawable(resource);
         } else if (null != mDrawableLoadedCallback) {
+            // Call a callback to save/share the image
             mDrawableLoadedCallback.onDrawableLoaded(resource);
+        } else {
+            // Save the drawable in RAM, launch a dialog to display it
+            mFragment.setImageDrawableForDialog(resource);
+            mFragment.showDialog(CardViewDialogFragment.GET_IMAGE);
         }
         mFragment.getFamiliarActivity().clearLoading();
     }
@@ -126,11 +126,6 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
      */
     @Override
     public void onLoadFailed(@Nullable Drawable errorDrawable) {
-        // Try to load the next URL
-        if (null != mImageView) {
-            mFragment.loadImageWithGlide(mImageView, mAttempt + 1);
-        } else if (null != mDrawableLoadedCallback) {
-            mFragment.saveImageWithGlide(mWhereTo, mAttempt + 1);
-        }
+        mFragment.getFamiliarActivity().clearLoading();
     }
 }

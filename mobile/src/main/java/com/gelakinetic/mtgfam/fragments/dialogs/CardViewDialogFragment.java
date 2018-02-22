@@ -24,9 +24,7 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,11 +32,8 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.Pair;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -122,28 +117,16 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 Dialog dialog = new Dialog(getParentCardViewFragment().mActivity);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
                 dialog.setContentView(R.layout.card_view_image_dialog);
-
                 ImageView dialogImageView = dialog.findViewById(R.id.cardimage);
 
-                // Find the dimension to scale to
-                int mBorder = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 34, getResources().getDisplayMetrics());
-                Display display = ((WindowManager) getParentCardViewFragment().mActivity
-                        .getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-                Point p = new Point();
-                display.getSize(p);
-                int mHeight = p.y - mBorder;
-                int mWidth = p.x - mBorder;
-
-                // Load the image with Glide
-                getParentCardViewFragment().loadImageWithGlide(dialogImageView, 0);
+                // Set the image loaded with Glide
+                dialogImageView.setImageDrawable(getParentCardViewFragment().getImageDrawable());
 
                 dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        getParentCardViewFragment().saveImageWithGlide(CardViewFragment.MAIN_PAGE, 0);
+                        getParentCardViewFragment().saveImageWithGlide(CardViewFragment.MAIN_PAGE);
                         return true;
                     }
                 });
@@ -382,7 +365,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentCardViewFragment().saveImageWithGlide(CardViewFragment.SHARE, 0);
+                                getParentCardViewFragment().saveImageWithGlide(CardViewFragment.SHARE);
                             }
                         });
                 return builder.build();
