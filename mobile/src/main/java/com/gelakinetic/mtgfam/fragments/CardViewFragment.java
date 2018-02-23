@@ -36,7 +36,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -59,8 +61,10 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.Language;
@@ -332,7 +336,7 @@ public class CardViewFragment extends FamiliarFragment {
             mColorIndicatorLayout = null;
         }
 
-        mDrawableForDialog = null; // TODO test this
+        mDrawableForDialog = null;
     }
 
     /**
@@ -752,7 +756,7 @@ public class CardViewFragment extends FamiliarFragment {
             cardLanguage = "en";
         }
 
-        // Try downloading the image TODO test this
+        // Try downloading the image
         if (null == mGlideRequestManager) {
             mGlideRequestManager = GlideApp.with(this);
         } else {
@@ -766,44 +770,57 @@ public class CardViewFragment extends FamiliarFragment {
         if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
             // Only check the cache
             onlyCheckCache = true;
-            // TODO if the load fails, display the text
         }
 
-        // Create the request. Note, the attempt numbers here should match the attempt numbers in MtgCard.getImageUrlString()
-        mGlideTarget =
-                getGlideRequest(0, cardLanguage, width, height, onlyCheckCache,
-                        getGlideRequest(1, cardLanguage, width, height, onlyCheckCache,
-                                getGlideRequest(2, cardLanguage, width, height, onlyCheckCache,
-                                        getGlideRequest(3, cardLanguage, width, height, onlyCheckCache, null))))
-                        .into(familiarGlideTarget);
+        // Run the first request.
+        mGlideTarget = runGlideRequest(0, cardLanguage, width, height, onlyCheckCache, familiarGlideTarget);
     }
 
     /**
-     * Helper function to build a single glide request
+     * Helper function to run a glide request
      *
      * @param attempt        The number of this attempt
      * @param cardLanguage   The language of the card to load
      * @param width          0 to do nothing or a positive number to resize the image
      * @param height         0 to do nothing or a positive number to resize the image
      * @param onlyCheckCache true to only check the cache, false to check the network too
-     * @param errorRequest   A request to call if this one errors out, or null
+     * @param target         The target to load the image into
      * @return The built glide request
      */
-    GlideRequest<Drawable> getGlideRequest(int attempt, String cardLanguage, int width, int height,
-                                           boolean onlyCheckCache, RequestBuilder<Drawable> errorRequest) {
+    Target<Drawable> runGlideRequest(int attempt, String cardLanguage, int width, int height,
+                                     boolean onlyCheckCache, Target<Drawable> target) {
+
         // Build the initial request
         GlideRequest<Drawable> request = mGlideRequestManager
                 .load(mCard.getImageUrlString(attempt, cardLanguage, getContext()))
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        // Peek at the next URL
+                        if (null == mCard.getImageUrlString(attempt + 1, cardLanguage, getContext())) {
+                            // If it's null, return false to let FamiliarGlideTarget take care of it
+                            return false;
+                        } else {
+                            // Otherwise post a runnable to try the next load
+                            (new Handler()).post(() -> {
+                                runGlideRequest(attempt + 1, cardLanguage, width, height, onlyCheckCache, target);
+                            });
+                            // Return true so FamiliarGlideTarget doesn't call onLoadFailed()
+                            return true;
+                        }
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        // Don't do anything
+                        return false;
+                    }
+                });
 
         // Only check the cache if requested
         if (onlyCheckCache) {
             request = request.onlyRetrieveFromCache(true);
-        }
-
-        // Add the error handler if given
-        if (null != errorRequest) {
-            request = request.error(errorRequest);
         }
 
         // Resize the request if given
@@ -814,7 +831,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         // Return the request
-        return request;
+        return request.into(target);
     }
 
     /**
@@ -832,6 +849,14 @@ public class CardViewFragment extends FamiliarFragment {
      */
     public Drawable getImageDrawable() {
         return mDrawableForDialog;
+    }
+
+    /**
+     * Display the text if the image fails to load
+     */
+    public void showText() {
+        mImageScrollView.setVisibility(View.GONE);
+        mTextScrollView.setVisibility(View.VISIBLE);
     }
 
     /**

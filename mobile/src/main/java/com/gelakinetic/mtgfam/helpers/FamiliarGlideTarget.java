@@ -26,6 +26,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 
@@ -127,5 +128,7 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
     @Override
     public void onLoadFailed(@Nullable Drawable errorDrawable) {
         mFragment.getFamiliarActivity().clearLoading();
+        ToastWrapper.makeAndShowText(mFragment.getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
+        mFragment.showText();
     }
 }
