@@ -766,14 +766,8 @@ public class CardViewFragment extends FamiliarFragment {
             }
         }
 
-        boolean onlyCheckCache = false;
-        if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
-            // Only check the cache
-            onlyCheckCache = true;
-        }
-
         // Run the first request.
-        mGlideTarget = runGlideRequest(0, cardLanguage, width, height, onlyCheckCache, familiarGlideTarget);
+        mGlideTarget = runGlideRequest(0, cardLanguage, width, height, true, familiarGlideTarget);
     }
 
     /**
@@ -799,8 +793,24 @@ public class CardViewFragment extends FamiliarFragment {
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         // Peek at the next URL
                         if (null == mCard.getImageUrlString(attempt + 1, cardLanguage, getContext())) {
-                            // If it's null, return false to let FamiliarGlideTarget take care of it
-                            return false;
+                            // All lookups failed
+                            if (onlyCheckCache) {
+                                // It's only checking the cache. This comes first
+                                if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
+                                    // Done checking the cache, and there's no network, return false
+                                    return false;
+                                } else {
+                                    // Done checking the cache, but there is network, try to look there starting with the 0th attempt
+                                    (new Handler()).post(() -> {
+                                        runGlideRequest(0, cardLanguage, width, height, false, target);
+                                    });
+                                    return true;
+                                }
+                            } else {
+                                // Not only checking the cache, and all lookups failed.
+                                // Return false to let FamiliarGlideTarget take care of it
+                                return false;
+                            }
                         } else {
                             // Otherwise post a runnable to try the next load
                             (new Handler()).post(() -> {
