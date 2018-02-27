@@ -122,119 +122,136 @@ public class MarketPriceFetcher {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
                 }
 
-                /* try the fetch up to eight times, for different accent mark & split card combos*/
-                int retry = MAX_NUM_RETRIES;
+                CardDbAdapter.MultiCardType multiCardType = null;
+                String tcgSetName = null;
+
                 /* then the same for multicard ordering */
                 SQLiteDatabase database;
                 try {
                     database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
+
+                    /* If the card number wasn't given, figure it out */
+                    if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
+                        Cursor c = CardDbAdapter.fetchCardByNameAndSet(params.mName, params.mExpansion, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
+
+                        if (params.mNumber == null || params.mNumber.equals("")) {
+                            params.mNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                        }
+
+                        if (params.mType == null || params.mType.equals("")) {
+                            params.mType = CardDbAdapter.getTypeLine(c);
+                        }
+
+                        if (params.mMultiverseId == -1) {
+                            params.mMultiverseId = CardDbAdapter.getMultiverseIdFromNameAndSet(params.mName, params.mExpansion, database);
+                            if (params.mMultiverseId == -1) {
+                                c.close();
+                                throw new FamiliarDbException(null);
+                            }
+                        }
+                        c.close();
+                    }
+
+                    multiCardType = CardDbAdapter.isMultiCard(params.mNumber, params.mExpansion);
+
+                    /* Get the TCGplayer.com set name, why can't everything be consistent? */
+                    tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
+
                 } catch (FamiliarDbException e) {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
                 }
-                while (retry > 0) {
-                    String tcgSetName = null;
-                    String tcgCardName = null;
-                    CardDbAdapter.MultiCardType multiCardType = null;
-                    try {
-                        /* If the card number wasn't given, figure it out */
-                        if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
-                            Cursor c = CardDbAdapter.fetchCardByNameAndSet(params.mName, params.mExpansion, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
 
-                            if (params.mNumber == null || params.mNumber.equals("")) {
-                                params.mNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-                            }
-
-                            if (params.mType == null || params.mType.equals("")) {
-                                params.mType = CardDbAdapter.getTypeLine(c);
-                            }
-
-                            if (params.mMultiverseId == -1) {
-                                params.mMultiverseId = CardDbAdapter.getMultiverseIdFromNameAndSet(params.mName, params.mExpansion, database);
-                                if (params.mMultiverseId == -1) {
-                                    c.close();
-                                    throw new FamiliarDbException(null);
-                                }
-                            }
-                            c.close();
-                        }
-
-                        multiCardType = CardDbAdapter.isMultiCard(params.mNumber, params.mExpansion);
-
-                        /* Get the TCGplayer.com set name, why can't everything be consistent? */
-                        tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
-
-                        /* Set up retries for multicard ordering */
-                        if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
-                            /* Next time try the other order */
-                            switch (retry % (MAX_NUM_RETRIES / 2)) {
-                                case 0:
-                                    /* Try just the a side */
-                                    tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.mExpansion, params.mNumber.replace("b", "a"), database);
-                                    break;
-                                case 3:
-                                    /* Try just the b side */
-                                    tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.mExpansion, params.mNumber.replace("a", "b"), database);
-                                    break;
-                                case 2:
-                                    /* Try the combined name in one direction */
-                                    tcgCardName = CardDbAdapter.getSplitName(params.mMultiverseId, true, database);
-                                    break;
-                                case 1:
-                                    /* Try the combined name in the other direction */
-                                    tcgCardName = CardDbAdapter.getSplitName(params.mMultiverseId, false, database);
-                                    break;
-                                default:
-                                    /* Something went wrong */
-                                    tcgCardName = params.mName;
-                                    break;
-                            }
-                        } else {
-                            /* This isn't a multicard */
-                            tcgCardName = params.mName;
-                        }
-                        /* Retry with accent marks removed */
-                        if (retry <= MAX_NUM_RETRIES / 2) {
-                            tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
-                        }
-
-                        /* Tack on the number for basic lands */
-                        if (params.mType.startsWith("Basic Land")) {
-                            tcgCardName += " (" + params.mNumber + ")";
-                        }
-                    } catch (FamiliarDbException e) {
-                        lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
-                    }
-
-                    if (null != tcgCardName && null != tcgSetName) {
-                        try {
-                            /* Query the API, one step at a time */
-                            ProductInformation information = api.getProductInformation(tcgCardName, tcgSetName);
-                            if (information.results.length > 0) {
-                                ProductMarketPrice price = api.getProductMarketPrice(information.results);
-                                if (price.results.length > 0) {
-                                    ProductDetails details = api.getProductDetails(information.results);
-                                    if (details.results.length > 0) {
-                                        /* database close if all is good */
-                                        DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
-
-                                        /* Return a new MarketPriceInfo */
-                                        return Single.just(new MarketPriceInfo(price.results, details.results));
-                                    }
-                                }
-                            }
-                        } catch (IOException e) {
-                            lastThrownException = new Exception(mActivity.getString(R.string.price_error_network));
-                        }
-                    } else {
-                        lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
-                    }
-
-                    /* If this is a single card, skip over a bunch of retry cases */
-                    if (retry == MAX_NUM_RETRIES && multiCardType == CardDbAdapter.MultiCardType.NOPE) {
-                        retry = 2;
-                    }
-                    retry--;
+                /* If this isn't a multi-card, don't iterate so much */
+                int numMultiCardOptions = 1;
+                if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
+                    numMultiCardOptions = 4;
                 }
+
+                /* Iterate through all possible queries for this card
+                 * First (innermost loop) try the different combination of multi-card names
+                 * Then (middle loop) try with and without accent marks
+                 * Last (outer loop) try without a set name. This works for Schemes & Planes with weird TCGPlayer sets
+                 */
+                for (int setOption = 0; setOption < 2; setOption++) {
+                    for (int accentOption = 0; accentOption < 2; accentOption++) {
+                        for (int multiOption = 0; multiOption < numMultiCardOptions; multiOption++) {
+                            String tcgCardName = null;
+                            try {
+                                /* Set up retries for multicard ordering */
+                                if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
+                                    /* Next time try the other order */
+                                    switch (multiOption) {
+                                        case 0:
+                                            /* Try just the a side */
+                                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.mExpansion, params.mNumber.replace("b", "a"), database);
+                                            break;
+                                        case 1:
+                                            /* Try just the b side */
+                                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.mExpansion, params.mNumber.replace("a", "b"), database);
+                                            break;
+                                        case 2:
+                                            /* Try the combined name in one direction */
+                                            tcgCardName = CardDbAdapter.getSplitName(params.mMultiverseId, true, database);
+                                            break;
+                                        case 3:
+                                            /* Try the combined name in the other direction */
+                                            tcgCardName = CardDbAdapter.getSplitName(params.mMultiverseId, false, database);
+                                            break;
+                                        default:
+                                            /* Something went wrong */
+                                            tcgCardName = params.mName;
+                                            break;
+                                    }
+                                } else {
+                                    /* This isn't a multicard */
+                                    tcgCardName = params.mName;
+                                }
+
+                                /* Retry with accent marks removed */
+                                if (accentOption == 1) {
+                                    tcgCardName = CardDbAdapter.removeAccentMarks(tcgCardName);
+                                }
+
+                                /* Try it with no set name */
+                                if (setOption == 1) {
+                                    tcgSetName = null;
+                                }
+
+                                /* Tack on the number for basic lands */
+                                if (params.mType.startsWith("Basic Land")) {
+                                    tcgCardName += " (" + params.mNumber + ")";
+                                }
+                            } catch (FamiliarDbException e) {
+                                lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
+                            }
+
+                            if (null != tcgCardName) {
+                                try {
+                                    /* Query the API, one step at a time */
+                                    ProductInformation information = api.getProductInformation(tcgCardName, tcgSetName);
+                                    if (information.results.length > 0) {
+                                        ProductMarketPrice price = api.getProductMarketPrice(information.results);
+                                        if (price.results.length > 0) {
+                                            ProductDetails details = api.getProductDetails(information.results);
+                                            if (details.results.length > 0) {
+                                                /* database close if all is good */
+                                                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+
+                                                /* Return a new MarketPriceInfo */
+                                                return Single.just(new MarketPriceInfo(price.results, details.results));
+                                            }
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                    lastThrownException = new Exception(mActivity.getString(R.string.price_error_network));
+                                }
+                            } else {
+                                lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
+                            }
+                        }
+                    }
+                }
+
                 /* database close if something failed */
                 DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                 return Single.error(lastThrownException);

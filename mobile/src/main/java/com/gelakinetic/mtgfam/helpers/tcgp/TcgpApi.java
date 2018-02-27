@@ -289,11 +289,19 @@ public class TcgpApi {
             setDefaultOptions(conn, HttpMethod.POST);
             addHeaders(conn);
 
+            // Create the params, only adding the set if it isn't null
+            GetProductInformationOptions.NameValuesPair queryParams[];
+            if (null != expansion) {
+                queryParams = new GetProductInformationOptions.NameValuesPair[]{
+                        new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name}),
+                        new GetProductInformationOptions.NameValuesPair("SetName", new String[]{expansion})};
+            } else {
+                queryParams = new GetProductInformationOptions.NameValuesPair[]{
+                        new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name})};
+            }
+            
             // Add the information to search by
-            GetProductInformationOptions options = new GetProductInformationOptions(
-                    new GetProductInformationOptions.NameValuesPair[]{
-                            new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name}),
-                            new GetProductInformationOptions.NameValuesPair("SetName", new String[]{expansion})});
+            GetProductInformationOptions options = new GetProductInformationOptions(queryParams);
             conn.getOutputStream().write(new Gson().toJson(options, GetProductInformationOptions.class)
                     .getBytes(Charset.forName("UTF-8")));
 
