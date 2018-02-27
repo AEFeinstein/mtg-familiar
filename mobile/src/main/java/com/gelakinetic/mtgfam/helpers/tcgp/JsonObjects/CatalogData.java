@@ -38,7 +38,7 @@ public class CatalogData {
     public static class CatalogDataItem {
         public final int categoryId;
         public final String name;
-        public final Date modifiedOn;
+        public final String modifiedOn; // Date modifiedOn;
         public final String displayName;
         public final String seoCategoryName;
         public final String sealedLabel;

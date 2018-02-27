@@ -39,7 +39,7 @@ public class ProductDetails {
         public final CatalogData.CatalogDataItem category;
         public final Group group;
         public final String url;
-        public final Date modifiedOn;
+        public final String modifiedOn; // Date modifiedOn;
         public final Conditions productConditions[];
         public final int imageCount;
         public final PresaleInfo presaleInfo;
@@ -76,7 +76,7 @@ public class ProductDetails {
 
     public static class PresaleInfo {
         public final boolean isPresale;
-        public final Date releasedOn;
+        public final String releasedOn; // Date releasedOn;
         public final String note;
 
         public PresaleInfo() {
@@ -105,7 +105,7 @@ public class ProductDetails {
         public final boolean supplemental;
         public final String publishedOn;
         public final CatalogData.CatalogDataItem category;
-        public final Date modifiedOn;
+        public final String modifiedOn; // Date modifiedOn;
 
         public Group() {
             groupId = 0;
