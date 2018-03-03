@@ -503,12 +503,10 @@ public class SearchViewFragment extends FamiliarFragment {
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SAVED_FORMAT_KEY, mSelectedFormat);
+        outState.putIntArray(SAVED_RARITY_KEY, mRarityCheckedIndices);
+        outState.putIntArray(SAVED_SET_KEY, mSetCheckedIndices);
         super.onSaveInstanceState(outState);
-        if (outState != null) {
-            outState.putInt(SAVED_FORMAT_KEY, mSelectedFormat);
-            outState.putIntArray(SAVED_RARITY_KEY, mRarityCheckedIndices);
-            outState.putIntArray(SAVED_SET_KEY, mSetCheckedIndices);
-        }
     }
 
     /**

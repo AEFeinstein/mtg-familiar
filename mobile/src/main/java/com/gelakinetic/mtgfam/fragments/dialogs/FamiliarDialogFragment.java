@@ -78,8 +78,11 @@ public class FamiliarDialogFragment extends DialogFragment {
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        if (outState.isEmpty()) {
+            outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        }
         super.onSaveInstanceState(outState);
+        FamiliarActivity.logBundleSize("OSSI " + this.getClass().getName(), outState);
     }
 
     /**
@@ -174,5 +177,16 @@ public class FamiliarDialogFragment extends DialogFragment {
     boolean canCreateDialog() {
         return (null != getDialogParentFragment()) &&
                 (!getDialogParentFragment().getActivity().isFinishing());
+    }
+
+    /**
+     * Override setArguments to also log the size of the arguments being set
+     *
+     * @param args Arguments to set
+     */
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+        FamiliarActivity.logBundleSize("SA " + this.getClass().getName(), args);
     }
 }

@@ -42,6 +42,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -1041,7 +1043,7 @@ public class FamiliarActivity extends AppCompatActivity {
         }
 
         mCurrentFrag = position;
-        Fragment newFrag;
+        FamiliarFragment newFrag;
         /* Pick the new fragment */
         switch (resId) {
             case R.string.main_card_search: {
@@ -1273,7 +1275,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     @NotNull
     public android.app.FragmentManager getFragmentManager() {
-        Log.e("Suggestion", "Use .getSupportFragmentManager()");
+        FamiliarActivity.DebugLog(Log.WARN, "Suggestion", "Use .getSupportFragmentManager()");
         return super.getFragmentManager();
     }
 
@@ -1439,6 +1441,8 @@ public class FamiliarActivity extends AppCompatActivity {
         outState.putBoolean(IS_REFRESHING, mRefreshLayout.mRefreshing);
         mRefreshLayout.setRefreshing(false);
         super.onSaveInstanceState(outState);
+
+        FamiliarActivity.logBundleSize("OSSI " + this.getClass().getName(), outState);
     }
 
     /**
@@ -1718,6 +1722,70 @@ public class FamiliarActivity extends AppCompatActivity {
                     break;
             }
             return null;
+        }
+    }
+
+    /**
+     * Debug wrapper for Log.x
+     *
+     * @param level The Log level, VERBOSE, DEBUG, INFO, WARN, ERROR, or ASSERT
+     * @param tag   The tag for this message
+     * @param msg   The message to log
+     */
+    public static void DebugLog(int level, String tag, String msg) {
+        if (BuildConfig.DEBUG) {
+            switch (level) {
+                case Log.VERBOSE:
+                    Log.v(tag, msg);
+                    break;
+                case Log.DEBUG:
+                    Log.d(tag, msg);
+                    break;
+                case Log.INFO:
+                    Log.i(tag, msg);
+                    break;
+                case Log.WARN:
+                    Log.w(tag, msg);
+                    break;
+                case Log.ERROR:
+                    Log.e(tag, msg);
+                    break;
+                case Log.ASSERT:
+                    Log.wtf(tag, msg);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Helper to log a bundle's size
+     *
+     * @param name     A label for the log
+     * @param outState The bundle to log the size of
+     */
+    public static void logBundleSize(String name, Bundle outState) {
+        if (BuildConfig.DEBUG) {
+            Parcel parcel = Parcel.obtain();
+            parcel.writeBundle(outState);
+            int size = parcel.dataSize();
+            parcel.recycle();
+            FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + Integer.toString(size) + " bytes");
+        }
+    }
+
+    /**
+     * Helper to log a parcelable's size
+     *
+     * @param name     A label for the log
+     * @param outState THe parcelable to log the size of
+     */
+    public static void logBundleSize(String name, Parcelable outState) {
+        if (BuildConfig.DEBUG) {
+            Parcel parcel = Parcel.obtain();
+            parcel.writeParcelable(outState, 0);
+            int size = parcel.dataSize();
+            parcel.recycle();
+            FamiliarActivity.DebugLog(Log.VERBOSE, "logBundleSize", name + " saving " + Integer.toString(size) + " bytes");
         }
     }
 }
