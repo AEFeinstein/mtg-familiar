@@ -35,12 +35,12 @@ public class AccessToken {
     public final Date expires;
 
     public AccessToken() {
-        access_token = null;
-        token_type = null;
+        access_token = "";
+        token_type = "";
         expires_in = 0;
-        userName = null;
-        issued = null;
-        expires = null;
+        userName = "";
+        issued = new Date();
+        expires = new Date();
     }
 
     public static void setDateFormat(GsonBuilder builder) {

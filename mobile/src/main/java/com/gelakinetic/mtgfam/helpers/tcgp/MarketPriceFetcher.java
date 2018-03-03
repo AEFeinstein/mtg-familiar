@@ -239,8 +239,20 @@ public class MarketPriceFetcher {
 
                                                 /* Return a new MarketPriceInfo */
                                                 return Single.just(new MarketPriceInfo(price.results, details.results));
+                                            } else if (details.errors.length > 0) {
+                                                /* Return the error returned by TCGPlayer */
+                                                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+                                                return Single.error(new Throwable(details.errors[0]));
                                             }
+                                        } else if (price.errors.length > 0) {
+                                            /* Return the error returned by TCGPlayer */
+                                            DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+                                            return Single.error(new Throwable(price.errors[0]));
                                         }
+                                    } else if (information.errors.length > 0) {
+                                        /* Return the error returned by TCGPlayer */
+                                        DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+                                        return Single.error(new Throwable(information.errors[0]));
                                     }
                                 } catch (IOException e) {
                                     lastThrownException = new Exception(mActivity.getString(R.string.price_error_network));

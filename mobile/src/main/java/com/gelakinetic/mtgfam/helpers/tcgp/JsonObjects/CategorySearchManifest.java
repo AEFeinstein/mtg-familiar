@@ -27,9 +27,9 @@ public class CategorySearchManifest {
 
     public CategorySearchManifest() {
         success = false;
-        errors = null;
-        sortingOptions = null;
-        filterOptions = null;
+        errors = new String[]{};
+        sortingOptions = new TextValuePair[]{};
+        filterOptions = new FilterOptions[]{};
     }
 
     public CategorySearchManifest(boolean success, String[] errors, TextValuePair[] sorting, FilterOptions[] filters) {

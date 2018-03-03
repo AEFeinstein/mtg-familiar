@@ -28,6 +28,7 @@ import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductMarketPrice;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -95,7 +96,7 @@ public class TcgpApi {
 
     public static final int CATEGORY_ID_MAGIC = 1;
 
-    private static final String TCGP_VERSION = "v1.7.1";
+    private static final String TCGP_VERSION = "v1.9.0";
     private String mAccessToken;
 
     public void setToken(String tokenStr) {
@@ -169,7 +170,17 @@ public class TcgpApi {
             conn.getOutputStream().write(payload.getBytes(Charset.forName("UTF-8")));
 
             // Get the response stream
-            InputStream inStream = conn.getInputStream();
+            InputStream inStream;
+            try {
+                inStream = conn.getInputStream();
+            } catch (FileNotFoundException e) {
+                inStream = conn.getErrorStream();
+                if (null == inStream) {
+                    conn.disconnect();
+                    // Return an empty, not null, object
+                    return new AccessToken();
+                }
+            }
 
             // Parse the json out of the response and save it
             GsonBuilder builder = new GsonBuilder();
@@ -208,7 +219,17 @@ public class TcgpApi {
 //            addHeaders(conn);
 //
 //            // Get the response stream. This opens the connection
-//            InputStream inStream = conn.getInputStream();
+//            InputStream inStream;
+//            try {
+//                inStream = conn.getInputStream();
+//            } catch (FileNotFoundException e) {
+//                inStream = conn.getErrorStream();
+//                if(null == inStream) {
+//                    conn.disconnect();
+//                    // Return an empty, not null, object
+//                    return new CatalogData();
+//                }
+//            }
 //
 //            // Parse the json out of the response and save it
 //            GsonBuilder builder = new GsonBuilder();
@@ -245,7 +266,17 @@ public class TcgpApi {
 //            addHeaders(conn);
 //
 //            // Get the response stream. This opens the connection
-//            InputStream inStream = conn.getInputStream();
+//            InputStream inStream;
+//            try {
+//                inStream = conn.getInputStream();
+//            } catch (FileNotFoundException e) {
+//                inStream = conn.getErrorStream();
+//                if(null == inStream) {
+//                    conn.disconnect();
+//                    // Return an empty, not null, object
+//                    return new CategorySearchManifest();
+//                }
+//            }
 //
 //            // Parse the json out of the response and save it
 //            Gson gson = new Gson();
@@ -299,14 +330,24 @@ public class TcgpApi {
                 queryParams = new GetProductInformationOptions.NameValuesPair[]{
                         new GetProductInformationOptions.NameValuesPair("ProductName", new String[]{name})};
             }
-            
+
             // Add the information to search by
             GetProductInformationOptions options = new GetProductInformationOptions(queryParams);
             conn.getOutputStream().write(new Gson().toJson(options, GetProductInformationOptions.class)
                     .getBytes(Charset.forName("UTF-8")));
 
             // Get the response stream. This opens the connection
-            InputStream inStream = conn.getInputStream();
+            InputStream inStream;
+            try {
+                inStream = conn.getInputStream();
+            } catch (FileNotFoundException e) {
+                inStream = conn.getErrorStream();
+                if (null == inStream) {
+                    conn.disconnect();
+                    // Return an empty, not null, object
+                    return new ProductInformation();
+                }
+            }
 
             // Parse the json out of the response and save it
             ProductInformation information = (new Gson()).fromJson(new InputStreamReader(inStream),
@@ -350,7 +391,17 @@ public class TcgpApi {
             addHeaders(conn);
 
             // Get the response stream. This opens the connection
-            InputStream inStream = conn.getInputStream();
+            InputStream inStream;
+            try {
+                inStream = conn.getInputStream();
+            } catch (FileNotFoundException e) {
+                inStream = conn.getErrorStream();
+                if (null == inStream) {
+                    conn.disconnect();
+                    // Return an empty, not null, object
+                    return new ProductMarketPrice();
+                }
+            }
 
             // Parse the json out of the response and save it
             ProductMarketPrice price = new Gson()
@@ -393,7 +444,17 @@ public class TcgpApi {
             addHeaders(conn);
 
             // Get the response stream. This opens the connection
-            InputStream inStream = conn.getInputStream();
+            InputStream inStream;
+            try {
+                inStream = conn.getInputStream();
+            } catch (FileNotFoundException e) {
+                inStream = conn.getErrorStream();
+                if (null == inStream) {
+                    conn.disconnect();
+                    // Return an empty, not null, object
+                    return new ProductDetails();
+                }
+            }
 
             // Parse the json out of the response and save it
             GsonBuilder builder = new GsonBuilder();

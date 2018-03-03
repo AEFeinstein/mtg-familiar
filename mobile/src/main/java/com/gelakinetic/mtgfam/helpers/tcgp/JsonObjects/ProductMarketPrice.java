@@ -28,8 +28,8 @@ public class ProductMarketPrice {
 
     public ProductMarketPrice() {
         success = false;
-        errors = null;
-        results = null;
+        errors = new String[]{};
+        results = new MarketPrice[]{};
     }
 
     public static class MarketPrice {

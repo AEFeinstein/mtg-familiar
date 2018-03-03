@@ -28,7 +28,7 @@ public class ProductInformation {
     public ProductInformation() {
         totalItems = 0;
         success = false;
-        errors = null;
-        results = null;
+        errors = new String[]{};
+        results = new long[]{};
     }
 }

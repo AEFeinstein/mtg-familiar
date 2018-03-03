@@ -31,8 +31,8 @@ public class CatalogData {
 
     public CatalogData() {
         success = false;
-        errors = null;
-        results = null;
+        errors = new String[]{};
+        results = new CatalogDataItem[]{};
     }
 
     public static class CatalogDataItem {

@@ -28,8 +28,8 @@ public class ProductDetails {
 
     public ProductDetails() {
         success = false;
-        errors = null;
-        results = null;
+        errors = new String[]{};
+        results = new Details[]{};
     }
 
     public static class Details {
