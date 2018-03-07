@@ -786,6 +786,9 @@ public class FamiliarActivity extends AppCompatActivity {
         cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
         cacheParams.diskCacheSize = 1024 * 1024 * PreferenceAdapter.getImageCacheSize(this);
         addImageCache(getSupportFragmentManager(), cacheParams);
+
+        // Uncomment this to run a test to lookup all prices for all cards
+        // (new LookupAllPricesTest()).execute(this);
     }
 
     private boolean processIntent(Intent intent) {
