@@ -53,6 +53,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -176,24 +177,32 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 @SuppressLint("InflateParams") View v = getActivity().getLayoutInflater().inflate(R.layout.card_view_price_dialog, null, false);
 
                 assert v != null; /* Because Android Studio */
-                TextView l = v.findViewById(R.id.low);
-                TextView m = v.findViewById(R.id.med);
-                TextView h = v.findViewById(R.id.high);
-                TextView f = v.findViewById(R.id.foil);
-                TextView priceLink = v.findViewById(R.id.pricelink);
 
-                l.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mLow));
-                m.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mAverage));
-                h.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mHigh));
-
-                if (getParentCardViewFragment().mPriceInfo.mFoilAverage != 0) {
-                    f.setText(String.format(Locale.US, "$%1$,.2f", getParentCardViewFragment().mPriceInfo.mFoilAverage));
+                final String priceFormat = "$%1$,.2f";
+                MarketPriceInfo price = getParentCardViewFragment().mPriceInfo;
+                if (price.hasNormalPrice()) {
+                    ((TextView) v.findViewById(R.id.normal_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.LOW)));
+                    ((TextView) v.findViewById(R.id.normal_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MID)));
+                    ((TextView) v.findViewById(R.id.normal_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.HIGH)));
+                    ((TextView) v.findViewById(R.id.normal_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(false, MarketPriceInfo.PriceType.MARKET)));
                 } else {
-                    f.setVisibility(View.GONE);
-                    v.findViewById(R.id.foil_label).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_prices).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
                 }
+
+                if (price.hasFoilPrice()) {
+                    ((TextView) v.findViewById(R.id.foil_low)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.LOW)));
+                    ((TextView) v.findViewById(R.id.foil_mid)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MID)));
+                    ((TextView) v.findViewById(R.id.foil_high)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.HIGH)));
+                    ((TextView) v.findViewById(R.id.foil_market)).setText(String.format(Locale.US, priceFormat, price.getPrice(true, MarketPriceInfo.PriceType.MARKET)));
+                } else {
+                    v.findViewById(R.id.foil_prices).setVisibility(View.GONE);
+                    v.findViewById(R.id.normal_foil_divider).setVisibility(View.GONE);
+                }
+
+                TextView priceLink = v.findViewById(R.id.pricelink);
                 priceLink.setMovementMethod(LinkMovementMethod.getInstance());
-                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.mUrl + "\">" +
+                priceLink.setText(ImageGetterHelper.formatHtmlString("<a href=\"" + getParentCardViewFragment().mPriceInfo.getUrl() + "\">" +
                         getString(R.string.card_view_price_dialog_link) + "</a>"));
 
                 MaterialDialog.Builder adb = new MaterialDialog.Builder(getActivity());
@@ -309,9 +318,9 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 for (Pair<MtgCard, Boolean> deckEntry : decklist) {
                                     if (!deckEntry.second && // not in the sideboard
                                             deckEntry.first.mName.equals(cardName) &&
-                                            deckEntry.first.setCode.equals(cardSet)) {
+                                            deckEntry.first.mExpansion.equals(cardSet)) {
                                         // Increment the card already in the deck
-                                        deckEntry.first.numberOf++;
+                                        deckEntry.first.mNumberOf++;
                                         entryIncremented = true;
                                         break;
                                     }

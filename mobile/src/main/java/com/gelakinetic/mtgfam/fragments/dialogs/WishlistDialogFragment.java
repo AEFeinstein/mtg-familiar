@@ -32,6 +32,7 @@ import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -90,15 +91,13 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
             case DIALOG_PRICE_SETTING: {
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
-                        .items(getString(R.string.trader_Low),
-                                getString(R.string.trader_Average), getString(R.string.trader_High))
-                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
+                        .items(getResources().getStringArray(R.array.trade_option_entries))
+                        .itemsCallbackSingleChoice(getParentWishlistFragment().getPriceSetting().ordinal(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentWishlistFragment().getPriceSetting() != which) {
-                                    getParentWishlistFragment().setPriceSetting(which);
-                                    PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentWishlistFragment().getPriceSetting()));
+                                if (getParentWishlistFragment().getPriceSetting().ordinal() != which) {
+                                    getParentWishlistFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
+                                    PreferenceAdapter.setWishlistPrice(getContext(), getParentWishlistFragment().getPriceSetting());
                                     getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                                     getParentWishlistFragment().updateTotalPrices(0);
                                 }

@@ -112,7 +112,7 @@ Pridajte sa do &lt;a href=https://github.com/AEFeinstein/mtg-familiar&gt;open so
 &lt;br&gt;
 Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of the Coast LLC.&lt;br&gt;
 &lt;br&gt;
-&lt;a href=https://github.com/octo-online/robospice&gt;Robospice&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/afollestad/material-dialogs&gt;Material Dialogs&lt;/a&gt; used under the MIT License&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -219,7 +219,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="card_view_price_dialog_low">"Nízka:"</string>
     <string name="card_view_price_dialog_medium">"Priemerná:"</string>
     <string name="card_view_price_dialog_high">"Vysoká:"</string>
-    <string name="card_view_price_dialog_foil">"Foil priemerná:"</string>
     <string name="card_view_price_dialog_link">"Kliknite sem pre všetky informácie o cenách a trendoch"</string>
     <string name="card_view_no_rulings">"Žiadne pravidlá pre túto kartu"</string>
     <string name="card_view_gatherer_page">"Stránka Gatherer"</string>

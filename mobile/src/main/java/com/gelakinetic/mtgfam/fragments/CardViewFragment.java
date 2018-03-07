@@ -73,18 +73,15 @@ import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.PriceFetchRequest;
-import com.gelakinetic.mtgfam.helpers.PriceInfo;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.lruCache.RecyclingBitmapDrawable;
-import com.octo.android.robospice.persistence.DurationInMillis;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
@@ -104,6 +101,7 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.reactivex.functions.Consumer;
 
 /**
  * This class handles displaying card info.
@@ -146,7 +144,7 @@ public class CardViewFragment extends FamiliarFragment {
     public ArrayList<Ruling> mRulingsArrayList;
 
     /* Loaded in a Spice Service */
-    public PriceInfo mPriceInfo;
+    public MarketPriceInfo mPriceInfo;
 
     /* Card info, used to build the URL to fetch the picture */
     private String mCardNumber;
@@ -788,31 +786,19 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.price: {
-                mActivity.setLoading();
-
-                PriceFetchRequest priceRequest;
-                priceRequest = new PriceFetchRequest(mCardName, mSetCode, mCardNumber, mMultiverseId, getActivity());
-                mActivity.mSpiceManager.execute(priceRequest,
-                        mCardName + "-" + mSetCode, DurationInMillis.ONE_DAY, new RequestListener<PriceInfo>() {
-
+                MtgCard card = new MtgCard();
+                card.mName = mCardName;
+                card.mExpansion = mSetCode;
+                card.mMultiverseId = mMultiverseId;
+                card.mType = mCardType;
+                card.mNumber = mCardNumber;
+                mActivity.mMarketPriceStore.fetchMarketPrice(card,
+                        new Consumer<MarketPriceInfo>() {
                             @Override
-                            public void onRequestFailure(SpiceException spiceException) {
+                            public void accept(MarketPriceInfo marketPriceInfo) throws Exception {
                                 if (CardViewFragment.this.isAdded()) {
-                                    mActivity.clearLoading();
-
-                                    CardViewFragment.this.removeDialog(getFragmentManager());
-                                    ToastWrapper.makeAndShowText(mActivity, spiceException.getMessage(),
-                                            ToastWrapper.LENGTH_SHORT);
-                                }
-                            }
-
-                            @Override
-                            public void onRequestSuccess(final PriceInfo result) {
-                                if (CardViewFragment.this.isAdded()) {
-                                    mActivity.clearLoading();
-
-                                    if (result != null) {
-                                        mPriceInfo = result;
+                                    if (marketPriceInfo != null) {
+                                        mPriceInfo = marketPriceInfo;
                                         showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
                                         ToastWrapper.makeAndShowText(mActivity,
@@ -821,8 +807,17 @@ public class CardViewFragment extends FamiliarFragment {
                                     }
                                 }
                             }
-                        }
-                );
+                        },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                if (CardViewFragment.this.isAdded()) {
+                                    CardViewFragment.this.removeDialog(getFragmentManager());
+                                    ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
+                                            ToastWrapper.LENGTH_SHORT);
+                                }
+                            }
+                        });
 
                 return true;
             }
@@ -1237,7 +1232,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             try {
                 // Don't attempt scaling if there's no host fragment
-                if(null == getHost()) {
+                if (null == getHost()) {
                     return null;
                 }
                 /* 16dp */

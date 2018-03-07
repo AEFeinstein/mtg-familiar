@@ -44,6 +44,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -112,7 +113,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 if (positionForDialog >= lSide.size() || positionForDialog < 0) {
                     return DontShowDialog();
                 }
-                final boolean oldFoil = lSide.get(positionForDialog).foil;
+                final boolean oldFoil = lSide.get(positionForDialog).mIsFoil;
 
                 /* Inflate the view and pull out UI elements */
                 @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.trader_card_click_dialog,
@@ -123,7 +124,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 final EditText priceText = view.findViewById(R.id.traderDialogPrice);
 
                 /* Set initial values */
-                String numberOfStr = String.valueOf(lSide.get(positionForDialog).numberOf);
+                String numberOfStr = String.valueOf(lSide.get(positionForDialog).mNumberOf);
                 numberOf.setText(numberOfStr);
                 numberOf.setSelection(numberOfStr.length());
                 foilCheckbox.setChecked(oldFoil);
@@ -135,7 +136,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Only show the foil checkbox if the card can be foil */
                 try {
                     SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                    if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).setCode, database)) {
+                    if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).mExpansion, database)) {
                         view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
                     } else {
                         view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
@@ -150,8 +151,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 foilCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        lSide.get(positionForDialog).foil = b;
-                        if (!lSide.get(positionForDialog).customPrice) {
+                        lSide.get(positionForDialog).mIsFoil = b;
+                        if (!lSide.get(positionForDialog).mIsCustomPrice) {
                             getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
                             priceText.setText(lSide.get(positionForDialog).hasPrice() ?
                                     lSide.get(positionForDialog).getPriceString().substring(1) : "");
@@ -174,10 +175,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                     @Override
                     public void onClick(View v) {
-                        lSide.get(positionForDialog).customPrice = false;
+                        lSide.get(positionForDialog).mIsCustomPrice = false;
                         /* This loads the price if necessary, or uses cached info */
                         getParentTradeFragment().loadPrice(lSide.get(positionForDialog));
-                        int price = lSide.get(positionForDialog).price;
+                        int price = lSide.get(positionForDialog).mPrice;
                         priceText.setText(String.format(Locale.US, "%d.%02d", price / 100, price % 100));
 
                         aaSide.notifyDataSetChanged();
@@ -194,7 +195,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                             /* Get the card ID, and send it to a new CardViewPagerFragment */
                             Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
-                                    lSide.get(positionForDialog).setCode, Collections.singletonList(
+                                    lSide.get(positionForDialog).mExpansion, Collections.singletonList(
                                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
 
                             Bundle args = new Bundle();
@@ -230,22 +231,22 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 MtgCard data = lSide.get(positionForDialog);
 
                                 /* Assume non-custom price */
-                                data.customPrice = false;
+                                data.mIsCustomPrice = false;
 
                                 /* Set this card's foil option */
-                                data.foil = foilCheckbox.isChecked();
+                                data.mIsFoil = foilCheckbox.isChecked();
 
                                 /* validate number of cards text */
                                 if (numberOf.length() == 0) {
-                                    data.numberOf = 1;
+                                    data.mNumberOf = 1;
                                 } else {
                                     /* Set the numberOf */
                                     assert numberOf.getEditableText() != null;
                                     try {
-                                        data.numberOf =
+                                        data.mNumberOf =
                                                 (Integer.parseInt(numberOf.getEditableText().toString()));
                                     } catch (NumberFormatException e) {
-                                        data.numberOf = 1;
+                                        data.mNumberOf = 1;
                                     }
                                 }
 
@@ -255,50 +256,29 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                                 /* If the input price is blank, set it to zero */
                                 if (userInputPrice.length() == 0) {
-                                    data.customPrice = true;
-                                    data.price = 0;
+                                    data.mIsCustomPrice = true;
+                                    data.mPrice = 0;
                                 } else {
                                     /* Attempt to parse the price */
                                     try {
-                                        data.price = (int) (Double.parseDouble(userInputPrice) * 100);
+                                        data.mPrice = (int) (Double.parseDouble(userInputPrice) * 100);
                                     } catch (NumberFormatException e) {
-                                        data.customPrice = true;
-                                        data.price = 0;
+                                        data.mIsCustomPrice = true;
+                                        data.mPrice = 0;
                                     }
                                 }
 
                                 /* Check if the user hand-modified the price by comparing the current price
                                  * to the cached price */
                                 int oldPrice;
-                                if (data.priceInfo != null) {
-                                    if (data.foil) {
-                                        oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
-                                    } else {
-                                        switch (getParentTradeFragment().getPriceSetting()) {
-                                            case TradeFragment.LOW_PRICE: {
-                                                oldPrice = (int) (data.priceInfo.mLow * 100);
-                                                break;
-                                            }
-                                            default:
-                                            case TradeFragment.AVG_PRICE: {
-                                                oldPrice = (int) (data.priceInfo.mAverage * 100);
-                                                break;
-                                            }
-                                            case TradeFragment.HIGH_PRICE: {
-                                                oldPrice = (int) (data.priceInfo.mHigh * 100);
-                                                break;
-                                            }
-                                            case TradeFragment.FOIL_PRICE: {
-                                                oldPrice = (int) (data.priceInfo.mFoilAverage * 100);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    if (oldPrice != data.price) {
-                                        data.customPrice = true;
+                                if (data.mPriceInfo != null) {
+                                    oldPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getParentTradeFragment().getPriceSetting()) * 100);
+
+                                    if (oldPrice != data.mPrice) {
+                                        data.mIsCustomPrice = true;
                                     }
                                 } else {
-                                    data.customPrice = true;
+                                    data.mIsCustomPrice = true;
                                 }
 
                                 /* Notify things to update */
@@ -387,19 +367,19 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 }
 
                                 /* Change the card's information, and reload the price */
-                                data.setCode = (aSetCodes[position]);
-                                data.setName = (aSets[position]);
-                                data.message = (getString(R.string.wishlist_loading));
-                                data.priceInfo = null;
+                                data.mExpansion = (aSetCodes[position]);
+                                data.mSetName = (aSets[position]);
+                                data.mMessage = (getString(R.string.wishlist_loading));
+                                data.mPriceInfo = null;
 
                                 /* See if the new set can be foil */
                                 try {
                                     SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                                    if (!CardDbAdapter.canBeFoil(data.setCode, database)) {
-                                        data.foil = false;
+                                    if (!CardDbAdapter.canBeFoil(data.mExpansion, database)) {
+                                        data.mIsFoil = false;
                                     }
                                 } catch (FamiliarDbException e) {
-                                    data.foil = false;
+                                    data.mIsFoil = false;
                                 }
                                 DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
@@ -414,35 +394,32 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Build the dialog with some choices */
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(R.string.pref_trade_price_title)
-                        .items(getString(R.string.trader_Low),
-                                getString(R.string.trader_Average),
-                                getString(R.string.trader_High))
-                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting(), new MaterialDialog.ListCallbackSingleChoice() {
+                        .items(getResources().getStringArray(R.array.trade_option_entries))
+                        .itemsCallbackSingleChoice(getParentTradeFragment().getPriceSetting().ordinal(), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                                if (getParentTradeFragment().getPriceSetting() != which) {
-                                    getParentTradeFragment().setPriceSetting(which);
+                                if (getParentTradeFragment().getPriceSetting().ordinal() != which) {
+                                    getParentTradeFragment().setPriceSetting(MarketPriceInfo.PriceType.fromOrdinal(which));
 
                                     /* Update ALL the prices! */
                                     for (MtgCard data : getParentTradeFragment().mListLeft) {
-                                        if (!data.customPrice) {
-                                            data.message = getString(R.string.wishlist_loading);
+                                        if (!data.mIsCustomPrice) {
+                                            data.mMessage = getString(R.string.wishlist_loading);
                                             getParentTradeFragment().loadPrice(data);
                                         }
                                     }
                                     getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT).notifyDataSetChanged();
 
                                     for (MtgCard data : getParentTradeFragment().mListRight) {
-                                        if (!data.customPrice) {
-                                            data.message = getString(R.string.wishlist_loading);
+                                        if (!data.mIsCustomPrice) {
+                                            data.mMessage = getString(R.string.wishlist_loading);
                                             getParentTradeFragment().loadPrice(data);
                                         }
                                     }
                                     getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT).notifyDataSetChanged();
 
                                     /* And also update the preference */
-                                    PreferenceAdapter.setTradePrice(getContext(),
-                                            String.valueOf(getParentTradeFragment().getPriceSetting()));
+                                    PreferenceAdapter.setTradePrice(getContext(), getParentTradeFragment().getPriceSetting());
 
                                     getParentTradeFragment().updateTotalPrices(TradeFragment.BOTH);
                                 }

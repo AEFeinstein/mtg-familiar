@@ -40,8 +40,6 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 
-import java.util.concurrent.RejectedExecutionException;
-
 /**
  * This is the superclass for all fragments. It has a bunch of convenient methods
  */
@@ -135,13 +133,6 @@ public abstract class FamiliarFragment extends Fragment {
     public void onPause() {
         super.onPause();
         removeDialog(getFragmentManager());
-        try {
-            if (getFamiliarActivity().mSpiceManager.getPendingRequestCount() > 0) {
-                getFamiliarActivity().mSpiceManager.cancelAllRequests();
-            }
-        } catch (RejectedExecutionException e) {
-            /* eat it */
-        }
     }
 
     /**

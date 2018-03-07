@@ -209,7 +209,6 @@ Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/lic
     <string name="card_view_price_dialog_low">"Bajo:"</string>
     <string name="card_view_price_dialog_medium">"Media:"</string>
     <string name="card_view_price_dialog_high">"Alto:"</string>
-    <string name="card_view_price_dialog_foil">"Media en foil:"</string>
     <string name="card_view_price_dialog_link">"Haz clic aquí para ver todos los precios y las tendencias"</string>
     <string name="card_view_no_rulings">"No hay reglas para esta carta"</string>
     <string name="card_view_gatherer_page">"Ver en Gatherer"</string>
