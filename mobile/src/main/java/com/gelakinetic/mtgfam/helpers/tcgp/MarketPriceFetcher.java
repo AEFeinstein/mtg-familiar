@@ -217,10 +217,6 @@ public class MarketPriceFetcher {
                                     tcgSetName = null;
                                 }
 
-                                /* Tack on the number for basic lands */
-                                if (params.mType.startsWith("Basic Land")) {
-                                    tcgCardName += " (" + params.mNumber + ")";
-                                }
                             } catch (FamiliarDbException e) {
                                 lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
                             }
