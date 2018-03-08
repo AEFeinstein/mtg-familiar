@@ -7,3 +7,5 @@
 -keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
 # Instructions told me to
 -keep class com.woxthebox.draglistview.** { *; }
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep class com.bumptech.glide.GeneratedAppGlideModuleImpl

@@ -237,7 +237,7 @@ public abstract class FamiliarFragment extends Fragment {
                     getFamiliarActivity().hideKeyboard();
                 }
             }
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | NullPointerException e) {
             // If the fragment can't be shown, fail quietly
         }
     }

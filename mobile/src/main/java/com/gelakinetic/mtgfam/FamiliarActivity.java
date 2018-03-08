@@ -38,7 +38,6 @@ import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -96,7 +95,6 @@ import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.lruCache.ImageCache;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetcher;
 import com.gelakinetic.mtgfam.helpers.updaters.DbUpdaterService;
 
@@ -186,8 +184,6 @@ public class FamiliarActivity extends AppCompatActivity {
     public ListView mDrawerList;
     public boolean mIsMenuVisible;
 
-    /* Image caching */
-    public ImageCache mImageCache;
     /* Listen for changes to preferences */
     private final SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -206,18 +202,6 @@ public class FamiliarActivity extends AppCompatActivity {
                 /* Restart the activity for theme & language changes */
                 FamiliarActivity.this.finish();
                 startActivity(new Intent(FamiliarActivity.this, FamiliarActivity.class).setAction(Intent.ACTION_MAIN));
-            } else if (s.equals(getString(R.string.key_imageCacheSize))) {
-                /* Close the old cache */
-                if (mImageCache != null) {
-                    mImageCache.flush();
-                    mImageCache.close();
-                }
-
-                /* Set up the image cache */
-                ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(FamiliarActivity.this, IMAGE_CACHE_DIR);
-                cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-                cacheParams.diskCacheSize = 1024 * 1024 * PreferenceAdapter.getImageCacheSize(FamiliarActivity.this);
-                addImageCache(getSupportFragmentManager(), cacheParams);
             }
         }
     };
@@ -763,6 +747,23 @@ public class FamiliarActivity extends AppCompatActivity {
                             }
                         }
                     }
+
+                    // When upgrading to version 54, clear out both the internal and external cache
+                    if (pInfo.versionCode == 54) {
+                        File cacheDir = getCacheDir();
+                        if (cacheDir.exists()) {
+                            for (File cachedFile : cacheDir.listFiles()) {
+                                cachedFile.delete();
+                            }
+                        }
+
+                        cacheDir = getExternalCacheDir();
+                        if (cacheDir.exists()) {
+                            for (File cachedFile : cacheDir.listFiles()) {
+                                cachedFile.delete();
+                            }
+                        }
+                    }
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 /* Eat it, don't show change log */
@@ -780,12 +781,6 @@ public class FamiliarActivity extends AppCompatActivity {
                 startService(new Intent(this, DbUpdaterService.class));
             }
         }
-
-        /* Set up the image cache */
-        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(this, IMAGE_CACHE_DIR);
-        cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-        cacheParams.diskCacheSize = 1024 * 1024 * PreferenceAdapter.getImageCacheSize(this);
-        addImageCache(getSupportFragmentManager(), cacheParams);
 
         // Uncomment this to run a test to lookup all prices for all cards
         // (new LookupAllPricesTest()).execute(this);
@@ -1514,41 +1509,6 @@ public class FamiliarActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     * Image Caching
-     */
-
-    private void addImageCache(FragmentManager fragmentManager,
-                               ImageCache.ImageCacheParams cacheParams) {
-        mImageCache = ImageCache.getInstance(fragmentManager, cacheParams);
-        new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
-    }
-
-    private void initDiskCacheInternal() {
-        if (mImageCache != null) {
-            mImageCache.initDiskCache();
-        }
-    }
-
-    private void clearCacheInternal() {
-        if (mImageCache != null) {
-            mImageCache.clearCache();
-        }
-    }
-
-    private void flushCacheInternal() {
-        if (mImageCache != null) {
-            mImageCache.flush();
-        }
-    }
-
-    private void closeCacheInternal() {
-        if (mImageCache != null) {
-            mImageCache.close();
-            mImageCache = null;
-        }
-    }
-
     /**
      * Callback for when a permission is requested.
      *
@@ -1690,28 +1650,6 @@ public class FamiliarActivity extends AppCompatActivity {
                 mHighlightedDrawable = textView.getCompoundDrawables()[0];
                 mHighlightedDrawable.setColorFilter(ContextCompat.getColor(FamiliarActivity.this, getResourceIdFromAttr(R.attr.colorPrimary_attr)), PorterDuff.Mode.SRC_IN);
             }
-        }
-    }
-
-    private class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Object... params) {
-            switch ((Integer) params[0]) {
-                case MESSAGE_CLEAR:
-                    clearCacheInternal();
-                    break;
-                case MESSAGE_INIT_DISK_CACHE:
-                    initDiskCacheInternal();
-                    break;
-                case MESSAGE_FLUSH:
-                    flushCacheInternal();
-                    break;
-                case MESSAGE_CLOSE:
-                    closeCacheInternal();
-                    break;
-            }
-            return null;
         }
     }
 }
