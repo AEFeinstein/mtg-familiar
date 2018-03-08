@@ -599,6 +599,9 @@ public class SearchViewFragment extends FamiliarFragment {
         if (searchCriteria.sets.size() == 0) {
             searchCriteria.sets = null;
         }
+        if (searchCriteria.watermark.length() == 0) {
+            searchCriteria.watermark = null;
+        }
 
         /* Build a color string. capital letters means the user is search for that color */
         searchCriteria.color = null;
