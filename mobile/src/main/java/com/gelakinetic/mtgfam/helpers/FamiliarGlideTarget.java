@@ -110,16 +110,6 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
     }
 
     /**
-     * When the load is cleared, have the activity clear the loading animation
-     *
-     * @param placeholder unused
-     */
-    @Override
-    public void onLoadCleared(@Nullable Drawable placeholder) {
-        mFragment.getFamiliarActivity().clearLoading();
-    }
-
-    /**
      * If the load failed, try loading it again with the next attempt. If all attempts fail, it'll
      * be handled by the caller
      *
