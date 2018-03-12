@@ -593,9 +593,11 @@ public class WishlistFragment extends FamiliarListFragment {
                     String toughness = CardDbAdapter.getPrintedPTL(info.mToughness, shouldShowSign);
                     holder.mCardPower.setText(power);
                     holder.mCardToughness.setText(toughness);
-                    holder.mCardPower.setVisibility(View.VISIBLE);
-                    holder.mCardSlash.setVisibility(View.VISIBLE);
-                    holder.mCardToughness.setVisibility(View.VISIBLE);
+                    if(!power.isEmpty() && !toughness.isEmpty()) {
+                        holder.mCardPower.setVisibility(View.VISIBLE);
+                        holder.mCardSlash.setVisibility(View.VISIBLE);
+                        holder.mCardToughness.setVisibility(View.VISIBLE);
+                    }
                 } catch (NumberFormatException nfe) {
                         /* eat it */
                 }
