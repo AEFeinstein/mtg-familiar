@@ -78,6 +78,9 @@ public class DecklistFragment extends FamiliarListFragment {
     public String mCurrentDeck = "";
     public static final String DECK_EXTENSION = ".deck";
 
+    public static final String FRAGMENT_TAG = "decklist";
+    public static final String CURRENT_DECKLIST_TAG = "decklist_name";
+
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button.
      *
@@ -160,7 +163,29 @@ public class DecklistFragment extends FamiliarListFragment {
         mDecklistChain.addComparator(new CardHelpers.CardComparatorColor());
         mDecklistChain.addComparator(new CardHelpers.CardComparatorName());
 
+
+        if (savedInstanceState != null) {
+            mCurrentDeck = savedInstanceState.getBundle(FRAGMENT_TAG).getString(CURRENT_DECKLIST_TAG);
+            readAndCompressDecklist(null, mCurrentDeck);
+        }
+
         return myFragmentView;
+    }
+
+    /**
+     * Create a bundle with information to recreate this exact state
+     * @return
+     */
+    private Bundle saveState() {
+        Bundle state = new Bundle();
+        state.putString(CURRENT_DECKLIST_TAG, mCurrentDeck);
+        return state;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle(FRAGMENT_TAG, saveState());
     }
 
     /**
@@ -169,6 +194,7 @@ public class DecklistFragment extends FamiliarListFragment {
     @Override
     public void onPause() {
         super.onPause();
+        PreferenceAdapter.setLastLoadedDecklist(getContext(), mCurrentDeck);
         DecklistHelpers.WriteCompressedDecklist(this.getContext(), mCompressedDecklist, getCurrentDeckName());
     }
 
@@ -260,6 +286,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         super.onResume();
         mCompressedDecklist.clear();
+        mCurrentDeck = PreferenceAdapter.getLastLoadedDecklist(getContext());
         readAndCompressDecklist(null, mCurrentDeck);
         getCardDataAdapter(0).notifyDataSetChanged();
         mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,

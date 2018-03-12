@@ -90,4 +90,5 @@
     <string name="key_deckPrice" translatable="false">deckPrice</string>
     <string name="key_TcgpToken" translatable="false">tcgp_token</string>
     <string name="key_TcgpTokenExpirationDate" translatable="false">tcgp_token_expiration_date</string>
+    <string name="key_LastDecklistLoaded" translatable="false">last_decklist_loaded</string>
 </resources>
