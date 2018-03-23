@@ -254,8 +254,6 @@ public class DbUpdaterService extends IntentService {
                                             }
 
                                             CardDbAdapter.createSet(expansion, database);
-                                            CardDbAdapter.addTcgName(expansion.mName_tcgp, expansion.mCode_gatherer, database);
-                                            CardDbAdapter.addFoilInfo(expansion.mCanBeFoil, expansion.mCode_gatherer, database);
                                         }
                                         int cardsAdded = 0;
                                         for (Card card : cardsToAdd) {

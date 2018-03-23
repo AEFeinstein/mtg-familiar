@@ -48,6 +48,12 @@ public class Expansion {
     // Whether or not this expansion has foil cards
     public boolean mCanBeFoil = false;
 
+    // Whether this expansion is online-only or has paper printings
+    public boolean mIsOnlineOnly = false;
+
+    // The color of the border, either Black, White, or Silver
+    public String mBorderColor = "";
+
     // MD5 digest for scraped cards, to see when things change
     public String mDigest = "";
 }

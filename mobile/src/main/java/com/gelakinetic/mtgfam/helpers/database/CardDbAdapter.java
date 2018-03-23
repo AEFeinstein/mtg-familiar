@@ -59,7 +59,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 86;
+    public static final int DATABASE_VERSION = 87;
 
     /* The name of the database */
     public static final String DATABASE_NAME = "data";
@@ -102,6 +102,8 @@ public class CardDbAdapter {
     public static final String KEY_BANNED_LIST = "banned_list";
     public static final String KEY_LEGAL_SETS = "legal_sets";
     private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
+    private static final String KEY_ONLINE_ONLY = "online_only";
+    private static final String KEY_BORDER_COLOR = "border_color";
     private static final String KEY_FORMAT = "format";
     public static final String KEY_DIGEST = "digest";
     private static final String KEY_RULINGS = "rulings";
@@ -187,7 +189,9 @@ public class CardDbAdapter {
             DATABASE_TABLE_SETS + "." + KEY_NAME_TCGPLAYER,
             DATABASE_TABLE_SETS + "." + KEY_DIGEST,
             DATABASE_TABLE_SETS + "." + KEY_DATE,
-            DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL
+            DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL,
+            DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY,
+            DATABASE_TABLE_SETS + "." + KEY_BORDER_COLOR
     ));
 
     /* SQL Strings used to create the database tables */
@@ -268,6 +272,8 @@ public class CardDbAdapter {
                     KEY_NAME_TCGPLAYER + " text, " +
                     KEY_DIGEST + " text, " +
                     KEY_CAN_BE_FOIL + " integer, " +
+                    KEY_ONLINE_ONLY + " integer, " +
+                    KEY_BORDER_COLOR + " text, " +
                     KEY_DATE + " integer);";
 
     private static final String DATABASE_CREATE_RULES =
@@ -1886,38 +1892,11 @@ public class CardDbAdapter {
         initialValues.put(KEY_DATE, set.mReleaseTimestamp);
         initialValues.put(KEY_DIGEST, set.mDigest);
         initialValues.put(KEY_CAN_BE_FOIL, set.mCanBeFoil);
+        initialValues.put(KEY_NAME_TCGPLAYER, set.mName_tcgp);
+        initialValues.put(KEY_ONLINE_ONLY, set.mIsOnlineOnly);
+        initialValues.put(KEY_BORDER_COLOR, set.mBorderColor);
 
         mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
-    }
-
-    /**
-     * Add a TcgPlayer.com set name to DATABASE_TABLE_SETS.
-     *
-     * @param name The TcgPlayer.com name
-     * @param code The set code to add the TcgPlayer.com name to
-     * @param mDb  The database to add the TcgPlayer.com name to
-     */
-    public static void addTcgName(String name, String code, SQLiteDatabase mDb) {
-        ContentValues args = new ContentValues();
-
-        args.put(KEY_NAME_TCGPLAYER, name);
-
-        mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
-    }
-
-    /**
-     * Add "can be foil" information to DATABASE_TABLE_SETS.
-     *
-     * @param canBeFoil "true" or "false", whether or not this set has foil cards
-     * @param code      The set code to add the info to
-     * @param mDb       The database to add the info to
-     */
-    public static void addFoilInfo(boolean canBeFoil, String code, SQLiteDatabase mDb) {
-        ContentValues args = new ContentValues();
-
-        args.put(KEY_CAN_BE_FOIL, canBeFoil);
-
-        mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
     }
 
     /**
