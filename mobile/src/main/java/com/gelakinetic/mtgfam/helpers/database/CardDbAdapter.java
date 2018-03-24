@@ -1836,35 +1836,55 @@ public class CardDbAdapter {
         format = sanitizeString(format, false);
 
         try {
-            /* The new way (single query per type, should be much faster) - Alex
-             * TODO clean this up */
-            String sql = "SELECT COALESCE(CASE "
-                    + "(SELECT " + KEY_SET
+            /* The new way (single query per type, should be much faster) - Alex */
+            String sql = "SELECT COALESCE(CASE ";
+
+            /* First coalesce logic, checks the card against ILLEGAL_SETS */
+            sql += "(SELECT " + KEY_SET
                     + " FROM " + DATABASE_TABLE_CARDS
-                    + " WHERE " + KEY_NAME + " = " + mCardName;
-
-            /* If the format is pauper, restrict to commons */
-            if ("Pauper".equals(format)) {
-                sql += "AND " + KEY_RARITY + " = " + ((int) 'C');
-            }
-            sql += ") ";
-
+                    + " WHERE " + KEY_NAME + " = " + mCardName + ")";
             for (String illegalSet : ILLEGAL_SETS) {
                 sql += "WHEN '" + illegalSet + "' THEN 1 ";
             }
-            sql += "ELSE NULL END, CASE (" +
-                    "SELECT 1 FROM " + DATABASE_TABLE_CARDS + " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS + " ls ON ls." + KEY_SET + " = c." + KEY_SET +
+            sql += "ELSE NULL END,";
+
+            /* Second coalesce logic, check card against legal sets */
+            sql += "CASE (" +
+                    " SELECT 1" +
+                    " FROM " + DATABASE_TABLE_CARDS + "" +
+                    " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS + " ls ON ls." + KEY_SET + " = c." + KEY_SET +
                     " WHERE ls." + KEY_FORMAT + " = " + format +
-                    " AND c." + KEY_NAME + " = " + mCardName + ")" +
-                    " WHEN 1 THEN NULL ELSE CASE" +
+                    " AND c." + KEY_NAME + " = " + mCardName + ")";
+            sql += "  WHEN 1 THEN NULL ELSE CASE" +
                     " WHEN " + format + " = 'Legacy' THEN NULL" +
                     " WHEN " + format + " = 'Vintage' THEN NULL" +
                     " WHEN " + format + " = 'Commander' THEN NULL" +
                     " WHEN " + format + " = 'Pauper' THEN NULL" +
-                    " ELSE 1 END END," +
-                    " (SELECT " + KEY_LEGALITY + " FROM " + DATABASE_TABLE_BANNED_CARDS +
+                    " ELSE 1";
+            sql += " END END,";
+
+            /* Third coalesce logic, check card against banned cards */
+            sql += " (SELECT " + KEY_LEGALITY +
+                    " FROM " + DATABASE_TABLE_BANNED_CARDS +
                     " WHERE " + KEY_NAME + " = " + mCardName +
-                    " AND " + KEY_FORMAT + " = " + format + "), 0) AS " + KEY_LEGALITY;
+                    " AND " + KEY_FORMAT + " = " + format + "),";
+
+
+            /* If the format is pauper, restrict to commons */
+            if ("'Pauper'".equals(format)) {
+                sql += " CASE (" +
+                        " SELECT 1" +
+                        " FROM " + DATABASE_TABLE_CARDS + "" +
+                        " WHERE " + KEY_NAME + " = " + mCardName + "" +
+                        " AND " + KEY_RARITY + " = " + ((int) 'C') + ")";
+                sql += "  WHEN 0 THEN 1" +
+                        " WHEN 1 THEN 0" +
+                        " ELSE 1";
+                sql += " END,";
+            }
+
+            /* Finish the coalesce with a 0 */
+            sql += "0) AS " + KEY_LEGALITY;
 
             Cursor c = mDb.rawQuery(sql, null);
 
@@ -2192,7 +2212,7 @@ public class CardDbAdapter {
 
     /**
      * DATABASE_TABLE_FORMATS
-     *
+     * <p>
      * Create a format in the database.
      *
      * @param name The name of the format to create
@@ -2260,7 +2280,7 @@ public class CardDbAdapter {
 
     /**
      * TABLE DATABASE_CREATE_RULES
-     *
+     * <p>
      * Drop the rules and glossary tables.
      *
      * @param mDb The database to drop tables from
@@ -2277,7 +2297,7 @@ public class CardDbAdapter {
 
     /**
      * TABLE DATABASE_CREATE_RULES
-     *
+     * <p>
      * Create the rules and glossary tables.
      *
      * @param mDb The database to add tables to
