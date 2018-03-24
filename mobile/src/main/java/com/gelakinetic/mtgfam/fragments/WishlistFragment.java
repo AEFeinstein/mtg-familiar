@@ -221,7 +221,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
                 /* If the number is empty because of a prior bug, get it from the database */
                 if (card.mNumber.equals("")) {
-                    Cursor numberCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CODE), false, database);
+                    Cursor numberCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CODE), false, false, database);
                     numberCursor.moveToFirst();
                     while (!numberCursor.isAfterLast()) {
                         if (card.mExpansion.equals(numberCursor.getString(numberCursor.getColumnIndex(CardDbAdapter.KEY_CODE)))) {

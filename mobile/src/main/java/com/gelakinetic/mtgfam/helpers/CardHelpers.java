@@ -182,7 +182,7 @@ public class CardHelpers {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, db);
+                    CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, db);
 
             Set<String> foilSets;
             foilSets = CardDbAdapter.getFoilSets(db);
@@ -674,7 +674,7 @@ public class CardHelpers {
             /* Get extra information from the database */
             Cursor cardCursor;
             if (cardSet == null) {
-                cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, database);
+                cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, true, database);
 
                 /* Make sure at least one card was found */
                 if (cardCursor.getCount() == 0) {

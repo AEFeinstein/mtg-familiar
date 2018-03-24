@@ -550,12 +550,13 @@ public class CardDbAdapter {
      * @param name        The name of the card to query
      * @param fields      The requested information about the card
      * @param shouldGroup true if the query should group by KEY_CODE, false otherwise
+     * @param offlineOnly true if the query should exclude online only cards, false otherwise
      * @param mDb         The database to query
      * @return A cursor with the requested information about the card
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
-                                         SQLiteDatabase mDb)
+                                         boolean offlineOnly, SQLiteDatabase mDb)
             throws FamiliarDbException {
         /* Sanitize the string and remove accent marks */
         name = sanitizeString(name, true);
@@ -571,7 +572,11 @@ public class CardDbAdapter {
         }
         sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS +
                 " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " + name + " COLLATE NOCASE";
+                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " + name;
+        if (offlineOnly) {
+            sql += " AND " + KEY_ONLINE_ONLY + " = 0";
+        }
+        sql += " COLLATE NOCASE";
         if (shouldGroup) {
             sql += " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE;
         }

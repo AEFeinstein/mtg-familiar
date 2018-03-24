@@ -585,7 +585,7 @@ public class CardViewFragment extends FamiliarFragment {
                     Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, database
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, false, database
             );
             mPrintings = new LinkedHashSet<>();
             mCardIds = new LinkedHashSet<>();
