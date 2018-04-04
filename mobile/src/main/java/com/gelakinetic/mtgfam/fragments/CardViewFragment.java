@@ -169,6 +169,7 @@ public class CardViewFragment extends FamiliarFragment {
     private GlideRequests mGlideRequestManager = null;
     private Target mGlideTarget = null;
     private Drawable mDrawableForDialog = null;
+    private boolean mIsOnlineOnly = false;
 
     /**
      * Kill any AsyncTask if it is still running.
@@ -575,6 +576,8 @@ public class CardViewFragment extends FamiliarFragment {
                     mCard.mForeignPrintings.add(fp);
                 }
             }
+
+            mIsOnlineOnly = 1 == cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_ONLINE_ONLY));
 
             cCardById.close();
 
@@ -1176,6 +1179,12 @@ public class CardViewFragment extends FamiliarFragment {
         /* If the image has been loaded to the main page, remove the menu option for image */
         if (PreferenceAdapter.getPicFirst(getContext())) {
             mi = menu.findItem(R.id.image);
+            if (mi != null) {
+                menu.removeItem(mi.getItemId());
+            }
+        }
+        if(mIsOnlineOnly) {
+            mi = menu.findItem(R.id.price);
             if (mi != null) {
                 menu.removeItem(mi.getItemId());
             }
