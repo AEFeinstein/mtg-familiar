@@ -577,7 +577,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
 
-            mIsOnlineOnly = 1 == cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_ONLINE_ONLY));
+            mIsOnlineOnly = CardDbAdapter.isOnlineOnly(mCard.mExpansion, database);
 
             cCardById.close();
 
@@ -1178,16 +1178,16 @@ public class CardViewFragment extends FamiliarFragment {
         MenuItem mi;
         /* If the image has been loaded to the main page, remove the menu option for image */
         if (PreferenceAdapter.getPicFirst(getContext())) {
-            mi = menu.findItem(R.id.image);
-            if (mi != null) {
-                menu.removeItem(mi.getItemId());
-            }
+            menu.findItem(R.id.image).setVisible(false);
+        } else {
+            menu.findItem(R.id.image).setVisible(true);
         }
+
+        /* If this is an online-only card, hide the price lookup button */
         if(mIsOnlineOnly) {
-            mi = menu.findItem(R.id.price);
-            if (mi != null) {
-                menu.removeItem(mi.getItemId());
-            }
+            menu.findItem(R.id.price).setVisible(false);
+        } else {
+            menu.findItem(R.id.price).setVisible(true);
         }
         /* This code removes the "change set" button if there is only one set.
          * Turns out some users use it to view the full set name when there is only one set/

@@ -517,62 +517,31 @@ public class CardDbAdapter {
      */
     public static Cursor fetchCards(long[] ids, String orderByStr, SQLiteDatabase database)
             throws FamiliarDbException {
-        /* Sanitize the string and remove accent marks */
-        String sql = "SELECT ";
-        boolean first = true;
-        for (String field : ALL_CARD_DATA_KEYS) {
-            if (first) {
-                first = false;
-            } else {
-                sql += ", ";
-            }
-            sql += field;
-        }
-        for (String field : ALL_SET_DATA_KEYS) {
-            sql += ", " + field;
-        }
-
-        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS +
-                " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                " WHERE (";
-
-        first = true;
-        for (long id : ids) {
-            if (first) {
-                first = false;
-            } else {
-                sql += " OR ";
-            }
-            sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_ID + "=" + id + ")";
-        }
-        sql += ")";
-
-        if (null != orderByStr) {
-            sql += " ORDER BY ";
-            String orderByParts[] = orderByStr.split(",");
-            first = true;
-            for (String orderByPart : orderByParts) {
-                if (first) {
-                    first = false;
-                } else {
-                    sql += ", ";
-                }
-                sql += DATABASE_TABLE_CARDS + "." + orderByPart;
-            }
-        }
-
-        Cursor c;
-
+        Cursor cursor;
         try {
-            c = database.rawQuery(sql, null);
+            boolean first = true;
+            String selectionStr = "";
+            for (long id : ids) {
+                if (!first) {
+                    selectionStr += " OR ";
+                } else {
+                    first = false;
+                }
+                selectionStr += KEY_ID + "=" + id;
+            }
+            String[] allCardDataKeys = new String[ALL_CARD_DATA_KEYS.size()];
+            ALL_CARD_DATA_KEYS.toArray(allCardDataKeys);
+            cursor = database.query(true, DATABASE_TABLE_CARDS, allCardDataKeys, selectionStr, null,
+                    null, null, orderByStr, null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
 
-        if (c != null) {
-            c.moveToFirst();
+        if (cursor != null) {
+            cursor.moveToFirst();
         }
-        return c;
+        return cursor;
+
     }
 
     /**
@@ -2035,6 +2004,31 @@ public class CardDbAdapter {
         return returnString;
     }
 
+    /**
+     * Returns whether or not a set is online only
+     *
+     * @param setCode  The set code to look up
+     * @param database The database to query
+     * @return true if the set is online only, false otherwise
+     */
+    public static boolean isOnlineOnly(String setCode, SQLiteDatabase database) throws FamiliarDbException {
+        String columns[] = new String[]{KEY_ONLINE_ONLY};
+        Cursor c;
+        try {
+            c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                    + "=\"" + setCode + "\"", null, null, null, null, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        boolean isOnlineOnly = false;
+        if (c != null && c.getCount() > 0) {
+            c.moveToFirst();
+            isOnlineOnly = (1 == c.getInt(c.getColumnIndex(KEY_ONLINE_ONLY)));
+            c.close();
+        }
+        return isOnlineOnly;
+    }
 
     /**
      * Given a set code, return a String with the set name that TCGPlayer.com uses.
