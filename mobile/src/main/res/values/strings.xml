@@ -51,6 +51,7 @@
     <string name="price_error_network">"Error fetching price [network]"</string>
     <string name="price_error_database">"Error fetching price [database]"</string>
     <string name="price_error_api_key">"Error fetching price [API keys]"</string>
+    <string name="price_error_online_only">"Card is online only"</string>
 
     <!-- Main menu activity -->
     <string name="main_pages">"PAGES"</string>

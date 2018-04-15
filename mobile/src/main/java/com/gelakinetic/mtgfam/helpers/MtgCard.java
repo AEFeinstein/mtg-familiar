@@ -45,7 +45,6 @@ public class MtgCard extends Card {
     /* Wish and trade list fields */
     public String mSetName;
     public String mSetNameMtgi;
-    public String mSetCode;
     public int mNumberOf;
     public int mPrice; /* In cents */
     public String mMessage;

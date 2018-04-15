@@ -152,12 +152,18 @@ public class MarketPriceFetcher {
                         c.close();
                     }
 
+                    if(CardDbAdapter.isOnlineOnly(params.mExpansion, database)) {
+                        DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+                        return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
+                    }
+
                     multiCardType = CardDbAdapter.isMultiCard(params.mNumber, params.mExpansion);
 
                     /* Get the TCGplayer.com set name, why can't everything be consistent? */
                     tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
 
                 } catch (FamiliarDbException e) {
+                    DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
                 }
 
