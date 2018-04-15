@@ -59,7 +59,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 86;
+    public static final int DATABASE_VERSION = 89;
 
     /* The name of the database */
     public static final String DATABASE_NAME = "data";
@@ -102,6 +102,8 @@ public class CardDbAdapter {
     public static final String KEY_BANNED_LIST = "banned_list";
     public static final String KEY_LEGAL_SETS = "legal_sets";
     private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
+    public static final String KEY_ONLINE_ONLY = "online_only";
+    private static final String KEY_BORDER_COLOR = "border_color";
     private static final String KEY_FORMAT = "format";
     public static final String KEY_DIGEST = "digest";
     private static final String KEY_RULINGS = "rulings";
@@ -187,7 +189,9 @@ public class CardDbAdapter {
             DATABASE_TABLE_SETS + "." + KEY_NAME_TCGPLAYER,
             DATABASE_TABLE_SETS + "." + KEY_DIGEST,
             DATABASE_TABLE_SETS + "." + KEY_DATE,
-            DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL
+            DATABASE_TABLE_SETS + "." + KEY_CAN_BE_FOIL,
+            DATABASE_TABLE_SETS + "." + KEY_ONLINE_ONLY,
+            DATABASE_TABLE_SETS + "." + KEY_BORDER_COLOR
     ));
 
     /* SQL Strings used to create the database tables */
@@ -268,6 +272,8 @@ public class CardDbAdapter {
                     KEY_NAME_TCGPLAYER + " text, " +
                     KEY_DIGEST + " text, " +
                     KEY_CAN_BE_FOIL + " integer, " +
+                    KEY_ONLINE_ONLY + " integer, " +
+                    KEY_BORDER_COLOR + " text, " +
                     KEY_DATE + " integer);";
 
     private static final String DATABASE_CREATE_RULES =
@@ -544,12 +550,13 @@ public class CardDbAdapter {
      * @param name        The name of the card to query
      * @param fields      The requested information about the card
      * @param shouldGroup true if the query should group by KEY_CODE, false otherwise
+     * @param offlineOnly true if the query should exclude online only cards, false otherwise
      * @param mDb         The database to query
      * @return A cursor with the requested information about the card
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor fetchCardByName(String name, List<String> fields, boolean shouldGroup,
-                                         SQLiteDatabase mDb)
+                                         boolean offlineOnly, SQLiteDatabase mDb)
             throws FamiliarDbException {
         /* Sanitize the string and remove accent marks */
         name = sanitizeString(name, true);
@@ -565,7 +572,11 @@ public class CardDbAdapter {
         }
         sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS +
                 " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " + name + " COLLATE NOCASE";
+                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " + name;
+        if (offlineOnly) {
+            sql += " AND " + KEY_ONLINE_ONLY + " = 0";
+        }
+        sql += " COLLATE NOCASE";
         if (shouldGroup) {
             sql += " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE;
         }
@@ -1304,6 +1315,11 @@ public class CardDbAdapter {
                     + " FROM " + DATABASE_TABLE_BANNED_CARDS
                     + " WHERE  " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '" + criteria.format + "'"
                     + " AND " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_LEGALITY + " = " + BANNED + ")";
+
+            // Ensure pauper only searches commons
+            if ("Pauper".equals(criteria.format)) {
+                statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_RARITY + " = " + ((int) 'C') + ")";
+            }
         }
 
         if (!backface) {
@@ -1825,34 +1841,55 @@ public class CardDbAdapter {
         format = sanitizeString(format, false);
 
         try {
-            /* The new way (single query per type, should be much faster) - Alex
-             * TODO clean this up */
-            String sql = "SELECT COALESCE(CASE (SELECT "
-                    + KEY_SET
-                    + " FROM "
-                    + DATABASE_TABLE_CARDS
-                    + " WHERE "
-                    + KEY_NAME
-                    + " = "
-                    + mCardName
-                    + ") ";
+            /* The new way (single query per type, should be much faster) - Alex */
+            String sql = "SELECT COALESCE(CASE ";
+
+            /* First coalesce logic, checks the card against ILLEGAL_SETS */
+            sql += "(SELECT " + KEY_SET
+                    + " FROM " + DATABASE_TABLE_CARDS
+                    + " WHERE " + KEY_NAME + " = " + mCardName + ")";
             for (String illegalSet : ILLEGAL_SETS) {
                 sql += "WHEN '" + illegalSet + "' THEN 1 ";
             }
-            sql += "ELSE NULL END, "
-                    + "CASE (SELECT 1 FROM " + DATABASE_TABLE_CARDS
-                    + " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS
-                    + " ls ON ls." + KEY_SET + " = c." + KEY_SET + " WHERE ls."
-                    + KEY_FORMAT + " = " + format + " AND c." + KEY_NAME
-                    + " = " + mCardName
-                    + ") WHEN 1 THEN NULL ELSE CASE WHEN " + format
-                    + " = 'Legacy' " + "THEN NULL WHEN " + format
-                    + " = 'Vintage' THEN NULL WHEN " + format
-                    + " = 'Commander' THEN NULL ELSE 1 END END, (SELECT "
-                    + KEY_LEGALITY + " from " + DATABASE_TABLE_BANNED_CARDS
-                    + " WHERE " + KEY_NAME + " = " + mCardName + " AND "
-                    + KEY_FORMAT + " = " + format + "), 0) AS "
-                    + KEY_LEGALITY;
+            sql += "ELSE NULL END,";
+
+            /* Second coalesce logic, check card against legal sets */
+            sql += "CASE (" +
+                    " SELECT 1" +
+                    " FROM " + DATABASE_TABLE_CARDS + "" +
+                    " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS + " ls ON ls." + KEY_SET + " = c." + KEY_SET +
+                    " WHERE ls." + KEY_FORMAT + " = " + format +
+                    " AND c." + KEY_NAME + " = " + mCardName + ")";
+            sql += "  WHEN 1 THEN NULL ELSE CASE" +
+                    " WHEN " + format + " = 'Legacy' THEN NULL" +
+                    " WHEN " + format + " = 'Vintage' THEN NULL" +
+                    " WHEN " + format + " = 'Commander' THEN NULL" +
+                    " WHEN " + format + " = 'Pauper' THEN NULL" +
+                    " ELSE 1";
+            sql += " END END,";
+
+            /* Third coalesce logic, check card against banned cards */
+            sql += " (SELECT " + KEY_LEGALITY +
+                    " FROM " + DATABASE_TABLE_BANNED_CARDS +
+                    " WHERE " + KEY_NAME + " = " + mCardName +
+                    " AND " + KEY_FORMAT + " = " + format + "),";
+
+
+            /* If the format is pauper, restrict to commons */
+            if ("'Pauper'".equals(format)) {
+                sql += " CASE (" +
+                        " SELECT 1" +
+                        " FROM " + DATABASE_TABLE_CARDS + "" +
+                        " WHERE " + KEY_NAME + " = " + mCardName + "" +
+                        " AND " + KEY_RARITY + " = " + ((int) 'C') + ")";
+                sql += "  WHEN 0 THEN 1" +
+                        " WHEN 1 THEN 0" +
+                        " ELSE 1";
+                sql += " END,";
+            }
+
+            /* Finish the coalesce with a 0 */
+            sql += "0) AS " + KEY_LEGALITY;
 
             Cursor c = mDb.rawQuery(sql, null);
 
@@ -1886,38 +1923,11 @@ public class CardDbAdapter {
         initialValues.put(KEY_DATE, set.mReleaseTimestamp);
         initialValues.put(KEY_DIGEST, set.mDigest);
         initialValues.put(KEY_CAN_BE_FOIL, set.mCanBeFoil);
+        initialValues.put(KEY_NAME_TCGPLAYER, set.mName_tcgp);
+        initialValues.put(KEY_ONLINE_ONLY, set.mIsOnlineOnly);
+        initialValues.put(KEY_BORDER_COLOR, set.mBorderColor);
 
         mDb.insert(DATABASE_TABLE_SETS, null, initialValues);
-    }
-
-    /**
-     * Add a TcgPlayer.com set name to DATABASE_TABLE_SETS.
-     *
-     * @param name The TcgPlayer.com name
-     * @param code The set code to add the TcgPlayer.com name to
-     * @param mDb  The database to add the TcgPlayer.com name to
-     */
-    public static void addTcgName(String name, String code, SQLiteDatabase mDb) {
-        ContentValues args = new ContentValues();
-
-        args.put(KEY_NAME_TCGPLAYER, name);
-
-        mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
-    }
-
-    /**
-     * Add "can be foil" information to DATABASE_TABLE_SETS.
-     *
-     * @param canBeFoil "true" or "false", whether or not this set has foil cards
-     * @param code      The set code to add the info to
-     * @param mDb       The database to add the info to
-     */
-    public static void addFoilInfo(boolean canBeFoil, String code, SQLiteDatabase mDb) {
-        ContentValues args = new ContentValues();
-
-        args.put(KEY_CAN_BE_FOIL, canBeFoil);
-
-        mDb.update(DATABASE_TABLE_SETS, args, KEY_CODE + " = '" + code + "'", null);
     }
 
     /**
@@ -1994,6 +2004,31 @@ public class CardDbAdapter {
         return returnString;
     }
 
+    /**
+     * Returns whether or not a set is online only
+     *
+     * @param setCode  The set code to look up
+     * @param database The database to query
+     * @return true if the set is online only, false otherwise
+     */
+    public static boolean isOnlineOnly(String setCode, SQLiteDatabase database) throws FamiliarDbException {
+        String columns[] = new String[]{KEY_ONLINE_ONLY};
+        Cursor c;
+        try {
+            c = database.query(true, DATABASE_TABLE_SETS, columns, KEY_CODE
+                    + "=\"" + setCode + "\"", null, null, null, null, null);
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+
+        boolean isOnlineOnly = false;
+        if (c != null && c.getCount() > 0) {
+            c.moveToFirst();
+            isOnlineOnly = (1 == c.getInt(c.getColumnIndex(KEY_ONLINE_ONLY)));
+            c.close();
+        }
+        return isOnlineOnly;
+    }
 
     /**
      * Given a set code, return a String with the set name that TCGPlayer.com uses.
@@ -2207,7 +2242,7 @@ public class CardDbAdapter {
 
     /**
      * DATABASE_TABLE_FORMATS
-     *
+     * <p>
      * Create a format in the database.
      *
      * @param name The name of the format to create
@@ -2275,7 +2310,7 @@ public class CardDbAdapter {
 
     /**
      * TABLE DATABASE_CREATE_RULES
-     *
+     * <p>
      * Drop the rules and glossary tables.
      *
      * @param mDb The database to drop tables from
@@ -2292,7 +2327,7 @@ public class CardDbAdapter {
 
     /**
      * TABLE DATABASE_CREATE_RULES
-     *
+     * <p>
      * Create the rules and glossary tables.
      *
      * @param mDb The database to add tables to

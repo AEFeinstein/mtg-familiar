@@ -45,7 +45,6 @@ public class MtgCard extends Card {
     /* Wish and trade list fields */
     public String mSetName;
     public String mSetNameMtgi;
-    public String mSetCode;
     public int mNumberOf;
     public int mPrice; /* In cents */
     public String mMessage;
@@ -191,7 +190,7 @@ public class MtgCard extends Card {
             try {
                 Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR), true, database);
+                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR), true, false, database);
                 card.mCmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
                 card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
             } catch (FamiliarDbException | NullPointerException e) {

@@ -169,6 +169,7 @@ public class CardViewFragment extends FamiliarFragment {
     private GlideRequests mGlideRequestManager = null;
     private Target mGlideTarget = null;
     private Drawable mDrawableForDialog = null;
+    private boolean mIsOnlineOnly = false;
 
     /**
      * Kill any AsyncTask if it is still running.
@@ -576,6 +577,8 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
 
+            mIsOnlineOnly = CardDbAdapter.isOnlineOnly(mCard.mExpansion, database);
+
             cCardById.close();
 
             /* Find the other sets this card is in ahead of time, so that it can be remove from the menu
@@ -585,7 +588,7 @@ public class CardViewFragment extends FamiliarFragment {
                     Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
-                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, database
+                            CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER), false, false, database
             );
             mPrintings = new LinkedHashSet<>();
             mCardIds = new LinkedHashSet<>();
@@ -1175,10 +1178,16 @@ public class CardViewFragment extends FamiliarFragment {
         MenuItem mi;
         /* If the image has been loaded to the main page, remove the menu option for image */
         if (PreferenceAdapter.getPicFirst(getContext())) {
-            mi = menu.findItem(R.id.image);
-            if (mi != null) {
-                menu.removeItem(mi.getItemId());
-            }
+            menu.findItem(R.id.image).setVisible(false);
+        } else {
+            menu.findItem(R.id.image).setVisible(true);
+        }
+
+        /* If this is an online-only card, hide the price lookup button */
+        if(mIsOnlineOnly) {
+            menu.findItem(R.id.price).setVisible(false);
+        } else {
+            menu.findItem(R.id.price).setVisible(true);
         }
         /* This code removes the "change set" button if there is only one set.
          * Turns out some users use it to view the full set name when there is only one set/

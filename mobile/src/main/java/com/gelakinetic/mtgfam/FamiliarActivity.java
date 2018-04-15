@@ -830,7 +830,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         }
                     } else if ((queryParam = data.getQueryParameter("name")) != null) {
                         Cursor cursor = CardDbAdapter.fetchCardByName(queryParam,
-                                Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, database);
+                                Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, false, database);
                         if (cursor.getCount() != 0) {
                             isDeepLink = true;
                             args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,

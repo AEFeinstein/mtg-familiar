@@ -81,10 +81,15 @@ public class MarketPriceInfo {
         ProductMarketPrice.MarketPrice foilPrice = null;
         ProductMarketPrice.MarketPrice normalPrice = null;
         for (ProductMarketPrice.MarketPrice marketPrice : results) {
-            if (marketPrice.subTypeName.equalsIgnoreCase("Foil")) {
-                foilPrice = marketPrice;
-            } else if (marketPrice.subTypeName.equalsIgnoreCase("Normal")) {
-                normalPrice = marketPrice;
+            if (!(marketPrice.highPrice == 0 &&
+                    marketPrice.midPrice == 0 &&
+                    marketPrice.lowPrice == 0 &&
+                    marketPrice.marketPrice == 0)) {
+                if (marketPrice.subTypeName.equalsIgnoreCase("Foil")) {
+                    foilPrice = marketPrice;
+                } else if (marketPrice.subTypeName.equalsIgnoreCase("Normal")) {
+                    normalPrice = marketPrice;
+                }
             }
         }
 
