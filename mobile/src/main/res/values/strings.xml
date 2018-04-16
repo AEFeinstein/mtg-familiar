@@ -551,12 +551,10 @@ Good luck, and have fun!
     <string name="decklist_not_legal">"Not Legal"</string>
 
     <!-- "Added Slovak Translation" was added -->
-    <string name="main_whats_new_text">"- In Search, search for cards by mana cost&lt;br&gt;
-- In Results, long-press a card to add to Deck or Wishlist&lt;br&gt;
-- In Deck Builder, add cards to the sideboard&lt;br&gt;
-- In Wish &amp; Trade Lists, sort by order added&lt;br&gt;
-- In lists, long-press to select multiple cards and swipe to delete them&lt;br&gt;
-- Bug fixes &amp; optimizations"</string>
+    <string name="main_whats_new_text">"- Added Pauper format&lt;br&gt;
+- Added search by watermark&lt;br&gt;
+- Added deck legality checks&lt;br&gt;
+- Added TCGPlayer.com Market Price"</string>
     <string name="card_view_send_to">"Share image using"</string>
     <string name="card_view_translated_dialog_title">"Translated Card Name"</string>
     <string name="pref_Portuguese">"Portuguese (Brazil)"</string>
