@@ -86,6 +86,10 @@ So, how generous are you feeling today?
 "</string>
     <string name="main_whats_new_title">"What's New"</string>
     <string name="main_whats_new_in_title">"What's New in Version"</string>
+    <string name="main_whats_new_text">"- Added Pauper format&lt;br&gt;
+- Added search by watermark&lt;br&gt;
+- Added deck legality checks&lt;br&gt;
+- Added TCGPlayer.com Market Price"</string>
     <string name="main_tts_warning_title">"Text-to-Speech"</string>
     <string name="main_tts_warning_text">"This application has text-to-speech capability for some of its features, but you don't seem to have it installed. If you want to install it, use the Install Text-to-Speech link in the settings menu."</string>
     <string name="main_export_data_title">"Save Data to SD"</string>
@@ -128,6 +132,8 @@ Magic the Gathering and Magic the Gathering cards are ™ &amp; © Wizards of th
 &lt;a href=https://github.com/woxblom/DragListView&gt;DragListView&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; used under the Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; used under the BSD, part MIT, and Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Program licenced under the &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
@@ -221,9 +227,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="card_view_banned">"Banned"</string>
     <string name="card_view_no_commander">"Cannot be commander"</string>
     <string name="card_view_price_dialog_title">"TCGPlayer.com Prices"</string>
-    <string name="card_view_price_dialog_low">"Low:"</string>
-    <string name="card_view_price_dialog_medium">"Average:"</string>
-    <string name="card_view_price_dialog_high">"High:"</string>
     <string name="card_view_price_dialog_link">"Click here for all prices and trend info"</string>
     <string name="card_view_no_rulings">"No rulings for this card"</string>
     <string name="card_view_gatherer_page">"Gatherer Page"</string>
@@ -240,6 +243,8 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="card_view_image_saved">"Image saved to "</string>
     <string name="card_view_share_card">"Share Card"</string>
     <string name="card_view_copied_to_clipboard">"Copied to Clipboard"</string>
+    <string name="card_view_send_to">"Share image using"</string>
+    <string name="card_view_translated_dialog_title">"Translated Card Name"</string>
 
     <!-- Life counter activity -->
     <string name="life_counter_announce_life">"Announce Life Totals"</string>
@@ -461,6 +466,11 @@ Good luck, and have fun!
     <string name="pref_Russian">"Russian"</string>
     <string name="pref_German">"German"</string>
     <string name="pref_Polish">"Polish"</string>
+    <string name="pref_Portuguese">"Portuguese (Brazil)"</string>
+    <string name="pref_Chinese">"Chinese Simplified"</string>
+    <string name="pref_Chinese_trad">"Chinese Traditional"</string>
+    <string name="pref_Korean">"Korean"</string>
+    <string name="pref_Slovak">"Slovak"</string>
     <string name="pref_tap_symbol_title">"Tap Symbol"</string>
     <string name="pref_tap_symbol_summary">"Which tap symbol to use in display"</string>
     <string name="pref_tap_symbol_modern">"Eighth Edition"</string>
@@ -549,21 +559,4 @@ Good luck, and have fun!
     </plurals>
     <string name="decklist_legality">"Deck Legality"</string>
     <string name="decklist_not_legal">"Not Legal"</string>
-
-    <!-- "Added Slovak Translation" was added -->
-    <string name="main_whats_new_text">"- Added Pauper format&lt;br&gt;
-- Added search by watermark&lt;br&gt;
-- Added deck legality checks&lt;br&gt;
-- Added TCGPlayer.com Market Price"</string>
-    <string name="card_view_send_to">"Share image using"</string>
-    <string name="card_view_translated_dialog_title">"Translated Card Name"</string>
-    <string name="pref_Portuguese">"Portuguese (Brazil)"</string>
-    <string name="pref_Chinese">"Chinese Simplified"</string>
-    <string name="pref_Chinese_trad">"Chinese Traditional"</string>
-    <string name="pref_Korean">"Korean"</string>
-
-    <!-- Only used for app translation, not card names -->
-    <string name="pref_Slovak">"Slovak"</string>
-    <string name="card_view_price_dialog_market">Market:</string>
-
 </resources>

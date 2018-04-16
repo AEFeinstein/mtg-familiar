@@ -39,7 +39,7 @@
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_view_price_dialog_low" />
+                android:text="@string/trader_Low" />
 
             <TextView
                 android:id="@+id/normal_low"
@@ -66,7 +66,7 @@
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_view_price_dialog_medium" />
+                android:text="@string/trader_Average" />
 
             <TextView
                 android:id="@+id/normal_mid"
@@ -93,7 +93,7 @@
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_view_price_dialog_high" />
+                android:text="@string/trader_High" />
 
             <TextView
                 android:id="@+id/normal_high"
@@ -120,7 +120,7 @@
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_view_price_dialog_market" />
+                android:text="@string/trader_Market" />
 
             <TextView
                 android:id="@+id/normal_market"
@@ -160,7 +160,7 @@
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_view_price_dialog_low" />
+                android:text="@string/trader_Low" />
 
             <TextView
                 android:id="@+id/foil_low"
@@ -192,7 +192,7 @@
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_view_price_dialog_medium" />
+                android:text="@string/trader_Average" />
 
             <TextView
                 android:id="@+id/foil_mid"
@@ -224,7 +224,7 @@
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_view_price_dialog_high" />
+                android:text="@string/trader_High" />
 
             <TextView
                 android:id="@+id/foil_high"
@@ -256,7 +256,7 @@
                 style="@style/text.medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/card_view_price_dialog_market" />
+                android:text="@string/trader_Market" />
 
             <TextView
                 android:id="@+id/foil_market"
