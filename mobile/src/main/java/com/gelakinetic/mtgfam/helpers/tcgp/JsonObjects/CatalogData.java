@@ -22,7 +22,6 @@ package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 import com.google.gson.GsonBuilder;
 
 import java.net.URL;
-import java.util.Date;
 
 public class CatalogData {
     public final boolean success;

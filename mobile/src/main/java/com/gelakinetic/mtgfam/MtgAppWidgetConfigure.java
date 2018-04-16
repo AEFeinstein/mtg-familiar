@@ -23,12 +23,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -71,30 +68,17 @@ public class MtgAppWidgetConfigure extends Activity {
         adb
                 .items((CharSequence[]) mLaunchers)
                 .alwaysCallMultiChoiceCallback()
-                .itemsCallbackMultiChoice(mSelectedIndices, new MaterialDialog.ListCallbackMultiChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                        mSelectedIndices = which;
-                        return true;
-                    }
+                .itemsCallbackMultiChoice(mSelectedIndices, (dialog, which, text) -> {
+                    mSelectedIndices = which;
+                    return true;
                 })
                 .positiveText(R.string.dialog_ok)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        finishAndUpdateWidget();
-                    }
-                })
+                .onPositive((dialog, which) -> finishAndUpdateWidget())
                 .title(R.string.pref_widget_mode_title);
 
         Dialog d = adb.build();
         /* Set the onDismissListener to finish the activity and refresh the widget */
-        d.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                finishAndUpdateWidget();
-            }
-        });
+        d.setOnDismissListener(dialogInterface -> finishAndUpdateWidget());
         d.show();
     }
 

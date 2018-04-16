@@ -52,11 +52,11 @@ import java.util.Calendar;
  * This fragment starts and stops the round timer. When it is started, it commits the end time as a shared preference,
  * sets a series of PendingIntents with the AlarmManager, creates a notification, and tells the FamiliarActivity to
  * display the time in the ActionBar.
- *
+ * <p>
  * Future activities and fragments will determine if the timer is running by checking the shared preference. If it is -1
  * the timer is no longer running. It will automatically be set to -1 when the final PendingIntent fires, or if it has
  * expired and then checked.
- *
+ * <p>
  * This means that the round timer persists through literally anything, even getting automatically restarted in place
  * after a force close (if the app is opened again). The FamiliarActivity will take care of recreating the notification
  * and PendingIntents.
@@ -223,43 +223,40 @@ public class RoundTimerFragment extends FamiliarFragment {
         mTimePicker.setPlusMinusVisibility(View.INVISIBLE);
 
         mTimerButton = v.findViewById(R.id.rt_action_button);
-        mTimerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (PreferenceAdapter.getRoundTimerEnd(getContext()) != -1) {
-                    /* Commit the endTime as -1 */
-                    PreferenceAdapter.setRoundTimerEnd(getContext(), -1);
-                    /* Cancel the alarms */
-                    setOrCancelAlarms(getActivity(), 0, false);
-                    /* Stop the ActionBar timer display*/
-                    getFamiliarActivity().stopUpdatingDisplay();
-                    /* Set button text to start again */
-                    mTimerButton.setText(R.string.timer_start);
-                    /* Cancel the notification */
-                    NotificationManagerCompat.from(getActivity()).cancel(TIMER_NOTIFICATION_ID);
-                } else {
-                    /* Figure out the end time */
-                    int hours = mTimePicker.getHours();
-                    int minutes = mTimePicker.getMinutes();
-                    int seconds = mTimePicker.getSeconds();
+        mTimerButton.setOnClickListener(view -> {
+            if (PreferenceAdapter.getRoundTimerEnd(getContext()) != -1) {
+                /* Commit the endTime as -1 */
+                PreferenceAdapter.setRoundTimerEnd(getContext(), -1);
+                /* Cancel the alarms */
+                setOrCancelAlarms(getActivity(), 0, false);
+                /* Stop the ActionBar timer display*/
+                getFamiliarActivity().stopUpdatingDisplay();
+                /* Set button text to start again */
+                mTimerButton.setText(R.string.timer_start);
+                /* Cancel the notification */
+                NotificationManagerCompat.from(getActivity()).cancel(TIMER_NOTIFICATION_ID);
+            } else {
+                /* Figure out the end time */
+                int hours = mTimePicker.getHours();
+                int minutes = mTimePicker.getMinutes();
+                int seconds = mTimePicker.getSeconds();
 
-                    long timeInMillis = ((hours * 3600) + (minutes * 60) + seconds) * 1000;
-                    if (timeInMillis == 0) {
-                        return;
-                    }
-                    long endTime = System.currentTimeMillis() + timeInMillis;
-                    /* Commit the end time */
-                    PreferenceAdapter.setRoundTimerEnd(getContext(), endTime);
-
-                    /* Set the alarm, and any warning alarms if applicable */
-                    setOrCancelAlarms(getActivity(), endTime, true);
-                    /* Show the notification */
-                    showTimerRunningNotification(getActivity(), endTime);
-                    /* Start the ActionBar display Timer */
-                    getFamiliarActivity().startUpdatingDisplay();
-                    /* Set the button text to stop the timer */
-                    mTimerButton.setText(R.string.timer_cancel);
+                long timeInMillis = ((hours * 3600) + (minutes * 60) + seconds) * 1000;
+                if (timeInMillis == 0) {
+                    return;
                 }
+                long endTime = System.currentTimeMillis() + timeInMillis;
+                /* Commit the end time */
+                PreferenceAdapter.setRoundTimerEnd(getContext(), endTime);
+
+                /* Set the alarm, and any warning alarms if applicable */
+                setOrCancelAlarms(getActivity(), endTime, true);
+                /* Show the notification */
+                showTimerRunningNotification(getActivity(), endTime);
+                /* Start the ActionBar display Timer */
+                getFamiliarActivity().startUpdatingDisplay();
+                /* Set the button text to stop the timer */
+                mTimerButton.setText(R.string.timer_cancel);
             }
         });
 

@@ -58,7 +58,7 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
         mDialogId = getArguments().getInt(ID_KEY);
         switch (mDialogId) {
             case DIALOG_RULES: {
-                        /* Use a generic AlertDialog to display the rules text */
+                /* Use a generic AlertDialog to display the rules text */
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(this.getActivity());
                 builder.neutralText(R.string.mojhosto_dialog_play)
                         .content(ImageGetterHelper.formatHtmlString(getString(R.string.mojhosto_rules_text)))
@@ -68,7 +68,7 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
             case DIALOG_MOMIR:
             case DIALOG_STONEHEWER:
             case DIALOG_JHOIRA: {
-                        /* Use a raw dialog with a custom view (ImageView inside LinearLayout) to display the Vanguard*/
+                /* Use a raw dialog with a custom view (ImageView inside LinearLayout) to display the Vanguard*/
                 Dialog dialog = new Dialog(this.getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.card_view_image_dialog);
@@ -88,29 +88,29 @@ public class MoJhoStoDialogFragment extends FamiliarDialogFragment {
                         break;
                 }
 
-                        /* Make a DP border */
+                /* Make a DP border */
                 int border = (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics());
 
-                        /* Get the screen size in px */
+                /* Get the screen size in px */
                 Rect rectangle = new Rect();
                 Window window = getActivity().getWindow();
                 window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
                 int windowHeight = rectangle.height();
                 int windowWidth = rectangle.width();
 
-                        /* Get the drawable size in px */
+                /* Get the drawable size in px */
                 assert image.getDrawable() != null;
                 int imageHeight = image.getDrawable().getIntrinsicHeight();
                 int imageWidth = image.getDrawable().getIntrinsicWidth();
 
-                        /* Figure out how much to scale the drawable */
+                /* Figure out how much to scale the drawable */
                 float scaleFactor;
                 if ((imageHeight / (float) imageWidth) > (windowHeight / (float) windowWidth)) {
-                            /* Limiting factor is height */
+                    /* Limiting factor is height */
                     scaleFactor = (windowHeight - border) / (float) imageHeight;
                 } else {
-                            /* Limiting factor is width */
+                    /* Limiting factor is width */
                     scaleFactor = (windowWidth - border) / (float) imageWidth;
                 }
 

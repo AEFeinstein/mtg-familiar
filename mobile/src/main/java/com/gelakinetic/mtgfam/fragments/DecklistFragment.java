@@ -23,10 +23,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.Pair;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -103,20 +103,13 @@ public class DecklistFragment extends FamiliarListFragment {
         assert myFragmentView != null;
 
         final TextView.OnEditorActionListener addCardListener =
-                new TextView.OnEditorActionListener() {
+                (textView, actionId, event) -> {
 
-                    @Override
-                    public boolean onEditorAction(final TextView textView,
-                                                  final int actionId,
-                                                  final KeyEvent event) {
-
-                        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                            addCardToDeck(false);
-                            return true;
-                        }
-                        return false;
-
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        addCardToDeck(false);
+                        return true;
                     }
+                    return false;
 
                 };
 
@@ -131,22 +124,9 @@ public class DecklistFragment extends FamiliarListFragment {
                 new int[]{R.id.decklistPrice}, null, R.menu.decklist_select_menu,
                 addCardListener);
 
-        myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(final View view) {
-                addCardToDeck(false);
-            }
-
-        });
+        myFragmentView.findViewById(R.id.add_card).setOnClickListener(view -> addCardToDeck(false));
         myFragmentView.findViewById(R.id.add_card_sideboard).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        addCardToDeck(true);
-                    }
-
-                });
+                v -> addCardToDeck(true));
 
         /* Decklist information */
         mDeckName = myFragmentView.findViewById(R.id.decklistName);
@@ -174,7 +154,8 @@ public class DecklistFragment extends FamiliarListFragment {
 
     /**
      * Create a bundle with information to recreate this exact state
-     * @return
+     *
+     * @return A bundle with the current decklist
      */
     private Bundle saveState() {
         Bundle state = new Bundle();
@@ -602,7 +583,7 @@ public class DecklistFragment extends FamiliarListFragment {
                 /* Find all foil and non foil compressed items with the same set code */
                 for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                     if (isi.mSetCode.equals(data.mExpansion)) {
-                                    /* Set the price as null and the message as the exception */
+                        /* Set the price as null and the message as the exception */
                         isi.mMessage = exception.getLocalizedMessage();
                         isi.mPrice = null;
                     }
@@ -706,9 +687,10 @@ public class DecklistFragment extends FamiliarListFragment {
             super(values, DecklistFragment.this);
         }
 
+        @NonNull
         @Override
         public DecklistViewHolder onCreateViewHolder(
-                ViewGroup parent,
+                @NonNull ViewGroup parent,
                 int viewType) {
             return new DecklistViewHolder(parent);
         }
@@ -758,7 +740,7 @@ public class DecklistFragment extends FamiliarListFragment {
          * @param position where the holder is
          */
         @Override
-        public void onBindViewHolder(DecklistViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull DecklistViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             final CompressedDecklistInfo info = getItem(position);
@@ -766,11 +748,11 @@ public class DecklistFragment extends FamiliarListFragment {
             holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
             if (info.header == null) {
 
-                    /* Enable the on click listener */
+                /* Enable the on click listener */
                 holder.itemView.setOnClickListener(holder);
                 holder.itemView.setOnLongClickListener(holder);
 
-                    /* Do the selection stuff */
+                /* Do the selection stuff */
                 if (info.isSelected()) {
                     holder.mCardNumberOf.setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_menu_done, 0, 0, 0);
@@ -781,7 +763,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     holder.mCardNumberOf.setText(String.valueOf(info.getTotalNumber()));
                 }
 
-                    /* set up the card's views */
+                /* set up the card's views */
                 holder.itemView.findViewById(R.id.card_row).setVisibility(View.VISIBLE);
                 View separator = holder.itemView.findViewById(R.id.decklistSeparator);
                 separator.setVisibility(View.GONE);
@@ -791,7 +773,7 @@ public class DecklistFragment extends FamiliarListFragment {
                         .formatStringWithGlyphs(info.mManaCost, imageGetter));
                 holder.setIsSwipeable(true);
             } else {
-                    /* The header uses the same layout, just set it up */
+                /* The header uses the same layout, just set it up */
                 holder.itemView.setOnClickListener(null);
                 holder.itemView.setOnLongClickListener(null);
                 final int typeIndex = Arrays.asList(
@@ -827,9 +809,9 @@ public class DecklistFragment extends FamiliarListFragment {
                 }
                 if (    /* The type is not above -1 OR is not in the sideboard */
                         (!(typeIndex > -1) || !cdi.mIsSideboard)
-                        /* The type is above -1 OR the card is in the sideboard */
+                                /* The type is above -1 OR the card is in the sideboard */
                                 && (typeIndex > -1 || cdi.mIsSideboard)
-                        /* The card is in the sideboard OR the card is the wanted type */
+                                /* The card is in the sideboard OR the card is the wanted type */
                                 && (cdi.mIsSideboard || cdi.mType.contains(types[typeIndex]))) {
                     /* There of course are edge cases */
                     final boolean lookForEnchant = types[typeIndex > -1 ? typeIndex : 0]

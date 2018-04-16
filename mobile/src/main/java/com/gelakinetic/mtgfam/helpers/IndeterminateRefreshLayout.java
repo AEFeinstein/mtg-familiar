@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
  * indication of a refresh. If an activity wishes to show just the progress
  * animation, it should call setRefreshing(true). To disable the gesture and progress
  * animation, call setEnabled(false) on the view.
- *
+ * <p>
  * <p> This layout should be made the parent of the view that will be refreshed as a
  * result of the gesture and can only support one direct child. This view will
  * also be made the target of the gesture and will be forced to match both the

@@ -26,7 +26,6 @@ import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.SpannableString;
@@ -34,13 +33,11 @@ import android.text.method.LinkMovementMethod;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.Language;
@@ -123,12 +120,9 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 // Set the image loaded with Glide
                 dialogImageView.setImageDrawable(getParentCardViewFragment().getImageDrawable());
 
-                dialogImageView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        getParentCardViewFragment().saveImageWithGlide(CardViewFragment.MAIN_PAGE);
-                        return true;
-                    }
+                dialogImageView.setOnLongClickListener(view -> {
+                    getParentCardViewFragment().saveImageWithGlide(CardViewFragment.MAIN_PAGE);
+                    return true;
                 });
 
                 return dialog;
@@ -216,12 +210,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
                 builder.title(R.string.card_view_set_dialog_title);
                 builder.items((CharSequence[]) aSets);
-                builder.itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
-                        getParentCardViewFragment().setInfoFromID(aIds[position]);
-                    }
-                });
+                builder.itemsCallback((dialog, itemView, position, text) -> getParentCardViewFragment().setInfoFromID(aIds[position]));
                 return builder.build();
             }
             case CARD_RULINGS: {
@@ -292,41 +281,32 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) deckNames)
-                        .itemsCallback(new MaterialDialog.ListCallback() {
+                        .itemsCallback((dialog, itemView, position, text) -> {
 
-                            @Override
-                            public void onSelection(
-                                    MaterialDialog dialog,
-                                    View itemView,
-                                    int position,
-                                    CharSequence text) {
+                            // Read the decklist
+                            String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
+                            ArrayList<Pair<MtgCard, Boolean>> decklist =
+                                    DecklistHelpers.ReadDecklist(getContext(), deckFileName);
 
-                                // Read the decklist
-                                String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
-                                ArrayList<Pair<MtgCard, Boolean>> decklist =
-                                        DecklistHelpers.ReadDecklist(getContext(), deckFileName);
-
-                                // Look through the decklist for any existing matches
-                                boolean entryIncremented = false;
-                                for (Pair<MtgCard, Boolean> deckEntry : decklist) {
-                                    if (!deckEntry.second && // not in the sideboard
-                                            deckEntry.first.mName.equals(cardName) &&
-                                            deckEntry.first.mExpansion.equals(cardSet)) {
-                                        // Increment the card already in the deck
-                                        deckEntry.first.mNumberOf++;
-                                        entryIncremented = true;
-                                        break;
-                                    }
+                            // Look through the decklist for any existing matches
+                            boolean entryIncremented = false;
+                            for (Pair<MtgCard, Boolean> deckEntry : decklist) {
+                                if (!deckEntry.second && // not in the sideboard
+                                        deckEntry.first.mName.equals(cardName) &&
+                                        deckEntry.first.mExpansion.equals(cardSet)) {
+                                    // Increment the card already in the deck
+                                    deckEntry.first.mNumberOf++;
+                                    entryIncremented = true;
+                                    break;
                                 }
-                                if (!entryIncremented) {
-                                    // Add a new card to the deck
-                                    decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
-                                }
-
-                                // Write the decklist back
-                                DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
+                            }
+                            if (!entryIncremented) {
+                                // Add a new card to the deck
+                                decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
                             }
 
+                            // Write the decklist back
+                            DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
                         })
                         .build();
             }
@@ -334,40 +314,32 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity)
                         .title(R.string.card_view_share_card)
                         .positiveText(R.string.search_text)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                View view = getParentCardViewFragment().getView();
-                                if (view == null) {
-                                    return;
-                                }
-                                SpannableString costSpannable = new SpannableString(((TextView) view.findViewById(R.id.cost)).getText());
-                                SpannableString abilitySpannable = new SpannableString(((TextView) view.findViewById(R.id.ability)).getText());
-                                String costText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(costSpannable));
-                                String abilityText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(abilitySpannable));
-                                String copyText = ((TextView) view.findViewById(R.id.name)).getText().toString() + '\n' +
-                                        costText + '\n' +
-                                        ((TextView) view.findViewById(R.id.type)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.set)).getText().toString() + '\n' +
-                                        abilityText + '\n' +
-                                        ((TextView) view.findViewById(R.id.flavor)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.pt)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.artist)).getText().toString() + '\n' +
-                                        ((TextView) view.findViewById(R.id.number)).getText().toString();
-                                Intent sendIntent = new Intent();
-                                sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, copyText);
-                                sendIntent.setType("text/plain");
-                                startActivity(sendIntent);
+                        .onPositive((dialog, which) -> {
+                            View view = getParentCardViewFragment().getView();
+                            if (view == null) {
+                                return;
                             }
+                            SpannableString costSpannable = new SpannableString(((TextView) view.findViewById(R.id.cost)).getText());
+                            SpannableString abilitySpannable = new SpannableString(((TextView) view.findViewById(R.id.ability)).getText());
+                            String costText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(costSpannable));
+                            String abilityText = getParentCardViewFragment().convertHtmlToPlainText(Html.toHtml(abilitySpannable));
+                            String copyText = ((TextView) view.findViewById(R.id.name)).getText().toString() + '\n' +
+                                    costText + '\n' +
+                                    ((TextView) view.findViewById(R.id.type)).getText().toString() + '\n' +
+                                    ((TextView) view.findViewById(R.id.set)).getText().toString() + '\n' +
+                                    abilityText + '\n' +
+                                    ((TextView) view.findViewById(R.id.flavor)).getText().toString() + '\n' +
+                                    ((TextView) view.findViewById(R.id.pt)).getText().toString() + '\n' +
+                                    ((TextView) view.findViewById(R.id.artist)).getText().toString() + '\n' +
+                                    ((TextView) view.findViewById(R.id.number)).getText().toString();
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, copyText);
+                            sendIntent.setType("text/plain");
+                            startActivity(sendIntent);
                         })
                         .negativeText(R.string.card_view_image)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                getParentCardViewFragment().saveImageWithGlide(CardViewFragment.SHARE);
-                            }
-                        });
+                        .onNegative((dialog, which) -> getParentCardViewFragment().saveImageWithGlide(CardViewFragment.SHARE));
                 return builder.build();
             }
             case TRANSLATE_CARD: {
@@ -445,23 +417,20 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         from, to);
                 ListView lv = new ListView(getParentCardViewFragment().mActivity);
                 lv.setAdapter(adapter);
-                lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        /* Copy the translated name to the clipboard */
-                        ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().getContext().
-                                getSystemService(android.content.Context.CLIPBOARD_SERVICE));
-                        if (null != clipboard) {
-                            ClipData cd = new ClipData(
-                                    ((TextView) view.findViewById(R.id.format)).getText(),
-                                    new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
-                                    new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
-                            clipboard.setPrimaryClip(cd);
+                lv.setOnItemLongClickListener((parent, view, position, id) -> {
+                    /* Copy the translated name to the clipboard */
+                    ClipboardManager clipboard = (ClipboardManager) (getParentCardViewFragment().getContext().
+                            getSystemService(android.content.Context.CLIPBOARD_SERVICE));
+                    if (null != clipboard) {
+                        ClipData cd = new ClipData(
+                                ((TextView) view.findViewById(R.id.format)).getText(),
+                                new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN},
+                                new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
+                        clipboard.setPrimaryClip(cd);
 
-                            ToastWrapper.makeAndShowText(getParentCardViewFragment().mActivity, R.string.card_view_copied_to_clipboard, ToastWrapper.LENGTH_SHORT);
-                        }
-                        return false;
+                        ToastWrapper.makeAndShowText(getParentCardViewFragment().mActivity, R.string.card_view_copied_to_clipboard, ToastWrapper.LENGTH_SHORT);
                     }
+                    return false;
                 });
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);

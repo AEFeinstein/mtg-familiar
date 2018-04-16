@@ -104,8 +104,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 
-import io.reactivex.functions.Consumer;
-
 /**
  * This class handles displaying card info.
  * WARNING! Because this fragment is nested in a CardViewPagerFragment, always get the parent
@@ -254,25 +252,19 @@ public class CardViewFragment extends FamiliarFragment {
         registerForContextMenu(mArtistTextView);
         registerForContextMenu(mNumberTextView);
 
-        mSetTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SearchCriteria setSearch = new SearchCriteria();
-                assert mSetTextView.getText() != null;
-                setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
-                Bundle arguments = new Bundle();
-                arguments.putSerializable(SearchViewFragment.CRITERIA, setSearch);
-                ResultListFragment rlFrag = new ResultListFragment();
-                startNewFragment(rlFrag, arguments);
-            }
+        mSetTextView.setOnClickListener(v -> {
+            SearchCriteria setSearch = new SearchCriteria();
+            assert mSetTextView.getText() != null;
+            setSearch.sets = Collections.singletonList(mSetTextView.getText().toString());
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(SearchViewFragment.CRITERIA, setSearch);
+            ResultListFragment rlFrag = new ResultListFragment();
+            startNewFragment(rlFrag, arguments);
         });
 
-        mCardImageView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                saveImageWithGlide(MAIN_PAGE);
-                return true;
-            }
+        mCardImageView.setOnLongClickListener(view -> {
+            saveImageWithGlide(MAIN_PAGE);
+            return true;
         });
 
         setInfoFromBundle(this.getArguments());
@@ -503,12 +495,10 @@ public class CardViewFragment extends FamiliarFragment {
                     mTransformButton.setVisibility(View.GONE);
                     mTransformButtonDivider.setVisibility(View.GONE);
                 } else {
-                    mTransformButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            releaseImageResources(true);
-                            mCard.mNumber = mTransformCardNumber;
-                            setInfoFromID(mTransformId);
-                        }
+                    mTransformButton.setOnClickListener(v -> {
+                        releaseImageResources(true);
+                        mCard.mNumber = mTransformCardNumber;
+                        setInfoFromID(mTransformId);
                     });
                 }
             }
@@ -804,9 +794,7 @@ public class CardViewFragment extends FamiliarFragment {
                                     return false;
                                 } else {
                                     // Done checking the cache, but there is network, try to look there starting with the 0th attempt
-                                    (new Handler()).post(() -> {
-                                        runGlideRequest(0, cardLanguage, width, height, false, target);
-                                    });
+                                    (new Handler()).post(() -> runGlideRequest(0, cardLanguage, width, height, false, target));
                                     return true;
                                 }
                             } else {
@@ -816,9 +804,7 @@ public class CardViewFragment extends FamiliarFragment {
                             }
                         } else {
                             // Otherwise post a runnable to try the next load
-                            (new Handler()).post(() -> {
-                                runGlideRequest(attempt + 1, cardLanguage, width, height, onlyCheckCache, target);
-                            });
+                            (new Handler()).post(() -> runGlideRequest(attempt + 1, cardLanguage, width, height, onlyCheckCache, target));
                             // Return true so FamiliarGlideTarget doesn't call onLoadFailed()
                             return true;
                         }
@@ -1074,29 +1060,23 @@ public class CardViewFragment extends FamiliarFragment {
             }
             case R.id.price: {
                 mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
-                        new Consumer<MarketPriceInfo>() {
-                            @Override
-                            public void accept(MarketPriceInfo marketPriceInfo) throws Exception {
-                                if (CardViewFragment.this.isAdded()) {
-                                    if (marketPriceInfo != null) {
-                                        mPriceInfo = marketPriceInfo;
-                                        showDialog(CardViewDialogFragment.GET_PRICE);
-                                    } else {
-                                        ToastWrapper.makeAndShowText(mActivity,
-                                                R.string.card_view_price_not_found,
-                                                ToastWrapper.LENGTH_SHORT);
-                                    }
+                        marketPriceInfo -> {
+                            if (CardViewFragment.this.isAdded()) {
+                                if (marketPriceInfo != null) {
+                                    mPriceInfo = marketPriceInfo;
+                                    showDialog(CardViewDialogFragment.GET_PRICE);
+                                } else {
+                                    ToastWrapper.makeAndShowText(mActivity,
+                                            R.string.card_view_price_not_found,
+                                            ToastWrapper.LENGTH_SHORT);
                                 }
                             }
                         },
-                        new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                if (CardViewFragment.this.isAdded()) {
-                                    CardViewFragment.this.removeDialog(getFragmentManager());
-                                    ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
-                                            ToastWrapper.LENGTH_SHORT);
-                                }
+                        throwable -> {
+                            if (CardViewFragment.this.isAdded()) {
+                                CardViewFragment.this.removeDialog(getFragmentManager());
+                                ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
+                                        ToastWrapper.LENGTH_SHORT);
                             }
                         });
 
@@ -1184,7 +1164,7 @@ public class CardViewFragment extends FamiliarFragment {
         }
 
         /* If this is an online-only card, hide the price lookup button */
-        if(mIsOnlineOnly) {
+        if (mIsOnlineOnly) {
             menu.findItem(R.id.price).setVisible(false);
         } else {
             menu.findItem(R.id.price).setVisible(true);

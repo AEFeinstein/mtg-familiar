@@ -22,7 +22,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -68,11 +67,7 @@ public class HtmlDocFragment extends FamiliarFragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
+                    getActivity().runOnUiThread(() -> progressBar.setVisibility(View.GONE));
                 }
             }
         });
@@ -102,11 +97,7 @@ public class HtmlDocFragment extends FamiliarFragment {
         webView.loadDataWithBaseURL(null, html.toString(), "text/html", "utf-8", null);
 
         /* Set up the button to jump to the top of the document */
-        view.findViewById(R.id.mtr_ipg_jump_to_top).setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                webView.scrollTo(0, 0);
-            }
-        });
+        view.findViewById(R.id.mtr_ipg_jump_to_top).setOnClickListener(v -> webView.scrollTo(0, 0));
 
         return view;
     }

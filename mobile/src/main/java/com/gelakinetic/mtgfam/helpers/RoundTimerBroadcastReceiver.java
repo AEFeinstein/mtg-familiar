@@ -193,7 +193,7 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
                             AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
 
                     if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                                            /* Do some speaking, on the alarm stream */
+                        /* Do some speaking, on the alarm stream */
                         HashMap<String, String> ttsParams = new HashMap<>();
                         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, WARNING_SPEECH);
                         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_ALARM));

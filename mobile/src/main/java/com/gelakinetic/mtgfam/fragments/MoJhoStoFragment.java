@@ -85,58 +85,34 @@ public class MoJhoStoFragment extends FamiliarFragment {
         assert myFragmentView != null;
 
         /* Add listeners to the portraits to show the full Vanguards */
-        myFragmentView.findViewById(R.id.imageViewMo).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(MoJhoStoDialogFragment.DIALOG_MOMIR);
-            }
-        });
+        myFragmentView.findViewById(R.id.imageViewMo).setOnClickListener(v -> showDialog(MoJhoStoDialogFragment.DIALOG_MOMIR));
 
-        myFragmentView.findViewById(R.id.imageViewSto).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(MoJhoStoDialogFragment.DIALOG_STONEHEWER);
-            }
-        });
+        myFragmentView.findViewById(R.id.imageViewSto).setOnClickListener(v -> showDialog(MoJhoStoDialogFragment.DIALOG_STONEHEWER));
 
-        myFragmentView.findViewById(R.id.imageViewJho).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(MoJhoStoDialogFragment.DIALOG_JHOIRA);
-            }
-        });
+        myFragmentView.findViewById(R.id.imageViewJho).setOnClickListener(v -> showDialog(MoJhoStoDialogFragment.DIALOG_JHOIRA));
 
         /* Add the listeners to the buttons to display random cards */
-        myFragmentView.findViewById(R.id.momir_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                try {
-                    int cmc = Integer.parseInt((String) mMomirCmcChoice.getSelectedItem());
-                    getOneSpell(CREATURE, cmc);
-                } catch (NumberFormatException e) {
-                    /* eat it */
-                }
+        myFragmentView.findViewById(R.id.momir_button).setOnClickListener(v -> {
+            try {
+                int cmc = Integer.parseInt((String) mMomirCmcChoice.getSelectedItem());
+                getOneSpell(CREATURE, cmc);
+            } catch (NumberFormatException e) {
+                /* eat it */
             }
         });
 
-        myFragmentView.findViewById(R.id.stonehewer_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                try {
-                    int cmc = Integer.parseInt((String) mStonehewerCmcChoice.getSelectedItem());
-                    getOneSpell(EQUIPMENT, cmc);
-                } catch (NumberFormatException e) {
-                    /* eat it */
-                }
+        myFragmentView.findViewById(R.id.stonehewer_button).setOnClickListener(v -> {
+            try {
+                int cmc = Integer.parseInt((String) mStonehewerCmcChoice.getSelectedItem());
+                getOneSpell(EQUIPMENT, cmc);
+            } catch (NumberFormatException e) {
+                /* eat it */
             }
         });
 
-        myFragmentView.findViewById(R.id.jhorira_instant_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getThreeSpells(INSTANT);
-            }
-        });
+        myFragmentView.findViewById(R.id.jhorira_instant_button).setOnClickListener(v -> getThreeSpells(INSTANT));
 
-        myFragmentView.findViewById(R.id.jhorira_sorcery_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getThreeSpells(SORCERY);
-            }
-        });
+        myFragmentView.findViewById(R.id.jhorira_sorcery_button).setOnClickListener(v -> getThreeSpells(SORCERY));
 
         /* Save the spinners to pull out the CMCs later */
         mMomirCmcChoice = myFragmentView.findViewById(R.id.momir_spinner);

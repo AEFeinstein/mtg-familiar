@@ -31,7 +31,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +38,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -265,16 +263,8 @@ public class SearchViewFragment extends FamiliarFragment {
         mCmcChoice.setAdapter(cmcChoiceAdapter);
 
         /* set the buttons to open the dialogs */
-        mFormatButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(SearchViewDialogFragment.FORMAT_LIST);
-            }
-        });
-        mRarityButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(SearchViewDialogFragment.RARITY_LIST);
-            }
-        });
+        mFormatButton.setOnClickListener(v -> showDialog(SearchViewDialogFragment.FORMAT_LIST));
+        mRarityButton.setOnClickListener(v -> showDialog(SearchViewDialogFragment.RARITY_LIST));
 
         /* This is a better default, might want to reorder the array */
         mColorSpinner.setSelection(2);
@@ -283,14 +273,12 @@ public class SearchViewFragment extends FamiliarFragment {
         checkDialogButtonColors();
 
         /* This listener will do searches directly from the TextViews. Attach it to everything! */
-        TextView.OnEditorActionListener doSearchListener = new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
-                if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
-                    doSearch();
-                    return true;
-                }
-                return false;
+        TextView.OnEditorActionListener doSearchListener = (arg0, arg1, arg2) -> {
+            if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
+                doSearch();
+                return true;
             }
+            return false;
         };
         mNameField.setOnEditorActionListener(doSearchListener);
         mTextField.setOnEditorActionListener(doSearchListener);
@@ -305,16 +293,13 @@ public class SearchViewFragment extends FamiliarFragment {
 
         /* set the autocomplete for card names */
         mNameField.setAdapter(new AutocompleteCursorAdapter(this, new String[]{CardDbAdapter.KEY_NAME}, new int[]{R.id.text1}, mNameField, true));
-        mNameField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SearchCriteria searchCriteria = new SearchCriteria();
-                searchCriteria.name = ((TextView) view.findViewById(R.id.text1)).getText().toString();
-                Bundle args = new Bundle();
-                args.putSerializable(CRITERIA, searchCriteria);
-                ResultListFragment rlFrag = new ResultListFragment();
-                startNewFragment(rlFrag, args);
-            }
+        mNameField.setOnItemClickListener((adapterView, view, i, l) -> {
+            SearchCriteria searchCriteria = new SearchCriteria();
+            searchCriteria.name = ((TextView) view.findViewById(R.id.text1)).getText().toString();
+            Bundle args = new Bundle();
+            args.putSerializable(CRITERIA, searchCriteria);
+            ResultListFragment rlFrag = new ResultListFragment();
+            startNewFragment(rlFrag, args);
         });
 
         /* Disable system level autocomplete for fields which do it already */
@@ -357,7 +342,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
 
                     if (mFormatNames == null) {
-                            /* Query the database for all formats and fill the arrays to populate the list of choices with */
+                        /* Query the database for all formats and fill the arrays to populate the list of choices with */
                         Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
                         formatCursor.moveToFirst();
 
@@ -408,35 +393,32 @@ public class SearchViewFragment extends FamiliarFragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            /* set the autocomplete for supertypes */
-                            ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
-                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
-                            mSupertypeField.setAdapter(supertypeAdapter);
+                    getActivity().runOnUiThread(() -> {
+                        /* set the autocomplete for supertypes */
+                        ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
+                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
+                        mSupertypeField.setAdapter(supertypeAdapter);
 
-                            /* set the autocomplete for subtypes */
-                            ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
-                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
-                            mSubtypeField.setAdapter(subtypeAdapter);
+                        /* set the autocomplete for subtypes */
+                        ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
+                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
+                        mSubtypeField.setAdapter(subtypeAdapter);
 
-                            /* set the autocomplete for sets */
-                            final SetAdapter setAdapter = new SetAdapter();
-                            mSetField.setAdapter(setAdapter);
+                        /* set the autocomplete for sets */
+                        final SetAdapter setAdapter = new SetAdapter();
+                        mSetField.setAdapter(setAdapter);
 
-                            /* set the autocomplete for artists */
-                            ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
-                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mArtists);
-                            mArtistField.setThreshold(1);
-                            mArtistField.setAdapter(artistAdapter);
+                        /* set the autocomplete for artists */
+                        ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
+                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mArtists);
+                        mArtistField.setThreshold(1);
+                        mArtistField.setAdapter(artistAdapter);
 
-                            /* set the autocomplete for watermarks */
-                            ArrayAdapter<String> watermarkAdapter = new ArrayAdapter<>(
-                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mWatermarks);
-                            mWatermarkField.setThreshold(1);
-                            mWatermarkField.setAdapter(watermarkAdapter);
-                        }
+                        /* set the autocomplete for watermarks */
+                        ArrayAdapter<String> watermarkAdapter = new ArrayAdapter<>(
+                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mWatermarks);
+                        mWatermarkField.setThreshold(1);
+                        mWatermarkField.setAdapter(watermarkAdapter);
                     });
                 } catch (NullPointerException e) {
                     /* If the UI thread isn't here, eat it */
@@ -445,11 +427,7 @@ public class SearchViewFragment extends FamiliarFragment {
         }.execute();
 
         /* set the search button! */
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                doSearch();
-            }
-        });
+        searchButton.setOnClickListener(v -> doSearch());
 
         myFragmentView.findViewById(R.id.camera_button).setVisibility(View.GONE);
         return myFragmentView;

@@ -22,11 +22,9 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
@@ -48,7 +46,7 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
             return DontShowDialog();
         }
 
-                /* This will be set to false if we are returning a null dialog. It prevents a crash */
+        /* This will be set to false if we are returning a null dialog. It prevents a crash */
         setShowsDialog(true);
 
         switch (DIALOG_SET_WARNINGS) {
@@ -76,20 +74,17 @@ public class RoundTimerDialogFragment extends FamiliarDialogFragment {
                         .customView(v, false)
                         .title(R.string.timer_warning_dialog_title)
                         .positiveText(R.string.dialog_ok)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                PreferenceAdapter
-                                        .setFifteenMinutePref(getContext(), chkFifteen.isChecked());
-                                PreferenceAdapter
-                                        .setTenMinutePref(getContext(), chkTen.isChecked());
-                                PreferenceAdapter
-                                        .setFiveMinutePref(getContext(), chkFive.isChecked());
-                                PreferenceAdapter
-                                        .setTwoMinutePref(getContext(), chkTwo.isChecked());
-                                PreferenceAdapter
-                                        .setUseSoundInsteadOfTTSPref(getContext(), chkUseSound.isChecked());
-                            }
+                        .onPositive((dialog, which) -> {
+                            PreferenceAdapter
+                                    .setFifteenMinutePref(getContext(), chkFifteen.isChecked());
+                            PreferenceAdapter
+                                    .setTenMinutePref(getContext(), chkTen.isChecked());
+                            PreferenceAdapter
+                                    .setFiveMinutePref(getContext(), chkFive.isChecked());
+                            PreferenceAdapter
+                                    .setTwoMinutePref(getContext(), chkTwo.isChecked());
+                            PreferenceAdapter
+                                    .setUseSoundInsteadOfTTSPref(getContext(), chkUseSound.isChecked());
                         })
                         .build();
             }

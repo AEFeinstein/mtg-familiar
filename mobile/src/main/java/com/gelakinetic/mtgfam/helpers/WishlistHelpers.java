@@ -206,7 +206,7 @@ public class WishlistHelpers {
                 }
                 /* Attempt to append the price */
                 if (sharePrice && isi.mPrice != null) {
-                    double price = 0;
+                    double price;
                     price = isi.mPrice.getPrice(isi.mIsFoil, priceOption);
                     if (price != 0) {
                         readableWishlist
@@ -310,7 +310,7 @@ public class WishlistHelpers {
     public static class WishlistComparator implements Comparator<CompressedWishlistInfo> {
 
         final ArrayList<SortOption> options = new ArrayList<>();
-        MarketPriceInfo.PriceType mPriceSetting = MarketPriceInfo.PriceType.MARKET;
+        MarketPriceInfo.PriceType mPriceSetting;
 
         /**
          * Constructor. It parses an "order by" string into search options. The first options have

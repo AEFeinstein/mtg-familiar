@@ -108,160 +108,118 @@ public class ManaPoolFragment extends FamiliarFragment {
             return null;
         }
 
-        whiteMinus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mWhite--;
-                if (mWhite < 0) {
-                    mWhite = 0;
-                }
-                update();
-            }
-        });
-        blueMinus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mBlue--;
-                if (mBlue < 0) {
-                    mBlue = 0;
-                }
-                update();
-            }
-        });
-        blackMinus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mBlack--;
-                if (mBlack < 0) {
-                    mBlack = 0;
-                }
-                update();
-            }
-        });
-        redMinus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mRed--;
-                if (mRed < 0) {
-                    mRed = 0;
-                }
-                update();
-            }
-        });
-        greenMinus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mGreen--;
-                if (mGreen < 0) {
-                    mGreen = 0;
-                }
-                update();
-            }
-        });
-        colorlessMinus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mColorless--;
-                if (mColorless < 0) {
-                    mColorless = 0;
-                }
-                update();
-            }
-        });
-        spellMinus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mSpell--;
-                if (mSpell < 0) {
-                    mSpell = 0;
-                }
-                update();
-            }
-        });
-        whiteMinus.setOnLongClickListener(new Button.OnLongClickListener() {
-            public boolean onLongClick(View view) {
+        whiteMinus.setOnClickListener(view -> {
+            mWhite--;
+            if (mWhite < 0) {
                 mWhite = 0;
-                update();
-                return true;
             }
+            update();
         });
-        blueMinus.setOnLongClickListener(new Button.OnLongClickListener() {
-            public boolean onLongClick(View view) {
+        blueMinus.setOnClickListener(view -> {
+            mBlue--;
+            if (mBlue < 0) {
                 mBlue = 0;
-                update();
-                return true;
             }
+            update();
         });
-        blackMinus.setOnLongClickListener(new Button.OnLongClickListener() {
-            public boolean onLongClick(View view) {
+        blackMinus.setOnClickListener(view -> {
+            mBlack--;
+            if (mBlack < 0) {
                 mBlack = 0;
-                update();
-                return true;
             }
+            update();
         });
-        redMinus.setOnLongClickListener(new Button.OnLongClickListener() {
-            public boolean onLongClick(View view) {
+        redMinus.setOnClickListener(view -> {
+            mRed--;
+            if (mRed < 0) {
                 mRed = 0;
-                update();
-                return true;
             }
+            update();
         });
-        greenMinus.setOnLongClickListener(new Button.OnLongClickListener() {
-            public boolean onLongClick(View view) {
+        greenMinus.setOnClickListener(view -> {
+            mGreen--;
+            if (mGreen < 0) {
                 mGreen = 0;
-                update();
-                return true;
             }
+            update();
         });
-        colorlessMinus.setOnLongClickListener(new Button.OnLongClickListener() {
-            public boolean onLongClick(View view) {
+        colorlessMinus.setOnClickListener(view -> {
+            mColorless--;
+            if (mColorless < 0) {
                 mColorless = 0;
-                update();
-                return true;
             }
+            update();
         });
-        spellMinus.setOnLongClickListener(new Button.OnLongClickListener() {
-            public boolean onLongClick(View view) {
+        spellMinus.setOnClickListener(view -> {
+            mSpell--;
+            if (mSpell < 0) {
                 mSpell = 0;
-                update();
-                return true;
             }
+            update();
+        });
+        whiteMinus.setOnLongClickListener(view -> {
+            mWhite = 0;
+            update();
+            return true;
+        });
+        blueMinus.setOnLongClickListener(view -> {
+            mBlue = 0;
+            update();
+            return true;
+        });
+        blackMinus.setOnLongClickListener(view -> {
+            mBlack = 0;
+            update();
+            return true;
+        });
+        redMinus.setOnLongClickListener(view -> {
+            mRed = 0;
+            update();
+            return true;
+        });
+        greenMinus.setOnLongClickListener(view -> {
+            mGreen = 0;
+            update();
+            return true;
+        });
+        colorlessMinus.setOnLongClickListener(view -> {
+            mColorless = 0;
+            update();
+            return true;
+        });
+        spellMinus.setOnLongClickListener(view -> {
+            mSpell = 0;
+            update();
+            return true;
         });
 
-        whitePlus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mWhite++;
-                update();
-            }
+        whitePlus.setOnClickListener(view -> {
+            mWhite++;
+            update();
         });
-        bluePlus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mBlue++;
-                update();
-            }
+        bluePlus.setOnClickListener(view -> {
+            mBlue++;
+            update();
         });
-        blackPlus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mBlack++;
-                update();
-            }
+        blackPlus.setOnClickListener(view -> {
+            mBlack++;
+            update();
         });
-        redPlus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mRed++;
-                update();
-            }
+        redPlus.setOnClickListener(view -> {
+            mRed++;
+            update();
         });
-        greenPlus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mGreen++;
-                update();
-            }
+        greenPlus.setOnClickListener(view -> {
+            mGreen++;
+            update();
         });
-        colorlessPlus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mColorless++;
-                update();
-            }
+        colorlessPlus.setOnClickListener(view -> {
+            mColorless++;
+            update();
         });
-        spellPlus.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View view) {
-                mSpell++;
-                update();
-            }
+        spellPlus.setOnClickListener(view -> {
+            mSpell++;
+            update();
         });
 
         return myFragmentView;

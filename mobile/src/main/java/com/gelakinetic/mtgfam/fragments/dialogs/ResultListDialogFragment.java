@@ -24,9 +24,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
-import android.view.View;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.StackingBehavior;
 import com.gelakinetic.mtgfam.R;
@@ -75,22 +73,14 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .stackingBehavior(StackingBehavior.ALWAYS)
                         .title(cardName)
                         .positiveText(R.string.result_list_Add_to_wishlist)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                WishlistHelpers.addItemToWishlist(getContext(),
-                                        new WishlistHelpers.CompressedWishlistInfo(
-                                                CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), 0));
-                            }
-                        })
+                        .onPositive((dialog, which) -> WishlistHelpers.addItemToWishlist(getContext(),
+                                new WishlistHelpers.CompressedWishlistInfo(
+                                        CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), 0)))
                         .negativeText(R.string.result_list_Add_to_decklist)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                // Show the dialog to pick a deck
-                                if (null != getParentResultListFragment()) {
-                                    getParentResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
-                                }
+                        .onNegative((dialog, which) -> {
+                            // Show the dialog to pick a deck
+                            if (null != getParentResultListFragment()) {
+                                getParentResultListFragment().showDialog(PICK_DECK, cardName, cardSet);
                             }
                         })
                         .build();
@@ -111,41 +101,32 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .title(R.string.decklist_select_dialog_title)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) deckNames)
-                        .itemsCallback(new MaterialDialog.ListCallback() {
+                        .itemsCallback((dialog, itemView, position, text) -> {
 
-                            @Override
-                            public void onSelection(
-                                    MaterialDialog dialog,
-                                    View itemView,
-                                    int position,
-                                    CharSequence text) {
+                            // Read the decklist
+                            String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
+                            ArrayList<Pair<MtgCard, Boolean>> decklist =
+                                    DecklistHelpers.ReadDecklist(getContext(), deckFileName);
 
-                                // Read the decklist
-                                String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
-                                ArrayList<Pair<MtgCard, Boolean>> decklist =
-                                        DecklistHelpers.ReadDecklist(getContext(), deckFileName);
-
-                                // Look through the decklist for any existing matches
-                                boolean entryIncremented = false;
-                                for (Pair<MtgCard, Boolean> deckEntry : decklist) {
-                                    if (!deckEntry.second && // not in the sideboard
-                                            deckEntry.first.mName.equals(cardName) &&
-                                            deckEntry.first.mExpansion.equals(cardSet)) {
-                                        // Increment the card already in the deck
-                                        deckEntry.first.mNumberOf++;
-                                        entryIncremented = true;
-                                        break;
-                                    }
+                            // Look through the decklist for any existing matches
+                            boolean entryIncremented = false;
+                            for (Pair<MtgCard, Boolean> deckEntry : decklist) {
+                                if (!deckEntry.second && // not in the sideboard
+                                        deckEntry.first.mName.equals(cardName) &&
+                                        deckEntry.first.mExpansion.equals(cardSet)) {
+                                    // Increment the card already in the deck
+                                    deckEntry.first.mNumberOf++;
+                                    entryIncremented = true;
+                                    break;
                                 }
-                                if (!entryIncremented) {
-                                    // Add a new card to the deck
-                                    decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
-                                }
-
-                                // Write the decklist back
-                                DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
+                            }
+                            if (!entryIncremented) {
+                                // Add a new card to the deck
+                                decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
                             }
 
+                            // Write the decklist back
+                            DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
                         })
                         .build();
             }

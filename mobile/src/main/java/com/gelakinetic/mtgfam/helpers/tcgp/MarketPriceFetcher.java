@@ -1,21 +1,21 @@
 /*
-* Copyright 2018 Adam Feinstein
-*
-* This file is part of MTG Familiar.
-*
-* MTG Familiar is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* MTG Familiar is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright 2018 Adam Feinstein
+ *
+ * This file is part of MTG Familiar.
+ *
+ * MTG Familiar is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MTG Familiar is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
@@ -53,8 +53,6 @@ import java.util.Date;
 import javax.annotation.Nonnull;
 
 import io.reactivex.Maybe;
-import io.reactivex.MaybeEmitter;
-import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.Single;
 import io.reactivex.functions.Consumer;
 
@@ -122,8 +120,8 @@ public class MarketPriceFetcher {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_network)));
                 }
 
-                CardDbAdapter.MultiCardType multiCardType = null;
-                String tcgSetName = null;
+                CardDbAdapter.MultiCardType multiCardType;
+                String tcgSetName;
 
                 /* then the same for multicard ordering */
                 SQLiteDatabase database;
@@ -152,7 +150,7 @@ public class MarketPriceFetcher {
                         c.close();
                     }
 
-                    if(CardDbAdapter.isOnlineOnly(params.mExpansion, database)) {
+                    if (CardDbAdapter.isOnlineOnly(params.mExpansion, database)) {
                         DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                         return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
                     }
@@ -327,21 +325,18 @@ public class MarketPriceFetcher {
             @Nonnull
             @Override
             public Maybe<MarketPriceInfo> read(@Nonnull final MtgCard cacheKey) {
-                return Maybe.create(new MaybeOnSubscribe<MarketPriceInfo>() {
-                    @Override
-                    public void subscribe(MaybeEmitter<MarketPriceInfo> emitter) {
-                        try {
-                            /* Attempt to read the cache file */
-                            File cacheFile = getCacheFile(cacheKey);
-                            FileReader reader = new FileReader(cacheFile);
-                            MarketPriceInfo info = new Gson().fromJson(reader, MarketPriceInfo.class);
-                            reader.close();
-                            /* Cache file read, emit it */
-                            emitter.onSuccess(info);
-                        } catch (Exception e) {
-                            /* Some exception occurred */
-                            emitter.onError(e);
-                        }
+                return Maybe.create(emitter -> {
+                    try {
+                        /* Attempt to read the cache file */
+                        File cacheFile = getCacheFile(cacheKey);
+                        FileReader reader = new FileReader(cacheFile);
+                        MarketPriceInfo info = new Gson().fromJson(reader, MarketPriceInfo.class);
+                        reader.close();
+                        /* Cache file read, emit it */
+                        emitter.onSuccess(info);
+                    } catch (Exception e) {
+                        /* Some exception occurred */
+                        emitter.onError(e);
                     }
                 });
             }
@@ -413,10 +408,9 @@ public class MarketPriceFetcher {
                      * callback on a UI thread
                      *
                      * @param marketPriceInfo The fetched MarketPriceInfo
-                     * @throws Exception If something goes terribly wrong
                      */
                     @Override
-                    public void accept(final MarketPriceInfo marketPriceInfo) throws Exception {
+                    public void accept(final MarketPriceInfo marketPriceInfo) {
                         /* Run the results on the UI thread */
                         mActivity.runOnUiThread(new Runnable() {
                             /**
@@ -448,10 +442,9 @@ public class MarketPriceFetcher {
                      * callback on a UI thread
                      *
                      * @param throwable The Throwable that caused the process to fail
-                     * @throws Exception If something goes terribly wrong
                      */
                     @Override
-                    public void accept(final Throwable throwable) throws Exception {
+                    public void accept(final Throwable throwable) {
                         /* Run the erros on the UI thread */
                         mActivity.runOnUiThread(new Runnable() {
                             /**

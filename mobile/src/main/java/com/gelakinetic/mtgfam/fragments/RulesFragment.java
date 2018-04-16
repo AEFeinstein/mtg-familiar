@@ -39,8 +39,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
@@ -258,45 +256,40 @@ public class RulesFragment extends FamiliarFragment {
 
                     if (isClickable) {
                         /* This only happens for rule mItems with no subcategory, so the cast, should be safe */
-                        list.setOnItemClickListener(new OnItemClickListener() {
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                DisplayItem item = mRules.get(position);
-                                Bundle args = new Bundle();
-                                if (item instanceof RuleItem) {
-                                    args.putInt(CATEGORY_KEY, ((RuleItem) item).mCategory);
-                                    args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).mSubcategory);
-                                } else if (item instanceof GlossaryItem) {
-                                    args.putBoolean(GLOSSARY_KEY, true);
-                                } else if (item instanceof BannedItem) {
-                                    args.putBoolean(BANNED_KEY, true);
-                                    if (isBanned) {
-                                        args.putString(FORMAT_KEY, item.getHeader());
-                                    }
+                        list.setOnItemClickListener((parent, view, position12, id) -> {
+                            DisplayItem item = mRules.get(position12);
+                            Bundle args = new Bundle();
+                            if (item instanceof RuleItem) {
+                                args.putInt(CATEGORY_KEY, ((RuleItem) item).mCategory);
+                                args.putInt(SUBCATEGORY_KEY, ((RuleItem) item).mSubcategory);
+                            } else if (item instanceof GlossaryItem) {
+                                args.putBoolean(GLOSSARY_KEY, true);
+                            } else if (item instanceof BannedItem) {
+                                args.putBoolean(BANNED_KEY, true);
+                                if (isBanned) {
+                                    args.putString(FORMAT_KEY, item.getHeader());
                                 }
-                                RulesFragment frag = new RulesFragment();
-                                startNewFragment(frag, args);
                             }
+                            RulesFragment frag = new RulesFragment();
+                            startNewFragment(frag, args);
                         });
                     }
-                    list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                            DisplayItem item = mRules.get(position);
-                            if (item instanceof RuleItem) {
-                                // Gets a handle to the clipboard service.
-                                ClipboardManager clipboard = (ClipboardManager)
-                                        getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                                if (null != clipboard) {
-                                    // Creates a new text clip to put on the clipboard
-                                    ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
-                                    // Set the clipboard's primary clip.
-                                    clipboard.setPrimaryClip(clip);
-                                    // Alert the user
-                                    ToastWrapper.makeAndShowText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT);
-                                }
+                    list.setOnItemLongClickListener((parent, view, position1, id) -> {
+                        DisplayItem item = mRules.get(position1);
+                        if (item instanceof RuleItem) {
+                            // Gets a handle to the clipboard service.
+                            ClipboardManager clipboard = (ClipboardManager)
+                                    getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                            if (null != clipboard) {
+                                // Creates a new text clip to put on the clipboard
+                                ClipData clip = ClipData.newPlainText(getString(R.string.rules_copy_tag), item.getHeader() + ": " + item.getText());
+                                // Set the clipboard's primary clip.
+                                clipboard.setPrimaryClip(clip);
+                                // Alert the user
+                                ToastWrapper.makeAndShowText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT);
                             }
-                            return true;
                         }
+                        return true;
                     });
                 } else {
                     /* Cursor had a size of 0, boring */
@@ -629,29 +622,41 @@ public class RulesFragment extends FamiliarFragment {
 
             this.mFormat = format;
             if (format.equalsIgnoreCase("Commander")) {
-                if (legality == RESTRICTED) {
-                    mLegality = getString(R.string.rules_banned_as_commander);
-                } else if (legality == BANNED) {
-                    mLegality = getString(R.string.card_view_banned);
-                } else if (legality == NONE) {
-                    mLegality = "";
-                } else if (legality == SETS) {
-                    mLegality = getString(R.string.rules_legal_sets);
-                } else {
-                    mLegality = "";
+                switch (legality) {
+                    case RESTRICTED:
+                        mLegality = getString(R.string.rules_banned_as_commander);
+                        break;
+                    case BANNED:
+                        mLegality = getString(R.string.card_view_banned);
+                        break;
+                    case NONE:
+                        mLegality = "";
+                        break;
+                    case SETS:
+                        mLegality = getString(R.string.rules_legal_sets);
+                        break;
+                    default:
+                        mLegality = "";
+                        break;
                 }
             } else {
-                if (legality == BANNED) {
-                    mLegality = getString(R.string.card_view_banned);
-                } else if (legality == RESTRICTED) {
-                    mLegality = getString(R.string.card_view_restricted);
+                switch (legality) {
+                    case BANNED:
+                        mLegality = getString(R.string.card_view_banned);
+                        break;
+                    case RESTRICTED:
+                        mLegality = getString(R.string.card_view_restricted);
 
-                } else if (legality == NONE) {
-                    mLegality = "";
-                } else if (legality == SETS) {
-                    mLegality = getString(R.string.rules_legal_sets);
-                } else {
-                    mLegality = "";
+                        break;
+                    case NONE:
+                        mLegality = "";
+                        break;
+                    case SETS:
+                        mLegality = getString(R.string.rules_legal_sets);
+                        break;
+                    default:
+                        mLegality = "";
+                        break;
                 }
             }
             if (cards == null) {

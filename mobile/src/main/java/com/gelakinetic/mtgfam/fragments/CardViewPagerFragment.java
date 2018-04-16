@@ -217,7 +217,7 @@ public class CardViewPagerFragment extends FamiliarFragment {
          * @param view     The view being transformed
          * @param position Where the view currently is
          */
-        public void transformPage(View view, float position) {
+        public void transformPage(@NonNull View view, float position) {
             int pageWidth = view.getWidth();
 
             if (position < -1) { /* [-Infinity,-1)

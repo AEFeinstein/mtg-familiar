@@ -23,9 +23,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -90,14 +90,12 @@ public class WishlistFragment extends FamiliarListFragment {
         View myFragmentView = inflater.inflate(R.layout.wishlist_frag, container, false);
         assert myFragmentView != null;
 
-        TextView.OnEditorActionListener addCardListener = new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
-                if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
-                    addCardToWishlist();
-                    return true;
-                }
-                return false;
+        TextView.OnEditorActionListener addCardListener = (arg0, arg1, arg2) -> {
+            if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
+                addCardToWishlist();
+                return true;
             }
+            return false;
         };
 
         /* Set up the wishlist and adapter, it will be read in onResume() */
@@ -111,12 +109,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 new int[]{R.id.priceText}, new int[]{R.id.divider_total_price},
                 R.menu.action_mode_menu, addCardListener);
 
-        myFragmentView.findViewById(R.id.add_card).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addCardToWishlist();
-            }
-        });
+        myFragmentView.findViewById(R.id.add_card).setOnClickListener(view -> addCardToWishlist());
 
         return myFragmentView;
     }
@@ -527,8 +520,9 @@ public class WishlistFragment extends FamiliarListFragment {
             super(values, WishlistFragment.this);
         }
 
+        @NonNull
         @Override
-        public WishlistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public WishlistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new WishlistViewHolder(parent);
         }
 
@@ -550,34 +544,34 @@ public class WishlistFragment extends FamiliarListFragment {
         }
 
         @Override
-        public void onBindViewHolder(WishlistViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull WishlistViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             /* Get all the wishlist info for this entry */
             final CompressedWishlistInfo info = getItem(position);
 
-                /* Make sure you can see the item */
+            /* Make sure you can see the item */
             holder.itemView.findViewById(R.id.card_row_full).setVisibility(View.VISIBLE);
 
-                /* Clear out the old items in the view */
+            /* Clear out the old items in the view */
             holder.mWishlistSets.removeAllViews();
 
-                /* Set the card name, always */
+            /* Set the card name, always */
             holder.setCardName(info.mName);
 
-                /* Show or hide full card information */
+            /* Show or hide full card information */
             holder.itemView.findViewById(R.id.cardset).setVisibility(View.GONE);
             if (mShowCardInfo) {
                 Html.ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(getActivity());
-                    /* make sure everything is showing */
+                /* make sure everything is showing */
                 holder.mCardCost.setVisibility(View.VISIBLE);
                 holder.mCardType.setVisibility(View.VISIBLE);
                 holder.mCardText.setVisibility(View.VISIBLE);
-                    /* Show the power, toughness, or loyalty if the card has it */
+                /* Show the power, toughness, or loyalty if the card has it */
                 holder.mCardPower.setVisibility(View.GONE);
                 holder.mCardSlash.setVisibility(View.GONE);
                 holder.mCardToughness.setVisibility(View.GONE);
-                    /* Set the type, cost, and ability */
+                /* Set the type, cost, and ability */
                 holder.mCardType.setText(info.mType);
                 holder.mCardCost.setText(ImageGetterHelper.formatStringWithGlyphs(info.mManaCost, imgGetter));
                 holder.mCardText.setText(ImageGetterHelper.formatStringWithGlyphs(info.mText, imgGetter));
@@ -593,16 +587,16 @@ public class WishlistFragment extends FamiliarListFragment {
                     String toughness = CardDbAdapter.getPrintedPTL(info.mToughness, shouldShowSign);
                     holder.mCardPower.setText(power);
                     holder.mCardToughness.setText(toughness);
-                    if(!power.isEmpty() && !toughness.isEmpty()) {
+                    if (!power.isEmpty() && !toughness.isEmpty()) {
                         holder.mCardPower.setVisibility(View.VISIBLE);
                         holder.mCardSlash.setVisibility(View.VISIBLE);
                         holder.mCardToughness.setVisibility(View.VISIBLE);
                     }
                 } catch (NumberFormatException nfe) {
-                        /* eat it */
+                    /* eat it */
                 }
 
-                    /* Show the loyalty, if the card has any (traitor...) */
+                /* Show the loyalty, if the card has any (traitor...) */
                 float loyalty = info.mLoyalty;
                 if (loyalty != -1 && loyalty != CardDbAdapter.NO_ONE_CARES) {
                     holder.mCardPower.setVisibility(View.GONE);
@@ -611,7 +605,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     holder.mCardToughness.setVisibility(View.VISIBLE);
                 }
             } else {
-                    /* hide all the extra fields */
+                /* hide all the extra fields */
                 holder.mCardCost.setVisibility(View.GONE);
                 holder.mCardType.setVisibility(View.GONE);
                 holder.mCardText.setVisibility(View.GONE);
@@ -620,15 +614,15 @@ public class WishlistFragment extends FamiliarListFragment {
                 holder.mCardToughness.setVisibility(View.GONE);
             }
 
-                /* Rarity is displayed on the expansion lines */
+            /* Rarity is displayed on the expansion lines */
             holder.itemView.findViewById(R.id.rarity).setVisibility(View.GONE);
 
-                /* List all the sets and wishlist values for this card */
+            /* List all the sets and wishlist values for this card */
             for (IndividualSetInfo isi : info.mInfo) {
-                    /* inflate a new row */
+                /* inflate a new row */
                 View setRow = getActivity().getLayoutInflater().inflate(R.layout.wishlist_cardset_row, (ViewGroup) holder.itemView.getParent(), false);
                 assert setRow != null;
-                    /* Write the set name, color it with the rarity */
+                /* Write the set name, color it with the rarity */
                 int color;
                 switch (isi.mRarity) {
                     case 'c':
@@ -660,17 +654,17 @@ public class WishlistFragment extends FamiliarListFragment {
                 ((TextView) setRow.findViewById(R.id.wishlistRowSet)).setTextColor(
                         ContextCompat.getColor(getContext(), getResourceIdFromAttr(color)));
 
-                    /* Show or hide the foil indicator */
+                /* Show or hide the foil indicator */
                 if (isi.mIsFoil) {
                     setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.VISIBLE);
                 } else {
                     setRow.findViewById(R.id.wishlistSetRowFoil).setVisibility(View.GONE);
                 }
 
-                    /* Show individual prices and number of each card, or message if price does not exist, if desired */
+                /* Show individual prices and number of each card, or message if price does not exist, if desired */
                 TextView priceText = setRow.findViewById(R.id.wishlistRowPrice);
                 if (mShowIndividualPrices) {
-                    double price = 0;
+                    double price;
                     if (isi.mPrice == null || (price = isi.mPrice.getPrice(isi.mIsFoil, getPriceSetting())) == 0) {
                         priceText.setText(String.format(Locale.US, "%dx %s", isi.mNumberOf, isi.mMessage));
                         priceText.setTextColor(ContextCompat.getColor(getContext(), R.color.material_red_500));
@@ -679,10 +673,10 @@ public class WishlistFragment extends FamiliarListFragment {
                         priceText.setTextColor(ContextCompat.getColor(getContext(), getResourceIdFromAttr(R.attr.color_text)));
                     }
                 } else {
-                        /* Just show the number of */
+                    /* Just show the number of */
                     priceText.setText("x" + isi.mNumberOf);
                 }
-                    /* Add the view to the linear layout */
+                /* Add the view to the linear layout */
                 holder.mWishlistSets.addView(setRow);
             }
         }

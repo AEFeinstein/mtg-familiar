@@ -103,6 +103,13 @@ public class Card implements Comparable<Card> {
             return (arg0 instanceof ForeignPrinting) &&
                     (this.mMultiverseId == ((ForeignPrinting) arg0).mMultiverseId);
         }
+
+        @Override
+        public int hashCode() {
+            int hash = 23;
+            hash = hash * 31 + super.hashCode();
+            return hash * 31 + this.mMultiverseId;
+        }
     }
 
     /**

@@ -117,9 +117,9 @@ public class MtgCard extends Card {
         return String.format(Locale.US, "$%d.%02d", this.mPrice / 100, this.mPrice % 100);
     }
 
-    /************************************************
-     *             MtgCards and Trading             *
-     ************************************************/
+    //////////////////////////////////////////////////
+    //             MtgCards and Trading             //
+    //////////////////////////////////////////////////
 
     /**
      * Returns the string representation of this MtgCard for saving trades
@@ -239,9 +239,9 @@ public class MtgCard extends Card {
         return totalPrice;
     }
 
-    /************************************************
-     *             MtgCards and Wishlist            *
-     ************************************************/
+    //////////////////////////////////////////////////
+    //             MtgCards and Wishlist            //
+    //////////////////////////////////////////////////
 
     /**
      * Returns the string representation of this MtgCard for saving wishlists
@@ -456,7 +456,7 @@ public class MtgCard extends Card {
         final String mtgiExtras = "http://magiccards.info/extras/";
         String picURL;
         if (mType.toLowerCase().contains(ctx.getString(R.string.search_Ongoing).toLowerCase()) ||
-                    /* extra space to not confuse with planeswalker */
+                /* extra space to not confuse with planeswalker */
                 mType.toLowerCase().contains(ctx.getString(R.string.search_Plane).toLowerCase() + " ") ||
                 mType.toLowerCase().contains(ctx.getString(R.string.search_Phenomenon).toLowerCase()) ||
                 mType.toLowerCase().contains(ctx.getString(R.string.search_Scheme).toLowerCase())) {

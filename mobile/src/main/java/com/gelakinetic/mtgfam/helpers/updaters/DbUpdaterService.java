@@ -425,13 +425,11 @@ public class DbUpdaterService extends IntentService {
         mNotificationManager.notify(STATUS_NOTIFICATION, mBuilder.build());
 
         /* Periodically update the progress bar */
-        mProgressUpdater = new Runnable() {
-            public void run() {
-                mBuilder.setProgress(100, mProgress, false);
-                mNotificationManager.notify(STATUS_NOTIFICATION, mBuilder.build());
-                if (mProgress != 100) {
-                    mHandler.postDelayed(mProgressUpdater, 200);
-                }
+        mProgressUpdater = () -> {
+            mBuilder.setProgress(100, mProgress, false);
+            mNotificationManager.notify(STATUS_NOTIFICATION, mBuilder.build());
+            if (mProgress != 100) {
+                mHandler.postDelayed(mProgressUpdater, 200);
             }
         };
         mHandler.postDelayed(mProgressUpdater, 200);

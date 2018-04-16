@@ -23,13 +23,11 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.RulesFragment;
@@ -87,17 +85,12 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
 
         switch (DIALOG_SEARCH) {
             case DIALOG_SEARCH: {
-                        /* Inflate a view to type in the player's name, and show it in an AlertDialog */
+                /* Inflate a view to type in the player's name, and show it in an AlertDialog */
                 @SuppressLint("InflateParams") View textEntryView = getActivity().getLayoutInflater().inflate(R.layout.alert_dialog_text_entry,
                         null, false);
                 assert textEntryView != null;
                 final EditText nameInput = textEntryView.findViewById(R.id.text_entry);
-                textEntryView.findViewById(R.id.clear_button).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        nameInput.setText("");
-                    }
-                });
+                textEntryView.findViewById(R.id.clear_button).setOnClickListener(view -> nameInput.setText(""));
 
                 String title;
                 if (getParentRulesFragment().mCategory == -1) {
@@ -118,23 +111,20 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                         .title(title)
                         .customView(textEntryView, false)
                         .positiveText(R.string.dialog_ok)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                if (nameInput.getText() == null) {
-                                    dialog.dismiss();
-                                    return;
-                                }
-                                String keyword = nameInput.getText().toString();
-                                if (keyword.length() < 3) {
-                                    ToastWrapper.makeAndShowText(getActivity(),
-                                            R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG);
-                                } else {
-                                    searchArgs = new Bundle();
-                                    searchArgs.putString(RulesFragment.KEYWORD_KEY, keyword);
-                                    searchArgs.putInt(RulesFragment.CATEGORY_KEY, getParentRulesFragment().mCategory);
-                                    searchArgs.putInt(RulesFragment.SUBCATEGORY_KEY, getParentRulesFragment().mSubcategory);
-                                }
+                        .onPositive((dialog1, which) -> {
+                            if (nameInput.getText() == null) {
+                                dialog1.dismiss();
+                                return;
+                            }
+                            String keyword = nameInput.getText().toString();
+                            if (keyword.length() < 3) {
+                                ToastWrapper.makeAndShowText(getActivity(),
+                                        R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG);
+                            } else {
+                                searchArgs = new Bundle();
+                                searchArgs.putString(RulesFragment.KEYWORD_KEY, keyword);
+                                searchArgs.putInt(RulesFragment.CATEGORY_KEY, getParentRulesFragment().mCategory);
+                                searchArgs.putInt(RulesFragment.SUBCATEGORY_KEY, getParentRulesFragment().mSubcategory);
                             }
                         })
                         .negativeText(R.string.dialog_cancel)

@@ -30,8 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -230,27 +228,22 @@ public class ResultListFragment extends FamiliarFragment {
             }
         }
 
-        mListView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    startCardViewFrag(id);
-                } catch (FamiliarDbException e) {
-                    handleFamiliarDbException(true);
-                }
+        mListView.setOnItemClickListener((parent, view, position, id) -> {
+            try {
+                startCardViewFrag(id);
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(true);
             }
         });
 
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String cardName = ((TextView) view.findViewById(R.id.card_name)).getText().toString();
-                String cardSet = null;
-                if(view.findViewById(R.id.cardset).getVisibility() == View.VISIBLE) {
-                    cardSet = ((TextView) view.findViewById(R.id.cardset)).getText().toString();
-                }
-                showDialog(ResultListDialogFragment.QUICK_ADD, cardName, cardSet);
-                return true;
+        mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            String cardName = ((TextView) view.findViewById(R.id.card_name)).getText().toString();
+            String cardSet = null;
+            if (view.findViewById(R.id.cardset).getVisibility() == View.VISIBLE) {
+                cardSet = ((TextView) view.findViewById(R.id.cardset)).getText().toString();
             }
+            showDialog(ResultListDialogFragment.QUICK_ADD, cardName, cardSet);
+            return true;
         });
 
         return myFragmentView;
@@ -280,9 +273,9 @@ public class ResultListFragment extends FamiliarFragment {
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_MULTIVERSEID
             }, database);
         }
-            /* If "id0" exists, then it's three cards and they should be merged
-             * Otherwise, do a search with the given criteria
-             */
+        /* If "id0" exists, then it's three cards and they should be merged
+         * Otherwise, do a search with the given criteria
+         */
         else if ((id = args.getLong(CARD_ID_0)) != 0L) {
             long id1 = args.getLong(CARD_ID_1);
             long id2 = args.getLong(CARD_ID_2);

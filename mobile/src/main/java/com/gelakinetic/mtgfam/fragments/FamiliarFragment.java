@@ -24,6 +24,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -93,7 +94,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @return The inflated view
      */
     @Override
-    public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+    public abstract View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
     /**
      * Clear any results from the prior fragment. We don't want them persisting past this fragment,
@@ -115,7 +116,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         super.onSaveInstanceState(outState);
     }
@@ -151,12 +152,9 @@ public abstract class FamiliarFragment extends Fragment {
             if (canInterceptSearchKey()) {
                 menu.add(R.string.search_search)
                         .setIcon(R.drawable.ic_menu_search)
-                        .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                onInterceptSearchKey();
-                                return true;
-                            }
+                        .setOnMenuItemClickListener(item -> {
+                            onInterceptSearchKey();
+                            return true;
                         }).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             } else {
 
@@ -263,20 +261,15 @@ public abstract class FamiliarFragment extends Fragment {
         /* Show a toast on the UI thread */
         FragmentActivity activity = getActivity();
         if (null != activity) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ToastWrapper.makeAndShowText(getActivity(), R.string.error_database, ToastWrapper.LENGTH_LONG);
-                }
-            });
+            activity.runOnUiThread(() -> ToastWrapper.makeAndShowText(getActivity(), R.string.error_database, ToastWrapper.LENGTH_LONG));
             /* Finish the fragment if requested */
             if (shouldFinish) {
                 try {
-                /* will be correct for nested ViewPager fragments too */
+                    /* will be correct for nested ViewPager fragments too */
                     FragmentManager fm = activity.getSupportFragmentManager();
                     if (fm != null) {
-                    /* If there is only one fragment, finish the activity
-                     * Otherwise pop the offending fragment */
+                        /* If there is only one fragment, finish the activity
+                         * Otherwise pop the offending fragment */
                         if (fm.getFragments().size() == 1) {
                             activity.finish();
                         } else {

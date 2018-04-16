@@ -321,23 +321,17 @@ public class LcPlayer {
                     mView.findViewById(R.id.commanderCastText).setVisibility(View.VISIBLE);
                     mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
                     mCommanderCastingButton.setVisibility(View.VISIBLE);
-                    mCommanderCastingButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mCommanderCasting++;
-                            mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
-                        }
+                    mCommanderCastingButton.setOnClickListener(view -> {
+                        mCommanderCasting++;
+                        mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
                     });
-                    mCommanderCastingButton.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View view) {
-                            mCommanderCasting--;
-                            if (mCommanderCasting < 0) {
-                                mCommanderCasting = 0;
-                            }
-                            mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
-                            return true;
+                    mCommanderCastingButton.setOnLongClickListener(view -> {
+                        mCommanderCasting--;
+                        if (mCommanderCasting < 0) {
+                            mCommanderCasting = 0;
                         }
+                        mCommanderCastingButton.setText(formatInt(mCommanderCasting, false));
+                        return true;
                     });
 
                     mCommanderRowView = LayoutInflater.from(
@@ -378,51 +372,23 @@ public class LcPlayer {
         }
         /* If the user touches the life total, pop a dialog to change it via keyboard */
         mReadoutTextView = mView.findViewById(R.id.player_readout);
-        mReadoutTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /* Commit any changes before showing the dialog */
-                if (mCommitting) {
-                    mCommitting = false;
-                    mHandler.removeCallbacks(mLifePoisonCommitter);
-                    mLifePoisonCommitter.run();
-                }
-                showDialog(LcPlayerDialogFragment.DIALOG_CHANGE_LIFE, -1);
+        mReadoutTextView.setOnClickListener(view -> {
+            /* Commit any changes before showing the dialog */
+            if (mCommitting) {
+                mCommitting = false;
+                mHandler.removeCallbacks(mLifePoisonCommitter);
+                mLifePoisonCommitter.run();
             }
+            showDialog(LcPlayerDialogFragment.DIALOG_CHANGE_LIFE, -1);
         });
 
         /* Set the life / poison modifier buttons */
-        mView.findViewById(R.id.player_minus1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeValue(-1, false);
-            }
-        });
-        mView.findViewById(R.id.player_minus5).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeValue(-5, false);
-            }
-        });
-        mView.findViewById(R.id.player_plus1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeValue(1, false);
-            }
-        });
-        mView.findViewById(R.id.player_plus5).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeValue(5, false);
-            }
-        });
+        mView.findViewById(R.id.player_minus1).setOnClickListener(view -> changeValue(-1, false));
+        mView.findViewById(R.id.player_minus5).setOnClickListener(view -> changeValue(-5, false));
+        mView.findViewById(R.id.player_plus1).setOnClickListener(view -> changeValue(1, false));
+        mView.findViewById(R.id.player_plus5).setOnClickListener(view -> changeValue(5, false));
 
-        mView.findViewById(R.id.player_name).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog(LcPlayerDialogFragment.DIALOG_SET_NAME, -1);
-            }
-        });
+        mView.findViewById(R.id.player_name).setOnClickListener(view -> showDialog(LcPlayerDialogFragment.DIALOG_SET_NAME, -1));
 
         setMode(statType);
 
@@ -783,12 +749,7 @@ public class LcPlayer {
             view.findViewById(R.id.dividerH).setVisibility(View.GONE);
             view.findViewById(R.id.dividerV).setVisibility(View.GONE);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showDialog(LcPlayerDialogFragment.DIALOG_COMMANDER_DAMAGE, position);
-                }
-            });
+            view.setOnClickListener(view1 -> showDialog(LcPlayerDialogFragment.DIALOG_COMMANDER_DAMAGE, position));
             return view;
         }
 

@@ -111,11 +111,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
 
         m9000Player = MediaPlayer.create(getActivity(), R.raw.over_9000);
         if (m9000Player != null) {
-            m9000Player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                public void onCompletion(MediaPlayer mp) {
-                    onUtteranceCompleted(LIFE_ANNOUNCE);
-                }
-            });
+            m9000Player.setOnCompletionListener(mp -> onUtteranceCompleted(LIFE_ANNOUNCE));
         }
     }
 
@@ -168,63 +164,45 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         }
         ViewTreeObserver viewTreeObserver = mScrollView.getViewTreeObserver();
         assert viewTreeObserver != null;
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            public void onGlobalLayout() {
-                if (isVisible()) {
-                    boolean changed = false;
-                    if (mListSizeHeight < mScrollView.getHeight()) {
-                        mListSizeHeight = mScrollView.getHeight();
-                        changed = true;
-                    }
-                    if (mListSizeWidth < mScrollView.getWidth()) {
-                        mListSizeWidth = mScrollView.getWidth();
-                        changed = true;
-                    }
-                    if (changed) {
-                        if (getActivity().getResources().getConfiguration().orientation
-                                == Configuration.ORIENTATION_LANDSCAPE) {
-                            if (mDisplayMode == DISPLAY_COMMANDER) {
-                                /* Conveniently takes care of re-adding the sized views in the right number of rows */
-                                changeDisplayMode(false);
-                            }
+        viewTreeObserver.addOnGlobalLayoutListener(() -> {
+            if (isVisible()) {
+                boolean changed = false;
+                if (mListSizeHeight < mScrollView.getHeight()) {
+                    mListSizeHeight = mScrollView.getHeight();
+                    changed = true;
+                }
+                if (mListSizeWidth < mScrollView.getWidth()) {
+                    mListSizeWidth = mScrollView.getWidth();
+                    changed = true;
+                }
+                if (changed) {
+                    if (getActivity().getResources().getConfiguration().orientation
+                            == Configuration.ORIENTATION_LANDSCAPE) {
+                        if (mDisplayMode == DISPLAY_COMMANDER) {
+                            /* Conveniently takes care of re-adding the sized views in the right number of rows */
+                            changeDisplayMode(false);
                         }
-                        for (LcPlayer player : mPlayers) {
-                            player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
-                                    getActivity().getResources().getConfiguration().orientation
-                                            == Configuration.ORIENTATION_PORTRAIT
-                            );
-                        }
+                    }
+                    for (LcPlayer player : mPlayers) {
+                        player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
+                                getActivity().getResources().getConfiguration().orientation
+                                        == Configuration.ORIENTATION_PORTRAIT
+                        );
                     }
                 }
             }
         });
 
         mPoisonButton = myFragmentView.findViewById(R.id.poison_button);
-        mPoisonButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                setStatDisplaying(STAT_POISON);
-            }
-        });
+        mPoisonButton.setOnClickListener(view -> setStatDisplaying(STAT_POISON));
 
         mLifeButton = myFragmentView.findViewById(R.id.life_button);
-        mLifeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                setStatDisplaying(STAT_LIFE);
-            }
-        });
+        mLifeButton.setOnClickListener(view -> setStatDisplaying(STAT_LIFE));
 
         mCommanderButton = myFragmentView.findViewById(R.id.commander_button);
-        mCommanderButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                setStatDisplaying(STAT_COMMANDER);
-            }
-        });
+        mCommanderButton.setOnClickListener(view -> setStatDisplaying(STAT_COMMANDER));
 
-        myFragmentView.findViewById(R.id.reset_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                showDialog(LifeCounterDialogFragment.DIALOG_RESET_CONFIRM);
-            }
-        });
+        myFragmentView.findViewById(R.id.reset_button).setOnClickListener(view -> showDialog(LifeCounterDialogFragment.DIALOG_RESET_CONFIRM));
 
         if (savedInstanceState != null) {
             mStatDisplaying = savedInstanceState.getInt(DISPLAY_MODE, STAT_LIFE);
@@ -568,17 +546,14 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             return;
         }
         if (mDisplayMode == DISPLAY_COMMANDER) {
-            player.mCommanderRowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                        /* Show this player's info in mCommanderPlayerView */
-                    mCommanderPlayerView.removeAllViews();
-                    mCommanderPlayerView.addView(player.mView);
-                    player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
-                            getActivity().getResources().getConfiguration().orientation
-                                    == Configuration.ORIENTATION_PORTRAIT
-                    );
-                }
+            player.mCommanderRowView.setOnClickListener(view -> {
+                /* Show this player's info in mCommanderPlayerView */
+                mCommanderPlayerView.removeAllViews();
+                mCommanderPlayerView.addView(player.mView);
+                player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
+                        getActivity().getResources().getConfiguration().orientation
+                                == Configuration.ORIENTATION_PORTRAIT
+                );
             });
 
             if (mPlayers.size() == 1) {
@@ -679,7 +654,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 mLargestPlayerNumber = number;
             }
         } catch (NumberFormatException e) {
-                /* eat it */
+            /* eat it */
         }
 
         mPlayers.add(player);
@@ -833,12 +808,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                     mTtsInit = true;
                     if (mIsSearchViewOpen) {
                         /* Search view is open, pend menu refresh */
-                        mAfterSearchClosedRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                getActivity().invalidateOptionsMenu();
-                            }
-                        };
+                        mAfterSearchClosedRunnable = () -> getActivity().invalidateOptionsMenu();
                     } else {
                         /* Redraw menu */
                         getActivity().invalidateOptionsMenu();

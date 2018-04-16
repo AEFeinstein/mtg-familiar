@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 /**
  * This is a superclass for all dialog fragments. It fixes some bugs and handles rotations nicely
- *
+ * <p>
  * You must override onCreateDialog(); and then call
  * newFragment.show(getActivity().getSupportFragmentManager(), FamiliarActivity.DIALOG_TAG);
  */

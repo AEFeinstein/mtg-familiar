@@ -19,8 +19,6 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
-import java.util.Date;
-
 public class ProductDetails {
     public final boolean success;
     public final String errors[];

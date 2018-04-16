@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.TextSwitcher;
@@ -97,44 +96,14 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
         mDeckCountText.setText("" + mDeckCount);
 
         /* Attach actions to all the buttons */
-        myFragmentView.findViewById(R.id.deck_counter_1).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(1);
-            }
-        });
-        myFragmentView.findViewById(R.id.deck_counter_2).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(2);
-            }
-        });
-        myFragmentView.findViewById(R.id.deck_counter_3).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(3);
-            }
-        });
-        myFragmentView.findViewById(R.id.deck_counter_4).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(4);
-            }
-        });
+        myFragmentView.findViewById(R.id.deck_counter_1).setOnClickListener(v -> updateCardCount(1));
+        myFragmentView.findViewById(R.id.deck_counter_2).setOnClickListener(v -> updateCardCount(2));
+        myFragmentView.findViewById(R.id.deck_counter_3).setOnClickListener(v -> updateCardCount(3));
+        myFragmentView.findViewById(R.id.deck_counter_4).setOnClickListener(v -> updateCardCount(4));
 
-        myFragmentView.findViewById(R.id.deck_counter_undo).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(COUNT_FLAG_UNDO);
-            }
-        });
+        myFragmentView.findViewById(R.id.deck_counter_undo).setOnClickListener(v -> updateCardCount(COUNT_FLAG_UNDO));
 
-        myFragmentView.findViewById(R.id.deck_counter_reset).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateCardCount(COUNT_FLAG_RESET);
-            }
-        });
+        myFragmentView.findViewById(R.id.deck_counter_reset).setOnClickListener(v -> updateCardCount(COUNT_FLAG_RESET));
         return myFragmentView;
     }
 

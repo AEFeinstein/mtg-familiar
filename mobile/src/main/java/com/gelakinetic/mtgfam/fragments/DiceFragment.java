@@ -84,67 +84,35 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
         int color = ContextCompat.getColor(getContext(), R.color.colorPrimary_light);
 
         if (d2 != null) {
-            d2.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    flipCoin();
-                }
-            });
+            d2.setOnClickListener(view -> flipCoin());
             d2.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d4 != null) {
-            d4.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    rollDie(4);
-                }
-            });
+            d4.setOnClickListener(view -> rollDie(4));
             d4.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d6 != null) {
-            d6.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    rollDie(6);
-                }
-            });
+            d6.setOnClickListener(view -> rollDie(6));
             d6.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d8 != null) {
-            d8.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    rollDie(8);
-                }
-            });
+            d8.setOnClickListener(view -> rollDie(8));
             d8.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d10 != null) {
-            d10.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    rollDie(10);
-                }
-            });
+            d10.setOnClickListener(view -> rollDie(10));
             d10.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d12 != null) {
-            d12.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    rollDie(12);
-                }
-            });
+            d12.setOnClickListener(view -> rollDie(12));
             d12.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d20 != null) {
-            d20.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    rollDie(20);
-                }
-            });
+            d20.setOnClickListener(view -> rollDie(20));
             d20.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (d100 != null) {
-            d100.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    rollDie(100);
-                }
-            });
+            d100.setOnClickListener(view -> rollDie(100));
             d100.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         }
         if (dN != null) {

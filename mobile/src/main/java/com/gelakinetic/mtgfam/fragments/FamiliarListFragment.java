@@ -35,7 +35,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -51,8 +50,6 @@ import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
-
-import io.reactivex.functions.Consumer;
 
 /**
  * This class is for extension by any Fragment that has a custom list of cards at it's base that
@@ -131,29 +128,19 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
 
         // Then set up the checkbox
         mCheckboxFoil = fragmentView.findViewById(R.id.list_foil);
-        mCheckboxFoil.setOnLongClickListener(new View.OnLongClickListener() {
+        mCheckboxFoil.setOnLongClickListener(view -> {
 
-            @Override
-            public boolean onLongClick(View view) {
-
-                /* Lock the checkbox on long click */
-                mCheckboxFoilLocked = true;
-                mCheckboxFoil.setChecked(true);
-                return true;
-
-            }
+            /* Lock the checkbox on long click */
+            mCheckboxFoilLocked = true;
+            mCheckboxFoil.setChecked(true);
+            return true;
 
         });
-        mCheckboxFoil.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mCheckboxFoil.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (!isChecked) {
-                    /* Unlock the checkbox when the user unchecks it */
-                    mCheckboxFoilLocked = false;
-                }
-
+            if (!isChecked) {
+                /* Unlock the checkbox when the user unchecks it */
+                mCheckboxFoilLocked = false;
             }
 
         });
@@ -164,7 +151,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         // Set up total price views
         mTotalPriceFields.clear();
         for (int resId : priceViewIds) {
-            mTotalPriceFields.add((TextView) fragmentView.findViewById(resId));
+            mTotalPriceFields.add(fragmentView.findViewById(resId));
         }
         mTotalPriceDividers.clear();
         if (null != priceDividerIds) {
@@ -471,41 +458,35 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             data.mPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getPriceSetting()) * 100);
         } else {
             getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data,
-                    new Consumer<MarketPriceInfo>() {
-                        @Override
-                        public void accept(MarketPriceInfo result) throws Exception {
-                            /* Sanity check */
-                            if (result == null) {
-                                data.mPriceInfo = null;
-                            } else {
-                                /* Set the PriceInfo object */
-                                data.mPriceInfo = result;
+                    result -> {
+                        /* Sanity check */
+                        if (result == null) {
+                            data.mPriceInfo = null;
+                        } else {
+                            /* Set the PriceInfo object */
+                            data.mPriceInfo = result;
 
-                                /* Only reset the price to the downloaded one if the old price isn't custom */
-                                if (!data.mIsCustomPrice) {
-                                    data.mPrice = (int) (result.getPrice(data.mIsFoil, getPriceSetting()) * 100);
-                                }
-                                /* Clear the message */
-                                data.mMessage = null;
+                            /* Only reset the price to the downloaded one if the old price isn't custom */
+                            if (!data.mIsCustomPrice) {
+                                data.mPrice = (int) (result.getPrice(data.mIsFoil, getPriceSetting()) * 100);
                             }
+                            /* Clear the message */
+                            data.mMessage = null;
+                        }
 
-                            /* because this can return when the fragment is in the background */
-                            if (FamiliarListFragment.this.isAdded()) {
-                                onCardPriceLookupSuccess(data, result);
-                                for (CardDataAdapter adapter : mCardDataAdapters) {
-                                    adapter.notifyDataSetChanged();
-                                }
+                        /* because this can return when the fragment is in the background */
+                        if (FamiliarListFragment.this.isAdded()) {
+                            onCardPriceLookupSuccess(data, result);
+                            for (CardDataAdapter adapter : mCardDataAdapters) {
+                                adapter.notifyDataSetChanged();
                             }
                         }
                     },
-                    new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            if (FamiliarListFragment.this.isAdded()) {
-                                onCardPriceLookupFailure(data, throwable);
-                                for (CardDataAdapter adapter : mCardDataAdapters) {
-                                    adapter.notifyDataSetChanged();
-                                }
+                    throwable -> {
+                        if (FamiliarListFragment.this.isAdded()) {
+                            onCardPriceLookupFailure(data, throwable);
+                            for (CardDataAdapter adapter : mCardDataAdapters) {
+                                adapter.notifyDataSetChanged();
                             }
                         }
                     });

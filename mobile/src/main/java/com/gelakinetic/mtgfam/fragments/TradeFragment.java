@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -122,24 +123,10 @@ public class TradeFragment extends FamiliarListFragment {
 
         /* Click listeners to add cards */
         myFragmentView.findViewById(R.id.addCardLeft).setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        addCardToTrade(LEFT);
-                    }
-
-                });
+                v -> addCardToTrade(LEFT));
 
         myFragmentView.findViewById(R.id.addCardRight).setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        addCardToTrade(RIGHT);
-                    }
-
-                });
+                v -> addCardToTrade(RIGHT));
 
         return myFragmentView;
     }
@@ -590,7 +577,7 @@ public class TradeFragment extends FamiliarListFragment {
             /* Iterate over all the sort options, starting with the high priority ones */
             for (SortOrderDialogFragment.SortOption option : options) {
                 try {
-                /* Compare the entries based on the key */
+                    /* Compare the entries based on the key */
                     switch (option.getKey()) {
                         case CardDbAdapter.KEY_NAME: {
                             retVal = card1.mName.compareTo(card2.mName);
@@ -698,8 +685,9 @@ public class TradeFragment extends FamiliarListFragment {
             this.side = side;
         }
 
+        @NonNull
         @Override
-        public TradeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public TradeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             return new TradeViewHolder(viewGroup, side);
         }
 
@@ -720,7 +708,7 @@ public class TradeFragment extends FamiliarListFragment {
         }
 
         @Override
-        public void onBindViewHolder(TradeViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull TradeViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);
 
             final MtgCard item = getItem(position);

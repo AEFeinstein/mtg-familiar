@@ -25,7 +25,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -94,33 +92,28 @@ public class CardHelpers {
         /* If the button should be shown, show it and attach a listener */
         if (showCardButton) {
             customView.findViewById(R.id.show_card_button).setOnClickListener(
-                    new View.OnClickListener() {
+                    view -> {
 
-                        @Override
-                        public void onClick(View view) {
-
-                            Bundle args = new Bundle();
-                            /* Open the database */
-                            try {
-                                SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false)
-                                        .openDatabase(false);
-                                /* Get the card ID, and send it to a new CardViewFragment */
-                                long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
-                                if (cardId > 0) {
-                                    args.putLongArray(
-                                            CardViewPagerFragment.CARD_ID_ARRAY,
-                                            new long[]{cardId}
-                                    );
-                                    args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-                                    CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
-                                    fragment.startNewFragment(cvpFrag, args);
-                                }
-                            } catch (FamiliarDbException e) {
-                                fragment.handleFamiliarDbException(false);
+                        Bundle args = new Bundle();
+                        /* Open the database */
+                        try {
+                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false)
+                                    .openDatabase(false);
+                            /* Get the card ID, and send it to a new CardViewFragment */
+                            long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
+                            if (cardId > 0) {
+                                args.putLongArray(
+                                        CardViewPagerFragment.CARD_ID_ARRAY,
+                                        new long[]{cardId}
+                                );
+                                args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+                                CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+                                fragment.startNewFragment(cvpFrag, args);
                             }
-                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-
+                        } catch (FamiliarDbException e) {
+                            fragment.handleFamiliarDbException(false);
                         }
+                        DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
 
                     });
         } else {
@@ -237,94 +230,87 @@ public class CardHelpers {
                 .title(mCardName + " " + dialogText)
                 .customView(customView, false)
                 .positiveText(fragment.getString(R.string.dialog_ok))
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                .onPositive((dialog, which) -> {
 
-                    @Override
-                    public void onClick(
-                            @NonNull MaterialDialog dialog,
-                            @NonNull DialogAction which) {
+                    ArrayList<Pair<MtgCard, Boolean>> list;
 
-                        ArrayList<Pair<MtgCard, Boolean>> list;
-
-                        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
-                            /* Read the wishlist */
-                            list = new ArrayList<>();
-                            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
-                            for (MtgCard card : wishlist) {
-                                list.add(new Pair<>(card, false));
-                            }
-                        } else {
-                            list = DecklistHelpers.ReadDecklist(
-                                    ctx,
-                                    deckName + DecklistFragment.DECK_EXTENSION
-                            );
+                    if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
+                        /* Read the wishlist */
+                        list = new ArrayList<>();
+                        ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
+                        for (MtgCard card : wishlist) {
+                            list.add(new Pair<>(card, false));
                         }
-
-                        /* Add the cards listed in the dialog to the wishlist */
-                        for (int i = 0; i < linearLayout.getChildCount(); i++) {
-                            View view = linearLayout.getChildAt(i);
-                            assert view != null;
-
-                            /* build the card object */
-                            MtgCard card = new MtgCard();
-                            card.mName = mCardName;
-                            card.mExpansion = potentialSetCodes.get(i);
-                            try {
-                                Button numberInput = view.findViewById(R.id.number_button);
-                                assert numberInput.getText() != null;
-                                card.mNumberOf = Integer.parseInt(numberInput.getText().toString());
-                            } catch (NumberFormatException e) {
-                                card.mNumberOf = 0;
-                            }
-                            card.mIsFoil = view.findViewById(R.id.wishlistDialogFoil)
-                                    .getVisibility() == View.VISIBLE;
-                            card.mRarity = potentialRarities.get(i);
-                            card.mNumber = potentialNumbers.get(i);
-
-                            /* Look through the wishlist for each card, set the numberOf or remove
-                             * it if it exists, or add the card if it doesn't */
-                            boolean added = false;
-                            for (int j = 0; j < list.size(); j++) {
-                                if (card.mName.equals(list.get(j).first.mName)
-                                        && isSideboard == list.get(j).second
-                                        && card.mExpansion.equals(list.get(j).first.mExpansion)
-                                        && card.mIsFoil == list.get(j).first.mIsFoil) {
-                                    if (card.mNumberOf == 0) {
-                                        list.remove(j);
-                                        j--;
-                                    } else {
-                                        list.get(j).first.mNumberOf = card.mNumberOf;
-                                    }
-                                    added = true;
-                                }
-                            }
-                            if (!added && card.mNumberOf > 0) {
-                                list.add(new Pair<>(card, false));
-                            }
-
-                        }
-
-                        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
-                            ArrayList<MtgCard> wishlist = new ArrayList<>();
-                            /* Turn it back in to a plain ArrayList */
-                            for (Pair<MtgCard, Boolean> card : list) {
-                                wishlist.add(card.first);
-                            }
-                            /* Write the wishlist */
-                            WishlistHelpers.WriteWishlist(fragment.getActivity(), wishlist);
-                            /* notify the fragment of a change in the wishlist */
-                            fragment.onWishlistChanged(mCardName); //
-                        } else {
-                            DecklistHelpers.WriteDecklist(
-                                    ctx,
-                                    list,
-                                    deckName + DecklistFragment.DECK_EXTENSION
-                            );
-                            fragment.onWishlistChanged(mCardName);
-
-                        }
+                    } else {
+                        list = DecklistHelpers.ReadDecklist(
+                                ctx,
+                                deckName + DecklistFragment.DECK_EXTENSION
+                        );
                     }
 
+                    /* Add the cards listed in the dialog to the wishlist */
+                    for (int i = 0; i < linearLayout.getChildCount(); i++) {
+                        View view = linearLayout.getChildAt(i);
+                        assert view != null;
+
+                        /* build the card object */
+                        MtgCard card = new MtgCard();
+                        card.mName = mCardName;
+                        card.mExpansion = potentialSetCodes.get(i);
+                        try {
+                            Button numberInput = view.findViewById(R.id.number_button);
+                            assert numberInput.getText() != null;
+                            card.mNumberOf = Integer.parseInt(numberInput.getText().toString());
+                        } catch (NumberFormatException e) {
+                            card.mNumberOf = 0;
+                        }
+                        card.mIsFoil = view.findViewById(R.id.wishlistDialogFoil)
+                                .getVisibility() == View.VISIBLE;
+                        card.mRarity = potentialRarities.get(i);
+                        card.mNumber = potentialNumbers.get(i);
+
+                        /* Look through the wishlist for each card, set the numberOf or remove
+                         * it if it exists, or add the card if it doesn't */
+                        boolean added = false;
+                        for (int j = 0; j < list.size(); j++) {
+                            if (card.mName.equals(list.get(j).first.mName)
+                                    && isSideboard == list.get(j).second
+                                    && card.mExpansion.equals(list.get(j).first.mExpansion)
+                                    && card.mIsFoil == list.get(j).first.mIsFoil) {
+                                if (card.mNumberOf == 0) {
+                                    list.remove(j);
+                                    j--;
+                                } else {
+                                    list.get(j).first.mNumberOf = card.mNumberOf;
+                                }
+                                added = true;
+                            }
+                        }
+                        if (!added && card.mNumberOf > 0) {
+                            list.add(new Pair<>(card, false));
+                        }
+
+                    }
+
+                    if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
+                        ArrayList<MtgCard> wishlist = new ArrayList<>();
+                        /* Turn it back in to a plain ArrayList */
+                        for (Pair<MtgCard, Boolean> card : list) {
+                            wishlist.add(card.first);
+                        }
+                        /* Write the wishlist */
+                        WishlistHelpers.WriteWishlist(fragment.getActivity(), wishlist);
+                        /* notify the fragment of a change in the wishlist */
+                        fragment.onWishlistChanged(mCardName); //
+                    } else {
+                        DecklistHelpers.WriteDecklist(
+                                ctx,
+                                list,
+                                deckName + DecklistFragment.DECK_EXTENSION
+                        );
+                        fragment.onWishlistChanged(mCardName);
+
+                    }
                 })
                 .negativeText(fragment.getString(R.string.dialog_cancel))
                 .build();
