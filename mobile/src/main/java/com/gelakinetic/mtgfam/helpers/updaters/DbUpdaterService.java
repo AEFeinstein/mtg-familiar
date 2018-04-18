@@ -318,9 +318,6 @@ public class DbUpdaterService extends IntentService {
                             CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
                         }
 
-                        /* Close the database */
-                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
-
                         updatedStuff.add(getString(R.string.update_added_rules));
                     }
                 }
@@ -333,6 +330,9 @@ public class DbUpdaterService extends IntentService {
                 if (logWriter != null) {
                     e1.printStackTrace(logWriter);
                 }
+            } finally {
+                /* Close the database */
+                DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
             }
 
             /* Parse the MTR and IPG */

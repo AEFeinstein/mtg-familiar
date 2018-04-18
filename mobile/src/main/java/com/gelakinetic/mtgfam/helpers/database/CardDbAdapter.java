@@ -59,7 +59,7 @@ import java.util.zip.GZIPInputStream;
 public class CardDbAdapter {
 
     /* Database version. Must be incremented whenever datagz is updated */
-    public static final int DATABASE_VERSION = 90;
+    public static final int DATABASE_VERSION = 91;
 
     /* The name of the database */
     public static final String DATABASE_NAME = "data";
@@ -281,9 +281,9 @@ public class CardDbAdapter {
                     KEY_ID + " integer primary key autoincrement, " +
                     KEY_CATEGORY + " integer not null, " +
                     KEY_SUBCATEGORY + " integer not null, " +
-                    KEY_ENTRY + " text not null, " +
+                    KEY_ENTRY + " text, " +
                     KEY_RULE_TEXT + " text not null, " +
-                    KEY_POSITION + " integer not null);";
+                    KEY_POSITION + " integer);";
 
     /* Special values for KEY_POWER and KEY_TOUGHNESS */
     public static final int STAR = -1000;
