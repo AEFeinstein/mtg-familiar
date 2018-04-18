@@ -469,8 +469,8 @@ public class CardDbAdapter {
                             " ORDER BY " + colKey;
             cursor = database.rawQuery(query, null);
 
-            // If the cursor is null, return an empty array
-            if (null == cursor) {
+            // If the cursor is null or has no results, return an empty array
+            if (null == cursor || cursor.getCount() == 0) {
                 return new String[]{};
             }
 

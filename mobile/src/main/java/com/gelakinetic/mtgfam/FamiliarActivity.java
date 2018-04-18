@@ -676,7 +676,7 @@ public class FamiliarActivity extends AppCompatActivity {
          * appropriate fragment */
         /* Only launch a fragment if the app isn't being recreated, i.e. savedInstanceState is
          * null */
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && getIntent() != null) {
             isDeepLink = processIntent(getIntent());
         }
 
@@ -757,10 +757,16 @@ public class FamiliarActivity extends AppCompatActivity {
         // (new LookupAllPricesTest()).execute(this);
     }
 
-    private boolean processIntent(Intent intent) {
+    private boolean processIntent(@NonNull Intent intent) {
         boolean isDeepLink = false;
 
-        switch (intent.getAction()) {
+        String action;
+        try {
+            action = intent.getAction();
+        } catch (NullPointerException e) {
+            action = "";
+        }
+        switch (action) {
             case Intent.ACTION_SEARCH: {
                 /* Do a search by name, launched from the quick search */
                 String query = intent.getStringExtra(SearchManager.QUERY);
