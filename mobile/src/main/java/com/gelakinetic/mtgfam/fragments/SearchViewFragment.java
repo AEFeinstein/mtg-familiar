@@ -374,8 +374,9 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 } catch (FamiliarDbException e) {
                     handleFamiliarDbException(true);
+                } finally {
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 }
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 return null;
             }

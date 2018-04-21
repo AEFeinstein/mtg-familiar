@@ -246,8 +246,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 String[] from = new String[]{"format", "status"};
                 int[] to = new int[]{R.id.format, R.id.status};
                 try {
-                    SQLiteDatabase database =
-                            DatabaseManager.getInstance(getContext(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getContext(), false).openDatabase(false);
                     Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                     cFormats.moveToFirst();
                     List<HashMap<String, String>> fillMaps = new ArrayList<>();
@@ -303,11 +302,11 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
                     builder.customView(lv, false);
                     builder.title(R.string.decklist_legality);
-                    DatabaseManager.getInstance(getContext(), false).closeDatabase(false);
                     return builder.build();
                 } catch (FamiliarDbException fdbe) {
-                    DatabaseManager.getInstance(getContext(), false).closeDatabase(false);
                     getParentDecklistFragment().handleFamiliarDbException(false);
+                } finally {
+                    DatabaseManager.getInstance(getContext(), false).closeDatabase(false);
                 }
             }
             default: {

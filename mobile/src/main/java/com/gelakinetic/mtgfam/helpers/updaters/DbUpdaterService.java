@@ -136,21 +136,21 @@ public class DbUpdaterService extends IntentService {
             boolean commitDates = true;
             boolean newRulesParsed = false;
 
-            try {
-                /* Look for updates with the banned / restricted lists and formats */
-                LegalityData legalityData = parser.readLegalityJsonStream(this, logWriter);
+            /* Look for updates with the banned / restricted lists and formats */
+            LegalityData legalityData = parser.readLegalityJsonStream(this, logWriter);
 
-                /* Log the date */
+            /* Log the date */
+            if (logWriter != null) {
+                logWriter.write("mCurrentRulesDate: " + parser.mCurrentLegalityTimestamp + '\n');
+            }
+
+            if (legalityData != null) {
                 if (logWriter != null) {
-                    logWriter.write("mCurrentRulesDate: " + parser.mCurrentLegalityTimestamp + '\n');
+                    logWriter.write("Adding new legalityData" + '\n');
                 }
 
-                if (legalityData != null) {
-                    if (logWriter != null) {
-                        logWriter.write("Adding new legalityData" + '\n');
-                    }
-
-                    /* Open a writable database, insert the legality data */
+                /* Open a writable database, insert the legality data */
+                try {
                     SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
                     /* Add all the data we've downloaded */
                     CardDbAdapter.dropLegalTables(database);
@@ -171,21 +171,28 @@ public class DbUpdaterService extends IntentService {
                             CardDbAdapter.addLegalCard(restrictedCard, format.mName, CardDbAdapter.RESTRICTED, database);
                         }
                     }
-
+                } catch (FamiliarDbException e) {
+                    commitDates = false; /* don't commit the dates */
+                    if (logWriter != null) {
+                        e.printStackTrace(logWriter);
+                    }
+                } finally {
                     /* Close the writable database */
                     DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
                 }
+            }
 
-                /* Change the notification to generic "checking for updates" */
-                switchToChecking();
+            /* Change the notification to generic "checking for updates" */
+            switchToChecking();
 
-                /* Look for new cards */
-                Manifest manifest = parser.readUpdateJsonStream(getApplicationContext(), logWriter);
+            /* Look for new cards */
+            Manifest manifest = parser.readUpdateJsonStream(getApplicationContext(), logWriter);
 
-                if (manifest != null) {
-                    /* Make an arraylist of all the current set codes */
-                    ArrayList<String> currentSetCodes = new ArrayList<>();
-                    HashMap<String, String> storedDigests = new HashMap<>();
+            if (manifest != null) {
+                /* Make an arraylist of all the current set codes */
+                ArrayList<String> currentSetCodes = new ArrayList<>();
+                HashMap<String, String> storedDigests = new HashMap<>();
+                try {
                     /* Get readable database access */
                     SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), false).openDatabase(false);
                     Cursor setCursor = CardDbAdapter.fetchAllSets(database);
@@ -201,10 +208,18 @@ public class DbUpdaterService extends IntentService {
                         /* Cleanup */
                         setCursor.close();
                     }
+                } catch (FamiliarDbException e) {
+                    commitDates = false; /* don't commit the dates */
+                    if (logWriter != null) {
+                        e.printStackTrace(logWriter);
+                    }
+                } finally {
                     DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false);
+                }
 
-                    /* Look through the manifest and drop all out of date sets */
-                    database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                /* Look through the manifest and drop all out of date sets */
+                try {
+                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
                     for (Manifest.ManifestEntry set : manifest.mPatches) {
                         try {
                             /* If the digest doesn't match, mark the set for dropping
@@ -221,32 +236,40 @@ public class DbUpdaterService extends IntentService {
                             /* eat it */
                         }
                     }
+                } catch (FamiliarDbException e) {
+                    commitDates = false; /* don't commit the dates */
+                    if (logWriter != null) {
+                        e.printStackTrace(logWriter);
+                    }
+                } finally {
                     DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+                }
 
-                    /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
-                    for (Manifest.ManifestEntry set : manifest.mPatches) {
-                        if (!set.mCode.equals("DD3") && /* Never download the old Duel Deck Anthologies patch */
-                                !currentSetCodes.contains(set.mCode)) { /* check to see if the patch is known already */
-                            int retries = 5;
-                            while (retries > 0) {
-                                try {
-                                    /* Change the notification to the specific set */
-                                    switchToUpdating(String.format(getString(R.string.update_updating_set), set.mName));
-                                    InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter, getApplicationContext());
-                                    if (streamToRead != null) {
-                                        ArrayList<Card> cardsToAdd = new ArrayList<>();
-                                        ArrayList<Expansion> setsToAdd = new ArrayList<>();
+                /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
+                for (Manifest.ManifestEntry set : manifest.mPatches) {
+                    if (!set.mCode.equals("DD3") && /* Never download the old Duel Deck Anthologies patch */
+                            !currentSetCodes.contains(set.mCode)) { /* check to see if the patch is known already */
+                        int retries = 5;
+                        while (retries > 0) {
+                            try {
+                                /* Change the notification to the specific set */
+                                switchToUpdating(String.format(getString(R.string.update_updating_set), set.mName));
+                                InputStream streamToRead = FamiliarActivity.getHttpInputStream(set.mURL, logWriter, getApplicationContext());
+                                if (streamToRead != null) {
+                                    ArrayList<Card> cardsToAdd = new ArrayList<>();
+                                    ArrayList<Expansion> setsToAdd = new ArrayList<>();
 
-                                        GZIPInputStream gis = new GZIPInputStream(streamToRead);
-                                        JsonReader reader = new JsonReader(new InputStreamReader(gis, "UTF-8"));
-                                        parser.readCardJsonStream(reader, cardsToAdd, setsToAdd);
-                                        streamToRead.close();
-                                        updatedStuff.add(set.mName);
-                                        /* Everything was successful, retries = 0 breaks the while loop */
-                                        retries = 0;
+                                    GZIPInputStream gis = new GZIPInputStream(streamToRead);
+                                    JsonReader reader = new JsonReader(new InputStreamReader(gis, "UTF-8"));
+                                    parser.readCardJsonStream(reader, cardsToAdd, setsToAdd);
+                                    streamToRead.close();
+                                    updatedStuff.add(set.mName);
+                                    /* Everything was successful, retries = 0 breaks the while loop */
+                                    retries = 0;
 
-                                        /* After the download, open the database */
-                                        database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                                    /* After the download, open the database */
+                                    try {
+                                        SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
                                         /* Insert the newly downloaded info */
                                         for (Expansion expansion : setsToAdd) {
                                             if (logWriter != null) {
@@ -261,47 +284,57 @@ public class DbUpdaterService extends IntentService {
                                             cardsAdded++;
                                             mProgress = (int) (100 * (cardsAdded / (float) cardsToAdd.size()));
                                         }
+
+                                    } catch (FamiliarDbException e) {
+                                        commitDates = false; /* don't commit the dates */
+                                        if (logWriter != null) {
+                                            e.printStackTrace(logWriter);
+                                        }
+                                    } finally {
                                         /* Close the database */
                                         DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
                                     }
-                                } catch (IOException e) {
-                                    if (logWriter != null) {
-                                        logWriter.print("Retry " + retries + '\n');
-                                        e.printStackTrace(logWriter);
-                                    }
                                 }
-                                retries--;
+                            } catch (IOException e) {
+                                if (logWriter != null) {
+                                    logWriter.print("Retry " + retries + '\n');
+                                    e.printStackTrace(logWriter);
+                                }
                             }
+                            retries--;
                         }
                     }
                 }
+            }
 
-                /* Change the notification to generic "checking for updates" */
-                switchToChecking();
+            /* Change the notification to generic "checking for updates" */
+            switchToChecking();
 
-                /* Parse the rules
-                 * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
-                 * built. This is a safe assumption to make, since any market release will have the latest database baked
-                 * in.
-                 */
+            /* Parse the rules
+             * Instead of using a hardcoded string, the default lastRulesUpdate is the timestamp of when the APK was
+             * built. This is a safe assumption to make, since any market release will have the latest database baked
+             * in.
+             */
 
-                long lastRulesUpdate = PreferenceAdapter.getLastRulesUpdate(this);
+            long lastRulesUpdate = PreferenceAdapter.getLastRulesUpdate(this);
 
-                RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
+            RulesParser rp = new RulesParser(new Date(lastRulesUpdate), reporter);
 
-                if (rp.needsToUpdate(getApplicationContext(), logWriter)) {
-                    switchToUpdating(getString(R.string.update_updating_rules));
-                    if (rp.parseRules(logWriter)) {
-                        ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();
-                        ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
-                        rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
+            if (rp.needsToUpdate(getApplicationContext(), logWriter)) {
+                switchToUpdating(getString(R.string.update_updating_rules));
+                if (rp.parseRules(logWriter)) {
+                    ArrayList<RulesParser.RuleItem> rulesToAdd = new ArrayList<>();
+                    ArrayList<RulesParser.GlossaryItem> glossaryItemsToAdd = new ArrayList<>();
+                    rp.loadRulesAndGlossary(rulesToAdd, glossaryItemsToAdd);
 
-                        /* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
-                         * should let them know and try again next update.
-                         */
-                        newRulesParsed = true;
+                    /* Only save the timestamp of this if the update was 100% successful; if something went screwy, we
+                     * should let them know and try again next update.
+                     */
+                    newRulesParsed = true;
 
-                        /* Open the database */
+                    /* Open the database */
+                    try {
+
                         SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
 
                         /* Add stored rules */
@@ -317,23 +350,20 @@ public class DbUpdaterService extends IntentService {
                         for (RulesParser.GlossaryItem term : glossaryItemsToAdd) {
                             CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
                         }
-
                         updatedStuff.add(getString(R.string.update_added_rules));
+                    } catch (FamiliarDbException e) {
+                        commitDates = false; /* don't commit the dates */
+                        if (logWriter != null) {
+                            e.printStackTrace(logWriter);
+                        }
+                    } finally {
+                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
                     }
                 }
-
-                /* Change the notification to generic "checking for updates" */
-                switchToChecking();
-
-            } catch (FamiliarDbException e1) {
-                commitDates = false; /* don't commit the dates */
-                if (logWriter != null) {
-                    e1.printStackTrace(logWriter);
-                }
-            } finally {
-                /* Close the database */
-                DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
             }
+
+            /* Change the notification to generic "checking for updates" */
+            switchToChecking();
 
             /* Parse the MTR and IPG */
             MTRIPGParser mtrIpgParser = new MTRIPGParser(this);

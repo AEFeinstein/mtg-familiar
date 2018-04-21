@@ -375,8 +375,7 @@ public class CardViewFragment extends FamiliarFragment {
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(mActivity);
 
         try {
-            SQLiteDatabase database =
-                    DatabaseManager.getInstance(mActivity, false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
             Cursor cCardById;
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
@@ -603,10 +602,9 @@ public class CardViewFragment extends FamiliarFragment {
             }
         } catch (FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
+        } finally {
             DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
-            return;
         }
-        DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
     }
 
     /**
@@ -1215,8 +1213,7 @@ public class CardViewFragment extends FamiliarFragment {
         protected Void doInBackground(Void... params) {
 
             try {
-                SQLiteDatabase database =
-                        DatabaseManager.getInstance(mActivity, false).openDatabase(false);
+                SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
                 Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
                 mLegalities = new String[cFormats.getCount()];
@@ -1253,9 +1250,10 @@ public class CardViewFragment extends FamiliarFragment {
             } catch (FamiliarDbException e) {
                 CardViewFragment.this.handleFamiliarDbException(false);
                 mLegalities = null;
+            } finally {
+                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
             }
 
-            DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
             return null;
         }
 

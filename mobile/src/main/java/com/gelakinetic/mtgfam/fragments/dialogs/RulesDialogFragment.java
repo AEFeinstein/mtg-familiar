@@ -103,8 +103,9 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                     } catch (FamiliarDbException e) {
                         title = String.format(getString(R.string.rules_search_cat),
                                 getString(R.string.rules_this_cat));
+                    } finally {
+                        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                     }
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 }
 
                 Dialog dialog = new MaterialDialog.Builder(getActivity())

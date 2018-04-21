@@ -376,8 +376,9 @@ public class DecklistFragment extends FamiliarListFragment {
                     ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
+        } finally {
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**

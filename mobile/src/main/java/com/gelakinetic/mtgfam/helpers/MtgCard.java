@@ -148,64 +148,52 @@ public class MtgCard extends Card {
      */
     public static MtgCard fromTradeString(String line, Context context) {
 
-        SQLiteDatabase database = null;
-        try {
-            database = DatabaseManager.getInstance(context, false).openDatabase(false);
-        } catch (FamiliarDbException e) {
-            /* Carry on without the database */
-        }
-
         MtgCard card = new MtgCard();
-        String[] parts = line.split(DELIMITER);
+        try {
+            SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false);
 
-        /* Parse these parts out of the string */
-        card.mSide = Integer.parseInt(parts[0]);
-        card.mName = parts[1];
-        card.mExpansion = parts[2];
+            String[] parts = line.split(DELIMITER);
 
-        /* Correct the mExpansion code for Duel Deck Anthologies */
-        if (card.mExpansion.equals("DD3")) {
-            try {
+            /* Parse these parts out of the string */
+            card.mSide = Integer.parseInt(parts[0]);
+            card.mName = parts[1];
+            card.mExpansion = parts[2];
+
+            /* Correct the mExpansion code for Duel Deck Anthologies */
+            if (card.mExpansion.equals("DD3")) {
                 card.mExpansion = CardDbAdapter.getCorrectSetCode(card.mName, card.mExpansion, database);
-            } catch (FamiliarDbException | NullPointerException e) {
-                /* Eat it and use the old mExpansion code. */
             }
-        }
-        card.mNumberOf = Integer.parseInt(parts[3]);
+            card.mNumberOf = Integer.parseInt(parts[3]);
 
-        /* These parts may not exist */
-        card.mIsCustomPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
-        if (parts.length > 5) {
-            card.mPrice = Integer.parseInt(parts[5]);
-        } else {
-            card.mPrice = 0;
-        }
-        card.mIsFoil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
+            /* These parts may not exist */
+            card.mIsCustomPrice = parts.length > 4 && Boolean.parseBoolean(parts[4]);
+            if (parts.length > 5) {
+                card.mPrice = Integer.parseInt(parts[5]);
+            } else {
+                card.mPrice = 0;
+            }
+            card.mIsFoil = parts.length > 6 && Boolean.parseBoolean(parts[6]);
 
-        if (parts.length > 7) {
-            card.mCmc = Integer.parseInt(parts[7]);
-            card.mColor = parts[8];
-        } else {
-            /* Pull from db */
-            try {
+            if (parts.length > 7) {
+                card.mCmc = Integer.parseInt(parts[7]);
+                card.mColor = parts[8];
+            } else {
+                /* Pull from db */
                 Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR), true, false, database);
                 card.mCmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
                 card.mColor = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
-            } catch (FamiliarDbException | NullPointerException e) {
-                card.mCmc = 0;
-                card.mColor = "";
             }
+
+            /* Defaults regardless */
+            card.mSetName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
+        } catch (FamiliarDbException e) {
+            /* Oops, data will be incomplete */
+        } finally {
+            DatabaseManager.getInstance(context, false).closeDatabase(false);
         }
 
-        /* Defaults regardless */
-        try {
-            card.mSetName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
-        } catch (FamiliarDbException | NullPointerException e) {
-            card.mSetName = null;
-        }
-        DatabaseManager.getInstance(context, false).closeDatabase(false);
         card.mMessage = context.getString(R.string.wishlist_loading);
         return card;
     }
@@ -279,8 +267,9 @@ public class MtgCard extends Card {
                 newCard.mExpansion = CardDbAdapter.getCorrectSetCode(newCard.mName, newCard.mExpansion, database);
             } catch (FamiliarDbException e) {
                 /* Eat it and use the old mExpansion code. */
+            } finally {
+                DatabaseManager.getInstance(mCtx, false).closeDatabase(false);
             }
-            DatabaseManager.getInstance(mCtx, false).closeDatabase(false);
         }
         newCard.mNumberOf = Integer.parseInt(parts[2]);
 

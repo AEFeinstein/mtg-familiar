@@ -528,8 +528,9 @@ public class FamiliarActivity extends AppCompatActivity {
                             startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
                         } catch (FamiliarDbException e) {
                             e.printStackTrace();
+                        } finally {
+                            DatabaseManager.getInstance(FamiliarActivity.this, true).closeDatabase(true);
                         }
-                        DatabaseManager.getInstance(FamiliarActivity.this, true).closeDatabase(true);
                     }
                     shouldCloseDrawer = true;
                     break;
@@ -885,8 +886,9 @@ public class FamiliarActivity extends AppCompatActivity {
                         }
                     } catch (FamiliarDbException e) {
                         e.printStackTrace();
+                    } finally {
+                        DatabaseManager.getInstance(this, false).closeDatabase(false);
                     }
-                    DatabaseManager.getInstance(this, false).closeDatabase(false);
                 }
                 args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
                 if (shouldSelectItem) {

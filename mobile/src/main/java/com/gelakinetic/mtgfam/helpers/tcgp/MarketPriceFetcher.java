@@ -124,9 +124,8 @@ public class MarketPriceFetcher {
                 String tcgSetName;
 
                 /* then the same for multicard ordering */
-                SQLiteDatabase database;
                 try {
-                    database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
 
                     /* If the card number wasn't given, figure it out */
                     if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
@@ -151,7 +150,6 @@ public class MarketPriceFetcher {
                     }
 
                     if (CardDbAdapter.isOnlineOnly(params.mExpansion, database)) {
-                        DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                         return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
                     }
 
@@ -161,8 +159,9 @@ public class MarketPriceFetcher {
                     tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
 
                 } catch (FamiliarDbException e) {
-                    DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
+                } finally {
+                    DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                 }
 
                 /* If this isn't a multi-card, don't iterate so much */
@@ -181,6 +180,8 @@ public class MarketPriceFetcher {
                         for (int multiOption = 0; multiOption < numMultiCardOptions; multiOption++) {
                             String tcgCardName = null;
                             try {
+                                SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
+
                                 /* Set up retries for multicard ordering */
                                 if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
                                     /* Next time try the other order */
@@ -222,7 +223,10 @@ public class MarketPriceFetcher {
                                 }
 
                             } catch (FamiliarDbException e) {
+                                tcgCardName = null;
                                 lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
+                            } finally {
+                                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                             }
 
                             if (null != tcgCardName) {
@@ -234,38 +238,27 @@ public class MarketPriceFetcher {
                                         if (price.results.length > 0) {
                                             ProductDetails details = api.getProductDetails(information.results);
                                             if (details.results.length > 0) {
-                                                /* database close if all is good */
-                                                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
-
                                                 /* Return a new MarketPriceInfo */
                                                 return Single.just(new MarketPriceInfo(price.results, details.results));
                                             } else if (details.errors.length > 0) {
                                                 /* Return the error returned by TCGPlayer */
-                                                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                                                 return Single.error(new Throwable(details.errors[0]));
                                             }
                                         } else if (price.errors.length > 0) {
                                             /* Return the error returned by TCGPlayer */
-                                            DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                                             return Single.error(new Throwable(price.errors[0]));
                                         }
                                     } else if (information.errors.length > 0) {
                                         /* Return the error returned by TCGPlayer */
-                                        DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                                         return Single.error(new Throwable(information.errors[0]));
                                     }
                                 } catch (IOException e) {
                                     lastThrownException = new Exception(mActivity.getString(R.string.price_error_network));
                                 }
-                            } else {
-                                lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
                             }
                         }
                     }
                 }
-
-                /* database close if something failed */
-                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
                 return Single.error(lastThrownException);
             }
         };

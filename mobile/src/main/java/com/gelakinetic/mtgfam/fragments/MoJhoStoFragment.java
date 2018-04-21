@@ -216,7 +216,6 @@ public class MoJhoStoFragment extends FamiliarFragment {
 
             if (permanents.getCount() == 0) {
                 permanents.close();
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 return;
             }
             int pos = mRandom.nextInt(permanents.getCount());
@@ -232,8 +231,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
             permanents.close();
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
+        } finally {
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**
@@ -281,7 +281,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
             spells.close();
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
+        } finally {
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 }

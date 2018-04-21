@@ -97,8 +97,7 @@ public class CardHelpers {
                         Bundle args = new Bundle();
                         /* Open the database */
                         try {
-                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false)
-                                    .openDatabase(false);
+                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
                             /* Get the card ID, and send it to a new CardViewFragment */
                             long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
                             if (cardId > 0) {
@@ -112,8 +111,9 @@ public class CardHelpers {
                             }
                         } catch (FamiliarDbException e) {
                             fragment.handleFamiliarDbException(false);
+                        } finally {
+                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
                         }
-                        DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
 
                     });
         } else {
@@ -165,8 +165,7 @@ public class CardHelpers {
 
         try {
             /* Open the database */
-            SQLiteDatabase db =
-                    DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
+            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
 
             /* Get all the cards with relevant info from the database */
             Cursor cards;
@@ -219,11 +218,10 @@ public class CardHelpers {
             /* Clean up */
             cards.close();
         } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
             return null;
+        } finally {
+            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
         }
-
-        DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
 
         /* make and return the actual dialog */
         return new MaterialDialog.Builder(ctx)
@@ -666,7 +664,6 @@ public class CardHelpers {
                 if (cardCursor.getCount() == 0) {
                     ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
                             ToastWrapper.LENGTH_LONG);
-                    DatabaseManager.getInstance(activity, false).closeDatabase(false);
                     return null;
                 }
                 /* If we don't specify the set, and we are trying to find a foil card, choose the
@@ -690,7 +687,6 @@ public class CardHelpers {
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
                         ToastWrapper.LENGTH_LONG);
-                DatabaseManager.getInstance(activity, false).closeDatabase(false);
                 return null;
             }
 
@@ -732,8 +728,9 @@ public class CardHelpers {
             return card;
         } catch (FamiliarDbException | NumberFormatException fde) {
             /* todo: handle this */
+        } finally {
+            DatabaseManager.getInstance(activity, false).closeDatabase(false);
         }
-        DatabaseManager.getInstance(activity, false).closeDatabase(false);
         return null;
 
     }

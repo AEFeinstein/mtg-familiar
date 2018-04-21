@@ -141,8 +141,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 } catch (FamiliarDbException e) {
                     /* Err on the side of foil */
                     foilCheckbox.setVisibility(View.VISIBLE);
+                } finally {
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 }
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 /* when the user checks or un-checks the foil box, if the price isn't custom, set it */
                 foilCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -193,8 +194,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         getParentTradeFragment().startNewFragment(cvpFrag, args);
                     } catch (FamiliarDbException e) {
                         getParentTradeFragment().handleFamiliarDbException(false);
+                    } finally {
+                        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                     }
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 });
 
                 /* Set up the button to change the set of this card */
@@ -303,11 +305,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 } catch (FamiliarDbException e) {
                     /* Don't show the dialog, but pop a toast */
                     getParentTradeFragment().handleFamiliarDbException(true);
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                     return DontShowDialog();
+                } finally {
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                 }
-
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 /* Turn set names and set codes into arrays */
                 final String[] aSets = sets.toArray(new String[sets.size()]);
@@ -355,8 +356,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 }
                             } catch (FamiliarDbException e) {
                                 data1.mIsFoil = false;
+                            } finally {
+                                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                             }
-                            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                             /* Reload and notify the adapter */
                             getParentTradeFragment().loadPrice(data1);

@@ -173,8 +173,6 @@ public class WishlistFragment extends FamiliarListFragment {
 
         /* Redraw the new wishlist with the new card */
         getCardDataAdapter(0).notifyDataSetChanged();
-
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**
@@ -278,8 +276,9 @@ public class WishlistFragment extends FamiliarListFragment {
 
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
+        } finally {
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**
