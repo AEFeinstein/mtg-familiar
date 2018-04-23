@@ -146,7 +146,7 @@ public class DatabaseManager {
          * @param handle This is set to a value unique to this database access and must be used
          *               to close the access later
          * @return a SQLiteDatabase to query or whatever
-         * @throws FamiliarDbException
+         * @throws FamiliarDbException if the database can't be opened
          */
         public synchronized SQLiteDatabase openDatabase(@NonNull FamiliarDbHandle handle) throws FamiliarDbException {
             // Assign this open a handle
@@ -199,3 +199,4 @@ public class DatabaseManager {
             }
         }
     }
+}
