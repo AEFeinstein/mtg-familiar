@@ -45,6 +45,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import com.gelakinetic.mtgfam.helpers.util.FragmentHelpers;
 
@@ -96,8 +97,9 @@ public class CardHelpers {
 
                         Bundle args = new Bundle();
                         /* Open the database */
+                        FamiliarDbHandle handle = new FamiliarDbHandle();
                         try {
-                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
+                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false, handle);
                             /* Get the card ID, and send it to a new CardViewFragment */
                             long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
                             if (cardId > 0) {
@@ -112,9 +114,9 @@ public class CardHelpers {
                         } catch (FamiliarDbException e) {
                             fragment.handleFamiliarDbException(false);
                         } finally {
-                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
+                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false, handle);
                         }
-
+                        fragment.removeDialog(fragment.getFragmentManager());
                     });
         } else {
             customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
@@ -163,9 +165,10 @@ public class CardHelpers {
         final ArrayList<Character> potentialRarities = new ArrayList<>();
         final ArrayList<String> potentialNumbers = new ArrayList<>();
 
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             /* Open the database */
-            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
+            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false, handle);
 
             /* Get all the cards with relevant info from the database */
             Cursor cards;
@@ -220,7 +223,7 @@ public class CardHelpers {
         } catch (FamiliarDbException e) {
             return null;
         } finally {
-            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
+            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false, handle);
         }
 
         /* make and return the actual dialog */
@@ -630,8 +633,9 @@ public class CardHelpers {
             int numberOf) {
 
         FamiliarActivity activity = (FamiliarActivity) context;
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false, handle);
             /* Make the new MTGCard */
             MtgCard card = new MtgCard();
             card.mIsFoil = isFoil;
@@ -729,7 +733,7 @@ public class CardHelpers {
         } catch (FamiliarDbException | NumberFormatException fde) {
             /* todo: handle this */
         } finally {
-            DatabaseManager.getInstance(activity, false).closeDatabase(false);
+            DatabaseManager.getInstance(activity, false).closeDatabase(false, handle);
         }
         return null;
 

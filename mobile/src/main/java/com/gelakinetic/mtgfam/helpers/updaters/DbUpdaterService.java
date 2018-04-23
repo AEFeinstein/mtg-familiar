@@ -39,6 +39,7 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.google.gson.stream.JsonReader;
 
 import java.io.File;
@@ -150,8 +151,9 @@ public class DbUpdaterService extends IntentService {
                 }
 
                 /* Open a writable database, insert the legality data */
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true, handle);
                     /* Add all the data we've downloaded */
                     CardDbAdapter.dropLegalTables(database);
                     CardDbAdapter.createLegalTables(database);
@@ -178,7 +180,7 @@ public class DbUpdaterService extends IntentService {
                     }
                 } finally {
                     /* Close the writable database */
-                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true, handle);
                 }
             }
 
@@ -192,9 +194,10 @@ public class DbUpdaterService extends IntentService {
                 /* Make an arraylist of all the current set codes */
                 ArrayList<String> currentSetCodes = new ArrayList<>();
                 HashMap<String, String> storedDigests = new HashMap<>();
+                FamiliarDbHandle setsHandle = new FamiliarDbHandle();
                 try {
                     /* Get readable database access */
-                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), false).openDatabase(false, setsHandle);
                     Cursor setCursor = CardDbAdapter.fetchAllSets(database);
                     if (setCursor != null) {
                         setCursor.moveToFirst();
@@ -214,12 +217,13 @@ public class DbUpdaterService extends IntentService {
                         e.printStackTrace(logWriter);
                     }
                 } finally {
-                    DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false);
+                    DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false, setsHandle);
                 }
 
                 /* Look through the manifest and drop all out of date sets */
+                FamiliarDbHandle manifestHandle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true, manifestHandle);
                     for (Manifest.ManifestEntry set : manifest.mPatches) {
                         try {
                             /* If the digest doesn't match, mark the set for dropping
@@ -242,7 +246,7 @@ public class DbUpdaterService extends IntentService {
                         e.printStackTrace(logWriter);
                     }
                 } finally {
-                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true, manifestHandle);
                 }
 
                 /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
@@ -268,8 +272,9 @@ public class DbUpdaterService extends IntentService {
                                     retries = 0;
 
                                     /* After the download, open the database */
+                                    FamiliarDbHandle expansionHandle = new FamiliarDbHandle();
                                     try {
-                                        SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                                        SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true, expansionHandle);
                                         /* Insert the newly downloaded info */
                                         for (Expansion expansion : setsToAdd) {
                                             if (logWriter != null) {
@@ -292,7 +297,7 @@ public class DbUpdaterService extends IntentService {
                                         }
                                     } finally {
                                         /* Close the database */
-                                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+                                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true, expansionHandle);
                                     }
                                 }
                             } catch (IOException e) {
@@ -333,9 +338,10 @@ public class DbUpdaterService extends IntentService {
                     newRulesParsed = true;
 
                     /* Open the database */
+                    FamiliarDbHandle handle = new FamiliarDbHandle();
                     try {
 
-                        SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true);
+                        SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true, handle);
 
                         /* Add stored rules */
                         if (rulesToAdd.size() > 0 || glossaryItemsToAdd.size() > 0) {
@@ -357,7 +363,7 @@ public class DbUpdaterService extends IntentService {
                             e.printStackTrace(logWriter);
                         }
                     } finally {
-                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true);
+                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true, handle);
                     }
                 }
             }

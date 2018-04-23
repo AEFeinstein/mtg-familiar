@@ -29,6 +29,7 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.AccessToken;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductDetails;
 import com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects.ProductInformation;
@@ -124,8 +125,9 @@ public class MarketPriceFetcher {
                 String tcgSetName;
 
                 /* then the same for multicard ordering */
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, handle);
 
                     /* If the card number wasn't given, figure it out */
                     if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
@@ -161,7 +163,7 @@ public class MarketPriceFetcher {
                 } catch (FamiliarDbException e) {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
                 } finally {
-                    DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+                    DatabaseManager.getInstance(mActivity, false).closeDatabase(false, handle);
                 }
 
                 /* If this isn't a multi-card, don't iterate so much */
@@ -179,8 +181,9 @@ public class MarketPriceFetcher {
                     for (int accentOption = 0; accentOption < 2; accentOption++) {
                         for (int multiOption = 0; multiOption < numMultiCardOptions; multiOption++) {
                             String tcgCardName = null;
+                            FamiliarDbHandle setOptHandle = new FamiliarDbHandle();
                             try {
-                                SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
+                                SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, setOptHandle);
 
                                 /* Set up retries for multicard ordering */
                                 if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
@@ -226,7 +229,7 @@ public class MarketPriceFetcher {
                                 tcgCardName = null;
                                 lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
                             } finally {
-                                DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+                                DatabaseManager.getInstance(mActivity, false).closeDatabase(false, setOptHandle);
                             }
 
                             if (null != tcgCardName) {

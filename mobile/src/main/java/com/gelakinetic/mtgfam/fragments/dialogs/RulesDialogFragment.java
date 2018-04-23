@@ -35,6 +35,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -96,15 +97,16 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                 if (getParentRulesFragment().mCategory == -1) {
                     title = getString(R.string.rules_search_all);
                 } else {
+                    FamiliarDbHandle handle = new FamiliarDbHandle();
                     try {
-                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
                         title = String.format(getString(R.string.rules_search_cat),
                                 CardDbAdapter.getCategoryName(getParentRulesFragment().mCategory, getParentRulesFragment().mSubcategory, database));
                     } catch (FamiliarDbException e) {
                         title = String.format(getString(R.string.rules_search_cat),
                                 getString(R.string.rules_this_cat));
                     } finally {
-                        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+                        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
                     }
                 }
 

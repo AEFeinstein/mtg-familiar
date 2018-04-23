@@ -41,6 +41,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -245,8 +246,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 }
                 String[] from = new String[]{"format", "status"};
                 int[] to = new int[]{R.id.format, R.id.status};
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getContext(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getContext(), false).openDatabase(false, handle);
                     Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                     cFormats.moveToFirst();
                     List<HashMap<String, String>> fillMaps = new ArrayList<>();
@@ -306,8 +308,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 } catch (FamiliarDbException fdbe) {
                     getParentDecklistFragment().handleFamiliarDbException(false);
                 } finally {
-                    DatabaseManager.getInstance(getContext(), false).closeDatabase(false);
+                    DatabaseManager.getInstance(getContext(), false).closeDatabase(false, handle);
                 }
+                return DontShowDialog();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);

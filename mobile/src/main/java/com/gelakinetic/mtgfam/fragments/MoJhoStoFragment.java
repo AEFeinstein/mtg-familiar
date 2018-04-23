@@ -40,6 +40,7 @@ import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.Collections;
 import java.util.Random;
@@ -195,9 +196,10 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param cmc  The converted mana cost of the card to randomly fetch
      */
     private void getOneSpell(String type, int cmc) {
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SearchCriteria criteria = new SearchCriteria();
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
             if (type.equals(EQUIPMENT)) {
                 criteria.cmcLogic = "<=";
                 criteria.subTypes = Collections.singletonList(type);
@@ -232,7 +234,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         } finally {
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
         }
     }
 
@@ -243,8 +245,9 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param type The supertype of the card to randomly fetch
      */
     private void getThreeSpells(String type) {
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = Collections.singletonList(type);
@@ -282,7 +285,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         } finally {
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
         }
     }
 }

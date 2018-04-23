@@ -53,6 +53,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -163,9 +164,10 @@ public class RulesFragment extends FamiliarFragment {
         Cursor setsCursor = null;
 
         /* Populate the cursor with information from the database */
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             /* Open a database connection */
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
 
             if (isGlossary) {
                 cursor = CardDbAdapter.getGlossaryTerms(database);
@@ -301,7 +303,7 @@ public class RulesFragment extends FamiliarFragment {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
         }
 
         list.setSelection(position);
@@ -422,8 +424,9 @@ public class RulesFragment extends FamiliarFragment {
         if (shouldLink) {
             Matcher m = mLinkPattern.matcher(cs);
             while (m.find()) {
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
                     String[] tokens = cs.subSequence(m.start(), m.end()).toString().split("(\\.)");
                     int firstInt = Integer.parseInt(tokens[0]);
                     final int linkCat = firstInt / 100;
@@ -453,7 +456,7 @@ public class RulesFragment extends FamiliarFragment {
                 } catch (Exception e) {
                     /* Eat any exceptions; they'll just cause the link to not appear*/
                 } finally {
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
                 }
             }
         }

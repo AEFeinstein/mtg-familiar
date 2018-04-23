@@ -45,6 +45,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -69,6 +70,7 @@ public class ResultListFragment extends FamiliarFragment {
     private Cursor mCursor;
     private ListView mListView;
     private SQLiteDatabase mDatabase;
+    private FamiliarDbHandle mDbHandle = new FamiliarDbHandle();
 
     /**
      * When the fragment is created, open the database and search for whatever.
@@ -161,7 +163,7 @@ public class ResultListFragment extends FamiliarFragment {
 
         /* Open up the database, search for stuff */
         try {
-            mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, mDbHandle);
             doSearch(this.getArguments(), mDatabase);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
@@ -308,7 +310,7 @@ public class ResultListFragment extends FamiliarFragment {
         if (mCursor != null) {
             mCursor.close();
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, mDbHandle);
     }
 
     /**
