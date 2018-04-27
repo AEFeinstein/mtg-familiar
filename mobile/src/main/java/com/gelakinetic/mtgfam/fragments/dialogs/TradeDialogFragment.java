@@ -24,7 +24,6 @@ import android.app.Dialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,6 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
@@ -73,6 +71,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     /* Extra argument keys */
     public static final String ID_POSITION = "Position";
     public static final String ID_SIDE = "Side";
+    private MaterialDialog.SingleButtonCallback mOnPositiveCallback;
 
     /**
      * @return The currently viewed TradeFragment
@@ -179,6 +178,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Set up the button to show info about this card */
                 view.findViewById(R.id.traderDialogInfo).setOnClickListener(v -> {
                     try {
+                        if (null != mOnPositiveCallback) {
+                            mOnPositiveCallback.onClick(null, null);
+                        }
                         SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
                         /* Get the card ID, and send it to a new CardViewPagerFragment */
                         Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
@@ -200,71 +202,81 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 });
 
                 /* Set up the button to change the set of this card */
-                view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(v -> getParentTradeFragment().showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog));
+                view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(v -> {
+                    if (null != mOnPositiveCallback) {
+                        mOnPositiveCallback.onClick(null, null);
+                    }
+                    getParentTradeFragment().showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
+                });
+
+                /* Create the callback for when the dialog is successfully closed or when the card
+                 * info is shown or when the set is changed
+                 */
+                mOnPositiveCallback = (dialog, which) -> {
+                    /* Grab a reference to the card */
+                    MtgCard data = lSide.get(positionForDialog);
+
+                    /* Assume non-custom price */
+                    data.mIsCustomPrice = false;
+
+                    /* Set this card's foil option */
+                    data.mIsFoil = foilCheckbox.isChecked();
+
+                    /* validate number of cards text */
+                    if (numberOf.length() == 0) {
+                        data.mNumberOf = 1;
+                    } else {
+                        /* Set the numberOf */
+                        assert numberOf.getEditableText() != null;
+                        try {
+                            data.mNumberOf =
+                                    (Integer.parseInt(numberOf.getEditableText().toString()));
+                        } catch (NumberFormatException e) {
+                            data.mNumberOf = 1;
+                        }
+                    }
+
+                    /* validate the price text */
+                    assert priceText.getText() != null;
+                    String userInputPrice = priceText.getText().toString();
+
+                    /* If the input price is blank, set it to zero */
+                    if (userInputPrice.length() == 0) {
+                        data.mIsCustomPrice = true;
+                        data.mPrice = 0;
+                    } else {
+                        /* Attempt to parse the price */
+                        try {
+                            data.mPrice = (int) (Double.parseDouble(userInputPrice) * 100);
+                        } catch (NumberFormatException e) {
+                            data.mIsCustomPrice = true;
+                            data.mPrice = 0;
+                        }
+                    }
+
+                    /* Check if the user hand-modified the price by comparing the current price
+                     * to the cached price */
+                    int oldPrice;
+                    if (data.mPriceInfo != null) {
+                        oldPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getParentTradeFragment().getPriceSetting()) * 100);
+
+                        if (oldPrice != data.mPrice) {
+                            data.mIsCustomPrice = true;
+                        }
+                    } else {
+                        data.mIsCustomPrice = true;
+                    }
+
+                    /* Notify things to update */
+                    aaSide.notifyDataSetChanged();
+                    getParentTradeFragment().updateTotalPrices(sideForDialog);
+                };
 
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(lSide.get(positionForDialog).mName)
                         .customView(view, false)
                         .positiveText(R.string.dialog_done)
-                        .onPositive((dialog, which) -> {
-                            /* Grab a reference to the card */
-                            MtgCard data = lSide.get(positionForDialog);
-
-                            /* Assume non-custom price */
-                            data.mIsCustomPrice = false;
-
-                            /* Set this card's foil option */
-                            data.mIsFoil = foilCheckbox.isChecked();
-
-                            /* validate number of cards text */
-                            if (numberOf.length() == 0) {
-                                data.mNumberOf = 1;
-                            } else {
-                                /* Set the numberOf */
-                                assert numberOf.getEditableText() != null;
-                                try {
-                                    data.mNumberOf =
-                                            (Integer.parseInt(numberOf.getEditableText().toString()));
-                                } catch (NumberFormatException e) {
-                                    data.mNumberOf = 1;
-                                }
-                            }
-
-                            /* validate the price text */
-                            assert priceText.getText() != null;
-                            String userInputPrice = priceText.getText().toString();
-
-                            /* If the input price is blank, set it to zero */
-                            if (userInputPrice.length() == 0) {
-                                data.mIsCustomPrice = true;
-                                data.mPrice = 0;
-                            } else {
-                                /* Attempt to parse the price */
-                                try {
-                                    data.mPrice = (int) (Double.parseDouble(userInputPrice) * 100);
-                                } catch (NumberFormatException e) {
-                                    data.mIsCustomPrice = true;
-                                    data.mPrice = 0;
-                                }
-                            }
-
-                            /* Check if the user hand-modified the price by comparing the current price
-                             * to the cached price */
-                            int oldPrice;
-                            if (data.mPriceInfo != null) {
-                                oldPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getParentTradeFragment().getPriceSetting()) * 100);
-
-                                if (oldPrice != data.mPrice) {
-                                    data.mIsCustomPrice = true;
-                                }
-                            } else {
-                                data.mIsCustomPrice = true;
-                            }
-
-                            /* Notify things to update */
-                            aaSide.notifyDataSetChanged();
-                            getParentTradeFragment().updateTotalPrices(sideForDialog);
-                        })
+                        .onPositive(mOnPositiveCallback)
                         .negativeText(R.string.dialog_cancel)
                         .onNegative((dialog, which) -> {
                             // Revert any foil changes
