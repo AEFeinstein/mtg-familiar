@@ -513,7 +513,7 @@ public class LcPlayer {
      * @param mGridLayoutHeight The height of the GridLayout in which to put the player's view
      * @param mDisplayMode      either LifeCounterFragment.DISPLAY_COMPACT or LifeCounterFragment.DISPLAY_NORMAL
      */
-    public void setSize(int mGridLayoutWidth, int mGridLayoutHeight, int mDisplayMode, boolean isPortrait) {
+    public void setSize(int mGridLayoutWidth, int mGridLayoutHeight, int mDisplayMode, boolean isPortrait, boolean isSingle) {
 
         if (null == mView) {
             return;
@@ -523,7 +523,10 @@ public class LcPlayer {
             case LifeCounterFragment.DISPLAY_NORMAL: {
                 ViewGroup.LayoutParams params = mView.getLayoutParams();
                 if (null != params) {
-                    if (isPortrait) {
+                    if (isSingle) {
+                        params.width = mGridLayoutWidth;
+                        params.height = mGridLayoutHeight;
+                    } else if (isPortrait) {
                         params.width = mGridLayoutWidth;
                         params.height = mGridLayoutHeight / 2;
                     } else {
@@ -550,16 +553,18 @@ public class LcPlayer {
             }
             case LifeCounterFragment.DISPLAY_COMMANDER: {
                 /* Set the row height to 48dp and the width to some fraction of the screen */
-                ViewGroup.LayoutParams rowParams = mCommanderRowView.getLayoutParams();
-                if (null != rowParams) {
-                    rowParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
-                            mFragment.getActivity().getResources().getDisplayMetrics());
-                    if (isPortrait) {
-                        rowParams.width = mGridLayoutWidth / 2;
-                    } else {
-                        rowParams.width = mGridLayoutWidth / 4;
+                if (null != mCommanderRowView) {
+                    ViewGroup.LayoutParams rowParams = mCommanderRowView.getLayoutParams();
+                    if (null != rowParams) {
+                        rowParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48,
+                                mFragment.getActivity().getResources().getDisplayMetrics());
+                        if (isPortrait) {
+                            rowParams.width = mGridLayoutWidth / 2;
+                        } else {
+                            rowParams.width = mGridLayoutWidth / 4;
+                        }
+                        mCommanderRowView.setLayoutParams(rowParams);
                     }
-                    mCommanderRowView.setLayoutParams(rowParams);
                 }
 
                 /* Then set the player view to half the screen, if in landscape */

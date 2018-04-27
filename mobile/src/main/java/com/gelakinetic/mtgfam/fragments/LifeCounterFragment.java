@@ -183,12 +183,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                             changeDisplayMode(false);
                         }
                     }
-                    for (LcPlayer player : mPlayers) {
-                        player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
-                                getActivity().getResources().getConfiguration().orientation
-                                        == Configuration.ORIENTATION_PORTRAIT
-                        );
-                    }
+                    resizeAllPlayers();
                 }
             }
         });
@@ -521,7 +516,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             if (mPlayers.size() > 0 && null != mPlayers.get(0).mView) {
                 mCommanderPlayerView.addView(mPlayers.get(0).mView);
                 mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources()
-                        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+                        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
+                        mPlayers.size() == 1);
             }
         } else {
             mCommanderPlayerView.setVisibility(View.GONE);
@@ -552,7 +548,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
                 mCommanderPlayerView.addView(player.mView);
                 player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
                         getActivity().getResources().getConfiguration().orientation
-                                == Configuration.ORIENTATION_PORTRAIT
+                                == Configuration.ORIENTATION_PORTRAIT, mPlayers.size() == 1
                 );
             });
 
@@ -562,10 +558,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         }
 
         /* If the size has already been measured, set the player's size */
-        if (mListSizeHeight != -1) {
-            player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
-                    getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
-        }
+        resizeAllPlayers();
     }
 
     /**
@@ -629,6 +622,8 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
         player.mName = getString(R.string.life_counter_default_name) + " " + mLargestPlayerNumber;
         player.mDefaultLifeTotal = getDefaultLife();
         player.mLife = player.mDefaultLifeTotal;
+
+        resizeAllPlayers();
 
         mPlayers.add(player);
     }
@@ -914,6 +909,19 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             }
         } else {
             mAudioManager.abandonAudioFocus(this);
+        }
+    }
+
+    /**
+     * Resize all players according to the measured screen size
+     */
+    public void resizeAllPlayers() {
+        if (mListSizeHeight != -1) {
+            for (LcPlayer player : mPlayers) {
+                player.setSize(mListSizeWidth, mListSizeHeight, mDisplayMode,
+                        getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
+                        mPlayers.size() == 1);
+            }
         }
     }
 }

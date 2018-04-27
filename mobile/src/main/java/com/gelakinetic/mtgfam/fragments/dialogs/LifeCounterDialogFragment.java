@@ -100,6 +100,7 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
                                 getParentLifeCounterFragment().mGridLayout.removeView(getParentLifeCounterFragment().mPlayers.get(position).mView);
                             }
                             getParentLifeCounterFragment().mPlayers.remove(position);
+                            getParentLifeCounterFragment().resizeAllPlayers();
                             getParentLifeCounterFragment().mGridLayout.invalidate();
 
                             getParentLifeCounterFragment().setCommanderInfo(position);
