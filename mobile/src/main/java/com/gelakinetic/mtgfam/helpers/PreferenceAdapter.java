@@ -97,128 +97,20 @@ public class PreferenceAdapter {
     }
 
     /* White mana */
-    public static synchronized int getWhiteMana(@Nullable Context context) {
+    public static synchronized int getMana(@Nullable Context context, int key) {
         if (null == context) {
             return 0;
         }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_whiteMana), 0);
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(key), 0);
     }
 
-    public static synchronized void setWhiteMana(@Nullable Context context, int whiteMana) {
+    public static synchronized void setMana(@Nullable Context context, int key, int mana) {
         if (null == context) {
             return;
         }
 
         Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_whiteMana), whiteMana);
-        edit.apply();
-    }
-
-    /* Blue mana */
-    public static synchronized int getBlueMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_blueMana), 0);
-    }
-
-    public static synchronized void setBlueMana(@Nullable Context context, int blueMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_blueMana), blueMana);
-        edit.apply();
-    }
-
-    /* Black mana */
-    public static synchronized int getBlackMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_blackMana), 0);
-    }
-
-    public static synchronized void setBlackMana(@Nullable Context context, int blackMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_blackMana), blackMana);
-        edit.apply();
-    }
-
-    /* Red mana */
-    public static synchronized int getRedMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_redMana), 0);
-    }
-
-    public static synchronized void setRedMana(@Nullable Context context, int redMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_redMana), redMana);
-        edit.apply();
-    }
-
-    /* Green mana */
-    public static synchronized int getGreenMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_greenMana), 0);
-    }
-
-    public static synchronized void setGreenMana(@Nullable Context context, int greenMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_greenMana), greenMana);
-        edit.apply();
-    }
-
-    /* Colorless mana */
-    public static synchronized int getColorlessMana(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_colorlessMana), 0);
-    }
-
-    public static synchronized void setColorlessMana(@Nullable Context context, int colorlessMana) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_colorlessMana), colorlessMana);
-        edit.apply();
-    }
-
-    /* Spell count */
-    public static synchronized int getSpellCount(@Nullable Context context) {
-        if (null == context) {
-            return 0;
-        }
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(R.string.key_spellCount), 0);
-    }
-
-    public static synchronized void setSpellCount(@Nullable Context context, int spellCount) {
-        if (null == context) {
-            return;
-        }
-
-        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        edit.putInt(context.getString(R.string.key_spellCount), spellCount);
+        edit.putInt(context.getString(key), mana);
         edit.apply();
     }
 

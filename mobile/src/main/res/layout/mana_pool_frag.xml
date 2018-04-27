@@ -262,6 +262,45 @@
                     android:text="@string/mana_pool_plus"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <!-- Energy -->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/energy_minus"
+                    style="?attr/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/mana_pool_minus"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    app:srcCompat="@drawable/glyph_e" />
+
+                <TextView
+                    android:id="@+id/energy_readout"
+                    style="@style/text.xxlarge"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/mana_pool_zero" />
+
+                <Button
+                    android:id="@+id/energy_plus"
+                    style="?attr/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/mana_pool_plus"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
             <!-- spell -->
 
             <LinearLayout

@@ -275,29 +275,65 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-    <!-- spell -->
+
+    <!-- energy -->
+    <!-- spells -->
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:baselineAligned="false"
         android:gravity="center"
         android:orientation="horizontal">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2">
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/energy_minus"
+                style="?attr/button"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:text="@string/mana_pool_minus"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dip"
+                app:srcCompat="@drawable/glyph_e" />
+
+            <TextView
+                android:id="@+id/energy_readout"
+                style="@style/text.xxlarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/mana_pool_zero" />
+
+            <Button
+                android:id="@+id/energy_plus"
+                style="?attr/button"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5sp"
+                android:text="@string/mana_pool_plus"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
             <Button
                 android:id="@+id/spell_minus"
                 style="?attr/button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="5sp"
                 android:text="@string/mana_pool_minus"
                 android:textStyle="bold" />
 
@@ -324,11 +360,6 @@
                 android:text="@string/mana_pool_plus"
                 android:textStyle="bold" />
         </LinearLayout>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
     </LinearLayout>
+
 </LinearLayout>
