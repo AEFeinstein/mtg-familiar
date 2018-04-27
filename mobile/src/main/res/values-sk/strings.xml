@@ -295,8 +295,6 @@ Manapool bude tiež vymazaný."</string>
     <string name="trader_edit_dialog_reset_price">"Obnoviť cenu"</string>
     <string name="trader_clear_dialog_title">"Vymazať výmenu"</string>
     <string name="trader_clear_dialog_text">"Naozaj chcete vymazať aktuálnu výmenu?"</string>
-    <string name="trader_select_dialog_title">"Vyberte výmenu"</string>
-    <string name="trader_delete_dialog_title">"Zmazať výmenu"</string>
     <string name="trader_edit_dialog_info">"Podrobnosti"</string>
     <string name="trader_toast_no_trades">"Nemáte žiadne uložené výmeny."</string>
     <string name="trader_toast_save_error">"Výmenu sa nepodarilo uložiť; prosím skúste to znova."</string>

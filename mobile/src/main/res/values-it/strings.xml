@@ -284,8 +284,6 @@ Verrà azzerata anche la riserva di mana"</string>
     <string name="trader_edit_dialog_reset_price">"Resetta Prezzo"</string>
     <string name="trader_clear_dialog_title">"Azzera Scambio"</string>
     <string name="trader_clear_dialog_text">"Vuoi davvero eliminare lo scambio corrente?"</string>
-    <string name="trader_select_dialog_title">"Seleziona uno Scambio"</string>
-    <string name="trader_delete_dialog_title">"Elimina uno Scambio"</string>
     <string name="trader_edit_dialog_info">"Informazione sulla carta"</string>
     <string name="trader_toast_no_trades">"Non hai salvato scambi."</string>
     <string name="trader_toast_save_error">"Lo scambio non può essere salvato, riprova più tardi."</string>

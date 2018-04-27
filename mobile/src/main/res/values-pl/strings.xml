@@ -288,8 +288,6 @@ Licznik many także ulegnie wyczyszczeniu."</string>
     <string name="trader_edit_dialog_reset_price">"Zeruj Cenę"</string>
     <string name="trader_clear_dialog_title">"Wyczyść Wymianę"</string>
     <string name="trader_clear_dialog_text">"Czy na pewno chcesz wyczyścić obecną wymianę?"</string>
-    <string name="trader_select_dialog_title">"Wybierz Wymianę"</string>
-    <string name="trader_delete_dialog_title">"Usuń Wymianę"</string>
     <string name="trader_edit_dialog_info">"Informacja o karcie"</string>
     <string name="trader_toast_no_trades">"Nie masz zapisanych wymian."</string>
     <string name="trader_toast_save_error">"Nie można zapisać wymiany, spróbuj ponownie."</string>

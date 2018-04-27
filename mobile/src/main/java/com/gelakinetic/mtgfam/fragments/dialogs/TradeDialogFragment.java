@@ -444,7 +444,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 }
 
                 return new MaterialDialog.Builder(this.getActivity())
-                        .title(R.string.trader_select_dialog_title)
+                        .title(R.string.trader_load)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) tradeNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
@@ -470,7 +470,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 }
 
                 return new MaterialDialog.Builder(this.getActivity())
-                        .title(R.string.trader_delete_dialog_title)
+                        .title(R.string.trader_delete)
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) tradeNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
