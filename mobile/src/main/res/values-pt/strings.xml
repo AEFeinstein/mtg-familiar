@@ -281,8 +281,6 @@ Reserva de mana também serão apagados."</string>
     <string name="trader_edit_dialog_reset_price">"Resetar Preço"</string>
     <string name="trader_clear_dialog_title">"Limpar Troca"</string>
     <string name="trader_clear_dialog_text">"Tem certeza de que deseja apagar a troca atual?"</string>
-    <string name="trader_select_dialog_title">"Selecione um Troca"</string>
-    <string name="trader_delete_dialog_title">"Excluir uma Troca"</string>
     <string name="trader_edit_dialog_info">"Informação da Carta"</string>
     <string name="trader_toast_no_trades">"Você não tem trocas salvas."</string>
     <string name="trader_toast_save_error">"A troca não poderia ser salva; por favor, tente novamente."</string>

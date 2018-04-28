@@ -28,6 +28,7 @@
     <string name="key_greenMana" translatable="false">greenMana</string>
     <string name="key_colorlessMana" translatable="false">colorlessMana</string>
     <string name="key_spellCount" translatable="false">spellCount</string>
+    <string name="key_energy" translatable="false">energy</string>
     <string name="key_lastRulesUpdate" translatable="false">lastRulesUpdate</string>
     <string name="key_lastMTRUpdate" translatable="false">lastMTRUpdate</string>
     <string name="key_lastIPGUpdate" translatable="false">lastIPGUpdate</string>

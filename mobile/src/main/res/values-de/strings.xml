@@ -298,8 +298,6 @@ Der Manavorrat wird ebenfalls geleert"</string>
     <string name="trader_edit_dialog_reset_price">"Preis zurücksetzen"</string>
     <string name="trader_clear_dialog_title">"Tausch leeren"</string>
     <string name="trader_clear_dialog_text">"Bist du sicher, dass du den aktuellen Tausch leeren möchtest?"</string>
-    <string name="trader_select_dialog_title">"Tausch auswählen"</string>
-    <string name="trader_delete_dialog_title">"Tausch löschen"</string>
     <string name="trader_edit_dialog_info">"Karteninformation"</string>
     <string name="trader_toast_no_trades">"Du hast keine gespeicherten Tausche."</string>
     <string name="trader_toast_save_error">"Tausch konnte nicht gespeichert werden. Bitte versuche es erneut."</string>

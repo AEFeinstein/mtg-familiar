@@ -281,8 +281,6 @@ La reserva de maná también será vaciada."</string>
     <string name="trader_edit_dialog_reset_price">"Reiniciar precio"</string>
     <string name="trader_clear_dialog_title">"Limpiar intercambio"</string>
     <string name="trader_clear_dialog_text">"¿Seguro que quieres limpiar el intercambio actual?"</string>
-    <string name="trader_select_dialog_title">"Seleccionar un intercambio"</string>
-    <string name="trader_delete_dialog_title">"Borrar un intercambio"</string>
     <string name="trader_edit_dialog_info">"Información de carta"</string>
     <string name="trader_toast_no_trades">"No tienes ningún intercambio guardado."</string>
     <string name="trader_toast_save_error">"El intercambio no pudo ser guardado; por favor, prueba otra vez."</string>

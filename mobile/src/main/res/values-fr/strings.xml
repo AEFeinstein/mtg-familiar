@@ -281,8 +281,6 @@ La réserve de mana sera aussi vidée."</string>
     <string name="trader_edit_dialog_reset_price">"Réinitialiser Prix"</string>
     <string name="trader_clear_dialog_title">"Vider Echange"</string>
     <string name="trader_clear_dialog_text">"Etes-vous sûr de vouloir vider l'échange actuel?"</string>
-    <string name="trader_select_dialog_title">"Choisir un échange"</string>
-    <string name="trader_delete_dialog_title">"Supprimer un échange"</string>
     <string name="trader_edit_dialog_info">"Informations de carte"</string>
     <string name="trader_toast_no_trades">"Vous n'avez aucun échange sauvé."</string>
     <string name="trader_toast_save_error">"L'échange n'a pu être sauvé; veuillez réessayer."</string>

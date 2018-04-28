@@ -305,8 +305,6 @@ Mana pool will also be cleared."</string>
     <string name="trader_edit_dialog_reset_price">"Reset Price"</string>
     <string name="trader_clear_dialog_title">"Clear Trade"</string>
     <string name="trader_clear_dialog_text">"Are you sure you want to clear the current trade?"</string>
-    <string name="trader_select_dialog_title">"Select a Trade"</string>
-    <string name="trader_delete_dialog_title">"Delete a Trade"</string>
     <string name="trader_edit_dialog_info">"Card Info"</string>
     <string name="trader_toast_no_trades">"You have no saved trades."</string>
     <string name="trader_toast_save_error">"The trade could not be saved; please try again."</string>
