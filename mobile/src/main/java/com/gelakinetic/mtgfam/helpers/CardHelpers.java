@@ -282,9 +282,9 @@ public class CardHelpers {
 
                         Bundle args = new Bundle();
                         /* Open the database */
-                        FamiliarDbHandle handle = new FamiliarDbHandle();
+                        FamiliarDbHandle showCardHandle = new FamiliarDbHandle();
                         try {
-                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false, handle);
+                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false, showCardHandle);
                             /* Get the card ID, and send it to a new CardViewFragment */
                             long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
                             if (cardId > 0) {
@@ -299,7 +299,7 @@ public class CardHelpers {
                         } catch (FamiliarDbException e) {
                             fragment.handleFamiliarDbException(false);
                         } finally {
-                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false, handle);
+                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false, showCardHandle);
                         }
                         fragment.removeDialog(fragment.getFragmentManager());
                     });
