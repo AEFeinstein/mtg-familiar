@@ -71,7 +71,6 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
     /* Extra argument keys */
     public static final String ID_POSITION = "Position";
     public static final String ID_SIDE = "Side";
-    private MaterialDialog.SingleButtonCallback mOnPositiveCallback;
 
     /**
      * @return The currently viewed TradeFragment
@@ -175,44 +174,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     getParentTradeFragment().updateTotalPrices(sideForDialog);
                 });
 
-                /* Set up the button to show info about this card */
-                view.findViewById(R.id.traderDialogInfo).setOnClickListener(v -> {
-                    try {
-                        if (null != mOnPositiveCallback) {
-                            mOnPositiveCallback.onClick(null, null);
-                        }
-                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
-                        /* Get the card ID, and send it to a new CardViewPagerFragment */
-                        Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
-                                lSide.get(positionForDialog).mExpansion, Collections.singletonList(
-                                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
-
-                        Bundle args = new Bundle();
-                        args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
-                                cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
-                        args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
-
-                        cursor.close();
-                        CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
-                        getParentTradeFragment().startNewFragment(cvpFrag, args);
-                    } catch (FamiliarDbException e) {
-                        getParentTradeFragment().handleFamiliarDbException(false);
-                    }
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                });
-
-                /* Set up the button to change the set of this card */
-                view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(v -> {
-                    if (null != mOnPositiveCallback) {
-                        mOnPositiveCallback.onClick(null, null);
-                    }
-                    getParentTradeFragment().showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
-                });
-
                 /* Create the callback for when the dialog is successfully closed or when the card
                  * info is shown or when the set is changed
                  */
-                mOnPositiveCallback = (dialog, which) -> {
+                MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
                     /* Grab a reference to the card */
                     MtgCard data = lSide.get(positionForDialog);
 
@@ -272,11 +237,41 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     getParentTradeFragment().updateTotalPrices(sideForDialog);
                 };
 
+                /* Set up the button to show info about this card */
+                view.findViewById(R.id.traderDialogInfo).setOnClickListener(v -> {
+                    try {
+                        onPositiveCallback.onClick(null, null);
+                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                        /* Get the card ID, and send it to a new CardViewPagerFragment */
+                        Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
+                                lSide.get(positionForDialog).mExpansion, Collections.singletonList(
+                                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
+
+                        Bundle args = new Bundle();
+                        args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY, new long[]{cursor.getLong(
+                                cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
+                        args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
+
+                        cursor.close();
+                        CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
+                        getParentTradeFragment().startNewFragment(cvpFrag, args);
+                    } catch (FamiliarDbException e) {
+                        getParentTradeFragment().handleFamiliarDbException(false);
+                    }
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+                });
+
+                /* Set up the button to change the set of this card */
+                view.findViewById(R.id.traderDialogChangeSet).setOnClickListener(v -> {
+                    onPositiveCallback.onClick(null, null);
+                    getParentTradeFragment().showDialog(DIALOG_CHANGE_SET, sideForDialog, positionForDialog);
+                });
+
                 return new MaterialDialog.Builder(this.getActivity())
                         .title(lSide.get(positionForDialog).mName)
                         .customView(view, false)
                         .positiveText(R.string.dialog_done)
-                        .onPositive(mOnPositiveCallback)
+                        .onPositive(onPositiveCallback)
                         .negativeText(R.string.dialog_cancel)
                         .onNegative((dialog, which) -> {
                             // Revert any foil changes
