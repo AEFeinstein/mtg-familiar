@@ -2,7 +2,6 @@
 <resources>
 
 <!-- General-purpose strings -->
-<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Buscar nombre"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Cancelar"</string>
@@ -30,8 +29,6 @@
 <string name="not_deleted">"no se ha borrrado"</string>
 <string name="no_network">"Red no disponible."</string>
 <string name="filter_title_view_card">"Ver carta"</string>
-<string name="tutor_cards_notice">"Funciona con TutorCards"</string>
-<string name="tutor_cards_fail">"Imposible conectar con TutorCards"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"PÁGINAS"</string>
@@ -76,7 +73,6 @@ Así que, ¿cómo vas hoy de generosidad?
 <string name="main_import_fail">"Importación fallida. Por favor pon MTGFamiliarBackup.zip en el directorio raíz de tu tarjeta SD."</string>
 <string name="main_about">"Acerca de"</string>
 
-<!-- Fuzzy -->
 <string name="main_about_text">"Esta aplicación es mi regalo a la comunidad de MTG.&lt;br&gt;
 &lt;br&gt;
 Por favor, envía tus preguntas, comentarios, problemas y peticiones a &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
@@ -111,11 +107,13 @@ Magic the Gathering y las cartas de Magic the Gathering son ™ &amp; © Wizards
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; usado bajo la Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; usado bajo la Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; usado bajo la BSD, part MIT, Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
 Programa licenciado bajo la &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Medios digitales licenciados bajo la &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-&lt;!--&lt;br&gt;--&gt;
-&lt;!--La búsqueda de cartas por imagen funciona con &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.--&gt;
 "</string>
 <string name="main_drawer_open">"Abrir columna de navegación"</string>
 <string name="main_drawer_close">"Cerrar columna de navegación"</string>
@@ -271,8 +269,6 @@ La reserva de maná también será vaciada."</string>
 <string name="trader_edit_dialog_reset_price">"Reiniciar precio"</string>
 <string name="trader_clear_dialog_title">"Limpiar intercambio"</string>
 <string name="trader_clear_dialog_text">"¿Seguro que quieres limpiar el intercambio actual?"</string>
-<string name="trader_select_dialog_title">"Seleccionar un intercambio"</string>
-<string name="trader_delete_dialog_title">"Borrar un intercambio"</string>
 <string name="trader_edit_dialog_info">"Información de carta"</string>
 <string name="trader_toast_no_trades">"No tienes ningún intercambio guardado."</string>
 <string name="trader_toast_save_error">"El intercambio no pudo ser guardado; por favor, prueba otra vez."</string>
@@ -335,7 +331,6 @@ La reserva de maná también será vaciada."</string>
 <string name="profile_update_dci">"Actualizar número DCI"</string>
 <string name="profile_remove_dci">"Eliminar número DCI"</string>
 
-<!-- Fuzzy -->
 <string name="profile_update_dci_dialog_title">"Introducir número DCI"</string>
 <string name="profile_invalid_dci">"Número DCI inválido."</string>
 <string name="profile_no_dci">"No has ingresado tu número DCI."</string>
@@ -366,11 +361,9 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 ¡Buena suerte, y pásalo bien!
 "</string>
 
-<!-- Fuzzy -->
 <string name="mojhosto_momir_label">"CMC ="</string>
 <string name="mojhosto_random_creature">"Criatura aleatoria"</string>
 
-<!-- Fuzzy -->
 <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
 <string name="mojhosto_random_equipment">"Equipamiento aleatorio"</string>
 <string name="mojhosto_random_instants">"Tres instantáneos aleatorios"</string>
@@ -379,8 +372,6 @@ Es recomendable usar papel y lápiz para seguir el progreso del juego. Por desgr
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Ajustes generales"</string>
-<string name="pref_screen_search">"Búsqueda y resultados"</string>
-<string name="pref_screen_trade_wishlist">"Intercambios y lista de deseos"</string>
 <string name="pref_cat_default_fragment">"Página por defecto"</string>
 <string name="pref_default_fragment_mode_summary">"La primera cosa que ves cuando abres la aplicación"</string>
 <string name="pref_cat_updates">"Actualizaciones de la base de datos"</string>

@@ -2,7 +2,6 @@
 <resources>
 
 <!-- General-purpose strings -->
-<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Namen suchen"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Abbrechen"</string>
@@ -34,8 +33,6 @@
 <string name="not_deleted">"nicht gelöscht"</string>
 <string name="no_network">"Netzwerk nicht verfügbar"</string>
 <string name="filter_title_view_card">"Karte ansehen"</string>
-<string name="tutor_cards_notice">"Ermöglicht durch TutorCards"</string>
-<string name="tutor_cards_fail">"TutorCards ist nicht erreichbar"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"SEITEN"</string>
@@ -87,7 +84,6 @@ Also, wie großzügig bist du heute?
 <string name="main_about">"Über diese App"</string>
 
 <!-- Some grammar corrections and changes in language tone. -->
-<!-- Fuzzy -->
 <string name="main_about_text">"Diese App ist mein Geschenk an die MTG-Gemeinschaft.&lt;br&gt;
 &lt;br&gt;
 Sende deine Fragen, Kommentare, Bedenken und dein Lob an &lt;a href=mailto:mtg.familiar@gmail.com&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
@@ -122,11 +118,13 @@ Magic the Gathering und Magic the Gathering Karten sind ™ &amp; © Wizards of 
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; wird verwendet unter der Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; wird verwendet unter der BSD, part MIT, Apache License, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
 Programm lizenziert unter der &lt;a href=http://www.gnu.org/licenses/gpl.html&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa/3.0/&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-&lt;!--&lt;br&gt;--&gt;
-&lt;!--Kartenbildsuche ermöglicht durch&lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.--&gt;
 "</string>
 <string name="main_drawer_open">"Navigationsleiste öffnen"</string>
 <string name="main_drawer_close">"Navigationsleiste schließen"</string>
@@ -285,8 +283,6 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="trader_edit_dialog_reset_price">"Preis zurücksetzen"</string>
 <string name="trader_clear_dialog_title">"Tausch leeren"</string>
 <string name="trader_clear_dialog_text">"Bist du sicher, dass du den aktuellen Tausch leeren möchtest?"</string>
-<string name="trader_select_dialog_title">"Tausch auswählen"</string>
-<string name="trader_delete_dialog_title">"Tausch löschen"</string>
 <string name="trader_edit_dialog_info">"Karteninformation"</string>
 <string name="trader_toast_no_trades">"Du hast keine gespeicherten Tausche."</string>
 <string name="trader_toast_save_error">"Tausch konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
@@ -389,8 +385,6 @@ Viel Glück und viel Spaß!
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Allgemeine Einstellungen"</string>
-<string name="pref_screen_search">"Suche und Ergebnisse"</string>
-<string name="pref_screen_trade_wishlist">"Tausch &amp; Wunschliste"</string>
 <string name="pref_cat_default_fragment">"Standardseite"</string>
 <string name="pref_default_fragment_mode_summary">"Das Erste, was du nach dem Öffnen der App siehst."</string>
 <string name="pref_cat_updates">"Datenbankaktualisierungen"</string>
@@ -546,7 +540,6 @@ Viel Glück und viel Spaß!
 <string name="pref_cat_list_general">"Allgemeine Listen"</string>
 
 <!-- Could you explain the undo functionality in simple terms? -->
-<!-- Fuzzy -->
 <string name="pref_undo_timeout_seconds_summary">"Zeitraum in Sekunden, in dem eine Aktion rückgängig gemacht werden kann."</string>
 
 <!-- Where and how is this used? Is it a button? Does it mean "to undo the timeout" or "the timeout of undoing"? -->

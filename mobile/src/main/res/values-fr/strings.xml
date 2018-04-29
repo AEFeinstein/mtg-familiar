@@ -2,7 +2,6 @@
 <resources>
 
 <!-- General-purpose strings -->
-<string name="app_name">"MTG Familiar"</string>
 <string name="name_search_hint">"Chercher un nom"</string>
 <string name="dialog_ok">"OK"</string>
 <string name="dialog_cancel">"Annuler"</string>
@@ -28,8 +27,6 @@
 <string name="not_deleted">"non supprimé"</string>
 <string name="no_network">"Réseau non disponible"</string>
 <string name="filter_title_view_card">"Vue Carte"</string>
-<string name="tutor_cards_notice">"Optimisé par TutorCards"</string>
-<string name="tutor_cards_fail">"TutorCards inaccessible"</string>
 
 <!-- Main menu activity -->
 <string name="main_pages">"PAGES"</string>
@@ -74,7 +71,6 @@ Alors, à quel point vous sentez-vous généreux aujourd'hui?
 <string name="main_import_fail">"Echec de l'import. Veuillez placer MTGFamiliarBackup.zip à la racine de votre carte SD"</string>
 <string name="main_about">"A propos"</string>
 
-<!-- Fuzzy -->
 <string name="main_about_text">"Cette appli est mon cadeau à la communauté MTG.&lt;br&gt;
 &lt;br&gt;
 Envoyez vos questions, commentaires, problèmes et souhaits à &lt;a href=\"mailto:mtg.familiar@gmail.com\"&gt;mtg.familiar@gmail.com&lt;/a&gt;.&lt;br&gt;
@@ -109,11 +105,13 @@ Magic the Gathering et les cartes Magic the Gathering sont ™ &amp; © Wizards 
 &lt;br&gt;
 &lt;a href=https://github.com/splitwise/TokenAutoComplete&gt;TokenAutoComplete&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
+&lt;a href=https://github.com/NYTimes/Store&gt;NYTimes's Store&lt;/a&gt; utilisé sous Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
+&lt;a href=https://github.com/bumptech/glide&gt;Glide&lt;/a&gt; utilisé sous BSD, part MIT, Licence Apache, Version 2.0&lt;/a&gt;.&lt;br&gt;
+&lt;br&gt;
 Programme sous licence &lt;a href=\"http://www.gnu.org/licenses/gpl.html\"&gt;GNU General Public License v3+&lt;/a&gt;.&lt;br&gt;
 &lt;br&gt;
 Médias sous licence &lt;a href=\"http://creativecommons.org/licenses/by-sa/3.0/\"&gt;Creative Commons Attribution-ShareAlike 3.0 Unported License&lt;a&gt;.&lt;br&gt;
-&lt;!--&lt;br&gt;--&gt;
-&lt;!--Recherche de carte par image optimisée par &lt;a href=https://tutor.cards&gt;TutorCards&lt;/a&gt;.--&gt;
 "</string>
 <string name="main_drawer_open">"Ouvrir la colonne de navigation"</string>
 <string name="main_drawer_close">"Fermer la colonne de navigation"</string>
@@ -269,8 +267,6 @@ La réserve de mana sera aussi vidée."</string>
 <string name="trader_edit_dialog_reset_price">"Réinitialiser Prix"</string>
 <string name="trader_clear_dialog_title">"Vider Echange"</string>
 <string name="trader_clear_dialog_text">"Etes-vous sûr de vouloir vider l'échange actuel?"</string>
-<string name="trader_select_dialog_title">"Choisir un échange"</string>
-<string name="trader_delete_dialog_title">"Supprimer un échange"</string>
 <string name="trader_edit_dialog_info">"Informations de carte"</string>
 <string name="trader_toast_no_trades">"Vous n'avez aucun échange sauvé."</string>
 <string name="trader_toast_save_error">"L'échange n'a pu être sauvé; veuillez réessayer."</string>
@@ -333,7 +329,6 @@ La réserve de mana sera aussi vidée."</string>
 <string name="profile_update_dci">"Mettre à jour le numéro DCI"</string>
 <string name="profile_remove_dci">"Effacer le numéro DCI"</string>
 
-<!-- Fuzzy -->
 <string name="profile_update_dci_dialog_title">"Saisir le numéro DCI"</string>
 <string name="profile_invalid_dci">"Numéro DCI saisi non valide"</string>
 <string name="profile_no_dci">"Vous n'avez pas saisi votre numéro DCI"</string>
@@ -364,11 +359,9 @@ Papier et crayon peuvent être utiles pour suivre le jeu. Malheureusement, MTG F
 Bonne chance, et bon jeu!
 "</string>
 
-<!-- Fuzzy -->
 <string name="mojhosto_momir_label">"CMC ="</string>
 <string name="mojhosto_random_creature">"Créature aléatoire"</string>
 
-<!-- Fuzzy -->
 <string name="mojhosto_stonehewer_label">"CMC ≤"</string>
 <string name="mojhosto_random_equipment">"Equipement aléatoire"</string>
 <string name="mojhosto_random_instants">"3 éphémères aléatoires"</string>
@@ -377,8 +370,6 @@ Bonne chance, et bon jeu!
 
 <!-- Preferences -->
 <string name="pref_screen_general">"Paramètres généraux"</string>
-<string name="pref_screen_search">"Recherche &amp; Résultats"</string>
-<string name="pref_screen_trade_wishlist">"Echange &amp; Liste de voeux"</string>
 <string name="pref_cat_default_fragment">"Page par défaut"</string>
 <string name="pref_default_fragment_mode_summary">"La première chose que vous voyez quand l'application démarre"</string>
 <string name="pref_cat_updates">"Mise à jour des données"</string>
