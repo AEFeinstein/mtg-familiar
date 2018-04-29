@@ -287,7 +287,6 @@ public class MoJhoStoFragment extends FamiliarFragment {
             handleFamiliarDbException(true);
         } finally {
             DatabaseManager.closeDatabase(getActivity(), handle);
-            DatabaseManager.closeDatabase(getActivity(), handle);
         }
     }
 }
