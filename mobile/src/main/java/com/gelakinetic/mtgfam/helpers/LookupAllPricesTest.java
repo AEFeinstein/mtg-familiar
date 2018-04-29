@@ -73,7 +73,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
 
         try {
             // Search for all cards
-            SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, mHandle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, mHandle);
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = new ArrayList<>(1);
             criteria.superTypes.add("!asdl");
@@ -165,7 +165,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
         } else {
             Log.d(DAPT_TAG, totalSuccess + " successes (avg " + (totalElapsedSuccess / (double) totalSuccess) + "ms)");
             Log.d(DAPT_TAG, totalFailure + " failures (avg " + (totalElapsedFailure / (double) totalFailure) + "ms)");
-            DatabaseManager.getInstance(mActivity, false).closeDatabase(false, mHandle);
+            DatabaseManager.closeDatabase(mActivity, mHandle);
         }
 
     }

@@ -377,7 +377,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, handle);
             Cursor cCardById;
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
@@ -601,7 +601,7 @@ public class CardViewFragment extends FamiliarFragment {
         } catch (FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
         } finally {
-            DatabaseManager.getInstance(mActivity, false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(mActivity, handle);
         }
         mActivity.invalidateOptionsMenu();
     }
@@ -1213,7 +1213,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             FamiliarDbHandle handle = new FamiliarDbHandle();
             try {
-                SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, handle);
+                SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, handle);
                 Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
                 mLegalities = new String[cFormats.getCount()];
@@ -1251,7 +1251,7 @@ public class CardViewFragment extends FamiliarFragment {
                 CardViewFragment.this.handleFamiliarDbException(false);
                 mLegalities = null;
             } finally {
-                DatabaseManager.getInstance(mActivity, false).closeDatabase(false, handle);
+                DatabaseManager.closeDatabase(mActivity, handle);
             }
 
             return null;

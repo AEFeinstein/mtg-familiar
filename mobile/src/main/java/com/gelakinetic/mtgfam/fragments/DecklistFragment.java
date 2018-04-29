@@ -333,7 +333,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
             /* Clear the decklist, or just the card that changed */
             clearCompressedInfo(changedCardName);
 
@@ -377,7 +377,7 @@ public class DecklistFragment extends FamiliarListFragment {
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
         } finally {
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(getActivity(), handle);
         }
     }
 

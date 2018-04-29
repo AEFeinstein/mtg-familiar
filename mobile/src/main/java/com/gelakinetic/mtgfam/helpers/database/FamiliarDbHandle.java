@@ -20,14 +20,20 @@
 package com.gelakinetic.mtgfam.helpers.database;
 
 public class FamiliarDbHandle {
-    private Integer handle = 0;
+    private Integer mHandle = 0;
+    private boolean mTransactional = false;
 
-    Integer getHandle() {
-        return handle;
+    void setInfo(int handle, boolean transactional) {
+        mHandle = handle;
+        mTransactional = transactional;
     }
 
-    void setHandle(int val) {
-        handle = val;
+    Integer getHandle() {
+        return mHandle;
+    }
+
+    public boolean isTransactional() {
+        return mTransactional;
     }
 
 }

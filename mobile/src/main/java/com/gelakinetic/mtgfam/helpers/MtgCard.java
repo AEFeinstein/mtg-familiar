@@ -152,7 +152,7 @@ public class MtgCard extends Card {
         MtgCard card = new MtgCard();
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(context, false).openDatabase(false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(context, false, handle);
 
             String[] parts = line.split(DELIMITER);
 
@@ -193,7 +193,7 @@ public class MtgCard extends Card {
         } catch (FamiliarDbException e) {
             /* Oops, data will be incomplete */
         } finally {
-            DatabaseManager.getInstance(context, false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(context, handle);
         }
 
         card.mMessage = context.getString(R.string.wishlist_loading);
@@ -266,12 +266,12 @@ public class MtgCard extends Card {
         if (newCard.mExpansion.equals("DD3")) {
             FamiliarDbHandle handle = new FamiliarDbHandle();
             try {
-                SQLiteDatabase database = DatabaseManager.getInstance(mCtx, false).openDatabase(false, handle);
+                SQLiteDatabase database = DatabaseManager.openDatabase(mCtx, false, handle);
                 newCard.mExpansion = CardDbAdapter.getCorrectSetCode(newCard.mName, newCard.mExpansion, database);
             } catch (FamiliarDbException e) {
                 /* Eat it and use the old mExpansion code. */
             } finally {
-                DatabaseManager.getInstance(mCtx, false).closeDatabase(false, handle);
+                DatabaseManager.closeDatabase(mCtx, handle);
             }
         }
         newCard.mNumberOf = Integer.parseInt(parts[2]);

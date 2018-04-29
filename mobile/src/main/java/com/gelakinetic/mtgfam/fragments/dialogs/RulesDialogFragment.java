@@ -99,14 +99,14 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                 } else {
                     FamiliarDbHandle handle = new FamiliarDbHandle();
                     try {
-                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
+                        SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
                         title = String.format(getString(R.string.rules_search_cat),
                                 CardDbAdapter.getCategoryName(getParentRulesFragment().mCategory, getParentRulesFragment().mSubcategory, database));
                     } catch (FamiliarDbException e) {
                         title = String.format(getString(R.string.rules_search_cat),
                                 getString(R.string.rules_this_cat));
                     } finally {
-                        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
+                        DatabaseManager.closeDatabase(getActivity(), handle);
                     }
                 }
 

@@ -206,7 +206,7 @@ public class WishlistFragment extends FamiliarListFragment {
         ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
             boolean cardNumberFixed = false;
             /* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
@@ -279,7 +279,7 @@ public class WishlistFragment extends FamiliarListFragment {
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
         } finally {
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(getActivity(), handle);
         }
     }
 

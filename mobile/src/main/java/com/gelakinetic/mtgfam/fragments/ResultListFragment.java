@@ -164,7 +164,7 @@ public class ResultListFragment extends FamiliarFragment {
 
         /* Open up the database, search for stuff */
         try {
-            mDatabase = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, mDbHandle);
+            mDatabase = DatabaseManager.openDatabase(getActivity(), false, mDbHandle);
             doSearch(this.getArguments(), mDatabase);
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(true);
@@ -311,7 +311,7 @@ public class ResultListFragment extends FamiliarFragment {
         if (mCursor != null) {
             mCursor.close();
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, mDbHandle);
+        DatabaseManager.closeDatabase(getActivity(), mDbHandle);
     }
 
     /**

@@ -200,7 +200,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SearchCriteria criteria = new SearchCriteria();
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
             if (type.equals(EQUIPMENT)) {
                 criteria.cmcLogic = "<=";
                 criteria.subTypes = Collections.singletonList(type);
@@ -235,7 +235,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         } finally {
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(getActivity(), handle);
         }
     }
 
@@ -248,7 +248,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
     private void getThreeSpells(String type) {
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = Collections.singletonList(type);
@@ -286,7 +286,8 @@ public class MoJhoStoFragment extends FamiliarFragment {
         } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
             handleFamiliarDbException(true);
         } finally {
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(getActivity(), handle);
+            DatabaseManager.closeDatabase(getActivity(), handle);
         }
     }
 }

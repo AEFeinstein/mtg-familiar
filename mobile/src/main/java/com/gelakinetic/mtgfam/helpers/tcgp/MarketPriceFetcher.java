@@ -129,7 +129,7 @@ public class MarketPriceFetcher {
                 /* then the same for multicard ordering */
                 FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, handle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, handle);
 
                     /* If the card number wasn't given, figure it out */
                     if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
@@ -165,7 +165,7 @@ public class MarketPriceFetcher {
                 } catch (FamiliarDbException e) {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
                 } finally {
-                    DatabaseManager.getInstance(mActivity, false).closeDatabase(false, handle);
+                    DatabaseManager.closeDatabase(mActivity, handle);
                 }
 
                 /* If this isn't a multi-card, don't iterate so much */
@@ -185,7 +185,7 @@ public class MarketPriceFetcher {
                             String tcgCardName;
                             FamiliarDbHandle setOptHandle = new FamiliarDbHandle();
                             try {
-                                SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, setOptHandle);
+                                SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, setOptHandle);
 
                                 /* Set up retries for multicard ordering */
                                 if (multiCardType != CardDbAdapter.MultiCardType.NOPE) {
@@ -231,7 +231,7 @@ public class MarketPriceFetcher {
                                 tcgCardName = null;
                                 lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
                             } finally {
-                                DatabaseManager.getInstance(mActivity, false).closeDatabase(false, setOptHandle);
+                                DatabaseManager.closeDatabase(mActivity, handle);
                             }
 
                             if (null != tcgCardName) {

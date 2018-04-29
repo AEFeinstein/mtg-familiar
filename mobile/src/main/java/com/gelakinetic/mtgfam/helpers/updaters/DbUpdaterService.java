@@ -153,7 +153,7 @@ public class DbUpdaterService extends IntentService {
                 /* Open a writable database, insert the legality data */
                 FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true, handle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, handle);
                     /* Add all the data we've downloaded */
                     CardDbAdapter.dropLegalTables(database);
                     CardDbAdapter.createLegalTables(database);
@@ -180,7 +180,7 @@ public class DbUpdaterService extends IntentService {
                     }
                 } finally {
                     /* Close the writable database */
-                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true, handle);
+                    DatabaseManager.closeDatabase(getApplicationContext(), handle);
                 }
             }
 
@@ -197,7 +197,7 @@ public class DbUpdaterService extends IntentService {
                 FamiliarDbHandle setsHandle = new FamiliarDbHandle();
                 try {
                     /* Get readable database access */
-                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), false).openDatabase(false, setsHandle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), false, setsHandle);
                     Cursor setCursor = CardDbAdapter.fetchAllSets(database);
                     if (setCursor != null) {
                         setCursor.moveToFirst();
@@ -217,13 +217,13 @@ public class DbUpdaterService extends IntentService {
                         e.printStackTrace(logWriter);
                     }
                 } finally {
-                    DatabaseManager.getInstance(getApplicationContext(), false).closeDatabase(false, setsHandle);
+                    DatabaseManager.closeDatabase(getApplicationContext(), setsHandle);
                 }
 
                 /* Look through the manifest and drop all out of date sets */
                 FamiliarDbHandle manifestHandle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true, manifestHandle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, manifestHandle);
                     for (Manifest.ManifestEntry set : manifest.mPatches) {
                         try {
                             /* If the digest doesn't match, mark the set for dropping
@@ -246,7 +246,7 @@ public class DbUpdaterService extends IntentService {
                         e.printStackTrace(logWriter);
                     }
                 } finally {
-                    DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true, manifestHandle);
+                    DatabaseManager.closeDatabase(getApplicationContext(), manifestHandle);
                 }
 
                 /* Look through the list of available patches, and if it doesn't exist in the database, add it. */
@@ -274,7 +274,7 @@ public class DbUpdaterService extends IntentService {
                                     /* After the download, open the database */
                                     FamiliarDbHandle expansionHandle = new FamiliarDbHandle();
                                     try {
-                                        SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true, expansionHandle);
+                                        SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, expansionHandle);
                                         /* Insert the newly downloaded info */
                                         for (Expansion expansion : setsToAdd) {
                                             if (logWriter != null) {
@@ -297,7 +297,7 @@ public class DbUpdaterService extends IntentService {
                                         }
                                     } finally {
                                         /* Close the database */
-                                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true, expansionHandle);
+                                        DatabaseManager.closeDatabase(getApplicationContext(), expansionHandle);
                                     }
                                 }
                             } catch (IOException e) {
@@ -341,7 +341,7 @@ public class DbUpdaterService extends IntentService {
                     FamiliarDbHandle handle = new FamiliarDbHandle();
                     try {
 
-                        SQLiteDatabase database = DatabaseManager.getInstance(getApplicationContext(), true).openDatabase(true, handle);
+                        SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, handle);
 
                         /* Add stored rules */
                         if (rulesToAdd.size() > 0 || glossaryItemsToAdd.size() > 0) {
@@ -363,7 +363,7 @@ public class DbUpdaterService extends IntentService {
                             e.printStackTrace(logWriter);
                         }
                     } finally {
-                        DatabaseManager.getInstance(getApplicationContext(), true).closeDatabase(true, handle);
+                        DatabaseManager.closeDatabase(getApplicationContext(), handle);
                     }
                 }
             }

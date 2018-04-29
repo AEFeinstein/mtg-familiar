@@ -321,7 +321,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 /* Only actually get data if the arrays are null */
                 FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
                     if (mSetNames == null) {
                         /* Query the database for all sets and fill the arrays to populate the list of choices with */
                         Cursor setCursor = CardDbAdapter.fetchAllSets(database);
@@ -377,7 +377,7 @@ public class SearchViewFragment extends FamiliarFragment {
                 } catch (FamiliarDbException e) {
                     handleFamiliarDbException(true);
                 } finally {
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
+                    DatabaseManager.closeDatabase(getActivity(), handle);
                 }
 
                 return null;

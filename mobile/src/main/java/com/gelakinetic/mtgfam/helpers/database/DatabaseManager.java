@@ -39,7 +39,7 @@ public class DatabaseManager {
      *
      * @param context A singleton DatabaseHelper to open databases with, later
      */
-    public static synchronized void initializeInstance(Context context) {
+    public static synchronized void initializeInstances(Context context) {
         mDatabase.initializeInstance(context);
         mTransactionalDatabase.initializeInstance(context);
     }
@@ -51,8 +51,8 @@ public class DatabaseManager {
      * @param isTransactional Whether we should get a transactional instance or not
      * @return The DatabaseManager
      */
-    public static synchronized DatabaseManager getInstance(Context context,
-                                                           boolean isTransactional) {
+    private static synchronized DatabaseManager getInstance(Context context,
+                                                            boolean isTransactional) {
         if (isTransactional) {
             return mTransactionalDatabase.getInstance(context);
 
@@ -65,13 +65,29 @@ public class DatabaseManager {
     /**
      * Opens a database, either a transactional one or not
      *
+     * @param context         A context to construct a DatabaseHelper if necessary
      * @param isTransactional Whether or not this database operation is transactional
      * @param handle          This is set to a value unique to this database access and must be used
      *                        to close the access later
      * @return A SQLiteDatabase object used for database access
      * @throws FamiliarDbException if the database can't be opened
      */
-    public synchronized SQLiteDatabase openDatabase(boolean isTransactional, @NonNull FamiliarDbHandle handle) throws FamiliarDbException {
+    public static synchronized SQLiteDatabase openDatabase(Context context, boolean isTransactional,
+                                                           @NonNull FamiliarDbHandle handle) throws FamiliarDbException {
+        return getInstance(context, isTransactional).openDatabase(isTransactional, handle);
+    }
+
+    /**
+     * Opens a database, either a transactional one or not
+     *
+     * @param isTransactional Whether or not this database operation is transactional
+     * @param handle          This is set to a value unique to this database access and must be used
+     *                        to close the access later
+     * @return A SQLiteDatabase object used for database access
+     * @throws FamiliarDbException if the database can't be opened
+     */
+    private synchronized SQLiteDatabase openDatabase(boolean isTransactional,
+                                                     @NonNull FamiliarDbHandle handle) throws FamiliarDbException {
         if (isTransactional) {
             return mTransactionalDatabase.openDatabase(handle);
         } else {
@@ -82,11 +98,20 @@ public class DatabaseManager {
     /**
      * Close a database opened with this class
      *
-     * @param isTransactional Whether we should close the transactional database or not
-     * @param handle          The handle from openDatabase, used to close this instance
+     * @param context A context to construct a DatabaseHelper if necessary
+     * @param handle  The handle from openDatabase, used to close this instance
      */
-    public synchronized void closeDatabase(boolean isTransactional, @NonNull FamiliarDbHandle handle) {
-        if (isTransactional) {
+    public static synchronized void closeDatabase(Context context, @NonNull FamiliarDbHandle handle) {
+        getInstance(context, handle.isTransactional()).closeDatabase(handle);
+    }
+
+    /**
+     * Close a database opened with this class
+     *
+     * @param handle The handle from openDatabase, used to close this instance
+     */
+    private synchronized void closeDatabase(@NonNull FamiliarDbHandle handle) {
+        if (handle.isTransactional()) {
             mTransactionalDatabase.closeDatabase(handle);
         } else {
             mDatabase.closeDatabase(handle);
@@ -99,7 +124,7 @@ public class DatabaseManager {
      * entry points: a writable transactional one, and a readable one.
      */
     private static class AtomicDatabase {
-        private final static ArrayList<Integer> mOpenHandles = new ArrayList<>();
+        private final static ArrayList<FamiliarDbHandle> mOpenHandles = new ArrayList<>();
         private final boolean mTransactional;
         private static SQLiteDatabase mDatabase;
         private static DatabaseManager mDatabaseManager;
@@ -152,10 +177,10 @@ public class DatabaseManager {
             // Assign this open a handle
             if (mOpenHandles.isEmpty()) {
                 // Start with a nonzero value
-                handle.setHandle(1);
+                handle.setInfo(1, mTransactional);
             } else {
                 // Or use one more than the last value
-                handle.setHandle(mOpenHandles.get(mOpenHandles.size() - 1) + 1);
+                handle.setInfo(mOpenHandles.get(mOpenHandles.size() - 1).getHandle() + 1, mTransactional);
             }
 
             try {
@@ -172,7 +197,7 @@ public class DatabaseManager {
                     }
                 }
                 // Add the handle to the collection of open handles only if the open was successful
-                mOpenHandles.add(handle.getHandle());
+                mOpenHandles.add(handle);
                 return mDatabase;
             } catch (SQLiteException e) {
                 throw new FamiliarDbException(e);
@@ -186,9 +211,9 @@ public class DatabaseManager {
          */
         synchronized void closeDatabase(@NonNull FamiliarDbHandle handle) {
             // If there was a successful open with this handle
-            if (mOpenHandles.contains(handle.getHandle())) {
+            if (mOpenHandles.contains(handle)) {
                 // Remove the handle from the collection of open handles
-                mOpenHandles.remove(handle.getHandle());
+                mOpenHandles.remove(handle);
                 // Close the database
                 if (mOpenHandles.isEmpty()) {
                     if (mTransactional) {

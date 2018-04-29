@@ -474,7 +474,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        DatabaseManager.initializeInstance(getApplicationContext());
+        DatabaseManager.initializeInstances(getApplicationContext());
 
         mRefreshLayout = findViewById(R.id.fragment_container);
         mRefreshLayout.setColors(
@@ -519,7 +519,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     if (getNetworkState(FamiliarActivity.this, true) != -1) {
                         FamiliarDbHandle handle = new FamiliarDbHandle();
                         try {
-                            SQLiteDatabase database = DatabaseManager.getInstance(FamiliarActivity.this, true).openDatabase(true, handle);
+                            SQLiteDatabase database = DatabaseManager.openDatabase(FamiliarActivity.this, true, handle);
                             CardDbAdapter.dropCreateDB(database);
                             PreferenceAdapter.setLastLegalityUpdate(FamiliarActivity.this, 0);
                             PreferenceAdapter.setLastIPGUpdate(FamiliarActivity.this, 0);
@@ -531,7 +531,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         } catch (FamiliarDbException e) {
                             e.printStackTrace();
                         } finally {
-                            DatabaseManager.getInstance(FamiliarActivity.this, true).closeDatabase(true, handle);
+                            DatabaseManager.closeDatabase(FamiliarActivity.this, handle);
                         }
                     }
                     shouldCloseDrawer = true;
@@ -798,7 +798,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
                     FamiliarDbHandle handle = new FamiliarDbHandle();
                     try {
-                        SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false, handle);
+                        SQLiteDatabase database = DatabaseManager.openDatabase(this, false, handle);
                         String queryParam;
                         if ((queryParam = data.getQueryParameter("multiverseid")) != null) {
                             Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
@@ -833,7 +833,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         this.finish();
                         shouldSelectItem = false;
                     } finally {
-                        DatabaseManager.getInstance(this, false).closeDatabase(false, handle);
+                        DatabaseManager.closeDatabase(this, handle);
                     }
                 } else if (data.getAuthority().contains("CardSearchProvider")) {
                     /* User clicked a card in the quick search autocomplete, jump right to it */
@@ -846,7 +846,7 @@ public class FamiliarActivity extends AppCompatActivity {
 
                     FamiliarDbHandle handle = new FamiliarDbHandle();
                     try {
-                        SQLiteDatabase database = DatabaseManager.getInstance(this, false).openDatabase(false, handle);
+                        SQLiteDatabase database = DatabaseManager.openDatabase(this, false, handle);
                         Cursor cursor = null;
                         boolean screenLaunched = false;
                         if (data.getScheme().toLowerCase().equals("card") &&
@@ -891,7 +891,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     } catch (FamiliarDbException e) {
                         e.printStackTrace();
                     } finally {
-                        DatabaseManager.getInstance(this, false).closeDatabase(false, handle);
+                        DatabaseManager.closeDatabase(this, handle);
                     }
                 }
                 args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);

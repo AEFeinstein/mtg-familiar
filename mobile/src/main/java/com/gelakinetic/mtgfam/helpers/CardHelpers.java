@@ -134,7 +134,7 @@ public class CardHelpers {
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             /* Open the database */
-            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false, handle);
+            SQLiteDatabase db = DatabaseManager.openDatabase(fragment.getActivity(), false, handle);
 
             /* Get all the cards with relevant info from the database */
             Cursor cards;
@@ -189,7 +189,7 @@ public class CardHelpers {
         } catch (FamiliarDbException e) {
             return null;
         } finally {
-            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(fragment.getActivity(), handle);
         }
 
         MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
@@ -284,7 +284,7 @@ public class CardHelpers {
                         /* Open the database */
                         FamiliarDbHandle showCardHandle = new FamiliarDbHandle();
                         try {
-                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false, showCardHandle);
+                            SQLiteDatabase db = DatabaseManager.openDatabase(fragment.getActivity(), false, showCardHandle);
                             /* Get the card ID, and send it to a new CardViewFragment */
                             long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
                             if (cardId > 0) {
@@ -299,7 +299,7 @@ public class CardHelpers {
                         } catch (FamiliarDbException e) {
                             fragment.handleFamiliarDbException(false);
                         } finally {
-                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false, showCardHandle);
+                            DatabaseManager.closeDatabase(fragment.getActivity(), showCardHandle);
                         }
                         fragment.removeDialog(fragment.getFragmentManager());
                     });
@@ -637,7 +637,7 @@ public class CardHelpers {
         FamiliarActivity activity = (FamiliarActivity) context;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
             /* Make the new MTGCard */
             MtgCard card = new MtgCard();
             card.mIsFoil = isFoil;
@@ -735,7 +735,7 @@ public class CardHelpers {
         } catch (FamiliarDbException | NumberFormatException fde) {
             /* todo: handle this */
         } finally {
-            DatabaseManager.getInstance(activity, false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(activity, handle);
         }
         return null;
 

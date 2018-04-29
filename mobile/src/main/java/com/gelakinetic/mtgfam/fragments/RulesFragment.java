@@ -167,7 +167,7 @@ public class RulesFragment extends FamiliarFragment {
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             /* Open a database connection */
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
 
             if (isGlossary) {
                 cursor = CardDbAdapter.getGlossaryTerms(database);
@@ -303,7 +303,7 @@ public class RulesFragment extends FamiliarFragment {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
+            DatabaseManager.closeDatabase(getActivity(), handle);
         }
 
         list.setSelection(position);
@@ -426,7 +426,7 @@ public class RulesFragment extends FamiliarFragment {
             while (m.find()) {
                 FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
                     String[] tokens = cs.subSequence(m.start(), m.end()).toString().split("(\\.)");
                     int firstInt = Integer.parseInt(tokens[0]);
                     final int linkCat = firstInt / 100;
@@ -456,7 +456,7 @@ public class RulesFragment extends FamiliarFragment {
                 } catch (Exception e) {
                     /* Eat any exceptions; they'll just cause the link to not appear*/
                 } finally {
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
+                    DatabaseManager.closeDatabase(getActivity(), handle);
                 }
             }
         }
