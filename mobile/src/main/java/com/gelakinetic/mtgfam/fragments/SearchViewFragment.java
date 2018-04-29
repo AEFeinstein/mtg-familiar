@@ -57,6 +57,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.model.Comparison;
 import com.gelakinetic.mtgfam.helpers.view.ComparisonSpinner;
 import com.gelakinetic.mtgfam.helpers.view.CompletionView;
@@ -318,8 +319,9 @@ public class SearchViewFragment extends FamiliarFragment {
             protected Void doInBackground(Void... voids) {
 
                 /* Only actually get data if the arrays are null */
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
                     if (mSetNames == null) {
                         /* Query the database for all sets and fill the arrays to populate the list of choices with */
                         Cursor setCursor = CardDbAdapter.fetchAllSets(database);
@@ -374,8 +376,9 @@ public class SearchViewFragment extends FamiliarFragment {
                     }
                 } catch (FamiliarDbException e) {
                     handleFamiliarDbException(true);
+                } finally {
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
                 }
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 return null;
             }

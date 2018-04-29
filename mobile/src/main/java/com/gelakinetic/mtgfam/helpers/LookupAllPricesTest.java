@@ -28,6 +28,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceFetcher;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
@@ -43,6 +44,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
     int totalElapsedFailure = 0;
     int totalFailure = 0;
     FamiliarActivity mActivity;
+    private FamiliarDbHandle mHandle = new FamiliarDbHandle();
 
     /**
      * Get all cards from the database, then look up all of their prices
@@ -71,7 +73,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
 
         try {
             // Search for all cards
-            SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, mHandle);
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = new ArrayList<>(1);
             criteria.superTypes.add("!asdl");
@@ -163,7 +165,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
         } else {
             Log.d(DAPT_TAG, totalSuccess + " successes (avg " + (totalElapsedSuccess / (double) totalSuccess) + "ms)");
             Log.d(DAPT_TAG, totalFailure + " failures (avg " + (totalElapsedFailure / (double) totalFailure) + "ms)");
-            DatabaseManager.getInstance(mActivity, false).closeDatabase(false);
+            DatabaseManager.getInstance(mActivity, false).closeDatabase(false, mHandle);
         }
 
     }

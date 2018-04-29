@@ -41,6 +41,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
@@ -131,8 +132,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 priceText.setSelection(priceNumberStr.length());
 
                 /* Only show the foil checkbox if the card can be foil */
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
                     if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).mExpansion, database)) {
                         view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
                     } else {
@@ -141,8 +143,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 } catch (FamiliarDbException e) {
                     /* Err on the side of foil */
                     foilCheckbox.setVisibility(View.VISIBLE);
+                } finally {
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
                 }
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 /* when the user checks or un-checks the foil box, if the price isn't custom, set it */
                 foilCheckbox.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -239,9 +242,11 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 /* Set up the button to show info about this card */
                 view.findViewById(R.id.traderDialogInfo).setOnClickListener(v -> {
+                    onPositiveCallback.onClick(null, null);
+                    FamiliarDbHandle infoHandle = new FamiliarDbHandle();
                     try {
-                        onPositiveCallback.onClick(null, null);
-                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                        SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, infoHandle);
+
                         /* Get the card ID, and send it to a new CardViewPagerFragment */
                         Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
                                 lSide.get(positionForDialog).mExpansion, Collections.singletonList(
@@ -257,8 +262,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         getParentTradeFragment().startNewFragment(cvpFrag, args);
                     } catch (FamiliarDbException e) {
                         getParentTradeFragment().handleFamiliarDbException(false);
+                    } finally {
+                        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, infoHandle);
                     }
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
+                    getParentTradeFragment().removeDialog(getFragmentManager());
                 });
 
                 /* Set up the button to change the set of this card */
@@ -302,8 +309,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 Set<String> sets = new LinkedHashSet<>();
                 Set<String> setCodes = new LinkedHashSet<>();
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
                     /* Query the database for all versions of this card */
                     Cursor cards = CardDbAdapter.fetchCardByName(data.mName, Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
@@ -321,11 +329,10 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 } catch (FamiliarDbException e) {
                     /* Don't show the dialog, but pop a toast */
                     getParentTradeFragment().handleFamiliarDbException(true);
-                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
                     return DontShowDialog();
+                } finally {
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
                 }
-
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                 /* Turn set names and set codes into arrays */
                 final String[] aSets = sets.toArray(new String[sets.size()]);
@@ -366,15 +373,17 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             data1.mPriceInfo = null;
 
                             /* See if the new set can be foil */
+                            FamiliarDbHandle foilHandle = new FamiliarDbHandle();
                             try {
-                                SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                                SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, foilHandle);
                                 if (!CardDbAdapter.canBeFoil(data1.mExpansion, database)) {
                                     data1.mIsFoil = false;
                                 }
                             } catch (FamiliarDbException e) {
                                 data1.mIsFoil = false;
+                            } finally {
+                                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, foilHandle);
                             }
-                            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
                             /* Reload and notify the adapter */
                             getParentTradeFragment().loadPrice(data1);
