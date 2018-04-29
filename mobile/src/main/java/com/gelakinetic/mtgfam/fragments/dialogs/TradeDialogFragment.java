@@ -132,9 +132,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 priceText.setSelection(priceNumberStr.length());
 
                 /* Only show the foil checkbox if the card can be foil */
-                FamiliarDbHandle handle = new FamiliarDbHandle();
+                FamiliarDbHandle canBeFoilHandle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, canBeFoilHandle);
                     if (CardDbAdapter.canBeFoil(lSide.get(positionForDialog).mExpansion, database)) {
                         view.findViewById(R.id.checkbox_layout).setVisibility(View.VISIBLE);
                     } else {
@@ -144,7 +144,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     /* Err on the side of foil */
                     foilCheckbox.setVisibility(View.VISIBLE);
                 } finally {
-                    DatabaseManager.closeDatabase(getActivity(), handle);
+                    DatabaseManager.closeDatabase(getActivity(), canBeFoilHandle);
                 }
 
                 /* when the user checks or un-checks the foil box, if the price isn't custom, set it */
@@ -309,9 +309,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 Set<String> sets = new LinkedHashSet<>();
                 Set<String> setCodes = new LinkedHashSet<>();
-                FamiliarDbHandle handle = new FamiliarDbHandle();
+                FamiliarDbHandle fetchCardHandle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, fetchCardHandle);
                     /* Query the database for all versions of this card */
                     Cursor cards = CardDbAdapter.fetchCardByName(data.mName, Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
@@ -331,7 +331,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     getParentTradeFragment().handleFamiliarDbException(true);
                     return DontShowDialog();
                 } finally {
-                    DatabaseManager.closeDatabase(getActivity(), handle);
+                    DatabaseManager.closeDatabase(getActivity(), fetchCardHandle);
                 }
 
                 /* Turn set names and set codes into arrays */

@@ -796,9 +796,9 @@ public class FamiliarActivity extends AppCompatActivity {
 
                 boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
                 if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
-                    FamiliarDbHandle handle = new FamiliarDbHandle();
+                    FamiliarDbHandle fromUrlHandle = new FamiliarDbHandle();
                     try {
-                        SQLiteDatabase database = DatabaseManager.openDatabase(this, false, handle);
+                        SQLiteDatabase database = DatabaseManager.openDatabase(this, false, fromUrlHandle);
                         String queryParam;
                         if ((queryParam = data.getQueryParameter("multiverseid")) != null) {
                             Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
@@ -833,7 +833,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         this.finish();
                         shouldSelectItem = false;
                     } finally {
-                        DatabaseManager.closeDatabase(this, handle);
+                        DatabaseManager.closeDatabase(this, fromUrlHandle);
                     }
                 } else if (data.getAuthority().contains("CardSearchProvider")) {
                     /* User clicked a card in the quick search autocomplete, jump right to it */
@@ -844,9 +844,9 @@ public class FamiliarActivity extends AppCompatActivity {
                     /* User clicked a deep link, jump to the card(s) */
                     isDeepLink = true;
 
-                    FamiliarDbHandle handle = new FamiliarDbHandle();
+                    FamiliarDbHandle deepLinkHandle = new FamiliarDbHandle();
                     try {
-                        SQLiteDatabase database = DatabaseManager.openDatabase(this, false, handle);
+                        SQLiteDatabase database = DatabaseManager.openDatabase(this, false, deepLinkHandle);
                         Cursor cursor = null;
                         boolean screenLaunched = false;
                         if (data.getScheme().toLowerCase().equals("card") &&
@@ -891,7 +891,7 @@ public class FamiliarActivity extends AppCompatActivity {
                     } catch (FamiliarDbException e) {
                         e.printStackTrace();
                     } finally {
-                        DatabaseManager.closeDatabase(this, handle);
+                        DatabaseManager.closeDatabase(this, deepLinkHandle);
                     }
                 }
                 args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);

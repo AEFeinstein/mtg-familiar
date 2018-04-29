@@ -151,9 +151,9 @@ public class DbUpdaterService extends IntentService {
                 }
 
                 /* Open a writable database, insert the legality data */
-                FamiliarDbHandle handle = new FamiliarDbHandle();
+                FamiliarDbHandle legalHandle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, handle);
+                    SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, legalHandle);
                     /* Add all the data we've downloaded */
                     CardDbAdapter.dropLegalTables(database);
                     CardDbAdapter.createLegalTables(database);
@@ -180,7 +180,7 @@ public class DbUpdaterService extends IntentService {
                     }
                 } finally {
                     /* Close the writable database */
-                    DatabaseManager.closeDatabase(getApplicationContext(), handle);
+                    DatabaseManager.closeDatabase(getApplicationContext(), legalHandle);
                 }
             }
 
@@ -338,10 +338,10 @@ public class DbUpdaterService extends IntentService {
                     newRulesParsed = true;
 
                     /* Open the database */
-                    FamiliarDbHandle handle = new FamiliarDbHandle();
+                    FamiliarDbHandle rulesHandle = new FamiliarDbHandle();
                     try {
 
-                        SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, handle);
+                        SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), true, rulesHandle);
 
                         /* Add stored rules */
                         if (rulesToAdd.size() > 0 || glossaryItemsToAdd.size() > 0) {
@@ -363,7 +363,7 @@ public class DbUpdaterService extends IntentService {
                             e.printStackTrace(logWriter);
                         }
                     } finally {
-                        DatabaseManager.closeDatabase(getApplicationContext(), handle);
+                        DatabaseManager.closeDatabase(getApplicationContext(), rulesHandle);
                     }
                 }
             }

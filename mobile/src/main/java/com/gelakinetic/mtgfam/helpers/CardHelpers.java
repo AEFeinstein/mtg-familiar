@@ -131,10 +131,10 @@ public class CardHelpers {
         final ArrayList<Character> potentialRarities = new ArrayList<>();
         final ArrayList<String> potentialNumbers = new ArrayList<>();
 
-        FamiliarDbHandle handle = new FamiliarDbHandle();
+        FamiliarDbHandle fetchCardHandle = new FamiliarDbHandle();
         try {
             /* Open the database */
-            SQLiteDatabase db = DatabaseManager.openDatabase(fragment.getActivity(), false, handle);
+            SQLiteDatabase db = DatabaseManager.openDatabase(fragment.getActivity(), false, fetchCardHandle);
 
             /* Get all the cards with relevant info from the database */
             Cursor cards;
@@ -189,7 +189,7 @@ public class CardHelpers {
         } catch (FamiliarDbException e) {
             return null;
         } finally {
-            DatabaseManager.closeDatabase(fragment.getActivity(), handle);
+            DatabaseManager.closeDatabase(fragment.getActivity(), fetchCardHandle);
         }
 
         MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
