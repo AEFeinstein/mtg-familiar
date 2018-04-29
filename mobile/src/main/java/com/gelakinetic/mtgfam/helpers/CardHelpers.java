@@ -280,6 +280,8 @@ public class CardHelpers {
             customView.findViewById(R.id.show_card_button).setOnClickListener(
                     view -> {
 
+                        onPositiveCallback.onClick(null, null);
+
                         Bundle args = new Bundle();
                         /* Open the database */
                         FamiliarDbHandle showCardHandle = new FamiliarDbHandle();
