@@ -165,7 +165,7 @@ public class DatabaseManager {
                     if (mTransactional) {
                         mDatabase = mDatabaseHelper.getWritableDatabase();
                         if (mDatabase != null) {
-                            mDatabase.beginTransaction();
+                            mDatabase.execSQL("BEGIN EXCLUSIVE TRANSACTION");
                         }
                     } else {
                         mDatabase = mDatabaseHelper.getReadableDatabase();
@@ -192,7 +192,7 @@ public class DatabaseManager {
                 // Close the database
                 if (mOpenHandles.isEmpty()) {
                     if (mTransactional) {
-                        mDatabase.endTransaction();
+                        mDatabase.execSQL("COMMIT");
                     }
                     mDatabase.close();
                 }

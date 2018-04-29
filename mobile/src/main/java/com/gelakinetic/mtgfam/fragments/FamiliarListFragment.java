@@ -168,7 +168,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * properly and set the visibility for total price views
      */
     @Override
-    void onResume() {
+    public void onResume() {
         super.onResume();
 
         if (null == mNameField) {

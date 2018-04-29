@@ -67,7 +67,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
      */
     @Override
-    void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setHasOptionsMenu(true);
     }
@@ -102,7 +102,7 @@ public abstract class FamiliarFragment extends Fragment {
      * and they should have been looked at by now anyway
      */
     @Override
-    void onResume() {
+    public void onResume() {
         super.onResume();
         if ((getActivity()) != null) {
             getFamiliarActivity().getFragmentResults();
@@ -117,7 +117,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         super.onSaveInstanceState(outState);
     }
@@ -132,7 +132,7 @@ public abstract class FamiliarFragment extends Fragment {
      * intents on the first install. It also cleans up any pending spice requests (price loading)
      */
     @Override
-    void onPause() {
+    public void onPause() {
         super.onPause();
         removeDialog(getFragmentManager());
     }
@@ -145,7 +145,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
 

@@ -482,8 +482,11 @@ public class DbUpdaterService extends IntentService {
         }
 
         StringBuilder body = new StringBuilder(getString(R.string.update_added)).append(" ");
+        boolean first = true;
         for (String stuff : newStuff) {
-            if (body.length() > 0) {
+            if (first) {
+                first = false;
+            } else {
                 body.append(", ");
             }
             body.append(stuff);
