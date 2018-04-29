@@ -28,32 +28,32 @@ package com.gelakinetic.GathererScraper.JsonTypes;
 public class Expansion {
 
     // Name used by Gatherer
-    public final String mName_gatherer = "";
+    public String mName_gatherer = "";
 
     // expansion code used by Gatherer
-    public final String mCode_gatherer = "";
+    public String mCode_gatherer = "";
 
     // expansion code used by magiccards.info
-    public final String mCode_mtgi = "";
+    public String mCode_mtgi = "";
 
     // expansion mName used by TCGPlayer.com
-    public final String mName_tcgp = "";
+    public String mName_tcgp = "";
 
     // expansion name used by MagicCardMarket.eu
     public String mName_mkm = "";
 
     // Date the expansion was released
-    public final long mReleaseTimestamp = 0;
+    public long mReleaseTimestamp = 0;
 
     // Whether or not this expansion has foil cards
-    public final boolean mCanBeFoil = false;
+    public boolean mCanBeFoil = false;
 
     // Whether this expansion is online-only or has paper printings
-    public final boolean mIsOnlineOnly = false;
+    public boolean mIsOnlineOnly = false;
 
     // The color of the border, either Black, White, or Silver
-    public final String mBorderColor = "";
+    public String mBorderColor = "";
 
     // MD5 digest for scraped cards, to see when things change
-    public final String mDigest = "";
+    public String mDigest = "";
 }
