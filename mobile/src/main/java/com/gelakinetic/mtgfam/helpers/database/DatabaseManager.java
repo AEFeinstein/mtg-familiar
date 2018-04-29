@@ -124,11 +124,11 @@ public class DatabaseManager {
      * entry points: a writable transactional one, and a readable one.
      */
     private static class AtomicDatabase {
-        private final static ArrayList<FamiliarDbHandle> mOpenHandles = new ArrayList<>();
+        private final ArrayList<FamiliarDbHandle> mOpenHandles = new ArrayList<>();
         private final boolean mTransactional;
-        private static SQLiteDatabase mDatabase;
-        private static DatabaseManager mDatabaseManager;
-        private static DatabaseHelper mDatabaseHelper;
+        private SQLiteDatabase mDatabase;
+        private DatabaseManager mDatabaseManager;
+        private DatabaseHelper mDatabaseHelper;
 
         /**
          * Constructor, marks if this object is transactional or not
@@ -197,7 +197,7 @@ public class DatabaseManager {
                     }
                 }
                 // Add the handle to the collection of open handles only if the open was successful
-                mOpenHandles.add(handle);
+                    mOpenHandles.add(handle);
                 return mDatabase;
             } catch (SQLiteException e) {
                 throw new FamiliarDbException(e);
@@ -217,7 +217,7 @@ public class DatabaseManager {
                 // Close the database
                 if (mOpenHandles.isEmpty()) {
                     if (mTransactional) {
-                        mDatabase.execSQL("COMMIT");
+                            mDatabase.execSQL("COMMIT");
                     }
                     mDatabase.close();
                 }
