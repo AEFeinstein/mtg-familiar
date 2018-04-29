@@ -104,7 +104,7 @@ public class ManaPoolFragment extends FamiliarFragment {
         }
     }
 
-    ArrayList<ManaPoolItem> mManaPoolItems = new ArrayList<>();
+    private final ArrayList<ManaPoolItem> mManaPoolItems = new ArrayList<>();
 
     /**
      * Create the view and set up the buttons

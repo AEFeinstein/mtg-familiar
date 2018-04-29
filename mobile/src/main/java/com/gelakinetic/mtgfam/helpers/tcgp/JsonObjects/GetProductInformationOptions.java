@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class GetProductInformationOptions {
     public final String sort;
     public final int limit;

@@ -17,7 +17,6 @@
   ~ along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/master_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
@@ -51,14 +50,12 @@
         android:fillViewport="true">
 
         <LinearLayout
-            android:id="@+id/linearLayout7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/linearLayout1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -67,7 +64,6 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/linearLayout2"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -93,7 +89,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -127,7 +122,6 @@
                     android:text="MOR" />
 
                 <LinearLayout
-                    android:id="@+id/linearLayout4"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -158,13 +152,11 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/frameLayout1"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
             <LinearLayout
-                android:id="@+id/linearLayout5"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
 

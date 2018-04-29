@@ -139,7 +139,7 @@ public class CardViewFragment extends FamiliarFragment {
     private LinearLayout mColorIndicatorLayout;
 
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
-    public AsyncTask mAsyncTask;
+    private AsyncTask mAsyncTask;
     public String[] mLegalities;
     public String[] mFormats;
     public ArrayList<Ruling> mRulingsArrayList;
@@ -213,7 +213,7 @@ public class CardViewFragment extends FamiliarFragment {
      */
     @Override
     public View onCreateView(
-            LayoutInflater inflater,
+            @NonNull LayoutInflater inflater,
             ViewGroup container,
             Bundle savedInstanceState) {
 
@@ -611,7 +611,7 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param cardImageView The ImageView to load the image into
      */
-    public void loadImageWithGlide(ImageView cardImageView) {
+    private void loadImageWithGlide(ImageView cardImageView) {
 
         // Get screen dimensions
         int mBorder = (int) TypedValue.applyDimension(
@@ -771,8 +771,8 @@ public class CardViewFragment extends FamiliarFragment {
      * @param target         The target to load the image into
      * @return The built glide request
      */
-    Target<Drawable> runGlideRequest(int attempt, String cardLanguage, int width, int height,
-                                     boolean onlyCheckCache, Target<Drawable> target) {
+    private Target<Drawable> runGlideRequest(int attempt, String cardLanguage, int width, int height,
+                                             boolean onlyCheckCache, Target<Drawable> target) {
 
         // Build the initial request
         GlideRequest<Drawable> request = mGlideRequestManager
@@ -1183,10 +1183,10 @@ public class CardViewFragment extends FamiliarFragment {
      * This inner class encapsulates a ruling and the date it was made.
      */
     public static class Ruling {
-        public final String date;
-        public final String ruling;
+        final String date;
+        final String ruling;
 
-        public Ruling(String d, String r) {
+        Ruling(String d, String r) {
             date = d;
             ruling = r;
         }

@@ -106,4 +106,7 @@
 
     <color name="hyperlink_text">#0077CC</color>
 
+    <color name="btn_ripple_dark">#33ffffff</color>
+    <color name="btn_ripple_light">#1f000000</color>
+
 </resources>

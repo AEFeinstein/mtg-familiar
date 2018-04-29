@@ -94,7 +94,7 @@ public class TcgpApi {
     // 52 Supply Bundles
     // 53 Munchkin CCG
 
-    public static final int CATEGORY_ID_MAGIC = 1;
+    private static final int CATEGORY_ID_MAGIC = 1;
 
     private static final String TCGP_VERSION = "v1.9.0";
     private String mAccessToken;
@@ -376,11 +376,10 @@ public class TcgpApi {
             // Concatenate all the product IDs into one string
             StringBuilder stringIds = new StringBuilder();
             for (long id : productIds) {
-                if (stringIds.length() == 0) {
-                    stringIds = new StringBuilder(Long.toString(id));
-                } else {
-                    stringIds.append(',').append(Long.toString(id));
+                if (stringIds.length() > 0) {
+                    stringIds.append(',');
                 }
+                stringIds.append(Long.toString(id));
             }
 
             // Create the connection with default options and headers
@@ -430,11 +429,10 @@ public class TcgpApi {
             // Concatenate all the product IDs into one string
             StringBuilder stringIds = new StringBuilder();
             for (long id : productIds) {
-                if (stringIds.length() == 0) {
-                    stringIds = new StringBuilder(Long.toString(id));
-                } else {
-                    stringIds.append(',').append(Long.toString(id));
+                if (stringIds.length() > 0) {
+                    stringIds.append(',');
                 }
+                stringIds.append(Long.toString(id));
             }
 
             // Create the connection with default options and headers

@@ -102,7 +102,7 @@ public class CardDbAdapter {
     public static final String KEY_BANNED_LIST = "banned_list";
     public static final String KEY_LEGAL_SETS = "legal_sets";
     private static final String KEY_NAME_TCGPLAYER = "name_tcgplayer";
-    public static final String KEY_ONLINE_ONLY = "online_only";
+    private static final String KEY_ONLINE_ONLY = "online_only";
     private static final String KEY_BORDER_COLOR = "border_color";
     private static final String KEY_FORMAT = "format";
     public static final String KEY_DIGEST = "digest";
@@ -306,7 +306,7 @@ public class CardDbAdapter {
     public static final int BANNED = 1;
     public static final int RESTRICTED = 2;
 
-    public static final String ILLEGAL_SETS[] = {"UG", "UNH", "UST", "ARS", "PCP", "PP2"};
+    private static final String[] ILLEGAL_SETS = {"UG", "UNH", "UST", "ARS", "PCP", "PP2"};
 
     /* The various types of multi-cards */
     public enum MultiCardType {
@@ -520,18 +520,18 @@ public class CardDbAdapter {
         Cursor cursor;
         try {
             boolean first = true;
-            String selectionStr = "";
+            StringBuilder selectionStr = new StringBuilder();
             for (long id : ids) {
                 if (!first) {
-                    selectionStr += " OR ";
+                    selectionStr.append(" OR ");
                 } else {
                     first = false;
                 }
-                selectionStr += KEY_ID + "=" + id;
+                selectionStr.append(KEY_ID + "=").append(id);
             }
             String[] allCardDataKeys = new String[ALL_CARD_DATA_KEYS.size()];
             ALL_CARD_DATA_KEYS.toArray(allCardDataKeys);
-            cursor = database.query(true, DATABASE_TABLE_CARDS, allCardDataKeys, selectionStr, null,
+            cursor = database.query(true, DATABASE_TABLE_CARDS, allCardDataKeys, selectionStr.toString(), null,
                     null, null, orderByStr, null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
@@ -560,31 +560,29 @@ public class CardDbAdapter {
             throws FamiliarDbException {
         /* Sanitize the string and remove accent marks */
         name = sanitizeString(name, true);
-        String sql = "SELECT ";
+        StringBuilder sql = new StringBuilder("SELECT ");
         boolean first = true;
         for (String field : fields) {
             if (first) {
                 first = false;
             } else {
-                sql += ", ";
+                sql.append(", ");
             }
-            sql += field;
+            sql.append(field);
         }
-        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS +
-                " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " + name;
+        sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name);
         if (offlineOnly) {
-            sql += " AND " + KEY_ONLINE_ONLY + " = 0";
+            sql.append(" AND " + KEY_ONLINE_ONLY + " = 0");
         }
-        sql += " COLLATE NOCASE";
+        sql.append(" COLLATE NOCASE");
         if (shouldGroup) {
-            sql += " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE;
+            sql.append(" GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE);
         }
-        sql += " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC";
+        sql.append(" ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC");
         Cursor c;
 
         try {
-            c = mDb.rawQuery(sql, null);
+            c = mDb.rawQuery(sql.toString(), null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -607,26 +605,21 @@ public class CardDbAdapter {
     public static Cursor fetchCardByMultiverseId(long multiverseId, String[] fields,
                                                  SQLiteDatabase database)
             throws FamiliarDbException {
-        String sql = "SELECT ";
+        StringBuilder sql = new StringBuilder("SELECT ");
         boolean first = true;
         for (String field : fields) {
             if (first) {
                 first = false;
             } else {
-                sql += ", ";
+                sql.append(", ");
             }
-            sql += field;
+            sql.append(field);
         }
-        sql += " FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " +
-                DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID + " = " + multiverseId
-                + " GROUP BY " + DATABASE_TABLE_SETS + "." + KEY_CODE
-                + " ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE
-                + " DESC";
+        sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_MULTIVERSEID + " = ").append(multiverseId).append(" GROUP BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_CODE).append(" ORDER BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_DATE).append(" DESC");
         Cursor cursor;
 
         try {
-            cursor = database.rawQuery(sql, null);
+            cursor = database.rawQuery(sql.toString(), null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -647,22 +640,19 @@ public class CardDbAdapter {
      */
     public static void fillExtraWishlistData(ArrayList<? extends CompressedCardInfo> mCompressedCard,
                                              SQLiteDatabase mDb) throws FamiliarDbException {
-        String sql = "SELECT ";
+        StringBuilder sql = new StringBuilder("SELECT ");
 
         boolean first = true;
         for (String field : CardDbAdapter.ALL_CARD_DATA_KEYS) {
             if (first) {
                 first = false;
             } else {
-                sql += ", ";
+                sql.append(", ");
             }
-            sql += field;
+            sql.append(field);
         }
 
-        sql += " FROM " + DATABASE_TABLE_CARDS +
-                " JOIN " + DATABASE_TABLE_SETS + " ON " +
-                DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET +
-                " WHERE (";
+        sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE (");
 
         first = true;
         boolean doSql = false;
@@ -672,16 +662,12 @@ public class CardDbAdapter {
                 if (first) {
                     first = false;
                 } else {
-                    sql += " OR ";
+                    sql.append(" OR ");
                 }
                 if (cwi.mExpansion != null && !cwi.mExpansion.equals("")) {
-                    sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = " +
-                            sanitizeString(cwi.mName, false) +
-                            " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" +
-                            cwi.mExpansion + "')";
+                    sql.append("(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = ").append(sanitizeString(cwi.mName, false)).append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = '").append(cwi.mExpansion).append("')");
                 } else {
-                    sql += "(" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " +
-                            sanitizeString(cwi.mName, true) + ")";
+                    sql.append("(" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(sanitizeString(cwi.mName, true)).append(")");
                 }
             }
         }
@@ -690,12 +676,12 @@ public class CardDbAdapter {
             return;
         }
 
-        sql += ")"; /*  ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC */
+        sql.append(")"); /*  ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC */
 
         Cursor cursor;
 
         try {
-            cursor = mDb.rawQuery(sql, null);
+            cursor = mDb.rawQuery(sql.toString(), null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -760,29 +746,22 @@ public class CardDbAdapter {
         name = sanitizeString(name, true);
         setCode = sanitizeString(setCode, false);
 
-        String sql = "SELECT ";
+        StringBuilder sql = new StringBuilder("SELECT ");
         boolean first = true;
         for (String field : fields) {
             if (first) {
                 first = false;
             } else {
-                sql += ", ";
+                sql.append(", ");
             }
-            sql += field;
+            sql.append(field);
         }
 
-        sql += " FROM "
-                + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS
-                + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = "
-                + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE "
-                + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = " + name + " COLLATE NOCASE"
-                + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = "
-                + setCode + " ORDER BY " + DATABASE_TABLE_SETS + "."
-                + KEY_DATE + " DESC";
+        sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name).append(" COLLATE NOCASE").append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = ").append(setCode).append(" ORDER BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_DATE).append(" DESC");
         Cursor c;
 
         try {
-            c = mDb.rawQuery(sql, null);
+            c = mDb.rawQuery(sql.toString(), null);
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
         }
@@ -849,19 +828,18 @@ public class CardDbAdapter {
             throws FamiliarDbException {
         Cursor cursor;
 
-        String statement = " WHERE 1=1";
+        StringBuilder statement = new StringBuilder(" WHERE 1=1");
 
         if (criteria.name != null) {
             String[] nameParts = criteria.name.split(" ");
             for (String s : nameParts) {
-                statement += " AND (" +
-                        DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE " + sanitizeString("%" + s + "%", true) + ")";
+                statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " LIKE ").append(sanitizeString("%" + s + "%", true)).append(")");
             }
         }
 
         /* Check if the watermark matches exactly */
         if (criteria.watermark != null) {
-            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_WATERMARK + " = " + sanitizeString(criteria.watermark, false) + ")";
+            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_WATERMARK + " = ").append(sanitizeString(criteria.watermark, false)).append(")");
         }
 
         /*
@@ -889,12 +867,9 @@ public class CardDbAdapter {
                 case 0:
                     for (String s : cardTextParts) {
                         if (s.contains(EXCLUDE_TOKEN))
-                            statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_ABILITY + " NOT LIKE "
-                                    + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false) + ")";
+                            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " NOT LIKE ").append(sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false)).append(")");
                         else
-                            statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                    + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
+                            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + s + "%", false)).append(")");
                     }
                     break;
                 case 1:
@@ -903,27 +878,20 @@ public class CardDbAdapter {
                         if (firstRun) {
                             firstRun = false;
                             if (s.contains(EXCLUDE_TOKEN))
-                                statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_ABILITY + " NOT LIKE "
-                                        + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false) + ")";
+                                statement.append(" AND ((" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " NOT LIKE ").append(sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false)).append(")");
                             else
-                                statement += " AND ((" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
+                                statement.append(" AND ((" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + s + "%", false)).append(")");
                         } else {
                             if (s.contains(EXCLUDE_TOKEN))
-                                statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_ABILITY + " NOT LIKE "
-                                        + sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false) + ")";
+                                statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " NOT LIKE ").append(sanitizeString("%" + s.substring(EXCLUDE_TOKEN_START) + "%", false)).append(")");
                             else
-                                statement += " OR (" + DATABASE_TABLE_CARDS + "."
-                                        + KEY_ABILITY + " LIKE " + sanitizeString("%" + s + "%", false) + ")";
+                                statement.append(" OR (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + s + "%", false)).append(")");
                         }
                     }
-                    statement += ")";
+                    statement.append(")");
                     break;
                 case 2:
-                    statement += " AND (" + DATABASE_TABLE_CARDS + "."
-                            + KEY_ABILITY + " LIKE " + sanitizeString("%" + criteria.text + "%", false) + ")";
+                    statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ABILITY + " LIKE ").append(sanitizeString("%" + criteria.text + "%", false)).append(")");
                     break;
                 default:
                     break;
@@ -947,11 +915,9 @@ public class CardDbAdapter {
                 case 0:
                     for (String s : supertypes) {
                         if (s.contains(EXCLUDE_TOKEN)) {
-                            statement += " AND (" + supertypeInDb + " NOT LIKE " +
-                                    sanitizeString("% " + s.substring(1) + " %", false) + ")";
+                            statement.append(" AND (" + supertypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                         } else
-                            statement += " AND (" + supertypeInDb + " LIKE " +
-                                    sanitizeString("% " + s + " %", false) + ")";
+                            statement.append(" AND (" + supertypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
                     }
                     break;
                 case 1:
@@ -961,25 +927,19 @@ public class CardDbAdapter {
                             firstRun = false;
 
                             if (s.contains(EXCLUDE_TOKEN))
-                                statement += " AND ((" + supertypeInDb + " NOT LIKE "
-                                        + sanitizeString("% " + s.substring(1) + " %", false) + ")";
+                                statement.append(" AND ((" + supertypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                             else
-                                statement += " AND ((" + supertypeInDb + " LIKE " +
-                                        sanitizeString("% " + s + " %", false) + ")";
+                                statement.append(" AND ((" + supertypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
                         } else if (s.contains(EXCLUDE_TOKEN))
-                            statement += " AND (" + supertypeInDb + " NOT LIKE " +
-                                    sanitizeString("% " + s.substring(1) + " %", false)
-                                    + ")";
+                            statement.append(" AND (" + supertypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                         else
-                            statement += " OR (" + supertypeInDb + " LIKE " +
-                                    sanitizeString("% " + s + " %", false) + ")";
+                            statement.append(" OR (" + supertypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
                     }
-                    statement += ")";
+                    statement.append(")");
                     break;
                 case 2:
                     for (String s : supertypes) {
-                        statement += " AND (" + supertypeInDb + " NOT LIKE " +
-                                sanitizeString("% " + s + " %", false) + ")";
+                        statement.append(" AND (" + supertypeInDb + " NOT LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
                     }
                     break;
                 default:
@@ -995,11 +955,9 @@ public class CardDbAdapter {
                 case 0:
                     for (String s : subtypes) {
                         if (s.contains(EXCLUDE_TOKEN)) {
-                            statement += " AND (" + subtypeInDb + " NOT LIKE " +
-                                    sanitizeString("% " + s.substring(1) + " %", false) + ")";
+                            statement.append(" AND (" + subtypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                         } else {
-                            statement += " AND (" + subtypeInDb + " LIKE " +
-                                    sanitizeString("% " + s + " %", false) + ")";
+                            statement.append(" AND (" + subtypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
                         }
                     }
                     break;
@@ -1009,24 +967,19 @@ public class CardDbAdapter {
                         if (firstRun) {
                             firstRun = false;
                             if (s.contains(EXCLUDE_TOKEN))
-                                statement += " AND ((" + subtypeInDb + " NOT LIKE "
-                                        + sanitizeString("% " + s.substring(1) + " %", false) + ")";
+                                statement.append(" AND ((" + subtypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                             else
-                                statement += " AND ((" + subtypeInDb + " LIKE " +
-                                        sanitizeString("% " + s + " %", false) + ")";
+                                statement.append(" AND ((" + subtypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
                         } else if (s.contains(EXCLUDE_TOKEN))
-                            statement += " AND (" + subtypeInDb + " NOT LIKE " +
-                                    sanitizeString("% " + s.substring(1) + " %", false) + ")";
+                            statement.append(" AND (" + subtypeInDb + " NOT LIKE ").append(sanitizeString("% " + s.substring(1) + " %", false)).append(")");
                         else
-                            statement += " OR (" + subtypeInDb + " LIKE " +
-                                    sanitizeString("% " + s + " %", false) + ")";
+                            statement.append(" OR (" + subtypeInDb + " LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
                     }
-                    statement += ")";
+                    statement.append(")");
                     break;
                 case 2:
                     for (String s : subtypes) {
-                        statement += " AND (" + subtypeInDb + " NOT LIKE " +
-                                sanitizeString("% " + s + " %", false) + ")";
+                        statement.append(" AND (" + subtypeInDb + " NOT LIKE ").append(sanitizeString("% " + s + " %", false)).append(")");
                     }
                     break;
                 default:
@@ -1037,18 +990,15 @@ public class CardDbAdapter {
          *************************************************************************************/
 
         if (criteria.flavor != null) {
-            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_FLAVOR
-                    + " LIKE " + sanitizeString("%" + criteria.flavor + "%", false) + ")";
+            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_FLAVOR + " LIKE ").append(sanitizeString("%" + criteria.flavor + "%", false)).append(")");
         }
 
         if (criteria.artist != null) {
-            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_ARTIST
-                    + " LIKE " + sanitizeString("%" + criteria.artist + "%", false) + ")";
+            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_ARTIST + " LIKE ").append(sanitizeString("%" + criteria.artist + "%", false)).append(")");
         }
 
         if (criteria.collectorsNumber != null) {
-            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER
-                    + " = " + sanitizeString(criteria.collectorsNumber, false) + ")";
+            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " = ").append(sanitizeString(criteria.collectorsNumber, false)).append(")");
         }
 
         /*
@@ -1066,7 +1016,7 @@ public class CardDbAdapter {
              * ...if the chosen color logic was exactly (2) or none (3) of the selected colors.
              */
             if (criteria.colorLogic > 1) {
-                statement += " AND ((";
+                statement.append(" AND ((");
                 for (byte b : criteria.color.getBytes()) {
                     char ch = (char) b;
 
@@ -1074,25 +1024,22 @@ public class CardDbAdapter {
                         if (firstPrint)
                             firstPrint = false;
                         else
-                            statement += " AND ";
+                            statement.append(" AND ");
 
-                        if (ch == 'l' || ch == 'L')
-                            statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-                                    + " NOT GLOB '[CLA]'";
+                        if (ch == 'l')
+                            statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT GLOB '[CLA]'");
                         else
-                            statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-                                    + " NOT LIKE '%" + Character.toUpperCase(ch)
-                                    + "%'";
+                            statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " NOT LIKE '%").append(Character.toUpperCase(ch)).append("%'");
                     }
                 }
-                statement += ") AND (";
+                statement.append(") AND (");
             }
 
             firstPrint = true;
 
             /* Might contain these colors */
             if (criteria.colorLogic < 2)
-                statement += " AND (";
+                statement.append(" AND (");
 
             for (byte b : criteria.color.getBytes()) {
                 char ch = (char) b;
@@ -1101,23 +1048,21 @@ public class CardDbAdapter {
                         firstPrint = false;
                     else {
                         if (criteria.colorLogic == 1 || criteria.colorLogic == 3)
-                            statement += " AND ";
+                            statement.append(" AND ");
                         else
-                            statement += " OR ";
+                            statement.append(" OR ");
                     }
 
-                    if (ch == 'l' || ch == 'L')
-                        statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-                                + " GLOB '[CLA]'";
+                    if (ch == 'L')
+                        statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " GLOB '[CLA]'");
                     else
-                        statement += DATABASE_TABLE_CARDS + "." + KEY_COLOR
-                                + " LIKE '%" + ch + "%'";
+                        statement.append(DATABASE_TABLE_CARDS + "." + KEY_COLOR + " LIKE '%").append(ch).append("%'");
                 }
             }
             if (criteria.colorLogic > 1)
-                statement += "))";
+                statement.append("))");
             else
-                statement += ")";
+                statement.append(")");
         }
         /* End of addition
          *************************************************************************************/
@@ -1131,48 +1076,45 @@ public class CardDbAdapter {
                 case 0: {
                     /* search_May_include_any_colors */
                     boolean first = true;
-                    statement += " AND (";
+                    statement.append(" AND (");
                     for (int i = 0; i < criteria.colorIdentity.length(); i++) {
                         if (Character.isLowerCase(criteria.colorIdentity.charAt(i))) {
                             if (!first) {
-                                statement += " AND ";
+                                statement.append(" AND ");
                             }
                             if (criteria.colorIdentity.charAt(i) == 'l') {
                                 /* If colorless isn't selected, don't allow empty identities */
-                                statement += "(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
-                                        " NOT LIKE \"\")";
+                                statement.append("(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " NOT LIKE \"\")");
                             } else {
-                                statement += "(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
-                                        " NOT LIKE \"%" + criteria.colorIdentity.toUpperCase().charAt(i) + "%\")";
+                                statement.append("(" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " NOT LIKE \"%").append(criteria.colorIdentity.toUpperCase().charAt(i)).append("%\")");
                             }
                             first = false;
                         }
                     }
-                    statement += ")";
+                    statement.append(")");
                     break;
                 }
                 case 1: {
                     /* search_Exact_all_selected_and_no_others */
-                    String colorIdentity = "";
+                    StringBuilder colorIdentity = new StringBuilder();
                     for (int i = 0; i < criteria.colorIdentity.length(); i++) {
                         if (Character.isUpperCase(criteria.colorIdentity.charAt(i))) {
                             if (criteria.colorIdentity.charAt(i) == 'L') {
                                 /* Colorless identity is the empty string */
-                                statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " = \"\")";
+                                statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " = \"\")");
                             } else {
-                                colorIdentity += criteria.colorIdentity.charAt(i);
+                                colorIdentity.append(criteria.colorIdentity.charAt(i));
                             }
                         }
                     }
-                    statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY +
-                            " = \"" + colorIdentity + "\")";
+                    statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_COLOR_IDENTITY + " = \"").append(colorIdentity).append("\")");
                     break;
                 }
             }
         }
 
         if (criteria.sets != null && criteria.sets.size() > 0) {
-            statement += " AND (";
+            statement.append(" AND (");
 
             boolean first = true;
 
@@ -1180,46 +1122,40 @@ public class CardDbAdapter {
                 if (first) {
                     first = false;
                 } else {
-                    statement += " OR ";
+                    statement.append(" OR ");
                 }
-                statement += DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" + set + "'";
+                statement.append(DATABASE_TABLE_CARDS + "." + KEY_SET + " = '").append(set).append("'");
             }
 
-            statement += ")";
+            statement.append(")");
         }
 
         if (criteria.powChoice != NO_ONE_CARES) {
-            statement += " AND (";
+            statement.append(" AND (");
 
             if (criteria.powChoice > STAR) {
-                statement += DATABASE_TABLE_CARDS + "." + KEY_POWER + " "
-                        + criteria.powLogic + " " + criteria.powChoice;
+                statement.append(DATABASE_TABLE_CARDS + "." + KEY_POWER + " ").append(criteria.powLogic).append(" ").append(criteria.powChoice);
                 if (criteria.powLogic.equals("<")) {
-                    statement += " AND " + DATABASE_TABLE_CARDS + "."
-                            + KEY_POWER + " > " + STAR;
+                    statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_POWER + " > " + STAR);
                 }
             } else if (criteria.powLogic.equals("=")) {
-                statement += DATABASE_TABLE_CARDS + "." + KEY_POWER + " "
-                        + criteria.powLogic + " " + criteria.powChoice;
+                statement.append(DATABASE_TABLE_CARDS + "." + KEY_POWER + " ").append(criteria.powLogic).append(" ").append(criteria.powChoice);
             }
-            statement += ")";
+            statement.append(")");
         }
 
         if (criteria.touChoice != NO_ONE_CARES) {
-            statement += " AND (";
+            statement.append(" AND (");
 
             if (criteria.touChoice > STAR) {
-                statement += DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS + " "
-                        + criteria.touLogic + " " + criteria.touChoice;
+                statement.append(DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS + " ").append(criteria.touLogic).append(" ").append(criteria.touChoice);
                 if (criteria.touLogic.equals("<")) {
-                    statement += " AND " + DATABASE_TABLE_CARDS + "."
-                            + KEY_TOUGHNESS + " > " + STAR;
+                    statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS + " > " + STAR);
                 }
             } else if (criteria.touLogic.equals("=")) {
-                statement += DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS + " "
-                        + criteria.touLogic + " " + criteria.touChoice;
+                statement.append(DATABASE_TABLE_CARDS + "." + KEY_TOUGHNESS + " ").append(criteria.touLogic).append(" ").append(criteria.touChoice);
             }
-            statement += ")";
+            statement.append(")");
         }
 
         if (null != criteria.manaCostLogic && null != criteria.manaCost) {
@@ -1232,47 +1168,45 @@ public class CardDbAdapter {
         }
 
         if (criteria.cmc != -1) {
-            statement += " AND (";
+            statement.append(" AND (");
 
-            statement += DATABASE_TABLE_CARDS + "." + KEY_CMC + " " + criteria.cmcLogic
-                    + " " + criteria.cmc + ")";
+            statement.append(DATABASE_TABLE_CARDS + "." + KEY_CMC + " ").append(criteria.cmcLogic).append(" ").append(criteria.cmc).append(")");
         }
 
         if (criteria.moJhoStoFilter) {
             /* Filter out tokens. */
-            statement += " AND (" +
+            statement.append(" AND (" +
                     /* Cards without mana costs. */
                     "NOT " + DATABASE_TABLE_CARDS + "." + KEY_MANACOST + " = '' " +
                     /* Cards like 'Dryad Arbor'. */
-                    "OR " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " LIKE '%Land Creature%')";
+                    "OR " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " LIKE '%Land Creature%')");
             /* Filter out 'UN-'sets*/
-            statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " IN (";
+            statement.append(" AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " IN (");
             boolean first = true;
             for (String illegalSet : ILLEGAL_SETS) {
                 if (first) {
                     first = false;
                 } else {
-                    statement += ", ";
+                    statement.append(", ");
                 }
-                statement += "'" + illegalSet + "'";
+                statement.append("'").append(illegalSet).append("'");
             }
-            statement += ")";
+            statement.append(")");
         }
 
         if (criteria.rarity != null) {
-            statement += " AND (";
+            statement.append(" AND (");
 
             boolean firstPrint = true;
             for (int i = 0; i < criteria.rarity.length(); i++) {
                 if (firstPrint) {
                     firstPrint = false;
                 } else {
-                    statement += " OR ";
+                    statement.append(" OR ");
                 }
-                statement += DATABASE_TABLE_CARDS + "." + KEY_RARITY + " = "
-                        + (int) criteria.rarity.toUpperCase().charAt(i) + "";
+                statement.append(DATABASE_TABLE_CARDS + "." + KEY_RARITY + " = ").append((int) criteria.rarity.toUpperCase().charAt(i));
             }
-            statement += ")";
+            statement.append(")");
         }
 
         if (criteria.format != null) {
@@ -1288,47 +1222,31 @@ public class CardDbAdapter {
 
             /* If the format is not eternal, filter by set */
             if (numLegalSetCursor.getCount() > 0) {
-                statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " IN ("
-                        + "  SELECT " + DATABASE_TABLE_CARDS + "_B." + KEY_NAME
-                        + "  FROM " + DATABASE_TABLE_CARDS + " " + DATABASE_TABLE_CARDS + "_B "
-                        + "  WHERE " + DATABASE_TABLE_CARDS + "_B." + KEY_SET + " IN ("
-                        + "    SELECT " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET
-                        + "    FROM " + DATABASE_TABLE_LEGAL_SETS
-                        + "    WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='" + criteria.format + "'"
-                        + "  )"
-                        + " )";
+                statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " IN (" + "  SELECT " + DATABASE_TABLE_CARDS + "_B." + KEY_NAME + "  FROM " + DATABASE_TABLE_CARDS + " " + DATABASE_TABLE_CARDS + "_B " + "  WHERE " + DATABASE_TABLE_CARDS + "_B." + KEY_SET + " IN (" + "    SELECT " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + "    FROM " + DATABASE_TABLE_LEGAL_SETS + "    WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='").append(criteria.format).append("'").append("  )").append(" )");
             } else {
                 /* Otherwise filter silver bordered cards, giant cards */
                 for (String illegalSet : ILLEGAL_SETS) {
-                    statement += " AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '" + illegalSet + "'";
+                    statement.append(" AND NOT " + DATABASE_TABLE_CARDS + "." + KEY_SET + " = '").append(illegalSet).append("'");
                 }
-                statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Plane'" +
-                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Conspiracy'" +
-                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE '%Scheme'" +
-                        " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Vanguard'";
+                statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Plane'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Conspiracy'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE '%Scheme'" + " AND " + DATABASE_TABLE_CARDS + "." + KEY_SUPERTYPE + " NOT LIKE 'Vanguard'");
             }
 
             numLegalSetCursor.close();
 
-            statement += " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT "
-                    + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME
-                    + " FROM " + DATABASE_TABLE_BANNED_CARDS
-                    + " WHERE  " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '" + criteria.format + "'"
-                    + " AND " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_LEGALITY + " = " + BANNED + ")";
+            statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " FROM " + DATABASE_TABLE_BANNED_CARDS + " WHERE  " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '").append(criteria.format).append("'").append(" AND ").append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED).append(")");
 
             // Ensure pauper only searches commons
             if ("Pauper".equals(criteria.format)) {
-                statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_RARITY + " = " + ((int) 'C') + ")";
+                statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_RARITY + " = " + ((int) 'C') + ")");
             }
         }
 
         if (!backface) {
-            statement += " AND (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER
-                    + " NOT LIKE '%b%')";
+            statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_NUMBER + " NOT LIKE '%b%')");
         }
 
         if (criteria.setLogic != MOST_RECENT_PRINTING && criteria.setLogic != ALL_PRINTINGS) {
-            statement = " JOIN (SELECT iT" + DATABASE_TABLE_CARDS + "."
+            statement.insert(0, " JOIN (SELECT iT" + DATABASE_TABLE_CARDS + "."
                     + KEY_NAME + ", MIN(" + DATABASE_TABLE_SETS + "."
                     + KEY_DATE + ") AS " + KEY_DATE + " FROM "
                     + DATABASE_TABLE_CARDS + " AS iT" + DATABASE_TABLE_CARDS
@@ -1337,30 +1255,29 @@ public class CardDbAdapter {
                     + DATABASE_TABLE_SETS + "." + KEY_CODE + " GROUP BY iT"
                     + DATABASE_TABLE_CARDS + "." + KEY_NAME
                     + ") AS FirstPrints" + " ON " + DATABASE_TABLE_CARDS + "."
-                    + KEY_NAME + " = FirstPrints." + KEY_NAME + statement;
+                    + KEY_NAME + " = FirstPrints." + KEY_NAME);
             if (criteria.setLogic == FIRST_PRINTING)
-                statement = " AND " + DATABASE_TABLE_SETS + "." + KEY_DATE
-                        + " = FirstPrints." + KEY_DATE + statement;
+                statement.insert(0, " AND " + DATABASE_TABLE_SETS + "." + KEY_DATE
+                        + " = FirstPrints." + KEY_DATE);
             else
-                statement = " AND " + DATABASE_TABLE_SETS + "." + KEY_DATE
-                        + " <> FirstPrints." + KEY_DATE + statement;
+                statement.insert(0, " AND " + DATABASE_TABLE_SETS + "." + KEY_DATE
+                        + " <> FirstPrints." + KEY_DATE);
         }
 
-        if (statement.equals(" WHERE 1=1")) {
+        if (statement.toString().equals(" WHERE 1=1")) {
             /* If the statement is just this, it means we added nothing */
             return null;
         }
 
         try {
-            String sel = null;
+            StringBuilder sel = new StringBuilder();
             for (String s : returnTypes) {
-                if (sel == null) {
-                    sel = DATABASE_TABLE_CARDS + "." + s + " AS " + s;
-                } else {
-                    sel += ", " + DATABASE_TABLE_CARDS + "." + s + " AS " + s;
+                if (sel.length() > 0) {
+                    sel.append(", ");
                 }
+                sel.append(DATABASE_TABLE_CARDS + ".").append(s).append(" AS ").append(s);
             }
-            sel += ", " + DATABASE_TABLE_SETS + "." + KEY_DATE;
+            sel.append(", " + DATABASE_TABLE_SETS + "." + KEY_DATE);
 
             String sql = "SELECT * FROM (SELECT " + sel + " FROM " + DATABASE_TABLE_CARDS
                     + " JOIN " + DATABASE_TABLE_SETS + " ON "
@@ -1622,16 +1539,16 @@ public class CardDbAdapter {
             /* Concatenate all strings after the first delimiter
              * in case there's a hyphen in the subtype
              */
-            String subtype = "";
+            StringBuilder subtype = new StringBuilder();
             boolean first = true;
             for (int i = 1; i < types.length; i++) {
                 if (!first) {
-                    subtype += delimiter;
+                    subtype.append(delimiter);
                 }
-                subtype += types[i];
+                subtype.append(types[i]);
                 first = false;
             }
-            initialValues.put(KEY_SUBTYPE, subtype);
+            initialValues.put(KEY_SUBTYPE, subtype.toString());
         } else {
             initialValues.put(KEY_SUBTYPE, "");
         }
@@ -1848,9 +1765,11 @@ public class CardDbAdapter {
             sql += "(SELECT " + KEY_SET
                     + " FROM " + DATABASE_TABLE_CARDS
                     + " WHERE " + KEY_NAME + " = " + mCardName + ")";
+            StringBuilder sqlBuilder = new StringBuilder(sql);
             for (String illegalSet : ILLEGAL_SETS) {
-                sql += "WHEN '" + illegalSet + "' THEN 1 ";
+                sqlBuilder.append("WHEN '").append(illegalSet).append("' THEN 1 ");
             }
+            sql = sqlBuilder.toString();
             sql += "ELSE NULL END,";
 
             /* Second coalesce logic, check card against legal sets */

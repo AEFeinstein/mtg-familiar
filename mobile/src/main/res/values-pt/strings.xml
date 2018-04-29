@@ -170,8 +170,7 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="search_Rare">"Rara"</string>
 <string name="search_Mythic">"Mítica"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-<string name="search_type">"Tipo"</string>
-<string name="search_mana_cost">"Custo de Mana"</string>
+    <string name="search_mana_cost">"Custo de Mana"</string>
 <string name="search_collectors_number">"Número da Coleção"</string>
 <string name="search_color_title">"Cor"</string>
 <string name="search_color_identity_title">"Identidade de cor"</string>
@@ -202,8 +201,7 @@ mídia licenciado sob a &lt;a href=\"http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_no_pictures_folder">"Não é possível localizar a pasta de imagens. Tente novamente."</string>
 <string name="card_view_unable_to_create_dir">"Não foi possível criar o diretório para salvar imagens. Tente novamente."</string>
 <string name="card_view_unable_to_create_file">"Não foi possível criar o arquivo de imagem. Tente novamente."</string>
-<string name="card_view_no_image">"Não é possível localizar a imagem para salvar. Tente novamente."</string>
-<string name="card_view_unable_to_save_image">"Falha ao salvar a imagem. Tente novamente."</string>
+    <string name="card_view_unable_to_save_image">"Falha ao salvar a imagem. Tente novamente."</string>
 <string name="card_view_save_failure">"Houve um erro ao salvar a imagem. Tente novamente."</string>
 <string name="card_view_image_saved">"Imagem salva"</string>
 <string name="card_view_share_card">"Compartilhar Carta"</string>
@@ -255,8 +253,7 @@ Reserva de mana também serão apagados."</string>
 <string name="dice_tails">"Coroa"</string>
 
 <!-- Mana pool activity -->
-<string name="mana_pool_error_toast">"Falha ao carregar Reserva de mana!"</string>
-<string name="mana_pool_clear_all">"Limpar Tudo"</string>
+    <string name="mana_pool_clear_all">"Limpar Tudo"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Adicionar carta"</string>

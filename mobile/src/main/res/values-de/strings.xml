@@ -183,8 +183,7 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythic"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-<string name="search_type">"Typ"</string>
-<string name="search_mana_cost">"Manakosten"</string>
+    <string name="search_mana_cost">"Manakosten"</string>
 <string name="search_collectors_number">"Sammlernummer"</string>
 <string name="search_color_title">"Farbe"</string>
 <string name="search_color_identity_title">"Farbidentität"</string>
@@ -217,8 +216,7 @@ Medien lizenziert unter der &lt;a href=http://creativecommons.org/licenses/by-sa
 <string name="card_view_no_pictures_folder">"Bilderordner konnte nicht gefunden werden. Bitte versuche es erneut."</string>
 <string name="card_view_unable_to_create_dir">"Verzeichnis zum Speichern der Bilder konnte nicht erstellt werden. Bitte versuche es erneut."</string>
 <string name="card_view_unable_to_create_file">"Bilddatei konnte nicht erstellt werden. Bitte versuche es erneut."</string>
-<string name="card_view_no_image">"Konnte das zu speichernde Bild nicht finden. Bitte versuche es erneut."</string>
-<string name="card_view_unable_to_save_image">"Bild kann nicht gespeichert werden. Bitte versuche es erneut."</string>
+    <string name="card_view_unable_to_save_image">"Bild kann nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_save_failure">"Bild konnte nicht gespeichert werden. Bitte versuche es erneut."</string>
 <string name="card_view_image_saved">"Bild gespeichert unter"</string>
 <string name="card_view_share_card">"Karte teilen"</string>
@@ -271,8 +269,7 @@ Der Manavorrat wird ebenfalls geleert"</string>
 <string name="dice_tails">"Zahl"</string>
 
 <!-- Mana pool activity -->
-<string name="mana_pool_error_toast">"Manavorrat konnte nicht geladen werden!"</string>
-<string name="mana_pool_clear_all">"Alles löschen"</string>
+    <string name="mana_pool_clear_all">"Alles löschen"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Karte hinzufügen"</string>

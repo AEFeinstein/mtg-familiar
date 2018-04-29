@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class ProductMarketPrice {
 
     public final boolean success;

@@ -19,7 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp;
 
-public class TcgpKeys {
+class TcgpKeys {
     final String PUBLIC_KEY = null;
     final String PRIVATE_KEY = null;
     final String ACCESS_TOKEN = null;

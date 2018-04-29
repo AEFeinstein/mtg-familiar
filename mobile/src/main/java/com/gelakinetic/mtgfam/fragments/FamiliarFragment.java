@@ -67,7 +67,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
      */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setHasOptionsMenu(true);
     }
@@ -80,6 +80,7 @@ public abstract class FamiliarFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         getFamiliarActivity().clearLoading();
+        getFamiliarActivity().mMarketPriceStore.stopAllRequests();
     }
 
     /**
@@ -101,7 +102,7 @@ public abstract class FamiliarFragment extends Fragment {
      * and they should have been looked at by now anyway
      */
     @Override
-    public void onResume() {
+    void onResume() {
         super.onResume();
         if ((getActivity()) != null) {
             getFamiliarActivity().getFragmentResults();
@@ -116,7 +117,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         super.onSaveInstanceState(outState);
     }
@@ -131,7 +132,7 @@ public abstract class FamiliarFragment extends Fragment {
      * intents on the first install. It also cleans up any pending spice requests (price loading)
      */
     @Override
-    public void onPause() {
+    void onPause() {
         super.onPause();
         removeDialog(getFragmentManager());
     }
@@ -144,7 +145,7 @@ public abstract class FamiliarFragment extends Fragment {
      * @param inflater The inflater to use to inflate the menu
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
 

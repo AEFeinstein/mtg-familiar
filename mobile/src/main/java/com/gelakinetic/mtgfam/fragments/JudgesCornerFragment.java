@@ -75,7 +75,7 @@ public class JudgesCornerFragment extends FamiliarFragment {
      * resources.
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.judges_corner_frag, container, false);
     }

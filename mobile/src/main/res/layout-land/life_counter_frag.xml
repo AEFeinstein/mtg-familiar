@@ -18,7 +18,6 @@
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linear_layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal">
@@ -54,7 +53,6 @@
     <!-- Command bar: reset, poison, etc. -->
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="48dp"
         android:layout_height="fill_parent"
         android:gravity="center"

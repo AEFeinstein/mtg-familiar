@@ -87,7 +87,7 @@ public class WishlistFragment extends FamiliarListFragment {
      * @return The view to be displayed
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View myFragmentView = inflater.inflate(R.layout.wishlist_frag, container, false);
         assert myFragmentView != null;
 

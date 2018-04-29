@@ -110,7 +110,7 @@ public class DatabaseManager {
          *
          * @param isTransactional true if the object is transactional, false otherwise
          */
-        public AtomicDatabase(boolean isTransactional) {
+        AtomicDatabase(boolean isTransactional) {
             mTransactional = isTransactional;
         }
 
@@ -148,7 +148,7 @@ public class DatabaseManager {
          * @return a SQLiteDatabase to query or whatever
          * @throws FamiliarDbException if the database can't be opened
          */
-        public synchronized SQLiteDatabase openDatabase(@NonNull FamiliarDbHandle handle) throws FamiliarDbException {
+        synchronized SQLiteDatabase openDatabase(@NonNull FamiliarDbHandle handle) throws FamiliarDbException {
             // Assign this open a handle
             if (mOpenHandles.isEmpty()) {
                 // Start with a nonzero value
@@ -184,7 +184,7 @@ public class DatabaseManager {
          *
          * @param handle The handle from openDatabase, used to close this instance
          */
-        public synchronized void closeDatabase(@NonNull FamiliarDbHandle handle) {
+        synchronized void closeDatabase(@NonNull FamiliarDbHandle handle) {
             // If there was a successful open with this handle
             if (mOpenHandles.contains(handle.getHandle())) {
                 // Remove the handle from the collection of open handles

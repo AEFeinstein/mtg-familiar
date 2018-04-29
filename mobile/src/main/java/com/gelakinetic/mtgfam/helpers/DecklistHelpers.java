@@ -124,8 +124,7 @@ public class DecklistHelpers {
             String line;
             // Sanitize the deckname before loading in case it was saved improperly on an earlier version of Familiar
             deckName = deckName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
-            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)));
-            try {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)))) {
                 boolean isSideboard;
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
@@ -139,8 +138,6 @@ public class DecklistHelpers {
                     }
                     lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
                 }
-            } finally {
-                br.close();
             }
         } catch (NumberFormatException nfe) {
             ToastWrapper.makeAndShowText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);

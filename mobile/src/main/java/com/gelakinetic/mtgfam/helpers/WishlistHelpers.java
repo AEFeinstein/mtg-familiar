@@ -145,16 +145,13 @@ public class WishlistHelpers {
 
         try {
             String line;
-            BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(WISHLIST_NAME)));
-            try {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(WISHLIST_NAME)))) {
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
                     MtgCard card = MtgCard.fromWishlistString(line, mCtx);
                     card.setIndex(orderAddedIdx++);
                     lWishlist.add(card);
                 }
-            } finally {
-                br.close();
             }
         } catch (NumberFormatException e) {
             ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
@@ -289,7 +286,7 @@ public class WishlistHelpers {
          * @param priceSetting LOW_PRICE, AVG_PRICE, or HIGH_PRICE
          * @return The sum price of all cards in this object
          */
-        public double getTotalPrice(MarketPriceInfo.PriceType priceSetting) {
+        double getTotalPrice(MarketPriceInfo.PriceType priceSetting) {
             double sumWish = 0;
 
             for (IndividualSetInfo isi : mInfo) {
@@ -310,7 +307,7 @@ public class WishlistHelpers {
     public static class WishlistComparator implements Comparator<CompressedWishlistInfo> {
 
         final ArrayList<SortOption> options = new ArrayList<>();
-        MarketPriceInfo.PriceType mPriceSetting;
+        final MarketPriceInfo.PriceType mPriceSetting;
 
         /**
          * Constructor. It parses an "order by" string into search options. The first options have

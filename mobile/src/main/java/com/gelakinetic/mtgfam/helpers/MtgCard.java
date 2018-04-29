@@ -81,7 +81,7 @@ public class MtgCard extends Card {
         mForeignPrintings = new ArrayList<>();
     }
 
-    public MtgCard(Card card) {
+    MtgCard(Card card) {
         if (card != null) {
             this.mName = card.mName;
             this.mExpansion = card.mExpansion;

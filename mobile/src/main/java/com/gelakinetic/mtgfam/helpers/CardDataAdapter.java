@@ -55,7 +55,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      * @param values   The values which will back this adapter
      * @param fragment The fragment this adapter will be shown in
      */
-    public CardDataAdapter(ArrayList<T> values, FamiliarListFragment fragment) {
+    protected CardDataAdapter(ArrayList<T> values, FamiliarListFragment fragment) {
         items = values;
         inSelectMode = false;
         undoBuffer = new ArrayList<>();
@@ -97,7 +97,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      * @return The item at that position
      */
     @Nullable
-    public T getItem(int position) {
+    protected T getItem(int position) {
         if (position < items.size()) {
             return items.get(position);
         }

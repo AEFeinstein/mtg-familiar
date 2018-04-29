@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers.tcgp.JsonObjects;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class CategorySearchManifest {
     public final boolean success;
     public final String errors[];

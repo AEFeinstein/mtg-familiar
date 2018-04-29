@@ -79,8 +79,8 @@ public class DecklistFragment extends FamiliarListFragment {
     public String mCurrentDeck = "";
     public static final String DECK_EXTENSION = ".deck";
 
-    public static final String FRAGMENT_TAG = "decklist";
-    public static final String CURRENT_DECKLIST_TAG = "decklist_name";
+    private static final String FRAGMENT_TAG = "decklist";
+    private static final String CURRENT_DECKLIST_TAG = "decklist_name";
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button.
@@ -95,7 +95,7 @@ public class DecklistFragment extends FamiliarListFragment {
      * @return The view to be displayed.
      */
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -165,7 +165,7 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle(FRAGMENT_TAG, saveState());
     }
@@ -641,7 +641,7 @@ public class DecklistFragment extends FamiliarListFragment {
     }
 
     @Override
-    public MarketPriceInfo.PriceType getPriceSetting() {
+    protected MarketPriceInfo.PriceType getPriceSetting() {
         return PreferenceAdapter.getDeckPrice(getContext());
     }
 

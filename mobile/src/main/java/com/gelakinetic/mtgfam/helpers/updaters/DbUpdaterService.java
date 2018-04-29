@@ -481,16 +481,16 @@ public class DbUpdaterService extends IntentService {
             return;
         }
 
-        String body = getString(R.string.update_added) + " ";
-        for (int i = 0; i < newStuff.size(); i++) {
-            body += newStuff.get(i);
-            if (i < newStuff.size() - 1) {
-                body += ", ";
+        StringBuilder body = new StringBuilder(getString(R.string.update_added)).append(" ");
+        for (String stuff : newStuff) {
+            if (body.length() > 0) {
+                body.append(", ");
             }
+            body.append(stuff);
         }
 
         mBuilder.setContentTitle(getString(R.string.app_name))
-                .setContentText(body)
+                .setContentText(body.toString())
                 .setAutoCancel(true)
                 .setOngoing(false);
 

@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class HtmlDocFragment extends FamiliarFragment {
      * @return The view to display
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         /* Inflate the view, pull out UI elements */
         View view = inflater.inflate(R.layout.html_frag, container, false);

@@ -172,8 +172,7 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
 <string name="search_Rare">"Rara"</string>
 <string name="search_Mythic">"Mitica"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-<string name="search_type">"Tipo"</string>
-<string name="search_mana_cost">"Costo di mana"</string>
+    <string name="search_mana_cost">"Costo di mana"</string>
 <string name="search_collectors_number">"Numero del collezionista"</string>
 <string name="search_color_title">"Colore"</string>
 <string name="search_color_identity_title">"Identità di colore"</string>
@@ -204,8 +203,7 @@ I media hanno una licenza &lt;a href=http://creativecommons.org/licenses/by-sa/3
 <string name="card_view_no_pictures_folder">"Non riesco a trovare la cartella delle immagini, prova ancora."</string>
 <string name="card_view_unable_to_create_dir">"Impossibile creare la cartella per il salvataggio delle immagini, per favore riprova."</string>
 <string name="card_view_unable_to_create_file">"Impossibile creare il file immagine, per favore riprova."</string>
-<string name="card_view_no_image">"Non riesco a trovare l'immagine da salvare, prova ancora."</string>
-<string name="card_view_unable_to_save_image">"Impossibile salvare l'immagine, per favore riprova."</string>
+    <string name="card_view_unable_to_save_image">"Impossibile salvare l'immagine, per favore riprova."</string>
 <string name="card_view_save_failure">"Salvataggio dell'immagine fallito, per favore riprova."</string>
 <string name="card_view_image_saved">"Immagine salvata in "</string>
 <string name="card_view_share_card">"Condividi carta"</string>
@@ -258,8 +256,7 @@ Verrà azzerata anche la riserva di mana"</string>
 <string name="dice_tails">"croce"</string>
 
 <!-- Mana pool activity -->
-<string name="mana_pool_error_toast">"Il caricamento della riserva di mana è fallito!"</string>
-<string name="mana_pool_clear_all">"Cancella tutto"</string>
+    <string name="mana_pool_clear_all">"Cancella tutto"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Aggiungi una carta"</string>

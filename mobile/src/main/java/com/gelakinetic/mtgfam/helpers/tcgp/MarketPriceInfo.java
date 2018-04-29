@@ -59,7 +59,7 @@ public class MarketPriceInfo {
          *
          * @param price The MarketPrice to copy prices from
          */
-        public Price(ProductMarketPrice.MarketPrice price) {
+        Price(ProductMarketPrice.MarketPrice price) {
             low = price.lowPrice;
             mid = price.midPrice;
             high = price.highPrice;

@@ -225,15 +225,16 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 TextView textViewRules = v.findViewById(R.id.rules);
                 TextView textViewUrl = v.findViewById(R.id.url);
 
-                String message = "";
+                String message;
                 if (getParentCardViewFragment().mRulingsArrayList.size() == 0) {
                     message = getString(R.string.card_view_no_rulings);
                 } else {
+                    StringBuilder messageBuilder = new StringBuilder();
                     for (CardViewFragment.Ruling r : getParentCardViewFragment().mRulingsArrayList) {
-                        message += (r.toString() + "<br><br>");
+                        messageBuilder.append(r.toString()).append("<br><br>");
                     }
 
-                    message = message.replace("{Tap}", "{T}");
+                    message = messageBuilder.toString().replace("{Tap}", "{T}");
                 }
                 CharSequence messageGlyph = ImageGetterHelper.formatStringWithGlyphs(message, imgGetter);
 

@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +67,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      * @return The view to be shown
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         /* Inflate the view, pull out UI elements */
         View myFragmentView = inflater.inflate(R.layout.deck_counter_frag, container, false);
@@ -127,7 +128,7 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
 
         outState.putInt(DECK_COUNT_KEY, mDeckCount);
         outState.putString(SEQUENCE_KEY, ArrayToString(mDeckCountSequence));
@@ -142,13 +143,13 @@ public class DeckCounterFragment extends FamiliarFragment implements ViewFactory
      * @return A String representation of the list
      */
     private String ArrayToString(ArrayList<Integer> list) {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         if (list != null) {
             for (Integer i : list) {
-                string += i + ",";
+                string.append(i).append(",");
             }
         }
-        return string;
+        return string.toString();
     }
 
     /**

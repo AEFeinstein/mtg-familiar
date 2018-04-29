@@ -36,15 +36,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
+class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
 
     private static final String DAPT_TAG = "DAPT";
-    int totalElapsedSuccess = 0;
-    int totalSuccess = 0;
-    int totalElapsedFailure = 0;
-    int totalFailure = 0;
-    FamiliarActivity mActivity;
-    private FamiliarDbHandle mHandle = new FamiliarDbHandle();
+    private int totalElapsedSuccess = 0;
+    private int totalSuccess = 0;
+    private int totalElapsedFailure = 0;
+    private int totalFailure = 0;
+    private FamiliarActivity mActivity;
+    private final FamiliarDbHandle mHandle = new FamiliarDbHandle();
 
     /**
      * Get all cards from the database, then look up all of their prices
@@ -108,7 +108,7 @@ public class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void>
      * @param fetcher The fetcher to fetch the card price with
      * @param cursor  The cursor pointing to card data in the database
      */
-    void lookupCard(final MarketPriceFetcher fetcher, final Cursor cursor) {
+    private void lookupCard(final MarketPriceFetcher fetcher, final Cursor cursor) {
         // Make an MtgCard object from the cursor row
         MtgCard toLookup = new MtgCard();
         toLookup.mName = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));

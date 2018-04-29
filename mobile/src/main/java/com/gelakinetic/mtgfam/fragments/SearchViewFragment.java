@@ -198,7 +198,7 @@ public class SearchViewFragment extends FamiliarFragment {
      * @return the inflated view
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         /* Inflate the view */
         View myFragmentView = inflater.inflate(R.layout.search_frag, container, false);
@@ -483,7 +483,7 @@ public class SearchViewFragment extends FamiliarFragment {
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (outState != null) {
             outState.putInt(SAVED_FORMAT_KEY, mSelectedFormat);
@@ -526,22 +526,6 @@ public class SearchViewFragment extends FamiliarFragment {
         /* Read EditTexts */
         searchCriteria.name = mNameField.getText().toString().trim();
         searchCriteria.text = mTextField.getText().toString().trim();
-        String supertype = "";
-        for (String type : mSupertypeField.getObjects()) {
-            if (supertype.isEmpty()) {
-                supertype = type;
-            } else {
-                supertype += " " + type;
-            }
-        }
-        String subtype = "";
-        for (String type : mSubtypeField.getObjects()) {
-            if (subtype.isEmpty()) {
-                subtype = type;
-            } else {
-                subtype += " " + type;
-            }
-        }
 
         searchCriteria.superTypes = mSupertypeField.getObjects();
         searchCriteria.subTypes = mSubtypeField.getObjects();
@@ -660,13 +644,14 @@ public class SearchViewFragment extends FamiliarFragment {
             searchCriteria.format = mFormatNames[mSelectedFormat];
         }
 
-        searchCriteria.rarity = null;
+        StringBuilder rarityBuilder = new StringBuilder();
         for (int index : mRarityCheckedIndices) {
-            if (searchCriteria.rarity == null) {
-                searchCriteria.rarity = mRarityCodes[index] + "";
-            } else {
-                searchCriteria.rarity += mRarityCodes[index];
-            }
+            rarityBuilder.append(mRarityCodes[index]);
+        }
+        if (rarityBuilder.length() > 0) {
+            searchCriteria.rarity = rarityBuilder.toString();
+        } else {
+            searchCriteria.rarity = null;
         }
 
         String[] logicChoices = getResources().getStringArray(R.array.logic_spinner);

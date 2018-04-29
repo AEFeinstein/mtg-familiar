@@ -26,6 +26,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -145,7 +146,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @return The inflated view
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mListSizeWidth = -1;
         mListSizeHeight = -1;
 
@@ -213,7 +214,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(DISPLAY_MODE, mStatDisplaying);
         super.onSaveInstanceState(outState);
     }

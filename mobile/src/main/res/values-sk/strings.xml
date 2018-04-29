@@ -152,7 +152,6 @@ For 2-4:   %1$d nájdené karty. -->
 <plurals name="search_toast_results">
 <item quantity="one">"%1$d nájdená karta"</item>
 <item quantity="few">"%1$d nájdené karty"</item>
-<item quantity="many">"%1$d nájdených kariet"</item>
 <item quantity="other">"%1$d nájdených kariet"</item>
 </plurals>
 <string name="search_toast_cannot_save">"Nepodarilo sa uložiť možnosti vyhľadávania."</string>
@@ -179,8 +178,7 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="search_Rare">"Rare"</string>
 <string name="search_Mythic">"Mythic"</string>
 <string name="search_Timeshifted">"Timeshifted"</string>
-<string name="search_type">"Typ"</string>
-<string name="search_mana_cost">"Manová cena"</string>
+    <string name="search_mana_cost">"Manová cena"</string>
 <string name="search_collectors_number">"Zberateľské číslo"</string>
 <string name="search_color_title">"Farba"</string>
 <string name="search_color_identity_title">"Farebná identita"</string>
@@ -211,8 +209,7 @@ For 2-4:   %1$d nájdené karty. -->
 <string name="card_view_no_pictures_folder">"Nepodarilo sa nájsť priečinok obrázkov, prosím skúste to znova."</string>
 <string name="card_view_unable_to_create_dir">"Nepodarilo sa vytvoriť adresár na uloženie obrázkov, prosím skúste to znova."</string>
 <string name="card_view_unable_to_create_file">"Nepodarilo sa vytvoriť súbor s obrázkom, prosím skúste to znova."</string>
-<string name="card_view_no_image">"Nepodarilo sa nájsť obrázok na uloženie, prosím skúste to znova."</string>
-<string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
+    <string name="card_view_unable_to_save_image">"Obrázok sa nedá uložiť, prosím skúste to znova."</string>
 <string name="card_view_save_failure">"Nepodarilo sa uložiť obrázok, prosím skúste to znova."</string>
 <string name="card_view_image_saved">"Obrázok sa uložil do "</string>
 <string name="card_view_share_card">"Zdieľať kartu"</string>
@@ -236,13 +233,11 @@ Manapool bude tiež vymazaný."</string>
 <plurals name="life_counter_spoken_life">
 <item quantity="one">"%1$s má %2$d život."</item>
 <item quantity="few">"%1$s má %2$d životov."</item>
-<item quantity="many">"%1$s má %2$d životov."</item>
 <item quantity="other">"%1$s má %2$d životov."</item>
 </plurals>
 <plurals name="life_counter_spoken_poison">
 <item quantity="one">"%1$s má %2$d poison žetón."</item>
 <item quantity="few">"%1$s má %2$d poison žetónov."</item>
-<item quantity="many">"%1$s má %2$d poison žetónov."</item>
 <item quantity="other">"%1$s má %2$d poison žetónov."</item>
 </plurals>
 <string name="life_counter_over_9000">"nad 9000"</string>
@@ -268,8 +263,7 @@ Manapool bude tiež vymazaný."</string>
 <string name="dice_tails">"orol"</string>
 
 <!-- Mana pool activity -->
-<string name="mana_pool_error_toast">"Manapool sa nepodarilo načítať!"</string>
-<string name="mana_pool_clear_all">"Vymazať všetko"</string>
+    <string name="mana_pool_clear_all">"Vymazať všetko"</string>
 
 <!-- Card trading activity -->
 <string name="trader_add_card">"Pridať kartu"</string>
@@ -544,7 +538,6 @@ Veľa šťastia a zabavte sa!"</string>
 <plurals name="decklist_cards_count">
 <item quantity="one">"%1$d karta"</item>
 <item quantity="few">"%1$d karty"</item>
-<item quantity="many">"%1$d kariet"</item>
 <item quantity="other">"%1$d kariet"</item>
 </plurals>
 

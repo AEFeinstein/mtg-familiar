@@ -55,18 +55,20 @@ import javax.annotation.Nonnull;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 public class MarketPriceFetcher {
 
     private static final String KEY_PREFIX = "price_";
-    private static final int MAX_NUM_RETRIES = 8;
 
     private final FamiliarActivity mActivity;
     private final Store<MarketPriceInfo, MtgCard> mStore;
     private int mNumPriceRequests = 0;
 
-    abstract class RecordingPersister<Rec, Key> implements RecordProvider<Key>, Persister<Rec, Key> {
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    private abstract class RecordingPersister<Rec, Key> implements RecordProvider<Key>, Persister<Rec, Key> {
     }
 
     /**
@@ -180,7 +182,7 @@ public class MarketPriceFetcher {
                 for (int setOption = 0; setOption < 2; setOption++) {
                     for (int accentOption = 0; accentOption < 2; accentOption++) {
                         for (int multiOption = 0; multiOption < numMultiCardOptions; multiOption++) {
-                            String tcgCardName = null;
+                            String tcgCardName;
                             FamiliarDbHandle setOptHandle = new FamiliarDbHandle();
                             try {
                                 SQLiteDatabase database = DatabaseManager.getInstance(mActivity, false).openDatabase(false, setOptHandle);
@@ -267,7 +269,7 @@ public class MarketPriceFetcher {
         };
 
         /* Create the Persister, which also handles managing cache staleness */
-        RecordingPersister<MarketPriceInfo, MtgCard> mPersister = new RecordingPersister<MarketPriceInfo, MtgCard>() {
+        RecordingPersister<MarketPriceInfo, MtgCard> persister = new RecordingPersister<MarketPriceInfo, MtgCard>() {
 
             private static final int MAX_TIME_IN_CACHE_MS = 86400000; /* One day's worth of ms */
 
@@ -364,7 +366,7 @@ public class MarketPriceFetcher {
 
         mStore = StoreBuilder.<MtgCard, MarketPriceInfo>key()
                 .fetcher(mFetcher)
-                .persister(mPersister)
+                .persister(persister)
                 .networkBeforeStale()
                 .open();
     }
@@ -397,7 +399,7 @@ public class MarketPriceFetcher {
              */
             @Override
             public void run() {
-                mStore.get(card).subscribe(new Consumer<MarketPriceInfo>() {
+                mCompositeDisposable.add(mStore.get(card).subscribe(new Consumer<MarketPriceInfo>() {
                     /**
                      * This callback is called when a MarketPriceInfo is fetched either from the
                      * network or cache. The callback runs on a non-UI thread, but invokes the given
@@ -461,8 +463,12 @@ public class MarketPriceFetcher {
                             }
                         });
                     }
-                });
+                }));
             }
         }).start();
+    }
+
+    public void stopAllRequests() {
+        mCompositeDisposable.clear();
     }
 }

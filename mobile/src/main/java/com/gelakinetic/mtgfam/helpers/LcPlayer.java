@@ -630,7 +630,7 @@ public class LcPlayer {
     /**
      * Inner class to display the HistoryEntries in a ListView
      */
-    public class HistoryArrayAdapter extends ArrayAdapter<HistoryEntry> {
+    class HistoryArrayAdapter extends ArrayAdapter<HistoryEntry> {
 
         private final int mType;
 

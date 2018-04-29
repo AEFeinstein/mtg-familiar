@@ -123,7 +123,7 @@ public class FamiliarDialogFragment extends DialogFragment {
      * @return The current fragment being displayed by the app
      */
     @Nullable
-    Fragment getDialogParentFragment() {
+    private Fragment getDialogParentFragment() {
         return getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
     }
 

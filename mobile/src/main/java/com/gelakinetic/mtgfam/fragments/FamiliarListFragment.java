@@ -168,7 +168,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * properly and set the visibility for total price views
      */
     @Override
-    public void onResume() {
+    void onResume() {
         super.onResume();
 
         if (null == mNameField) {
@@ -208,7 +208,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * Deselects all currently selected items from all the adapters
      */
-    public void adaptersDeselectAll() {
+    private void adaptersDeselectAll() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.deselectAll();
         }
@@ -217,7 +217,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * Sets all adapters in select mode
      */
-    public void adaptersSetAllSelectedMode() {
+    private void adaptersSetAllSelectedMode() {
         for (CardDataAdapter adapter : mCardDataAdapters) {
             adapter.setInSelectMode(true);
         }
@@ -524,7 +524,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
     /**
      * @return the current price setting
      */
-    public abstract MarketPriceInfo.PriceType getPriceSetting();
+    protected abstract MarketPriceInfo.PriceType getPriceSetting();
 
     /**
      * @param priceSetting The price setting to write to preferences

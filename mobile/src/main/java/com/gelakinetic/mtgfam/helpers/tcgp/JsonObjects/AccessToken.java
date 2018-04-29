@@ -24,6 +24,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class AccessToken {
     public final String access_token;
     public final String token_type;

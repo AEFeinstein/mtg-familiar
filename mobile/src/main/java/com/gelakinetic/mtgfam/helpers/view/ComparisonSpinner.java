@@ -41,7 +41,7 @@ public class ComparisonSpinner extends android.support.v7.widget.AppCompatSpinne
     }
 
     private class ComparisonAdapter extends ArrayAdapter<Comparison> {
-        public ComparisonAdapter() {
+        ComparisonAdapter() {
             super(ComparisonSpinner.this.getContext(), R.layout.list_item_1, Comparison.values());
         }
 

@@ -149,22 +149,22 @@ public class SortOrderDialogFragment extends FamiliarDialogFragment {
         adb.positiveText(getActivity().getResources().getString(R.string.dialog_ok));
         adb.onPositive((dialog, which) -> {
             /* Reordering the entries reorders the pairs */
-            String orderByStr = "";
+            StringBuilder orderByStr = new StringBuilder();
             boolean first = true;
             for (SortOption p : options) {
                 if (!first) {
-                    orderByStr += ",";
+                    orderByStr.append(",");
                 }
-                orderByStr += (p.mDatabaseKey);
+                orderByStr.append(p.mDatabaseKey);
                 if (p.mAscending) {
-                    orderByStr += " " + SQL_ASC;
+                    orderByStr.append(" ").append(SQL_ASC);
                 } else {
-                    orderByStr += " " + SQL_DESC;
+                    orderByStr.append(" ").append(SQL_DESC);
                 }
                 first = false;
             }
             if (null != getParentFamiliarFragment()) {
-                getParentFamiliarFragment().receiveSortOrder(orderByStr);
+                getParentFamiliarFragment().receiveSortOrder(orderByStr.toString());
             }
         });
 

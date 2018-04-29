@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -59,7 +60,7 @@ public class DiceFragment extends FamiliarFragment implements ViewSwitcher.ViewF
      * @return A view with a TextSwitcher and a bunch of die buttons
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View myFragmentView = inflater.inflate(R.layout.dice_frag, container, false);
 
         mRandom = new Random();

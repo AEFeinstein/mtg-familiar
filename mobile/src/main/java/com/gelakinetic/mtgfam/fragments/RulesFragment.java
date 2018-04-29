@@ -100,7 +100,7 @@ public class RulesFragment extends FamiliarFragment {
      * @return The view to be shown
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         String keyword;
         final String format;
 
@@ -480,17 +480,17 @@ public class RulesFragment extends FamiliarFragment {
         /**
          * @return The string text associated with this entry
          */
-        public abstract String getText();
+        protected abstract String getText();
 
         /**
          * @return The string header associated with this entry
          */
-        public abstract String getHeader();
+        protected abstract String getHeader();
 
         /**
          * @return True if clicking this entry opens a sub-fragment, false otherwise
          */
-        public abstract boolean isClickable();
+        protected abstract boolean isClickable();
     }
 
     /**
@@ -510,7 +510,7 @@ public class RulesFragment extends FamiliarFragment {
          * @param entry       The letter entry of the rule.
          * @param rulesText   The rule. Follow it!
          */
-        public RuleItem(int category, int subcategory, String entry, String rulesText) {
+        RuleItem(int category, int subcategory, String entry, String rulesText) {
             this.mCategory = category;
             this.mSubcategory = subcategory;
             this.mEntry = entry;
@@ -568,7 +568,7 @@ public class RulesFragment extends FamiliarFragment {
          * @param clickable  Whether clicking this entry will start a sub-fragment. In practice, just the main glossary
          *                   entry point
          */
-        public GlossaryItem(String term, String definition, boolean clickable) {
+        GlossaryItem(String term, String definition, boolean clickable) {
             this.mTerm = term;
             this.mDefinition = definition;
             this.mClickable = clickable;
@@ -610,7 +610,7 @@ public class RulesFragment extends FamiliarFragment {
          * @param cards     Banned and restricted cards in the format
          * @param clickable Whether clicking on this entry will start a sub-fragment. Main Banned entry point
          */
-        public BannedItem(String format, int legality, String cards, boolean clickable) {
+        BannedItem(String format, int legality, String cards, boolean clickable) {
 
             this.mFormat = format;
             if (format.equalsIgnoreCase("Commander")) {
@@ -708,7 +708,7 @@ public class RulesFragment extends FamiliarFragment {
          *                           R.layout.rules_list_item
          * @param items              The DisplayItems to show
          */
-        public RulesListAdapter(Context context, int textViewResourceId, ArrayList<DisplayItem> items) {
+        RulesListAdapter(Context context, int textViewResourceId, ArrayList<DisplayItem> items) {
             super(context, textViewResourceId, items);
 
             this.mLayoutResourceId = textViewResourceId;

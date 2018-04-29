@@ -18,7 +18,6 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/nplayer_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -162,7 +161,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/player_history_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".4"

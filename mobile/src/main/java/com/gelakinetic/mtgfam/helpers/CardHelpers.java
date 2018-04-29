@@ -367,7 +367,7 @@ public class CardHelpers {
 
         public String mSet;
         public String mSetCode;
-        public String mNumber;
+        String mNumber;
 
         public Boolean mIsFoil;
         public MarketPriceInfo mPrice;

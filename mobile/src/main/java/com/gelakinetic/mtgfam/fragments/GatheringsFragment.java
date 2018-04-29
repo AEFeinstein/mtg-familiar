@@ -19,6 +19,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,7 +67,7 @@ public class GatheringsFragment extends FamiliarFragment {
      * @param outState Bundle in which to place the saved gathering.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         Gathering savedGathering = new Gathering();
 
         savedGathering.mDisplayMode = mDisplayModeSpinner.getSelectedItemPosition();
@@ -111,7 +112,7 @@ public class GatheringsFragment extends FamiliarFragment {
      * @return The inflated view
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mLargestPlayerNumber = 0;
 
         /* Inflate a view */

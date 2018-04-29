@@ -111,7 +111,7 @@
         <provider
             android:name="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
             android:authorities="com.gelakinetic.mtgfam.helpers.database.CardSearchProvider"
-            android:exported="true" />
+            android:exported="false" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

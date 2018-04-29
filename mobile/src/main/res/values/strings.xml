@@ -205,7 +205,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="search_Rare">"Rare"</string>
     <string name="search_Mythic">"Mythic"</string>
     <string name="search_Timeshifted">"Timeshifted"</string>
-    <string name="search_type">"Type"</string>
     <string name="search_mana_cost">"Mana Cost"</string>
     <string name="search_collectors_number">"Collector's Number"</string>
     <string name="search_color_title">"Color"</string>
@@ -237,7 +236,6 @@ Media licenced under the &lt;a href=http://creativecommons.org/licenses/by-sa/3.
     <string name="card_view_no_pictures_folder">"Unable to find pictures folder, please try again."</string>
     <string name="card_view_unable_to_create_dir">"Unable to create directory to hold images, please try again"</string>
     <string name="card_view_unable_to_create_file">"Unable to create image file, please try again."</string>
-    <string name="card_view_no_image">"Could not find the image to save, please try again."</string>
     <string name="card_view_unable_to_save_image">"Unable to save image, please try again."</string>
     <string name="card_view_save_failure">"Failed to save image, please try again"</string>
     <string name="card_view_image_saved">"Image saved to "</string>
@@ -293,7 +291,6 @@ Mana pool will also be cleared."</string>
     <string name="dice_tails">"tails"</string>
 
     <!-- Mana pool activity -->
-    <string name="mana_pool_error_toast">"Mana pool failed to load!"</string>
     <string name="mana_pool_clear_all">"Clear All"</string>
 
     <!-- Card trading activity -->

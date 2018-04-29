@@ -1549,23 +1549,23 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * This nested class encapsulates the necessary information for an entry in the drawer menu.
      */
-    public class DrawerEntry {
+    class DrawerEntry {
         final int mNameResource;
         final int mIconAttr;
         final boolean mIsDivider;
         TextView textView;
 
-        public DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
+        DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
             mNameResource = nameResource;
             mIconAttr = iconResource;
             mIsDivider = isHeader;
         }
 
-        public void setTextView(TextView textView) {
+        void setTextView(TextView textView) {
             this.textView = textView;
         }
 
-        public TextView getTextView() {
+        TextView getTextView() {
             return textView;
         }
     }
@@ -1574,7 +1574,7 @@ public class FamiliarActivity extends AppCompatActivity {
      * This nested class is the adapter which populates the listView in the drawer menu. It handles
      * both entries and headers.
      */
-    public class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
+    class DrawerEntryArrayAdapter extends ArrayAdapter<DrawerEntry> {
         private Drawable mHighlightedDrawable;
 
         /**
@@ -1583,7 +1583,7 @@ public class FamiliarActivity extends AppCompatActivity {
          *
          * @param context The application's context, used to inflate views later.
          */
-        public DrawerEntryArrayAdapter(Context context) {
+        DrawerEntryArrayAdapter(Context context) {
             super(context, R.layout.drawer_list_item, mPageEntries);
         }
 

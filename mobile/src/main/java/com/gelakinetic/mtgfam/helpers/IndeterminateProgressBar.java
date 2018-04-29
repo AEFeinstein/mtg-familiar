@@ -36,7 +36,7 @@ import android.view.animation.Interpolator;
  * the user is to triggering something (e.g. how far they need to pull down to
  * trigger a refresh).
  */
-public final class IndeterminateProgressBar {
+final class IndeterminateProgressBar {
 
     // Default progress animation colors are grays.
     private final static int COLOR1 = 0xFFFF0000;
@@ -250,7 +250,7 @@ public final class IndeterminateProgressBar {
             super();
         }
 
-        public static BakedBezierInterpolator getInstance() {
+        static BakedBezierInterpolator getInstance() {
             return INSTANCE;
         }
 

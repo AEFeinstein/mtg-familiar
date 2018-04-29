@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,7 +57,7 @@ import java.util.Random;
 public class ResultListFragment extends FamiliarFragment {
 
     /* Constants for bundled arguments */
-    public static final String CARD_ID = "id";
+    private static final String CARD_ID = "id";
     public static final String CARD_ID_0 = "id0";
     public static final String CARD_ID_1 = "id1";
     public static final String CARD_ID_2 = "id2";
@@ -70,7 +71,7 @@ public class ResultListFragment extends FamiliarFragment {
     private Cursor mCursor;
     private ListView mListView;
     private SQLiteDatabase mDatabase;
-    private FamiliarDbHandle mDbHandle = new FamiliarDbHandle();
+    private final FamiliarDbHandle mDbHandle = new FamiliarDbHandle();
 
     /**
      * When the fragment is created, open the database and search for whatever.
@@ -103,7 +104,7 @@ public class ResultListFragment extends FamiliarFragment {
      * @param outState Bundle in which to place your saved state.
      */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         try {
             outState.putInt(CURSOR_POSITION, mListView.getFirstVisiblePosition());
             View tmp = mListView.getChildAt(0);
@@ -149,7 +150,7 @@ public class ResultListFragment extends FamiliarFragment {
      * @return the view if the fragment is showing, null if otherwise
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (container == null) {
             /* Something is happening when the fragment is on the back stack */
