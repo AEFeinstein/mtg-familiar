@@ -54,6 +54,7 @@ import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
@@ -173,8 +174,6 @@ public class WishlistFragment extends FamiliarListFragment {
 
         /* Redraw the new wishlist with the new card */
         getCardDataAdapter(0).notifyDataSetChanged();
-
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**
@@ -205,8 +204,9 @@ public class WishlistFragment extends FamiliarListFragment {
     private void readAndCompressWishlist(String changedCardName) {
         /* Read the wishlist */
         ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
             boolean cardNumberFixed = false;
             /* Translate the set code to tcg name, of course it's not saved */
             for (MtgCard card : wishlist) {
@@ -278,8 +278,9 @@ public class WishlistFragment extends FamiliarListFragment {
 
         } catch (FamiliarDbException e) {
             handleFamiliarDbException(false);
+        } finally {
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**

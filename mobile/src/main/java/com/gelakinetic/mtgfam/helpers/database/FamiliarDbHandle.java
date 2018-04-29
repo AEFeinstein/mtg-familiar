@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Adam Feinstein
+ * Copyright 2018 Adam Feinstein
  *
  * This file is part of MTG Familiar.
  *
@@ -17,30 +17,17 @@
  * along with MTG Familiar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package com.gelakinetic.mtgfam.helpers.database;
 
-buildscript {
-    repositories {
-        jcenter()
-        google()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+public class FamiliarDbHandle {
+    private Integer handle = 0;
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    Integer getHandle() {
+        return handle;
     }
-}
 
-allprojects {
-    repositories {
-        jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
+    void setHandle(int val) {
+        handle = val;
     }
+
 }

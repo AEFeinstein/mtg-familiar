@@ -45,6 +45,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import com.gelakinetic.mtgfam.helpers.util.FragmentHelpers;
 
@@ -130,10 +131,10 @@ public class CardHelpers {
         final ArrayList<Character> potentialRarities = new ArrayList<>();
         final ArrayList<String> potentialNumbers = new ArrayList<>();
 
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             /* Open the database */
-            SQLiteDatabase db =
-                    DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false);
+            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false, handle);
 
             /* Get all the cards with relevant info from the database */
             Cursor cards;
@@ -186,11 +187,10 @@ public class CardHelpers {
             /* Clean up */
             cards.close();
         } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
             return null;
+        } finally {
+            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false, handle);
         }
-
-        DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
 
         MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
 
@@ -279,12 +279,12 @@ public class CardHelpers {
         if (showCardButton) {
             customView.findViewById(R.id.show_card_button).setOnClickListener(
                     view -> {
-                        onPositiveCallback.onClick(null, null);
+
                         Bundle args = new Bundle();
                         /* Open the database */
+                        FamiliarDbHandle showCardHandle = new FamiliarDbHandle();
                         try {
-                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false)
-                                    .openDatabase(false);
+                            SQLiteDatabase db = DatabaseManager.getInstance(fragment.getActivity(), false).openDatabase(false, showCardHandle);
                             /* Get the card ID, and send it to a new CardViewFragment */
                             long cardId = CardDbAdapter.fetchIdByName(mCardName, db);
                             if (cardId > 0) {
@@ -298,9 +298,10 @@ public class CardHelpers {
                             }
                         } catch (FamiliarDbException e) {
                             fragment.handleFamiliarDbException(false);
+                        } finally {
+                            DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false, showCardHandle);
                         }
-                        DatabaseManager.getInstance(fragment.getActivity(), false).closeDatabase(false);
-
+                        fragment.removeDialog(fragment.getFragmentManager());
                     });
         } else {
             customView.findViewById(R.id.show_card_button).setVisibility(View.GONE);
@@ -634,8 +635,9 @@ public class CardHelpers {
             int numberOf) {
 
         FamiliarActivity activity = (FamiliarActivity) context;
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(activity, false).openDatabase(false, handle);
             /* Make the new MTGCard */
             MtgCard card = new MtgCard();
             card.mIsFoil = isFoil;
@@ -668,7 +670,6 @@ public class CardHelpers {
                 if (cardCursor.getCount() == 0) {
                     ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
                             ToastWrapper.LENGTH_LONG);
-                    DatabaseManager.getInstance(activity, false).closeDatabase(false);
                     return null;
                 }
                 /* If we don't specify the set, and we are trying to find a foil card, choose the
@@ -692,7 +693,6 @@ public class CardHelpers {
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
                         ToastWrapper.LENGTH_LONG);
-                DatabaseManager.getInstance(activity, false).closeDatabase(false);
                 return null;
             }
 
@@ -734,8 +734,9 @@ public class CardHelpers {
             return card;
         } catch (FamiliarDbException | NumberFormatException fde) {
             /* todo: handle this */
+        } finally {
+            DatabaseManager.getInstance(activity, false).closeDatabase(false, handle);
         }
-        DatabaseManager.getInstance(activity, false).closeDatabase(false);
         return null;
 
     }

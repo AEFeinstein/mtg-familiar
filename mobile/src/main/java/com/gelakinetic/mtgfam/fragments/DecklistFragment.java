@@ -52,6 +52,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
@@ -330,10 +331,9 @@ public class DecklistFragment extends FamiliarListFragment {
         final ArrayList<Pair<MtgCard, Boolean>> decklist =
                 DecklistHelpers.ReadDecklist(getActivity(), lDeckName);
 
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            final SQLiteDatabase database =
-                    DatabaseManager.getInstance(getActivity(), false)
-                            .openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
             /* Clear the decklist, or just the card that changed */
             clearCompressedInfo(changedCardName);
 
@@ -376,8 +376,9 @@ public class DecklistFragment extends FamiliarListFragment {
                     ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
         } catch (FamiliarDbException fde) {
             handleFamiliarDbException(false);
+        } finally {
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
         }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
     }
 
     /**

@@ -53,6 +53,7 @@ import com.gelakinetic.mtgfam.helpers.ToastWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -159,13 +160,14 @@ public class RulesFragment extends FamiliarFragment {
             });
         }
 
-        Cursor cursor;
+        Cursor cursor = null;
         Cursor setsCursor = null;
 
         /* Populate the cursor with information from the database */
+        FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             /* Open a database connection */
-            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+            SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
 
             if (isGlossary) {
                 cursor = CardDbAdapter.getGlossaryTerms(database);
@@ -184,15 +186,9 @@ public class RulesFragment extends FamiliarFragment {
                 cursor = CardDbAdapter.getRulesByKeyword(keyword, mCategory, mSubcategory, database);
                 isClickable = false;
             }
-        } catch (FamiliarDbException e) {
-            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-            handleFamiliarDbException(true);
-            return myFragmentView;
-        }
 
-        /* Add DisplayItems to mRules */
-        if (setsCursor != null) {
-            try {
+            /* Add DisplayItems to mRules */
+            if (setsCursor != null) {
                 if (setsCursor.getCount() > 0) {
                     setsCursor.moveToFirst();
                     mRules.add(new BannedItem(
@@ -201,19 +197,13 @@ public class RulesFragment extends FamiliarFragment {
                             setsCursor.getString(setsCursor.getColumnIndex(CardDbAdapter.KEY_LEGAL_SETS)), false));
                 }
                 setsCursor.close();
-            } catch (SQLiteDatabaseCorruptException e) {
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                handleFamiliarDbException(true);
-                return null;
+                if (cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
+                    int listItemResource = R.layout.rules_list_detail_item;
+                    RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
+                    list.setAdapter(adapter);
+                }
             }
-            if (cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
-                int listItemResource = R.layout.rules_list_detail_item;
-                RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
-                list.setAdapter(adapter);
-            }
-        }
-        if (cursor != null) {
-            try {
+            if (cursor != null) {
                 if (cursor.getCount() > 0) {
                     cursor.moveToFirst();
                     while (!cursor.isAfterLast()) {
@@ -299,16 +289,21 @@ public class RulesFragment extends FamiliarFragment {
                         getFragmentManager().popBackStack();
                     }
                 }
-            } catch (SQLiteDatabaseCorruptException e) {
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
-                handleFamiliarDbException(true);
-                return null;
+            } else {
+                if (!isBanned) { /* Cursor is null. weird. */
+                    ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
+                    getFragmentManager().popBackStack();
+                }
             }
-        } else {
-            if (!isBanned) { /* Cursor is null. weird. */
-                ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
-                getFragmentManager().popBackStack();
+
+        } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
+            handleFamiliarDbException(true);
+            return myFragmentView;
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
             }
+            DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
         }
 
         list.setSelection(position);
@@ -339,11 +334,6 @@ public class RulesFragment extends FamiliarFragment {
          * "WIZARDS!". I still reserve the right to do that, though. - Alex
          */
         mLinkPattern = Pattern.compile("([1-9][0-9]{2}(\\.([a-z0-9]{1,4}(-[a-z])?)?\\.?)?)");
-
-        if (cursor != null) {
-            cursor.close();
-        }
-        DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
 
         return myFragmentView;
     }
@@ -434,8 +424,9 @@ public class RulesFragment extends FamiliarFragment {
         if (shouldLink) {
             Matcher m = mLinkPattern.matcher(cs);
             while (m.find()) {
+                FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
-                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false);
+                    SQLiteDatabase database = DatabaseManager.getInstance(getActivity(), false).openDatabase(false, handle);
                     String[] tokens = cs.subSequence(m.start(), m.end()).toString().split("(\\.)");
                     int firstInt = Integer.parseInt(tokens[0]);
                     final int linkCat = firstInt / 100;
@@ -464,8 +455,9 @@ public class RulesFragment extends FamiliarFragment {
                     }, m.start(), m.end(), 0);
                 } catch (Exception e) {
                     /* Eat any exceptions; they'll just cause the link to not appear*/
+                } finally {
+                    DatabaseManager.getInstance(getActivity(), false).closeDatabase(false, handle);
                 }
-                DatabaseManager.getInstance(getActivity(), false).closeDatabase(false);
             }
         }
         return result;
