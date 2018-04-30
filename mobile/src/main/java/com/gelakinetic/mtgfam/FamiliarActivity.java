@@ -766,8 +766,11 @@ public class FamiliarActivity extends AppCompatActivity {
         String action;
         try {
             action = intent.getAction();
+            if (null == action) {
+                action = Intent.ACTION_MAIN;
+            }
         } catch (NullPointerException e) {
-            action = "";
+            action = Intent.ACTION_MAIN;
         }
         switch (action) {
             case Intent.ACTION_SEARCH: {
