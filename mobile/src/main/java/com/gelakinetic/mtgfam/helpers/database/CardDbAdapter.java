@@ -1775,15 +1775,18 @@ public class CardDbAdapter {
             /* Second coalesce logic, check card against legal sets */
             sql += "CASE (" +
                     " SELECT 1" +
-                    " FROM " + DATABASE_TABLE_CARDS + "" +
-                    " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS + " ls ON ls." + KEY_SET + " = c." + KEY_SET +
+                    " FROM " + DATABASE_TABLE_CARDS + " c INNER JOIN " + DATABASE_TABLE_LEGAL_SETS + " ls ON ls." + KEY_SET + " = c." + KEY_SET +
                     " WHERE ls." + KEY_FORMAT + " = " + format +
-                    " AND c." + KEY_NAME + " = " + mCardName + ")";
+                    " AND c." + KEY_NAME + " = " + mCardName;
+            /* If the format is pauper, restrict to commons */
+            if ("'Pauper'".equals(format)) {
+                sql += " AND c." + KEY_RARITY + " = " + ((int) 'C');
+            }
+            sql += ")";
             sql += "  WHEN 1 THEN NULL ELSE CASE" +
                     " WHEN " + format + " = 'Legacy' THEN NULL" +
                     " WHEN " + format + " = 'Vintage' THEN NULL" +
                     " WHEN " + format + " = 'Commander' THEN NULL" +
-                    " WHEN " + format + " = 'Pauper' THEN NULL" +
                     " ELSE 1";
             sql += " END END,";
 
@@ -1792,20 +1795,6 @@ public class CardDbAdapter {
                     " FROM " + DATABASE_TABLE_BANNED_CARDS +
                     " WHERE " + KEY_NAME + " = " + mCardName +
                     " AND " + KEY_FORMAT + " = " + format + "),";
-
-
-            /* If the format is pauper, restrict to commons */
-            if ("'Pauper'".equals(format)) {
-                sql += " CASE (" +
-                        " SELECT 1" +
-                        " FROM " + DATABASE_TABLE_CARDS + "" +
-                        " WHERE " + KEY_NAME + " = " + mCardName + "" +
-                        " AND " + KEY_RARITY + " = " + ((int) 'C') + ")";
-                sql += "  WHEN 0 THEN 1" +
-                        " WHEN 1 THEN 0" +
-                        " ELSE 1";
-                sql += " END,";
-            }
 
             /* Finish the coalesce with a 0 */
             sql += "0) AS " + KEY_LEGALITY;
