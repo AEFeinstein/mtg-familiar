@@ -676,7 +676,7 @@ public class CardDbAdapter {
             return;
         }
 
-        sql.append(")"); /*  ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC */
+        sql.append(")"); /* ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC */
 
         Cursor cursor;
 
@@ -819,8 +819,8 @@ public class CardDbAdapter {
      * @param returnTypes The columns which should be returned in the cursor
      * @param consolidate true to not include multiple printings of the same card, false otherwise
      * @param orderByStr  A string used to order the results
-     * @param mDb         The database to query  @return A cursor with the requested information
-     *                    about the queried cards
+     * @param mDb         The database to query
+     * @return A cursor with the requested information about the queried cards
      * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor Search(SearchCriteria criteria, boolean backface, String[] returnTypes,
@@ -1222,7 +1222,13 @@ public class CardDbAdapter {
 
             /* If the format is not eternal, filter by set */
             if (numLegalSetCursor.getCount() > 0) {
-                statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " IN (" + "  SELECT " + DATABASE_TABLE_CARDS + "_B." + KEY_NAME + "  FROM " + DATABASE_TABLE_CARDS + " " + DATABASE_TABLE_CARDS + "_B " + "  WHERE " + DATABASE_TABLE_CARDS + "_B." + KEY_SET + " IN (" + "    SELECT " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + "    FROM " + DATABASE_TABLE_LEGAL_SETS + "    WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='").append(criteria.format).append("'").append("  )").append(" )");
+                String toAppend = " AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " IN (" + " SELECT " + DATABASE_TABLE_CARDS + "_B." + KEY_NAME + " FROM " + DATABASE_TABLE_CARDS + " " + DATABASE_TABLE_CARDS + "_B " + " WHERE ";
+                // Ensure pauper only searches commons in valid Pauper sets
+                if ("Pauper".equals(criteria.format)) {
+                    toAppend += DATABASE_TABLE_CARDS + "_B." + KEY_RARITY + " = " + ((int) 'C') + " AND ";
+                }
+                toAppend += DATABASE_TABLE_CARDS + "_B." + KEY_SET + " IN (" + " SELECT " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_SET + " FROM " + DATABASE_TABLE_LEGAL_SETS + " WHERE " + DATABASE_TABLE_LEGAL_SETS + "." + KEY_FORMAT + "='" + criteria.format + "' ) )";
+                statement.append(toAppend);
             } else {
                 /* Otherwise filter silver bordered cards, giant cards */
                 for (String illegalSet : ILLEGAL_SETS) {
@@ -1233,12 +1239,7 @@ public class CardDbAdapter {
 
             numLegalSetCursor.close();
 
-            statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " FROM " + DATABASE_TABLE_BANNED_CARDS + " WHERE  " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '").append(criteria.format).append("'").append(" AND ").append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED).append(")");
-
-            // Ensure pauper only searches commons
-            if ("Pauper".equals(criteria.format)) {
-                statement.append(" AND (" + DATABASE_TABLE_CARDS + "." + KEY_RARITY + " = " + ((int) 'C') + ")");
-            }
+            statement.append(" AND " + DATABASE_TABLE_CARDS + "." + KEY_NAME + " NOT IN (SELECT " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_NAME + " FROM " + DATABASE_TABLE_BANNED_CARDS + " WHERE " + DATABASE_TABLE_BANNED_CARDS + "." + KEY_FORMAT + " = '").append(criteria.format).append("'").append(" AND ").append(DATABASE_TABLE_BANNED_CARDS).append(".").append(KEY_LEGALITY).append(" = ").append(BANNED).append(")");
         }
 
         if (!backface) {
