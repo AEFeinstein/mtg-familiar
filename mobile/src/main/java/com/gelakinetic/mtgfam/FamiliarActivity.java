@@ -694,7 +694,8 @@ public class FamiliarActivity extends AppCompatActivity {
                 if (pInfo.versionCode != lastVersion &&
                         !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
                         !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
-                        !(lastVersion == 52 && pInfo.versionCode == 53)) { // Don't show 52 -> 53, it was just a quick bugfix release
+                        !(lastVersion == 52 && pInfo.versionCode == 53) && // Don't show 52 -> 53, it was just a quick bugfix release
+                        !(lastVersion == 54 && pInfo.versionCode == 55)) { // Don't show 54 -> 55, it was just a quick bugfix release
                     if (lastVersion != 0) {
                         showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }
