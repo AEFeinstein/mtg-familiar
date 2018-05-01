@@ -320,12 +320,14 @@ public class SearchViewFragment extends FamiliarFragment {
             protected Void doInBackground(Void... voids) {
 
                 /* Only actually get data if the arrays are null */
+                Cursor formatCursor = null;
+                Cursor setCursor = null;
                 FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
                     SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
                     if (mSetNames == null) {
                         /* Query the database for all sets and fill the arrays to populate the list of choices with */
-                        Cursor setCursor = CardDbAdapter.fetchAllSets(database);
+                        setCursor = CardDbAdapter.fetchAllSets(database);
                         setCursor.moveToFirst();
 
                         mSetNames = new String[setCursor.getCount()];
@@ -341,12 +343,11 @@ public class SearchViewFragment extends FamiliarFragment {
                             mSetNames[i] = setCursor.getString(setCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
                             setCursor.moveToNext();
                         }
-                        setCursor.close();
                     }
 
                     if (mFormatNames == null) {
                         /* Query the database for all formats and fill the arrays to populate the list of choices with */
-                        Cursor formatCursor = CardDbAdapter.fetchAllFormats(database);
+                        formatCursor = CardDbAdapter.fetchAllFormats(database);
                         formatCursor.moveToFirst();
 
                         mFormatNames = new String[formatCursor.getCount()];
@@ -355,7 +356,6 @@ public class SearchViewFragment extends FamiliarFragment {
                             mFormatNames[i] = formatCursor.getString(formatCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
                             formatCursor.moveToNext();
                         }
-                        formatCursor.close();
                     }
 
                     if (mSupertypes == null) {
@@ -378,6 +378,12 @@ public class SearchViewFragment extends FamiliarFragment {
                 } catch (SQLiteException | FamiliarDbException e) {
                     handleFamiliarDbException(true);
                 } finally {
+                    if (null != setCursor) {
+                        setCursor.close();
+                    }
+                    if (null != formatCursor) {
+                        formatCursor.close();
+                    }
                     DatabaseManager.closeDatabase(getActivity(), handle);
                 }
 

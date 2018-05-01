@@ -247,10 +247,11 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 }
                 String[] from = new String[]{"format", "status"};
                 int[] to = new int[]{R.id.format, R.id.status};
+                Cursor cFormats = null;
                 FamiliarDbHandle handle = new FamiliarDbHandle();
                 try {
                     SQLiteDatabase database = DatabaseManager.openDatabase(getContext(), false, handle);
-                    Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
+                    cFormats = CardDbAdapter.fetchAllFormats(database);
                     cFormats.moveToFirst();
                     List<HashMap<String, String>> fillMaps = new ArrayList<>();
                     for (int i = 0; i < cFormats.getCount(); i++) {
@@ -309,6 +310,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                 } catch (SQLiteException | FamiliarDbException fdbe) {
                     getParentDecklistFragment().handleFamiliarDbException(false);
                 } finally {
+                    if (null != cFormats) {
+                        cFormats.close();
+                    }
                     DatabaseManager.closeDatabase(getContext(), handle);
                 }
                 return DontShowDialog();

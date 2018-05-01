@@ -244,12 +244,13 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                 /* Set up the button to show info about this card */
                 view.findViewById(R.id.traderDialogInfo).setOnClickListener(v -> {
                     onPositiveCallback.onClick(null, null);
+                    Cursor cursor = null;
                     FamiliarDbHandle infoHandle = new FamiliarDbHandle();
                     try {
                         SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, infoHandle);
 
                         /* Get the card ID, and send it to a new CardViewPagerFragment */
-                        Cursor cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
+                        cursor = CardDbAdapter.fetchCardByNameAndSet(lSide.get(positionForDialog).mName,
                                 lSide.get(positionForDialog).mExpansion, Collections.singletonList(
                                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), database);
 
@@ -258,12 +259,14 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                         args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
 
-                        cursor.close();
                         CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
                         getParentTradeFragment().startNewFragment(cvpFrag, args);
                     } catch (SQLiteException | FamiliarDbException e) {
                         getParentTradeFragment().handleFamiliarDbException(false);
                     } finally {
+                        if (null != cursor) {
+                            cursor.close();
+                        }
                         DatabaseManager.closeDatabase(getActivity(), infoHandle);
                     }
                     getParentTradeFragment().removeDialog(getFragmentManager());
@@ -310,11 +313,12 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 Set<String> sets = new LinkedHashSet<>();
                 Set<String> setCodes = new LinkedHashSet<>();
+                Cursor cards = null;
                 FamiliarDbHandle fetchCardHandle = new FamiliarDbHandle();
                 try {
                     SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, fetchCardHandle);
                     /* Query the database for all versions of this card */
-                    Cursor cards = CardDbAdapter.fetchCardByName(data.mName, Arrays.asList(
+                    cards = CardDbAdapter.fetchCardByName(data.mName, Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_SETS + "." + CardDbAdapter.KEY_NAME), true, false, database);
@@ -325,13 +329,14 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         }
                         cards.moveToNext();
                     }
-                    /* clean up */
-                    cards.close();
                 } catch (SQLiteException | FamiliarDbException e) {
                     /* Don't show the dialog, but pop a toast */
                     getParentTradeFragment().handleFamiliarDbException(true);
                     return DontShowDialog();
                 } finally {
+                    if (null != cards) {
+                        cards.close();
+                    }
                     DatabaseManager.closeDatabase(getActivity(), fetchCardHandle);
                 }
 

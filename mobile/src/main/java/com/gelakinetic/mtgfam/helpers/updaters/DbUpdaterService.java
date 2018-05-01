@@ -195,11 +195,12 @@ public class DbUpdaterService extends IntentService {
                 /* Make an arraylist of all the current set codes */
                 ArrayList<String> currentSetCodes = new ArrayList<>();
                 HashMap<String, String> storedDigests = new HashMap<>();
+                Cursor setCursor = null;
                 FamiliarDbHandle setsHandle = new FamiliarDbHandle();
                 try {
                     /* Get readable database access */
                     SQLiteDatabase database = DatabaseManager.openDatabase(getApplicationContext(), false, setsHandle);
-                    Cursor setCursor = CardDbAdapter.fetchAllSets(database);
+                    setCursor = CardDbAdapter.fetchAllSets(database);
                     if (setCursor != null) {
                         setCursor.moveToFirst();
                         while (!setCursor.isAfterLast()) {
@@ -209,8 +210,6 @@ public class DbUpdaterService extends IntentService {
                             currentSetCodes.add(code);
                             setCursor.moveToNext();
                         }
-                        /* Cleanup */
-                        setCursor.close();
                     }
                 } catch (SQLiteException | FamiliarDbException e) {
                     commitDates = false; /* don't commit the dates */
@@ -218,6 +217,9 @@ public class DbUpdaterService extends IntentService {
                         e.printStackTrace(logWriter);
                     }
                 } finally {
+                    if (null != setCursor) {
+                        setCursor.close();
+                    }
                     DatabaseManager.closeDatabase(getApplicationContext(), setsHandle);
                 }
 

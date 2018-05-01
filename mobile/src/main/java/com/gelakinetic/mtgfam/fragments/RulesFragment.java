@@ -160,10 +160,9 @@ public class RulesFragment extends FamiliarFragment {
             });
         }
 
+        /* Populate the cursor with information from the database */
         Cursor cursor = null;
         Cursor setsCursor = null;
-
-        /* Populate the cursor with information from the database */
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             /* Open a database connection */
@@ -196,7 +195,6 @@ public class RulesFragment extends FamiliarFragment {
                             SETS,
                             setsCursor.getString(setsCursor.getColumnIndex(CardDbAdapter.KEY_LEGAL_SETS)), false));
                 }
-                setsCursor.close();
                 if (cursor.getCount() == 0) { // Adapter will not be set when cursor has count 0
                     int listItemResource = R.layout.rules_list_detail_item;
                     RulesListAdapter adapter = new RulesListAdapter(getActivity(), listItemResource, mRules);
@@ -229,7 +227,6 @@ public class RulesFragment extends FamiliarFragment {
                         }
                         cursor.moveToNext();
                     }
-                    cursor.close();
                     if (!isGlossary && !isBanned && mCategory == -1 && keyword == null) {
                         /* If it's the initial rules page, add a Glossary link to the end*/
                         mRules.add(new GlossaryItem(getString(R.string.rules_glossary), "", true));
@@ -283,7 +280,6 @@ public class RulesFragment extends FamiliarFragment {
                     });
                 } else {
                     /* Cursor had a size of 0, boring */
-                    cursor.close();
                     if (!isBanned) {
                         ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
                         getFragmentManager().popBackStack();
@@ -300,8 +296,11 @@ public class RulesFragment extends FamiliarFragment {
             handleFamiliarDbException(true);
             return myFragmentView;
         } finally {
-            if (cursor != null && !cursor.isClosed()) {
+            if (cursor != null) {
                 cursor.close();
+            }
+            if (setsCursor != null) {
+                setsCursor.close();
             }
             DatabaseManager.closeDatabase(getActivity(), handle);
         }

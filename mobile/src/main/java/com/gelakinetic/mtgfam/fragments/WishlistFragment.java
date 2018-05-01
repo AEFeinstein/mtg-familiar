@@ -205,6 +205,7 @@ public class WishlistFragment extends FamiliarListFragment {
     private void readAndCompressWishlist(String changedCardName) {
         /* Read the wishlist */
         ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
+        Cursor numberCursor = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
@@ -215,7 +216,7 @@ public class WishlistFragment extends FamiliarListFragment {
 
                 /* If the number is empty because of a prior bug, get it from the database */
                 if (card.mNumber.equals("")) {
-                    Cursor numberCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CODE), false, false, database);
+                    numberCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(CardDbAdapter.KEY_NUMBER, CardDbAdapter.KEY_CODE), false, false, database);
                     numberCursor.moveToFirst();
                     while (!numberCursor.isAfterLast()) {
                         if (card.mExpansion.equals(numberCursor.getString(numberCursor.getColumnIndex(CardDbAdapter.KEY_CODE)))) {
@@ -225,7 +226,6 @@ public class WishlistFragment extends FamiliarListFragment {
                         }
                         numberCursor.moveToNext();
                     }
-                    numberCursor.close();
                 }
             }
 
@@ -280,6 +280,9 @@ public class WishlistFragment extends FamiliarListFragment {
         } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(false);
         } finally {
+            if (null != numberCursor) {
+                numberCursor.close();
+            }
             DatabaseManager.closeDatabase(getActivity(), handle);
         }
     }

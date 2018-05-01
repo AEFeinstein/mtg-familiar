@@ -60,13 +60,17 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
         mActivity = activities[0];
 
         // Delete all caches
-        File cacheDir = mActivity.getExternalCacheDir();
-        for (File cacheFile : cacheDir.listFiles()) {
-            cacheFile.delete();
-        }
-        cacheDir = mActivity.getCacheDir();
-        for (File cacheFile : cacheDir.listFiles()) {
-            cacheFile.delete();
+        try {
+            File cacheDir = mActivity.getExternalCacheDir();
+            for (File cacheFile : cacheDir.listFiles()) {
+                cacheFile.delete();
+            }
+            cacheDir = mActivity.getCacheDir();
+            for (File cacheFile : cacheDir.listFiles()) {
+                cacheFile.delete();
+            }
+        } catch (NullPointerException e) {
+            // Eh
         }
 
         // Make a fetcher
@@ -166,6 +170,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
         } else {
             Log.d(DAPT_TAG, totalSuccess + " successes (avg " + (totalElapsedSuccess / (double) totalSuccess) + "ms)");
             Log.d(DAPT_TAG, totalFailure + " failures (avg " + (totalElapsedFailure / (double) totalFailure) + "ms)");
+            cursor.close();
             DatabaseManager.closeDatabase(mActivity, mHandle);
         }
 

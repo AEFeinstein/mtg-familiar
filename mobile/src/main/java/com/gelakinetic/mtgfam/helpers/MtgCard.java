@@ -151,6 +151,7 @@ public class MtgCard extends Card {
     public static MtgCard fromTradeString(String line, Context context) {
 
         MtgCard card = new MtgCard();
+        Cursor cardCursor = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SQLiteDatabase database = DatabaseManager.openDatabase(context, false, handle);
@@ -182,7 +183,7 @@ public class MtgCard extends Card {
                 card.mColor = parts[8];
             } else {
                 /* Pull from db */
-                Cursor cardCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(
+                cardCursor = CardDbAdapter.fetchCardByName(card.mName, Arrays.asList(
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
                         CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR), true, false, database);
                 card.mCmc = cardCursor.getInt(cardCursor.getColumnIndex(CardDbAdapter.KEY_CMC));
@@ -194,6 +195,9 @@ public class MtgCard extends Card {
         } catch (SQLiteException | FamiliarDbException e) {
             /* Oops, data will be incomplete */
         } finally {
+            if (null != cardCursor) {
+                cardCursor.close();
+            }
             DatabaseManager.closeDatabase(context, handle);
         }
 

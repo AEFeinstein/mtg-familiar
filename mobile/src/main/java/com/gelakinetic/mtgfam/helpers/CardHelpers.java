@@ -132,13 +132,13 @@ public class CardHelpers {
         final ArrayList<Character> potentialRarities = new ArrayList<>();
         final ArrayList<String> potentialNumbers = new ArrayList<>();
 
+        Cursor cards = null;
         FamiliarDbHandle fetchCardHandle = new FamiliarDbHandle();
         try {
             /* Open the database */
             SQLiteDatabase db = DatabaseManager.openDatabase(fragment.getActivity(), false, fetchCardHandle);
 
             /* Get all the cards with relevant info from the database */
-            Cursor cards;
             cards = CardDbAdapter.fetchCardByName(mCardName, Arrays.asList(
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
                     CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
@@ -184,12 +184,12 @@ public class CardHelpers {
 
                 cards.moveToNext();
             }
-
-            /* Clean up */
-            cards.close();
         } catch (SQLiteException | FamiliarDbException e) {
             return null;
         } finally {
+            if (null != cards) {
+                cards.close();
+            }
             DatabaseManager.closeDatabase(fragment.getActivity(), fetchCardHandle);
         }
 
@@ -638,6 +638,7 @@ public class CardHelpers {
             int numberOf) {
 
         FamiliarActivity activity = (FamiliarActivity) context;
+        Cursor cardCursor = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
@@ -665,7 +666,6 @@ public class CardHelpers {
             /* Note the card price is loading */
             card.mMessage = activity.getString(R.string.wishlist_loading);
             /* Get extra information from the database */
-            Cursor cardCursor;
             if (cardSet == null) {
                 cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, true, database);
 
@@ -731,13 +731,14 @@ public class CardHelpers {
             if (!CardDbAdapter.canBeFoil(card.mExpansion, database)) {
                 card.mIsFoil = false;
             }
-            /* clean up */
-            cardCursor.close();
             /* return our made card! */
             return card;
         } catch (SQLiteException | FamiliarDbException | NumberFormatException fde) {
             /* todo: handle this */
         } finally {
+            if (null != cardCursor) {
+                cardCursor.close();
+            }
             DatabaseManager.closeDatabase(activity, handle);
         }
         return null;

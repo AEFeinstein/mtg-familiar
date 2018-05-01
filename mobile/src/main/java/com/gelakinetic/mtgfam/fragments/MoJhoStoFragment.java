@@ -197,6 +197,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param cmc  The converted mana cost of the card to randomly fetch
      */
     private void getOneSpell(String type, int cmc) {
+        Cursor permanents = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SearchCriteria criteria = new SearchCriteria();
@@ -211,14 +212,13 @@ public class MoJhoStoFragment extends FamiliarFragment {
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             criteria.cmc = cmc;
             criteria.moJhoStoFilter = true;
-            Cursor permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
+            permanents = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
             if (permanents == null) {
                 throw new FamiliarDbException(new Exception("permanents failure"));
             }
 
             if (permanents.getCount() == 0) {
-                permanents.close();
                 return;
             }
             int pos = mRandom.nextInt(permanents.getCount());
@@ -230,11 +230,12 @@ public class MoJhoStoFragment extends FamiliarFragment {
             args.putInt(CardViewPagerFragment.STARTING_CARD_POSITION, 0);
             CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
             startNewFragment(cvpFrag, args);
-
-            permanents.close();
         } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
         } finally {
+            if (null != permanents) {
+                permanents.close();
+            }
             DatabaseManager.closeDatabase(getActivity(), handle);
         }
     }
@@ -246,13 +247,14 @@ public class MoJhoStoFragment extends FamiliarFragment {
      * @param type The supertype of the card to randomly fetch
      */
     private void getThreeSpells(String type) {
+        Cursor spells = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
             String[] returnTypes = new String[]{CardDbAdapter.KEY_ID, CardDbAdapter.KEY_NAME};
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = Collections.singletonList(type);
-            Cursor spells = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
+            spells = CardDbAdapter.Search(criteria, false, returnTypes, true, null, database);
 
             if (spells == null) {
                 throw new FamiliarDbException(new Exception("three spell failure"));
@@ -281,11 +283,12 @@ public class MoJhoStoFragment extends FamiliarFragment {
             /* add a fragment */
             ResultListFragment rlFrag = new ResultListFragment();
             startNewFragment(rlFrag, args);
-
-            spells.close();
         } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
         } finally {
+            if (null != spells) {
+                spells.close();
+            }
             DatabaseManager.closeDatabase(getActivity(), handle);
         }
     }

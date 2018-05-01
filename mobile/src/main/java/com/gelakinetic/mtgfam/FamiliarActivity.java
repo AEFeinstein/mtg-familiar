@@ -807,31 +807,30 @@ public class FamiliarActivity extends AppCompatActivity {
 
                 boolean shouldClearFragmentStack = true; /* Clear backstack for deep links */
                 if (data.getAuthority().toLowerCase().contains("gatherer.wizards")) {
+                    Cursor cursor = null;
                     FamiliarDbHandle fromUrlHandle = new FamiliarDbHandle();
                     try {
                         SQLiteDatabase database = DatabaseManager.openDatabase(this, false, fromUrlHandle);
                         String queryParam;
                         if ((queryParam = data.getQueryParameter("multiverseid")) != null) {
-                            Cursor cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
+                            cursor = CardDbAdapter.fetchCardByMultiverseId(Long.parseLong(queryParam),
                                     new String[]{CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID}, database);
                             if (cursor.getCount() != 0) {
                                 isDeepLink = true;
                                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
                                         new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                             }
-                            cursor.close();
                             if (args.size() == 0) {
                                 throw new Exception("Not Found");
                             }
                         } else if ((queryParam = data.getQueryParameter("name")) != null) {
-                            Cursor cursor = CardDbAdapter.fetchCardByName(queryParam,
+                            cursor = CardDbAdapter.fetchCardByName(queryParam,
                                     Collections.singletonList(CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID), true, false, database);
                             if (cursor.getCount() != 0) {
                                 isDeepLink = true;
                                 args.putLongArray(CardViewPagerFragment.CARD_ID_ARRAY,
                                         new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                             }
-                            cursor.close();
                             if (args.size() == 0) {
                                 throw new Exception("Not Found");
                             }
@@ -844,6 +843,9 @@ public class FamiliarActivity extends AppCompatActivity {
                         this.finish();
                         shouldSelectItem = false;
                     } finally {
+                        if (null != cursor) {
+                            cursor.close();
+                        }
                         DatabaseManager.closeDatabase(this, fromUrlHandle);
                     }
                 } else if (data.getAuthority().contains("CardSearchProvider")) {
@@ -855,10 +857,10 @@ public class FamiliarActivity extends AppCompatActivity {
                     /* User clicked a deep link, jump to the card(s) */
                     isDeepLink = true;
 
+                    Cursor cursor = null;
                     FamiliarDbHandle deepLinkHandle = new FamiliarDbHandle();
                     try {
                         SQLiteDatabase database = DatabaseManager.openDatabase(this, false, deepLinkHandle);
-                        Cursor cursor = null;
                         boolean screenLaunched = false;
                         if (data.getScheme().toLowerCase().equals("card") &&
                                 data.getAuthority().toLowerCase().equals("multiverseid")) {
@@ -892,7 +894,6 @@ public class FamiliarActivity extends AppCompatActivity {
                                 this.finish();
                                 shouldSelectItem = false;
                             }
-                            cursor.close();
                         } else if (!screenLaunched) {
                             /* null cursor, just return */
                             ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
@@ -902,6 +903,9 @@ public class FamiliarActivity extends AppCompatActivity {
                     } catch (SQLiteException | FamiliarDbException e) {
                         e.printStackTrace();
                     } finally {
+                        if (null != cursor) {
+                            cursor.close();
+                        }
                         DatabaseManager.closeDatabase(this, deepLinkHandle);
                     }
                 }

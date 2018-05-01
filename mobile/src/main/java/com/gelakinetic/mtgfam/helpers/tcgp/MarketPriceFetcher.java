@@ -128,30 +128,29 @@ public class MarketPriceFetcher {
                 String tcgSetName;
 
                 /* then the same for multicard ordering */
+                Cursor cursor = null;
                 FamiliarDbHandle cardInfoHandle = new FamiliarDbHandle();
                 try {
                     SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, cardInfoHandle);
 
                     /* If the card number wasn't given, figure it out */
                     if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
-                        Cursor c = CardDbAdapter.fetchCardByNameAndSet(params.mName, params.mExpansion, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
+                        cursor = CardDbAdapter.fetchCardByNameAndSet(params.mName, params.mExpansion, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
 
                         if (params.mNumber == null || params.mNumber.equals("")) {
-                            params.mNumber = c.getString(c.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+                            params.mNumber = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
                         }
 
                         if (params.mType == null || params.mType.equals("")) {
-                            params.mType = CardDbAdapter.getTypeLine(c);
+                            params.mType = CardDbAdapter.getTypeLine(cursor);
                         }
 
                         if (params.mMultiverseId == -1) {
                             params.mMultiverseId = CardDbAdapter.getMultiverseIdFromNameAndSet(params.mName, params.mExpansion, database);
                             if (params.mMultiverseId == -1) {
-                                c.close();
                                 throw new FamiliarDbException(null);
                             }
                         }
-                        c.close();
                     }
 
                     if (CardDbAdapter.isOnlineOnly(params.mExpansion, database)) {
@@ -166,6 +165,9 @@ public class MarketPriceFetcher {
                 } catch (SQLiteException | FamiliarDbException e) {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
                 } finally {
+                    if (null != cursor) {
+                        cursor.close();
+                    }
                     DatabaseManager.closeDatabase(mActivity, cardInfoHandle);
                 }
 

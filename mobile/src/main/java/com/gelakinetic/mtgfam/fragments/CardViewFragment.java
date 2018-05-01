@@ -376,10 +376,11 @@ public class CardViewFragment extends FamiliarFragment {
 
         ImageGetter imgGetter = ImageGetterHelper.GlyphGetter(mActivity);
 
+        Cursor cCardById = null;
+        Cursor cCardByName = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, handle);
-            Cursor cCardById;
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
             /* http://magiccards.info/scans/en/mt/55.jpg */
@@ -571,11 +572,8 @@ public class CardViewFragment extends FamiliarFragment {
 
             mIsOnlineOnly = CardDbAdapter.isOnlineOnly(mCard.mExpansion, database);
 
-            cCardById.close();
-
             /* Find the other sets this card is in ahead of time, so that it can be remove from the menu
              * if there is only one set */
-            Cursor cCardByName;
             cCardByName = CardDbAdapter.fetchCardByName(mCard.mName,
                     Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
@@ -598,10 +596,15 @@ public class CardViewFragment extends FamiliarFragment {
                 }
                 cCardByName.moveToNext();
             }
-            cCardByName.close();
         } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
         } finally {
+            if (null != cCardById) {
+                cCardById.close();
+            }
+            if (null != cCardByName) {
+                cCardByName.close();
+            }
             DatabaseManager.closeDatabase(mActivity, handle);
         }
         mActivity.invalidateOptionsMenu();
@@ -1212,10 +1215,11 @@ public class CardViewFragment extends FamiliarFragment {
         @Override
         protected Void doInBackground(Void... params) {
 
+            Cursor cFormats = null;
             FamiliarDbHandle handle = new FamiliarDbHandle();
             try {
                 SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, handle);
-                Cursor cFormats = CardDbAdapter.fetchAllFormats(database);
+                cFormats = CardDbAdapter.fetchAllFormats(database);
                 mFormats = new String[cFormats.getCount()];
                 mLegalities = new String[cFormats.getCount()];
 
@@ -1247,11 +1251,13 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                     cFormats.moveToNext();
                 }
-                cFormats.close();
             } catch (SQLiteException | FamiliarDbException e) {
                 CardViewFragment.this.handleFamiliarDbException(false);
                 mLegalities = null;
             } finally {
+                if (null != cFormats) {
+                    cFormats.close();
+                }
                 DatabaseManager.closeDatabase(mActivity, handle);
             }
 
