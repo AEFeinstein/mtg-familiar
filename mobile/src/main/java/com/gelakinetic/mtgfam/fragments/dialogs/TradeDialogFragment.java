@@ -23,6 +23,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -140,7 +141,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     } else {
                         view.findViewById(R.id.checkbox_layout).setVisibility(View.GONE);
                     }
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     /* Err on the side of foil */
                     foilCheckbox.setVisibility(View.VISIBLE);
                 } finally {
@@ -260,7 +261,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         cursor.close();
                         CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
                         getParentTradeFragment().startNewFragment(cvpFrag, args);
-                    } catch (FamiliarDbException e) {
+                    } catch (SQLiteException | FamiliarDbException e) {
                         getParentTradeFragment().handleFamiliarDbException(false);
                     } finally {
                         DatabaseManager.closeDatabase(getActivity(), infoHandle);
@@ -326,7 +327,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                     }
                     /* clean up */
                     cards.close();
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     /* Don't show the dialog, but pop a toast */
                     getParentTradeFragment().handleFamiliarDbException(true);
                     return DontShowDialog();
@@ -379,7 +380,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 if (!CardDbAdapter.canBeFoil(data1.mExpansion, database)) {
                                     data1.mIsFoil = false;
                                 }
-                            } catch (FamiliarDbException e) {
+                            } catch (SQLiteException | FamiliarDbException e) {
                                 data1.mIsFoil = false;
                             } finally {
                                 DatabaseManager.closeDatabase(getActivity(), foilHandle);

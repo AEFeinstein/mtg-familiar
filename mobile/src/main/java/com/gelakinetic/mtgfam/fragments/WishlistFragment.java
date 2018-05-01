@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -276,7 +277,7 @@ public class WishlistFragment extends FamiliarListFragment {
                 sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
             }
 
-        } catch (FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(false);
         } finally {
             DatabaseManager.closeDatabase(getActivity(), handle);

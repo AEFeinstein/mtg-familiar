@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.helpers;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -95,7 +96,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                 // Try to lookup all prices
                 lookupCard(fetcher, allCards);
             }
-        } catch (FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             e.printStackTrace();
         }
 

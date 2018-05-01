@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -598,7 +599,7 @@ public class CardViewFragment extends FamiliarFragment {
                 cCardByName.moveToNext();
             }
             cCardByName.close();
-        } catch (FamiliarDbException | CursorIndexOutOfBoundsException e) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
         } finally {
             DatabaseManager.closeDatabase(mActivity, handle);
@@ -1247,7 +1248,7 @@ public class CardViewFragment extends FamiliarFragment {
                     cFormats.moveToNext();
                 }
                 cFormats.close();
-            } catch (FamiliarDbException e) {
+            } catch (SQLiteException | FamiliarDbException e) {
                 CardViewFragment.this.handleFamiliarDbException(false);
                 mLegalities = null;
             } finally {

@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.helpers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.mtgfam.R;
@@ -190,7 +191,7 @@ public class MtgCard extends Card {
 
             /* Defaults regardless */
             card.mSetName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
-        } catch (FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             /* Oops, data will be incomplete */
         } finally {
             DatabaseManager.closeDatabase(context, handle);
@@ -268,7 +269,7 @@ public class MtgCard extends Card {
             try {
                 SQLiteDatabase database = DatabaseManager.openDatabase(mCtx, false, handle);
                 newCard.mExpansion = CardDbAdapter.getCorrectSetCode(newCard.mName, newCard.mExpansion, database);
-            } catch (FamiliarDbException e) {
+            } catch (SQLiteException | FamiliarDbException e) {
                 /* Eat it and use the old mExpansion code. */
             } finally {
                 DatabaseManager.closeDatabase(mCtx, handle);

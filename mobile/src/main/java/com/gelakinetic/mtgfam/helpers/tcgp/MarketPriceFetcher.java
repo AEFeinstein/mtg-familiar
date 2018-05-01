@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.helpers.tcgp;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -162,7 +163,7 @@ public class MarketPriceFetcher {
                     /* Get the TCGplayer.com set name, why can't everything be consistent? */
                     tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
 
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
                 } finally {
                     DatabaseManager.closeDatabase(mActivity, cardInfoHandle);
@@ -227,7 +228,7 @@ public class MarketPriceFetcher {
                                     tcgSetName = null;
                                 }
 
-                            } catch (FamiliarDbException e) {
+                            } catch (SQLiteException | FamiliarDbException e) {
                                 tcgCardName = null;
                                 lastThrownException = new Exception(mActivity.getString(R.string.price_error_database));
                             } finally {

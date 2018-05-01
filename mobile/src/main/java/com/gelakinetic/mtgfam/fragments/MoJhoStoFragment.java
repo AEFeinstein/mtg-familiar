@@ -21,7 +21,7 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabaseCorruptException;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -232,7 +232,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             startNewFragment(cvpFrag, args);
 
             permanents.close();
-        } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
         } finally {
             DatabaseManager.closeDatabase(getActivity(), handle);
@@ -283,7 +283,7 @@ public class MoJhoStoFragment extends FamiliarFragment {
             startNewFragment(rlFrag, args);
 
             spells.close();
-        } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
         } finally {
             DatabaseManager.closeDatabase(getActivity(), handle);

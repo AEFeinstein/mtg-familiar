@@ -21,6 +21,7 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -166,7 +167,7 @@ public class ResultListFragment extends FamiliarFragment {
         try {
             mDatabase = DatabaseManager.openDatabase(getActivity(), false, mDbHandle);
             doSearch(this.getArguments(), mDatabase);
-        } catch (FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
             return myFragmentView;
         }
@@ -220,7 +221,7 @@ public class ResultListFragment extends FamiliarFragment {
                 long id = mCursor.getLong(mCursor.getColumnIndex(CardDbAdapter.KEY_ID));
                 try {
                     startCardViewFrag(id);
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     handleFamiliarDbException(true);
                 }
             } else {
@@ -234,7 +235,7 @@ public class ResultListFragment extends FamiliarFragment {
         mListView.setOnItemClickListener((parent, view, position, id) -> {
             try {
                 startCardViewFrag(id);
-            } catch (FamiliarDbException e) {
+            } catch (SQLiteException | FamiliarDbException e) {
                 handleFamiliarDbException(true);
             }
         });
@@ -437,7 +438,7 @@ public class ResultListFragment extends FamiliarFragment {
             case R.id.search_menu_random_search:
                 try {
                     startCardViewFrag(-1);
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     handleFamiliarDbException(true);
                 }
                 return true;
@@ -498,7 +499,7 @@ public class ResultListFragment extends FamiliarFragment {
             doSearch(getArguments(), mDatabase);
             /* Display the newly sorted data */
             fillData();
-        } catch (FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
         }
     }

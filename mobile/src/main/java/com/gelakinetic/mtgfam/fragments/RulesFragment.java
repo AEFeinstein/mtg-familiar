@@ -24,7 +24,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabaseCorruptException;
+import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -296,7 +296,7 @@ public class RulesFragment extends FamiliarFragment {
                 }
             }
 
-        } catch (FamiliarDbException | SQLiteDatabaseCorruptException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             handleFamiliarDbException(true);
             return myFragmentView;
         } finally {

@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -102,7 +103,7 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                         SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, handle);
                         title = String.format(getString(R.string.rules_search_cat),
                                 CardDbAdapter.getCategoryName(getParentRulesFragment().mCategory, getParentRulesFragment().mSubcategory, database));
-                    } catch (FamiliarDbException e) {
+                    } catch (SQLiteException | FamiliarDbException e) {
                         title = String.format(getString(R.string.rules_search_cat),
                                 getString(R.string.rules_this_cat));
                     } finally {

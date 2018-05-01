@@ -32,6 +32,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
@@ -528,7 +529,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             PreferenceAdapter.setLastRulesUpdate(FamiliarActivity.this, 0);
                             PreferenceAdapter.setLegalityTimestamp(FamiliarActivity.this, 0);
                             startService(new Intent(FamiliarActivity.this, DbUpdaterService.class));
-                        } catch (FamiliarDbException e) {
+                        } catch (SQLiteException | FamiliarDbException e) {
                             e.printStackTrace();
                         } finally {
                             DatabaseManager.closeDatabase(FamiliarActivity.this, handle);
@@ -898,7 +899,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             this.finish();
                             shouldSelectItem = false;
                         }
-                    } catch (FamiliarDbException e) {
+                    } catch (SQLiteException | FamiliarDbException e) {
                         e.printStackTrace();
                     } finally {
                         DatabaseManager.closeDatabase(this, deepLinkHandle);

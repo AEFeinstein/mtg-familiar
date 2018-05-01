@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.fragments;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -374,7 +375,7 @@ public class DecklistFragment extends FamiliarListFragment {
             mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
                     ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
                     ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
-        } catch (FamiliarDbException fde) {
+        } catch (SQLiteException | FamiliarDbException fde) {
             handleFamiliarDbException(false);
         } finally {
             DatabaseManager.closeDatabase(getActivity(), handle);

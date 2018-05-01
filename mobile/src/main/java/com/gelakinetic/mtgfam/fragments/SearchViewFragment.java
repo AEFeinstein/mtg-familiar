@@ -25,6 +25,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -374,7 +375,7 @@ public class SearchViewFragment extends FamiliarFragment {
                     if (mWatermarks == null) {
                         mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_WATERMARK, false, database);
                     }
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     handleFamiliarDbException(true);
                 } finally {
                     DatabaseManager.closeDatabase(getActivity(), handle);

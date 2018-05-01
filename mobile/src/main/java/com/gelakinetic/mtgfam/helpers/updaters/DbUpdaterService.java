@@ -23,6 +23,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
@@ -173,7 +174,7 @@ public class DbUpdaterService extends IntentService {
                             CardDbAdapter.addLegalCard(restrictedCard, format.mName, CardDbAdapter.RESTRICTED, database);
                         }
                     }
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     commitDates = false; /* don't commit the dates */
                     if (logWriter != null) {
                         e.printStackTrace(logWriter);
@@ -211,7 +212,7 @@ public class DbUpdaterService extends IntentService {
                         /* Cleanup */
                         setCursor.close();
                     }
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     commitDates = false; /* don't commit the dates */
                     if (logWriter != null) {
                         e.printStackTrace(logWriter);
@@ -240,7 +241,7 @@ public class DbUpdaterService extends IntentService {
                             /* eat it */
                         }
                     }
-                } catch (FamiliarDbException e) {
+                } catch (SQLiteException | FamiliarDbException e) {
                     commitDates = false; /* don't commit the dates */
                     if (logWriter != null) {
                         e.printStackTrace(logWriter);
@@ -290,7 +291,7 @@ public class DbUpdaterService extends IntentService {
                                             mProgress = (int) (100 * (cardsAdded / (float) cardsToAdd.size()));
                                         }
 
-                                    } catch (FamiliarDbException e) {
+                                    } catch (SQLiteException | FamiliarDbException e) {
                                         commitDates = false; /* don't commit the dates */
                                         if (logWriter != null) {
                                             e.printStackTrace(logWriter);
@@ -357,7 +358,7 @@ public class DbUpdaterService extends IntentService {
                             CardDbAdapter.insertGlossaryTerm(term.term, term.definition, database);
                         }
                         updatedStuff.add(getString(R.string.update_added_rules));
-                    } catch (FamiliarDbException e) {
+                    } catch (SQLiteException | FamiliarDbException e) {
                         commitDates = false; /* don't commit the dates */
                         if (logWriter != null) {
                             e.printStackTrace(logWriter);

@@ -24,6 +24,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
@@ -186,7 +187,7 @@ public class CardHelpers {
 
             /* Clean up */
             cards.close();
-        } catch (FamiliarDbException e) {
+        } catch (SQLiteException | FamiliarDbException e) {
             return null;
         } finally {
             DatabaseManager.closeDatabase(fragment.getActivity(), fetchCardHandle);
@@ -298,7 +299,7 @@ public class CardHelpers {
                                 CardViewPagerFragment cvpFrag = new CardViewPagerFragment();
                                 fragment.startNewFragment(cvpFrag, args);
                             }
-                        } catch (FamiliarDbException e) {
+                        } catch (SQLiteException | FamiliarDbException e) {
                             fragment.handleFamiliarDbException(false);
                         } finally {
                             DatabaseManager.closeDatabase(fragment.getActivity(), showCardHandle);
@@ -734,7 +735,7 @@ public class CardHelpers {
             cardCursor.close();
             /* return our made card! */
             return card;
-        } catch (FamiliarDbException | NumberFormatException fde) {
+        } catch (SQLiteException | FamiliarDbException | NumberFormatException fde) {
             /* todo: handle this */
         } finally {
             DatabaseManager.closeDatabase(activity, handle);

@@ -23,6 +23,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -305,7 +306,7 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                     builder.customView(lv, false);
                     builder.title(R.string.decklist_legality);
                     return builder.build();
-                } catch (FamiliarDbException fdbe) {
+                } catch (SQLiteException | FamiliarDbException fdbe) {
                     getParentDecklistFragment().handleFamiliarDbException(false);
                 } finally {
                     DatabaseManager.closeDatabase(getContext(), handle);
