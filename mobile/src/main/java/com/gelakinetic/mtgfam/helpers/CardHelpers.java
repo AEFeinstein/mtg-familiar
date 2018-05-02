@@ -35,7 +35,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
@@ -633,24 +632,23 @@ public class CardHelpers {
             boolean isFoil,
             int numberOf) {
 
-        FamiliarActivity activity = (FamiliarActivity) context;
         Cursor cardCursor = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(context, false, handle);
             /* Construct a blank MTGCard */
             MtgCard card = new MtgCard();
             card.mIsFoil = isFoil;
             card.mNumberOf = numberOf;
             /* Note the card price is loading */
-            card.mMessage = activity.getString(R.string.wishlist_loading);
+            card.mMessage = context.getString(R.string.wishlist_loading);
             /* Get extra information from the database */
             if (cardSet == null) {
                 cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS, true, true, database);
 
                 /* Make sure at least one card was found */
                 if (cardCursor.getCount() == 0) {
-                    ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
+                    ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
                             ToastWrapper.LENGTH_LONG);
                     throw new FamiliarDbException(new Exception("fallback"));
                 }
@@ -673,7 +671,7 @@ public class CardHelpers {
 
             /* Make sure at least one card was found */
             if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
+                ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
                         ToastWrapper.LENGTH_LONG);
                 throw new FamiliarDbException(new Exception("fallback"));
             }
@@ -730,7 +728,7 @@ public class CardHelpers {
             if (null != cardCursor) {
                 cardCursor.close();
             }
-            DatabaseManager.closeDatabase(activity, handle);
+            DatabaseManager.closeDatabase(context, handle);
         }
     }
 }

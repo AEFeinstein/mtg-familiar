@@ -36,6 +36,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
+import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -350,49 +351,48 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .items((CharSequence[]) aSets)
                         .itemsCallback((dialog, itemView, position, text) -> {
                             /* Figure out what we're updating */
-                            MtgCard data1;
+                            ArrayList<MtgCard> list;
                             TradeFragment.TradeDataAdapter adapter;
 
                             /* Make sure positionForDialog is in bounds */
                             int max1;
+
                             if (sideForDialog == TradeFragment.LEFT) {
                                 max1 = getParentTradeFragment().mListLeft.size();
+                                list = getParentTradeFragment().mListLeft;
+                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
                             } else {
                                 max1 = getParentTradeFragment().mListRight.size();
+                                list = getParentTradeFragment().mListRight;
+                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
                             }
+
                             if (positionForDialog < 0 || positionForDialog >= max1) {
                                 return;
                             }
 
-                            if (sideForDialog == TradeFragment.LEFT) {
-                                data1 = getParentTradeFragment().mListLeft.get(positionForDialog);
-                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
-                            } else {
-                                data1 = getParentTradeFragment().mListRight.get(positionForDialog);
-                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
-                            }
-
-                            /* Change the card's information, and reload the price */
-                            data1.mExpansion = (aSetCodes[position]);
-                            data1.mSetName = (aSets[position]);
-                            data1.mMessage = (getString(R.string.wishlist_loading));
-                            data1.mPriceInfo = null;
+                            String name = list.get(positionForDialog).mName;
+                            String set = aSetCodes[position];
+                            int numberOf = list.get(positionForDialog).mNumberOf;
 
                             /* See if the new set can be foil */
                             FamiliarDbHandle foilHandle = new FamiliarDbHandle();
+                            boolean isFoil = list.get(positionForDialog).mIsFoil;
                             try {
                                 SQLiteDatabase database = DatabaseManager.openDatabase(getActivity(), false, foilHandle);
-                                if (!CardDbAdapter.canBeFoil(data1.mExpansion, database)) {
-                                    data1.mIsFoil = false;
+                                if (!CardDbAdapter.canBeFoil(set, database)) {
+                                    isFoil = false;
                                 }
                             } catch (SQLiteException | FamiliarDbException e) {
-                                data1.mIsFoil = false;
+                                isFoil = false;
                             } finally {
                                 DatabaseManager.closeDatabase(getActivity(), foilHandle);
                             }
 
+                            list.set(positionForDialog, CardHelpers.makeMtgCard(getContext(), name, set, isFoil, numberOf));
+
                             /* Reload and notify the adapter */
-                            getParentTradeFragment().loadPrice(data1);
+                            getParentTradeFragment().loadPrice(list.get(positionForDialog));
                             adapter.notifyDataSetChanged();
                         })
                         .build();
