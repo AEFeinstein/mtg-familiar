@@ -62,7 +62,7 @@ public class DecklistHelpers {
                 fos.write(cardString.getBytes());
             }
             fos.close();
-        } catch (IOException ioe) {
+        } catch (IOException | IllegalArgumentException ioe) {
             ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         }
 
