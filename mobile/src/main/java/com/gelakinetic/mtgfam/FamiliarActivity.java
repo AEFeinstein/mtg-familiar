@@ -691,19 +691,21 @@ public class FamiliarActivity extends AppCompatActivity {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 
                 int lastVersion = PreferenceAdapter.getLastVersion(this);
-                if (pInfo.versionCode != lastVersion &&
-                        !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
-                        !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
-                        !(lastVersion == 52 && pInfo.versionCode == 53) && // Don't show 52 -> 53, it was just a quick bugfix release
-                        !(lastVersion == 54 && pInfo.versionCode == 55)) { // Don't show 54 -> 55, it was just a quick bugfix release
-                    if (lastVersion != 0) {
+                if (pInfo.versionCode != lastVersion) {
+
+                    // Show the changelog dialog, sometimes
+                    if (lastVersion != 0 &&
+                            !(lastVersion == 50 && pInfo.versionCode == 51) && // Don't show 50 -> 51, it was just a quick bugfix release
+                            !(lastVersion == 51 && pInfo.versionCode == 52) && // Don't show 51 -> 52, it was just a quick bugfix release
+                            !(lastVersion == 52 && pInfo.versionCode == 53) && // Don't show 52 -> 53, it was just a quick bugfix release
+                            !(lastVersion == 54 && pInfo.versionCode == 55)    // Don't show 54 -> 55, it was just a quick bugfix release
+                            ) {
                         showDialogFragment(FamiliarActivityDialogFragment.DIALOG_CHANGE_LOG);
                     }
-                    PreferenceAdapter.setLastVersion(this, pInfo.versionCode);
 
                     /* Clear the mtr and ipg on update, to replace them with the newly colored
                      *  versions, but only if we're updating to 3.0.1 (v24) */
-                    if (pInfo.versionCode <= 24) {
+                    if (lastVersion < 24) {
                         File mtr = new File(getFilesDir(), JudgesCornerFragment.MTR_LOCAL_FILE);
                         File ipg = new File(getFilesDir(), JudgesCornerFragment.IPG_LOCAL_FILE);
                         File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
@@ -748,6 +750,8 @@ public class FamiliarActivity extends AppCompatActivity {
                             }
                         }
                     }
+
+                    PreferenceAdapter.setLastVersion(this, pInfo.versionCode);
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 /* Eat it, don't show change log */
