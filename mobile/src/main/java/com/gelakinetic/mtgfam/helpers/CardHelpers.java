@@ -26,6 +26,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,6 @@ import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
-import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
@@ -54,7 +54,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -217,20 +216,16 @@ public class CardHelpers {
                 assert view != null;
 
                 /* build the card object */
-                MtgCard card = new MtgCard();
-                card.mName = mCardName;
-                card.mExpansion = potentialSetCodes.get(i);
+                boolean isFoil = view.findViewById(R.id.wishlistDialogFoil).getVisibility() == View.VISIBLE;
+                int numberOf;
                 try {
                     Button numberInput = view.findViewById(R.id.number_button);
                     assert numberInput.getText() != null;
-                    card.mNumberOf = Integer.parseInt(numberInput.getText().toString());
+                    numberOf = Integer.parseInt(numberInput.getText().toString());
                 } catch (NumberFormatException e) {
-                    card.mNumberOf = 0;
+                    numberOf = 0;
                 }
-                card.mIsFoil = view.findViewById(R.id.wishlistDialogFoil)
-                        .getVisibility() == View.VISIBLE;
-                card.mRarity = potentialRarities.get(i);
-                card.mNumber = potentialNumbers.get(i);
+                MtgCard card = CardHelpers.makeMtgCard(ctx, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
 
                 /* Look through the wishlist for each card, set the numberOf or remove
                  * it if it exists, or add the card if it doesn't */
@@ -630,6 +625,7 @@ public class CardHelpers {
      * @param numberOf how many copies of the card are needed
      * @return an MtgCard made based on the given parameters
      */
+    @NonNull
     public static MtgCard makeMtgCard(
             Context context,
             String cardName,
@@ -642,38 +638,21 @@ public class CardHelpers {
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
             SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
-            /* Make the new MTGCard */
+            /* Construct a blank MTGCard */
             MtgCard card = new MtgCard();
             card.mIsFoil = isFoil;
             card.mNumberOf = numberOf;
-            /* Find out what kind of fragment we are in, so we can pull less stuff if we can */
-            /* trade, wishlist, and decklist all use "name_search" */
-            List<String> fields;
-            boolean isTradeFragment = FragmentHelpers.isInstanceOf(context, TradeFragment.class);
-            if (isTradeFragment) {
-                fields = Arrays.asList(
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NUMBER,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_RARITY,
-                        /* CMC and Color For sorting */
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_CMC,
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_COLOR,
-                        /* Don't trust the user */
-                        CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_NAME);
-            } else {
-                fields = CardDbAdapter.ALL_CARD_DATA_KEYS;
-            }
             /* Note the card price is loading */
             card.mMessage = activity.getString(R.string.wishlist_loading);
             /* Get extra information from the database */
             if (cardSet == null) {
-                cardCursor = CardDbAdapter.fetchCardByName(cardName, fields, true, true, database);
+                cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS, true, true, database);
 
                 /* Make sure at least one card was found */
                 if (cardCursor.getCount() == 0) {
                     ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
                             ToastWrapper.LENGTH_LONG);
-                    return null;
+                    throw new FamiliarDbException(new Exception("fallback"));
                 }
                 /* If we don't specify the set, and we are trying to find a foil card, choose the
                  * latest foil printing. If there are no eligible printings, select the latest */
@@ -689,43 +668,50 @@ public class CardHelpers {
                     }
                 }
             } else {
-                cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, fields, database);
+                cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
             }
 
             /* Make sure at least one card was found */
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeAndShowText(activity, R.string.toast_no_card,
                         ToastWrapper.LENGTH_LONG);
-                return null;
+                throw new FamiliarDbException(new Exception("fallback"));
             }
 
             /* Don't rely on the user's given name, get it from the DB just to be sure */
             card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
             card.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
             card.mSetName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
+            card.mSetNameMtgi = CardDbAdapter.getCodeMtgi(card.mExpansion, database);
             card.mNumber = cardCursor.getString(cardCursor
                     .getColumnIndex(CardDbAdapter.KEY_NUMBER));
             card.mCmc = cardCursor.getInt((cardCursor
                     .getColumnIndex(CardDbAdapter.KEY_CMC)));
             card.mColor = cardCursor.getString(cardCursor
                     .getColumnIndex(CardDbAdapter.KEY_COLOR));
-            if (!isTradeFragment) {
-                card.mType = CardDbAdapter.getTypeLine(cardCursor);
-                card.mRarity = (char) cardCursor.getInt(cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_RARITY));
-                card.mManaCost = cardCursor.getString(cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_MANACOST));
-                card.mPower = cardCursor.getInt(cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_POWER));
-                card.mToughness = cardCursor.getInt(cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-                card.mLoyalty = cardCursor.getInt(cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-                card.mText = cardCursor.getString(cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_ABILITY));
-                card.mFlavor = cardCursor.getString(cardCursor
-                        .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            }
+            card.mType = CardDbAdapter.getTypeLine(cardCursor);
+            card.mRarity = (char) cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_RARITY));
+            card.mManaCost = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_MANACOST));
+            card.mPower = cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_POWER));
+            card.mToughness = cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+            card.mLoyalty = cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+            card.mText = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_ABILITY));
+            card.mFlavor = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+            card.mMultiverseId = cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
+            card.mArtist = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_ARTIST));
+            card.mWatermark = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_WATERMARK));
+            card.mColorIdentity = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_COLOR_IDENTITY));
 
             /* Override choice is the card can't be foil */
             if (!CardDbAdapter.canBeFoil(card.mExpansion, database)) {
@@ -734,14 +720,17 @@ public class CardHelpers {
             /* return our made card! */
             return card;
         } catch (SQLiteException | FamiliarDbException | NumberFormatException fde) {
-            /* todo: handle this */
+            MtgCard fallbackCard = new MtgCard();
+            fallbackCard.mName = cardName;
+            fallbackCard.mExpansion = cardSet;
+            fallbackCard.mIsFoil = isFoil;
+            fallbackCard.mNumberOf = numberOf;
+            return fallbackCard;
         } finally {
             if (null != cardCursor) {
                 cardCursor.close();
             }
             DatabaseManager.closeDatabase(activity, handle);
         }
-        return null;
-
     }
 }

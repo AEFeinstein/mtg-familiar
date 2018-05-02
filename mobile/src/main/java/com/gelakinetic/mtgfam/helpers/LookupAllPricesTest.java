@@ -115,12 +115,10 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
      */
     private void lookupCard(final MarketPriceFetcher fetcher, final Cursor cursor) {
         // Make an MtgCard object from the cursor row
-        MtgCard toLookup = new MtgCard();
-        toLookup.mName = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-        toLookup.mExpansion = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET));
-        toLookup.mType = CardDbAdapter.getTypeLine(cursor);
-        toLookup.mMultiverseId = cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
-        toLookup.mNumber = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
+        MtgCard toLookup = CardHelpers.makeMtgCard(mActivity,
+                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
+                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)),
+                false, 0);
 
         // Start the lookup and log the time
         long start = System.currentTimeMillis();

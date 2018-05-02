@@ -110,7 +110,7 @@ public class CardDbAdapter {
     private static final String KEY_CODE_MTGI = "code_mtgi";
     private static final String KEY_DATE = "date";
     private static final String KEY_POSITION = "position";
-    private static final String KEY_COLOR_IDENTITY = "color_identity";
+    public static final String KEY_COLOR_IDENTITY = "color_identity";
     private static final String KEY_CAN_BE_FOIL = "can_be_foil";
     private static final String KEY_NAME_NO_ACCENT = "name_no_accent";
     public static final String KEY_NAME_CHINESE_TRADITIONAL = "NAME_CHINESE_TRADITIONAL";

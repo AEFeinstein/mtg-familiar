@@ -74,6 +74,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
+import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.FamiliarGlideTarget;
 import com.gelakinetic.mtgfam.helpers.GlideApp;
@@ -384,16 +385,12 @@ public class CardViewFragment extends FamiliarFragment {
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
             /* http://magiccards.info/scans/en/mt/55.jpg */
-            mCard = new MtgCard();
-            mCard.mName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
-            mCard.mCmc = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_CMC));
-            mCard.mExpansion = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
-            mCard.mSetName = CardDbAdapter.getSetNameFromCode(mCard.mExpansion, database);
-            mCard.mSetNameMtgi = CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)), database);
+            mCard = CardHelpers.makeMtgCard(getContext(),
+                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)),
+                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
+                    false, 0);
 
-            mCard.mNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-
-            switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
+            switch (mCard.mRarity) {
                 case 'C':
                 case 'c':
                     mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
@@ -421,47 +418,34 @@ public class CardViewFragment extends FamiliarFragment {
                     break;
             }
 
-            String sCost = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-            CharSequence csCost = ImageGetterHelper.formatStringWithGlyphs(sCost, imgGetter);
-            mCostTextView.setText(csCost);
+            mCostTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.mManaCost, imgGetter));
 
-            String sAbility = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-            CharSequence csAbility = ImageGetterHelper.formatStringWithGlyphs(sAbility, imgGetter);
-            mAbilityTextView.setText(csAbility);
+            mAbilityTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.mText, imgGetter));
             mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-            String sFlavor = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            CharSequence csFlavor = ImageGetterHelper.formatStringWithGlyphs(sFlavor, imgGetter);
-            mFlavorTextView.setText(csFlavor);
+            mFlavorTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.mFlavor, imgGetter));
 
-            mNameTextView
-                    .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)));
-            mCard.mType = CardDbAdapter.getTypeLine(cCardById);
+            mNameTextView.setText(mCard.mName);
             mTypeTextView.setText(mCard.mType);
-            mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
-            mArtistTextView
-                    .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
-            String numberAndRarity =
-                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)) + " (" +
-                            (char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))
-                            + ")";
+            mSetTextView.setText(mCard.mExpansion);
+            mArtistTextView.setText(mCard.mArtist);
+            String numberAndRarity = mCard.mNumber + " (" + mCard.mRarity + ")";
             mNumberTextView.setText(numberAndRarity);
 
-            int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-            float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
-            float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+            int loyalty = mCard.mLoyalty;
+            float p = mCard.mPower;
+            float t = mCard.mToughness;
             if (loyalty != CardDbAdapter.NO_ONE_CARES) {
                 mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(loyalty, false));
             } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
-                boolean shouldShowSign = sAbility.contains("Augment {") && mSetTextView.getText().equals("UST");
+                boolean shouldShowSign = mCard.mText.contains("Augment {") && mSetTextView.getText().equals("UST");
                 mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign) + "/" + CardDbAdapter.getPrintedPTL(t, shouldShowSign));
             } else {
                 mPowTouTextView.setText("");
             }
 
             boolean isMultiCard = false;
-            switch (CardDbAdapter.isMultiCard(mCard.mNumber,
-                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)))) {
+            switch (CardDbAdapter.isMultiCard(mCard.mNumber, mCard.mExpansion)) {
                 case NOPE:
                     isMultiCard = false;
                     mTransformButton.setVisibility(View.GONE);
@@ -506,8 +490,6 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             }
 
-            mCard.mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
-
             /* Do we load the image immediately to the main page, or do it in a dialog later? */
             if (PreferenceAdapter.getPicFirst(getContext())) {
                 mImageScrollView.setVisibility(View.VISIBLE);
@@ -528,8 +510,7 @@ public class CardViewFragment extends FamiliarFragment {
             mColorIndicatorLayout.removeAllViews();
             ColorIndicatorView civ =
                     new ColorIndicatorView(this.mActivity, dimension, dimension / 15,
-                            cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)),
-                            sCost);
+                            mCard.mColor, mCard.mManaCost);
             if (civ.shouldInidcatorBeShown()) {
                 mColorIndicatorLayout.setVisibility(View.VISIBLE);
                 mColorIndicatorLayout.addView(civ);
