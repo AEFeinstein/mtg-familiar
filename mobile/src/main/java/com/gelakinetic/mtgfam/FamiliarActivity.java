@@ -723,8 +723,9 @@ public class FamiliarActivity extends AppCompatActivity {
                         }
                     }
 
-                    // When upgrading to version 54, clear out both the internal and external cache
-                    if (pInfo.versionCode == 54) {
+                    // When upgrading from 53 or below, clear out both the internal and external cache
+                    // Version 54 added in new caching for images and prices
+                    if (lastVersion < 54) {
                         File cacheDir = getCacheDir();
                         if (null != cacheDir && cacheDir.exists()) {
                             File listFiles[] = cacheDir.listFiles();
