@@ -36,7 +36,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -389,7 +388,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 DatabaseManager.closeDatabase(getActivity(), foilHandle);
                             }
 
-                            list.set(positionForDialog, CardHelpers.makeMtgCard(getContext(), name, set, isFoil, numberOf));
+                            list.set(positionForDialog, new MtgCard(getContext(), name, set, isFoil, numberOf));
 
                             /* Reload and notify the adapter */
                             getParentTradeFragment().loadPrice(list.get(positionForDialog));

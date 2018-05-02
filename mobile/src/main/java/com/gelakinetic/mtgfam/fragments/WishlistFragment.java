@@ -44,7 +44,6 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.WishlistDialogFragment;
 import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
@@ -139,7 +138,7 @@ public class WishlistFragment extends FamiliarListFragment {
             return;
         }
 
-        MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
+        MtgCard card = new MtgCard(getContext(), name, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
         if (card == null) {
             return;
         }
@@ -518,7 +517,7 @@ public class WishlistFragment extends FamiliarListFragment {
     /**
      * The adapter that drives the wish list
      */
-    public class WishlistDataAdapter
+    class WishlistDataAdapter
             extends CardDataAdapter<CompressedWishlistInfo, WishlistViewHolder> {
 
         WishlistDataAdapter(ArrayList<CompressedWishlistInfo> values) {

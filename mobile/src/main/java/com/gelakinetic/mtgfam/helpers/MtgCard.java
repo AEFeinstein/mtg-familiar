@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
@@ -44,16 +45,16 @@ public class MtgCard extends Card {
 
     /* Wish and trade list fields */
     public String mSetName;
-    public String mSetNameMtgi;
+    private String mSetNameMtgi;
     public int mNumberOf;
     public int mPrice; /* In cents */
     public String mMessage;
-    public boolean mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
-    public boolean mIsFoil = false;
+    public boolean mIsCustomPrice; /* default is false as all cards should first grab internet prices. */
+    public boolean mIsFoil;
     public int mSide;
     public MarketPriceInfo mPriceInfo;
     private int mIndex;
-    private boolean mIsSelected = false;
+    private boolean mIsSelected;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -78,10 +79,24 @@ public class MtgCard extends Card {
         mColorIdentity = "";
         mWatermark = "";
         mForeignPrintings = new ArrayList<>();
+
+        // From MtgCard
+        this.mSetName = "";
+        this.mSetNameMtgi = "";
+        this.mNumberOf = 0;
+        this.mPrice = 0; /* In cents */
+        this.mMessage = "";
+        this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
+        this.mIsFoil = false;
+        this.mSide = 0;
+        this.mPriceInfo = new MarketPriceInfo();
+        this.mIndex = 0;
+        this.mIsSelected = false;
     }
 
-    MtgCard(Card card) {
+    MtgCard(MtgCard card) {
         if (card != null) {
+            // From Card
             this.mName = card.mName;
             this.mExpansion = card.mExpansion;
             this.mType = card.mType;
@@ -99,7 +114,134 @@ public class MtgCard extends Card {
             this.mMultiverseId = card.mMultiverseId;
             this.mColorIdentity = card.mColorIdentity;
             this.mWatermark = card.mWatermark;
-            this.mForeignPrintings = new ArrayList<>(card.mForeignPrintings);
+            this.mForeignPrintings = new ArrayList<>(card.mForeignPrintings.size());
+            for(ForeignPrinting fp : card.mForeignPrintings) {
+                this.mForeignPrintings.add(new ForeignPrinting(fp));
+            }
+
+            // From MtgCard
+            this.mSetName = card.mSetName;
+            this.mSetNameMtgi = card.mSetNameMtgi;
+            this.mNumberOf = card.mNumberOf;
+            this.mPrice = card.mPrice; /* In cents */
+            this.mMessage = card.mMessage;
+            this.mIsCustomPrice = card.mIsCustomPrice; /* default is false as all cards should first grab internet prices. */
+            this.mIsFoil = card.mIsFoil;
+            this.mSide = card.mSide;
+            this.mPriceInfo = new MarketPriceInfo(card.mPriceInfo);
+            this.mIndex = card.mIndex;
+            this.mIsSelected = card.mIsSelected;
+        }
+    }
+
+    /**
+     * Construct a MtgCard based on the given parameters.
+     *
+     * @param context  context the method is being called from
+     * @param cardName name of the card to make
+     * @param cardSet  set code of the card to make
+     * @param isFoil   if the card is foil or not
+     * @param numberOf how many copies of the card are needed
+     */
+    public MtgCard(
+            Context context,
+            String cardName,
+            String cardSet,
+            boolean isFoil,
+            int numberOf) {
+
+        Cursor cardCursor = null;
+        FamiliarDbHandle handle = new FamiliarDbHandle();
+        try {
+            SQLiteDatabase database = DatabaseManager.openDatabase(context, false, handle);
+            /* Construct a blank MTGCard */
+            this.mIsFoil = isFoil;
+            this.mNumberOf = numberOf;
+            /* Note the card price is loading */
+            this.mMessage = context.getString(R.string.wishlist_loading);
+            /* Get extra information from the database */
+            if (cardSet == null) {
+                cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS, true, true, database);
+
+                /* Make sure at least one card was found */
+                if (cardCursor.getCount() == 0) {
+                    ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
+                            ToastWrapper.LENGTH_LONG);
+                    throw new FamiliarDbException(new Exception("fallback"));
+                }
+                /* If we don't specify the set, and we are trying to find a foil card, choose the
+                 * latest foil printing. If there are no eligible printings, select the latest */
+                if (isFoil) {
+                    while (!CardDbAdapter.canBeFoil(
+                            cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET))
+                            , database)) {
+                        if (cardCursor.isLast()) {
+                            cardCursor.moveToFirst();
+                            break;
+                        }
+                        cardCursor.moveToNext();
+                    }
+                }
+            } else {
+                cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
+            }
+
+            /* Make sure at least one card was found */
+            if (cardCursor.getCount() == 0) {
+                ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
+                        ToastWrapper.LENGTH_LONG);
+                throw new FamiliarDbException(new Exception("fallback"));
+            }
+
+            /* Don't rely on the user's given name, get it from the DB just to be sure */
+            this.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+            this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
+            this.mSetName = CardDbAdapter.getSetNameFromCode(this.mExpansion, database);
+            this.mSetNameMtgi = CardDbAdapter.getCodeMtgi(this.mExpansion, database);
+            this.mNumber = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_NUMBER));
+            this.mCmc = cardCursor.getInt((cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_CMC)));
+            this.mColor = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_COLOR));
+            this.mType = CardDbAdapter.getTypeLine(cardCursor);
+            this.mRarity = (char) cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_RARITY));
+            this.mManaCost = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_MANACOST));
+            this.mPower = cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_POWER));
+            this.mToughness = cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+            this.mLoyalty = cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+            this.mText = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_ABILITY));
+            this.mFlavor = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+            this.mMultiverseId = cardCursor.getInt(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
+            this.mArtist = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_ARTIST));
+            this.mWatermark = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_WATERMARK));
+            this.mColorIdentity = cardCursor.getString(cardCursor
+                    .getColumnIndex(CardDbAdapter.KEY_COLOR_IDENTITY));
+
+            /* Override choice is the card can't be foil */
+            if (!CardDbAdapter.canBeFoil(this.mExpansion, database)) {
+                this.mIsFoil = false;
+            }
+        } catch (SQLiteException | FamiliarDbException | NumberFormatException fde) {
+            this.mName = cardName;
+            this.mExpansion = cardSet;
+            this.mIsFoil = isFoil;
+            this.mNumberOf = numberOf;
+        } finally {
+            if (null != cardCursor) {
+                cardCursor.close();
+            }
+            DatabaseManager.closeDatabase(context, handle);
         }
     }
 
@@ -164,7 +306,7 @@ public class MtgCard extends Card {
             }
         }
 
-        MtgCard card = CardHelpers.makeMtgCard(context, parts[1], parts[2], false, Integer.parseInt(parts[3]));
+        MtgCard card = new MtgCard(context, parts[1], parts[2], false, Integer.parseInt(parts[3]));
         card.mSide = Integer.parseInt(parts[0]);
 
         /* These parts may not exist */
@@ -255,7 +397,7 @@ public class MtgCard extends Card {
             foil = Boolean.parseBoolean(parts[5]);
         }
 
-        return CardHelpers.makeMtgCard(mCtx, parts[0], parts[1], foil, Integer.parseInt(parts[2]));
+        return new MtgCard(mCtx, parts[0], parts[1], foil, Integer.parseInt(parts[2]));
     }
 
     /**

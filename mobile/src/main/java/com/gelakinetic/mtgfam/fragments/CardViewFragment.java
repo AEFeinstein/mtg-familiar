@@ -74,7 +74,6 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.CardViewDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.ColorIndicatorView;
 import com.gelakinetic.mtgfam.helpers.FamiliarGlideTarget;
 import com.gelakinetic.mtgfam.helpers.GlideApp;
@@ -385,7 +384,7 @@ public class CardViewFragment extends FamiliarFragment {
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
             /* http://magiccards.info/scans/en/mt/55.jpg */
-            mCard = CardHelpers.makeMtgCard(getContext(),
+            mCard = new MtgCard(getContext(),
                     cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)),
                     cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
                     false, 0);
@@ -534,18 +533,14 @@ public class CardViewFragment extends FamiliarFragment {
             mCard.mForeignPrintings.clear();
 
             // Add English
-            Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting();
-            englishPrinting.mLanguageCode = Language.English;
-            englishPrinting.mName = mCard.mName;
-            englishPrinting.mMultiverseId = mCard.mMultiverseId;
+            Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting(mCard.mName, Language.English, mCard.mMultiverseId);
             mCard.mForeignPrintings.add(englishPrinting);
 
             // Add all the others
             for (String lang[] : allLanguageKeys) {
-                Card.ForeignPrinting fp = new Card.ForeignPrinting();
-                fp.mLanguageCode = lang[0];
-                fp.mName = cCardById.getString(cCardById.getColumnIndex(lang[1]));
-                fp.mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(lang[2]));
+                Card.ForeignPrinting fp = new Card.ForeignPrinting(
+                        cCardById.getString(cCardById.getColumnIndex(lang[1])), lang[0],
+                        cCardById.getInt(cCardById.getColumnIndex(lang[2])));
                 if (fp.mName != null && !fp.mName.isEmpty()) {
                     mCard.mForeignPrintings.add(fp);
                 }
@@ -1137,7 +1132,6 @@ public class CardViewFragment extends FamiliarFragment {
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        MenuItem mi;
         /* If the image has been loaded to the main page, remove the menu option for image */
         if (PreferenceAdapter.getPicFirst(getContext())) {
             menu.findItem(R.id.image).setVisible(false);

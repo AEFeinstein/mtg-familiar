@@ -197,7 +197,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         final String name = String.valueOf(getCardNameInput());
         final String numberOf = String.valueOf(getCardNumberInput());
-        final MtgCard card = CardHelpers.makeMtgCard(getContext(), name, null,
+        final MtgCard card = new MtgCard(getContext(), name, null,
                 checkboxFoilIsChecked(), Integer.parseInt(numberOf));
 
         /* If for some reason the card was null, we can just leave */

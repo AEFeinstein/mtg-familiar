@@ -30,7 +30,6 @@ import com.afollestad.materialdialogs.StackingBehavior;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -75,7 +74,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .positiveText(R.string.result_list_Add_to_wishlist)
                         .onPositive((dialog, which) -> WishlistHelpers.addItemToWishlist(getContext(),
                                 new WishlistHelpers.CompressedWishlistInfo(
-                                        CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), 0)))
+                                        new MtgCard(getContext(), cardName, cardSet, false, 1), 0)))
                         .negativeText(R.string.result_list_Add_to_decklist)
                         .onNegative((dialog, which) -> {
                             // Show the dialog to pick a deck
@@ -122,7 +121,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             }
                             if (!entryIncremented) {
                                 // Add a new card to the deck
-                                decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                decklist.add(new Pair<>(new MtgCard(getContext(), cardName, cardSet, false, 1), false));
                             }
 
                             // Write the decklist back

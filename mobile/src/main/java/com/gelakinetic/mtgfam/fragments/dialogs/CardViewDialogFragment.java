@@ -303,7 +303,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             }
                             if (!entryIncremented) {
                                 // Add a new card to the deck
-                                decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                decklist.add(new Pair<>(new MtgCard(getContext(), cardName, cardSet, false, 1), false));
                             }
 
                             // Write the decklist back

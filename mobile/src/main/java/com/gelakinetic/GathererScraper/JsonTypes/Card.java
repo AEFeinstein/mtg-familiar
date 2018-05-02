@@ -89,9 +89,21 @@ public class Card implements Comparable<Card> {
 
     // Private class for encapsulating foreign printing information
     public static class ForeignPrinting implements Comparable<ForeignPrinting> {
-        public int mMultiverseId;
-        public String mName;
-        public String mLanguageCode;
+        public final int mMultiverseId;
+        public final String mName;
+        public final String mLanguageCode;
+
+        public ForeignPrinting(ForeignPrinting fp) {
+            this.mMultiverseId = fp.mMultiverseId;
+            this.mName = fp.mName;
+            this.mLanguageCode = fp.mLanguageCode;
+        }
+
+        public ForeignPrinting(String name, String languageCode, int multiverseId) {
+            this.mName = name;
+            this.mLanguageCode = languageCode;
+            this.mMultiverseId = multiverseId;
+        }
 
         @Override
         public int compareTo(@NonNull ForeignPrinting o) {

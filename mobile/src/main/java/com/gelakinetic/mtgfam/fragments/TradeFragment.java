@@ -40,7 +40,6 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
 import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -146,7 +145,7 @@ public class TradeFragment extends FamiliarListFragment {
         final String cardName = getCardNameInput().toString();
         final int numberOf = Integer.parseInt(getCardNumberInput().toString());
         final boolean isFoil = checkboxFoilIsChecked();
-        final MtgCard card = CardHelpers.makeMtgCard(getContext(), cardName, null, isFoil, numberOf);
+        final MtgCard card = new MtgCard(getContext(), cardName, null, isFoil, numberOf);
 
         if (card == null) {
             return;

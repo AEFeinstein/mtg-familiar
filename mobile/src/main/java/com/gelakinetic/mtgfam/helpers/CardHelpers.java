@@ -26,7 +26,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,8 +126,6 @@ public class CardHelpers {
 
         /* Get all potential sets and rarities for this card */
         final ArrayList<String> potentialSetCodes = new ArrayList<>();
-        final ArrayList<Character> potentialRarities = new ArrayList<>();
-        final ArrayList<String> potentialNumbers = new ArrayList<>();
 
         Cursor cards = null;
         FamiliarDbHandle fetchCardHandle = new FamiliarDbHandle();
@@ -151,8 +148,6 @@ public class CardHelpers {
             while (!cards.isAfterLast()) {
                 String setCode = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_SET));
                 String setName = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NAME));
-                char rarity = (char) cards.getInt(cards.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                String number = cards.getString(cards.getColumnIndex(CardDbAdapter.KEY_NUMBER));
 
                 /* Inflate a row and fill it with stuff */
                 View listDialogRow = createDialogRow(
@@ -163,8 +158,6 @@ public class CardHelpers {
                         linearLayout);
                 linearLayout.addView(listDialogRow);
                 potentialSetCodes.add(setCode);
-                potentialRarities.add(rarity);
-                potentialNumbers.add(number);
 
                 /* If this card has a foil version, add that too */
                 if (foilSets.contains(setCode)) {
@@ -176,8 +169,6 @@ public class CardHelpers {
                             linearLayout);
                     linearLayout.addView(wishlistRowFoil);
                     potentialSetCodes.add(setCode);
-                    potentialRarities.add(rarity);
-                    potentialNumbers.add(number);
                 }
 
                 cards.moveToNext();
@@ -224,7 +215,7 @@ public class CardHelpers {
                 } catch (NumberFormatException e) {
                     numberOf = 0;
                 }
-                MtgCard card = CardHelpers.makeMtgCard(ctx, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
+                MtgCard card = new MtgCard(ctx, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
 
                 /* Look through the wishlist for each card, set the numberOf or remove
                  * it if it exists, or add the card if it doesn't */
@@ -387,7 +378,7 @@ public class CardHelpers {
          *
          * @param card The MtgCard which will be the base for this object
          */
-        public CompressedCardInfo(MtgCard card) {
+        CompressedCardInfo(MtgCard card) {
 
             super(card);
             mInfo = new ArrayList<>();
@@ -612,123 +603,5 @@ public class CardHelpers {
 
         }
 
-    }
-
-    /**
-     * Construct a MtgCard based on the given parameters.
-     *
-     * @param context  context the method is being called from
-     * @param cardName name of the card to make
-     * @param cardSet  set code of the card to make
-     * @param isFoil   if the card is foil or not
-     * @param numberOf how many copies of the card are needed
-     * @return an MtgCard made based on the given parameters
-     */
-    @NonNull
-    public static MtgCard makeMtgCard(
-            Context context,
-            String cardName,
-            String cardSet,
-            boolean isFoil,
-            int numberOf) {
-
-        Cursor cardCursor = null;
-        FamiliarDbHandle handle = new FamiliarDbHandle();
-        try {
-            SQLiteDatabase database = DatabaseManager.openDatabase(context, false, handle);
-            /* Construct a blank MTGCard */
-            MtgCard card = new MtgCard();
-            card.mIsFoil = isFoil;
-            card.mNumberOf = numberOf;
-            /* Note the card price is loading */
-            card.mMessage = context.getString(R.string.wishlist_loading);
-            /* Get extra information from the database */
-            if (cardSet == null) {
-                cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS, true, true, database);
-
-                /* Make sure at least one card was found */
-                if (cardCursor.getCount() == 0) {
-                    ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
-                            ToastWrapper.LENGTH_LONG);
-                    throw new FamiliarDbException(new Exception("fallback"));
-                }
-                /* If we don't specify the set, and we are trying to find a foil card, choose the
-                 * latest foil printing. If there are no eligible printings, select the latest */
-                if (isFoil) {
-                    while (!CardDbAdapter.canBeFoil(
-                            cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET))
-                            , database)) {
-                        if (cardCursor.isLast()) {
-                            cardCursor.moveToFirst();
-                            break;
-                        }
-                        cardCursor.moveToNext();
-                    }
-                }
-            } else {
-                cardCursor = CardDbAdapter.fetchCardByNameAndSet(cardName, cardSet, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
-            }
-
-            /* Make sure at least one card was found */
-            if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
-                        ToastWrapper.LENGTH_LONG);
-                throw new FamiliarDbException(new Exception("fallback"));
-            }
-
-            /* Don't rely on the user's given name, get it from the DB just to be sure */
-            card.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            card.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            card.mSetName = CardDbAdapter.getSetNameFromCode(card.mExpansion, database);
-            card.mSetNameMtgi = CardDbAdapter.getCodeMtgi(card.mExpansion, database);
-            card.mNumber = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_NUMBER));
-            card.mCmc = cardCursor.getInt((cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_CMC)));
-            card.mColor = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_COLOR));
-            card.mType = CardDbAdapter.getTypeLine(cardCursor);
-            card.mRarity = (char) cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_RARITY));
-            card.mManaCost = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_MANACOST));
-            card.mPower = cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_POWER));
-            card.mToughness = cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-            card.mLoyalty = cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-            card.mText = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_ABILITY));
-            card.mFlavor = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            card.mMultiverseId = cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
-            card.mArtist = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_ARTIST));
-            card.mWatermark = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_WATERMARK));
-            card.mColorIdentity = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_COLOR_IDENTITY));
-
-            /* Override choice is the card can't be foil */
-            if (!CardDbAdapter.canBeFoil(card.mExpansion, database)) {
-                card.mIsFoil = false;
-            }
-            /* return our made card! */
-            return card;
-        } catch (SQLiteException | FamiliarDbException | NumberFormatException fde) {
-            MtgCard fallbackCard = new MtgCard();
-            fallbackCard.mName = cardName;
-            fallbackCard.mExpansion = cardSet;
-            fallbackCard.mIsFoil = isFoil;
-            fallbackCard.mNumberOf = numberOf;
-            return fallbackCard;
-        } finally {
-            if (null != cardCursor) {
-                cardCursor.close();
-            }
-            DatabaseManager.closeDatabase(context, handle);
-        }
     }
 }

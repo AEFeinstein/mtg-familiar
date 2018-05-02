@@ -36,7 +36,9 @@ import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
+@SuppressWarnings("unused")
 class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
 
     private static final String DAPT_TAG = "DAPT";
@@ -44,7 +46,6 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
     private int totalSuccess = 0;
     private int totalElapsedFailure = 0;
     private int totalFailure = 0;
-    private FamiliarActivity mActivity;
     private final FamiliarDbHandle mHandle = new FamiliarDbHandle();
 
     /**
@@ -57,16 +58,18 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
     protected Void doInBackground(FamiliarActivity... activities) {
 
         // Save the activity
-        mActivity = activities[0];
+        FamiliarActivity activity = activities[0];
 
         // Delete all caches
         try {
-            File cacheDir = mActivity.getExternalCacheDir();
-            for (File cacheFile : cacheDir.listFiles()) {
+            File cacheDir = activity.getExternalCacheDir();
+            for (File cacheFile : Objects.requireNonNull(cacheDir).listFiles()) {
+                //noinspection ResultOfMethodCallIgnored
                 cacheFile.delete();
             }
-            cacheDir = mActivity.getCacheDir();
-            for (File cacheFile : cacheDir.listFiles()) {
+            cacheDir = activity.getCacheDir();
+            for (File cacheFile :  Objects.requireNonNull(cacheDir).listFiles()) {
+                //noinspection ResultOfMethodCallIgnored
                 cacheFile.delete();
             }
         } catch (NullPointerException e) {
@@ -74,11 +77,11 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
         }
 
         // Make a fetcher
-        MarketPriceFetcher fetcher = new MarketPriceFetcher(mActivity);
+        MarketPriceFetcher fetcher = new MarketPriceFetcher(activity);
 
         try {
             // Search for all cards
-            SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, mHandle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, mHandle);
             SearchCriteria criteria = new SearchCriteria();
             criteria.superTypes = new ArrayList<>(1);
             criteria.superTypes.add("!asdl");
@@ -98,7 +101,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                 allCards.moveToFirst();
 
                 // Try to lookup all prices
-                lookupCard(fetcher, allCards);
+                lookupCard(fetcher, allCards, activity);
             }
         } catch (SQLiteException | FamiliarDbException e) {
             e.printStackTrace();
@@ -113,9 +116,9 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
      * @param fetcher The fetcher to fetch the card price with
      * @param cursor  The cursor pointing to card data in the database
      */
-    private void lookupCard(final MarketPriceFetcher fetcher, final Cursor cursor) {
+    private void lookupCard(final MarketPriceFetcher fetcher, final Cursor cursor, final FamiliarActivity activity) {
         // Make an MtgCard object from the cursor row
-        MtgCard toLookup = CardHelpers.makeMtgCard(mActivity,
+        MtgCard toLookup = new MtgCard(activity,
                 cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
                 cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)),
                 false, 0);
@@ -139,7 +142,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                     Log.d(DAPT_TAG, "Success [" + toLookup.mExpansion + "] " + toLookup.mName + " in " + elapsed + "ms : " + priceStr);
 
                     // Move to the next
-                    fetchNext(fetcher, cursor);
+                    fetchNext(fetcher, cursor, activity);
                 },
                 throwable -> {
                     // Timing
@@ -151,7 +154,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                     Log.d(DAPT_TAG, "Failure [" + toLookup.mExpansion + "] " + toLookup.mName + " in " + elapsed + "ms, " + throwable.getMessage());
 
                     // Move to the next
-                    fetchNext(fetcher, cursor);
+                    fetchNext(fetcher, cursor, activity);
                 });
     }
 
@@ -161,15 +164,15 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
      * @param fetcher The fetcher to fetch the card price with
      * @param cursor  The cursor to advance
      */
-    private void fetchNext(MarketPriceFetcher fetcher, Cursor cursor) {
+    private void fetchNext(MarketPriceFetcher fetcher, Cursor cursor, FamiliarActivity activity) {
         cursor.moveToNext();
         if (!cursor.isAfterLast()) {
-            lookupCard(fetcher, cursor);
+            lookupCard(fetcher, cursor, activity);
         } else {
             Log.d(DAPT_TAG, totalSuccess + " successes (avg " + (totalElapsedSuccess / (double) totalSuccess) + "ms)");
             Log.d(DAPT_TAG, totalFailure + " failures (avg " + (totalElapsedFailure / (double) totalFailure) + "ms)");
             cursor.close();
-            DatabaseManager.closeDatabase(mActivity, mHandle);
+            DatabaseManager.closeDatabase(activity, mHandle);
         }
 
     }
