@@ -114,11 +114,14 @@ public class CardSearchProvider extends ContentProvider {
 
                     return CardDbAdapter.getCardByRowId(rowId1, columns3, mDatabase);
                 }
-                default:
-                    throw new IllegalArgumentException("Unknown Uri: " + uri);
+                default: {
+                    return null;
+                    //throw new IllegalArgumentException("Unknown Uri: " + uri);
+                }
             }
         } catch (SQLiteException | FamiliarDbException e) {
-            throw new IllegalArgumentException(e.toString());
+            return null;
+            //throw new IllegalArgumentException(e.toString());
         }
     }
 
