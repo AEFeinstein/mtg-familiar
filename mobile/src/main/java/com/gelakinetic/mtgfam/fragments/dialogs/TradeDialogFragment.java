@@ -360,7 +360,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             if (sideForDialog == TradeFragment.LEFT) {
                                 max1 = getParentTradeFragment().mListLeft.size();
                                 list = getParentTradeFragment().mListLeft;
-                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.RIGHT);
+                                adapter = (TradeFragment.TradeDataAdapter) getParentTradeFragment().getCardDataAdapter(TradeFragment.LEFT);
                             } else {
                                 max1 = getParentTradeFragment().mListRight.size();
                                 list = getParentTradeFragment().mListRight;
