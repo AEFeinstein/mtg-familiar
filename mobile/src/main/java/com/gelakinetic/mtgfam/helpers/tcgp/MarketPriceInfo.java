@@ -72,10 +72,17 @@ public class MarketPriceInfo {
          * @param price The object to copy
          */
         public Price(Price price) {
-            low = price.low;
-            mid = price.mid;
-            high = price.high;
-            market = price.market;
+            if(null != price) {
+                low = price.low;
+                mid = price.mid;
+                high = price.high;
+                market = price.market;
+            } else {
+                low = 0;
+                mid = 0;
+                high = 0;
+                market = 0;
+            }
         }
     }
 
@@ -89,9 +96,15 @@ public class MarketPriceInfo {
      * @param priceInfo The object to copy
      */
     public MarketPriceInfo(MarketPriceInfo priceInfo) {
-        this.mProductUrl = priceInfo.mProductUrl;
-        this.mNormalPrice = new Price(priceInfo.mNormalPrice);
-        this.mFoilPrice = new Price(priceInfo.mFoilPrice);
+        if (null != priceInfo) {
+            this.mProductUrl = priceInfo.mProductUrl;
+            this.mNormalPrice = new Price(priceInfo.mNormalPrice);
+            this.mFoilPrice = new Price(priceInfo.mFoilPrice);
+        } else {
+            this.mProductUrl = "";
+            this.mNormalPrice = null;
+            this.mFoilPrice = null;
+        }
     }
 
     /**

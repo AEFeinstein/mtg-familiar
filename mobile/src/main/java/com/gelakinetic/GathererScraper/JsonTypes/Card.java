@@ -94,9 +94,15 @@ public class Card implements Comparable<Card> {
         public final String mLanguageCode;
 
         public ForeignPrinting(ForeignPrinting fp) {
-            this.mMultiverseId = fp.mMultiverseId;
-            this.mName = fp.mName;
-            this.mLanguageCode = fp.mLanguageCode;
+            if (null != fp) {
+                this.mMultiverseId = fp.mMultiverseId;
+                this.mName = fp.mName;
+                this.mLanguageCode = fp.mLanguageCode;
+            } else {
+                this.mName = "";
+                this.mLanguageCode = "";
+                this.mMultiverseId = 0;
+            }
         }
 
         public ForeignPrinting(String name, String languageCode, int multiverseId) {

@@ -91,7 +91,7 @@ public class DecklistHelpers {
 
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                if (cdi.mName != null) {
+                if (cdi.mName != null && !cdi.mName.isEmpty()) {
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                         cdi.applyIndividualInfo(isi);
                         String cardString = cdi.toWishlistString();
