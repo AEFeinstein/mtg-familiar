@@ -165,8 +165,17 @@ public abstract class FamiliarFragment extends Fragment {
                 }
                 SearchView sv = new SearchView(getActivity());
                 try {
+                    // Try to get the package name, important for debug builds
+                    String packageName = null;
+                    if (null != getContext()) {
+                        packageName = getContext().getPackageName();
+                    }
+                    // Default to the production package name
+                    if (null == packageName) {
+                        packageName = "com.gelakinetic.mtgfam";
+                    }
                     sv.setSearchableInfo(searchManager.getSearchableInfo(
-                            new ComponentName(getContext().getPackageName(), "com.gelakinetic.mtgfam.FamiliarActivity")));
+                            new ComponentName(packageName, "com.gelakinetic.mtgfam.FamiliarActivity")));
 
                     MenuItem mi = menu.add(R.string.name_search_hint)
                             .setIcon(R.drawable.ic_menu_search);
@@ -190,7 +199,7 @@ public abstract class FamiliarFragment extends Fragment {
                     });
                     mi.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
-                } catch (Resources.NotFoundException e) {
+                } catch (RuntimeException e) {
                     /* One user threw this once. I think the typed ComponentName fixes it, but just in case */
                 }
             }
