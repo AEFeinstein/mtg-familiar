@@ -170,7 +170,7 @@ public class FamiliarActivity extends AppCompatActivity {
             new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false, new Class[]{MoJhoStoFragment.class}),
             new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false, new Class[]{ProfileFragment.class}),
             new DrawerEntry(0, 0, true, null),
-            new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false, new Class[]{PrefsFragment.class}),
+            new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false, null),
             new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false, null),
             new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false, null),
             new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false, null),
