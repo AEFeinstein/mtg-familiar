@@ -68,10 +68,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gelakinetic.mtgfam.fragments.CardViewFragment;
 import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
+import com.gelakinetic.mtgfam.fragments.DeckCounterFragment;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.DiceFragment;
 import com.gelakinetic.mtgfam.fragments.FamiliarFragment;
+import com.gelakinetic.mtgfam.fragments.GatheringsFragment;
+import com.gelakinetic.mtgfam.fragments.HtmlDocFragment;
 import com.gelakinetic.mtgfam.fragments.JudgesCornerFragment;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.fragments.ManaPoolFragment;
@@ -148,36 +152,31 @@ public class FamiliarActivity extends AppCompatActivity {
             "&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted";
     /* Timer to determine user inactivity for screen dimming in the life counter */
     private static final long INACTIVITY_MS = 30000;
-    private static final int MESSAGE_CLEAR = 0;
-    private static final int MESSAGE_INIT_DISK_CACHE = 1;
-    private static final int MESSAGE_FLUSH = 2;
-    private static final int MESSAGE_CLOSE = 3;
-    private static final String IMAGE_CACHE_DIR = "familiar_image_cache";
     /* Spice setup */
     public final MarketPriceFetcher mMarketPriceStore = new MarketPriceFetcher(this);
 
     /* What the drawer menu will be */
     private final DrawerEntry[] mPageEntries = {
-            new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false),
-            new DrawerEntry(R.string.main_life_counter, R.attr.ic_drawer_life, false),
-            new DrawerEntry(R.string.main_mana_pool, R.attr.ic_drawer_mana, false),
-            new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false),
-            new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false),
-            new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false),
-            new DrawerEntry(R.string.main_decklist, R.attr.ic_drawer_deck, false),
-            new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false),
-            new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false),
-            new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false),
-            new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false),
-            new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false),
-            new DrawerEntry(0, 0, true),
-            new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false),
-            new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false),
-            new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false),
-            new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false),
-            new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false),
-            new DrawerEntry(R.string.main_export_data_title, R.attr.ic_drawer_save, false),
-            new DrawerEntry(R.string.main_import_data_title, R.attr.ic_drawer_load, false),
+            new DrawerEntry(R.string.main_card_search, R.attr.ic_drawer_search, false, new Class[]{SearchViewFragment.class, ResultListFragment.class, CardViewPagerFragment.class, CardViewFragment.class}),
+            new DrawerEntry(R.string.main_life_counter, R.attr.ic_drawer_life, false, new Class[]{LifeCounterFragment.class, GatheringsFragment.class}),
+            new DrawerEntry(R.string.main_mana_pool, R.attr.ic_drawer_mana, false, new Class[]{ManaPoolFragment.class}),
+            new DrawerEntry(R.string.main_dice, R.attr.ic_drawer_dice, false, new Class[]{DiceFragment.class}),
+            new DrawerEntry(R.string.main_trade, R.attr.ic_drawer_trade, false, new Class[]{TradeFragment.class}),
+            new DrawerEntry(R.string.main_wishlist, R.attr.ic_drawer_wishlist, false, new Class[]{WishlistFragment.class}),
+            new DrawerEntry(R.string.main_decklist, R.attr.ic_drawer_deck, false, new Class[]{DecklistFragment.class}),
+            new DrawerEntry(R.string.main_timer, R.attr.ic_drawer_timer, false, new Class[]{RoundTimerFragment.class}),
+            new DrawerEntry(R.string.main_rules, R.attr.ic_drawer_rules, false, new Class[]{RulesFragment.class}),
+            new DrawerEntry(R.string.main_judges_corner, R.attr.ic_drawer_judge, false, new Class[]{JudgesCornerFragment.class, DeckCounterFragment.class, HtmlDocFragment.class}),
+            new DrawerEntry(R.string.main_mojhosto, R.attr.ic_drawer_mojhosto, false, new Class[]{MoJhoStoFragment.class}),
+            new DrawerEntry(R.string.main_profile, R.attr.ic_drawer_profile, false, new Class[]{ProfileFragment.class}),
+            new DrawerEntry(0, 0, true, null),
+            new DrawerEntry(R.string.main_settings_title, R.attr.ic_drawer_settings, false, new Class[]{PrefsFragment.class}),
+            new DrawerEntry(R.string.main_force_update_title, R.attr.ic_drawer_download, false, null),
+            new DrawerEntry(R.string.main_donate_title, R.attr.ic_drawer_good, false, null),
+            new DrawerEntry(R.string.main_about, R.attr.ic_drawer_about, false, null),
+            new DrawerEntry(R.string.main_whats_new_title, R.attr.ic_drawer_help, false, null),
+            new DrawerEntry(R.string.main_export_data_title, R.attr.ic_drawer_save, false, null),
+            new DrawerEntry(R.string.main_import_data_title, R.attr.ic_drawer_load, false, null),
     };
     private final Handler mInactivityHandler = new Handler();
     /* Drawer elements */
@@ -731,6 +730,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             File listFiles[] = cacheDir.listFiles();
                             if (null != listFiles) {
                                 for (File cachedFile : listFiles) {
+                                    //noinspection ResultOfMethodCallIgnored
                                     cachedFile.delete();
                                 }
                             }
@@ -741,6 +741,7 @@ public class FamiliarActivity extends AppCompatActivity {
                             File listFiles[] = cacheDir.listFiles();
                             if (null != listFiles) {
                                 for (File cachedFile : listFiles) {
+                                    //noinspection ResultOfMethodCallIgnored
                                     cachedFile.delete();
                                 }
                             }
@@ -1146,6 +1147,26 @@ public class FamiliarActivity extends AppCompatActivity {
 
             /* Color the icon when the fragment changes */
             mPagesAdapter.colorDrawerEntry(mPageEntries[position].getTextView());
+        }
+    }
+
+    /**
+     * When a FamiliarFragment resumes, if it was below another FamiliarFragment on the backstack,
+     * call this to reselect the drawer entry based on the class
+     *
+     * @param aClass The class that resumed and should have the associated entry selected
+     */
+    public void selectDrawerEntry(Class<? extends FamiliarFragment> aClass) {
+        // Look through all the entries
+        for (int position = 0; position < mPageEntries.length; position++) {
+            // Check if the entry expects the current class
+            if (mPageEntries[position].isClass(aClass)) {
+                // If it does, set the position and select the entry
+                mCurrentFrag = position;
+                mPagesAdapter.colorDrawerEntry(mPageEntries[mCurrentFrag].getTextView());
+                mDrawerList.setItemChecked(mCurrentFrag, true);
+                return;
+            }
         }
     }
 
@@ -1568,12 +1589,14 @@ public class FamiliarActivity extends AppCompatActivity {
         final int mNameResource;
         final int mIconAttr;
         final boolean mIsDivider;
+        private final Class[] mFragClasses;
         TextView textView;
 
-        DrawerEntry(int nameResource, int iconResource, boolean isHeader) {
+        DrawerEntry(int nameResource, int iconResource, boolean isHeader, Class fragments[]) {
             mNameResource = nameResource;
             mIconAttr = iconResource;
             mIsDivider = isHeader;
+            mFragClasses = fragments;
         }
 
         void setTextView(TextView textView) {
@@ -1582,6 +1605,18 @@ public class FamiliarActivity extends AppCompatActivity {
 
         TextView getTextView() {
             return textView;
+        }
+
+        boolean isClass(Class<? extends FamiliarFragment> aClass) {
+            if (null == mFragClasses) {
+                return false;
+            }
+            for (Class fragClass : mFragClasses) {
+                if (aClass.equals(fragClass)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

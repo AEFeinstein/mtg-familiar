@@ -22,7 +22,6 @@ package com.gelakinetic.mtgfam.fragments;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -107,6 +106,7 @@ public abstract class FamiliarFragment extends Fragment {
         if ((getActivity()) != null) {
             getFamiliarActivity().getFragmentResults();
             getFamiliarActivity().mDrawerLayout.closeDrawer(getFamiliarActivity().mDrawerList);
+            getFamiliarActivity().selectDrawerEntry(this.getClass());
         }
     }
 
