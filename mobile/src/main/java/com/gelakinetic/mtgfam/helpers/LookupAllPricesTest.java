@@ -140,7 +140,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                         } else if (marketPriceInfo.hasFoilPrice()) {
                             priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(true, MarketPriceInfo.PriceType.MARKET));
                         }
-                        Log.d(DAPT_TAG, "Success [" + toLookup.mExpansion + "] " + toLookup.mName + " in " + elapsed + "ms : " + priceStr);
+                        Log.d(DAPT_TAG, "Success [" + toLookup.getExpansion() + "] " + toLookup.getName() + " in " + elapsed + "ms : " + priceStr);
 
                         // Move to the next
                         fetchNext(fetcher, cursor, activity);
@@ -152,7 +152,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                         totalFailure++;
 
                         // Debug print
-                        Log.d(DAPT_TAG, "Failure [" + toLookup.mExpansion + "] " + toLookup.mName + " in " + elapsed + "ms, " + throwable.getMessage());
+                        Log.d(DAPT_TAG, "Failure [" + toLookup.getExpansion() + "] " + toLookup.getName() + " in " + elapsed + "ms, " + throwable.getMessage());
 
                         // Move to the next
                         fetchNext(fetcher, cursor, activity);

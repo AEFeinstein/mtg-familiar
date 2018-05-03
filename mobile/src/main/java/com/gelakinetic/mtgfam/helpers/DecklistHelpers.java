@@ -91,7 +91,7 @@ public class DecklistHelpers {
 
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
-                if (cdi.mName != null && !cdi.mName.isEmpty()) {
+                if (cdi.getName() != null && !cdi.getName().isEmpty()) {
                     for (CardHelpers.IndividualSetInfo isi : cdi.mInfo) {
                         cdi.applyIndividualInfo(isi);
                         String cardString = cdi.toWishlistString();
@@ -169,7 +169,7 @@ public class DecklistHelpers {
                     readableDecklist
                             .append(isi.mNumberOf)
                             .append(' ')
-                            .append(cdi.mName);
+                            .append(cdi.getName());
                     if (isi.mIsFoil) {
                         readableDecklist
                                 .append(" (")
@@ -193,13 +193,13 @@ public class DecklistHelpers {
         final Map<String, String> targetFoilNumberOfs = new HashMap<>();
 
         for (Pair<MtgCard, Boolean> card : decklist) {
-            if (card.first.mName.equals(mCardName) && card.second == isSideboard) {
+            if (card.first.getName().equals(mCardName) && card.second == isSideboard) {
                 if (card.first.mIsFoil) {
-                    targetFoilNumberOfs.put(card.first.mExpansion,
+                    targetFoilNumberOfs.put(card.first.getExpansion(),
                             String.valueOf(card.first.mNumberOf));
                     continue;
                 }
-                targetCardNumberOfs.put(card.first.mExpansion, String.valueOf(card.first.mNumberOf));
+                targetCardNumberOfs.put(card.first.getExpansion(), String.valueOf(card.first.mNumberOf));
             }
         }
         return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);

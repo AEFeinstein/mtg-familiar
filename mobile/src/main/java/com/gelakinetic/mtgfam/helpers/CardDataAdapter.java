@@ -112,7 +112,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
      */
     void swipeRemoveItem(final int position) {
         // Remove the item from the list and add it to a temporary array
-        String removedName = items.get(position).mName;
+        String removedName = items.get(position).getName();
         undoBuffer.add(items.remove(position));
 
         onItemRemoved();

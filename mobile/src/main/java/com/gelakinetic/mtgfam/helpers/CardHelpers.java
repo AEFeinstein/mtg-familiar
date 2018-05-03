@@ -222,9 +222,9 @@ public class CardHelpers {
                      * it if it exists, or add the card if it doesn't */
                     boolean added = false;
                     for (int j = 0; j < list.size(); j++) {
-                        if (card.mName.equals(list.get(j).first.mName)
+                        if (card.getName().equals(list.get(j).first.getName())
                                 && isSideboard == list.get(j).second
-                                && card.mExpansion.equals(list.get(j).first.mExpansion)
+                                && card.getExpansion().equals(list.get(j).first.getExpansion())
                                 && card.mIsFoil == list.get(j).first.mIsFoil) {
                             if (card.mNumberOf == 0) {
                                 list.remove(j);
@@ -402,13 +402,13 @@ public class CardHelpers {
 
             if (card != null) {
                 isi.mSet = card.mSetName;
-                isi.mSetCode = card.mExpansion;
-                isi.mNumber = card.mNumber;
+                isi.mSetCode = card.getExpansion();
+                isi.mNumber = card.getNumber();
                 isi.mIsFoil = card.mIsFoil;
                 isi.mPrice = null;
                 isi.mMessage = card.mMessage;
                 isi.mNumberOf = card.mNumberOf;
-                isi.mRarity = card.mRarity;
+                isi.mRarity = card.getRarity();
             }
 
             mInfo.add(isi);
@@ -460,7 +460,7 @@ public class CardHelpers {
 
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
-            return card1.mName.compareTo(card2.mName);
+            return card1.getName().compareTo(card2.getName());
         }
 
     }
@@ -474,9 +474,9 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            if (card1.mCmc == card2.mCmc) {
+            if (card1.getCmc() == card2.getCmc()) {
                 return 0;
-            } else if (card1.mCmc > card2.mCmc) {
+            } else if (card1.getCmc() > card2.getCmc()) {
                 return 1;
             }
             return -1;
@@ -520,14 +520,14 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            String cardColors1 = getColors(card1.mColor);
-            String cardColors2 = getColors(card2.mColor);
+            String cardColors1 = getColors(card1.getColor());
+            String cardColors2 = getColors(card2.getColor());
             int priority1;
             int priority2;
             //1. If colorless, perform colorless comparison
             if (cardColors1.length() + cardColors2.length() == 0) {
-                cardColors1 = card1.mColor;
-                cardColors2 = card2.mColor;
+                cardColors1 = card1.getColor();
+                cardColors2 = card2.getColor();
                 for (int i = 0; i < Math.min(cardColors1.length(), cardColors2.length()); i++) {
                     priority1 = NON_COLORS.indexOf(cardColors1.charAt(i));
                     priority2 = NON_COLORS.indexOf(cardColors2.charAt(i));
@@ -591,8 +591,8 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            String card1Type = card1.mType;
-            String card2Type = card2.mType;
+            String card1Type = card1.getType();
+            String card2Type = card2.getType();
             for (String type : mTypes) {
                 if (card1Type.contains(type) && card2Type.contains(type)) {
                     return 0;

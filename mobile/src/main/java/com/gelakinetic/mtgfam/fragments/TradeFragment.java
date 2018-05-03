@@ -578,31 +578,31 @@ public class TradeFragment extends FamiliarListFragment {
                     /* Compare the entries based on the key */
                     switch (option.getKey()) {
                         case CardDbAdapter.KEY_NAME: {
-                            retVal = card1.mName.compareTo(card2.mName);
+                            retVal = card1.getName().compareTo(card2.getName());
                             break;
                         }
                         case CardDbAdapter.KEY_COLOR: {
-                            retVal = card1.mColor.compareTo(card2.mColor);
+                            retVal = card1.getColor().compareTo(card2.getColor());
                             break;
                         }
                         case CardDbAdapter.KEY_SUPERTYPE: {
-                            retVal = card1.mType.compareTo(card2.mType);
+                            retVal = card1.getType().compareTo(card2.getType());
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = card1.mCmc - card2.mCmc;
+                            retVal = card1.getCmc() - card2.getCmc();
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
-                            retVal = Float.compare(card1.mPower, card2.mPower);
+                            retVal = Float.compare(card1.getPower(), card2.getPower());
                             break;
                         }
                         case CardDbAdapter.KEY_TOUGHNESS: {
-                            retVal = Float.compare(card1.mToughness, card2.mToughness);
+                            retVal = Float.compare(card1.getToughness(), card2.getToughness());
                             break;
                         }
                         case CardDbAdapter.KEY_SET: {
-                            retVal = card1.mExpansion.compareTo(card2.mExpansion);
+                            retVal = card1.getExpansion().compareTo(card2.getExpansion());
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
@@ -712,7 +712,7 @@ public class TradeFragment extends FamiliarListFragment {
             final MtgCard item = getItem(position);
 
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
-            holder.setCardName(item.mName);
+            holder.setCardName(item.getName());
             holder.mCardSet.setText(item.mSetName);
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {

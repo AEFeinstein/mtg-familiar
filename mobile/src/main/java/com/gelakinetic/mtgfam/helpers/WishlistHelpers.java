@@ -183,7 +183,7 @@ public class WishlistHelpers {
         /* For each wishlist entry */
         for (CompressedWishlistInfo cwi : mCompressedWishlist) {
             /* Append the card name, always */
-            readableWishlist.append(cwi.mName);
+            readableWishlist.append(cwi.getName());
             readableWishlist.append("\r\n");
 
             /* Append the full text, if the user wants it */
@@ -226,12 +226,12 @@ public class WishlistHelpers {
         final Map<String, String> targetCardNumberOfs = new HashMap<>();
         final Map<String, String> targetFoilNumberOfs = new HashMap<>();
         for (MtgCard card : wishlist) {
-            if (card.mName.equals(cardName)) {
+            if (card.getName().equals(cardName)) {
                 if (card.mIsFoil) {
-                    targetFoilNumberOfs.put(card.mExpansion, String.valueOf(card.mNumberOf));
+                    targetFoilNumberOfs.put(card.getExpansion(), String.valueOf(card.mNumberOf));
                     continue;
                 }
-                targetCardNumberOfs.put(card.mExpansion, String.valueOf(card.mNumberOf));
+                targetCardNumberOfs.put(card.getExpansion(), String.valueOf(card.mNumberOf));
             }
         }
         return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);
@@ -348,31 +348,31 @@ public class WishlistHelpers {
                 try {
                     switch (option.getKey()) {
                         case CardDbAdapter.KEY_NAME: {
-                            retVal = wish1.mName.compareTo(wish2.mName);
+                            retVal = wish1.getName().compareTo(wish2.getName());
                             break;
                         }
                         case CardDbAdapter.KEY_COLOR: {
-                            retVal = wish1.mColor.compareTo(wish2.mColor);
+                            retVal = wish1.getColor().compareTo(wish2.getColor());
                             break;
                         }
                         case CardDbAdapter.KEY_SUPERTYPE: {
-                            retVal = wish1.mType.compareTo(wish2.mType);
+                            retVal = wish1.getType().compareTo(wish2.getType());
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = wish1.mCmc - wish2.mCmc;
+                            retVal = wish1.getCmc() - wish2.getCmc();
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
-                            retVal = Float.compare(wish1.mPower, wish2.mPower);
+                            retVal = Float.compare(wish1.getPower(), wish2.getPower());
                             break;
                         }
                         case CardDbAdapter.KEY_TOUGHNESS: {
-                            retVal = Float.compare(wish1.mToughness, wish2.mToughness);
+                            retVal = Float.compare(wish1.getToughness(), wish2.getToughness());
                             break;
                         }
                         case CardDbAdapter.KEY_SET: {
-                            retVal = wish1.mExpansion.compareTo(wish2.mExpansion);
+                            retVal = wish1.getExpansion().compareTo(wish2.getExpansion());
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
