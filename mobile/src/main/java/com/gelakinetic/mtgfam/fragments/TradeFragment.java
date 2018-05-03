@@ -279,7 +279,7 @@ public class TradeFragment extends FamiliarListFragment {
                     MtgCard card = MtgCard.fromTradeString(line, getActivity());
                     card.setIndex(mOrderAddedIdx++);
 
-                    if (card.mSetName == null) {
+                    if (card.getSetName() == null) {
                         handleFamiliarDbException(false);
                         return;
                     }
@@ -713,7 +713,7 @@ public class TradeFragment extends FamiliarListFragment {
 
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
             holder.setCardName(item.getName());
-            holder.mCardSet.setText(item.mSetName);
+            holder.mCardSet.setText(item.getSetName());
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {
                 holder.mCardPrice.setText(item.mNumberOf + "x " + item.getPriceString());

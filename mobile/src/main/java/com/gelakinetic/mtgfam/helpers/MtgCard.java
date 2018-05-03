@@ -44,7 +44,7 @@ public class MtgCard extends Card {
     private static final String DELIMITER = "%";
 
     /* Wish and trade list fields */
-    public String mSetName;
+    String mSetName;
     private String mSetNameMtgi;
     public int mNumberOf;
     public int mPrice; /* In cents */
@@ -603,5 +603,9 @@ public class MtgCard extends Card {
      */
     private URL getGathererImageUrl() throws MalformedURLException {
         return new URL("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=" + mMultiverseId + "&type=card");
+    }
+
+    public String getSetName() {
+        return mSetName;
     }
 }

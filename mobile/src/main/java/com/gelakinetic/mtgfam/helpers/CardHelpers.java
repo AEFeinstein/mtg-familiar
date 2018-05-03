@@ -401,7 +401,7 @@ public class CardHelpers {
             IndividualSetInfo isi = new IndividualSetInfo();
 
             if (card != null) {
-                isi.mSet = card.mSetName;
+                isi.mSet = card.getSetName();
                 isi.mSetCode = card.getExpansion();
                 isi.mNumber = card.getNumber();
                 isi.mIsFoil = card.mIsFoil;
