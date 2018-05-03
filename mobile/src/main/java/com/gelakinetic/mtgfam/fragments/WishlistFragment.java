@@ -350,6 +350,7 @@ public class WishlistFragment extends FamiliarListFragment {
                     }
                 }
             }
+            updateTotalPrices(0);
         }
     }
 

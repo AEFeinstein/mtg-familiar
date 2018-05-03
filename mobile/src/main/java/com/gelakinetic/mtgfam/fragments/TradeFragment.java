@@ -429,6 +429,7 @@ public class TradeFragment extends FamiliarListFragment {
     protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
         data.mMessage = exception.getLocalizedMessage();
         data.mPriceInfo = null;
+        updateTotalPrices(BOTH);
     }
 
     @Override
