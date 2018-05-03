@@ -115,7 +115,7 @@ public class MtgCard extends Card {
             this.mColorIdentity = card.mColorIdentity;
             this.mWatermark = card.mWatermark;
             this.mForeignPrintings = new ArrayList<>(card.mForeignPrintings.size());
-            for(ForeignPrinting fp : card.mForeignPrintings) {
+            for (ForeignPrinting fp : card.mForeignPrintings) {
                 this.mForeignPrintings.add(new ForeignPrinting(fp));
             }
 
@@ -148,7 +148,7 @@ public class MtgCard extends Card {
             String cardName,
             String cardSet,
             boolean isFoil,
-            int numberOf) {
+            int numberOf) throws InstantiationException {
 
         Cursor cardCursor = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
@@ -167,7 +167,7 @@ public class MtgCard extends Card {
                 if (cardCursor.getCount() == 0) {
                     ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
                             ToastWrapper.LENGTH_LONG);
-                    throw new FamiliarDbException(new Exception("fallback"));
+                    throw new InstantiationException();
                 }
                 /* If we don't specify the set, and we are trying to find a foil card, choose the
                  * latest foil printing. If there are no eligible printings, select the latest */
@@ -190,7 +190,7 @@ public class MtgCard extends Card {
             if (cardCursor.getCount() == 0) {
                 ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
                         ToastWrapper.LENGTH_LONG);
-                throw new FamiliarDbException(new Exception("fallback"));
+                throw new InstantiationException();
             }
 
             /* Don't rely on the user's given name, get it from the DB just to be sure */
@@ -233,10 +233,7 @@ public class MtgCard extends Card {
                 this.mIsFoil = false;
             }
         } catch (SQLiteException | FamiliarDbException | NumberFormatException fde) {
-            this.mName = cardName;
-            this.mExpansion = cardSet;
-            this.mIsFoil = isFoil;
-            this.mNumberOf = numberOf;
+            throw new InstantiationException();
         } finally {
             if (null != cardCursor) {
                 cardCursor.close();
@@ -288,7 +285,7 @@ public class MtgCard extends Card {
      * @param context The context for database access
      * @return An initialized MtgCard
      */
-    public static MtgCard fromTradeString(String line, Context context) {
+    public static MtgCard fromTradeString(String line, Context context) throws InstantiationException {
 
         /* Parse these parts out of the string */
         String[] parts = line.split(DELIMITER);
@@ -375,7 +372,7 @@ public class MtgCard extends Card {
      * @param line Information about this card, in the form of what toWishlistString() prints
      * @param mCtx A context used for getting localized strings
      */
-    public static MtgCard fromWishlistString(String line, Context mCtx) {
+    public static MtgCard fromWishlistString(String line, Context mCtx) throws InstantiationException {
 
         String[] parts = line.split(MtgCard.DELIMITER);
 

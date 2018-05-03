@@ -68,7 +68,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
                 cacheFile.delete();
             }
             cacheDir = activity.getCacheDir();
-            for (File cacheFile :  Objects.requireNonNull(cacheDir).listFiles()) {
+            for (File cacheFile : Objects.requireNonNull(cacheDir).listFiles()) {
                 //noinspection ResultOfMethodCallIgnored
                 cacheFile.delete();
             }
@@ -118,44 +118,54 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
      */
     private void lookupCard(final MarketPriceFetcher fetcher, final Cursor cursor, final FamiliarActivity activity) {
         // Make an MtgCard object from the cursor row
-        MtgCard toLookup = new MtgCard(activity,
-                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
-                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)),
-                false, 0);
+        try {
+            MtgCard toLookup = new MtgCard(activity,
+                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
+                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)),
+                    false, 0);
 
-        // Start the lookup and log the time
-        long start = System.currentTimeMillis();
-        fetcher.fetchMarketPrice(toLookup,
-                marketPriceInfo -> {
-                    // Timing
-                    long elapsed = System.currentTimeMillis() - start;
-                    totalElapsedSuccess += elapsed;
-                    totalSuccess++;
+            // Start the lookup and log the time
+            long start = System.currentTimeMillis();
+            fetcher.fetchMarketPrice(toLookup,
+                    marketPriceInfo -> {
+                        // Timing
+                        long elapsed = System.currentTimeMillis() - start;
+                        totalElapsedSuccess += elapsed;
+                        totalSuccess++;
 
-                    // Debug print
-                    String priceStr = "";
-                    if (marketPriceInfo.hasNormalPrice()) {
-                        priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(false, MarketPriceInfo.PriceType.MARKET));
-                    } else if (marketPriceInfo.hasFoilPrice()) {
-                        priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(true, MarketPriceInfo.PriceType.MARKET));
-                    }
-                    Log.d(DAPT_TAG, "Success [" + toLookup.mExpansion + "] " + toLookup.mName + " in " + elapsed + "ms : " + priceStr);
+                        // Debug print
+                        String priceStr = "";
+                        if (marketPriceInfo.hasNormalPrice()) {
+                            priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(false, MarketPriceInfo.PriceType.MARKET));
+                        } else if (marketPriceInfo.hasFoilPrice()) {
+                            priceStr = String.format(Locale.US, "$%.2f", marketPriceInfo.getPrice(true, MarketPriceInfo.PriceType.MARKET));
+                        }
+                        Log.d(DAPT_TAG, "Success [" + toLookup.mExpansion + "] " + toLookup.mName + " in " + elapsed + "ms : " + priceStr);
 
-                    // Move to the next
-                    fetchNext(fetcher, cursor, activity);
-                },
-                throwable -> {
-                    // Timing
-                    long elapsed = System.currentTimeMillis() - start;
-                    totalElapsedFailure += elapsed;
-                    totalFailure++;
+                        // Move to the next
+                        fetchNext(fetcher, cursor, activity);
+                    },
+                    throwable -> {
+                        // Timing
+                        long elapsed = System.currentTimeMillis() - start;
+                        totalElapsedFailure += elapsed;
+                        totalFailure++;
 
-                    // Debug print
-                    Log.d(DAPT_TAG, "Failure [" + toLookup.mExpansion + "] " + toLookup.mName + " in " + elapsed + "ms, " + throwable.getMessage());
+                        // Debug print
+                        Log.d(DAPT_TAG, "Failure [" + toLookup.mExpansion + "] " + toLookup.mName + " in " + elapsed + "ms, " + throwable.getMessage());
 
-                    // Move to the next
-                    fetchNext(fetcher, cursor, activity);
-                });
+                        // Move to the next
+                        fetchNext(fetcher, cursor, activity);
+                    });
+        } catch (InstantiationException e) {
+
+            // Debug print
+            Log.d(DAPT_TAG, "Failure [" + cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_SET)) + "] " +
+                    cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME)) + ", " + e.getMessage());
+
+            // Move to the next
+            fetchNext(fetcher, cursor, activity);
+        }
     }
 
     /**

@@ -388,11 +388,14 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                                 DatabaseManager.closeDatabase(getActivity(), foilHandle);
                             }
 
-                            list.set(positionForDialog, new MtgCard(getContext(), name, set, isFoil, numberOf));
-
-                            /* Reload and notify the adapter */
-                            getParentTradeFragment().loadPrice(list.get(positionForDialog));
-                            adapter.notifyDataSetChanged();
+                            try {
+                                list.set(positionForDialog, new MtgCard(getContext(), name, set, isFoil, numberOf));
+                                /* Reload and notify the adapter */
+                                getParentTradeFragment().loadPrice(list.get(positionForDialog));
+                                adapter.notifyDataSetChanged();
+                            } catch (java.lang.InstantiationException e) {
+                                /* Eat it */
+                            }
                         })
                         .build();
             }

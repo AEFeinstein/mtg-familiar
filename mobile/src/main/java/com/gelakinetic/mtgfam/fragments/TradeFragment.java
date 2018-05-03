@@ -145,39 +145,38 @@ public class TradeFragment extends FamiliarListFragment {
         final String cardName = getCardNameInput().toString();
         final int numberOf = Integer.parseInt(getCardNumberInput().toString());
         final boolean isFoil = checkboxFoilIsChecked();
-        final MtgCard card = new MtgCard(getContext(), cardName, null, isFoil, numberOf);
+        try {
+            final MtgCard card = new MtgCard(getContext(), cardName, null, isFoil, numberOf);
 
-        if (card == null) {
-            return;
+            card.setIndex(mOrderAddedIdx++);
+
+            switch (side) {
+                case LEFT: {
+                    mListLeft.add(0, card);
+                    getCardDataAdapter(LEFT).notifyItemInserted(0);
+                    loadPrice(card);
+                    break;
+                }
+                case RIGHT: {
+                    mListRight.add(0, card);
+                    getCardDataAdapter(RIGHT).notifyItemInserted(0);
+                    loadPrice(card);
+                    break;
+                }
+                default: {
+                    return;
+                }
+            }
+
+            clearCardNameInput();
+            clearCardNumberInput();
+
+            uncheckFoilCheckbox();
+
+            sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
+        } catch (java.lang.InstantiationException e) {
+            /* Eat it */
         }
-
-        card.setIndex(mOrderAddedIdx++);
-
-        switch (side) {
-            case LEFT: {
-                mListLeft.add(0, card);
-                getCardDataAdapter(LEFT).notifyItemInserted(0);
-                loadPrice(card);
-                break;
-            }
-            case RIGHT: {
-                mListRight.add(0, card);
-                getCardDataAdapter(RIGHT).notifyItemInserted(0);
-                loadPrice(card);
-                break;
-            }
-            default: {
-                return;
-            }
-        }
-
-        clearCardNameInput();
-        clearCardNumberInput();
-
-        uncheckFoilCheckbox();
-
-        sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
-
     }
 
     /**
@@ -295,7 +294,7 @@ public class TradeFragment extends FamiliarListFragment {
                             loadPrice(card);
                         }
                     }
-                } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                } catch (NumberFormatException | IndexOutOfBoundsException | java.lang.InstantiationException e) {
                     // This card line is junk, ignore it
                 }
             }

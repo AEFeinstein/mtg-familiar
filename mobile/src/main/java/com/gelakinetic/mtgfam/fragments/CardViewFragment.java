@@ -572,7 +572,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
                 cCardByName.moveToNext();
             }
-        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException | java.lang.InstantiationException e) {
             handleFamiliarDbException(true);
         } finally {
             if (null != cCardById) {

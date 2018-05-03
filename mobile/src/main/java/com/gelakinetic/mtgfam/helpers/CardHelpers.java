@@ -215,29 +215,32 @@ public class CardHelpers {
                 } catch (NumberFormatException e) {
                     numberOf = 0;
                 }
-                MtgCard card = new MtgCard(ctx, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
+                try {
+                    MtgCard card = new MtgCard(ctx, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
 
-                /* Look through the wishlist for each card, set the numberOf or remove
-                 * it if it exists, or add the card if it doesn't */
-                boolean added = false;
-                for (int j = 0; j < list.size(); j++) {
-                    if (card.mName.equals(list.get(j).first.mName)
-                            && isSideboard == list.get(j).second
-                            && card.mExpansion.equals(list.get(j).first.mExpansion)
-                            && card.mIsFoil == list.get(j).first.mIsFoil) {
-                        if (card.mNumberOf == 0) {
-                            list.remove(j);
-                            j--;
-                        } else {
-                            list.get(j).first.mNumberOf = card.mNumberOf;
+                    /* Look through the wishlist for each card, set the numberOf or remove
+                     * it if it exists, or add the card if it doesn't */
+                    boolean added = false;
+                    for (int j = 0; j < list.size(); j++) {
+                        if (card.mName.equals(list.get(j).first.mName)
+                                && isSideboard == list.get(j).second
+                                && card.mExpansion.equals(list.get(j).first.mExpansion)
+                                && card.mIsFoil == list.get(j).first.mIsFoil) {
+                            if (card.mNumberOf == 0) {
+                                list.remove(j);
+                                j--;
+                            } else {
+                                list.get(j).first.mNumberOf = card.mNumberOf;
+                            }
+                            added = true;
                         }
-                        added = true;
                     }
+                    if (!added && card.mNumberOf > 0) {
+                        list.add(new Pair<>(card, false));
+                    }
+                } catch (InstantiationException e) {
+                    /* Eat it */
                 }
-                if (!added && card.mNumberOf > 0) {
-                    list.add(new Pair<>(card, false));
-                }
-
             }
 
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {

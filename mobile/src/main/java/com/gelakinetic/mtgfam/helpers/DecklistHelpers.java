@@ -136,7 +136,11 @@ public class DecklistHelpers {
                         isSideboard = true;
                         line = line.substring(3);
                     }
-                    lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
+                    try {
+                        lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
+                    } catch (InstantiationException e) {
+                        /* Eat it */
+                    }
                 }
             }
         } catch (NumberFormatException nfe) {

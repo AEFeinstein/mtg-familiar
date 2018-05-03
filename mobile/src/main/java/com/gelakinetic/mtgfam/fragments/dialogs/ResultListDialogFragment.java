@@ -72,9 +72,15 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .stackingBehavior(StackingBehavior.ALWAYS)
                         .title(cardName)
                         .positiveText(R.string.result_list_Add_to_wishlist)
-                        .onPositive((dialog, which) -> WishlistHelpers.addItemToWishlist(getContext(),
-                                new WishlistHelpers.CompressedWishlistInfo(
-                                        new MtgCard(getContext(), cardName, cardSet, false, 1), 0)))
+                        .onPositive((dialog, which) -> {
+                            try {
+                                WishlistHelpers.addItemToWishlist(getContext(),
+                                        new WishlistHelpers.CompressedWishlistInfo(
+                                                new MtgCard(getContext(), cardName, cardSet, false, 1), 0));
+                            } catch (java.lang.InstantiationException e) {
+                                /* Eat it */
+                            }
+                        })
                         .negativeText(R.string.result_list_Add_to_decklist)
                         .onNegative((dialog, which) -> {
                             // Show the dialog to pick a deck
@@ -121,7 +127,11 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             }
                             if (!entryIncremented) {
                                 // Add a new card to the deck
-                                decklist.add(new Pair<>(new MtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                try {
+                                    decklist.add(new Pair<>(new MtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                } catch (java.lang.InstantiationException e) {
+                                    /* Eat it */
+                                }
                             }
 
                             // Write the decklist back

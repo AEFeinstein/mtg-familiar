@@ -138,42 +138,43 @@ public class WishlistFragment extends FamiliarListFragment {
             return;
         }
 
-        MtgCard card = new MtgCard(getContext(), name, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
-        if (card == null) {
-            return;
-        }
-        CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
+        try {
+            MtgCard card = new MtgCard(getContext(), name, null, checkboxFoilIsChecked(), Integer.parseInt(numberOf));
+            CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
 
-        /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
-        if (mCompressedWishlist.contains(wrapped)) {
-            CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped));
-            boolean added = false;
-            for (IndividualSetInfo isi : cwi.mInfo) {
-                if (isi.mSetCode.equals(card.mExpansion) && isi.mIsFoil.equals(card.mIsFoil)) {
-                    added = true;
-                    isi.mNumberOf++;
+            /* Add it to the wishlist, either as a new CompressedWishlistInfo, or to an existing one */
+            if (mCompressedWishlist.contains(wrapped)) {
+                CompressedWishlistInfo cwi = mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped));
+                boolean added = false;
+                for (IndividualSetInfo isi : cwi.mInfo) {
+                    if (isi.mSetCode.equals(card.mExpansion) && isi.mIsFoil.equals(card.mIsFoil)) {
+                        added = true;
+                        isi.mNumberOf++;
+                    }
                 }
+                if (!added) {
+                    cwi.add(card);
+                }
+            } else {
+                mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
             }
-            if (!added) {
-                cwi.add(card);
-            }
-        } else {
-            mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
+
+            /* load the price */
+            loadPrice(card);
+
+            /* Sort the wishlist */
+            sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
+
+            /* Clean up for the next add */
+            clearCardNumberInput();
+            clearCardNameInput();
+            uncheckFoilCheckbox();
+
+            /* Redraw the new wishlist with the new card */
+            getCardDataAdapter(0).notifyDataSetChanged();
+        } catch (java.lang.InstantiationException e) {
+            /* Eat it */
         }
-
-        /* load the price */
-        loadPrice(card);
-
-        /* Sort the wishlist */
-        sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
-
-        /* Clean up for the next add */
-        clearCardNumberInput();
-        clearCardNameInput();
-        uncheckFoilCheckbox();
-
-        /* Redraw the new wishlist with the new card */
-        getCardDataAdapter(0).notifyDataSetChanged();
     }
 
     /**
