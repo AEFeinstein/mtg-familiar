@@ -497,7 +497,7 @@ public class CardDbAdapter {
             Arrays.sort(wordsArr);
             return wordsArr;
 
-        } catch (SQLiteException | IllegalStateException e) {
+        } catch (SQLiteException | IllegalStateException | NullPointerException | CursorIndexOutOfBoundsException e) {
             throw new FamiliarDbException(e);
         } finally {
             if (cursor != null) {

@@ -376,7 +376,7 @@ public class SearchViewFragment extends FamiliarFragment {
                         mWatermarks = CardDbAdapter.getUniqueColumnArray(CardDbAdapter.KEY_WATERMARK, false, database);
                     }
                 } catch (SQLiteException | FamiliarDbException e) {
-                    handleFamiliarDbException(true);
+                    handleFamiliarDbException(false);
                 } finally {
                     if (null != setCursor) {
                         setCursor.close();
@@ -405,30 +405,37 @@ public class SearchViewFragment extends FamiliarFragment {
                 try {
                     getActivity().runOnUiThread(() -> {
                         /* set the autocomplete for supertypes */
-                        ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
-                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
-                        mSupertypeField.setAdapter(supertypeAdapter);
+                        if (null != mSupertypes) {
+                            ArrayAdapter<String> supertypeAdapter = new ArrayAdapter<>(
+                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSupertypes);
+                            mSupertypeField.setAdapter(supertypeAdapter);
+                        }
 
-                        /* set the autocomplete for subtypes */
-                        ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
-                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
-                        mSubtypeField.setAdapter(subtypeAdapter);
+                        if (null != mSubtypes) {
+                            /* set the autocomplete for subtypes */
+                            ArrayAdapter<String> subtypeAdapter = new ArrayAdapter<>(
+                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mSubtypes);
+                            mSubtypeField.setAdapter(subtypeAdapter);
+                        }
 
-                        /* set the autocomplete for sets */
-                        final SetAdapter setAdapter = new SetAdapter();
-                        mSetField.setAdapter(setAdapter);
+                        if (null != mArtists) {
+                            /* set the autocomplete for sets */
+                            final SetAdapter setAdapter = new SetAdapter();
+                            mSetField.setAdapter(setAdapter);
+                            /* set the autocomplete for artists */
+                            ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
+                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mArtists);
+                            mArtistField.setThreshold(1);
+                            mArtistField.setAdapter(artistAdapter);
+                        }
 
-                        /* set the autocomplete for artists */
-                        ArrayAdapter<String> artistAdapter = new ArrayAdapter<>(
-                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mArtists);
-                        mArtistField.setThreshold(1);
-                        mArtistField.setAdapter(artistAdapter);
-
-                        /* set the autocomplete for watermarks */
-                        ArrayAdapter<String> watermarkAdapter = new ArrayAdapter<>(
-                                SearchViewFragment.this.getActivity(), R.layout.list_item_1, mWatermarks);
-                        mWatermarkField.setThreshold(1);
-                        mWatermarkField.setAdapter(watermarkAdapter);
+                        if (null != mWatermarks) {
+                            /* set the autocomplete for watermarks */
+                            ArrayAdapter<String> watermarkAdapter = new ArrayAdapter<>(
+                                    SearchViewFragment.this.getActivity(), R.layout.list_item_1, mWatermarks);
+                            mWatermarkField.setThreshold(1);
+                            mWatermarkField.setAdapter(watermarkAdapter);
+                        }
                     });
                 } catch (NullPointerException e) {
                     /* If the UI thread isn't here, eat it */
