@@ -579,6 +579,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     }
                 }
             }
+            updateTotalPrices(0);
         }
     }
 

@@ -1050,6 +1050,7 @@ public class CardViewFragment extends FamiliarFragment {
                         },
                         throwable -> {
                             if (CardViewFragment.this.isAdded()) {
+                                mPriceInfo = null;
                                 CardViewFragment.this.removeDialog(getFragmentManager());
                                 ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
                                         ToastWrapper.LENGTH_SHORT);
