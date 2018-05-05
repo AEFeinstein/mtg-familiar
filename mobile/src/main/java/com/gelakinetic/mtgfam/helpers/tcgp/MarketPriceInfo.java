@@ -65,11 +65,56 @@ public class MarketPriceInfo {
             high = price.highPrice;
             market = price.marketPrice;
         }
+
+        /**
+         * Create a copy of a Price object
+         *
+         * @param price The object to copy
+         */
+        public Price(Price price) {
+            if(null != price) {
+                low = price.low;
+                mid = price.mid;
+                high = price.high;
+                market = price.market;
+            } else {
+                low = 0;
+                mid = 0;
+                high = 0;
+                market = 0;
+            }
+        }
     }
 
     private final Price mNormalPrice;
     private final Price mFoilPrice;
     private final String mProductUrl;
+
+    /**
+     * Create a deep copy of a MarketPriceInfo
+     *
+     * @param priceInfo The object to copy
+     */
+    public MarketPriceInfo(MarketPriceInfo priceInfo) {
+        if (null != priceInfo) {
+            this.mProductUrl = priceInfo.mProductUrl;
+            this.mNormalPrice = new Price(priceInfo.mNormalPrice);
+            this.mFoilPrice = new Price(priceInfo.mFoilPrice);
+        } else {
+            this.mProductUrl = "";
+            this.mNormalPrice = null;
+            this.mFoilPrice = null;
+        }
+    }
+
+    /**
+     * Create a blank MarketPriceInfo
+     */
+    public MarketPriceInfo() {
+        this.mProductUrl = "";
+        this.mNormalPrice = null;
+        this.mFoilPrice = null;
+    }
 
     /**
      * Create a MarketPriceInfo object from data retrieved from the TCGPlayer.com API

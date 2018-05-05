@@ -110,7 +110,7 @@ public class CardDbAdapter {
     private static final String KEY_CODE_MTGI = "code_mtgi";
     private static final String KEY_DATE = "date";
     private static final String KEY_POSITION = "position";
-    private static final String KEY_COLOR_IDENTITY = "color_identity";
+    public static final String KEY_COLOR_IDENTITY = "color_identity";
     private static final String KEY_CAN_BE_FOIL = "can_be_foil";
     private static final String KEY_NAME_NO_ACCENT = "name_no_accent";
     public static final String KEY_NAME_CHINESE_TRADITIONAL = "NAME_CHINESE_TRADITIONAL";
@@ -621,106 +621,6 @@ public class CardDbAdapter {
             return cursor;
         } catch (SQLiteException | IllegalStateException e) {
             throw new FamiliarDbException(e);
-        }
-    }
-
-    /**
-     * Given an ArrayList of CompressedWishlistInfo, fill in all the missing information by querying
-     * the database.
-     *
-     * @param mCompressedCard An ArrayList of CompressedWishlistInfo to fill in
-     * @param mDb             The database to query
-     * @throws FamiliarDbException If something goes wrong
-     */
-    public static void fillExtraWishlistData(ArrayList<? extends CompressedCardInfo> mCompressedCard,
-                                             SQLiteDatabase mDb) throws FamiliarDbException {
-        StringBuilder sql = new StringBuilder("SELECT ");
-
-        boolean first = true;
-        for (String field : CardDbAdapter.ALL_CARD_DATA_KEYS) {
-            if (first) {
-                first = false;
-            } else {
-                sql.append(", ");
-            }
-            sql.append(field);
-        }
-
-        sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE (");
-
-        first = true;
-        boolean doSql = false;
-        for (CompressedCardInfo cwi : mCompressedCard) {
-            if (cwi.mType == null || cwi.mType.equals("")) {
-                doSql = true;
-                if (first) {
-                    first = false;
-                } else {
-                    sql.append(" OR ");
-                }
-                if (cwi.mExpansion != null && !cwi.mExpansion.equals("")) {
-                    sql.append("(" + DATABASE_TABLE_CARDS + "." + KEY_NAME + " = ").append(sanitizeString(cwi.mName, false)).append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = '").append(cwi.mExpansion).append("')");
-                } else {
-                    sql.append("(" + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(sanitizeString(cwi.mName, true)).append(")");
-                }
-            }
-        }
-
-        if (!doSql) {
-            return;
-        }
-
-        sql.append(")"); /* ORDER BY " + DATABASE_TABLE_SETS + "." + KEY_DATE + " DESC */
-
-        Cursor cursor = null;
-        try {
-            cursor = mDb.rawQuery(sql.toString(), null);
-
-            if (cursor != null) {
-                cursor.moveToFirst();
-            } else {
-                return;
-            }
-
-            while (!cursor.isAfterLast()) {
-                /* Do stuff */
-                String name = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-                for (CompressedCardInfo cwi : mCompressedCard) {
-                    if (name != null && name.equals(cwi.mName)) {
-                        cwi.mType =
-                                getTypeLine(cursor);
-                        cwi.mRarity =
-                                (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
-                        cwi.mManaCost =
-                                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-                        cwi.mPower =
-                                cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_POWER));
-                        cwi.mToughness =
-                                cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-                        cwi.mLoyalty =
-                                cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-                        cwi.mText =
-                                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-                        cwi.mFlavor =
-                                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-                        cwi.mNumber =
-                                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-                        cwi.mCmc =
-                                cursor.getInt((cursor.getColumnIndex(CardDbAdapter.KEY_CMC)));
-                        cwi.mColor =
-                                cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_COLOR));
-                    }
-                }
-                /* NEXT! */
-                cursor.moveToNext();
-            }
-        } catch (SQLiteException | IllegalStateException e) {
-            throw new FamiliarDbException(e);
-        } finally {
-            if (null != cursor) {
-                /* Use the cursor to populate stuff */
-                cursor.close();
-            }
         }
     }
 
@@ -1523,9 +1423,9 @@ public class CardDbAdapter {
         ContentValues initialValues = new ContentValues();
 
         String delimiter = " - ";
-        initialValues.put(KEY_NAME, card.mName);
-        initialValues.put(KEY_SET, card.mExpansion);
-        String types[] = card.mType.split(delimiter);
+        initialValues.put(KEY_NAME, card.getName());
+        initialValues.put(KEY_SET, card.getExpansion());
+        String types[] = card.getType().split(delimiter);
         if (types.length > 0) {
             initialValues.put(KEY_SUPERTYPE, types[0]);
         } else {
@@ -1548,72 +1448,72 @@ public class CardDbAdapter {
         } else {
             initialValues.put(KEY_SUBTYPE, "");
         }
-        initialValues.put(KEY_RARITY, (int) card.mRarity);
-        initialValues.put(KEY_MANACOST, card.mManaCost);
-        initialValues.put(KEY_CMC, card.mCmc);
-        initialValues.put(KEY_POWER, card.mPower);
-        initialValues.put(KEY_TOUGHNESS, card.mToughness);
-        initialValues.put(KEY_LOYALTY, card.mLoyalty);
-        initialValues.put(KEY_ABILITY, card.mText);
-        initialValues.put(KEY_FLAVOR, card.mFlavor);
-        initialValues.put(KEY_ARTIST, card.mArtist);
-        initialValues.put(KEY_NUMBER, card.mNumber);
-        initialValues.put(KEY_COLOR, card.mColor);
-        initialValues.put(KEY_MULTIVERSEID, card.mMultiverseId);
-        initialValues.put(KEY_COLOR_IDENTITY, card.mColorIdentity);
-        initialValues.put(KEY_NAME_NO_ACCENT, removeAccentMarks(card.mName));
-        initialValues.put(KEY_WATERMARK, card.mWatermark);
+        initialValues.put(KEY_RARITY, (int) card.getRarity());
+        initialValues.put(KEY_MANACOST, card.getManaCost());
+        initialValues.put(KEY_CMC, card.getCmc());
+        initialValues.put(KEY_POWER, card.getPower());
+        initialValues.put(KEY_TOUGHNESS, card.getToughness());
+        initialValues.put(KEY_LOYALTY, card.getLoyalty());
+        initialValues.put(KEY_ABILITY, card.getText());
+        initialValues.put(KEY_FLAVOR, card.getFlavor());
+        initialValues.put(KEY_ARTIST, card.getArtist());
+        initialValues.put(KEY_NUMBER, card.getNumber());
+        initialValues.put(KEY_COLOR, card.getColor());
+        initialValues.put(KEY_MULTIVERSEID, card.getMultiverseId());
+        initialValues.put(KEY_COLOR_IDENTITY, card.getColorIdentity());
+        initialValues.put(KEY_NAME_NO_ACCENT, removeAccentMarks(card.getName()));
+        initialValues.put(KEY_WATERMARK, card.getWatermark());
 
-        for (Card.ForeignPrinting fp : card.mForeignPrintings) {
-            switch (fp.mLanguageCode) {
+        for (Card.ForeignPrinting fp : card.getForeignPrintings()) {
+            switch (fp.getLanguageCode()) {
                 case Language.Chinese_Traditional: {
-                    initialValues.put(KEY_NAME_CHINESE_TRADITIONAL, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_CHINESE_TRADITIONAL, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_CHINESE_TRADITIONAL, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_CHINESE_TRADITIONAL, fp.getMultiverseId());
                     break;
                 }
                 case Language.Chinese_Simplified: {
-                    initialValues.put(KEY_NAME_CHINESE_SIMPLIFIED, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_CHINESE_SIMPLIFIED, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_CHINESE_SIMPLIFIED, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_CHINESE_SIMPLIFIED, fp.getMultiverseId());
                     break;
                 }
                 case Language.French: {
-                    initialValues.put(KEY_NAME_FRENCH, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_FRENCH, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_FRENCH, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_FRENCH, fp.getMultiverseId());
                     break;
                 }
                 case Language.German: {
-                    initialValues.put(KEY_NAME_GERMAN, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_GERMAN, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_GERMAN, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_GERMAN, fp.getMultiverseId());
                     break;
                 }
                 case Language.Italian: {
-                    initialValues.put(KEY_NAME_ITALIAN, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_ITALIAN, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_ITALIAN, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_ITALIAN, fp.getMultiverseId());
                     break;
                 }
                 case Language.Japanese: {
-                    initialValues.put(KEY_NAME_JAPANESE, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_JAPANESE, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_JAPANESE, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_JAPANESE, fp.getMultiverseId());
                     break;
                 }
                 case Language.Portuguese_Brazil: {
-                    initialValues.put(KEY_NAME_PORTUGUESE_BRAZIL, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_PORTUGUESE_BRAZIL, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_PORTUGUESE_BRAZIL, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_PORTUGUESE_BRAZIL, fp.getMultiverseId());
                     break;
                 }
                 case Language.Russian: {
-                    initialValues.put(KEY_NAME_RUSSIAN, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_RUSSIAN, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_RUSSIAN, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_RUSSIAN, fp.getMultiverseId());
                     break;
                 }
                 case Language.Spanish: {
-                    initialValues.put(KEY_NAME_SPANISH, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_SPANISH, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_SPANISH, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_SPANISH, fp.getMultiverseId());
                     break;
                 }
                 case Language.Korean: {
-                    initialValues.put(KEY_NAME_KOREAN, fp.mName);
-                    initialValues.put(KEY_MULTIVERSEID_KOREAN, fp.mMultiverseId);
+                    initialValues.put(KEY_NAME_KOREAN, fp.getName());
+                    initialValues.put(KEY_MULTIVERSEID_KOREAN, fp.getMultiverseId());
                     break;
                 }
             }

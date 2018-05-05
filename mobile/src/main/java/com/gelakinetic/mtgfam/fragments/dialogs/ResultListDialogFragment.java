@@ -30,7 +30,6 @@ import com.afollestad.materialdialogs.StackingBehavior;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -73,9 +72,15 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .stackingBehavior(StackingBehavior.ALWAYS)
                         .title(cardName)
                         .positiveText(R.string.result_list_Add_to_wishlist)
-                        .onPositive((dialog, which) -> WishlistHelpers.addItemToWishlist(getContext(),
-                                new WishlistHelpers.CompressedWishlistInfo(
-                                        CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), 0)))
+                        .onPositive((dialog, which) -> {
+                            try {
+                                WishlistHelpers.addItemToWishlist(getContext(),
+                                        new WishlistHelpers.CompressedWishlistInfo(
+                                                new MtgCard(getContext(), cardName, cardSet, false, 1), 0));
+                            } catch (java.lang.InstantiationException e) {
+                                /* Eat it */
+                            }
+                        })
                         .negativeText(R.string.result_list_Add_to_decklist)
                         .onNegative((dialog, which) -> {
                             // Show the dialog to pick a deck
@@ -112,8 +117,8 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             boolean entryIncremented = false;
                             for (Pair<MtgCard, Boolean> deckEntry : decklist) {
                                 if (!deckEntry.second && // not in the sideboard
-                                        deckEntry.first.mName.equals(cardName) &&
-                                        deckEntry.first.mExpansion.equals(cardSet)) {
+                                        deckEntry.first.getName().equals(cardName) &&
+                                        deckEntry.first.getExpansion().equals(cardSet)) {
                                     // Increment the card already in the deck
                                     deckEntry.first.mNumberOf++;
                                     entryIncremented = true;
@@ -122,7 +127,11 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             }
                             if (!entryIncremented) {
                                 // Add a new card to the deck
-                                decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                try {
+                                    decklist.add(new Pair<>(new MtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                } catch (java.lang.InstantiationException e) {
+                                    /* Eat it */
+                                }
                             }
 
                             // Write the decklist back

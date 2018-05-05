@@ -133,34 +133,14 @@ public class MarketPriceFetcher {
                 try {
                     SQLiteDatabase database = DatabaseManager.openDatabase(mActivity, false, cardInfoHandle);
 
-                    /* If the card number wasn't given, figure it out */
-                    if (params.mNumber == null || params.mNumber.equals("") || params.mType == null || params.mType.equals("") || params.mMultiverseId == -1) {
-                        cursor = CardDbAdapter.fetchCardByNameAndSet(params.mName, params.mExpansion, CardDbAdapter.ALL_CARD_DATA_KEYS, database);
-
-                        if (params.mNumber == null || params.mNumber.equals("")) {
-                            params.mNumber = cursor.getString(cursor.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-                        }
-
-                        if (params.mType == null || params.mType.equals("")) {
-                            params.mType = CardDbAdapter.getTypeLine(cursor);
-                        }
-
-                        if (params.mMultiverseId == -1) {
-                            params.mMultiverseId = CardDbAdapter.getMultiverseIdFromNameAndSet(params.mName, params.mExpansion, database);
-                            if (params.mMultiverseId == -1) {
-                                throw new FamiliarDbException(null);
-                            }
-                        }
-                    }
-
-                    if (CardDbAdapter.isOnlineOnly(params.mExpansion, database)) {
+                    if (CardDbAdapter.isOnlineOnly(params.getExpansion(), database)) {
                         return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
                     }
 
-                    multiCardType = CardDbAdapter.isMultiCard(params.mNumber, params.mExpansion);
+                    multiCardType = CardDbAdapter.isMultiCard(params.getNumber(), params.getExpansion());
 
                     /* Get the TCGplayer.com set name, why can't everything be consistent? */
-                    tcgSetName = CardDbAdapter.getTcgName(params.mExpansion, database);
+                    tcgSetName = CardDbAdapter.getTcgName(params.getExpansion(), database);
 
                 } catch (SQLiteException | FamiliarDbException e) {
                     return Single.error(new Exception(mActivity.getString(R.string.price_error_database)));
@@ -196,28 +176,28 @@ public class MarketPriceFetcher {
                                     switch (multiOption) {
                                         case 0:
                                             /* Try just the a side */
-                                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.mExpansion, params.mNumber.replace("b", "a"), database);
+                                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.getExpansion(), params.getNumber().replace("b", "a"), database);
                                             break;
                                         case 1:
                                             /* Try just the b side */
-                                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.mExpansion, params.mNumber.replace("a", "b"), database);
+                                            tcgCardName = CardDbAdapter.getNameFromSetAndNumber(params.getExpansion(), params.getNumber().replace("a", "b"), database);
                                             break;
                                         case 2:
                                             /* Try the combined name in one direction */
-                                            tcgCardName = CardDbAdapter.getSplitName(params.mMultiverseId, true, database);
+                                            tcgCardName = CardDbAdapter.getSplitName(params.getMultiverseId(), true, database);
                                             break;
                                         case 3:
                                             /* Try the combined name in the other direction */
-                                            tcgCardName = CardDbAdapter.getSplitName(params.mMultiverseId, false, database);
+                                            tcgCardName = CardDbAdapter.getSplitName(params.getMultiverseId(), false, database);
                                             break;
                                         default:
                                             /* Something went wrong */
-                                            tcgCardName = params.mName;
+                                            tcgCardName = params.getName();
                                             break;
                                     }
                                 } else {
                                     /* This isn't a multicard */
-                                    tcgCardName = params.mName;
+                                    tcgCardName = params.getName();
                                 }
 
                                 /* Retry with accent marks removed */
@@ -283,7 +263,7 @@ public class MarketPriceFetcher {
              * @return A File for this key
              */
             private File getCacheFile(MtgCard cacheKey) {
-                return new File(mActivity.getCacheDir(), (KEY_PREFIX + cacheKey.mName + "-" + cacheKey.mExpansion).replaceAll("\\W+", ""));
+                return new File(mActivity.getCacheDir(), (KEY_PREFIX + cacheKey.getName() + "-" + cacheKey.getExpansion()).replaceAll("\\W+", ""));
             }
 
             /**
@@ -386,7 +366,7 @@ public class MarketPriceFetcher {
     public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
                                  final Consumer<Throwable> onError) {
 
-        if (null == card.mName || card.mName.isEmpty() || null == card.mExpansion || card.mExpansion.isEmpty()) {
+        if (null == card.getName() || card.getName().isEmpty() || null == card.getExpansion() || card.getExpansion().isEmpty()) {
             throw new IllegalArgumentException("card must have a name and expansion to fetch price");
         }
 

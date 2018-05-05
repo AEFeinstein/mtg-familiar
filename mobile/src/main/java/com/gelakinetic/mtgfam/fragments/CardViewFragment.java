@@ -384,16 +384,12 @@ public class CardViewFragment extends FamiliarFragment {
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
             /* http://magiccards.info/scans/en/mt/55.jpg */
-            mCard = new MtgCard();
-            mCard.mName = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME));
-            mCard.mCmc = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_CMC));
-            mCard.mExpansion = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET));
-            mCard.mSetName = CardDbAdapter.getSetNameFromCode(mCard.mExpansion, database);
-            mCard.mSetNameMtgi = CardDbAdapter.getCodeMtgi(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)), database);
+            mCard = new MtgCard(getContext(),
+                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)),
+                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
+                    false, 0);
 
-            mCard.mNumber = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER));
-
-            switch ((char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))) {
+            switch (mCard.getRarity()) {
                 case 'C':
                 case 'c':
                     mSetTextView.setTextColor(ContextCompat.getColor(getContext(),
@@ -421,47 +417,34 @@ public class CardViewFragment extends FamiliarFragment {
                     break;
             }
 
-            String sCost = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_MANACOST));
-            CharSequence csCost = ImageGetterHelper.formatStringWithGlyphs(sCost, imgGetter);
-            mCostTextView.setText(csCost);
+            mCostTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getManaCost(), imgGetter));
 
-            String sAbility = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ABILITY));
-            CharSequence csAbility = ImageGetterHelper.formatStringWithGlyphs(sAbility, imgGetter);
-            mAbilityTextView.setText(csAbility);
+            mAbilityTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getText(), imgGetter));
             mAbilityTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
-            String sFlavor = cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            CharSequence csFlavor = ImageGetterHelper.formatStringWithGlyphs(sFlavor, imgGetter);
-            mFlavorTextView.setText(csFlavor);
+            mFlavorTextView.setText(ImageGetterHelper.formatStringWithGlyphs(mCard.getFlavor(), imgGetter));
 
-            mNameTextView
-                    .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)));
-            mCard.mType = CardDbAdapter.getTypeLine(cCardById);
-            mTypeTextView.setText(mCard.mType);
-            mSetTextView.setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)));
-            mArtistTextView
-                    .setText(cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_ARTIST)));
-            String numberAndRarity =
-                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NUMBER)) + " (" +
-                            (char) cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_RARITY))
-                            + ")";
+            mNameTextView.setText(mCard.getName());
+            mTypeTextView.setText(mCard.getType());
+            mSetTextView.setText(mCard.getExpansion());
+            mArtistTextView.setText(mCard.getArtist());
+            String numberAndRarity = mCard.getNumber() + " (" + mCard.getRarity() + ")";
             mNumberTextView.setText(numberAndRarity);
 
-            int loyalty = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-            float p = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_POWER));
-            float t = cCardById.getFloat(cCardById.getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+            int loyalty = mCard.getLoyalty();
+            float p = mCard.getPower();
+            float t = mCard.getToughness();
             if (loyalty != CardDbAdapter.NO_ONE_CARES) {
                 mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(loyalty, false));
             } else if (p != CardDbAdapter.NO_ONE_CARES && t != CardDbAdapter.NO_ONE_CARES) {
-                boolean shouldShowSign = sAbility.contains("Augment {") && mSetTextView.getText().equals("UST");
+                boolean shouldShowSign = mCard.getText().contains("Augment {") && mSetTextView.getText().equals("UST");
                 mPowTouTextView.setText(CardDbAdapter.getPrintedPTL(p, shouldShowSign) + "/" + CardDbAdapter.getPrintedPTL(t, shouldShowSign));
             } else {
                 mPowTouTextView.setText("");
             }
 
             boolean isMultiCard = false;
-            switch (CardDbAdapter.isMultiCard(mCard.mNumber,
-                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)))) {
+            switch (CardDbAdapter.isMultiCard(mCard.getNumber(), mCard.getExpansion())) {
                 case NOPE:
                     isMultiCard = false;
                     mTransformButton.setVisibility(View.GONE);
@@ -488,25 +471,22 @@ public class CardViewFragment extends FamiliarFragment {
             }
 
             if (isMultiCard) {
-                if (mCard.mNumber.contains("a")) {
-                    mTransformCardNumber = mCard.mNumber.replace("a", "b");
-                } else if (mCard.mNumber.contains("b")) {
-                    mTransformCardNumber = mCard.mNumber.replace("b", "a");
+                if (mCard.getNumber().contains("a")) {
+                    mTransformCardNumber = mCard.getNumber().replace("a", "b");
+                } else if (mCard.getNumber().contains("b")) {
+                    mTransformCardNumber = mCard.getNumber().replace("b", "a");
                 }
-                mTransformId = CardDbAdapter.getIdFromSetAndNumber(mCard.mExpansion, mTransformCardNumber, database);
+                mTransformId = CardDbAdapter.getIdFromSetAndNumber(mCard.getExpansion(), mTransformCardNumber, database);
                 if (mTransformId == -1) {
                     mTransformButton.setVisibility(View.GONE);
                     mTransformButtonDivider.setVisibility(View.GONE);
                 } else {
                     mTransformButton.setOnClickListener(v -> {
                         releaseImageResources(true);
-                        mCard.mNumber = mTransformCardNumber;
                         setInfoFromID(mTransformId);
                     });
                 }
             }
-
-            mCard.mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
 
             /* Do we load the image immediately to the main page, or do it in a dialog later? */
             if (PreferenceAdapter.getPicFirst(getContext())) {
@@ -528,8 +508,7 @@ public class CardViewFragment extends FamiliarFragment {
             mColorIndicatorLayout.removeAllViews();
             ColorIndicatorView civ =
                     new ColorIndicatorView(this.mActivity, dimension, dimension / 15,
-                            cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_COLOR)),
-                            sCost);
+                            mCard.getColor(), mCard.getManaCost());
             if (civ.shouldInidcatorBeShown()) {
                 mColorIndicatorLayout.setVisibility(View.VISIBLE);
                 mColorIndicatorLayout.addView(civ);
@@ -550,31 +529,27 @@ public class CardViewFragment extends FamiliarFragment {
                     {Language.Korean, CardDbAdapter.KEY_NAME_KOREAN, CardDbAdapter.KEY_MULTIVERSEID_KOREAN}};
 
             // Clear the translations first
-            mCard.mForeignPrintings.clear();
+            mCard.getForeignPrintings().clear();
 
             // Add English
-            Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting();
-            englishPrinting.mLanguageCode = Language.English;
-            englishPrinting.mName = mCard.mName;
-            englishPrinting.mMultiverseId = mCard.mMultiverseId;
-            mCard.mForeignPrintings.add(englishPrinting);
+            Card.ForeignPrinting englishPrinting = new Card.ForeignPrinting(mCard.getName(), Language.English, mCard.getMultiverseId());
+            mCard.getForeignPrintings().add(englishPrinting);
 
             // Add all the others
             for (String lang[] : allLanguageKeys) {
-                Card.ForeignPrinting fp = new Card.ForeignPrinting();
-                fp.mLanguageCode = lang[0];
-                fp.mName = cCardById.getString(cCardById.getColumnIndex(lang[1]));
-                fp.mMultiverseId = cCardById.getInt(cCardById.getColumnIndex(lang[2]));
-                if (fp.mName != null && !fp.mName.isEmpty()) {
-                    mCard.mForeignPrintings.add(fp);
+                Card.ForeignPrinting fp = new Card.ForeignPrinting(
+                        cCardById.getString(cCardById.getColumnIndex(lang[1])), lang[0],
+                        cCardById.getInt(cCardById.getColumnIndex(lang[2])));
+                if (fp.getName() != null && !fp.getName().isEmpty()) {
+                    mCard.getForeignPrintings().add(fp);
                 }
             }
 
-            mIsOnlineOnly = CardDbAdapter.isOnlineOnly(mCard.mExpansion, database);
+            mIsOnlineOnly = CardDbAdapter.isOnlineOnly(mCard.getExpansion(), database);
 
             /* Find the other sets this card is in ahead of time, so that it can be remove from the menu
              * if there is only one set */
-            cCardByName = CardDbAdapter.fetchCardByName(mCard.mName,
+            cCardByName = CardDbAdapter.fetchCardByName(mCard.getName(),
                     Arrays.asList(
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_SET,
                             CardDbAdapter.DATABASE_TABLE_CARDS + "." + CardDbAdapter.KEY_ID,
@@ -596,7 +571,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
                 cCardByName.moveToNext();
             }
-        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException | java.lang.InstantiationException e) {
             handleFamiliarDbException(true);
         } finally {
             if (null != cCardById) {
@@ -907,7 +882,7 @@ public class CardViewFragment extends FamiliarFragment {
             }
         }
 
-        fPath = new File(strPath, mCard.mName + "_" + mCard.mExpansion + ".jpg");
+        fPath = new File(strPath, mCard.getName() + "_" + mCard.getExpansion() + ".jpg");
 
         return fPath;
     }
@@ -1049,7 +1024,7 @@ public class CardViewFragment extends FamiliarFragment {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mCard.mName == null) {
+        if (mCard.getName() == null) {
             /*disable menu buttons if the card isn't initialized */
             return false;
         }
@@ -1075,6 +1050,7 @@ public class CardViewFragment extends FamiliarFragment {
                         },
                         throwable -> {
                             if (CardViewFragment.this.isAdded()) {
+                                mPriceInfo = null;
                                 CardViewFragment.this.removeDialog(getFragmentManager());
                                 ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
                                         ToastWrapper.LENGTH_SHORT);
@@ -1156,7 +1132,6 @@ public class CardViewFragment extends FamiliarFragment {
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        MenuItem mi;
         /* If the image has been loaded to the main page, remove the menu option for image */
         if (PreferenceAdapter.getPicFirst(getContext())) {
             menu.findItem(R.id.image).setVisible(false);
@@ -1227,7 +1202,7 @@ public class CardViewFragment extends FamiliarFragment {
                 for (int i = 0; i < cFormats.getCount(); i++) {
                     mFormats[i] =
                             cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
-                    switch (CardDbAdapter.checkLegality(mCard.mName, mFormats[i], database)) {
+                    switch (CardDbAdapter.checkLegality(mCard.getName(), mFormats[i], database)) {
                         case CardDbAdapter.LEGAL:
                             mLegalities[i] = getString(R.string.card_view_legal);
                             break;
@@ -1303,7 +1278,7 @@ public class CardViewFragment extends FamiliarFragment {
 
             mRulingsArrayList = new ArrayList<>();
             try {
-                url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mCard.mMultiverseId);
+                url = new URL("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" + mCard.getMultiverseId());
                 is = FamiliarActivity.getHttpInputStream(url, null, getContext());
                 if (is == null) {
                     throw new IOException("null stream");

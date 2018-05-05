@@ -243,7 +243,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
                 textViewUrl.setText(Html.fromHtml(
                         "<a href=http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=" +
-                                getParentCardViewFragment().mCard.mMultiverseId + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
+                                getParentCardViewFragment().mCard.getMultiverseId() + ">" + getString(R.string.card_view_gatherer_page) + "</a>"
                 ));
 
                 MaterialDialog.Builder builder = new MaterialDialog.Builder(getParentCardViewFragment().mActivity);
@@ -255,7 +255,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                 if (null == getParentCardViewFragment()) {
                     return DontShowDialog();
                 }
-                Dialog dialog = CardHelpers.getDialog(getParentCardViewFragment().mCard.mName, getParentCardViewFragment(), false, false);
+                Dialog dialog = CardHelpers.getDialog(getParentCardViewFragment().mCard.getName(), getParentCardViewFragment(), false, false);
                 if (dialog == null) {
                     getParentCardViewFragment().handleFamiliarDbException(false);
                     return DontShowDialog();
@@ -267,8 +267,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                     return DontShowDialog();
                 }
 
-                final String cardName = getParentCardViewFragment().mCard.mName;
-                final String cardSet = getParentCardViewFragment().mCard.mExpansion;
+                final String cardName = getParentCardViewFragment().mCard.getName();
+                final String cardSet = getParentCardViewFragment().mCard.getExpansion();
                 final String[] deckNames = getFiles(DecklistFragment.DECK_EXTENSION);
 
                 /* If there are no files, don't show the dialog */
@@ -293,8 +293,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             boolean entryIncremented = false;
                             for (Pair<MtgCard, Boolean> deckEntry : decklist) {
                                 if (!deckEntry.second && // not in the sideboard
-                                        deckEntry.first.mName.equals(cardName) &&
-                                        deckEntry.first.mExpansion.equals(cardSet)) {
+                                        deckEntry.first.getName().equals(cardName) &&
+                                        deckEntry.first.getExpansion().equals(cardSet)) {
                                     // Increment the card already in the deck
                                     deckEntry.first.mNumberOf++;
                                     entryIncremented = true;
@@ -303,7 +303,11 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             }
                             if (!entryIncremented) {
                                 // Add a new card to the deck
-                                decklist.add(new Pair<>(CardHelpers.makeMtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                try {
+                                    decklist.add(new Pair<>(new MtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                } catch (java.lang.InstantiationException e) {
+                                    /* Eat it */
+                                }
                             }
 
                             // Write the decklist back
@@ -345,7 +349,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
             }
             case TRANSLATE_CARD: {
                 /* Make sure the translations exist */
-                if (null == getParentCardViewFragment() || getParentCardViewFragment().mCard.mForeignPrintings.isEmpty()) {
+                if (null == getParentCardViewFragment() || getParentCardViewFragment().mCard.getForeignPrintings().isEmpty()) {
                     /* exception handled in AsyncTask */
                     return DontShowDialog();
                 }
@@ -356,12 +360,12 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 /* prepare the list of all translations */
                 List<HashMap<String, String>> fillMaps = new ArrayList<>();
-                for (Card.ForeignPrinting fp : getParentCardViewFragment().mCard.mForeignPrintings) {
+                for (Card.ForeignPrinting fp : getParentCardViewFragment().mCard.getForeignPrintings()) {
                     HashMap<String, String> map = new HashMap<>();
 
                     /* Translate the language code into a readable language label */
                     String language = null;
-                    switch (fp.mLanguageCode) {
+                    switch (fp.getLanguageCode()) {
                         case Language.Chinese_Traditional: {
                             language = getString(R.string.pref_Chinese_trad);
                             break;
@@ -410,7 +414,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                     /* Add the language and translation */
                     map.put(from[0], language);
-                    map.put(from[1], fp.mName);
+                    map.put(from[1], fp.getName());
                     fillMaps.add(map);
                 }
 

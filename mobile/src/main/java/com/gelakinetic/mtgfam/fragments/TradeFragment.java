@@ -40,7 +40,6 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.TradeDialogFragment;
 import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
-import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
@@ -146,39 +145,38 @@ public class TradeFragment extends FamiliarListFragment {
         final String cardName = getCardNameInput().toString();
         final int numberOf = Integer.parseInt(getCardNumberInput().toString());
         final boolean isFoil = checkboxFoilIsChecked();
-        final MtgCard card = CardHelpers.makeMtgCard(getContext(), cardName, null, isFoil, numberOf);
+        try {
+            final MtgCard card = new MtgCard(getContext(), cardName, null, isFoil, numberOf);
 
-        if (card == null) {
-            return;
+            card.setIndex(mOrderAddedIdx++);
+
+            switch (side) {
+                case LEFT: {
+                    mListLeft.add(0, card);
+                    getCardDataAdapter(LEFT).notifyItemInserted(0);
+                    loadPrice(card);
+                    break;
+                }
+                case RIGHT: {
+                    mListRight.add(0, card);
+                    getCardDataAdapter(RIGHT).notifyItemInserted(0);
+                    loadPrice(card);
+                    break;
+                }
+                default: {
+                    return;
+                }
+            }
+
+            clearCardNameInput();
+            clearCardNumberInput();
+
+            uncheckFoilCheckbox();
+
+            sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
+        } catch (java.lang.InstantiationException e) {
+            /* Eat it */
         }
-
-        card.setIndex(mOrderAddedIdx++);
-
-        switch (side) {
-            case LEFT: {
-                mListLeft.add(0, card);
-                getCardDataAdapter(LEFT).notifyItemInserted(0);
-                loadPrice(card);
-                break;
-            }
-            case RIGHT: {
-                mListRight.add(0, card);
-                getCardDataAdapter(RIGHT).notifyItemInserted(0);
-                loadPrice(card);
-                break;
-            }
-            default: {
-                return;
-            }
-        }
-
-        clearCardNameInput();
-        clearCardNumberInput();
-
-        uncheckFoilCheckbox();
-
-        sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
-
     }
 
     /**
@@ -281,7 +279,7 @@ public class TradeFragment extends FamiliarListFragment {
                     MtgCard card = MtgCard.fromTradeString(line, getActivity());
                     card.setIndex(mOrderAddedIdx++);
 
-                    if (card.mSetName == null) {
+                    if (card.getSetName() == null) {
                         handleFamiliarDbException(false);
                         return;
                     }
@@ -296,7 +294,7 @@ public class TradeFragment extends FamiliarListFragment {
                             loadPrice(card);
                         }
                     }
-                } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                } catch (NumberFormatException | IndexOutOfBoundsException | java.lang.InstantiationException e) {
                     // This card line is junk, ignore it
                 }
             }
@@ -431,6 +429,7 @@ public class TradeFragment extends FamiliarListFragment {
     protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
         data.mMessage = exception.getLocalizedMessage();
         data.mPriceInfo = null;
+        updateTotalPrices(BOTH);
     }
 
     @Override
@@ -580,31 +579,31 @@ public class TradeFragment extends FamiliarListFragment {
                     /* Compare the entries based on the key */
                     switch (option.getKey()) {
                         case CardDbAdapter.KEY_NAME: {
-                            retVal = card1.mName.compareTo(card2.mName);
+                            retVal = card1.getName().compareTo(card2.getName());
                             break;
                         }
                         case CardDbAdapter.KEY_COLOR: {
-                            retVal = card1.mColor.compareTo(card2.mColor);
+                            retVal = card1.getColor().compareTo(card2.getColor());
                             break;
                         }
                         case CardDbAdapter.KEY_SUPERTYPE: {
-                            retVal = card1.mType.compareTo(card2.mType);
+                            retVal = card1.getType().compareTo(card2.getType());
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = card1.mCmc - card2.mCmc;
+                            retVal = card1.getCmc() - card2.getCmc();
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
-                            retVal = Float.compare(card1.mPower, card2.mPower);
+                            retVal = Float.compare(card1.getPower(), card2.getPower());
                             break;
                         }
                         case CardDbAdapter.KEY_TOUGHNESS: {
-                            retVal = Float.compare(card1.mToughness, card2.mToughness);
+                            retVal = Float.compare(card1.getToughness(), card2.getToughness());
                             break;
                         }
                         case CardDbAdapter.KEY_SET: {
-                            retVal = card1.mExpansion.compareTo(card2.mExpansion);
+                            retVal = card1.getExpansion().compareTo(card2.getExpansion());
                             break;
                         }
                         case SortOrderDialogFragment.KEY_PRICE: {
@@ -714,8 +713,8 @@ public class TradeFragment extends FamiliarListFragment {
             final MtgCard item = getItem(position);
 
             holder.itemView.findViewById(R.id.trade_row).setVisibility(View.VISIBLE);
-            holder.setCardName(item.mName);
-            holder.mCardSet.setText(item.mSetName);
+            holder.setCardName(item.getName());
+            holder.mCardSet.setText(item.getSetName());
             holder.mCardFoil.setVisibility(item.mIsFoil ? View.VISIBLE : View.GONE);
             if (item.hasPrice()) {
                 holder.mCardPrice.setText(item.mNumberOf + "x " + item.getPriceString());

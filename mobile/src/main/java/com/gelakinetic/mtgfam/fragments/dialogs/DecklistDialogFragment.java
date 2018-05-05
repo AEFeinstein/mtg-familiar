@@ -261,8 +261,8 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                                 cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
                         for (CompressedDecklistInfo info :
                                 getParentDecklistFragment().mCompressedDecklist) {
-                            if (!info.mName.isEmpty()) { /* Skip the headers */
-                                switch (CardDbAdapter.checkLegality(info.mName, format, database)) {
+                            if (!info.getName().isEmpty()) { /* Skip the headers */
+                                switch (CardDbAdapter.checkLegality(info.getName(), format, database)) {
                                     case CardDbAdapter.LEGAL: {
                                         if (format.equalsIgnoreCase("Commander")
                                                 && info.getTotalNumber() > 1) {
