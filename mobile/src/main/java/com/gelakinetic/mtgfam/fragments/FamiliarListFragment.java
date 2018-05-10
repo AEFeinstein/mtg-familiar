@@ -351,7 +351,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
                                 ((DecklistFragment.DecklistDataAdapter) getCardDataAdapter(0)).getSelectedItems();
                         for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-                            WishlistHelpers.addItemToWishlist(getContext(),
+                            WishlistHelpers.addItemToWishlist(getActivity(),
                                     info.convertToWishlist());
                         }
                         mode.finish();

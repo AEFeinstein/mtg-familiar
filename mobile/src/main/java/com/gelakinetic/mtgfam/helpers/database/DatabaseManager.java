@@ -197,7 +197,7 @@ public class DatabaseManager {
                     }
                 }
                 // Add the handle to the collection of open handles only if the open was successful
-                    mOpenHandles.add(handle);
+                mOpenHandles.add(handle);
                 return mDatabase;
             } catch (SQLiteException e) {
                 throw new FamiliarDbException(e);
@@ -217,7 +217,7 @@ public class DatabaseManager {
                 // Close the database
                 if (mOpenHandles.isEmpty()) {
                     if (mTransactional) {
-                            mDatabase.execSQL("COMMIT");
+                        mDatabase.execSQL("COMMIT");
                     }
                     mDatabase.close();
                 }

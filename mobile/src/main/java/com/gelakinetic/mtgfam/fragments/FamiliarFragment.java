@@ -38,7 +38,7 @@ import android.view.ViewGroup;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
 /**
  * This is the superclass for all fragments. It has a bunch of convenient methods
@@ -271,7 +271,7 @@ public abstract class FamiliarFragment extends Fragment {
         /* Show a toast on the UI thread */
         FragmentActivity activity = getActivity();
         if (null != activity) {
-            activity.runOnUiThread(() -> ToastWrapper.makeAndShowText(getActivity(), R.string.error_database, ToastWrapper.LENGTH_LONG));
+            activity.runOnUiThread(() -> SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_database, SnackbarWrapper.LENGTH_LONG));
             /* Finish the fragment if requested */
             if (shouldFinish) {
                 try {

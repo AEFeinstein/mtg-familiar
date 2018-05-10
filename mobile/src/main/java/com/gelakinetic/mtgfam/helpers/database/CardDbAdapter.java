@@ -35,14 +35,12 @@ import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;

@@ -20,8 +20,8 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -77,7 +77,7 @@ public class CardHelpers {
             boolean showCardButton,
             final boolean isSideboard) {
 
-        final Context ctx = fragment.getActivity();
+        final Activity activity = fragment.getActivity();
 
         /* Create the custom view */
         @SuppressLint("InflateParams") View customView = fragment.getActivity().getLayoutInflater()
@@ -93,19 +93,19 @@ public class CardHelpers {
         final Map<String, String> targetFoilCardNumberOfs;
 
         // The wishlist dialog is shown both in the card view and the wishlist fragments
-        final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(ctx, WishlistFragment.class);
-        final boolean isCardViewDialog = FragmentHelpers.isInstanceOf(ctx, CardViewPagerFragment.class);
-        final boolean isResultListDialog = FragmentHelpers.isInstanceOf(ctx, ResultListFragment.class);
+        final boolean isWishlistDialog = FragmentHelpers.isInstanceOf(activity, WishlistFragment.class);
+        final boolean isCardViewDialog = FragmentHelpers.isInstanceOf(activity, CardViewPagerFragment.class);
+        final boolean isResultListDialog = FragmentHelpers.isInstanceOf(activity, ResultListFragment.class);
 
         final String deckName;
         final String dialogText;
 
         if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
             /* Read the wishlist */
-            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
+            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity);
             targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
             deckName = "";
-            dialogText = ctx.getString(R.string.wishlist_edit_dialog_title_end);
+            dialogText = activity.getString(R.string.wishlist_edit_dialog_title_end);
         } else {
             /* Right now only WishlistDialogFragment and DecklistDialogFragment call this, so
              * obviously now it is the decklist */
@@ -116,9 +116,9 @@ public class CardHelpers {
                 deckName = ((DecklistFragment) fragment).mCurrentDeck;
             }
             ArrayList<Pair<MtgCard, Boolean>> decklist =
-                    DecklistHelpers.ReadDecklist(ctx, deckName + DecklistFragment.DECK_EXTENSION);
+                    DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION);
             targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
-            dialogText = ctx.getString(R.string.decklist_edit_dialog_title_end);
+            dialogText = activity.getString(R.string.decklist_edit_dialog_title_end);
         }
         targetCardNumberOfs = targetNumberOfs.first;
         targetFoilCardNumberOfs = targetNumberOfs.second;
@@ -189,13 +189,13 @@ public class CardHelpers {
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                 /* Read the wishlist */
                 list = new ArrayList<>();
-                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
+                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity);
                 for (MtgCard card : wishlist) {
                     list.add(new Pair<>(card, false));
                 }
             } else {
                 list = DecklistHelpers.ReadDecklist(
-                        ctx,
+                        activity,
                         deckName + DecklistFragment.DECK_EXTENSION
                 );
             }
@@ -216,7 +216,7 @@ public class CardHelpers {
                     numberOf = 0;
                 }
                 try {
-                    MtgCard card = new MtgCard(ctx, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
+                    MtgCard card = new MtgCard(activity, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
 
                     /* Look through the wishlist for each card, set the numberOf or remove
                      * it if it exists, or add the card if it doesn't */
@@ -255,7 +255,7 @@ public class CardHelpers {
                 fragment.onWishlistChanged(mCardName); //
             } else {
                 DecklistHelpers.WriteDecklist(
-                        ctx,
+                        activity,
                         list,
                         deckName + DecklistFragment.DECK_EXTENSION
                 );
@@ -301,7 +301,7 @@ public class CardHelpers {
         }
 
         /* make and return the actual dialog */
-        return new MaterialDialog.Builder(ctx)
+        return new MaterialDialog.Builder(activity)
                 .title(mCardName + " " + dialogText)
                 .customView(customView, false)
                 .positiveText(fragment.getString(R.string.dialog_ok))
