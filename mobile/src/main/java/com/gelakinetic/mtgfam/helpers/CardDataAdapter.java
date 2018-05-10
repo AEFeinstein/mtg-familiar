@@ -117,10 +117,9 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
 
         onItemRemoved();
 
-        Snackbar.make(mFragment.getFamiliarActivity().findViewById(R.id.fragment_container),
-                mFragment.getString(R.string.cardlist_item_deleted) + " " + removedName,
-                PreferenceAdapter.getUndoTimeout(mFragment.getContext()))
-                .setAction(R.string.cardlist_undo, new View.OnClickListener() {
+        SnackbarWrapper.makeAndShowText(mFragment.getFamiliarActivity(), mFragment.getString(R.string.cardlist_item_deleted) + " " + removedName,
+                PreferenceAdapter.getUndoTimeout(mFragment.getContext()), R.string.cardlist_undo,
+                new View.OnClickListener() {
                     /**
                      * When "Undo" is clicked, readd the removed items to the underlying list,
                      * remove them from the undo list, and notify the adapter that it was changed
@@ -131,8 +130,8 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                     public void onClick(View v) {
                         undoDelete();
                     }
-                })
-                .addCallback(new Snackbar.Callback() {
+                },
+                new Snackbar.Callback() {
                     /**
                      * When the snackbar is dismissed, depending on how it was dismissed, either
                      * clear the undo buffer of all items and notify the adapter, or ignore it
@@ -160,8 +159,7 @@ public abstract class CardDataAdapter<T extends MtgCard, VH extends CardDataView
                             }
                         }
                     }
-                })
-                .show();
+                });
     }
 
     /**
