@@ -36,11 +36,23 @@
             android:background="?attr/colorPrimary_attr"
             android:minHeight="?attr/actionBarSize" />
 
-        <!-- The main content view -->
-        <com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout
-            android:id="@+id/fragment_container"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/smooth_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:indeterminate="true" />
+
+            <!-- The main content view -->
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </RelativeLayout>
     </LinearLayout>
 
     <!-- The navigation drawer -->
