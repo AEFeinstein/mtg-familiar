@@ -59,7 +59,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.DataSource;
@@ -135,8 +134,7 @@ public class CardViewFragment extends FamiliarFragment {
     private Button mTransformButton;
     private View mTransformButtonDivider;
     private ImageView mCardImageView;
-    private ScrollView mTextScrollView;
-    private ScrollView mImageScrollView;
+    private LinearLayout mCardTextLinearLayout;
     private LinearLayout mColorIndicatorLayout;
 
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
@@ -238,8 +236,7 @@ public class CardViewFragment extends FamiliarFragment {
         mPowTouTextView = myFragmentView.findViewById(R.id.pt);
         mTransformButtonDivider = myFragmentView.findViewById(R.id.transform_button_divider);
         mTransformButton = myFragmentView.findViewById(R.id.transformbutton);
-        mTextScrollView = myFragmentView.findViewById(R.id.cardTextScrollView);
-        mImageScrollView = myFragmentView.findViewById(R.id.cardImageScrollView);
+        mCardTextLinearLayout = myFragmentView.findViewById(R.id.CardTextLinearLayout);
         mCardImageView = myFragmentView.findViewById(R.id.cardpic);
         mColorIndicatorLayout =
                 myFragmentView.findViewById(R.id.color_indicator_view);
@@ -325,8 +322,7 @@ public class CardViewFragment extends FamiliarFragment {
             mPowTouTextView = null;
             mTransformButtonDivider = null;
             mTransformButton = null;
-            mTextScrollView = null;
-            mImageScrollView = null;
+            mCardTextLinearLayout = null;
             mCardImageView = null;
             mColorIndicatorLayout = null;
         }
@@ -490,14 +486,14 @@ public class CardViewFragment extends FamiliarFragment {
 
             /* Do we load the image immediately to the main page, or do it in a dialog later? */
             if (PreferenceAdapter.getPicFirst(getContext())) {
-                mImageScrollView.setVisibility(View.VISIBLE);
-                mTextScrollView.setVisibility(View.GONE);
+                mCardImageView.setVisibility(View.VISIBLE);
+                mCardTextLinearLayout.setVisibility(View.GONE);
 
                 // Load the image with Glide
-                loadImageWithGlide(mCardImageView);
+                loadImageWithGlide(mCardImageView, false);
             } else {
-                mImageScrollView.setVisibility(View.GONE);
-                mTextScrollView.setVisibility(View.VISIBLE);
+                mCardImageView.setVisibility(View.GONE);
+                mCardTextLinearLayout.setVisibility(View.VISIBLE);
             }
 
             /* Figure out how large the color indicator should be. Medium text is 18sp, with a border
@@ -590,18 +586,18 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param cardImageView The ImageView to load the image into
      */
-    private void loadImageWithGlide(ImageView cardImageView) {
+    private void loadImageWithGlide(ImageView cardImageView, boolean shouldScale) {
 
+        int width = 0;
+        int height = 0;
         // Get screen dimensions
-        int mBorder = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics());
-        Rect rectangle = new Rect();
-        mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
-        int height = ((rectangle.bottom - rectangle.top) -
-                mActivity.getSupportActionBar().getHeight()) - mBorder;
-        int width = (rectangle.right - rectangle.left) - mBorder;
-
+        if (shouldScale) {
+            int mBorder = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 36, getResources().getDisplayMetrics());
+            View toMeasure = getFamiliarActivity().findViewById(R.id.drawer_layout);
+            width = toMeasure.getWidth() - mBorder;
+            height = toMeasure.getHeight() - mBorder;
+        }
         // Load the image
         runGlideTarget(new FamiliarGlideTarget(this, cardImageView), width, height);
     }
@@ -707,7 +703,7 @@ public class CardViewFragment extends FamiliarFragment {
                     }
                 }
             }
-        }, whereTo), 0, 0);
+        }), 0, 0);
     }
 
     /**
@@ -830,8 +826,8 @@ public class CardViewFragment extends FamiliarFragment {
      * Display the text if the image fails to load
      */
     public void showText() {
-        mImageScrollView.setVisibility(View.GONE);
-        mTextScrollView.setVisibility(View.VISIBLE);
+        mCardImageView.setVisibility(View.GONE);
+        mCardTextLinearLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -1031,7 +1027,7 @@ public class CardViewFragment extends FamiliarFragment {
         /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.image: {
-                loadImageWithGlide(null);
+                loadImageWithGlide(null, true);
                 return true;
             }
             case R.id.price: {
