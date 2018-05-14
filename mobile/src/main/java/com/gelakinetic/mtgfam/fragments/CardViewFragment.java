@@ -1035,27 +1035,32 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.price: {
-                mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
-                        marketPriceInfo -> {
-                            if (CardViewFragment.this.isAdded()) {
-                                if (marketPriceInfo != null) {
-                                    mPriceInfo = marketPriceInfo;
-                                    showDialog(CardViewDialogFragment.GET_PRICE);
-                                } else {
-                                    ToastWrapper.makeAndShowText(mActivity,
-                                            R.string.card_view_price_not_found,
+                try {
+                    mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
+                            marketPriceInfo -> {
+                                if (CardViewFragment.this.isAdded()) {
+                                    if (marketPriceInfo != null) {
+                                        mPriceInfo = marketPriceInfo;
+                                        showDialog(CardViewDialogFragment.GET_PRICE);
+                                    } else {
+                                        ToastWrapper.makeAndShowText(mActivity,
+                                                R.string.card_view_price_not_found,
+                                                ToastWrapper.LENGTH_SHORT);
+                                    }
+                                }
+                            },
+                            throwable -> {
+                                if (CardViewFragment.this.isAdded()) {
+                                    mPriceInfo = null;
+                                    CardViewFragment.this.removeDialog(getFragmentManager());
+                                    ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
                                             ToastWrapper.LENGTH_SHORT);
                                 }
-                            }
-                        },
-                        throwable -> {
-                            if (CardViewFragment.this.isAdded()) {
-                                mPriceInfo = null;
-                                CardViewFragment.this.removeDialog(getFragmentManager());
-                                ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
-                                        ToastWrapper.LENGTH_SHORT);
-                            }
-                        });
+                            });
+
+                } catch (java.lang.InstantiationException e) {
+                    // TODO care about this?
+                }
 
                 return true;
             }

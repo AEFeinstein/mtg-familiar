@@ -110,17 +110,17 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
                             // Read the decklist
                             String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
-                            ArrayList<Pair<MtgCard, Boolean>> decklist =
+                            ArrayList<MtgCard> decklist =
                                     DecklistHelpers.ReadDecklist(getContext(), deckFileName);
 
                             // Look through the decklist for any existing matches
                             boolean entryIncremented = false;
-                            for (Pair<MtgCard, Boolean> deckEntry : decklist) {
-                                if (!deckEntry.second && // not in the sideboard
-                                        deckEntry.first.getName().equals(cardName) &&
-                                        deckEntry.first.getExpansion().equals(cardSet)) {
+                            for (MtgCard deckEntry : decklist) {
+                                if (!deckEntry.isSideboard() && // not in the sideboard
+                                        deckEntry.getName().equals(cardName) &&
+                                        deckEntry.getExpansion().equals(cardSet)) {
                                     // Increment the card already in the deck
-                                    deckEntry.first.mNumberOf++;
+                                    deckEntry.mNumberOf++;
                                     entryIncremented = true;
                                     break;
                                 }
@@ -128,7 +128,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             if (!entryIncremented) {
                                 // Add a new card to the deck
                                 try {
-                                    decklist.add(new Pair<>(new MtgCard(getContext(), cardName, cardSet, false, 1), false));
+                                    decklist.add(new MtgCard(getContext(), cardName, cardSet, false, 1));
                                 } catch (java.lang.InstantiationException e) {
                                     /* Eat it */
                                 }

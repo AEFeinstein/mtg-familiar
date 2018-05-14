@@ -364,10 +364,10 @@ public class MarketPriceFetcher {
      * @param onError   A Consumer callback to be called when an error occurs
      */
     public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
-                                 final Consumer<Throwable> onError) {
+                                 final Consumer<Throwable> onError) throws InstantiationException {
 
         if (null == card.getName() || card.getName().isEmpty() || null == card.getExpansion() || card.getExpansion().isEmpty()) {
-            throw new IllegalArgumentException("card must have a name and expansion to fetch price");
+            throw new InstantiationException("card must have a name and expansion to fetch price");
         }
 
         /* Show the loading animation */

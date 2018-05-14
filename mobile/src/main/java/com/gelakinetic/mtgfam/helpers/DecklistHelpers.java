@@ -20,11 +20,18 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -48,15 +55,15 @@ public class DecklistHelpers {
      */
     public static void WriteDecklist(
             Context mCtx,
-            ArrayList<Pair<MtgCard, Boolean>> lDecklist,
+            ArrayList<MtgCard> lDecklist,
             String fileName) {
 
         try {
             FileOutputStream fos = mCtx.openFileOutput(fileName, Context.MODE_PRIVATE);
-            for (Pair<MtgCard, Boolean> m : lDecklist) {
-                String cardString = m.first.toWishlistString();
+            for (MtgCard m : lDecklist) {
+                String cardString = m.toWishlistString();
                 /* If the card is a sideboard card, add the marking */
-                if (m.second) {
+                if (m.isSideboard()) {
                     cardString = "SB:" + cardString;
                 }
                 fos.write(cardString.getBytes());
@@ -116,9 +123,9 @@ public class DecklistHelpers {
      * @param mCtx A context to open the file and pop toasts with
      * @return The decklist in ArrayList<Pair> form
      */
-    public static ArrayList<Pair<MtgCard, Boolean>> ReadDecklist(Context mCtx, String deckName) {
+    public static ArrayList<MtgCard> ReadDecklist(Context mCtx, String deckName) {
 
-        ArrayList<Pair<MtgCard, Boolean>> lDecklist = new ArrayList<>();
+        ArrayList<MtgCard> lDecklist = new ArrayList<>();
 
         try {
             String line;
@@ -137,7 +144,7 @@ public class DecklistHelpers {
                         line = line.substring(3);
                     }
                     try {
-                        lDecklist.add(new Pair<>(MtgCard.fromWishlistString(line, mCtx), isSideboard));
+                        lDecklist.add(MtgCard.fromWishlistString(line, isSideboard, mCtx));
                     } catch (InstantiationException e) {
                         /* Eat it */
                     }
@@ -147,6 +154,37 @@ public class DecklistHelpers {
             ToastWrapper.makeAndShowText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
         } catch (IOException ioe) {
             /* Catches file not found exception when decklist doesn't exist */
+        }
+
+        Cursor cardCursor = null;
+        FamiliarDbHandle handle = new FamiliarDbHandle();
+        try {
+            SQLiteDatabase database = DatabaseManager.openDatabase(mCtx, false, handle);
+            cardCursor = CardDbAdapter.fetchCardByNamesAndSets(lDecklist, database);
+            cardCursor.moveToFirst();
+            while(!cardCursor.isAfterLast()) {
+                String name = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NAME));
+                String set = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SET));
+
+                for(MtgCard card : lDecklist) {
+                    if(card.getName().equals(name) && card.getExpansion().equals(set)) {
+                        try {
+                            card.initFromCursor(mCtx, cardCursor);
+                        } catch (InstantiationException e) {
+                            // Eat it
+                        }
+                        break;
+                    }
+                }
+                cardCursor.moveToNext();
+            }
+        } catch (SQLiteException | FamiliarDbException fde) {
+            // TODO care about this
+        } finally {
+            if (null != cardCursor) {
+                cardCursor.close();
+            }
+            DatabaseManager.closeDatabase(mCtx, handle);
         }
         return lDecklist;
 
@@ -186,20 +224,20 @@ public class DecklistHelpers {
 
     public static Pair<Map<String, String>, Map<String, String>> getTargetNumberOfs(
             String mCardName,
-            ArrayList<Pair<MtgCard, Boolean>> decklist,
+            ArrayList<MtgCard> decklist,
             boolean isSideboard) {
 
         final Map<String, String> targetCardNumberOfs = new HashMap<>();
         final Map<String, String> targetFoilNumberOfs = new HashMap<>();
 
-        for (Pair<MtgCard, Boolean> card : decklist) {
-            if (card.first.getName().equals(mCardName) && card.second == isSideboard) {
-                if (card.first.mIsFoil) {
-                    targetFoilNumberOfs.put(card.first.getExpansion(),
-                            String.valueOf(card.first.mNumberOf));
+        for (MtgCard card : decklist) {
+            if (card.getName().equals(mCardName) && card.isSideboard() == isSideboard) {
+                if (card.mIsFoil) {
+                    targetFoilNumberOfs.put(card.getExpansion(),
+                            String.valueOf(card.mNumberOf));
                     continue;
                 }
-                targetCardNumberOfs.put(card.first.getExpansion(), String.valueOf(card.first.mNumberOf));
+                targetCardNumberOfs.put(card.getExpansion(), String.valueOf(card.mNumberOf));
             }
         }
         return new Pair<>(targetCardNumberOfs, targetFoilNumberOfs);

@@ -35,7 +35,7 @@ import com.gelakinetic.GathererScraper.JsonTypes.Card;
 import com.gelakinetic.GathererScraper.JsonTypes.Expansion;
 import com.gelakinetic.GathererScraper.Language;
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.CardHelpers.CompressedCardInfo;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 
@@ -107,11 +107,11 @@ public class CardDbAdapter {
     private static final String KEY_FORMAT = "format";
     public static final String KEY_DIGEST = "digest";
     private static final String KEY_RULINGS = "rulings";
-    private static final String KEY_CODE_MTGI = "code_mtgi";
+    public static final String KEY_CODE_MTGI = "code_mtgi";
     private static final String KEY_DATE = "date";
     private static final String KEY_POSITION = "position";
     public static final String KEY_COLOR_IDENTITY = "color_identity";
-    private static final String KEY_CAN_BE_FOIL = "can_be_foil";
+    public static final String KEY_CAN_BE_FOIL = "can_be_foil";
     private static final String KEY_NAME_NO_ACCENT = "name_no_accent";
     public static final String KEY_NAME_CHINESE_TRADITIONAL = "NAME_CHINESE_TRADITIONAL";
     public static final String KEY_MULTIVERSEID_CHINESE_TRADITIONAL = "MULTIVERSEID_CHINESE_TRADITIONAL";
@@ -654,6 +654,61 @@ public class CardDbAdapter {
             }
 
             sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET + " WHERE " + DATABASE_TABLE_CARDS + "." + KEY_NAME_NO_ACCENT + " = ").append(name).append(" COLLATE NOCASE").append(" AND ").append(DATABASE_TABLE_CARDS).append(".").append(KEY_SET).append(" = ").append(setCode).append(" ORDER BY ").append(DATABASE_TABLE_SETS).append(".").append(KEY_DATE).append(" DESC");
+
+            Cursor c = mDb.rawQuery(sql.toString(), null);
+            if (c != null) {
+                c.moveToFirst();
+            }
+            return c;
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        }
+    }
+
+    /**
+     * TODO
+     *
+     * @param cards
+     * @param mDb
+     * @return
+     * @throws FamiliarDbException
+     */
+    public static Cursor fetchCardByNamesAndSets(ArrayList<MtgCard> cards, SQLiteDatabase mDb)
+            throws FamiliarDbException {
+        try {
+            StringBuilder sql = new StringBuilder("SELECT ");
+
+            // All the keys
+            boolean first = true;
+            for (String field : ALL_CARD_DATA_KEYS) {
+                if (first) {
+                    first = false;
+                } else {
+                    sql.append(", ");
+                }
+                sql.append(field).append(" as c_").append(field.split("\\.")[1]);
+            }
+            for (String field : ALL_SET_DATA_KEYS) {
+                sql.append(", ");
+                sql.append(field).append(" as s_").append(field.split("\\.")[1]);
+            }
+
+            // From a joined table
+            sql.append(" FROM " + DATABASE_TABLE_CARDS + " JOIN " + DATABASE_TABLE_SETS + " ON " + DATABASE_TABLE_SETS + "." + KEY_CODE + " = " + DATABASE_TABLE_CARDS + "." + KEY_SET);
+
+            sql.append(" WHERE ");
+
+            first = true;
+            for (MtgCard card: cards) {
+                if (first) {
+                    first = false;
+                } else {
+                    sql.append(" OR ");
+                }
+                sql.append("(c_").append(KEY_NAME_NO_ACCENT).append(" = ").append(sanitizeString(card.getName(), true)).append(" COLLATE NOCASE AND ");
+                sql.append("c_").append(KEY_SET).append(" = ").append(sanitizeString(card.getExpansion(), false)).append(")");
+            }
+            sql.append(" ORDER BY s_").append(KEY_DATE).append(" DESC");
 
             Cursor c = mDb.rawQuery(sql.toString(), null);
             if (c != null) {

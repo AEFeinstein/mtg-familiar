@@ -328,27 +328,27 @@ public class DecklistFragment extends FamiliarListFragment {
         final String lDeckName = getAndSetDeckName(deckName);
 
         /* Read the decklist */
-        final ArrayList<Pair<MtgCard, Boolean>> decklist =
+        final ArrayList<MtgCard> decklist =
                 DecklistHelpers.ReadDecklist(getActivity(), lDeckName);
 
         /* Clear the decklist, or just the card that changed */
         clearCompressedInfo(changedCardName);
 
         /* Compress the whole decklist, or just the card that changed */
-        for (Pair<MtgCard, Boolean> card : decklist) {
+        for (MtgCard card : decklist) {
             /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
-            if (!card.first.getName().isEmpty()) {
-                if (changedCardName == null || changedCardName.equals(card.first.getName())) {
+            if (!card.getName().isEmpty()) {
+                if (changedCardName == null || changedCardName.equals(card.getName())) {
                     CompressedDecklistInfo wrapped =
-                            new CompressedDecklistInfo(card.first, card.second);
+                            new CompressedDecklistInfo(card, card.isSideboard());
                     if (mCompressedDecklist.contains(wrapped)) {
                         mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
-                                .add(card.first);
+                                .add(card);
                     } else {
                         mCompressedDecklist.add(wrapped);
                     }
                     if (shouldShowPrice()) {
-                        loadPrice(card.first);
+                        loadPrice(card);
                     }
                 }
             }

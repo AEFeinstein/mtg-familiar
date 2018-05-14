@@ -20,6 +20,9 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
@@ -27,6 +30,9 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.io.BufferedReader;
@@ -149,7 +155,7 @@ public class WishlistHelpers {
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
                     try {
-                        MtgCard card = MtgCard.fromWishlistString(line, mCtx);
+                        MtgCard card = MtgCard.fromWishlistString(line, false, mCtx);
                         card.setIndex(orderAddedIdx++);
                         lWishlist.add(card);
                     } catch (InstantiationException e) {
@@ -162,6 +168,38 @@ public class WishlistHelpers {
         } catch (IOException e) {
             /* Catches file not found exception when wishlist doesn't exist */
         }
+
+        Cursor cardCursor = null;
+        FamiliarDbHandle handle = new FamiliarDbHandle();
+        try {
+            SQLiteDatabase database = DatabaseManager.openDatabase(mCtx, false, handle);
+            cardCursor = CardDbAdapter.fetchCardByNamesAndSets(lWishlist, database);
+            cardCursor.moveToFirst();
+            while(!cardCursor.isAfterLast()) {
+                String name = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NAME));
+                String set = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SET));
+
+                for(MtgCard card : lWishlist) {
+                    if(card.getName().equals(name) && card.getExpansion().equals(set)) {
+                        try {
+                            card.initFromCursor(mCtx, cardCursor);
+                        } catch (InstantiationException e) {
+                            // Eat it
+                        }
+                        break;
+                    }
+                }
+                cardCursor.moveToNext();
+            }
+        } catch (SQLiteException | FamiliarDbException fde) {
+            // TODO care about this
+        } finally {
+            if (null != cardCursor) {
+                cardCursor.close();
+            }
+            DatabaseManager.closeDatabase(mCtx, handle);
+        }
+
         return lWishlist;
     }
 

@@ -115,7 +115,7 @@ public class CardHelpers {
             } else {
                 deckName = ((DecklistFragment) fragment).mCurrentDeck;
             }
-            ArrayList<Pair<MtgCard, Boolean>> decklist =
+            ArrayList<MtgCard> decklist =
                     DecklistHelpers.ReadDecklist(ctx, deckName + DecklistFragment.DECK_EXTENSION);
             targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
             dialogText = ctx.getString(R.string.decklist_edit_dialog_title_end);
@@ -184,15 +184,13 @@ public class CardHelpers {
 
         MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
 
-            ArrayList<Pair<MtgCard, Boolean>> list;
+            ArrayList<MtgCard> list;
 
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                 /* Read the wishlist */
                 list = new ArrayList<>();
                 ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
-                for (MtgCard card : wishlist) {
-                    list.add(new Pair<>(card, false));
-                }
+                list.addAll(wishlist);
             } else {
                 list = DecklistHelpers.ReadDecklist(
                         ctx,
@@ -222,21 +220,21 @@ public class CardHelpers {
                      * it if it exists, or add the card if it doesn't */
                     boolean added = false;
                     for (int j = 0; j < list.size(); j++) {
-                        if (card.getName().equals(list.get(j).first.getName())
-                                && isSideboard == list.get(j).second
-                                && card.getExpansion().equals(list.get(j).first.getExpansion())
-                                && card.mIsFoil == list.get(j).first.mIsFoil) {
+                        if (card.getName().equals(list.get(j).getName())
+                                && isSideboard == list.get(j).isSideboard()
+                                && card.getExpansion().equals(list.get(j).getExpansion())
+                                && card.mIsFoil == list.get(j).mIsFoil) {
                             if (card.mNumberOf == 0) {
                                 list.remove(j);
                                 j--;
                             } else {
-                                list.get(j).first.mNumberOf = card.mNumberOf;
+                                list.get(j).mNumberOf = card.mNumberOf;
                             }
                             added = true;
                         }
                     }
                     if (!added && card.mNumberOf > 0) {
-                        list.add(new Pair<>(card, false));
+                        list.add(card);
                     }
                 } catch (InstantiationException e) {
                     /* Eat it */
@@ -246,9 +244,7 @@ public class CardHelpers {
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                 ArrayList<MtgCard> wishlist = new ArrayList<>();
                 /* Turn it back in to a plain ArrayList */
-                for (Pair<MtgCard, Boolean> card : list) {
-                    wishlist.add(card.first);
-                }
+                wishlist.addAll(list);
                 /* Write the wishlist */
                 WishlistHelpers.WriteWishlist(fragment.getActivity(), wishlist);
                 /* notify the fragment of a change in the wishlist */

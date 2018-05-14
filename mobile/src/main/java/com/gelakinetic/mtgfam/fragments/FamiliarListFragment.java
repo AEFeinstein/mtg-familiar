@@ -457,39 +457,43 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
         if (data.mPriceInfo != null) {
             data.mPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getPriceSetting()) * 100);
         } else {
-            getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data,
-                    result -> {
-                        /* Sanity check */
-                        if (result == null) {
-                            data.mPriceInfo = null;
-                        } else {
-                            /* Set the PriceInfo object */
-                            data.mPriceInfo = result;
+            try {
+                getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data,
+                        result -> {
+                            /* Sanity check */
+                            if (result == null) {
+                                data.mPriceInfo = null;
+                            } else {
+                                /* Set the PriceInfo object */
+                                data.mPriceInfo = result;
 
-                            /* Only reset the price to the downloaded one if the old price isn't custom */
-                            if (!data.mIsCustomPrice) {
-                                data.mPrice = (int) (result.getPrice(data.mIsFoil, getPriceSetting()) * 100);
+                                /* Only reset the price to the downloaded one if the old price isn't custom */
+                                if (!data.mIsCustomPrice) {
+                                    data.mPrice = (int) (result.getPrice(data.mIsFoil, getPriceSetting()) * 100);
+                                }
+                                /* Clear the message */
+                                data.mMessage = null;
                             }
-                            /* Clear the message */
-                            data.mMessage = null;
-                        }
 
-                        /* because this can return when the fragment is in the background */
-                        if (FamiliarListFragment.this.isAdded()) {
-                            onCardPriceLookupSuccess(data, result);
-                            for (CardDataAdapter adapter : mCardDataAdapters) {
-                                adapter.notifyDataSetChanged();
+                            /* because this can return when the fragment is in the background */
+                            if (FamiliarListFragment.this.isAdded()) {
+                                onCardPriceLookupSuccess(data, result);
+                                for (CardDataAdapter adapter : mCardDataAdapters) {
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
-                        }
-                    },
-                    throwable -> {
-                        if (FamiliarListFragment.this.isAdded()) {
-                            onCardPriceLookupFailure(data, throwable);
-                            for (CardDataAdapter adapter : mCardDataAdapters) {
-                                adapter.notifyDataSetChanged();
+                        },
+                        throwable -> {
+                            if (FamiliarListFragment.this.isAdded()) {
+                                onCardPriceLookupFailure(data, throwable);
+                                for (CardDataAdapter adapter : mCardDataAdapters) {
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
-                        }
-                    });
+                        });
+            } catch (java.lang.InstantiationException e) {
+                // TODO care maybe
+            }
         }
     }
 

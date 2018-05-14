@@ -55,6 +55,7 @@ public class MtgCard extends Card {
     public MarketPriceInfo mPriceInfo;
     private int mIndex;
     private boolean mIsSelected;
+    private boolean mIsSideboard;
 
     /**
      * Default constructor, doesn't leave null fields
@@ -92,6 +93,7 @@ public class MtgCard extends Card {
         this.mPriceInfo = new MarketPriceInfo();
         this.mIndex = 0;
         this.mIsSelected = false;
+        this.mIsSideboard = false;
     }
 
     MtgCard(MtgCard card) {
@@ -131,6 +133,7 @@ public class MtgCard extends Card {
             this.mPriceInfo = new MarketPriceInfo(card.mPriceInfo);
             this.mIndex = card.mIndex;
             this.mIsSelected = card.mIsSelected;
+            this.mIsSideboard = card.mIsSideboard;
         }
     }
 
@@ -228,6 +231,14 @@ public class MtgCard extends Card {
             this.mColorIdentity = cardCursor.getString(cardCursor
                     .getColumnIndex(CardDbAdapter.KEY_COLOR_IDENTITY));
 
+            this.mPrice = 0; /* In cents */
+            this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
+            this.mSide = 0;
+            this.mPriceInfo = null;
+            this.mIndex = 0;
+            this.mIsSelected = false;
+            this.mIsSideboard = false;
+
             /* Override choice is the card can't be foil */
             if (!CardDbAdapter.canBeFoil(this.mExpansion, database)) {
                 this.mIsFoil = false;
@@ -239,6 +250,80 @@ public class MtgCard extends Card {
                 cardCursor.close();
             }
             DatabaseManager.closeDatabase(context, handle);
+        }
+    }
+
+    /**
+     * Construct a MtgCard based on the given parameters.
+     *
+     * @param cardName name of the card to make
+     * @param cardSet  set code of the card to make
+     * @param isFoil   if the card is foil or not
+     * @param numberOf how many copies of the card are needed
+     */
+    public MtgCard(
+            String cardName,
+            String cardSet,
+            boolean isFoil,
+            int numberOf,
+            boolean isSideboard) throws InstantiationException {
+
+        /* Construct a blank MTGCard */
+        this.mName = cardName;
+        this.mExpansion = cardSet;
+        this.mIsFoil = isFoil;
+        this.mNumberOf = numberOf;
+        this.mIsSideboard = isSideboard;
+    }
+
+    public void initFromCursor(Context context, Cursor cardCursor) throws InstantiationException {
+
+        try {
+            /* Note the card price is loading */
+            this.mMessage = context.getString(R.string.wishlist_loading);
+
+            /* Don't rely on the user's given name, get it from the DB just to be sure */
+            this.mName = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NAME));
+            this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SET));
+            this.mNumber = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NUMBER));
+            this.mCmc = cardCursor.getInt((cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_CMC)));
+            this.mColor = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR));
+
+            this.mType = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SUPERTYPE));
+            String subtype = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SUBTYPE));
+            if (subtype.length() > 0) {
+                this.mType += " - " + subtype;
+            }
+
+            this.mRarity = (char) cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_RARITY));
+            this.mManaCost = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_MANACOST));
+            this.mPower = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_POWER));
+            this.mToughness = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_TOUGHNESS));
+            this.mLoyalty = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_LOYALTY));
+            this.mText = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_ABILITY));
+            this.mFlavor = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_FLAVOR));
+            this.mMultiverseId = cardCursor.getInt(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_MULTIVERSEID));
+            this.mArtist = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_ARTIST));
+            this.mWatermark = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_WATERMARK));
+            this.mColorIdentity = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_COLOR_IDENTITY));
+
+            this.mSetName = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_NAME));
+            this.mSetNameMtgi = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_CODE_MTGI));
+
+            this.mPrice = 0; /* In cents */
+            this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
+            this.mSide = 0;
+            this.mPriceInfo = null;
+            this.mIndex = 0;
+            this.mIsSelected = false;
+
+            /* Override choice is the card can't be foil */
+            int canBeFoil = cardCursor.getInt(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_CAN_BE_FOIL));
+            if (0 == canBeFoil) {
+                this.mIsFoil = false;
+            }
+        } catch (SQLiteException | NumberFormatException fde) {
+            throw new InstantiationException();
         }
     }
 
@@ -372,7 +457,7 @@ public class MtgCard extends Card {
      * @param line Information about this card, in the form of what toWishlistString() prints
      * @param mCtx A context used for getting localized strings
      */
-    public static MtgCard fromWishlistString(String line, Context mCtx) throws InstantiationException {
+    public static MtgCard fromWishlistString(String line, boolean isSideboard, Context mCtx) throws InstantiationException {
 
         String[] parts = line.split(MtgCard.DELIMITER);
 
@@ -394,7 +479,7 @@ public class MtgCard extends Card {
             foil = Boolean.parseBoolean(parts[5]);
         }
 
-        return new MtgCard(mCtx, parts[0], parts[1], foil, Integer.parseInt(parts[2]));
+        return new MtgCard(parts[0], parts[1], foil, Integer.parseInt(parts[2]), isSideboard);
     }
 
     /**
@@ -607,5 +692,9 @@ public class MtgCard extends Card {
 
     public String getSetName() {
         return mSetName;
+    }
+
+    public boolean isSideboard() {
+        return mIsSideboard;
     }
 }
