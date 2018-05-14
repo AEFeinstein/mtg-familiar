@@ -72,7 +72,7 @@ public class MarketPriceInfo {
          * @param price The object to copy
          */
         public Price(Price price) {
-            if(null != price) {
+            if (null != price) {
                 low = price.low;
                 mid = price.mid;
                 high = price.high;
@@ -172,28 +172,40 @@ public class MarketPriceInfo {
             return 0;
         }
 
-        Price toReturn;
+        Price priceInfo;
+        double toReturn = 0;
         if (isFoil) {
-            toReturn = mFoilPrice;
+            priceInfo = mFoilPrice;
         } else {
-            toReturn = mNormalPrice;
+            priceInfo = mNormalPrice;
         }
         /* Return the requested price */
         switch (priceType) {
             case LOW: {
-                return toReturn.low;
+                toReturn = priceInfo.low;
+                break;
             }
             case MID: {
-                return toReturn.mid;
+                toReturn = priceInfo.mid;
+                break;
             }
             case HIGH: {
-                return toReturn.high;
+                toReturn = priceInfo.high;
+                break;
             }
             default:
             case MARKET: {
-                return toReturn.market;
+                toReturn = priceInfo.market;
+                break;
             }
         }
+
+        // If only a market price exists, use that instead regardless
+        if (0 == toReturn && priceInfo.market > 0) {
+            toReturn = priceInfo.market;
+        }
+
+        return toReturn;
     }
 
     /**
