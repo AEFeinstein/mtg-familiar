@@ -279,20 +279,10 @@ public class TradeFragment extends FamiliarListFragment {
                     MtgCard card = MtgCard.fromTradeString(line, getActivity());
                     card.setIndex(mOrderAddedIdx++);
 
-                    if (card.getSetName() == null) {
-                        handleFamiliarDbException(false);
-                        return;
-                    }
                     if (card.mSide == LEFT) {
                         mListLeft.add(card);
-                        if (!card.mIsCustomPrice) {
-                            loadPrice(card);
-                        }
                     } else if (card.mSide == RIGHT) {
                         mListRight.add(card);
-                        if (!card.mIsCustomPrice) {
-                            loadPrice(card);
-                        }
                     }
                 } catch (NumberFormatException | IndexOutOfBoundsException | java.lang.InstantiationException e) {
                     // This card line is junk, ignore it
@@ -306,6 +296,21 @@ public class TradeFragment extends FamiliarListFragment {
         } finally {
             if (br != null) {
                 IOUtils.closeQuietly(br);
+            }
+        }
+
+        // Now that all the file IO is done, hit the database twice, once for each side
+        MtgCard.initCardListFromDb(getContext(), mListLeft);
+        for (MtgCard card : mListLeft) {
+            if (!card.mIsCustomPrice) {
+                loadPrice(card);
+            }
+        }
+
+        MtgCard.initCardListFromDb(getContext(), mListRight);
+        for (MtgCard card : mListRight) {
+            if (!card.mIsCustomPrice) {
+                loadPrice(card);
             }
         }
     }

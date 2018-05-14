@@ -366,7 +366,10 @@ public class MarketPriceFetcher {
     public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
                                  final Consumer<Throwable> onError) throws InstantiationException {
 
-        if (null == card.getName() || card.getName().isEmpty() || null == card.getExpansion() || card.getExpansion().isEmpty()) {
+        if (null == card.getName() || card.getName().isEmpty() ||
+                null == card.getExpansion() || card.getExpansion().isEmpty() ||
+                null == card.getNumber() || card.getNumber().isEmpty() ||
+                0 == card.getMultiverseId()) {
             throw new InstantiationException("card must have a name and expansion to fetch price");
         }
 

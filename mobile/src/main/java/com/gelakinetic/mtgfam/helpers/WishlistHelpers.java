@@ -169,36 +169,7 @@ public class WishlistHelpers {
             /* Catches file not found exception when wishlist doesn't exist */
         }
 
-        Cursor cardCursor = null;
-        FamiliarDbHandle handle = new FamiliarDbHandle();
-        try {
-            SQLiteDatabase database = DatabaseManager.openDatabase(mCtx, false, handle);
-            cardCursor = CardDbAdapter.fetchCardByNamesAndSets(lWishlist, database);
-            cardCursor.moveToFirst();
-            while(!cardCursor.isAfterLast()) {
-                String name = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NAME));
-                String set = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SET));
-
-                for(MtgCard card : lWishlist) {
-                    if(card.getName().equals(name) && card.getExpansion().equals(set)) {
-                        try {
-                            card.initFromCursor(mCtx, cardCursor);
-                        } catch (InstantiationException e) {
-                            // Eat it
-                        }
-                        break;
-                    }
-                }
-                cardCursor.moveToNext();
-            }
-        } catch (SQLiteException | FamiliarDbException fde) {
-            // TODO care about this
-        } finally {
-            if (null != cardCursor) {
-                cardCursor.close();
-            }
-            DatabaseManager.closeDatabase(mCtx, handle);
-        }
+        MtgCard.initCardListFromDb(mCtx, lWishlist);
 
         return lWishlist;
     }

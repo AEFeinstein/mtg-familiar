@@ -90,7 +90,7 @@ public class MtgCard extends Card {
         this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
         this.mIsFoil = false;
         this.mSide = 0;
-        this.mPriceInfo = new MarketPriceInfo();
+        this.mPriceInfo = null;
         this.mIndex = 0;
         this.mIsSelected = false;
         this.mIsSideboard = false;
@@ -254,7 +254,8 @@ public class MtgCard extends Card {
     }
 
     /**
-     * Construct a MtgCard based on the given parameters.
+     * Construct a MtgCard based on the given parameters. initFromCursor() really should be called
+     * for this MtgCard later
      *
      * @param cardName name of the card to make
      * @param cardSet  set code of the card to make
@@ -268,7 +269,10 @@ public class MtgCard extends Card {
             int numberOf,
             boolean isSideboard) throws InstantiationException {
 
-        /* Construct a blank MTGCard */
+        // Fill in safe empty values
+        this();
+
+        // Then add the parameters
         this.mName = cardName;
         this.mExpansion = cardSet;
         this.mIsFoil = isFoil;
@@ -276,7 +280,61 @@ public class MtgCard extends Card {
         this.mIsSideboard = isSideboard;
     }
 
-    public void initFromCursor(Context context, Cursor cardCursor) throws InstantiationException {
+    /**
+     * Given a list of cards with partial data, perform a single database operation to retrieve
+     * the missing data, then add it to the cards in the list
+     *
+     * @param mCtx  A context to do database operations with
+     * @param cards A list of cards to fill in data for
+     */
+    public static void initCardListFromDb(Context mCtx, ArrayList<MtgCard> cards) {
+        Cursor cardCursor = null;
+        FamiliarDbHandle handle = new FamiliarDbHandle();
+        try {
+            SQLiteDatabase database = DatabaseManager.openDatabase(mCtx, false, handle);
+
+            // Get everything
+            cardCursor = CardDbAdapter.fetchCardByNamesAndSets(cards, database);
+
+            // For each line database result
+            while (!cardCursor.isAfterLast()) {
+
+                // Get the name and set from the database
+                String name = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_NAME));
+                String set = cardCursor.getString(cardCursor.getColumnIndex("c_" + CardDbAdapter.KEY_SET));
+
+                // Match that to a card in the initial list
+                for (MtgCard card : cards) {
+                    if (card.getName().equals(name) && card.getExpansion().equals(set)) {
+                        try {
+                            // Fill in the initial list with data from the cursor
+                            card.initFromCursor(mCtx, cardCursor);
+                        } catch (java.lang.InstantiationException e) {
+                            // Eat it
+                        }
+                        break;
+                    }
+                }
+                cardCursor.moveToNext();
+            }
+        } catch (SQLiteException | FamiliarDbException fde) {
+            // TODO care about this
+        } finally {
+            if (null != cardCursor) {
+                cardCursor.close();
+            }
+            DatabaseManager.closeDatabase(mCtx, handle);
+        }
+    }
+
+    /**
+     * This is a pseudo-constructor used to fill in missing data from a Cursor.
+     *
+     * @param context    A Context to get strings with
+     * @param cardCursor A cursor pointing to this card's information from the database
+     * @throws InstantiationException If this card can't be initialized
+     */
+    private void initFromCursor(Context context, Cursor cardCursor) throws InstantiationException {
 
         try {
             /* Note the card price is loading */
@@ -388,7 +446,7 @@ public class MtgCard extends Card {
             }
         }
 
-        MtgCard card = new MtgCard(context, parts[1], parts[2], false, Integer.parseInt(parts[3]));
+        MtgCard card = new MtgCard(parts[1], parts[2], false, Integer.parseInt(parts[3]), false);
         card.mSide = Integer.parseInt(parts[0]);
 
         /* These parts may not exist */
