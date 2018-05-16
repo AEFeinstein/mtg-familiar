@@ -113,10 +113,12 @@ public class DecklistHelpers {
     /**
      * Read the decklist from a file and return it as an ArrayList<Pair<MtgCard, Boolean>>.
      *
-     * @param mCtx A context to open the file and pop toasts with
-     * @return The decklist in ArrayList<Pair> form
+     * @param mCtx         A context to open the file and database and pop toasts with
+     * @param deckName     the name of the deck to load
+     * @param loadFullData true to load all card data from the database, false to to just read the file
+     * @return The decklist as an ArrayList of MtgCards
      */
-    public static ArrayList<MtgCard> ReadDecklist(Context mCtx, String deckName) {
+    public static ArrayList<MtgCard> ReadDecklist(Context mCtx, String deckName, boolean loadFullData) {
 
         ArrayList<MtgCard> lDecklist = new ArrayList<>();
 
@@ -149,8 +151,9 @@ public class DecklistHelpers {
             /* Catches file not found exception when decklist doesn't exist */
         }
 
-        MtgCard.initCardListFromDb(mCtx, lDecklist);
-
+        if (loadFullData && !lDecklist.isEmpty()) {
+            MtgCard.initCardListFromDb(mCtx, lDecklist);
+        }
         return lDecklist;
 
     }

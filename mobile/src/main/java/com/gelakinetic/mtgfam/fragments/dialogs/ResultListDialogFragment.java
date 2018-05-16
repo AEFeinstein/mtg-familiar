@@ -23,7 +23,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Pair;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.StackingBehavior;
@@ -76,7 +75,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             try {
                                 WishlistHelpers.addItemToWishlist(getContext(),
                                         new WishlistHelpers.CompressedWishlistInfo(
-                                                new MtgCard(getContext(), cardName, cardSet, false, 1), 0));
+                                                new MtgCard(cardName, cardSet, false, 1, false), 0));
                             } catch (java.lang.InstantiationException e) {
                                 /* Eat it */
                             }
@@ -111,7 +110,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             // Read the decklist
                             String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
                             ArrayList<MtgCard> decklist =
-                                    DecklistHelpers.ReadDecklist(getContext(), deckFileName);
+                                    DecklistHelpers.ReadDecklist(getContext(), deckFileName, false);
 
                             // Look through the decklist for any existing matches
                             boolean entryIncremented = false;
@@ -128,7 +127,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             if (!entryIncremented) {
                                 // Add a new card to the deck
                                 try {
-                                    decklist.add(new MtgCard(getContext(), cardName, cardSet, false, 1));
+                                    decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
                                 } catch (java.lang.InstantiationException e) {
                                     /* Eat it */
                                 }

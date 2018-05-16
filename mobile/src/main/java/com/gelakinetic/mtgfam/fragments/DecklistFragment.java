@@ -329,7 +329,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
         /* Read the decklist */
         final ArrayList<MtgCard> decklist =
-                DecklistHelpers.ReadDecklist(getActivity(), lDeckName);
+                DecklistHelpers.ReadDecklist(getActivity(), lDeckName, true);
 
         /* Clear the decklist, or just the card that changed */
         clearCompressedInfo(changedCardName);

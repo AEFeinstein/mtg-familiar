@@ -30,8 +30,12 @@ public class EqualityTests {
 
     @Before
     public void setUp() {
-        lightningBolt = new MtgCard(
-                mFamiliarActivityRule.getActivity(), "Lightning Bolt", null, false, 1);
+        try {
+            lightningBolt = new MtgCard(
+                    mFamiliarActivityRule.getActivity(), "Lightning Bolt", null, false, 1);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

@@ -102,7 +102,7 @@ public class CardHelpers {
 
         if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
             /* Read the wishlist */
-            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
+            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx, false);
             targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
             deckName = "";
             dialogText = ctx.getString(R.string.wishlist_edit_dialog_title_end);
@@ -116,7 +116,7 @@ public class CardHelpers {
                 deckName = ((DecklistFragment) fragment).mCurrentDeck;
             }
             ArrayList<MtgCard> decklist =
-                    DecklistHelpers.ReadDecklist(ctx, deckName + DecklistFragment.DECK_EXTENSION);
+                    DecklistHelpers.ReadDecklist(ctx, deckName + DecklistFragment.DECK_EXTENSION, false);
             targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
             dialogText = ctx.getString(R.string.decklist_edit_dialog_title_end);
         }
@@ -189,12 +189,13 @@ public class CardHelpers {
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                 /* Read the wishlist */
                 list = new ArrayList<>();
-                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx);
+                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(ctx, false);
                 list.addAll(wishlist);
             } else {
                 list = DecklistHelpers.ReadDecklist(
                         ctx,
-                        deckName + DecklistFragment.DECK_EXTENSION
+                        deckName + DecklistFragment.DECK_EXTENSION,
+                        false
                 );
             }
 
@@ -214,14 +215,14 @@ public class CardHelpers {
                     numberOf = 0;
                 }
                 try {
-                    MtgCard card = new MtgCard(ctx, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
+                    MtgCard card = new MtgCard(mCardName, potentialSetCodes.get(i), isFoil, numberOf, isSideboard);
 
                     /* Look through the wishlist for each card, set the numberOf or remove
                      * it if it exists, or add the card if it doesn't */
                     boolean added = false;
                     for (int j = 0; j < list.size(); j++) {
                         if (card.getName().equals(list.get(j).getName())
-                                && isSideboard == list.get(j).isSideboard()
+                                && card.isSideboard() == list.get(j).isSideboard()
                                 && card.getExpansion().equals(list.get(j).getExpansion())
                                 && card.mIsFoil == list.get(j).mIsFoil) {
                             if (card.mNumberOf == 0) {

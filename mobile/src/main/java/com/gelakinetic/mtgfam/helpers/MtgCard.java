@@ -312,7 +312,7 @@ public class MtgCard extends Card {
                         } catch (java.lang.InstantiationException e) {
                             // Eat it
                         }
-                        break;
+                        // Keep looping if the same card is repeated (main deck + sideboard)
                     }
                 }
                 cardCursor.moveToNext();

@@ -197,7 +197,7 @@ public class WishlistFragment extends FamiliarListFragment {
      */
     private void readAndCompressWishlist(String changedCardName) {
         /* Read the wishlist */
-        ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity());
+        ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity(), true);
 
         /* Clear the wishlist, or just the card that changed */
         if (changedCardName == null) {

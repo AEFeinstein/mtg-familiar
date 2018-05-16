@@ -30,7 +30,6 @@ import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -287,7 +286,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             // Read the decklist
                             String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
                             ArrayList<MtgCard> decklist =
-                                    DecklistHelpers.ReadDecklist(getContext(), deckFileName);
+                                    DecklistHelpers.ReadDecklist(getContext(), deckFileName, false);
 
                             // Look through the decklist for any existing matches
                             boolean entryIncremented = false;
@@ -304,7 +303,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             if (!entryIncremented) {
                                 // Add a new card to the deck
                                 try {
-                                    decklist.add(new MtgCard(getContext(), cardName, cardSet, false, 1));
+                                    decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
                                 } catch (java.lang.InstantiationException e) {
                                     /* Eat it */
                                 }

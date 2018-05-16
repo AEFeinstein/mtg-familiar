@@ -20,9 +20,6 @@
 package com.gelakinetic.mtgfam.helpers;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.util.Pair;
 
 import com.gelakinetic.mtgfam.R;
@@ -30,9 +27,6 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.io.BufferedReader;
@@ -110,7 +104,7 @@ public class WishlistHelpers {
      * @param wishlistInfo the CompressedWishlistInfo to add to the wishlist
      */
     public static void addItemToWishlist(final Context context, final CompressedWishlistInfo wishlistInfo) {
-        final ArrayList<MtgCard> currentWishlist = ReadWishlist(context);
+        final ArrayList<MtgCard> currentWishlist = ReadWishlist(context, false);
         for (IndividualSetInfo isi : wishlistInfo.mInfo) {
             wishlistInfo.applyIndividualInfo(isi);
             if (currentWishlist.contains(wishlistInfo)) {
@@ -141,10 +135,11 @@ public class WishlistHelpers {
     /**
      * Read the wishlist from a file and return it as an ArrayList<MtgCard>
      *
-     * @param mCtx A context to open the file and pop toasts with
+     * @param mCtx         A context to open the file and pop toasts with
+     * @param loadFullData true to load all card data from the database, false to just read the file
      * @return The wishlist in ArrayList form
      */
-    public static ArrayList<MtgCard> ReadWishlist(Context mCtx) {
+    public static ArrayList<MtgCard> ReadWishlist(Context mCtx, boolean loadFullData) {
 
         ArrayList<MtgCard> lWishlist = new ArrayList<>();
         int orderAddedIdx = 0;
@@ -169,8 +164,9 @@ public class WishlistHelpers {
             /* Catches file not found exception when wishlist doesn't exist */
         }
 
-        MtgCard.initCardListFromDb(mCtx, lWishlist);
-
+        if (loadFullData && !lWishlist.isEmpty()) {
+            MtgCard.initCardListFromDb(mCtx, lWishlist);
+        }
         return lWishlist;
     }
 
