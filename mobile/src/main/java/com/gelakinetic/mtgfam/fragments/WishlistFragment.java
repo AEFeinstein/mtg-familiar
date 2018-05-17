@@ -347,10 +347,10 @@ public class WishlistFragment extends FamiliarListFragment {
                         /* Set the price as null and the message as the exception */
                         isi.mMessage = exception.getLocalizedMessage();
                         isi.mPrice = null;
+                        return;
                     }
                 }
             }
-            updateTotalPrices(0);
         }
     }
 
@@ -367,11 +367,16 @@ public class WishlistFragment extends FamiliarListFragment {
                         }
                         /* The message will never be shown with a valid price, so set it as DNE */
                         isi.mMessage = getString(R.string.card_view_price_not_found);
+                        return;
                     }
                 }
             }
-            updateTotalPrices(0);
         }
+    }
+
+    @Override
+    protected void onAllPriceLookupsFinished() {
+        updateTotalPrices(0);
         sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
     }
 

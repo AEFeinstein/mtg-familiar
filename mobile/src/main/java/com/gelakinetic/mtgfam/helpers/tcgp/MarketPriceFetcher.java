@@ -51,6 +51,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Nonnull;
 
@@ -66,6 +68,7 @@ public class MarketPriceFetcher {
     private final FamiliarActivity mActivity;
     private final Store<MarketPriceInfo, MtgCard> mStore;
     private int mNumPriceRequests = 0;
+    private ExecutorService mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -364,7 +367,7 @@ public class MarketPriceFetcher {
      * @param onError   A Consumer callback to be called when an error occurs
      */
     public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
-                                 final Consumer<Throwable> onError) throws InstantiationException {
+                                 final Consumer<Throwable> onError, final Runnable onAllDoneUI) throws InstantiationException {
 
         if (null == card.getName() || card.getName().isEmpty() ||
                 null == card.getExpansion() || card.getExpansion().isEmpty() ||
@@ -374,17 +377,17 @@ public class MarketPriceFetcher {
         }
 
         /* Show the loading animation */
-        mNumPriceRequests++;
         mActivity.setLoading();
 
         /* Start a new thread to perform the fetch */
-        new Thread(new Runnable() {
+        mThreadPool.submit(new Runnable() {
             /**
              * This runnable gets the card price from either the cache or network, and runs on a
              * non-UI thread
              */
             @Override
             public void run() {
+                mNumPriceRequests++;
                 mCompositeDisposable.add(mStore.get(card).subscribe(new Consumer<MarketPriceInfo>() {
                     /**
                      * This callback is called when a MarketPriceInfo is fetched either from the
@@ -395,29 +398,24 @@ public class MarketPriceFetcher {
                      */
                     @Override
                     public void accept(final MarketPriceInfo marketPriceInfo) {
-                        /* Run the results on the UI thread */
-                        mActivity.runOnUiThread(new Runnable() {
-                            /**
-                             * This runs the given success callback on the UI thread
-                             */
-                            @Override
-                            public void run() {
-                                mNumPriceRequests--;
-                                if (0 == mNumPriceRequests) {
-                                    mActivity.clearLoading();
-                                }
-                                try {
-                                    onSuccess.accept(marketPriceInfo);
-                                } catch (Exception e) {
-                                    /* Snatch defeat from the jaws of victory */
-                                    try {
-                                        onError.accept(e);
-                                    } catch (Exception e2) {
-                                        /* eat it */
-                                    }
-                                }
+                        mNumPriceRequests--;
+                        if (0 == mNumPriceRequests) {
+                            /* Run the results on the UI thread */
+                            mActivity.runOnUiThread(() -> {
+                                mActivity.clearLoading();
+                                onAllDoneUI.run();
+                            });
+                        }
+                        try {
+                            onSuccess.accept(marketPriceInfo);
+                        } catch (Exception e) {
+                            /* Snatch defeat from the jaws of victory */
+                            try {
+                                onError.accept(e);
+                            } catch (Exception e2) {
+                                /* eat it */
                             }
-                        });
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     /**
@@ -429,29 +427,24 @@ public class MarketPriceFetcher {
                      */
                     @Override
                     public void accept(final Throwable throwable) {
-                        /* Run the erros on the UI thread */
-                        mActivity.runOnUiThread(new Runnable() {
-                            /**
-                             * This runs the given error callback on the UI thread
-                             */
-                            @Override
-                            public void run() {
-                                mNumPriceRequests--;
-                                if (0 == mNumPriceRequests) {
-                                    mActivity.clearLoading();
-                                }
+                        mNumPriceRequests--;
+                        if (0 == mNumPriceRequests) {
+                            /* Run the results on the UI thread */
+                            mActivity.runOnUiThread(() -> {
+                                mActivity.clearLoading();
+                                onAllDoneUI.run();
+                            });
+                        }
 
-                                try {
-                                    onError.accept(throwable);
-                                } catch (Exception e) {
-                                    /* Eat it */
-                                }
-                            }
-                        });
+                        try {
+                            onError.accept(throwable);
+                        } catch (Exception e) {
+                            /* Eat it */
+                        }
                     }
                 }));
             }
-        }).start();
+        });
     }
 
     public void stopAllRequests() {

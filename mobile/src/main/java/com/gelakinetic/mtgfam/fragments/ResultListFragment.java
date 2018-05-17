@@ -40,10 +40,13 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.ResultListDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
+import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
+import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -137,6 +140,48 @@ public class ResultListFragment extends FamiliarFragment {
         super.onResume();
         fillData();
         mListView.setSelectionFromTop(mCursorPosition, mCursorPositionOffset);
+
+//        mCursor.moveToFirst();
+//        while (!mCursor.isAfterLast()) {
+//            try {
+//                MtgCard toAdd = new MtgCard(
+//                        mCursor.getString(mCursor.getColumnIndex(CardDbAdapter.KEY_NAME)),
+//                        mCursor.getString(mCursor.getColumnIndex(CardDbAdapter.KEY_SET)),
+//                        false, 1, false);
+//
+//                WishlistHelpers.addItemToWishlist(getContext(),
+//                        new WishlistHelpers.CompressedWishlistInfo(toAdd, 0));
+//
+//                // Read the decklist
+//                String deckFileName = "Slivers" + DecklistFragment.DECK_EXTENSION;
+//                ArrayList<MtgCard> decklist =
+//                        DecklistHelpers.ReadDecklist(getContext(), deckFileName, false);
+//
+//                // Look through the decklist for any existing matches
+//                boolean entryIncremented = false;
+//                for (MtgCard deckEntry : decklist) {
+//                    if (!deckEntry.isSideboard() && // not in the sideboard
+//                            deckEntry.getName().equals(toAdd.getName()) &&
+//                            deckEntry.getExpansion().equals(toAdd.getExpansion())) {
+//                        // Increment the card already in the deck
+//                        deckEntry.mNumberOf++;
+//                        entryIncremented = true;
+//                        break;
+//                    }
+//                }
+//                if (!entryIncremented) {
+//                    // Add a new card to the deck
+//                    decklist.add(toAdd);
+//                }
+//
+//                // Write the decklist back
+//                DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
+//
+//            } catch (java.lang.InstantiationException e) {
+//                /* Eat it */
+//            }
+//            mCursor.moveToNext();
+//        }
     }
 
     /**

@@ -21,13 +21,10 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,10 +47,6 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
@@ -576,10 +569,10 @@ public class DecklistFragment extends FamiliarListFragment {
                         /* Set the price as null and the message as the exception */
                         isi.mMessage = exception.getLocalizedMessage();
                         isi.mPrice = null;
+                        return;
                     }
                 }
             }
-            updateTotalPrices(0);
         }
     }
 
@@ -598,11 +591,17 @@ public class DecklistFragment extends FamiliarListFragment {
                         /* The message will never be shown with a valid price,
                          * so set it as DNE */
                         isi.mMessage = getString(R.string.card_view_price_not_found);
+                        return;
                     }
                 }
             }
-            updateTotalPrices(0);
         }
+    }
+
+    @Override
+    protected void onAllPriceLookupsFinished() {
+        updateTotalPrices(0);
+        getCardDataAdapter(0).notifyDataSetChanged();
     }
 
     /**

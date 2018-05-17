@@ -432,13 +432,16 @@ public class TradeFragment extends FamiliarListFragment {
 
     @Override
     protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
-        data.mMessage = exception.getLocalizedMessage();
-        data.mPriceInfo = null;
-        updateTotalPrices(BOTH);
+        // Do nothing, wait until all prices are fetched
     }
 
     @Override
     protected void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result) {
+        // Do nothing, wait until all prices are fetched
+    }
+
+    @Override
+    protected void onAllPriceLookupsFinished() {
         updateTotalPrices(BOTH);
         try {
             sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));

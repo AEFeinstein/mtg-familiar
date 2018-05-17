@@ -460,9 +460,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
             try {
                 getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data,
                         result -> {
+                            // This is not run on the UI thread
                             /* Sanity check */
                             if (result == null) {
                                 data.mPriceInfo = null;
+                                data.mMessage = getString(R.string.card_view_price_not_found);
                             } else {
                                 /* Set the PriceInfo object */
                                 data.mPriceInfo = result;
@@ -478,17 +480,20 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                             /* because this can return when the fragment is in the background */
                             if (FamiliarListFragment.this.isAdded()) {
                                 onCardPriceLookupSuccess(data, result);
-                                for (CardDataAdapter adapter : mCardDataAdapters) {
-                                    adapter.notifyDataSetChanged();
-                                }
                             }
                         },
                         throwable -> {
+                            // This is not run on the UI thread
+                            data.mPriceInfo = null;
+                            data.mMessage = throwable.getLocalizedMessage();
                             if (FamiliarListFragment.this.isAdded()) {
                                 onCardPriceLookupFailure(data, throwable);
-                                for (CardDataAdapter adapter : mCardDataAdapters) {
-                                    adapter.notifyDataSetChanged();
-                                }
+                            }
+                        },
+                        () -> {
+                            // This is run on the UI thread
+                            if (FamiliarListFragment.this.isAdded()) {
+                                onAllPriceLookupsFinished();
                             }
                         });
             } catch (java.lang.InstantiationException e) {
@@ -512,6 +517,11 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      * @param result The price information
      */
     protected abstract void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result);
+
+    /**
+     * Called on the UI thread when all price operations are finished
+     */
+    protected abstract void onAllPriceLookupsFinished();
 
     /**
      * Updates the total prices shown for the lists

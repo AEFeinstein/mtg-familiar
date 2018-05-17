@@ -147,6 +147,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Loaded in a Spice Service */
     public MarketPriceInfo mPriceInfo;
+    public String mErrorMessage;
 
     /* Card info, used to build the URL to fetch the picture */
     public MtgCard mCard;
@@ -1041,20 +1042,28 @@ public class CardViewFragment extends FamiliarFragment {
                                 if (CardViewFragment.this.isAdded()) {
                                     if (marketPriceInfo != null) {
                                         mPriceInfo = marketPriceInfo;
-                                        showDialog(CardViewDialogFragment.GET_PRICE);
                                     } else {
-                                        ToastWrapper.makeAndShowText(mActivity,
-                                                R.string.card_view_price_not_found,
-                                                ToastWrapper.LENGTH_SHORT);
+                                        mPriceInfo = null;
+                                        mErrorMessage = getString(R.string.card_view_price_not_found);
                                     }
                                 }
                             },
                             throwable -> {
                                 if (CardViewFragment.this.isAdded()) {
                                     mPriceInfo = null;
+                                    mErrorMessage = throwable.getMessage();
+                                }
+                            },
+                            () -> {
+                                if (mPriceInfo == null) {
+                                    // This was a failure
                                     CardViewFragment.this.removeDialog(getFragmentManager());
-                                    ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
-                                            ToastWrapper.LENGTH_SHORT);
+                                    if (null != mErrorMessage) {
+                                        ToastWrapper.makeAndShowText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT);
+                                    }
+                                } else {
+                                    // This was a success
+                                    showDialog(CardViewDialogFragment.GET_PRICE);
                                 }
                             });
 
