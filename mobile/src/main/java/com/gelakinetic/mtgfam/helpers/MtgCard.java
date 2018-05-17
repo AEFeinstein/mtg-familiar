@@ -368,12 +368,7 @@ public class MtgCard extends Card {
             this.mSetName = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_NAME));
             this.mSetNameMtgi = cardCursor.getString(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_CODE_MTGI));
 
-            this.mPrice = 0; /* In cents */
-            this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
-            this.mSide = 0;
-            this.mPriceInfo = null;
-            this.mIndex = 0;
-            this.mIsSelected = false;
+            // Don't mess with any of the other MtgCard specific fields that may have been loaded fron files, like mIsCustomPrice
 
             /* Override choice is the card can't be foil */
             int canBeFoil = cardCursor.getInt(cardCursor.getColumnIndex("s_" + CardDbAdapter.KEY_CAN_BE_FOIL));
