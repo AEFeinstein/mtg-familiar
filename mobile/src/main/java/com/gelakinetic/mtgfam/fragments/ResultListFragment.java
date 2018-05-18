@@ -45,7 +45,7 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ResultListAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -254,7 +254,7 @@ public class ResultListFragment extends FamiliarFragment {
             }
         } else if (this.isAdded()) {
             if (mCursor == null || mCursor.getCount() == 0) {
-                ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, ToastWrapper.LENGTH_SHORT
+                SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_no_results, SnackbarWrapper.LENGTH_SHORT
                 );
                 if (!getActivity().isTaskRoot()) {
                     getActivity().finish();
@@ -271,8 +271,8 @@ public class ResultListFragment extends FamiliarFragment {
                 }
             } else {
                 if (savedInstanceState == null) {
-                    ToastWrapper.makeAndShowText(this.getActivity(), String.format(getResources().getQuantityString(R.plurals.search_toast_results, mCursor.getCount()),
-                            mCursor.getCount()), ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this.getActivity(), String.format(getResources().getQuantityString(R.plurals.search_toast_results, mCursor.getCount()),
+                            mCursor.getCount()), SnackbarWrapper.LENGTH_LONG);
                 }
             }
         }

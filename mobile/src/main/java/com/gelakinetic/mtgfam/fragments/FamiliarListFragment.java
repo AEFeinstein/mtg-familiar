@@ -45,6 +45,7 @@ import com.gelakinetic.mtgfam.helpers.CardDataTouchHelper;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
@@ -289,10 +290,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         }
 
                         // Make a snackbar to undo this delete
-                        Snackbar.make(getFamiliarActivity().findViewById(R.id.fragment_container),
-                                "",
-                                PreferenceAdapter.getUndoTimeout(getContext()))
-                                .setAction(R.string.cardlist_undo, new View.OnClickListener() {
+                        SnackbarWrapper.makeAndShowText(getFamiliarActivity(), "", PreferenceAdapter.getUndoTimeout(getContext()), R.string.cardlist_undo,
+                                new View.OnClickListener() {
                                     /**
                                      * When "Undo" is clicked, readd the removed items to the underlying list,
                                      * remove them from the undo list, and notify the adapter that it was changed
@@ -305,8 +304,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                             adapter.undoDelete();
                                         }
                                     }
-                                })
-                                .addCallback(new Snackbar.Callback() {
+                                },
+                                new Snackbar.Callback() {
                                     /**
                                      * When the snackbar is dismissed, depending on how it was dismissed, either
                                      * clear the undo buffer of all items and notify the adapter, or ignore it
@@ -338,8 +337,8 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                                             }
                                         }
                                     }
-                                })
-                                .show();
+                                });
+
                         mode.finish();
                         if (shouldShowPrice()) {
                             updateTotalPrices(TradeFragment.BOTH);
@@ -351,7 +350,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                         ArrayList<DecklistHelpers.CompressedDecklistInfo> selectedItems =
                                 ((DecklistFragment.DecklistDataAdapter) getCardDataAdapter(0)).getSelectedItems();
                         for (DecklistHelpers.CompressedDecklistInfo info : selectedItems) {
-                            WishlistHelpers.addItemToWishlist(getContext(),
+                            WishlistHelpers.addItemToWishlist(getActivity(),
                                     info.convertToWishlist());
                         }
                         mode.finish();

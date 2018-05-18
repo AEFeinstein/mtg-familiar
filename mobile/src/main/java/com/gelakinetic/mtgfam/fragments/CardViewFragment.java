@@ -59,7 +59,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.DataSource;
@@ -83,7 +82,7 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -135,8 +134,7 @@ public class CardViewFragment extends FamiliarFragment {
     private Button mTransformButton;
     private View mTransformButtonDivider;
     private ImageView mCardImageView;
-    private ScrollView mTextScrollView;
-    private ScrollView mImageScrollView;
+    private LinearLayout mCardTextLinearLayout;
     private LinearLayout mColorIndicatorLayout;
 
     /* the AsyncTask loads stuff off the UI thread, and stores whatever in these local variables */
@@ -239,8 +237,7 @@ public class CardViewFragment extends FamiliarFragment {
         mPowTouTextView = myFragmentView.findViewById(R.id.pt);
         mTransformButtonDivider = myFragmentView.findViewById(R.id.transform_button_divider);
         mTransformButton = myFragmentView.findViewById(R.id.transformbutton);
-        mTextScrollView = myFragmentView.findViewById(R.id.cardTextScrollView);
-        mImageScrollView = myFragmentView.findViewById(R.id.cardImageScrollView);
+        mCardTextLinearLayout = myFragmentView.findViewById(R.id.CardTextLinearLayout);
         mCardImageView = myFragmentView.findViewById(R.id.cardpic);
         mColorIndicatorLayout =
                 myFragmentView.findViewById(R.id.color_indicator_view);
@@ -326,8 +323,7 @@ public class CardViewFragment extends FamiliarFragment {
             mPowTouTextView = null;
             mTransformButtonDivider = null;
             mTransformButton = null;
-            mTextScrollView = null;
-            mImageScrollView = null;
+            mCardTextLinearLayout = null;
             mCardImageView = null;
             mColorIndicatorLayout = null;
         }
@@ -385,7 +381,7 @@ public class CardViewFragment extends FamiliarFragment {
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
             /* http://magiccards.info/scans/en/mt/55.jpg */
-            mCard = new MtgCard(getContext(),
+            mCard = new MtgCard(getActivity(),
                     cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)),
                     cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
                     false, 0);
@@ -491,14 +487,14 @@ public class CardViewFragment extends FamiliarFragment {
 
             /* Do we load the image immediately to the main page, or do it in a dialog later? */
             if (PreferenceAdapter.getPicFirst(getContext())) {
-                mImageScrollView.setVisibility(View.VISIBLE);
-                mTextScrollView.setVisibility(View.GONE);
+                mCardImageView.setVisibility(View.VISIBLE);
+                mCardTextLinearLayout.setVisibility(View.GONE);
 
                 // Load the image with Glide
-                loadImageWithGlide(mCardImageView);
+                loadImageWithGlide(mCardImageView, false);
             } else {
-                mImageScrollView.setVisibility(View.GONE);
-                mTextScrollView.setVisibility(View.VISIBLE);
+                mCardImageView.setVisibility(View.GONE);
+                mCardTextLinearLayout.setVisibility(View.VISIBLE);
             }
 
             /* Figure out how large the color indicator should be. Medium text is 18sp, with a border
@@ -591,18 +587,18 @@ public class CardViewFragment extends FamiliarFragment {
      *
      * @param cardImageView The ImageView to load the image into
      */
-    private void loadImageWithGlide(ImageView cardImageView) {
+    private void loadImageWithGlide(ImageView cardImageView, boolean shouldScale) {
 
+        int width = 0;
+        int height = 0;
         // Get screen dimensions
-        int mBorder = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics());
-        Rect rectangle = new Rect();
-        mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        assert mActivity.getSupportActionBar() != null; /* Because Android Studio */
-        int height = ((rectangle.bottom - rectangle.top) -
-                mActivity.getSupportActionBar().getHeight()) - mBorder;
-        int width = (rectangle.right - rectangle.left) - mBorder;
-
+        if (shouldScale) {
+            int mBorder = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 36, getResources().getDisplayMetrics());
+            View toMeasure = getFamiliarActivity().findViewById(R.id.drawer_layout);
+            width = toMeasure.getWidth() - mBorder;
+            height = toMeasure.getHeight() - mBorder;
+        }
         // Load the image
         runGlideTarget(new FamiliarGlideTarget(this, cardImageView), width, height);
     }
@@ -617,7 +613,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         // Check that there's memory to save the image to
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_no_external_storage, ToastWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_no_external_storage, SnackbarWrapper.LENGTH_SHORT);
             return;
         }
 
@@ -638,7 +634,7 @@ public class CardViewFragment extends FamiliarFragment {
         try {
             imageFile = getSavedImageFile();
         } catch (Exception e) {
-            ToastWrapper.makeAndShowText(getContext(), e.getMessage(), ToastWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(getActivity(), e.getMessage(), SnackbarWrapper.LENGTH_SHORT);
             return;
         }
 
@@ -650,7 +646,7 @@ public class CardViewFragment extends FamiliarFragment {
             } else {
                 // Or display the path where it's saved
                 String strPath = imageFile.getAbsolutePath();
-                ToastWrapper.makeAndShowText(getContext(), getString(R.string.card_view_image_saved) + strPath, ToastWrapper.LENGTH_LONG);
+                SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + strPath, SnackbarWrapper.LENGTH_LONG);
             }
             return;
         }
@@ -672,7 +668,7 @@ public class CardViewFragment extends FamiliarFragment {
                         // Create the file
                         if (!imageFile.createNewFile()) {
                             // Couldn't create the file
-                            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_unable_to_create_file, ToastWrapper.LENGTH_SHORT);
+                            SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_create_file, SnackbarWrapper.LENGTH_SHORT);
                             return;
                         }
 
@@ -684,12 +680,12 @@ public class CardViewFragment extends FamiliarFragment {
 
                         // Couldn't save the image for some reason
                         if (!bCompressed) {
-                            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
+                            SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_save_failure, SnackbarWrapper.LENGTH_SHORT);
                             return;
                         }
                     } catch (IOException e) {
                         // Couldn't save it for some reason
-                        ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
+                        SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_save_failure, SnackbarWrapper.LENGTH_SHORT);
                         return;
                     }
 
@@ -704,11 +700,11 @@ public class CardViewFragment extends FamiliarFragment {
                     } else {
                         // Or display the path where it's saved
                         String strPath = imageFile.getAbsolutePath();
-                        ToastWrapper.makeAndShowText(getContext(), getString(R.string.card_view_image_saved) + strPath, ToastWrapper.LENGTH_LONG);
+                        SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + strPath, SnackbarWrapper.LENGTH_LONG);
                     }
                 }
             }
-        }, whereTo), 0, 0);
+        }), 0, 0);
     }
 
     /**
@@ -766,7 +762,7 @@ public class CardViewFragment extends FamiliarFragment {
                             // All lookups failed
                             if (onlyCheckCache) {
                                 // It's only checking the cache. This comes first
-                                if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
+                                if (FamiliarActivity.getNetworkState(getActivity(), true) == -1) {
                                     // Done checking the cache, and there's no network, return false
                                     return false;
                                 } else {
@@ -831,8 +827,8 @@ public class CardViewFragment extends FamiliarFragment {
      * Display the text if the image fails to load
      */
     public void showText() {
-        mImageScrollView.setVisibility(View.GONE);
-        mTextScrollView.setVisibility(View.VISIBLE);
+        mCardImageView.setVisibility(View.GONE);
+        mCardTextLinearLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -851,7 +847,7 @@ public class CardViewFragment extends FamiliarFragment {
             startActivity(Intent.createChooser(shareIntent,
                     getResources().getText(R.string.card_view_send_to)));
         } catch (Exception e) {
-            ToastWrapper.makeAndShowText(mActivity, e.getMessage(), ToastWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(mActivity, e.getMessage(), SnackbarWrapper.LENGTH_SHORT);
         }
     }
 
@@ -1032,7 +1028,7 @@ public class CardViewFragment extends FamiliarFragment {
         /* Handle item selection */
         switch (item.getItemId()) {
             case R.id.image: {
-                loadImageWithGlide(null);
+                loadImageWithGlide(null, true);
                 return true;
             }
             case R.id.price: {
@@ -1087,7 +1083,7 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.cardrulings: {
-                if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
+                if (FamiliarActivity.getNetworkState(getActivity(), true) == -1) {
                     return true;
                 }
 
@@ -1349,7 +1345,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             } else {
                 removeDialog(getFragmentManager());
-                ToastWrapper.makeAndShowText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
             }
             mActivity.clearLoading();
         }
@@ -1376,8 +1372,8 @@ public class CardViewFragment extends FamiliarFragment {
                     saveImageWithGlide(mSaveImageWhereTo);
                 } else {
                     /* Permission denied */
-                    ToastWrapper.makeAndShowText(this.getContext(), R.string.card_view_unable_to_save_image,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_save_image,
+                            SnackbarWrapper.LENGTH_LONG);
                 }
             }
         }

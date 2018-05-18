@@ -35,7 +35,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.GatheringsDialogFragment;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
@@ -239,7 +239,7 @@ public class GatheringsFragment extends FamiliarFragment {
      */
     public void SaveGathering(String _gatheringName) {
         if (_gatheringName.length() <= 0) {
-            ToastWrapper.makeAndShowText(getActivity(), R.string.gathering_toast_no_name, ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(getActivity(), R.string.gathering_toast_no_name, SnackbarWrapper.LENGTH_LONG);
             return;
         }
 

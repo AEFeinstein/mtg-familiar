@@ -179,6 +179,8 @@ dependencies {
         exclude module: 'jcip-annotations'
         exclude module: 'rxjava'
     }
+
+    implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
 }
 
 if (System.env.TRAVIS == 'true') {

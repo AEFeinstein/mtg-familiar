@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -140,14 +141,14 @@ public class MtgCard extends Card {
     /**
      * Construct a MtgCard based on the given parameters.
      *
-     * @param context  context the method is being called from
+     * @param activity activity the method is being called from
      * @param cardName name of the card to make
      * @param cardSet  set code of the card to make
      * @param isFoil   if the card is foil or not
      * @param numberOf how many copies of the card are needed
      */
     public MtgCard(
-            Context context,
+            Activity activity,
             String cardName,
             String cardSet,
             boolean isFoil,
@@ -156,20 +157,20 @@ public class MtgCard extends Card {
         Cursor cardCursor = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
-            SQLiteDatabase database = DatabaseManager.openDatabase(context, false, handle);
+            SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
             /* Construct a blank MTGCard */
             this.mIsFoil = isFoil;
             this.mNumberOf = numberOf;
             /* Note the card price is loading */
-            this.mMessage = context.getString(R.string.wishlist_loading);
+            this.mMessage = activity.getString(R.string.wishlist_loading);
             /* Get extra information from the database */
             if (cardSet == null) {
                 cardCursor = CardDbAdapter.fetchCardByName(cardName, CardDbAdapter.ALL_CARD_DATA_KEYS, true, true, database);
 
                 /* Make sure at least one card was found */
                 if (cardCursor.getCount() == 0) {
-                    ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(activity, R.string.toast_no_card,
+                            SnackbarWrapper.LENGTH_LONG);
                     throw new InstantiationException();
                 }
                 /* If we don't specify the set, and we are trying to find a foil card, choose the
@@ -191,8 +192,8 @@ public class MtgCard extends Card {
 
             /* Make sure at least one card was found */
             if (cardCursor.getCount() == 0) {
-                ToastWrapper.makeAndShowText(context, R.string.toast_no_card,
-                        ToastWrapper.LENGTH_LONG);
+                SnackbarWrapper.makeAndShowText(activity, R.string.toast_no_card,
+                        SnackbarWrapper.LENGTH_LONG);
                 throw new InstantiationException();
             }
 
@@ -249,7 +250,7 @@ public class MtgCard extends Card {
             if (null != cardCursor) {
                 cardCursor.close();
             }
-            DatabaseManager.closeDatabase(context, handle);
+            DatabaseManager.closeDatabase(activity, handle);
         }
     }
 
@@ -419,11 +420,11 @@ public class MtgCard extends Card {
     /**
      * Static method to construct a MtgCard from a trade list line
      *
-     * @param line    A String representation of a MtgCard
-     * @param context The context for database access
+     * @param line     A String representation of a MtgCard
+     * @param activity The activity for database access
      * @return An initialized MtgCard
      */
-    public static MtgCard fromTradeString(String line, Context context) throws InstantiationException {
+    public static MtgCard fromTradeString(String line, Activity activity) throws InstantiationException {
 
         /* Parse these parts out of the string */
         String[] parts = line.split(DELIMITER);
@@ -432,12 +433,12 @@ public class MtgCard extends Card {
         if (parts[2].equals("DD3")) {
             FamiliarDbHandle handle = new FamiliarDbHandle();
             try {
-                SQLiteDatabase database = DatabaseManager.openDatabase(context, false, handle);
+                SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
                 parts[2] = CardDbAdapter.getCorrectSetCode(parts[1], parts[2], database);
             } catch (SQLiteException | FamiliarDbException e) {
                 /* Oops, Expansion may be wrong */
             } finally {
-                DatabaseManager.closeDatabase(context, handle);
+                DatabaseManager.closeDatabase(activity, handle);
             }
         }
 
@@ -507,10 +508,10 @@ public class MtgCard extends Card {
     /**
      * Static method to construct MtgCard info from the result of a toWishlistString()
      *
-     * @param line Information about this card, in the form of what toWishlistString() prints
-     * @param mCtx A context used for getting localized strings
+     * @param line     Information about this card, in the form of what toWishlistString() prints
+     * @param activity A context used for getting localized strings
      */
-    public static MtgCard fromWishlistString(String line, boolean isSideboard, Context mCtx) throws InstantiationException {
+    public static MtgCard fromWishlistString(String line, boolean isSideboard, Activity activity) throws InstantiationException {
 
         String[] parts = line.split(MtgCard.DELIMITER);
 
@@ -518,12 +519,12 @@ public class MtgCard extends Card {
         if (parts[1].equals("DD3")) {
             FamiliarDbHandle handle = new FamiliarDbHandle();
             try {
-                SQLiteDatabase database = DatabaseManager.openDatabase(mCtx, false, handle);
+                SQLiteDatabase database = DatabaseManager.openDatabase(activity, false, handle);
                 parts[1] = CardDbAdapter.getCorrectSetCode(parts[0], parts[1], database);
             } catch (SQLiteException | FamiliarDbException e) {
                 /* Eat it and use the old mExpansion code. */
             } finally {
-                DatabaseManager.closeDatabase(mCtx, handle);
+                DatabaseManager.closeDatabase(activity, handle);
             }
         }
         /* "foil" didn't exist in earlier versions, so it may not be part of the string */

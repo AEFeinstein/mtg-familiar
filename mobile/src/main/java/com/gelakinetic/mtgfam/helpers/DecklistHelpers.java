@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Pair;
 
@@ -42,17 +43,17 @@ public class DecklistHelpers {
     /**
      * Write the decklist passed as a parameter to the decklist file.
      *
-     * @param mCtx      A context to open the file and pop toasts with
+     * @param activity  A context to open the file and pop toasts with
      * @param lDecklist The decklist to write to the file
      * @param fileName  The name of the file to write the decklist to
      */
     public static void WriteDecklist(
-            Context mCtx,
+            Activity activity,
             ArrayList<MtgCard> lDecklist,
             String fileName) {
 
         try {
-            FileOutputStream fos = mCtx.openFileOutput(fileName, Context.MODE_PRIVATE);
+            FileOutputStream fos = activity.openFileOutput(fileName, Context.MODE_PRIVATE);
             for (MtgCard m : lDecklist) {
                 String cardString = m.toWishlistString();
                 /* If the card is a sideboard card, add the marking */
@@ -63,7 +64,7 @@ public class DecklistHelpers {
             }
             fos.close();
         } catch (IOException | IllegalArgumentException ioe) {
-            ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, ioe.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         }
 
     }
@@ -71,23 +72,23 @@ public class DecklistHelpers {
     /**
      * Write the decklist passed as a parameter to the given filename.
      *
-     * @param mCtx                A context to open the file and pop toasts with
+     * @param activity            A context to open the file and pop toasts with
      * @param mCompressedDecklist The decklist to write to the file
      * @param fileName            the filename for the decklist
      */
     public static void WriteCompressedDecklist(
-            Context mCtx,
+            Activity activity,
             ArrayList<CompressedDecklistInfo> mCompressedDecklist,
             String fileName) {
 
-        if (null == mCtx) {
+        if (null == activity) {
             return;
         }
         try {
 
             final String newFileName =
                     fileName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
-            FileOutputStream fos = mCtx.openFileOutput(newFileName, Context.MODE_PRIVATE);
+            FileOutputStream fos = activity.openFileOutput(newFileName, Context.MODE_PRIVATE);
 
             /* For each compressed card, make an MtgCard and write it to the default decklist */
             for (CompressedDecklistInfo cdi : mCompressedDecklist) {
@@ -105,7 +106,7 @@ public class DecklistHelpers {
             }
             fos.close();
         } catch (IOException ioe) {
-            ToastWrapper.makeAndShowText(mCtx, ioe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, ioe.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         }
 
     }
@@ -113,12 +114,12 @@ public class DecklistHelpers {
     /**
      * Read the decklist from a file and return it as an ArrayList<Pair<MtgCard, Boolean>>.
      *
-     * @param mCtx         A context to open the file and database and pop toasts with
+     * @param activity A context to open the file and pop toasts with
      * @param deckName     the name of the deck to load
      * @param loadFullData true to load all card data from the database, false to to just read the file
      * @return The decklist as an ArrayList of MtgCards
      */
-    public static ArrayList<MtgCard> ReadDecklist(Context mCtx, String deckName, boolean loadFullData) {
+    public static ArrayList<MtgCard> ReadDecklist(Activity activity, String deckName, boolean loadFullData) {
 
         ArrayList<MtgCard> lDecklist = new ArrayList<>();
 
@@ -126,7 +127,7 @@ public class DecklistHelpers {
             String line;
             // Sanitize the deckname before loading in case it was saved improperly on an earlier version of Familiar
             deckName = deckName.replaceAll("(\\s)", "_").replaceAll("[^\\w.-]", "_");
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(deckName)))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(activity.openFileInput(deckName)))) {
                 boolean isSideboard;
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
@@ -139,14 +140,14 @@ public class DecklistHelpers {
                         line = line.substring(3);
                     }
                     try {
-                        lDecklist.add(MtgCard.fromWishlistString(line, isSideboard, mCtx));
+                        lDecklist.add(MtgCard.fromWishlistString(line, isSideboard, activity));
                     } catch (InstantiationException e) {
                         /* Eat it */
                     }
                 }
             }
         } catch (NumberFormatException nfe) {
-            ToastWrapper.makeAndShowText(mCtx, nfe.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, nfe.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         } catch (IOException ioe) {
             /* Catches file not found exception when decklist doesn't exist */
         }

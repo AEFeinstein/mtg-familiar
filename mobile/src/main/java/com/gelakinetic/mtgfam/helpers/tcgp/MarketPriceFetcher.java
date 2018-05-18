@@ -228,19 +228,29 @@ public class MarketPriceFetcher {
                                     /* Query the API, one step at a time */
                                     ProductInformation information = api.getProductInformation(tcgCardName, tcgSetName);
                                     if (information.results.length > 0) {
-                                        ProductMarketPrice price = api.getProductMarketPrice(information.results);
-                                        if (price.results.length > 0) {
-                                            ProductDetails details = api.getProductDetails(information.results);
-                                            if (details.results.length > 0) {
+                                        ProductDetails details = api.getProductDetails(information.results);
+                                        if (details.results.length > 0) {
+                                            // Assume the first result is the best result
+                                            long bestResult[] = {details.results[0].productId};
+                                            // Look through all results for a perfect match
+                                            for (ProductDetails.Details searchResult : details.results) {
+                                                if (searchResult.productName.toLowerCase().equals(tcgCardName.toLowerCase())) {
+                                                    // Found a perfect match!
+                                                    bestResult[0] = searchResult.productId;
+                                                    break;
+                                                }
+                                            }
+                                            ProductMarketPrice price = api.getProductMarketPrice(bestResult);
+                                            if (price.results.length > 0) {
                                                 /* Return a new MarketPriceInfo */
                                                 return Single.just(new MarketPriceInfo(price.results, details.results));
-                                            } else if (details.errors.length > 0) {
+                                            } else if (price.errors.length > 0) {
                                                 /* Return the error returned by TCGPlayer */
-                                                return Single.error(new Throwable(details.errors[0]));
+                                                return Single.error(new Throwable(price.errors[0]));
                                             }
-                                        } else if (price.errors.length > 0) {
+                                        } else if (details.errors.length > 0) {
                                             /* Return the error returned by TCGPlayer */
-                                            return Single.error(new Throwable(price.errors[0]));
+                                            return Single.error(new Throwable(details.errors[0]));
                                         }
                                     } else if (information.errors.length > 0) {
                                         /* Return the error returned by TCGPlayer */

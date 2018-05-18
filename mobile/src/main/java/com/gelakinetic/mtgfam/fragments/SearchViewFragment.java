@@ -54,7 +54,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SearchViewDialogFragment;
 import com.gelakinetic.mtgfam.helpers.AutocompleteCursorAdapter;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -823,7 +823,7 @@ public class SearchViewFragment extends FamiliarFragment {
             os.writeObject(searchCriteria);
             os.close();
         } catch (IOException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_save, ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_save, SnackbarWrapper.LENGTH_LONG);
         }
     }
 
@@ -985,7 +985,7 @@ public class SearchViewFragment extends FamiliarFragment {
             checkDialogButtonColors();
 
         } catch (IOException | ClassNotFoundException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_load, ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.search_toast_cannot_load, SnackbarWrapper.LENGTH_LONG);
         }
     }
 

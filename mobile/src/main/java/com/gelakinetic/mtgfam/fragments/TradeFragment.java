@@ -42,7 +42,7 @@ import com.gelakinetic.mtgfam.helpers.CardDataAdapter;
 import com.gelakinetic.mtgfam.helpers.CardDataViewHolder;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
@@ -146,7 +146,7 @@ public class TradeFragment extends FamiliarListFragment {
         final int numberOf = Integer.parseInt(getCardNumberInput().toString());
         final boolean isFoil = checkboxFoilIsChecked();
         try {
-            final MtgCard card = new MtgCard(getContext(), cardName, null, isFoil, numberOf);
+            final MtgCard card = new MtgCard(getActivity(), cardName, null, isFoil, numberOf);
 
             card.setIndex(mOrderAddedIdx++);
 
@@ -246,11 +246,11 @@ public class TradeFragment extends FamiliarListFragment {
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_save_error,
-                    ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_save_error,
+                    SnackbarWrapper.LENGTH_LONG);
         } catch (IllegalArgumentException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_invalid_chars,
-                    ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_invalid_chars,
+                    SnackbarWrapper.LENGTH_LONG);
         }
 
         /* And resort to the expected order after saving */
@@ -291,8 +291,8 @@ public class TradeFragment extends FamiliarListFragment {
         } catch (FileNotFoundException e) {
             /* Do nothing, the autosave doesn't exist */
         } catch (IOException e) {
-            ToastWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
-                    ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(this.getActivity(), e.getLocalizedMessage(),
+                    SnackbarWrapper.LENGTH_LONG);
         } finally {
             if (br != null) {
                 IOUtils.closeQuietly(br);
@@ -395,8 +395,8 @@ public class TradeFragment extends FamiliarListFragment {
         try {
             startActivity(Intent.createChooser(sendIntent, getString(R.string.trader_share)));
         } catch (android.content.ActivityNotFoundException ex) {
-            ToastWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
-                    ToastWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
+                    SnackbarWrapper.LENGTH_SHORT);
         }
     }
 

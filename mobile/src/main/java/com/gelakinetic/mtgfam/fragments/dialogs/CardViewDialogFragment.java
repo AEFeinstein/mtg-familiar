@@ -48,7 +48,7 @@ import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
@@ -272,8 +272,8 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeAndShowText(this.getParentCardViewFragment().mActivity, R.string.decklist_toast_no_decks,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this.getParentCardViewFragment().mActivity, R.string.decklist_toast_no_decks,
+                            SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -286,7 +286,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             // Read the decklist
                             String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
                             ArrayList<MtgCard> decklist =
-                                    DecklistHelpers.ReadDecklist(getContext(), deckFileName, false);
+                                    DecklistHelpers.ReadDecklist(getActivity(), deckFileName, false);
 
                             // Look through the decklist for any existing matches
                             boolean entryIncremented = false;
@@ -310,7 +310,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                             }
 
                             // Write the decklist back
-                            DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
+                            DecklistHelpers.WriteDecklist(getActivity(), decklist, deckFileName);
                         })
                         .build();
             }
@@ -432,7 +432,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 new ClipData.Item(((TextView) view.findViewById(R.id.status)).getText()));
                         clipboard.setPrimaryClip(cd);
 
-                        ToastWrapper.makeAndShowText(getParentCardViewFragment().mActivity, R.string.card_view_copied_to_clipboard, ToastWrapper.LENGTH_SHORT);
+                        SnackbarWrapper.makeAndShowText(getParentCardViewFragment().mActivity, R.string.card_view_copied_to_clipboard, SnackbarWrapper.LENGTH_SHORT);
                     }
                     return false;
                 });

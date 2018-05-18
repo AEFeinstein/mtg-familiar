@@ -34,7 +34,7 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -146,8 +146,8 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.decklist_toast_no_decks,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.decklist_toast_no_decks,
+                            SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -172,10 +172,10 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                 /* if there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeAndShowText(
+                    SnackbarWrapper.makeAndShowText(
                             this.getActivity(),
                             R.string.decklist_toast_no_decks,
-                            ToastWrapper.LENGTH_LONG
+                            SnackbarWrapper.LENGTH_LONG
                     );
                     return DontShowDialog();
                 }
@@ -189,11 +189,11 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                             File toDelete = new File(getActivity().getFilesDir(),
                                     deckNames[position] + DecklistFragment.DECK_EXTENSION);
                             if (!toDelete.delete()) {
-                                ToastWrapper.makeAndShowText(
+                                SnackbarWrapper.makeAndShowText(
                                         getActivity(),
                                         toDelete.getName() + " "
                                                 + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG
+                                        SnackbarWrapper.LENGTH_LONG
                                 );
                             }
 

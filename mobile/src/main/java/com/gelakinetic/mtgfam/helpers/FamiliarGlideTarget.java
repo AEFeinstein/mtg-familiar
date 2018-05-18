@@ -44,7 +44,6 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
     private final CardViewFragment mFragment;
     private final ImageView mImageView;
     private final DrawableLoadedCallback mDrawableLoadedCallback;
-    private final int mWhereTo;
 
     /**
      * Constructor for loading an image into an ImageView
@@ -56,7 +55,6 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
         mFragment = fragment;
         mImageView = imageView;
         mDrawableLoadedCallback = null;
-        mWhereTo = 0;
     }
 
     /**
@@ -64,15 +62,11 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
      *
      * @param fragment The fragment that the image is being saved from
      * @param callback A callback to be called when the image is loaded
-     * @param whereTo  What to do with the loaded image, either MAIN_PAGE to save it or SHARE to
-     *                 share it
      */
-    public FamiliarGlideTarget(CardViewFragment fragment, DrawableLoadedCallback callback,
-                               int whereTo) {
+    public FamiliarGlideTarget(CardViewFragment fragment, DrawableLoadedCallback callback) {
         mFragment = fragment;
         mImageView = null;
         mDrawableLoadedCallback = callback;
-        mWhereTo = whereTo;
     }
 
     /**
@@ -118,7 +112,7 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
     @Override
     public void onLoadFailed(@Nullable Drawable errorDrawable) {
         mFragment.getFamiliarActivity().clearLoading();
-        ToastWrapper.makeAndShowText(mFragment.getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
+        SnackbarWrapper.makeAndShowText(mFragment.getActivity(), R.string.card_view_image_not_found, SnackbarWrapper.LENGTH_SHORT);
         mFragment.showText();
     }
 }

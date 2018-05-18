@@ -31,7 +31,7 @@ import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.fragments.ResultListFragment;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .positiveText(R.string.result_list_Add_to_wishlist)
                         .onPositive((dialog, which) -> {
                             try {
-                                WishlistHelpers.addItemToWishlist(getContext(),
+                                WishlistHelpers.addItemToWishlist(getActivity(),
                                         new WishlistHelpers.CompressedWishlistInfo(
                                                 new MtgCard(cardName, cardSet, false, 1, false), 0));
                             } catch (java.lang.InstantiationException e) {
@@ -96,8 +96,8 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (deckNames.length == 0) {
-                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.decklist_toast_no_decks,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.decklist_toast_no_decks,
+                            SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -110,7 +110,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             // Read the decklist
                             String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
                             ArrayList<MtgCard> decklist =
-                                    DecklistHelpers.ReadDecklist(getContext(), deckFileName, false);
+                                    DecklistHelpers.ReadDecklist(getActivity(), deckFileName, false);
 
                             // Look through the decklist for any existing matches
                             boolean entryIncremented = false;
@@ -134,7 +134,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                             }
 
                             // Write the decklist back
-                            DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
+                            DecklistHelpers.WriteDecklist(getActivity(), decklist, deckFileName);
                         })
                         .build();
             }
