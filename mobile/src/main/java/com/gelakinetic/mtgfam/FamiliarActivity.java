@@ -59,11 +59,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -91,7 +93,6 @@ import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
@@ -116,6 +117,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Locale;
+
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
 public class FamiliarActivity extends AppCompatActivity {
     /* Tags for fragments */
@@ -205,7 +209,8 @@ public class FamiliarActivity extends AppCompatActivity {
     };
     private ActionBarDrawerToggle mDrawerToggle;
     /* UI elements */
-    private IndeterminateRefreshLayout mRefreshLayout;
+    private SmoothProgressBar mSmoothProgressBar;
+    private boolean mIsLoading = false;
     /* Used to pass results between fragments */
     private Bundle mFragResults;
     /* Timer setup */
@@ -477,12 +482,24 @@ public class FamiliarActivity extends AppCompatActivity {
 
         DatabaseManager.initializeInstances(getApplicationContext());
 
-        mRefreshLayout = findViewById(R.id.fragment_container);
-        mRefreshLayout.setColors(
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_rare)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_mythic)));
+        mSmoothProgressBar = findViewById(R.id.smooth_progress_bar);
+        mSmoothProgressBar.setIndeterminateDrawable(new SmoothProgressDrawable.Builder(this)
+                .colors(new int[]{
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_rare)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_mythic))})
+                .interpolator(new AccelerateDecelerateInterpolator())
+                .sectionsCount(4)
+                .separatorLength(0)
+                .progressiveStartSpeed(1.5f)
+                .progressiveStopSpeed(1.5f)
+                .progressiveStart(true)
+                .strokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()))
+                .build());
+
+        mSmoothProgressBar.setVisibility(View.GONE);
+        clearLoading();
 
         /* Set default preferences manually so that the listener doesn't do weird things on init */
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -1470,8 +1487,8 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(CURRENT_FRAG, mCurrentFrag);
-        outState.putBoolean(IS_REFRESHING, mRefreshLayout.mRefreshing);
-        mRefreshLayout.setRefreshing(false);
+        outState.putBoolean(IS_REFRESHING, mIsLoading);
+        clearLoading();
         super.onSaveInstanceState(outState);
     }
 
@@ -1487,7 +1504,11 @@ public class FamiliarActivity extends AppCompatActivity {
             mCurrentFrag = savedInstanceState.getInt(CURRENT_FRAG);
             mDrawerList.setItemChecked(mCurrentFrag, true);
 
-            mRefreshLayout.setRefreshing(savedInstanceState.getBoolean(IS_REFRESHING));
+            if (savedInstanceState.getBoolean(IS_REFRESHING)) {
+                setLoading();
+            } else {
+                clearLoading();
+            }
         }
     }
 
@@ -1495,14 +1516,19 @@ public class FamiliarActivity extends AppCompatActivity {
      * Show the indeterminate loading bar.
      */
     public void setLoading() {
-        mRefreshLayout.setRefreshing(true);
+        if (mSmoothProgressBar.getVisibility() == View.GONE) {
+            mSmoothProgressBar.setVisibility(View.VISIBLE);
+        }
+        mSmoothProgressBar.progressiveStart();
+        mIsLoading = true;
     }
 
     /**
      * Hide the indeterminate loading bar.
      */
     public void clearLoading() {
-        mRefreshLayout.setRefreshing(false);
+        mSmoothProgressBar.progressiveStop();
+        mIsLoading = false;
     }
 
     /**
