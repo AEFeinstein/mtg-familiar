@@ -21,8 +21,6 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,11 +47,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
@@ -178,7 +172,7 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onPause() {
         super.onPause();
         PreferenceAdapter.setLastLoadedDecklist(getContext(), mCurrentDeck);
-        DecklistHelpers.WriteCompressedDecklist(this.getContext(), mCompressedDecklist, getCurrentDeckName());
+        DecklistHelpers.WriteCompressedDecklist(this.getActivity(), mCompressedDecklist, getCurrentDeckName());
     }
 
     /**
@@ -198,7 +192,7 @@ public class DecklistFragment extends FamiliarListFragment {
         final String name = String.valueOf(getCardNameInput());
         final String numberOf = String.valueOf(getCardNumberInput());
         try {
-            final MtgCard card = new MtgCard(getContext(), name, null,
+            final MtgCard card = new MtgCard(getActivity(), name, null,
                     checkboxFoilIsChecked(), Integer.parseInt(numberOf));
 
             final CompressedDecklistInfo decklistInfo =
@@ -450,17 +444,17 @@ public class DecklistFragment extends FamiliarListFragment {
                     startActivity(Intent.createChooser(sendIntent,
                             getString(R.string.decklist_share)));
                 } catch (ActivityNotFoundException anfe) {
-                    ToastWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(getActivity(), R.string.error_no_email_client,
+                            SnackbarWrapper.LENGTH_LONG);
                 }
                 return true;
             }
             case R.id.deck_menu_save: {
                 String currentDeckName = getCurrentDeckName();
-                DecklistHelpers.WriteCompressedDecklist(getContext(), mCompressedDecklist,
+                DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist,
                         currentDeckName);
-                ToastWrapper.makeAndShowText(getActivity(), getString(R.string.decklist_saved_toast,
-                        currentDeckName), ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.decklist_saved_toast,
+                        currentDeckName), SnackbarWrapper.LENGTH_SHORT);
                 return true;
             }
             case R.id.deck_menu_legality: {

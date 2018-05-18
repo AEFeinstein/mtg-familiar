@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -95,7 +96,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -412,7 +413,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        ToastWrapper.cancelToast();
+        SnackbarWrapper.cancelSnackbar();
     }
 
     @Override
@@ -729,16 +730,16 @@ public class FamiliarActivity extends AppCompatActivity {
                         File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
                         if (mtr.exists()) {
                             if (!mtr.delete()) {
-                                ToastWrapper.makeAndShowText(this, mtr.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, mtr.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                             if (!ipg.delete()) {
-                                ToastWrapper.makeAndShowText(this, ipg.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                             if (!jar.delete()) {
-                                ToastWrapper.makeAndShowText(this, jar.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, jar.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                         }
                     }
@@ -824,7 +825,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 Bundle args = new Bundle();
 
                 if (null == data || null == data.getAuthority()) {
-                    ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                     this.finish();
                     return false;
                 }
@@ -863,7 +864,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         }
                     } catch (Exception e) {
                         /* empty cursor, just return */
-                        ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                        SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                         this.finish();
                         shouldSelectItem = false;
                     } finally {
@@ -914,13 +915,13 @@ public class FamiliarActivity extends AppCompatActivity {
                                         new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                             } else {
                                 /* empty cursor, just return */
-                                ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                                 this.finish();
                                 shouldSelectItem = false;
                             }
                         } else if (!screenLaunched) {
                             /* null cursor, just return */
-                            ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                            SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                             this.finish();
                             shouldSelectItem = false;
                         }
@@ -1548,17 +1549,17 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * Checks the networks state.
      *
-     * @param context         the context where this is being called
+     * @param activity        the activity to show the Snackbar in
      * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
      * @return -1 if there is no network connection, or the type of network, like
      * ConnectivityManager.TYPE_WIFI
      */
-    public static int getNetworkState(Context context, boolean shouldShowToast) {
+    public static int getNetworkState(Activity activity, boolean shouldShowToast) {
         try {
-            ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager conMan = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (null == conMan) {
                 if (shouldShowToast) {
-                    ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                    SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
                 }
                 return -1;
             }
@@ -1568,12 +1569,12 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
             }
             if (shouldShowToast) {
-                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
             }
             return -1;
         } catch (NullPointerException e) {
             if (shouldShowToast) {
-                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
             }
             return -1;
         }

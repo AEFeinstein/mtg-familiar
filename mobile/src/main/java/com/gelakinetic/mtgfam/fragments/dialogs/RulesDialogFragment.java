@@ -32,7 +32,7 @@ import android.widget.EditText;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.RulesFragment;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -122,8 +122,8 @@ public class RulesDialogFragment extends FamiliarDialogFragment {
                             }
                             String keyword = nameInput.getText().toString();
                             if (keyword.length() < 3) {
-                                ToastWrapper.makeAndShowText(getActivity(),
-                                        R.string.rules_short_key_toast, ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(getActivity(),
+                                        R.string.rules_short_key_toast, SnackbarWrapper.LENGTH_LONG);
                             } else {
                                 searchArgs = new Bundle();
                                 searchArgs.putString(RulesFragment.KEYWORD_KEY, keyword);
