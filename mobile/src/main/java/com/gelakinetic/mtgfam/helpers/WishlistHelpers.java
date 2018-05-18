@@ -19,6 +19,7 @@
 
 package com.gelakinetic.mtgfam.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Pair;
 
@@ -52,12 +53,12 @@ public class WishlistHelpers {
     /**
      * Write the wishlist passed as a parameter to the wishlist file
      *
-     * @param mCtx      A context to open the file and pop toasts with
+     * @param activity  A context to open the file and pop toasts with
      * @param lWishlist The wishlist to write to the file
      */
-    public static void WriteWishlist(Context mCtx, ArrayList<MtgCard> lWishlist) {
+    public static void WriteWishlist(Activity activity, ArrayList<MtgCard> lWishlist) {
         try {
-            FileOutputStream fos = mCtx.openFileOutput(WISHLIST_NAME, Context.MODE_PRIVATE);
+            FileOutputStream fos = activity.openFileOutput(WISHLIST_NAME, Context.MODE_PRIVATE);
 
             for (MtgCard m : lWishlist) {
                 fos.write(m.toWishlistString().getBytes());
@@ -65,23 +66,23 @@ public class WishlistHelpers {
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, e.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         }
     }
 
     /**
      * Write the wishlist passed as a parameter to the wishlist file
      *
-     * @param mCtx                A context to open the file and pop toasts with
+     * @param activity            A context to open the file and pop toasts with
      * @param mCompressedWishlist The wishlist to write to the file
      */
-    public static void WriteCompressedWishlist(Context mCtx, ArrayList<CompressedWishlistInfo> mCompressedWishlist) {
-        if (null == mCtx) {
+    public static void WriteCompressedWishlist(Activity activity, ArrayList<CompressedWishlistInfo> mCompressedWishlist) {
+        if (null == activity) {
             // Context is null, don't try to write the wishlist
             return;
         }
         try {
-            FileOutputStream fos = mCtx.openFileOutput(WISHLIST_NAME, Context.MODE_PRIVATE);
+            FileOutputStream fos = activity.openFileOutput(WISHLIST_NAME, Context.MODE_PRIVATE);
 
             /* For each compressed card, make an MtgCard and write it to the wishlist */
             for (CompressedWishlistInfo cwi : mCompressedWishlist) {
@@ -93,18 +94,18 @@ public class WishlistHelpers {
 
             fos.close();
         } catch (IOException e) {
-            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, e.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         }
     }
 
     /**
      * Adds an item as a CompressedWishlistInfo to the wishlist
      *
-     * @param context      context that this is being called from
+     * @param activity     activity that this is being called from
      * @param wishlistInfo the CompressedWishlistInfo to add to the wishlist
      */
-    public static void addItemToWishlist(final Context context, final CompressedWishlistInfo wishlistInfo) {
-        final ArrayList<MtgCard> currentWishlist = ReadWishlist(context);
+    public static void addItemToWishlist(final Activity activity, final CompressedWishlistInfo wishlistInfo) {
+        final ArrayList<MtgCard> currentWishlist = ReadWishlist(activity);
         for (IndividualSetInfo isi : wishlistInfo.mInfo) {
             wishlistInfo.applyIndividualInfo(isi);
             if (currentWishlist.contains(wishlistInfo)) {
@@ -114,7 +115,7 @@ public class WishlistHelpers {
                 currentWishlist.add(wishlistInfo);
             }
         }
-        WriteWishlist(context, currentWishlist);
+        WriteWishlist(activity, currentWishlist);
     }
 
     /**
@@ -135,21 +136,21 @@ public class WishlistHelpers {
     /**
      * Read the wishlist from a file and return it as an ArrayList<MtgCard>
      *
-     * @param mCtx A context to open the file and pop toasts with
+     * @param activity A context to open the file and pop toasts with
      * @return The wishlist in ArrayList form
      */
-    public static ArrayList<MtgCard> ReadWishlist(Context mCtx) {
+    public static ArrayList<MtgCard> ReadWishlist(Activity activity) {
 
         ArrayList<MtgCard> lWishlist = new ArrayList<>();
         int orderAddedIdx = 0;
 
         try {
             String line;
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(mCtx.openFileInput(WISHLIST_NAME)))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(activity.openFileInput(WISHLIST_NAME)))) {
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
                     try {
-                        MtgCard card = MtgCard.fromWishlistString(line, mCtx);
+                        MtgCard card = MtgCard.fromWishlistString(line, activity);
                         card.setIndex(orderAddedIdx++);
                         lWishlist.add(card);
                     } catch (InstantiationException e) {
@@ -158,7 +159,7 @@ public class WishlistHelpers {
                 }
             }
         } catch (NumberFormatException e) {
-            ToastWrapper.makeAndShowText(mCtx, e.getLocalizedMessage(), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, e.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         } catch (IOException e) {
             /* Catches file not found exception when wishlist doesn't exist */
         }

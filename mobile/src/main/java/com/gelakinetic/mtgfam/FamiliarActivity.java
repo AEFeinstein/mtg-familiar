@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -58,11 +59,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -90,11 +93,10 @@ import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.fragments.WishlistFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarActivityDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.FamiliarDialogFragment;
-import com.gelakinetic.mtgfam.helpers.IndeterminateRefreshLayout;
 import com.gelakinetic.mtgfam.helpers.MTGFamiliarAppWidgetProvider;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.ZipUtils;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
@@ -115,6 +117,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Locale;
+
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
 public class FamiliarActivity extends AppCompatActivity {
     /* Tags for fragments */
@@ -204,7 +209,8 @@ public class FamiliarActivity extends AppCompatActivity {
     };
     private ActionBarDrawerToggle mDrawerToggle;
     /* UI elements */
-    private IndeterminateRefreshLayout mRefreshLayout;
+    private SmoothProgressBar mSmoothProgressBar;
+    private boolean mIsLoading = false;
     /* Used to pass results between fragments */
     private Bundle mFragResults;
     /* Timer setup */
@@ -407,7 +413,7 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        ToastWrapper.cancelToast();
+        SnackbarWrapper.cancelSnackbar();
     }
 
     @Override
@@ -476,12 +482,24 @@ public class FamiliarActivity extends AppCompatActivity {
 
         DatabaseManager.initializeInstances(getApplicationContext());
 
-        mRefreshLayout = findViewById(R.id.fragment_container);
-        mRefreshLayout.setColors(
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_rare)),
-                ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_mythic)));
+        mSmoothProgressBar = findViewById(R.id.smooth_progress_bar);
+        mSmoothProgressBar.setIndeterminateDrawable(new SmoothProgressDrawable.Builder(this)
+                .colors(new int[]{
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_common)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_uncommon)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_rare)),
+                        ContextCompat.getColor(this, getResourceIdFromAttr(R.attr.color_mythic))})
+                .interpolator(new AccelerateDecelerateInterpolator())
+                .sectionsCount(4)
+                .separatorLength(0)
+                .progressiveStartSpeed(1.5f)
+                .progressiveStopSpeed(1.5f)
+                .progressiveStart(true)
+                .strokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()))
+                .build());
+
+        mSmoothProgressBar.setVisibility(View.GONE);
+        clearLoading();
 
         /* Set default preferences manually so that the listener doesn't do weird things on init */
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -712,16 +730,16 @@ public class FamiliarActivity extends AppCompatActivity {
                         File jar = new File(getFilesDir(), JudgesCornerFragment.JAR_LOCAL_FILE);
                         if (mtr.exists()) {
                             if (!mtr.delete()) {
-                                ToastWrapper.makeAndShowText(this, mtr.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, mtr.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                             if (!ipg.delete()) {
-                                ToastWrapper.makeAndShowText(this, ipg.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, ipg.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                             if (!jar.delete()) {
-                                ToastWrapper.makeAndShowText(this, jar.getName() + " " + getString(R.string.not_deleted),
-                                        ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, jar.getName() + " " + getString(R.string.not_deleted),
+                                        SnackbarWrapper.LENGTH_LONG);
                             }
                         }
                     }
@@ -807,7 +825,7 @@ public class FamiliarActivity extends AppCompatActivity {
                 Bundle args = new Bundle();
 
                 if (null == data || null == data.getAuthority()) {
-                    ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                     this.finish();
                     return false;
                 }
@@ -846,7 +864,7 @@ public class FamiliarActivity extends AppCompatActivity {
                         }
                     } catch (Exception e) {
                         /* empty cursor, just return */
-                        ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                        SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                         this.finish();
                         shouldSelectItem = false;
                     } finally {
@@ -897,13 +915,13 @@ public class FamiliarActivity extends AppCompatActivity {
                                         new long[]{cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_ID))});
                             } else {
                                 /* empty cursor, just return */
-                                ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                                 this.finish();
                                 shouldSelectItem = false;
                             }
                         } else if (!screenLaunched) {
                             /* null cursor, just return */
-                            ToastWrapper.makeAndShowText(this, R.string.no_results_found, ToastWrapper.LENGTH_LONG);
+                            SnackbarWrapper.makeAndShowText(this, R.string.no_results_found, SnackbarWrapper.LENGTH_LONG);
                             this.finish();
                             shouldSelectItem = false;
                         }
@@ -1469,8 +1487,8 @@ public class FamiliarActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(CURRENT_FRAG, mCurrentFrag);
-        outState.putBoolean(IS_REFRESHING, mRefreshLayout.mRefreshing);
-        mRefreshLayout.setRefreshing(false);
+        outState.putBoolean(IS_REFRESHING, mIsLoading);
+        clearLoading();
         super.onSaveInstanceState(outState);
     }
 
@@ -1486,7 +1504,11 @@ public class FamiliarActivity extends AppCompatActivity {
             mCurrentFrag = savedInstanceState.getInt(CURRENT_FRAG);
             mDrawerList.setItemChecked(mCurrentFrag, true);
 
-            mRefreshLayout.setRefreshing(savedInstanceState.getBoolean(IS_REFRESHING));
+            if (savedInstanceState.getBoolean(IS_REFRESHING)) {
+                setLoading();
+            } else {
+                clearLoading();
+            }
         }
     }
 
@@ -1494,14 +1516,19 @@ public class FamiliarActivity extends AppCompatActivity {
      * Show the indeterminate loading bar.
      */
     public void setLoading() {
-        mRefreshLayout.setRefreshing(true);
+        if (mSmoothProgressBar.getVisibility() == View.GONE) {
+            mSmoothProgressBar.setVisibility(View.VISIBLE);
+        }
+        mSmoothProgressBar.progressiveStart();
+        mIsLoading = true;
     }
 
     /**
      * Hide the indeterminate loading bar.
      */
     public void clearLoading() {
-        mRefreshLayout.setRefreshing(false);
+        mSmoothProgressBar.progressiveStop();
+        mIsLoading = false;
     }
 
     /**
@@ -1522,17 +1549,17 @@ public class FamiliarActivity extends AppCompatActivity {
     /**
      * Checks the networks state.
      *
-     * @param context         the context where this is being called
+     * @param activity        the activity to show the Snackbar in
      * @param shouldShowToast true, if you want a Toast to be shown indicating a lack of network
      * @return -1 if there is no network connection, or the type of network, like
      * ConnectivityManager.TYPE_WIFI
      */
-    public static int getNetworkState(Context context, boolean shouldShowToast) {
+    public static int getNetworkState(Activity activity, boolean shouldShowToast) {
         try {
-            ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager conMan = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (null == conMan) {
                 if (shouldShowToast) {
-                    ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                    SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
                 }
                 return -1;
             }
@@ -1542,12 +1569,12 @@ public class FamiliarActivity extends AppCompatActivity {
                 }
             }
             if (shouldShowToast) {
-                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
             }
             return -1;
         } catch (NullPointerException e) {
             if (shouldShowToast) {
-                ToastWrapper.makeAndShowText(context, R.string.no_network, ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(activity, R.string.no_network, SnackbarWrapper.LENGTH_SHORT);
             }
             return -1;
         }

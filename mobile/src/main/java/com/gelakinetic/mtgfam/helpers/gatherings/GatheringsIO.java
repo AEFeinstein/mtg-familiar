@@ -19,11 +19,11 @@
 
 package com.gelakinetic.mtgfam.helpers.gatherings;
 
-import android.content.Context;
+import android.app.Activity;
 import android.util.Xml;
 
 import com.gelakinetic.mtgfam.R;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -329,11 +329,11 @@ public class GatheringsIO {
      * @param filesDir The absolute path to the directory on the filesystem where files created with
      *                 openFileOutput(String, int) are stored.
      */
-    public static void DeleteGathering(String fileName, File filesDir, Context ctx) {
+    public static void DeleteGathering(String fileName, File filesDir, Activity activity) {
         File path = new File(filesDir, FOLDER_PATH);
         File gatheringFile = new File(path, fileName);
         if (!gatheringFile.delete()) {
-            ToastWrapper.makeAndShowText(ctx, fileName + " " + ctx.getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG);
+            SnackbarWrapper.makeAndShowText(activity, fileName + " " + activity.getString(R.string.not_deleted), SnackbarWrapper.LENGTH_LONG);
         }
     }
 
@@ -344,10 +344,10 @@ public class GatheringsIO {
      * @param filesDir The absolute path to the directory on the filesystem where files created with
      *                 openFileOutput(String, int) are stored.
      */
-    public static void DeleteGatheringByName(String _name, File filesDir, Context ctx) {
+    public static void DeleteGatheringByName(String _name, File filesDir, Activity activity) {
         for (String fileName : getGatheringFileList(filesDir)) {
             if (_name.equals(ReadGatheringNameFromXML(fileName, filesDir))) {
-                DeleteGathering(fileName, filesDir, ctx);
+                DeleteGathering(fileName, filesDir, activity);
             }
         }
     }

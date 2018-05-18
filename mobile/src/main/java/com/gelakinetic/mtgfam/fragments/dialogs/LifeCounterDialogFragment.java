@@ -27,7 +27,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.LifeCounterFragment;
 import com.gelakinetic.mtgfam.helpers.LcPlayer;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.gatherings.Gathering;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsIO;
 import com.gelakinetic.mtgfam.helpers.gatherings.GatheringsPlayerData;
@@ -166,8 +166,8 @@ public class LifeCounterDialogFragment extends FamiliarDialogFragment {
             case DIALOG_SET_GATHERING: {
                 /* If there aren't any dialogs, don't show the dialog. Pop a toast instead */
                 if (GatheringsIO.getNumberOfGatherings(getActivity().getFilesDir()) <= 0) {
-                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.gathering_toast_no_gatherings,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.gathering_toast_no_gatherings,
+                            SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 

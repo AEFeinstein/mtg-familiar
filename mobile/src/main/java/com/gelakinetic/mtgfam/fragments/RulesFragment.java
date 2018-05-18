@@ -49,7 +49,7 @@ import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.dialogs.RulesDialogFragment;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -273,7 +273,7 @@ public class RulesFragment extends FamiliarFragment {
                                 // Set the clipboard's primary clip.
                                 clipboard.setPrimaryClip(clip);
                                 // Alert the user
-                                ToastWrapper.makeAndShowText(getActivity(), R.string.rules_coppied, ToastWrapper.LENGTH_SHORT);
+                                SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_coppied, SnackbarWrapper.LENGTH_SHORT);
                             }
                         }
                         return true;
@@ -281,13 +281,13 @@ public class RulesFragment extends FamiliarFragment {
                 } else {
                     /* Cursor had a size of 0, boring */
                     if (!isBanned) {
-                        ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
+                        SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, SnackbarWrapper.LENGTH_SHORT);
                         getFragmentManager().popBackStack();
                     }
                 }
             } else {
                 if (!isBanned) { /* Cursor is null. weird. */
-                    ToastWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, ToastWrapper.LENGTH_SHORT);
+                    SnackbarWrapper.makeAndShowText(getActivity(), R.string.rules_no_results_toast, SnackbarWrapper.LENGTH_SHORT);
                     getFragmentManager().popBackStack();
                 }
             }
