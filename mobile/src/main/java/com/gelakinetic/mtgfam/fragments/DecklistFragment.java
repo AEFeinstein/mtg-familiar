@@ -21,6 +21,10 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,6 +51,10 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;
@@ -54,6 +62,8 @@ import org.apache.commons.collections4.comparators.ComparatorChain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -75,6 +85,87 @@ public class DecklistFragment extends FamiliarListFragment {
 
     private static final String FRAGMENT_TAG = "decklist";
     private static final String CURRENT_DECKLIST_TAG = "decklist_name";
+    private LegalityCheckerTask mLegalityCheckerTask = null;
+
+    public static final String[] LEGALITY_DIAOG_FROM = new String[]{"format", "status"};
+    public static final int[] LEGALITY_DIALOG_TO = new int[]{R.id.format, R.id.status};
+    public List<HashMap<String, String>> legalityMap = new ArrayList<>();
+
+    static class LegalityCheckerTask extends AsyncTask<DecklistFragment, Void, DecklistFragment> {
+
+        @Override
+        protected DecklistFragment doInBackground(DecklistFragment... decklistFragments) {
+            DecklistFragment parentFrag = decklistFragments[0];
+
+            parentFrag.legalityMap.clear();
+            Cursor cFormats = null;
+            FamiliarDbHandle handle = new FamiliarDbHandle();
+            try {
+                SQLiteDatabase database = DatabaseManager.openDatabase(parentFrag.getContext(), false, handle);
+                cFormats = CardDbAdapter.fetchAllFormats(database);
+                cFormats.moveToFirst();
+                for (int i = 0; i < cFormats.getCount(); i++) {
+                    boolean deckIsLegal = true;
+                    String deckLegality = "";
+                    String format =
+                            cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
+                    for (CompressedDecklistInfo info :
+                            parentFrag.mCompressedDecklist) {
+                        if (!info.getName().isEmpty()) { /* Skip the headers */
+                            switch (CardDbAdapter.checkLegality(info.getName(), format, database)) {
+                                case CardDbAdapter.LEGAL: {
+                                    if (format.equalsIgnoreCase("Commander")
+                                            && info.getTotalNumber() > 1) {
+                                        deckLegality = parentFrag.getString(R.string.decklist_not_legal);
+                                        deckIsLegal = false;
+                                    }
+                                    break;
+                                }
+                                case CardDbAdapter.RESTRICTED: {
+                                    if (format.equalsIgnoreCase("Vintage")
+                                            && info.getTotalNumber() > 1) {
+                                        deckLegality = parentFrag.getString(R.string.decklist_not_legal);
+                                        deckIsLegal = false;
+                                    }
+                                    break;
+                                }
+                                case CardDbAdapter.BANNED: {
+                                    deckLegality = parentFrag.getString(R.string.decklist_not_legal);
+                                    deckIsLegal = false;
+                                    break;
+                                }
+                            }
+                            if (!deckIsLegal) {
+                                break;
+                            }
+                        }
+                    }
+                    if (deckIsLegal) {
+                        deckLegality = parentFrag.getString(R.string.card_view_legal);
+                    }
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(LEGALITY_DIAOG_FROM[0], format);
+                    map.put(LEGALITY_DIAOG_FROM[1], deckLegality);
+                    parentFrag.legalityMap.add(map);
+                    cFormats.moveToNext();
+                }
+            } catch (SQLiteException | FamiliarDbException fdbe) {
+                parentFrag.handleFamiliarDbException(false);
+            } finally {
+                if (null != cFormats) {
+                    cFormats.close();
+                }
+                DatabaseManager.closeDatabase(parentFrag.getContext(), handle);
+            }
+            return parentFrag;
+        }
+
+        @Override
+        protected void onPostExecute(DecklistFragment fragment) {
+            fragment.getFamiliarActivity().clearLoading();
+            fragment.showDialog(DecklistDialogFragment.DIALOG_GET_LEGALITY, null, false);
+        }
+    }
 
     /**
      * Create the view, pull out UI elements, and set up the listener for the "add cards" button.
@@ -170,6 +261,10 @@ public class DecklistFragment extends FamiliarListFragment {
     @Override
     public void onPause() {
         super.onPause();
+        if (null != mLegalityCheckerTask) {
+            mLegalityCheckerTask.cancel(true);
+            getFamiliarActivity().clearLoading();
+        }
         PreferenceAdapter.setLastLoadedDecklist(getContext(), mCurrentDeck);
         DecklistHelpers.WriteCompressedDecklist(this.getContext(), mCompressedDecklist, getCurrentDeckName());
     }
@@ -459,7 +554,13 @@ public class DecklistFragment extends FamiliarListFragment {
                 return true;
             }
             case R.id.deck_menu_legality: {
-                showDialog(DecklistDialogFragment.DIALOG_GET_LEGALITY, null, false);
+                getFamiliarActivity().setLoading();
+
+                if (null != mLegalityCheckerTask) {
+                    mLegalityCheckerTask.cancel(true);
+                }
+                mLegalityCheckerTask = new LegalityCheckerTask();
+                mLegalityCheckerTask.execute(this);
             }
             default: {
                 return super.onOptionsItemSelected(item);
