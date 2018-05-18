@@ -166,7 +166,7 @@ public class WishlistHelpers {
         }
 
         if (loadFullData && !lWishlist.isEmpty()) {
-            MtgCard.initCardListFromDb(mCtx, lWishlist);
+            MtgCard.initCardListFromDb(activity, lWishlist);
         }
         return lWishlist;
     }

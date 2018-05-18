@@ -51,6 +51,10 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
+import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.collections4.comparators.ComparatorChain;

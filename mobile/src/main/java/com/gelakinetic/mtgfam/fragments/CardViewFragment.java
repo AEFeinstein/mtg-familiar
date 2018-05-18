@@ -1055,7 +1055,7 @@ public class CardViewFragment extends FamiliarFragment {
                                     // This was a failure
                                     CardViewFragment.this.removeDialog(getFragmentManager());
                                     if (null != mErrorMessage) {
-                                        ToastWrapper.makeAndShowText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT);
+                                        SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
                                     }
                                 } else {
                                     // This was a success

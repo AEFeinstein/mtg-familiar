@@ -153,7 +153,7 @@ public class DecklistHelpers {
         }
 
         if (loadFullData && !lDecklist.isEmpty()) {
-            MtgCard.initCardListFromDb(mCtx, lDecklist);
+            MtgCard.initCardListFromDb(activity, lDecklist);
         }
         return lDecklist;
 
