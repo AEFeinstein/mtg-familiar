@@ -118,7 +118,7 @@ public class FamiliarGlideTarget extends SimpleTarget<Drawable> {
     @Override
     public void onLoadFailed(@Nullable Drawable errorDrawable) {
         mFragment.getFamiliarActivity().clearLoading();
-        ToastWrapper.makeAndShowText(mFragment.getContext(), R.string.card_view_image_not_found, ToastWrapper.LENGTH_SHORT);
+        SnackbarWrapper.makeAndShowText(mFragment.getActivity(), R.string.card_view_image_not_found, SnackbarWrapper.LENGTH_SHORT);
         mFragment.showText();
     }
 }

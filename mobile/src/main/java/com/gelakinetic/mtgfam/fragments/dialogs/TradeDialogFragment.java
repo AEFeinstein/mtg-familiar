@@ -38,7 +38,7 @@ import com.gelakinetic.mtgfam.fragments.CardViewPagerFragment;
 import com.gelakinetic.mtgfam.fragments.TradeFragment;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -389,7 +389,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             }
 
                             try {
-                                list.set(positionForDialog, new MtgCard(getContext(), name, set, isFoil, numberOf));
+                                list.set(positionForDialog, new MtgCard(getActivity(), name, set, isFoil, numberOf));
                                 /* Reload and notify the adapter */
                                 getParentTradeFragment().loadPrice(list.get(positionForDialog));
                                 adapter.notifyDataSetChanged();
@@ -474,7 +474,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (tradeNames.length == 0) {
-                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_no_trades, SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -500,7 +500,7 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
 
                 /* If there are no files, don't show the dialog */
                 if (tradeNames.length == 0) {
-                    ToastWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_no_trades, ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(this.getActivity(), R.string.trader_toast_no_trades, SnackbarWrapper.LENGTH_LONG);
                     return DontShowDialog();
                 }
 
@@ -512,8 +512,8 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                             File toDelete = new File(getActivity().getFilesDir(), tradeNames[position] +
                                     TradeFragment.TRADE_EXTENSION);
                             if (!toDelete.delete()) {
-                                ToastWrapper.makeAndShowText(getActivity(), toDelete.getName() + " " +
-                                        getString(R.string.not_deleted), ToastWrapper.LENGTH_LONG);
+                                SnackbarWrapper.makeAndShowText(getActivity(), toDelete.getName() + " " +
+                                        getString(R.string.not_deleted), SnackbarWrapper.LENGTH_LONG);
                             }
                         })
                         .build();

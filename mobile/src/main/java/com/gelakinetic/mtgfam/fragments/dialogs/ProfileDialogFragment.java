@@ -33,7 +33,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.ProfileFragment;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -93,9 +93,9 @@ public class ProfileDialogFragment extends FamiliarDialogFragment {
                             String strNumber = dciEditText.getText().toString();
 
                             if (strNumber.isEmpty()) {
-                                ToastWrapper.makeAndShowText(getActivity(),
+                                SnackbarWrapper.makeAndShowText(getActivity(),
                                         R.string.profile_invalid_dci,
-                                        ToastWrapper.LENGTH_SHORT);
+                                        SnackbarWrapper.LENGTH_SHORT);
 
                                 return;
                             }

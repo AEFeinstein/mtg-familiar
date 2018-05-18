@@ -83,7 +83,7 @@ import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SearchCriteria;
-import com.gelakinetic.mtgfam.helpers.ToastWrapper;
+import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
 import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
 import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
@@ -384,7 +384,7 @@ public class CardViewFragment extends FamiliarFragment {
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
             /* http://magiccards.info/scans/en/mt/55.jpg */
-            mCard = new MtgCard(getContext(),
+            mCard = new MtgCard(getActivity(),
                     cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)),
                     cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
                     false, 0);
@@ -616,7 +616,7 @@ public class CardViewFragment extends FamiliarFragment {
 
         // Check that there's memory to save the image to
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_no_external_storage, ToastWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_no_external_storage, SnackbarWrapper.LENGTH_SHORT);
             return;
         }
 
@@ -637,7 +637,7 @@ public class CardViewFragment extends FamiliarFragment {
         try {
             imageFile = getSavedImageFile();
         } catch (Exception e) {
-            ToastWrapper.makeAndShowText(getContext(), e.getMessage(), ToastWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(getActivity(), e.getMessage(), SnackbarWrapper.LENGTH_SHORT);
             return;
         }
 
@@ -649,7 +649,7 @@ public class CardViewFragment extends FamiliarFragment {
             } else {
                 // Or display the path where it's saved
                 String strPath = imageFile.getAbsolutePath();
-                ToastWrapper.makeAndShowText(getContext(), getString(R.string.card_view_image_saved) + strPath, ToastWrapper.LENGTH_LONG);
+                SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + strPath, SnackbarWrapper.LENGTH_LONG);
             }
             return;
         }
@@ -671,7 +671,7 @@ public class CardViewFragment extends FamiliarFragment {
                         // Create the file
                         if (!imageFile.createNewFile()) {
                             // Couldn't create the file
-                            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_unable_to_create_file, ToastWrapper.LENGTH_SHORT);
+                            SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_create_file, SnackbarWrapper.LENGTH_SHORT);
                             return;
                         }
 
@@ -683,12 +683,12 @@ public class CardViewFragment extends FamiliarFragment {
 
                         // Couldn't save the image for some reason
                         if (!bCompressed) {
-                            ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
+                            SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_save_failure, SnackbarWrapper.LENGTH_SHORT);
                             return;
                         }
                     } catch (IOException e) {
                         // Couldn't save it for some reason
-                        ToastWrapper.makeAndShowText(getContext(), R.string.card_view_save_failure, ToastWrapper.LENGTH_SHORT);
+                        SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_save_failure, SnackbarWrapper.LENGTH_SHORT);
                         return;
                     }
 
@@ -703,7 +703,7 @@ public class CardViewFragment extends FamiliarFragment {
                     } else {
                         // Or display the path where it's saved
                         String strPath = imageFile.getAbsolutePath();
-                        ToastWrapper.makeAndShowText(getContext(), getString(R.string.card_view_image_saved) + strPath, ToastWrapper.LENGTH_LONG);
+                        SnackbarWrapper.makeAndShowText(getActivity(), getString(R.string.card_view_image_saved) + strPath, SnackbarWrapper.LENGTH_LONG);
                     }
                 }
             }
@@ -765,7 +765,7 @@ public class CardViewFragment extends FamiliarFragment {
                             // All lookups failed
                             if (onlyCheckCache) {
                                 // It's only checking the cache. This comes first
-                                if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
+                                if (FamiliarActivity.getNetworkState(getActivity(), true) == -1) {
                                     // Done checking the cache, and there's no network, return false
                                     return false;
                                 } else {
@@ -850,7 +850,7 @@ public class CardViewFragment extends FamiliarFragment {
             startActivity(Intent.createChooser(shareIntent,
                     getResources().getText(R.string.card_view_send_to)));
         } catch (Exception e) {
-            ToastWrapper.makeAndShowText(mActivity, e.getMessage(), ToastWrapper.LENGTH_SHORT);
+            SnackbarWrapper.makeAndShowText(mActivity, e.getMessage(), SnackbarWrapper.LENGTH_SHORT);
         }
     }
 
@@ -1042,9 +1042,9 @@ public class CardViewFragment extends FamiliarFragment {
                                     mPriceInfo = marketPriceInfo;
                                     showDialog(CardViewDialogFragment.GET_PRICE);
                                 } else {
-                                    ToastWrapper.makeAndShowText(mActivity,
+                                    SnackbarWrapper.makeAndShowText(mActivity,
                                             R.string.card_view_price_not_found,
-                                            ToastWrapper.LENGTH_SHORT);
+                                            SnackbarWrapper.LENGTH_SHORT);
                                 }
                             }
                         },
@@ -1052,8 +1052,8 @@ public class CardViewFragment extends FamiliarFragment {
                             if (CardViewFragment.this.isAdded()) {
                                 mPriceInfo = null;
                                 CardViewFragment.this.removeDialog(getFragmentManager());
-                                ToastWrapper.makeAndShowText(mActivity, throwable.getMessage(),
-                                        ToastWrapper.LENGTH_SHORT);
+                                SnackbarWrapper.makeAndShowText(mActivity, throwable.getMessage(),
+                                        SnackbarWrapper.LENGTH_SHORT);
                             }
                         });
 
@@ -1073,7 +1073,7 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.cardrulings: {
-                if (FamiliarActivity.getNetworkState(getContext(), true) == -1) {
+                if (FamiliarActivity.getNetworkState(getActivity(), true) == -1) {
                     return true;
                 }
 
@@ -1335,7 +1335,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
             } else {
                 removeDialog(getFragmentManager());
-                ToastWrapper.makeAndShowText(mActivity, mErrorMessage, ToastWrapper.LENGTH_SHORT);
+                SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
             }
             mActivity.clearLoading();
         }
@@ -1362,8 +1362,8 @@ public class CardViewFragment extends FamiliarFragment {
                     saveImageWithGlide(mSaveImageWhereTo);
                 } else {
                     /* Permission denied */
-                    ToastWrapper.makeAndShowText(this.getContext(), R.string.card_view_unable_to_save_image,
-                            ToastWrapper.LENGTH_LONG);
+                    SnackbarWrapper.makeAndShowText(getActivity(), R.string.card_view_unable_to_save_image,
+                            SnackbarWrapper.LENGTH_LONG);
                 }
             }
         }

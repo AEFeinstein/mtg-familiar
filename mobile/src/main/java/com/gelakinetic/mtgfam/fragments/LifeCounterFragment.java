@@ -517,7 +517,7 @@ public class LifeCounterFragment extends FamiliarFragment implements TextToSpeec
             if (mPlayers.size() > 0 && null != mPlayers.get(0).mView) {
                 mCommanderPlayerView.addView(mPlayers.get(0).mView);
                 mPlayers.get(0).setSize(mListSizeWidth, mListSizeHeight, mDisplayMode, getActivity().getResources()
-                        .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
+                                .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT,
                         mPlayers.size() == 1);
             }
         } else {
