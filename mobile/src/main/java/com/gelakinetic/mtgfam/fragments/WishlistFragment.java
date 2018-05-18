@@ -153,7 +153,7 @@ public class WishlistFragment extends FamiliarListFragment {
             }
 
             /* load the price */
-            loadPrice(card);
+            loadPrice(card, false);
 
             /* Sort the wishlist */
             sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
@@ -223,10 +223,11 @@ public class WishlistFragment extends FamiliarListFragment {
                 }
                 /* Look up the new price */
                 if (mShowIndividualPrices || shouldShowPrice()) {
-                    loadPrice(card);
+                    loadPrice(card, true);
                 }
             }
         }
+        getFamiliarActivity().mMarketPriceStore.executeAwaiting();
 
         /* Check for wholly removed cards if one card was modified */
         if (changedCardName != null) {

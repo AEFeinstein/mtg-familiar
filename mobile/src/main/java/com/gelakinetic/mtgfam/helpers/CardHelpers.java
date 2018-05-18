@@ -471,12 +471,7 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            if (card1.getCmc() == card2.getCmc()) {
-                return 0;
-            } else if (card1.getCmc() > card2.getCmc()) {
-                return 1;
-            }
-            return -1;
+            return Integer.compare(card1.getCmc(), card2.getCmc());
 
         }
 
@@ -562,12 +557,7 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            if (card1.mIsSideboard == card2.mIsSideboard) {
-                return 0;
-            } else if (card1.mIsSideboard) {
-                return 1;
-            }
-            return -1;
+            return Boolean.compare(card1.mIsSideboard, card2.mIsSideboard);
 
         }
 

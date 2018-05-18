@@ -50,6 +50,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -71,6 +72,8 @@ public class MarketPriceFetcher {
     private ExecutorService mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private final ArrayList<Runnable> mAwaitingRunnables = new ArrayList<>();
+    private final Object mSynchronizer = new Object();
 
     private abstract class RecordingPersister<Rec, Key> implements RecordProvider<Key>, Persister<Rec, Key> {
     }
@@ -362,11 +365,12 @@ public class MarketPriceFetcher {
      * It ensures the network operations are called on a non-UI thread and the result callbacks are
      * called on the UI thread.
      *
-     * @param card      A MtgCard to fetch data for. It must have a mName and mExpansion populated
-     * @param onSuccess A Consumer callback to be called when the price is fetched
-     * @param onError   A Consumer callback to be called when an error occurs
+     * @param card       A MtgCard to fetch data for. It must have a mName and mExpansion populated
+     * @param shouldWait false to execute this fetch immediately, true to queue it later for executeAwaiting()
+     * @param onSuccess  A Consumer callback to be called when the price is fetched
+     * @param onError    A Consumer callback to be called when an error occurs
      */
-    public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
+    public void fetchMarketPrice(final MtgCard card, boolean shouldWait, final Consumer<MarketPriceInfo> onSuccess,
                                  final Consumer<Throwable> onError, final Runnable onAllDoneUI) throws InstantiationException {
 
         if (null == card.getName() || card.getName().isEmpty() ||
@@ -380,7 +384,7 @@ public class MarketPriceFetcher {
         mActivity.setLoading();
 
         /* Start a new thread to perform the fetch */
-        mThreadPool.submit(new Runnable() {
+        Runnable priceRunnable = new Runnable() {
             /**
              * This runnable gets the card price from either the cache or network, and runs on a
              * non-UI thread
@@ -388,66 +392,101 @@ public class MarketPriceFetcher {
             @Override
             public void run() {
                 mNumPriceRequests++;
-                mCompositeDisposable.add(mStore.get(card).subscribe(new Consumer<MarketPriceInfo>() {
-                    /**
-                     * This callback is called when a MarketPriceInfo is fetched either from the
-                     * network or cache. The callback runs on a non-UI thread, but invokes the given
-                     * callback on a UI thread
-                     *
-                     * @param marketPriceInfo The fetched MarketPriceInfo
-                     */
-                    @Override
-                    public void accept(final MarketPriceInfo marketPriceInfo) {
-                        mNumPriceRequests--;
-                        if (0 == mNumPriceRequests) {
-                            /* Run the results on the UI thread */
-                            mActivity.runOnUiThread(() -> {
-                                mActivity.clearLoading();
-                                onAllDoneUI.run();
-                            });
-                        }
-                        try {
-                            onSuccess.accept(marketPriceInfo);
-                        } catch (Exception e) {
-                            /* Snatch defeat from the jaws of victory */
-                            try {
-                                onError.accept(e);
-                            } catch (Exception e2) {
-                                /* eat it */
+                mCompositeDisposable.add(mStore.get(card).subscribe(
+                        new Consumer<MarketPriceInfo>() {
+                            /**
+                             * This callback is called when a MarketPriceInfo is fetched either from the
+                             * network or cache. The callback runs on a non-UI thread, but invokes the given
+                             * callback on a UI thread
+                             *
+                             * @param marketPriceInfo The fetched MarketPriceInfo
+                             */
+                            @Override
+                            public void accept(final MarketPriceInfo marketPriceInfo) {
+                                synchronized (mSynchronizer) {
+                                    mNumPriceRequests--;
+                                    if (0 == mNumPriceRequests) {
+                                        /* Run the results on the UI thread */
+                                        mActivity.runOnUiThread(() -> {
+                                            synchronized (mSynchronizer) {
+                                                mActivity.clearLoading();
+                                                onAllDoneUI.run();
+                                            }
+                                        });
+                                    }
+                                    try {
+                                        onSuccess.accept(marketPriceInfo);
+                                    } catch (Exception e) {
+                                        /* Snatch defeat from the jaws of victory */
+                                        try {
+                                            onError.accept(e);
+                                        } catch (Exception e2) {
+                                            /* eat it */
+                                        }
+                                    }
+                                }
+                            }
+                        }, new Consumer<Throwable>() {
+                            /**
+                             * This callback is called when an exception is thrown when fetching a
+                             * MarketPriceInfo. The callback runs on a non-UI thread, but invokes the given
+                             * callback on a UI thread
+                             *
+                             * @param throwable The Throwable that caused the process to fail
+                             */
+                            @Override
+                            public void accept(final Throwable throwable) {
+                                synchronized (mSynchronizer) {
+                                    mNumPriceRequests--;
+                                    if (0 == mNumPriceRequests) {
+                                        /* Run the results on the UI thread */
+                                        mActivity.runOnUiThread(() -> {
+                                            synchronized (mSynchronizer) {
+                                                mActivity.clearLoading();
+                                                onAllDoneUI.run();
+                                            }
+                                        });
+                                    }
+
+                                    try {
+                                        onError.accept(throwable);
+                                    } catch (Exception e) {
+                                        /* Eat it */
+                                    }
+                                }
                             }
                         }
-                    }
-                }, new Consumer<Throwable>() {
-                    /**
-                     * This callback is called when an exception is thrown when fetching a
-                     * MarketPriceInfo. The callback runs on a non-UI thread, but invokes the given
-                     * callback on a UI thread
-                     *
-                     * @param throwable The Throwable that caused the process to fail
-                     */
-                    @Override
-                    public void accept(final Throwable throwable) {
-                        mNumPriceRequests--;
-                        if (0 == mNumPriceRequests) {
-                            /* Run the results on the UI thread */
-                            mActivity.runOnUiThread(() -> {
-                                mActivity.clearLoading();
-                                onAllDoneUI.run();
-                            });
-                        }
-
-                        try {
-                            onError.accept(throwable);
-                        } catch (Exception e) {
-                            /* Eat it */
-                        }
-                    }
-                }));
+                ));
             }
-        });
+        };
+
+        // Either run the Runnable or save it for later
+        if (shouldWait) {
+            mAwaitingRunnables.add(priceRunnable);
+        } else {
+            mThreadPool.submit(priceRunnable);
+        }
     }
 
+    /**
+     * Move all runnables from mAwaitingRunnables into the thread pool and execute them
+     */
+    public void executeAwaiting() {
+        for (Runnable priceRunnable : mAwaitingRunnables) {
+            mThreadPool.submit(priceRunnable);
+        }
+        mAwaitingRunnables.clear();
+    }
+
+    /**
+     * Stop all current requests, empty the thread pool and awaiting queue, clear loading animation
+     */
     public void stopAllRequests() {
         mCompositeDisposable.clear();
+        mNumPriceRequests = 0;
+        mThreadPool.shutdownNow();
+        mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        mAwaitingRunnables.clear();
+        mActivity.clearLoading();
     }
 }

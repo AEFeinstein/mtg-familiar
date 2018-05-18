@@ -154,13 +154,13 @@ public class TradeFragment extends FamiliarListFragment {
                 case LEFT: {
                     mListLeft.add(0, card);
                     getCardDataAdapter(LEFT).notifyItemInserted(0);
-                    loadPrice(card);
+                    loadPrice(card, false);
                     break;
                 }
                 case RIGHT: {
                     mListRight.add(0, card);
                     getCardDataAdapter(RIGHT).notifyItemInserted(0);
-                    loadPrice(card);
+                    loadPrice(card, false);
                     break;
                 }
                 default: {
@@ -303,16 +303,17 @@ public class TradeFragment extends FamiliarListFragment {
         MtgCard.initCardListFromDb(getContext(), mListLeft);
         for (MtgCard card : mListLeft) {
             if (!card.mIsCustomPrice) {
-                loadPrice(card);
+                loadPrice(card, true);
             }
         }
 
         MtgCard.initCardListFromDb(getContext(), mListRight);
         for (MtgCard card : mListRight) {
             if (!card.mIsCustomPrice) {
-                loadPrice(card);
+                loadPrice(card, true);
             }
         }
+        getFamiliarActivity().mMarketPriceStore.executeAwaiting();
     }
 
     /**
@@ -599,7 +600,7 @@ public class TradeFragment extends FamiliarListFragment {
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = card1.getCmc() - card2.getCmc();
+                            retVal = Integer.compare(card1.getCmc(), card2.getCmc());
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {

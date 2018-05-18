@@ -223,7 +223,7 @@ public class DecklistFragment extends FamiliarListFragment {
 
             /* Load the card's price */
             if (shouldShowPrice()) {
-                loadPrice(card);
+                loadPrice(card, false);
             }
 
             /* Sort the decklist */
@@ -341,11 +341,13 @@ public class DecklistFragment extends FamiliarListFragment {
                         mCompressedDecklist.add(wrapped);
                     }
                     if (shouldShowPrice()) {
-                        loadPrice(card);
+                        loadPrice(card, true);
                     }
                 }
             }
         }
+        getFamiliarActivity().mMarketPriceStore.executeAwaiting();
+
         /* check for wholly removed cards if one card was modified */
         if (changedCardName != null) {
             for (int i = 0; i < mCompressedDecklist.size(); i++) {

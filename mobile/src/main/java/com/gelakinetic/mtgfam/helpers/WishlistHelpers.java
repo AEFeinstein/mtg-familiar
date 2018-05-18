@@ -365,7 +365,7 @@ public class WishlistHelpers {
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = wish1.getCmc() - wish2.getCmc();
+                            retVal = Integer.compare(wish1.getCmc(), wish2.getCmc());
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
@@ -385,7 +385,7 @@ public class WishlistHelpers {
                             break;
                         }
                         case SortOrderDialogFragment.KEY_ORDER: {
-                            retVal = Integer.valueOf(wish1.getIndex()).compareTo(wish2.getIndex());
+                            retVal = Integer.compare(wish1.getIndex(), wish2.getIndex());
                             break;
                         }
                     }
