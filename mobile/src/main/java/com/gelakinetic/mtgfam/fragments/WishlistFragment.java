@@ -368,7 +368,6 @@ public class WishlistFragment extends FamiliarListFragment {
                         }
                         /* The message will never be shown with a valid price, so set it as DNE */
                         isi.mMessage = getString(R.string.card_view_price_not_found);
-                        return;
                     }
                 }
             }
