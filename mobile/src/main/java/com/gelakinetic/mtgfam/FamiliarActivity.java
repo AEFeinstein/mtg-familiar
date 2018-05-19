@@ -498,6 +498,17 @@ public class FamiliarActivity extends AppCompatActivity {
                 .strokeWidth(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()))
                 .build());
 
+        mSmoothProgressBar.setSmoothProgressDrawableCallbacks(new SmoothProgressDrawable.Callbacks() {
+            @Override
+            public void onStop() {
+                mSmoothProgressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onStart() {
+                mSmoothProgressBar.setVisibility(View.VISIBLE);
+            }
+        });
         mSmoothProgressBar.setVisibility(View.GONE);
         clearLoading();
 
@@ -1516,19 +1527,20 @@ public class FamiliarActivity extends AppCompatActivity {
      * Show the indeterminate loading bar.
      */
     public void setLoading() {
-        if (mSmoothProgressBar.getVisibility() == View.GONE) {
-            mSmoothProgressBar.setVisibility(View.VISIBLE);
+        if (!mIsLoading) {
+            mSmoothProgressBar.progressiveStart();
+            mIsLoading = true;
         }
-        mSmoothProgressBar.progressiveStart();
-        mIsLoading = true;
     }
 
     /**
      * Hide the indeterminate loading bar.
      */
     public void clearLoading() {
-        mSmoothProgressBar.progressiveStop();
-        mIsLoading = false;
+        if (mIsLoading) {
+            mSmoothProgressBar.progressiveStop();
+            mIsLoading = false;
+        }
     }
 
     /**
