@@ -148,6 +148,7 @@ public class MarketPriceFetcher {
                         return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
                     }
 
+                    // If the number doesn't exist, multiCardType will be MultiCardType.NOPE
                     multiCardType = CardDbAdapter.isMultiCard(params.getNumber(), params.getExpansion());
 
                     /* Get the TCGplayer.com set name, why can't everything be consistent? */
@@ -389,7 +390,6 @@ public class MarketPriceFetcher {
 
         if (null == card.getName() || card.getName().isEmpty() ||
                 null == card.getExpansion() || card.getExpansion().isEmpty() ||
-                null == card.getNumber() || card.getNumber().isEmpty() ||
                 0 == card.getMultiverseId()) {
             throw new InstantiationException("card must have a name and expansion to fetch price");
         }
