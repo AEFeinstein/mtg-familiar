@@ -289,6 +289,12 @@ public class MtgCard extends Card {
      * @param cards A list of cards to fill in data for
      */
     public static void initCardListFromDb(Context mCtx, ArrayList<MtgCard> cards) throws FamiliarDbException {
+        // First make sure there are cards to load data for
+        if(cards.isEmpty()) {
+            return;
+        }
+
+        // Then load it if necessary
         Cursor cardCursor = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {

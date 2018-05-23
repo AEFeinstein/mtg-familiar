@@ -974,4 +974,22 @@ edit.putString(context.getString(R.string.key_lastUpdate), lastUpdate);
         edit.apply();
     }
 
+    public static synchronized String getLastLoadedTrade(@Nullable Context context) {
+        if (null == context) {
+            return "";
+        }
+
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_LastTradeLoaded), "");
+    }
+
+    public static synchronized void setLastLoadedTrade(@Nullable Context context, String deckName) {
+        if (null == context) {
+            return;
+        }
+
+        Editor edit = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        edit.putString(context.getString(R.string.key_LastTradeLoaded), deckName);
+        edit.apply();
+    }
+
 }

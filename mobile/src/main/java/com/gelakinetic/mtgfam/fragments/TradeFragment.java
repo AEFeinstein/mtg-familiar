@@ -426,8 +426,14 @@ public class TradeFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        loadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
 
+        String tradeToLoad = PreferenceAdapter.getLastLoadedTrade(getContext());
+        if(!tradeToLoad.isEmpty()) {
+            mCurrentTrade = tradeToLoad;
+            loadTrade(mCurrentTrade + TRADE_EXTENSION);
+        } else {
+            loadTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+        }
     }
 
     /**
@@ -437,7 +443,12 @@ public class TradeFragment extends FamiliarListFragment {
     public void onPause() {
 
         super.onPause();
-        saveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+        if(!mCurrentTrade.isEmpty()) {
+            PreferenceAdapter.setLastLoadedTrade(getContext(), mCurrentTrade);
+            saveTrade(mCurrentTrade + TRADE_EXTENSION);
+        } else {
+            saveTrade(AUTOSAVE_NAME + TRADE_EXTENSION);
+        }
 
     }
 

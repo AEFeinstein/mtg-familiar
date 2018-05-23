@@ -92,4 +92,6 @@
     <string name="key_TcgpToken" translatable="false">tcgp_token</string>
     <string name="key_TcgpTokenExpirationDate" translatable="false">tcgp_token_expiration_date</string>
     <string name="key_LastDecklistLoaded" translatable="false">last_decklist_loaded</string>
+    <string name="key_LastTradeLoaded" translatable="false">last_trade_loaded</string>
+
 </resources>
