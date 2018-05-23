@@ -113,9 +113,9 @@ public class DecklistFragment extends FamiliarListFragment {
                         if (!info.getName().isEmpty()) { /* Skip the headers */
                             switch (CardDbAdapter.checkLegality(info.getName(), format, database)) {
                                 case CardDbAdapter.LEGAL: {
-                                    if (format.equalsIgnoreCase("Commander")
-                                            && info.getTotalNumber() > 1) {
-                                        deckLegality = parentFrag.getString(R.string.decklist_not_legal);
+                                    if ((format.equalsIgnoreCase("Commander") ||
+                                            format.equalsIgnoreCase("Brawl"))
+                                            && info.getTotalNumber() > 1 && !info.getType().contains("Basic")) {
                                         deckIsLegal = false;
                                     }
                                     break;
@@ -123,13 +123,11 @@ public class DecklistFragment extends FamiliarListFragment {
                                 case CardDbAdapter.RESTRICTED: {
                                     if (format.equalsIgnoreCase("Vintage")
                                             && info.getTotalNumber() > 1) {
-                                        deckLegality = parentFrag.getString(R.string.decklist_not_legal);
                                         deckIsLegal = false;
                                     }
                                     break;
                                 }
                                 case CardDbAdapter.BANNED: {
-                                    deckLegality = parentFrag.getString(R.string.decklist_not_legal);
                                     deckIsLegal = false;
                                     break;
                                 }
@@ -139,8 +137,17 @@ public class DecklistFragment extends FamiliarListFragment {
                             }
                         }
                     }
+                    int minCards = 60;
+                    if (format.equals("Commander")) {
+                        minCards = 100;
+                    }
+                    if (((DecklistDataAdapter) parentFrag.getCardDataAdapter(0)).getTotalCards() < minCards) {
+                        deckIsLegal = false;
+                    }
                     if (deckIsLegal) {
                         deckLegality = parentFrag.getString(R.string.card_view_legal);
+                    } else {
+                        deckLegality = parentFrag.getString(R.string.decklist_not_legal);
                     }
                     HashMap<String, String> map = new HashMap<>();
                     map.put(LEGALITY_DIAOG_FROM[0], format);

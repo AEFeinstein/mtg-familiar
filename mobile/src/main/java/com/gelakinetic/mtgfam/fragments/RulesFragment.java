@@ -612,7 +612,8 @@ public class RulesFragment extends FamiliarFragment {
         BannedItem(String format, int legality, String cards, boolean clickable) {
 
             this.mFormat = format;
-            if (format.equalsIgnoreCase("Commander")) {
+            if (format.equalsIgnoreCase("Commander") ||
+                    format.equalsIgnoreCase("Brawl")) {
                 switch (legality) {
                     case RESTRICTED:
                         mLegality = getString(R.string.rules_banned_as_commander);
