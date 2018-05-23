@@ -1033,7 +1033,7 @@ public class CardViewFragment extends FamiliarFragment {
             }
             case R.id.price: {
                 try {
-                    mActivity.mMarketPriceStore.fetchMarketPrice(mCard, false,
+                    mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
                             marketPriceInfo -> {
                                 if (CardViewFragment.this.isAdded()) {
                                     if (marketPriceInfo != null) {

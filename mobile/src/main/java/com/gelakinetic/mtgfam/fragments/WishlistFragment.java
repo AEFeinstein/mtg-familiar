@@ -65,7 +65,7 @@ public class WishlistFragment extends FamiliarListFragment {
     private boolean mShowIndividualPrices;
 
     /* The wishlist and adapter */
-    public ArrayList<CompressedWishlistInfo> mCompressedWishlist;
+    public final ArrayList<CompressedWishlistInfo> mCompressedWishlist = new ArrayList<>();
     private int mOrderAddedIdx = 0;
 
     /**
@@ -91,9 +91,6 @@ public class WishlistFragment extends FamiliarListFragment {
             }
             return false;
         };
-
-        /* Set up the wishlist and adapter, it will be read in onResume() */
-        mCompressedWishlist = new ArrayList<>();
 
         /* Make sure to initialize shared members */
         initializeMembers(
@@ -149,11 +146,13 @@ public class WishlistFragment extends FamiliarListFragment {
                     cwi.add(card);
                 }
             } else {
-                mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
+                synchronized (mCompressedWishlist) {
+                    mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
+                }
             }
 
             /* load the price */
-            loadPrice(card, false);
+            loadPrice(card);
 
             /* Sort the wishlist */
             sortWishlist(PreferenceAdapter.getWishlistSortOrder(getContext()));
@@ -196,45 +195,45 @@ public class WishlistFragment extends FamiliarListFragment {
      *                        changes
      */
     private void readAndCompressWishlist(String changedCardName) {
-        /* Read the wishlist */
-        ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity(), true);
+        synchronized (mCompressedWishlist) {
+            /* Read the wishlist */
+            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity(), true);
 
-        /* Clear the wishlist, or just the card that changed */
-        if (changedCardName == null) {
-            mCompressedWishlist.clear();
-        } else {
-            for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                if (cwi.getName().equals(changedCardName)) {
-                    cwi.clearCompressedInfo();
+            /* Clear the wishlist, or just the card that changed */
+            if (changedCardName == null) {
+                mCompressedWishlist.clear();
+            } else {
+                for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+                    if (cwi.getName().equals(changedCardName)) {
+                        cwi.clearCompressedInfo();
+                    }
                 }
             }
-        }
 
-        /* Compress the whole wishlist, or just the card that changed */
-        for (MtgCard card : wishlist) {
-            if (changedCardName == null || changedCardName.equals(card.getName())) {
-                /* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each
-                 * other */
-                CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
-                if (mCompressedWishlist.contains(wrapped)) {
-                    mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped)).add(card);
-                } else {
-                    mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
-                }
-                /* Look up the new price */
-                if (mShowIndividualPrices || shouldShowPrice()) {
-                    loadPrice(card, true);
+            /* Compress the whole wishlist, or just the card that changed */
+            for (MtgCard card : wishlist) {
+                if (changedCardName == null || changedCardName.equals(card.getName())) {
+                    /* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each
+                     * other */
+                    CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
+                    if (mCompressedWishlist.contains(wrapped)) {
+                        mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped)).add(card);
+                    } else {
+                        mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
+                    }
+                    /* Look up the new price */
+                    if (mShowIndividualPrices || shouldShowPrice()) {
+                        loadPrice(card);
+                    }
                 }
             }
-        }
-        getFamiliarActivity().mMarketPriceStore.executeAwaiting();
-
-        /* Check for wholly removed cards if one card was modified */
-        if (changedCardName != null) {
-            for (int i = 0; i < mCompressedWishlist.size(); i++) {
-                if (mCompressedWishlist.get(i).mInfo.size() == 0) {
-                    mCompressedWishlist.remove(i);
-                    i--;
+            /* Check for wholly removed cards if one card was modified */
+            if (changedCardName != null) {
+                for (int i = 0; i < mCompressedWishlist.size(); i++) {
+                    if (mCompressedWishlist.get(i).mInfo.size() == 0) {
+                        mCompressedWishlist.remove(i);
+                        i--;
+                    }
                 }
             }
         }
@@ -346,7 +345,11 @@ public class WishlistFragment extends FamiliarListFragment {
                 for (IndividualSetInfo isi : cwi.mInfo) {
                     if (isi.mSetCode.equals(data.getExpansion())) {
                         /* Set the price as null and the message as the exception */
-                        isi.mMessage = exception.getLocalizedMessage();
+                        if (null != exception.getLocalizedMessage()) {
+                            isi.mMessage = exception.getLocalizedMessage();
+                        } else {
+                            isi.mMessage = exception.getClass().getSimpleName();
+                        }
                         isi.mPrice = null;
                         return;
                     }
@@ -357,17 +360,19 @@ public class WishlistFragment extends FamiliarListFragment {
 
     @Override
     protected void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result) {
-        for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-            if (cwi.getName().equals(data.getName())) {
-                /* Find all foil and non foil compressed items with the same set code */
-                for (IndividualSetInfo isi : cwi.mInfo) {
-                    if (isi.mSetCode.equals(data.getExpansion())) {
-                        /* Set the whole price info object */
-                        if (result != null) {
-                            isi.mPrice = result;
+        synchronized (mCompressedWishlist) {
+            for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+                if (cwi.getName().equals(data.getName())) {
+                    /* Find all foil and non foil compressed items with the same set code */
+                    for (IndividualSetInfo isi : cwi.mInfo) {
+                        if (isi.mSetCode.equals(data.getExpansion())) {
+                            /* Set the whole price info object */
+                            if (result != null) {
+                                isi.mPrice = result;
+                            }
+                            /* The message will never be shown with a valid price, so set it as DNE */
+                            isi.mMessage = getString(R.string.card_view_price_not_found);
                         }
-                        /* The message will never be shown with a valid price, so set it as DNE */
-                        isi.mMessage = getString(R.string.card_view_price_not_found);
                     }
                 }
             }
@@ -428,9 +433,11 @@ public class WishlistFragment extends FamiliarListFragment {
      * Sorts the wishlist based on mWishlistSortType and mWishlistSortOrder
      */
     private void sortWishlist(String orderByStr) {
-        Collections.sort(mCompressedWishlist,
-                new WishlistHelpers.WishlistComparator(orderByStr, getPriceSetting()));
-        getCardDataAdapter(0).notifyDataSetChanged();
+        synchronized (mCompressedWishlist) {
+            Collections.sort(mCompressedWishlist,
+                    new WishlistHelpers.WishlistComparator(orderByStr, getPriceSetting()));
+            getCardDataAdapter(0).notifyDataSetChanged();
+        }
     }
 
     class WishlistViewHolder extends CardDataViewHolder {

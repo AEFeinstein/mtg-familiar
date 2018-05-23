@@ -209,7 +209,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                             /* do some cleaning up */
                             getParentDecklistFragment().mCurrentDeck = "autosave";
-                            getParentDecklistFragment().mCompressedDecklist.clear();
+                            synchronized (getParentDecklistFragment().mCompressedDecklist) {
+                                getParentDecklistFragment().mCompressedDecklist.clear();
+                            }
                             getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                             getParentDecklistFragment().mDeckName.setText(
                                     R.string.decklist_unnamed_deck

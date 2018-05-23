@@ -108,7 +108,9 @@ public class WishlistDialogFragment extends FamiliarDialogFragment {
                         .positiveText(R.string.dialog_ok)
                         .onPositive((dialog, which) -> {
                             WishlistHelpers.ResetCards(getActivity());
-                            getParentWishlistFragment().mCompressedWishlist.clear();
+                            synchronized (getParentWishlistFragment().mCompressedWishlist) {
+                                getParentWishlistFragment().mCompressedWishlist.clear();
+                            }
                             getParentWishlistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                             getParentWishlistFragment().updateTotalPrices(0);
                             /* Clear input too */

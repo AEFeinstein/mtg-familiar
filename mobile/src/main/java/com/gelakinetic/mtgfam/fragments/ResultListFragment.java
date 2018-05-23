@@ -149,13 +149,13 @@ public class ResultListFragment extends FamiliarFragment {
 //                        mCursor.getString(mCursor.getColumnIndex(CardDbAdapter.KEY_SET)),
 //                        false, 1, false);
 //
-//                WishlistHelpers.addItemToWishlist(getContext(),
+//                WishlistHelpers.addItemToWishlist(getActivity(),
 //                        new WishlistHelpers.CompressedWishlistInfo(toAdd, 0));
 //
 //                // Read the decklist
 //                String deckFileName = "Slivers" + DecklistFragment.DECK_EXTENSION;
 //                ArrayList<MtgCard> decklist =
-//                        DecklistHelpers.ReadDecklist(getContext(), deckFileName, false);
+//                        DecklistHelpers.ReadDecklist(getActivity(), deckFileName, false);
 //
 //                // Look through the decklist for any existing matches
 //                boolean entryIncremented = false;
@@ -175,7 +175,7 @@ public class ResultListFragment extends FamiliarFragment {
 //                }
 //
 //                // Write the decklist back
-//                DecklistHelpers.WriteDecklist(getContext(), decklist, deckFileName);
+//                DecklistHelpers.WriteDecklist(getActivity(), decklist, deckFileName);
 //
 //            } catch (java.lang.InstantiationException e) {
 //                /* Eat it */

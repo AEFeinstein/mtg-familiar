@@ -126,7 +126,7 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
 
             // Start the lookup and log the time
             long start = System.currentTimeMillis();
-            fetcher.fetchMarketPrice(toLookup, false,
+            fetcher.fetchMarketPrice(toLookup,
                     marketPriceInfo -> {
                         // Timing
                         long elapsed = System.currentTimeMillis() - start;

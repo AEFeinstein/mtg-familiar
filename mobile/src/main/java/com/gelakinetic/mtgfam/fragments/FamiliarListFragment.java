@@ -450,14 +450,14 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
      *
      * @param data A card to load price info for
      */
-    public void loadPrice(final MtgCard data, boolean shouldWait) {
+    public void loadPrice(final MtgCard data) {
 
         /* If the priceInfo is already loaded, don't bother performing a query */
         if (data.mPriceInfo != null) {
             data.mPrice = (int) (data.mPriceInfo.getPrice(data.mIsFoil, getPriceSetting()) * 100);
         } else {
             try {
-                getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data, shouldWait,
+                getFamiliarActivity().mMarketPriceStore.fetchMarketPrice(data,
                         result -> {
                             // This is not run on the UI thread
                             /* Sanity check */
@@ -485,6 +485,9 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                             // This is not run on the UI thread
                             data.mPriceInfo = null;
                             data.mMessage = throwable.getLocalizedMessage();
+                            if (null == data.mMessage) {
+                                data.mMessage = throwable.getClass().toString();
+                            }
                             if (FamiliarListFragment.this.isAdded()) {
                                 onCardPriceLookupFailure(data, throwable);
                             }

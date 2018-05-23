@@ -76,7 +76,7 @@ public class DecklistFragment extends FamiliarListFragment {
     public TextView mDeckCards;
 
     /* Decklist and adapters */
-    public ArrayList<CompressedDecklistInfo> mCompressedDecklist;
+    public final ArrayList<CompressedDecklistInfo> mCompressedDecklist = new ArrayList<>();
     private ComparatorChain<CompressedDecklistInfo> mDecklistChain;
 
     public static final String AUTOSAVE_NAME = "autosave";
@@ -109,8 +109,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     String deckLegality = "";
                     String format =
                             cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
-                    for (CompressedDecklistInfo info :
-                            parentFrag.mCompressedDecklist) {
+                    for (CompressedDecklistInfo info : parentFrag.mCompressedDecklist) {
                         if (!info.getName().isEmpty()) { /* Skip the headers */
                             switch (CardDbAdapter.checkLegality(info.getName(), format, database)) {
                                 case CardDbAdapter.LEGAL: {
@@ -198,9 +197,6 @@ public class DecklistFragment extends FamiliarListFragment {
                     return false;
 
                 };
-
-        /* Set up the decklist and adapter, it will be read in onResume() */
-        mCompressedDecklist = new ArrayList<>();
 
         /* Call to set up our shared UI elements */
         initializeMembers(
@@ -292,40 +288,42 @@ public class DecklistFragment extends FamiliarListFragment {
             final CompressedDecklistInfo decklistInfo =
                     new CompressedDecklistInfo(card, isSideboard);
 
-            /* Add it to the decklist, either as a new CompressedDecklistInfo, or to an existing one */
-            if (mCompressedDecklist.contains(decklistInfo)) {
-                boolean added = false;
-                final int firstIndex = mCompressedDecklist.indexOf(decklistInfo);
-                final CompressedDecklistInfo firstCard =
-                        mCompressedDecklist.get(firstIndex);
-                for (int i = 0; i < firstCard.mInfo.size(); i++) {
-                    CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
-                    if (firstIsi.mSetCode.equals(card.getExpansion()) && firstIsi.mIsFoil.equals(card.mIsFoil)) {
+            synchronized (mCompressedDecklist) {
+                /* Add it to the decklist, either as a new CompressedDecklistInfo, or to an existing one */
+                if (mCompressedDecklist.contains(decklistInfo)) {
+                    boolean added = false;
+                    final int firstIndex = mCompressedDecklist.indexOf(decklistInfo);
+                    final CompressedDecklistInfo firstCard =
+                            mCompressedDecklist.get(firstIndex);
+                    for (int i = 0; i < firstCard.mInfo.size(); i++) {
+                        CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
+                        if (firstIsi.mSetCode.equals(card.getExpansion()) && firstIsi.mIsFoil.equals(card.mIsFoil)) {
                         firstIsi.mNumberOf++;
-                        added = true;
-                        break;
+                            added = true;
+                            break;
+                        }
                     }
+                    if (!added) {
+                        firstCard.add(card);
+                    }
+                } else {
+                    mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
                 }
-                if (!added) {
-                    firstCard.add(card);
+
+                /* The headers shouldn't (and can't) be sorted */
+                clearHeaders();
+
+                /* Load the card's price */
+                if (shouldShowPrice()) {
+                    loadPrice(card);
                 }
-            } else {
-                mCompressedDecklist.add(new CompressedDecklistInfo(card, isSideboard));
+
+                /* Sort the decklist */
+                Collections.sort(mCompressedDecklist, mDecklistChain);
+
+                /* Save the decklist */
+                DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
             }
-
-            /* The headers shouldn't (and can't) be sorted */
-            clearHeaders();
-
-            /* Load the card's price */
-            if (shouldShowPrice()) {
-                loadPrice(card, false);
-            }
-
-            /* Sort the decklist */
-            Collections.sort(mCompressedDecklist, mDecklistChain);
-
-            /* Save the decklist */
-            DecklistHelpers.WriteCompressedDecklist(getActivity(), mCompressedDecklist, getCurrentDeckName());
 
             /* Clean up for the next add */
             clearCardNumberInput();
@@ -355,7 +353,9 @@ public class DecklistFragment extends FamiliarListFragment {
     public void onResume() {
 
         super.onResume();
-        mCompressedDecklist.clear();
+        synchronized (mCompressedDecklist) {
+            mCompressedDecklist.clear();
+        }
         mCurrentDeck = PreferenceAdapter.getLastLoadedDecklist(getContext());
         readAndCompressDecklist(null, mCurrentDeck);
         getCardDataAdapter(0).notifyDataSetChanged();
@@ -391,13 +391,15 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     private void clearCompressedInfo(final @Nullable String cardChanged) {
 
-        if (cardChanged == null) {
-            mCompressedDecklist.clear();
-            return;
-        }
-        for (final CompressedDecklistInfo cdi : mCompressedDecklist) {
-            if (!cdi.getName().isEmpty() && cdi.getName().equals(cardChanged)) {
-                cdi.clearCompressedInfo();
+        synchronized (mCompressedDecklist) {
+            if (cardChanged == null) {
+                mCompressedDecklist.clear();
+                return;
+            }
+            for (final CompressedDecklistInfo cdi : mCompressedDecklist) {
+                if (!cdi.getName().isEmpty() && cdi.getName().equals(cardChanged)) {
+                    cdi.clearCompressedInfo();
+                }
             }
         }
 
@@ -412,52 +414,52 @@ public class DecklistFragment extends FamiliarListFragment {
      * @param deckName        name of the deck that is loaded
      */
     public void readAndCompressDecklist(final String changedCardName, final String deckName) {
+        synchronized (mCompressedDecklist) {
+            final String lDeckName = getAndSetDeckName(deckName);
 
-        final String lDeckName = getAndSetDeckName(deckName);
-
-        /* Read the decklist */
-        final ArrayList<MtgCard> decklist =
+            /* Read the decklist */
+            final ArrayList<MtgCard> decklist =
                 DecklistHelpers.ReadDecklist(getActivity(), lDeckName, true);
 
-        /* Clear the decklist, or just the card that changed */
-        clearCompressedInfo(changedCardName);
+            /* Clear the decklist, or just the card that changed */
+            clearCompressedInfo(changedCardName);
 
-        /* Compress the whole decklist, or just the card that changed */
-        for (MtgCard card : decklist) {
-            /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
-            if (!card.getName().isEmpty()) {
-                if (changedCardName == null || changedCardName.equals(card.getName())) {
-                    CompressedDecklistInfo wrapped =
-                            new CompressedDecklistInfo(card, card.isSideboard());
-                    if (mCompressedDecklist.contains(wrapped)) {
-                        mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
-                                .add(card);
-                    } else {
-                        mCompressedDecklist.add(wrapped);
-                    }
-                    if (shouldShowPrice()) {
-                        loadPrice(card, true);
+            /* Compress the whole decklist, or just the card that changed */
+            for (MtgCard card : decklist) {
+                /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
+                if (!card.getName().isEmpty()) {
+                    if (changedCardName == null || changedCardName.equals(card.getName())) {
+                        CompressedDecklistInfo wrapped =
+                                new CompressedDecklistInfo(card, card.isSideboard());
+                        if (mCompressedDecklist.contains(wrapped)) {
+                            mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
+                                    .add(card);
+                        } else {
+                            mCompressedDecklist.add(wrapped);
+                        }
+                        if (shouldShowPrice()) {
+                            loadPrice(card);
+                        }
                     }
                 }
             }
-        }
-        getFamiliarActivity().mMarketPriceStore.executeAwaiting();
 
-        /* check for wholly removed cards if one card was modified */
-        if (changedCardName != null) {
-            for (int i = 0; i < mCompressedDecklist.size(); i++) {
-                if (mCompressedDecklist.get(i).mInfo.size() == 0) {
-                    mCompressedDecklist.remove(i);
-                    i--;
+            /* check for wholly removed cards if one card was modified */
+            if (changedCardName != null) {
+                for (int i = 0; i < mCompressedDecklist.size(); i++) {
+                    if (mCompressedDecklist.get(i).mInfo.size() == 0) {
+                        mCompressedDecklist.remove(i);
+                        i--;
+                    }
                 }
             }
+            /* Fill extra card data from the database, for displaying full card info */
+            Collections.sort(mCompressedDecklist, mDecklistChain);
+            setHeaderValues();
+            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
         }
-        /* Fill extra card data from the database, for displaying full card info */
-        Collections.sort(mCompressedDecklist, mDecklistChain);
-        setHeaderValues();
-        mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
     }
 
     /**
@@ -470,7 +472,9 @@ public class DecklistFragment extends FamiliarListFragment {
 
         readAndCompressDecklist(cardName, mCurrentDeck);
         clearHeaders();
-        Collections.sort(mCompressedDecklist, mDecklistChain);
+        synchronized (mCompressedDecklist) {
+            Collections.sort(mCompressedDecklist, mDecklistChain);
+        }
         setHeaderValues();
         getCardDataAdapter(0).notifyDataSetChanged();
 
@@ -585,15 +589,15 @@ public class DecklistFragment extends FamiliarListFragment {
      * Removes all of the headers.
      */
     private void clearHeaders() {
-
-        for (int i = 0; i < mCompressedDecklist.size(); i++) {
-            if (mCompressedDecklist.get(i).header != null) { /* We found our header */
-                /* Now remove it, and then back up a step */
-                mCompressedDecklist.remove(i);
-                i--;
+        synchronized (mCompressedDecklist) {
+            for (int i = 0; i < mCompressedDecklist.size(); i++) {
+                if (mCompressedDecklist.get(i).header != null) { /* We found our header */
+                    /* Now remove it, and then back up a step */
+                    mCompressedDecklist.remove(i);
+                    i--;
+                }
             }
         }
-
     }
 
     /**
@@ -604,15 +608,15 @@ public class DecklistFragment extends FamiliarListFragment {
      * @return true if the header is inserted, false if it isn't
      */
     private boolean insertHeaderAt(final int position, final String headerText) {
-
-        final CompressedDecklistInfo header = new CompressedDecklistInfo(new MtgCard(), false);
-        header.header = headerText;
-        if (!mCompressedDecklist.contains(header)) {
-            mCompressedDecklist.add(position, header);
-            return true;
+        synchronized (mCompressedDecklist) {
+            final CompressedDecklistInfo header = new CompressedDecklistInfo(new MtgCard(), false);
+            header.header = headerText;
+            if (!mCompressedDecklist.contains(header)) {
+                mCompressedDecklist.add(position, header);
+                return true;
+            }
+            return false;
         }
-        return false;
-
     }
 
     /**
@@ -789,34 +793,38 @@ public class DecklistFragment extends FamiliarListFragment {
 
         @Override
         protected void onItemReadded() {
-            // Resort the decklist
-            Collections.sort(mCompressedDecklist, mDecklistChain);
+            synchronized (mCompressedDecklist) {
+                // Resort the decklist
+                Collections.sort(mCompressedDecklist, mDecklistChain);
 
-            // Reset the headers
-            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
-            clearHeaders();
-            Collections.sort(mCompressedDecklist, mDecklistChain);
-            setHeaderValues();
+                // Reset the headers
+                mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
+                clearHeaders();
+                Collections.sort(mCompressedDecklist, mDecklistChain);
+                setHeaderValues();
 
-            // Call super to notify the adapter, etc
-            super.onItemReadded();
+                // Call super to notify the adapter, etc
+                super.onItemReadded();
+            }
         }
 
         @Override
         protected void onItemRemoved() {
-            // Reset the headers
-            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
-            clearHeaders();
-            Collections.sort(mCompressedDecklist, mDecklistChain);
-            setHeaderValues();
+            synchronized (mCompressedDecklist) {
+                // Reset the headers
+                mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count, getTotalCards(), getTotalCards()));
+                clearHeaders();
+                Collections.sort(mCompressedDecklist, mDecklistChain);
+                setHeaderValues();
 
-            // Update the number of cards listed
-            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+                // Update the number of cards listed
+                mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                        ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                        ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
 
-            // Call super to notify the adapter, etc
-            super.onItemRemoved();
+                // Call super to notify the adapter, etc
+                super.onItemRemoved();
+            }
         }
 
         @Override
