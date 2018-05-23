@@ -100,25 +100,29 @@ public class CardHelpers {
         final String deckName;
         final String dialogText;
 
-        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
-            /* Read the wishlist */
-            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity);
-            targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
-            deckName = "";
-            dialogText = activity.getString(R.string.wishlist_edit_dialog_title_end);
-        } else {
-            /* Right now only WishlistDialogFragment and DecklistDialogFragment call this, so
-             * obviously now it is the decklist */
-            String tempDeckName = ((DecklistFragment) fragment).mCurrentDeck;
-            if (tempDeckName.equals("")) {
-                deckName = DecklistFragment.AUTOSAVE_NAME;
+        try {
+            if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
+                /* Read the wishlist */
+                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
+                targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
+                deckName = "";
+                dialogText = activity.getString(R.string.wishlist_edit_dialog_title_end);
             } else {
-                deckName = ((DecklistFragment) fragment).mCurrentDeck;
+                /* Right now only WishlistDialogFragment and DecklistDialogFragment call this, so
+                 * obviously now it is the decklist */
+                String tempDeckName = ((DecklistFragment) fragment).mCurrentDeck;
+                if (tempDeckName.equals("")) {
+                    deckName = DecklistFragment.AUTOSAVE_NAME;
+                } else {
+                    deckName = ((DecklistFragment) fragment).mCurrentDeck;
+                }
+                ArrayList<MtgCard> decklist =
+                        DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION, false);
+                targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
+                dialogText = activity.getString(R.string.decklist_edit_dialog_title_end);
             }
-            ArrayList<Pair<MtgCard, Boolean>> decklist =
-                    DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION);
-            targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
-            dialogText = activity.getString(R.string.decklist_edit_dialog_title_end);
+        } catch (FamiliarDbException e) {
+            return null;
         }
         targetCardNumberOfs = targetNumberOfs.first;
         targetFoilCardNumberOfs = targetNumberOfs.second;
@@ -184,20 +188,23 @@ public class CardHelpers {
 
         MaterialDialog.SingleButtonCallback onPositiveCallback = (dialog, which) -> {
 
-            ArrayList<Pair<MtgCard, Boolean>> list;
+            ArrayList<MtgCard> list;
 
-            if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
-                /* Read the wishlist */
-                list = new ArrayList<>();
-                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity);
-                for (MtgCard card : wishlist) {
-                    list.add(new Pair<>(card, false));
+            try {
+                if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
+                    /* Read the wishlist */
+                    list = new ArrayList<>();
+                    ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
+                    list.addAll(wishlist);
+                } else {
+                    list = DecklistHelpers.ReadDecklist(
+                            activity,
+                            deckName + DecklistFragment.DECK_EXTENSION,
+                            false
+                    );
                 }
-            } else {
-                list = DecklistHelpers.ReadDecklist(
-                        activity,
-                        deckName + DecklistFragment.DECK_EXTENSION
-                );
+            } catch (FamiliarDbException e) {
+                return;
             }
 
             /* Add the cards listed in the dialog to the wishlist */
@@ -216,27 +223,27 @@ public class CardHelpers {
                     numberOf = 0;
                 }
                 try {
-                    MtgCard card = new MtgCard(activity, mCardName, potentialSetCodes.get(i), isFoil, numberOf);
+                    MtgCard card = new MtgCard(mCardName, potentialSetCodes.get(i), isFoil, numberOf, isSideboard);
 
                     /* Look through the wishlist for each card, set the numberOf or remove
                      * it if it exists, or add the card if it doesn't */
                     boolean added = false;
                     for (int j = 0; j < list.size(); j++) {
-                        if (card.getName().equals(list.get(j).first.getName())
-                                && isSideboard == list.get(j).second
-                                && card.getExpansion().equals(list.get(j).first.getExpansion())
-                                && card.mIsFoil == list.get(j).first.mIsFoil) {
+                        if (card.getName().equals(list.get(j).getName())
+                                && card.isSideboard() == list.get(j).isSideboard()
+                                && card.getExpansion().equals(list.get(j).getExpansion())
+                                && card.mIsFoil == list.get(j).mIsFoil) {
                             if (card.mNumberOf == 0) {
                                 list.remove(j);
                                 j--;
                             } else {
-                                list.get(j).first.mNumberOf = card.mNumberOf;
+                                list.get(j).mNumberOf = card.mNumberOf;
                             }
                             added = true;
                         }
                     }
                     if (!added && card.mNumberOf > 0) {
-                        list.add(new Pair<>(card, false));
+                        list.add(card);
                     }
                 } catch (InstantiationException e) {
                     /* Eat it */
@@ -246,9 +253,7 @@ public class CardHelpers {
             if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
                 ArrayList<MtgCard> wishlist = new ArrayList<>();
                 /* Turn it back in to a plain ArrayList */
-                for (Pair<MtgCard, Boolean> card : list) {
-                    wishlist.add(card.first);
-                }
+                wishlist.addAll(list);
                 /* Write the wishlist */
                 WishlistHelpers.WriteWishlist(fragment.getActivity(), wishlist);
                 /* notify the fragment of a change in the wishlist */
@@ -474,12 +479,7 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            if (card1.getCmc() == card2.getCmc()) {
-                return 0;
-            } else if (card1.getCmc() > card2.getCmc()) {
-                return 1;
-            }
-            return -1;
+            return Integer.compare(card1.getCmc(), card2.getCmc());
 
         }
 
@@ -565,12 +565,7 @@ public class CardHelpers {
         @Override
         public int compare(CompressedDecklistInfo card1, CompressedDecklistInfo card2) {
 
-            if (card1.mIsSideboard == card2.mIsSideboard) {
-                return 0;
-            } else if (card1.mIsSideboard) {
-                return 1;
-            }
-            return -1;
+            return Boolean.compare(card1.mIsSideboard, card2.mIsSideboard);
 
         }
 

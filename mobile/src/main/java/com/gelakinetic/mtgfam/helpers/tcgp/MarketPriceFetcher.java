@@ -22,6 +22,7 @@ package com.gelakinetic.mtgfam.helpers.tcgp;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Handler;
 
 import com.gelakinetic.mtgfam.FamiliarActivity;
 import com.gelakinetic.mtgfam.R;
@@ -50,7 +51,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
 
@@ -65,9 +70,14 @@ public class MarketPriceFetcher {
 
     private final FamiliarActivity mActivity;
     private final Store<MarketPriceInfo, MtgCard> mStore;
-    private int mNumPriceRequests = 0;
+    private ExecutorService mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private final Object mSynchronizer = new Object();
+    private final ArrayList<Future> mFutures = new ArrayList<>();
+
+    private static CheckFutureRunnable mCheckFutureRunnable;
+    private final Handler mHandler;
 
     private abstract class RecordingPersister<Rec, Key> implements RecordProvider<Key>, Persister<Rec, Key> {
     }
@@ -80,6 +90,7 @@ public class MarketPriceFetcher {
     public MarketPriceFetcher(FamiliarActivity context) {
         /* Save the context */
         mActivity = context;
+        mHandler = new Handler();
 
         /* Create the fetcher which actually gets the data */
         Fetcher<MarketPriceInfo, MtgCard> mFetcher = new Fetcher<MarketPriceInfo, MtgCard>() {
@@ -137,6 +148,7 @@ public class MarketPriceFetcher {
                         return Single.error(new Exception(mActivity.getString(R.string.price_error_online_only)));
                     }
 
+                    // If the number doesn't exist, multiCardType will be MultiCardType.NOPE
                     multiCardType = CardDbAdapter.isMultiCard(params.getNumber(), params.getExpansion());
 
                     /* Get the TCGplayer.com set name, why can't everything be consistent? */
@@ -374,94 +386,139 @@ public class MarketPriceFetcher {
      * @param onError   A Consumer callback to be called when an error occurs
      */
     public void fetchMarketPrice(final MtgCard card, final Consumer<MarketPriceInfo> onSuccess,
-                                 final Consumer<Throwable> onError) {
+                                 final Consumer<Throwable> onError, final Runnable onAllDoneUI) throws InstantiationException {
 
-        if (null == card.getName() || card.getName().isEmpty() || null == card.getExpansion() || card.getExpansion().isEmpty()) {
-            throw new IllegalArgumentException("card must have a name and expansion to fetch price");
+        if (null == card.getName() || card.getName().isEmpty() ||
+                null == card.getExpansion() || card.getExpansion().isEmpty() ||
+                0 == card.getMultiverseId()) {
+            throw new InstantiationException("card must have a name and expansion to fetch price");
         }
 
         /* Show the loading animation */
-        mNumPriceRequests++;
         mActivity.setLoading();
 
         /* Start a new thread to perform the fetch */
-        new Thread(new Runnable() {
+        Runnable priceRunnable = new Runnable() {
             /**
              * This runnable gets the card price from either the cache or network, and runs on a
              * non-UI thread
              */
             @Override
             public void run() {
-                mCompositeDisposable.add(mStore.get(card).subscribe(new Consumer<MarketPriceInfo>() {
-                    /**
-                     * This callback is called when a MarketPriceInfo is fetched either from the
-                     * network or cache. The callback runs on a non-UI thread, but invokes the given
-                     * callback on a UI thread
-                     *
-                     * @param marketPriceInfo The fetched MarketPriceInfo
-                     */
-                    @Override
-                    public void accept(final MarketPriceInfo marketPriceInfo) {
-                        /* Run the results on the UI thread */
-                        mActivity.runOnUiThread(new Runnable() {
+                mCompositeDisposable.add(mStore.get(card).subscribe(
+                        new Consumer<MarketPriceInfo>() {
                             /**
-                             * This runs the given success callback on the UI thread
+                             * This callback is called when a MarketPriceInfo is fetched either from the
+                             * network or cache. The callback runs on a non-UI thread, but invokes the given
+                             * callback on a UI thread
+                             *
+                             * @param marketPriceInfo The fetched MarketPriceInfo
                              */
                             @Override
-                            public void run() {
-                                mNumPriceRequests--;
-                                if (0 == mNumPriceRequests) {
-                                    mActivity.clearLoading();
-                                }
-                                try {
-                                    onSuccess.accept(marketPriceInfo);
-                                } catch (Exception e) {
-                                    /* Snatch defeat from the jaws of victory */
+                            public void accept(final MarketPriceInfo marketPriceInfo) {
+                                synchronized (mSynchronizer) {
                                     try {
-                                        onError.accept(e);
-                                    } catch (Exception e2) {
-                                        /* eat it */
+                                        onSuccess.accept(marketPriceInfo);
+                                    } catch (Exception e) {
+                                        /* Snatch defeat from the jaws of victory */
+                                        try {
+                                            onError.accept(e);
+                                        } catch (Exception e2) {
+                                            /* eat it */
+                                        }
                                     }
                                 }
                             }
-                        });
-                    }
-                }, new Consumer<Throwable>() {
-                    /**
-                     * This callback is called when an exception is thrown when fetching a
-                     * MarketPriceInfo. The callback runs on a non-UI thread, but invokes the given
-                     * callback on a UI thread
-                     *
-                     * @param throwable The Throwable that caused the process to fail
-                     */
-                    @Override
-                    public void accept(final Throwable throwable) {
-                        /* Run the erros on the UI thread */
-                        mActivity.runOnUiThread(new Runnable() {
+                        }, new Consumer<Throwable>() {
                             /**
-                             * This runs the given error callback on the UI thread
+                             * This callback is called when an exception is thrown when fetching a
+                             * MarketPriceInfo. The callback runs on a non-UI thread, but invokes the given
+                             * callback on a UI thread
+                             *
+                             * @param throwable The Throwable that caused the process to fail
                              */
                             @Override
-                            public void run() {
-                                mNumPriceRequests--;
-                                if (0 == mNumPriceRequests) {
-                                    mActivity.clearLoading();
-                                }
-
-                                try {
-                                    onError.accept(throwable);
-                                } catch (Exception e) {
-                                    /* Eat it */
+                            public void accept(final Throwable throwable) {
+                                synchronized (mSynchronizer) {
+                                    try {
+                                        onError.accept(throwable);
+                                    } catch (Exception e) {
+                                        /* Eat it */
+                                    }
                                 }
                             }
-                        });
-                    }
-                }));
+                        }
+                ));
             }
-        }).start();
+        };
+
+        mFutures.add(mThreadPool.submit(priceRunnable));
+        if (null == mCheckFutureRunnable) {
+            mCheckFutureRunnable = new CheckFutureRunnable(onAllDoneUI);
+            mHandler.postDelayed(() -> new Thread(mCheckFutureRunnable).start(), 1000);
+        }
     }
 
+    private class CheckFutureRunnable implements Runnable {
+
+        private final Runnable mOnCompleted;
+
+        /**
+         * Constructor which saves a callback to be called on the UI thread
+         *
+         * @param onCompleted A Runnable to be called on the UI thread when all Futures are done
+         */
+        CheckFutureRunnable(Runnable onCompleted) {
+            mOnCompleted = onCompleted;
+        }
+
+        /**
+         * Remove any Futures which are done, then either re-post the Runnable or call the function
+         * on the UI thread that everything is done
+         */
+        @Override
+        public void run() {
+            // If mCheckFutureRunnable is nulled out, this shouldn't run
+            synchronized (mSynchronizer) {
+                if (null != mCheckFutureRunnable) {
+                    // Loop over mFutures, removing any ones that are done
+                    for (int i = 0; i < mFutures.size(); i++) {
+                        if (mFutures.get(i).isDone()) {
+                            mFutures.remove(i);
+                            i--;
+                            // If all are done, call the callback
+                            if (mFutures.isEmpty()) {
+                                mCheckFutureRunnable = null;
+                                mActivity.runOnUiThread(() -> {
+                                    synchronized (mSynchronizer) {
+                                        mActivity.clearLoading();
+                                        mOnCompleted.run();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    // If there are still futures, post this to run again
+                    if (!mFutures.isEmpty()) {
+                        mHandler.postDelayed(() -> new Thread(mCheckFutureRunnable).start(), 1000);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Stop all current requests, empty the thread pool and awaiting queue, clear loading animation
+     */
     public void stopAllRequests() {
         mCompositeDisposable.clear();
+        mThreadPool.shutdownNow();
+        mThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        for (Future future : mFutures) {
+            future.cancel(true);
+        }
+        mFutures.clear();
+        mActivity.clearLoading();
+        mCheckFutureRunnable = null;
     }
 }

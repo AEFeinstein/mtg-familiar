@@ -156,6 +156,8 @@ class LookupAllPricesTest extends AsyncTask<FamiliarActivity, Void, Void> {
 
                         // Move to the next
                         fetchNext(fetcher, cursor, activity);
+                    },
+                    () -> {
                     });
         } catch (InstantiationException e) {
 

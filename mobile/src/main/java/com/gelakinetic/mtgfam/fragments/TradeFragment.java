@@ -44,6 +44,7 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
@@ -73,10 +74,10 @@ public class TradeFragment extends FamiliarListFragment {
     private static final String AUTOSAVE_NAME = "autosave";
 
     /* Left List and Company */
-    public ArrayList<MtgCard> mListLeft;
+    public final ArrayList<MtgCard> mListLeft = new ArrayList<>();
 
     /* Right List and Company */
-    public ArrayList<MtgCard> mListRight;
+    public final ArrayList<MtgCard> mListRight = new ArrayList<>();
 
     public String mCurrentTrade = "";
 
@@ -105,10 +106,8 @@ public class TradeFragment extends FamiliarListFragment {
 
         assert myFragmentView != null;
 
-        mListLeft = new ArrayList<>();
         CardDataAdapter listAdapterLeft = new TradeDataAdapter(mListLeft, LEFT);
 
-        mListRight = new ArrayList<>();
         CardDataAdapter listAdapterRight = new TradeDataAdapter(mListRight, RIGHT);
 
         /* Call to set up our shared UI elements */
@@ -152,13 +151,17 @@ public class TradeFragment extends FamiliarListFragment {
 
             switch (side) {
                 case LEFT: {
-                    mListLeft.add(0, card);
+                    synchronized (mListLeft) {
+                        mListLeft.add(0, card);
+                    }
                     getCardDataAdapter(LEFT).notifyItemInserted(0);
                     loadPrice(card);
                     break;
                 }
                 case RIGHT: {
-                    mListRight.add(0, card);
+                    synchronized (mListRight) {
+                        mListRight.add(0, card);
+                    }
                     getCardDataAdapter(RIGHT).notifyItemInserted(0);
                     loadPrice(card);
                     break;
@@ -265,37 +268,31 @@ public class TradeFragment extends FamiliarListFragment {
     public void loadTrade(String tradeName) {
         BufferedReader br = null;
         try {
-            /* Clear the current lists */
-            mListLeft.clear();
-            mListRight.clear();
+            synchronized (mListLeft) {
+                synchronized (mListRight) {
+                    /* Clear the current lists */
+                    mListLeft.clear();
+                    mListRight.clear();
 
-            /* Read each card, line by line, load prices along the way */
-            br = new BufferedReader(
-                    new InputStreamReader(this.getActivity().openFileInput(tradeName))
-            );
-            String line;
-            while ((line = br.readLine()) != null) {
-                try {
-                    MtgCard card = MtgCard.fromTradeString(line, getActivity());
-                    card.setIndex(mOrderAddedIdx++);
+                    /* Read each card, line by line, load prices along the way */
+                    br = new BufferedReader(
+                            new InputStreamReader(this.getActivity().openFileInput(tradeName))
+                    );
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        try {
+                            MtgCard card = MtgCard.fromTradeString(line, getActivity());
+                            card.setIndex(mOrderAddedIdx++);
 
-                    if (card.getSetName() == null) {
-                        handleFamiliarDbException(false);
-                        return;
-                    }
-                    if (card.mSide == LEFT) {
-                        mListLeft.add(card);
-                        if (!card.mIsCustomPrice) {
-                            loadPrice(card);
-                        }
-                    } else if (card.mSide == RIGHT) {
-                        mListRight.add(card);
-                        if (!card.mIsCustomPrice) {
-                            loadPrice(card);
+                            if (card.mSide == LEFT) {
+                                mListLeft.add(card);
+                            } else if (card.mSide == RIGHT) {
+                                mListRight.add(card);
+                            }
+                        } catch (NumberFormatException | IndexOutOfBoundsException | java.lang.InstantiationException e) {
+                            // This card line is junk, ignore it
                         }
                     }
-                } catch (NumberFormatException | IndexOutOfBoundsException | java.lang.InstantiationException e) {
-                    // This card line is junk, ignore it
                 }
             }
         } catch (FileNotFoundException e) {
@@ -307,6 +304,25 @@ public class TradeFragment extends FamiliarListFragment {
             if (br != null) {
                 IOUtils.closeQuietly(br);
             }
+        }
+
+        // Now that all the file IO is done, hit the database twice, once for each side
+        try {
+            MtgCard.initCardListFromDb(getContext(), mListLeft);
+            for (MtgCard card : mListLeft) {
+                if (!card.mIsCustomPrice) {
+                    loadPrice(card);
+                }
+            }
+
+            MtgCard.initCardListFromDb(getContext(), mListRight);
+            for (MtgCard card : mListRight) {
+                if (!card.mIsCustomPrice) {
+                    loadPrice(card);
+                }
+            }
+        } catch (FamiliarDbException fde) {
+            handleFamiliarDbException(true);
         }
     }
 
@@ -427,13 +443,16 @@ public class TradeFragment extends FamiliarListFragment {
 
     @Override
     protected void onCardPriceLookupFailure(MtgCard data, Throwable exception) {
-        data.mMessage = exception.getLocalizedMessage();
-        data.mPriceInfo = null;
-        updateTotalPrices(BOTH);
+        // Do nothing, wait until all prices are fetched
     }
 
     @Override
     protected void onCardPriceLookupSuccess(MtgCard data, MarketPriceInfo result) {
+        // Do nothing, wait until all prices are fetched
+    }
+
+    @Override
+    protected void onAllPriceLookupsFinished() {
         updateTotalPrices(BOTH);
         try {
             sortTrades(PreferenceAdapter.getTradeSortOrder(getContext()));
@@ -535,8 +554,12 @@ public class TradeFragment extends FamiliarListFragment {
     private void sortTrades(String sortOrder) {
         /* If no sort type specified, return */
         TradeComparator tradeComparator = new TradeComparator(sortOrder);
-        Collections.sort(mListLeft, tradeComparator);
-        Collections.sort(mListRight, tradeComparator);
+        synchronized (mListLeft) {
+            Collections.sort(mListLeft, tradeComparator);
+        }
+        synchronized (mListRight) {
+            Collections.sort(mListRight, tradeComparator);
+        }
         getCardDataAdapter(LEFT).notifyDataSetChanged();
         getCardDataAdapter(RIGHT).notifyDataSetChanged();
     }
@@ -591,7 +614,7 @@ public class TradeFragment extends FamiliarListFragment {
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = card1.getCmc() - card2.getCmc();
+                            retVal = Integer.compare(card1.getCmc(), card2.getCmc());
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
@@ -695,11 +718,15 @@ public class TradeFragment extends FamiliarListFragment {
             TradeComparator tradeComparator = new TradeComparator(PreferenceAdapter.getTradeSortOrder(getContext()));
             switch (side) {
                 case LEFT: {
-                    Collections.sort(mListLeft, tradeComparator);
+                    synchronized (mListLeft) {
+                        Collections.sort(mListLeft, tradeComparator);
+                    }
                     break;
                 }
                 case RIGHT: {
-                    Collections.sort(mListRight, tradeComparator);
+                    synchronized (mListRight) {
+                        Collections.sort(mListRight, tradeComparator);
+                    }
                     break;
                 }
             }

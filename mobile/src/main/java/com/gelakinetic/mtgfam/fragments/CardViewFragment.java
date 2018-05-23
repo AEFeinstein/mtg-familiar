@@ -30,7 +30,6 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -145,6 +144,7 @@ public class CardViewFragment extends FamiliarFragment {
 
     /* Loaded in a Spice Service */
     public MarketPriceInfo mPriceInfo;
+    public String mErrorMessage;
 
     /* Card info, used to build the URL to fetch the picture */
     public MtgCard mCard;
@@ -1031,27 +1031,40 @@ public class CardViewFragment extends FamiliarFragment {
                 return true;
             }
             case R.id.price: {
-                mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
-                        marketPriceInfo -> {
-                            if (CardViewFragment.this.isAdded()) {
-                                if (marketPriceInfo != null) {
-                                    mPriceInfo = marketPriceInfo;
-                                    showDialog(CardViewDialogFragment.GET_PRICE);
-                                } else {
-                                    SnackbarWrapper.makeAndShowText(mActivity,
-                                            R.string.card_view_price_not_found,
-                                            SnackbarWrapper.LENGTH_SHORT);
+                try {
+                    mActivity.mMarketPriceStore.fetchMarketPrice(mCard,
+                            marketPriceInfo -> {
+                                if (CardViewFragment.this.isAdded()) {
+                                    if (marketPriceInfo != null) {
+                                        mPriceInfo = marketPriceInfo;
+                                    } else {
+                                        mPriceInfo = null;
+                                        mErrorMessage = getString(R.string.card_view_price_not_found);
+                                    }
                                 }
-                            }
-                        },
-                        throwable -> {
-                            if (CardViewFragment.this.isAdded()) {
-                                mPriceInfo = null;
-                                CardViewFragment.this.removeDialog(getFragmentManager());
-                                SnackbarWrapper.makeAndShowText(mActivity, throwable.getMessage(),
-                                        SnackbarWrapper.LENGTH_SHORT);
-                            }
-                        });
+                            },
+                            throwable -> {
+                                if (CardViewFragment.this.isAdded()) {
+                                    mPriceInfo = null;
+                                    mErrorMessage = throwable.getMessage();
+                                }
+                            },
+                            () -> {
+                                if (mPriceInfo == null) {
+                                    // This was a failure
+                                    CardViewFragment.this.removeDialog(getFragmentManager());
+                                    if (null != mErrorMessage) {
+                                        SnackbarWrapper.makeAndShowText(mActivity, mErrorMessage, SnackbarWrapper.LENGTH_SHORT);
+                                    }
+                                } else {
+                                    // This was a success
+                                    showDialog(CardViewDialogFragment.GET_PRICE);
+                                }
+                            });
+
+                } catch (java.lang.InstantiationException e) {
+                    mErrorMessage = getString(R.string.card_view_price_not_found);
+                }
 
                 return true;
             }

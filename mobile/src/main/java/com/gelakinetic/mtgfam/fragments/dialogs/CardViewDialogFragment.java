@@ -30,7 +30,6 @@ import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -50,6 +49,7 @@ import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
 import com.gelakinetic.mtgfam.helpers.ImageGetterHelper;
 import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.jetbrains.annotations.NotNull;
@@ -284,34 +284,38 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                         .items((CharSequence[]) deckNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
 
-                            // Read the decklist
-                            String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
-                            ArrayList<Pair<MtgCard, Boolean>> decklist =
-                                    DecklistHelpers.ReadDecklist(getActivity(), deckFileName);
+                            try {
+                                // Read the decklist
+                                String deckFileName = deckNames[position] + DecklistFragment.DECK_EXTENSION;
+                                ArrayList<MtgCard> decklist =
+                                        DecklistHelpers.ReadDecklist(getActivity(), deckFileName, false);
 
-                            // Look through the decklist for any existing matches
-                            boolean entryIncremented = false;
-                            for (Pair<MtgCard, Boolean> deckEntry : decklist) {
-                                if (!deckEntry.second && // not in the sideboard
-                                        deckEntry.first.getName().equals(cardName) &&
-                                        deckEntry.first.getExpansion().equals(cardSet)) {
-                                    // Increment the card already in the deck
-                                    deckEntry.first.mNumberOf++;
-                                    entryIncremented = true;
-                                    break;
+                                // Look through the decklist for any existing matches
+                                boolean entryIncremented = false;
+                                for (MtgCard deckEntry : decklist) {
+                                    if (!deckEntry.isSideboard() && // not in the sideboard
+                                            deckEntry.getName().equals(cardName) &&
+                                            deckEntry.getExpansion().equals(cardSet)) {
+                                        // Increment the card already in the deck
+                                        deckEntry.mNumberOf++;
+                                        entryIncremented = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (!entryIncremented) {
-                                // Add a new card to the deck
-                                try {
-                                    decklist.add(new Pair<>(new MtgCard(getActivity(), cardName, cardSet, false, 1), false));
-                                } catch (java.lang.InstantiationException e) {
-                                    /* Eat it */
+                                if (!entryIncremented) {
+                                    // Add a new card to the deck
+                                    try {
+                                        decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
+                                    } catch (java.lang.InstantiationException e) {
+                                        /* Eat it */
+                                    }
                                 }
-                            }
 
-                            // Write the decklist back
-                            DecklistHelpers.WriteDecklist(getActivity(), decklist, deckFileName);
+                                // Write the decklist back
+                                DecklistHelpers.WriteDecklist(getActivity(), decklist, deckFileName);
+                            } catch (FamiliarDbException e) {
+                                getParentCardViewFragment().handleFamiliarDbException(false);
+                            }
                         })
                         .build();
             }

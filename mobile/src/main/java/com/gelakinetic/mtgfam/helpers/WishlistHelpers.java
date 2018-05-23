@@ -28,6 +28,7 @@ import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment;
 import com.gelakinetic.mtgfam.fragments.dialogs.SortOrderDialogFragment.SortOption;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.io.BufferedReader;
@@ -105,17 +106,21 @@ public class WishlistHelpers {
      * @param wishlistInfo the CompressedWishlistInfo to add to the wishlist
      */
     public static void addItemToWishlist(final Activity activity, final CompressedWishlistInfo wishlistInfo) {
-        final ArrayList<MtgCard> currentWishlist = ReadWishlist(activity);
-        for (IndividualSetInfo isi : wishlistInfo.mInfo) {
-            wishlistInfo.applyIndividualInfo(isi);
-            if (currentWishlist.contains(wishlistInfo)) {
-                final int existingIndex = currentWishlist.indexOf(wishlistInfo);
-                currentWishlist.get(existingIndex).mNumberOf += wishlistInfo.mNumberOf;
-            } else {
-                currentWishlist.add(wishlistInfo);
+        try {
+            final ArrayList<MtgCard> currentWishlist = ReadWishlist(activity, false);
+            for (IndividualSetInfo isi : wishlistInfo.mInfo) {
+                wishlistInfo.applyIndividualInfo(isi);
+                if (currentWishlist.contains(wishlistInfo)) {
+                    final int existingIndex = currentWishlist.indexOf(wishlistInfo);
+                    currentWishlist.get(existingIndex).mNumberOf += wishlistInfo.mNumberOf;
+                } else {
+                    currentWishlist.add(wishlistInfo);
+                }
             }
+            WriteWishlist(activity, currentWishlist);
+        } catch (FamiliarDbException e) {
+            // eat it
         }
-        WriteWishlist(activity, currentWishlist);
     }
 
     /**
@@ -136,10 +141,11 @@ public class WishlistHelpers {
     /**
      * Read the wishlist from a file and return it as an ArrayList<MtgCard>
      *
-     * @param activity A context to open the file and pop toasts with
+     * @param activity     A context to open the file and pop toasts with
+     * @param loadFullData true to load all card data from the database, false to just read the file
      * @return The wishlist in ArrayList form
      */
-    public static ArrayList<MtgCard> ReadWishlist(Activity activity) {
+    public static ArrayList<MtgCard> ReadWishlist(Activity activity, boolean loadFullData) throws FamiliarDbException {
 
         ArrayList<MtgCard> lWishlist = new ArrayList<>();
         int orderAddedIdx = 0;
@@ -150,7 +156,7 @@ public class WishlistHelpers {
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
                     try {
-                        MtgCard card = MtgCard.fromWishlistString(line, activity);
+                        MtgCard card = MtgCard.fromWishlistString(line, false, activity);
                         card.setIndex(orderAddedIdx++);
                         lWishlist.add(card);
                     } catch (InstantiationException e) {
@@ -162,6 +168,10 @@ public class WishlistHelpers {
             SnackbarWrapper.makeAndShowText(activity, e.getLocalizedMessage(), SnackbarWrapper.LENGTH_LONG);
         } catch (IOException e) {
             /* Catches file not found exception when wishlist doesn't exist */
+        }
+
+        if (loadFullData && !lWishlist.isEmpty()) {
+            MtgCard.initCardListFromDb(activity, lWishlist);
         }
         return lWishlist;
     }
@@ -361,7 +371,7 @@ public class WishlistHelpers {
                             break;
                         }
                         case CardDbAdapter.KEY_CMC: {
-                            retVal = wish1.getCmc() - wish2.getCmc();
+                            retVal = Integer.compare(wish1.getCmc(), wish2.getCmc());
                             break;
                         }
                         case CardDbAdapter.KEY_POWER: {
@@ -381,7 +391,7 @@ public class WishlistHelpers {
                             break;
                         }
                         case SortOrderDialogFragment.KEY_ORDER: {
-                            retVal = Integer.valueOf(wish1.getIndex()).compareTo(wish2.getIndex());
+                            retVal = Integer.compare(wish1.getIndex(), wish2.getIndex());
                             break;
                         }
                     }

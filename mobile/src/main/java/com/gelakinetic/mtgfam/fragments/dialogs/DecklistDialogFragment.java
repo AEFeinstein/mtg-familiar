@@ -21,9 +21,6 @@ package com.gelakinetic.mtgfam.fragments.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -37,19 +34,11 @@ import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.fragments.DecklistFragment;
 import com.gelakinetic.mtgfam.helpers.CardHelpers;
 import com.gelakinetic.mtgfam.helpers.DecklistHelpers;
-import com.gelakinetic.mtgfam.helpers.DecklistHelpers.CompressedDecklistInfo;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
-import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
-import com.gelakinetic.mtgfam.helpers.database.DatabaseManager;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
-import com.gelakinetic.mtgfam.helpers.database.FamiliarDbHandle;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Class that creates dialogs for DecklistFragment.
@@ -220,7 +209,9 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
 
                             /* do some cleaning up */
                             getParentDecklistFragment().mCurrentDeck = "autosave";
-                            getParentDecklistFragment().mCompressedDecklist.clear();
+                            synchronized (getParentDecklistFragment().mCompressedDecklist) {
+                                getParentDecklistFragment().mCompressedDecklist.clear();
+                            }
                             getParentDecklistFragment().getCardDataAdapter(0).notifyDataSetChanged();
                             getParentDecklistFragment().mDeckName.setText(
                                     R.string.decklist_unnamed_deck
@@ -242,80 +233,19 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .build();
             }
             case DIALOG_GET_LEGALITY: {
-                if (null == getParentDecklistFragment()) {
+                if (null == getParentDecklistFragment() || getParentDecklistFragment().legalityMap.isEmpty()) {
                     return DontShowDialog();
                 }
-                String[] from = new String[]{"format", "status"};
-                int[] to = new int[]{R.id.format, R.id.status};
-                Cursor cFormats = null;
-                FamiliarDbHandle handle = new FamiliarDbHandle();
-                try {
-                    SQLiteDatabase database = DatabaseManager.openDatabase(getContext(), false, handle);
-                    cFormats = CardDbAdapter.fetchAllFormats(database);
-                    cFormats.moveToFirst();
-                    List<HashMap<String, String>> fillMaps = new ArrayList<>();
-                    for (int i = 0; i < cFormats.getCount(); i++) {
-                        boolean deckIsLegal = true;
-                        String deckLegality = "";
-                        String format =
-                                cFormats.getString(cFormats.getColumnIndex(CardDbAdapter.KEY_NAME));
-                        for (CompressedDecklistInfo info :
-                                getParentDecklistFragment().mCompressedDecklist) {
-                            if (!info.getName().isEmpty()) { /* Skip the headers */
-                                switch (CardDbAdapter.checkLegality(info.getName(), format, database)) {
-                                    case CardDbAdapter.LEGAL: {
-                                        if (format.equalsIgnoreCase("Commander")
-                                                && info.getTotalNumber() > 1) {
-                                            deckLegality = getString(R.string.decklist_not_legal);
-                                            deckIsLegal = false;
-                                        }
-                                        break;
-                                    }
-                                    case CardDbAdapter.RESTRICTED: {
-                                        if (format.equalsIgnoreCase("Vintage")
-                                                && info.getTotalNumber() > 1) {
-                                            deckLegality = getString(R.string.decklist_not_legal);
-                                            deckIsLegal = false;
-                                        }
-                                        break;
-                                    }
-                                    case CardDbAdapter.BANNED: {
-                                        deckLegality = getString(R.string.decklist_not_legal);
-                                        deckIsLegal = false;
-                                        break;
-                                    }
-                                }
-                                if (!deckIsLegal) {
-                                    break;
-                                }
-                            }
-                        }
-                        if (deckIsLegal) {
-                            deckLegality = getString(R.string.card_view_legal);
-                        }
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put(from[0], format);
-                        map.put(from[1], deckLegality);
-                        fillMaps.add(map);
-                        cFormats.moveToNext();
-                    }
-                    SimpleAdapter adapter = new SimpleAdapter(
-                            getActivity(), fillMaps, R.layout.card_view_legal_row, from, to);
-                    ListView lv = new ListView(getActivity());
-                    lv.setAdapter(adapter);
-                    MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
-                    builder.customView(lv, false);
-                    builder.title(R.string.decklist_legality);
-                    return builder.build();
-                } catch (SQLiteException | FamiliarDbException fdbe) {
-                    getParentDecklistFragment().handleFamiliarDbException(false);
-                } finally {
-                    if (null != cFormats) {
-                        cFormats.close();
-                    }
-                    DatabaseManager.closeDatabase(getContext(), handle);
-                }
-                return DontShowDialog();
+
+                SimpleAdapter adapter = new SimpleAdapter(
+                        getActivity(), getParentDecklistFragment().legalityMap, R.layout.card_view_legal_row,
+                        DecklistFragment.LEGALITY_DIAOG_FROM, DecklistFragment.LEGALITY_DIALOG_TO);
+                ListView lv = new ListView(getActivity());
+                lv.setAdapter(adapter);
+                return new MaterialDialog.Builder(getActivity())
+                        .customView(lv, false)
+                        .title(R.string.decklist_legality)
+                        .build();
             }
             default: {
                 savedInstanceState.putInt("id", mDialogId);
