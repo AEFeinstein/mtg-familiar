@@ -298,7 +298,7 @@ public class DecklistFragment extends FamiliarListFragment {
                     for (int i = 0; i < firstCard.mInfo.size(); i++) {
                         CardHelpers.IndividualSetInfo firstIsi = firstCard.mInfo.get(i);
                         if (firstIsi.mSetCode.equals(card.getExpansion()) && firstIsi.mIsFoil.equals(card.mIsFoil)) {
-                        firstIsi.mNumberOf++;
+                            firstIsi.mNumberOf++;
                             added = true;
                             break;
                         }
@@ -415,50 +415,54 @@ public class DecklistFragment extends FamiliarListFragment {
      */
     public void readAndCompressDecklist(final String changedCardName, final String deckName) {
         synchronized (mCompressedDecklist) {
-            final String lDeckName = getAndSetDeckName(deckName);
+            try {
+                final String lDeckName = getAndSetDeckName(deckName);
 
-            /* Read the decklist */
-            final ArrayList<MtgCard> decklist =
-                DecklistHelpers.ReadDecklist(getActivity(), lDeckName, true);
+                /* Read the decklist */
+                final ArrayList<MtgCard> decklist =
+                        DecklistHelpers.ReadDecklist(getActivity(), lDeckName, true);
 
-            /* Clear the decklist, or just the card that changed */
-            clearCompressedInfo(changedCardName);
+                /* Clear the decklist, or just the card that changed */
+                clearCompressedInfo(changedCardName);
 
-            /* Compress the whole decklist, or just the card that changed */
-            for (MtgCard card : decklist) {
-                /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
-                if (!card.getName().isEmpty()) {
-                    if (changedCardName == null || changedCardName.equals(card.getName())) {
-                        CompressedDecklistInfo wrapped =
-                                new CompressedDecklistInfo(card, card.isSideboard());
-                        if (mCompressedDecklist.contains(wrapped)) {
-                            mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
-                                    .add(card);
-                        } else {
-                            mCompressedDecklist.add(wrapped);
-                        }
-                        if (shouldShowPrice()) {
-                            loadPrice(card);
+                /* Compress the whole decklist, or just the card that changed */
+                for (MtgCard card : decklist) {
+                    /* It's possible for empty cards to be saved, though I don't know how. Don't add them back */
+                    if (!card.getName().isEmpty()) {
+                        if (changedCardName == null || changedCardName.equals(card.getName())) {
+                            CompressedDecklistInfo wrapped =
+                                    new CompressedDecklistInfo(card, card.isSideboard());
+                            if (mCompressedDecklist.contains(wrapped)) {
+                                mCompressedDecklist.get(mCompressedDecklist.indexOf(wrapped))
+                                        .add(card);
+                            } else {
+                                mCompressedDecklist.add(wrapped);
+                            }
+                            if (shouldShowPrice()) {
+                                loadPrice(card);
+                            }
                         }
                     }
                 }
-            }
 
-            /* check for wholly removed cards if one card was modified */
-            if (changedCardName != null) {
-                for (int i = 0; i < mCompressedDecklist.size(); i++) {
-                    if (mCompressedDecklist.get(i).mInfo.size() == 0) {
-                        mCompressedDecklist.remove(i);
-                        i--;
+                /* check for wholly removed cards if one card was modified */
+                if (changedCardName != null) {
+                    for (int i = 0; i < mCompressedDecklist.size(); i++) {
+                        if (mCompressedDecklist.get(i).mInfo.size() == 0) {
+                            mCompressedDecklist.remove(i);
+                            i--;
+                        }
                     }
                 }
+                /* Fill extra card data from the database, for displaying full card info */
+                Collections.sort(mCompressedDecklist, mDecklistChain);
+                setHeaderValues();
+                mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
+                        ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
+                        ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(true);
             }
-            /* Fill extra card data from the database, for displaying full card info */
-            Collections.sort(mCompressedDecklist, mDecklistChain);
-            setHeaderValues();
-            mDeckCards.setText(getResources().getQuantityString(R.plurals.decklist_cards_count,
-                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards(),
-                    ((DecklistDataAdapter) getCardDataAdapter(0)).getTotalCards()));
         }
     }
 

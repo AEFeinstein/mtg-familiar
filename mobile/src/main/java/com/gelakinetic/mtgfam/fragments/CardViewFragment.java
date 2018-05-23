@@ -30,7 +30,6 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -1064,7 +1063,7 @@ public class CardViewFragment extends FamiliarFragment {
                             });
 
                 } catch (java.lang.InstantiationException e) {
-                    // TODO care about this?
+                    mErrorMessage = getString(R.string.card_view_price_not_found);
                 }
 
                 return true;

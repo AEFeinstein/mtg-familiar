@@ -666,12 +666,12 @@ public class CardDbAdapter {
     }
 
     /**
-     * TODO
+     * Given a list of cards, fetch all the database info about them in a single query
      *
-     * @param cards
-     * @param mDb
-     * @return
-     * @throws FamiliarDbException
+     * @param cards A list of cards to fetch info for
+     * @param mDb   The database to query
+     * @return A Cursor with the requested information
+     * @throws FamiliarDbException If something goes wrong
      */
     public static Cursor fetchCardByNamesAndSets(ArrayList<MtgCard> cards, SQLiteDatabase mDb)
             throws FamiliarDbException {
@@ -699,7 +699,7 @@ public class CardDbAdapter {
             sql.append(" WHERE ");
 
             first = true;
-            for (MtgCard card: cards) {
+            for (MtgCard card : cards) {
                 if (first) {
                     first = false;
                 } else {

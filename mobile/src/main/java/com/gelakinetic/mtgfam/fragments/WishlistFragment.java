@@ -49,6 +49,7 @@ import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import java.util.ArrayList;
@@ -196,45 +197,49 @@ public class WishlistFragment extends FamiliarListFragment {
      */
     private void readAndCompressWishlist(String changedCardName) {
         synchronized (mCompressedWishlist) {
-            /* Read the wishlist */
-            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity(), true);
+            try {
+                /* Read the wishlist */
+                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(getActivity(), true);
 
-            /* Clear the wishlist, or just the card that changed */
-            if (changedCardName == null) {
-                mCompressedWishlist.clear();
-            } else {
-                for (CompressedWishlistInfo cwi : mCompressedWishlist) {
-                    if (cwi.getName().equals(changedCardName)) {
-                        cwi.clearCompressedInfo();
+                /* Clear the wishlist, or just the card that changed */
+                if (changedCardName == null) {
+                    mCompressedWishlist.clear();
+                } else {
+                    for (CompressedWishlistInfo cwi : mCompressedWishlist) {
+                        if (cwi.getName().equals(changedCardName)) {
+                            cwi.clearCompressedInfo();
+                        }
                     }
                 }
-            }
 
-            /* Compress the whole wishlist, or just the card that changed */
-            for (MtgCard card : wishlist) {
-                if (changedCardName == null || changedCardName.equals(card.getName())) {
-                    /* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each
-                     * other */
-                    CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
-                    if (mCompressedWishlist.contains(wrapped)) {
-                        mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped)).add(card);
-                    } else {
-                        mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
-                    }
-                    /* Look up the new price */
-                    if (mShowIndividualPrices || shouldShowPrice()) {
-                        loadPrice(card);
-                    }
-                }
-            }
-            /* Check for wholly removed cards if one card was modified */
-            if (changedCardName != null) {
-                for (int i = 0; i < mCompressedWishlist.size(); i++) {
-                    if (mCompressedWishlist.get(i).mInfo.size() == 0) {
-                        mCompressedWishlist.remove(i);
-                        i--;
+                /* Compress the whole wishlist, or just the card that changed */
+                for (MtgCard card : wishlist) {
+                    if (changedCardName == null || changedCardName.equals(card.getName())) {
+                        /* This works because both MtgCard's and CompressedWishlistInfo's .equals() can compare each
+                         * other */
+                        CompressedWishlistInfo wrapped = new CompressedWishlistInfo(card, 0);
+                        if (mCompressedWishlist.contains(wrapped)) {
+                            mCompressedWishlist.get(mCompressedWishlist.indexOf(wrapped)).add(card);
+                        } else {
+                            mCompressedWishlist.add(new CompressedWishlistInfo(card, mOrderAddedIdx++));
+                        }
+                        /* Look up the new price */
+                        if (mShowIndividualPrices || shouldShowPrice()) {
+                            loadPrice(card);
+                        }
                     }
                 }
+                /* Check for wholly removed cards if one card was modified */
+                if (changedCardName != null) {
+                    for (int i = 0; i < mCompressedWishlist.size(); i++) {
+                        if (mCompressedWishlist.get(i).mInfo.size() == 0) {
+                            mCompressedWishlist.remove(i);
+                            i--;
+                        }
+                    }
+                }
+            } catch (FamiliarDbException e) {
+                handleFamiliarDbException(true);
             }
         }
     }

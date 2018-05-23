@@ -499,7 +499,7 @@ public abstract class FamiliarListFragment extends FamiliarFragment {
                             }
                         });
             } catch (java.lang.InstantiationException e) {
-                // TODO care maybe
+                onCardPriceLookupFailure(data, e);
             }
         }
     }

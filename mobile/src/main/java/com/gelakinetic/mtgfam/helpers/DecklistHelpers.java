@@ -26,6 +26,7 @@ import android.util.Pair;
 import com.gelakinetic.mtgfam.R;
 import com.gelakinetic.mtgfam.helpers.CardHelpers.IndividualSetInfo;
 import com.gelakinetic.mtgfam.helpers.WishlistHelpers.CompressedWishlistInfo;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -119,7 +120,7 @@ public class DecklistHelpers {
      * @param loadFullData true to load all card data from the database, false to to just read the file
      * @return The decklist as an ArrayList of MtgCards
      */
-    public static ArrayList<MtgCard> ReadDecklist(Activity activity, String deckName, boolean loadFullData) {
+    public static ArrayList<MtgCard> ReadDecklist(Activity activity, String deckName, boolean loadFullData) throws FamiliarDbException {
 
         ArrayList<MtgCard> lDecklist = new ArrayList<>();
 

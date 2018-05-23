@@ -288,7 +288,7 @@ public class MtgCard extends Card {
      * @param mCtx  A context to do database operations with
      * @param cards A list of cards to fill in data for
      */
-    public static void initCardListFromDb(Context mCtx, ArrayList<MtgCard> cards) {
+    public static void initCardListFromDb(Context mCtx, ArrayList<MtgCard> cards) throws FamiliarDbException {
         Cursor cardCursor = null;
         FamiliarDbHandle handle = new FamiliarDbHandle();
         try {
@@ -319,7 +319,7 @@ public class MtgCard extends Card {
                 cardCursor.moveToNext();
             }
         } catch (SQLiteException | FamiliarDbException fde) {
-            // TODO care about this
+            throw new FamiliarDbException(fde);
         } finally {
             if (null != cardCursor) {
                 cardCursor.close();

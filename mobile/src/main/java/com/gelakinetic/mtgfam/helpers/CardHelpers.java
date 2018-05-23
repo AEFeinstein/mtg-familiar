@@ -100,25 +100,29 @@ public class CardHelpers {
         final String deckName;
         final String dialogText;
 
-        if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
-            /* Read the wishlist */
-            ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
-            targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
-            deckName = "";
-            dialogText = activity.getString(R.string.wishlist_edit_dialog_title_end);
-        } else {
-            /* Right now only WishlistDialogFragment and DecklistDialogFragment call this, so
-             * obviously now it is the decklist */
-            String tempDeckName = ((DecklistFragment) fragment).mCurrentDeck;
-            if (tempDeckName.equals("")) {
-                deckName = DecklistFragment.AUTOSAVE_NAME;
+        try {
+            if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
+                /* Read the wishlist */
+                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
+                targetNumberOfs = WishlistHelpers.getTargetNumberOfs(mCardName, wishlist);
+                deckName = "";
+                dialogText = activity.getString(R.string.wishlist_edit_dialog_title_end);
             } else {
-                deckName = ((DecklistFragment) fragment).mCurrentDeck;
+                /* Right now only WishlistDialogFragment and DecklistDialogFragment call this, so
+                 * obviously now it is the decklist */
+                String tempDeckName = ((DecklistFragment) fragment).mCurrentDeck;
+                if (tempDeckName.equals("")) {
+                    deckName = DecklistFragment.AUTOSAVE_NAME;
+                } else {
+                    deckName = ((DecklistFragment) fragment).mCurrentDeck;
+                }
+                ArrayList<MtgCard> decklist =
+                        DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION, false);
+                targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
+                dialogText = activity.getString(R.string.decklist_edit_dialog_title_end);
             }
-            ArrayList<MtgCard> decklist =
-                    DecklistHelpers.ReadDecklist(activity, deckName + DecklistFragment.DECK_EXTENSION, false);
-            targetNumberOfs = DecklistHelpers.getTargetNumberOfs(mCardName, decklist, isSideboard);
-            dialogText = activity.getString(R.string.decklist_edit_dialog_title_end);
+        } catch (FamiliarDbException e) {
+            return null;
         }
         targetCardNumberOfs = targetNumberOfs.first;
         targetFoilCardNumberOfs = targetNumberOfs.second;
@@ -186,17 +190,21 @@ public class CardHelpers {
 
             ArrayList<MtgCard> list;
 
-            if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
-                /* Read the wishlist */
-                list = new ArrayList<>();
-                ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
-                list.addAll(wishlist);
-            } else {
-                list = DecklistHelpers.ReadDecklist(
-                        activity,
-                        deckName + DecklistFragment.DECK_EXTENSION,
-                        false
-                );
+            try {
+                if (isWishlistDialog || isCardViewDialog || isResultListDialog) {
+                    /* Read the wishlist */
+                    list = new ArrayList<>();
+                    ArrayList<MtgCard> wishlist = WishlistHelpers.ReadWishlist(activity, false);
+                    list.addAll(wishlist);
+                } else {
+                    list = DecklistHelpers.ReadDecklist(
+                            activity,
+                            deckName + DecklistFragment.DECK_EXTENSION,
+                            false
+                    );
+                }
+            } catch (FamiliarDbException e) {
+                return;
             }
 
             /* Add the cards listed in the dialog to the wishlist */

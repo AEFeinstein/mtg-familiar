@@ -44,6 +44,7 @@ import com.gelakinetic.mtgfam.helpers.MtgCard;
 import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 import com.gelakinetic.mtgfam.helpers.SnackbarWrapper;
 import com.gelakinetic.mtgfam.helpers.database.CardDbAdapter;
+import com.gelakinetic.mtgfam.helpers.database.FamiliarDbException;
 import com.gelakinetic.mtgfam.helpers.tcgp.MarketPriceInfo;
 
 import org.apache.commons.io.IOUtils;
@@ -306,18 +307,22 @@ public class TradeFragment extends FamiliarListFragment {
         }
 
         // Now that all the file IO is done, hit the database twice, once for each side
-        MtgCard.initCardListFromDb(getContext(), mListLeft);
-        for (MtgCard card : mListLeft) {
-            if (!card.mIsCustomPrice) {
-                loadPrice(card);
+        try {
+            MtgCard.initCardListFromDb(getContext(), mListLeft);
+            for (MtgCard card : mListLeft) {
+                if (!card.mIsCustomPrice) {
+                    loadPrice(card);
+                }
             }
-        }
 
-        MtgCard.initCardListFromDb(getContext(), mListRight);
-        for (MtgCard card : mListRight) {
-            if (!card.mIsCustomPrice) {
-                loadPrice(card);
+            MtgCard.initCardListFromDb(getContext(), mListRight);
+            for (MtgCard card : mListRight) {
+                if (!card.mIsCustomPrice) {
+                    loadPrice(card);
+                }
             }
+        } catch (FamiliarDbException fde) {
+            handleFamiliarDbException(true);
         }
     }
 
