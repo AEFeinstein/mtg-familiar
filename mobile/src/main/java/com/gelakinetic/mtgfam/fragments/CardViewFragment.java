@@ -1220,7 +1220,8 @@ public class CardViewFragment extends FamiliarFragment {
                              * commander, but can't be the commander as Restricted in the legality
                              * file.  This prevents older version of the app from throwing an
                              * IllegalStateException if we try including a new legality. */
-                            if (mFormats[i].equalsIgnoreCase("Commander")) {
+                            if (mFormats[i].equalsIgnoreCase("Commander") ||
+                                    mFormats[i].equalsIgnoreCase("Brawl")) {
                                 mLegalities[i] = getString(R.string.card_view_no_commander);
                             } else {
                                 mLegalities[i] = getString(R.string.card_view_restricted);
