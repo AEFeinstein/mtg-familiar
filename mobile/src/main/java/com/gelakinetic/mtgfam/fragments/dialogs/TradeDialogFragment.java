@@ -485,7 +485,9 @@ public class TradeDialogFragment extends FamiliarDialogFragment {
                         .negativeText(R.string.dialog_cancel)
                         .items((CharSequence[]) tradeNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
-                            /* Load the trade, set the current trade name */
+                            /* First save any changes */
+                            getParentTradeFragment().saveTrade(getParentTradeFragment().mCurrentTrade + TradeFragment.TRADE_EXTENSION);
+                            /* Then load the trade, set the current trade name */
                             getParentTradeFragment().loadTrade(tradeNames[position] + TradeFragment.TRADE_EXTENSION);
                             getParentTradeFragment().mCurrentTrade = tradeNames[position];
 

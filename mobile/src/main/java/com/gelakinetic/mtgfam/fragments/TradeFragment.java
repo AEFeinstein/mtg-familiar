@@ -79,7 +79,7 @@ public class TradeFragment extends FamiliarListFragment {
     /* Right List and Company */
     public final ArrayList<MtgCard> mListRight = new ArrayList<>();
 
-    public String mCurrentTrade = "";
+    public String mCurrentTrade = AUTOSAVE_NAME;
 
     private int mOrderAddedIdx = 0;
 
@@ -428,7 +428,7 @@ public class TradeFragment extends FamiliarListFragment {
         super.onResume();
 
         String tradeToLoad = PreferenceAdapter.getLastLoadedTrade(getContext());
-        if(!tradeToLoad.isEmpty()) {
+        if (!tradeToLoad.isEmpty()) {
             mCurrentTrade = tradeToLoad;
             loadTrade(mCurrentTrade + TRADE_EXTENSION);
         } else {
@@ -443,7 +443,7 @@ public class TradeFragment extends FamiliarListFragment {
     public void onPause() {
 
         super.onPause();
-        if(!mCurrentTrade.isEmpty()) {
+        if (!mCurrentTrade.isEmpty()) {
             PreferenceAdapter.setLastLoadedTrade(getContext(), mCurrentTrade);
             saveTrade(mCurrentTrade + TRADE_EXTENSION);
         } else {

@@ -157,6 +157,14 @@ public class DecklistDialogFragment extends FamiliarDialogFragment {
                         .items((CharSequence[]) deckNames)
                         .itemsCallback((dialog, itemView, position, text) -> {
 
+                            /* First save the current deck */
+                            DecklistHelpers.WriteCompressedDecklist(
+                                    getActivity(),
+                                    getParentDecklistFragment().mCompressedDecklist,
+                                    getParentDecklistFragment().mCurrentDeck + DecklistFragment.DECK_EXTENSION
+                            );
+
+                            /* Then read the next one */
                             getParentDecklistFragment()
                                     .readAndCompressDecklist(null, deckNames[position]);
                             getParentDecklistFragment().mCurrentDeck = deckNames[position];
