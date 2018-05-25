@@ -181,6 +181,8 @@ dependencies {
     }
 
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
+
+    implementation 'com.google.android:flexbox:1.0.0'
 }
 
 if (System.env.TRAVIS == 'true') {
