@@ -23,13 +23,14 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/add_mana"
         android:layout_centerInParent="true"
+        android:animateLayoutChanges="true"
         app:alignContent="center"
         app:alignItems="center"
         app:justifyContent="center"
         app:flexWrap="wrap">
 
         <FrameLayout
-            android:id="@+id/pool_white_mana"
+            android:id="@+id/white_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -38,13 +39,13 @@
                 app:srcCompat="@drawable/glyph_w"/>
 
             <TextView
-                android:id="@+id/pool_white_text"
+                android:id="@+id/white_readout"
                 style="@style/mana_pool_text"
                 tools:text="10"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/pool_blue_mana"
+            android:id="@+id/blue_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -53,13 +54,13 @@
                 app:srcCompat="@drawable/glyph_u"/>
 
             <TextView
-                android:id="@+id/pool_blue_text"
+                android:id="@+id/blue_readout"
                 style="@style/mana_pool_text"
                 tools:text="10"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/pool_black_mana"
+            android:id="@+id/black_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -68,13 +69,13 @@
                 app:srcCompat="@drawable/glyph_b"/>
 
             <TextView
-                android:id="@+id/pool_black_text"
+                android:id="@+id/black_readout"
                 style="@style/mana_pool_text"
                 tools:text="10"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/pool_red_mana"
+            android:id="@+id/red_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -83,13 +84,13 @@
                 app:srcCompat="@drawable/glyph_r"/>
 
             <TextView
-                android:id="@+id/pool_red_text"
+                android:id="@+id/red_readout"
                 style="@style/mana_pool_text"
                 tools:text="10"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/pool_green_mana"
+            android:id="@+id/green_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -98,13 +99,13 @@
                 app:srcCompat="@drawable/glyph_g"/>
 
             <TextView
-                android:id="@+id/pool_green_text"
+                android:id="@+id/green_readout"
                 style="@style/mana_pool_text"
                 tools:text="10"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/pool_colorless_mana"
+            android:id="@+id/colorless_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -113,13 +114,13 @@
                 app:srcCompat="@drawable/glyph_c"/>
 
             <TextView
-                android:id="@+id/pool_colorless_text"
+                android:id="@+id/colorless_readout"
                 style="@style/mana_pool_text"
                 tools:text="10"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/pool_energy"
+            android:id="@+id/energy_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -128,13 +129,13 @@
                 app:srcCompat="@drawable/glyph_e"/>
 
             <TextView
-                android:id="@+id/pool_energy_text"
+                android:id="@+id/energy_readout"
                 style="@style/mana_pool_text"
                 tools:text="10"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/pool_storm_count"
+            android:id="@+id/spell_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -143,7 +144,7 @@
                 app:srcCompat="@drawable/glyph_spell2"/>
 
             <TextView
-                android:id="@+id/pool_storm_count_text"
+                android:id="@+id/spell_readout"
                 style="@style/mana_pool_text"
                 tools:text="10"/>
         </FrameLayout>
@@ -159,40 +160,48 @@
         android:paddingTop="20dp">
 
         <ImageView
+            android:id="@+id/white_plus"
             style="@style/mana_image_small"
             app:srcCompat="@drawable/glyph_w"/>
 
         <ImageView
+            android:id="@+id/blue_plus"
             style="@style/mana_image_small"
             android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/glyph_u"/>
 
         <ImageView
+            android:id="@+id/black_plus"
             style="@style/mana_image_small"
             android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/glyph_b"/>
 
         <ImageView
+            android:id="@+id/red_plus"
             style="@style/mana_image_small"
             android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/glyph_r"/>
 
         <ImageView
+            android:id="@+id/green_plus"
             style="@style/mana_image_small"
             android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/glyph_g"/>
 
         <ImageView
+            android:id="@+id/colorless_plus"
             style="@style/mana_image_small"
             android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/glyph_c"/>
 
         <ImageView
+            android:id="@+id/energy_plus"
             style="@style/mana_image_small"
             android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/glyph_e"/>
 
         <ImageView
+            android:id="@+id/spell_plus"
             style="@style/mana_image_small"
             android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/glyph_spell2"/>

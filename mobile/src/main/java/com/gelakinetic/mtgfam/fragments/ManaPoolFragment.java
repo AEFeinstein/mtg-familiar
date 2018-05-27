@@ -41,6 +41,8 @@ public class ManaPoolFragment extends FamiliarFragment {
 
     private class ManaPoolItem {
 
+        private final View mPlus;
+        private final View mMinus;
         private int mCount;
         private final TextView mReadout;
         @StringRes
@@ -60,16 +62,20 @@ public class ManaPoolFragment extends FamiliarFragment {
             mCount = 0;
             mReadout = parent.findViewById(readoutResId);
             mKeyResId = keyResId;
-            parent.findViewById(plusResId).setOnClickListener((View v) -> {
+            mPlus = parent.findViewById(plusResId);
+            mPlus.setOnClickListener((View v) -> {
                 mCount++;
                 updateReadout();
+                updateVisibility();
             });
-            parent.findViewById(minusResId).setOnClickListener((View v) -> {
+            mMinus = parent.findViewById(minusResId);
+            mMinus.setOnClickListener((View v) -> {
                 mCount--;
                 if (mCount < 0) {
                     mCount = 0;
                 }
                 updateReadout();
+                updateVisibility();
             });
         }
 
@@ -79,6 +85,7 @@ public class ManaPoolFragment extends FamiliarFragment {
         void clearCount() {
             mCount = 0;
             updateReadout();
+            updateVisibility();
         }
 
         /**
@@ -88,12 +95,17 @@ public class ManaPoolFragment extends FamiliarFragment {
             mReadout.setText(String.format(Locale.getDefault(), "%d", mCount));
         }
 
+        private void updateVisibility() {
+            mMinus.setVisibility( mCount == 0 ? View.GONE : View.VISIBLE);
+        }
+
         /**
          * Use the given String key to save this count from shared prefrences and display it
          */
         void loadCount() {
             mCount = PreferenceAdapter.getMana(getContext(), mKeyResId);
             updateReadout();
+            updateVisibility();
         }
 
         /**
@@ -119,7 +131,7 @@ public class ManaPoolFragment extends FamiliarFragment {
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View myFragmentView = inflater.inflate(R.layout.mana_pool_frag, container, false);
+        View myFragmentView = inflater.inflate(R.layout.mana_pool_frag2, container, false);
 
         /* Clear out the mana pool items, just in case */
         mManaPoolItems.clear();
