@@ -19,16 +19,20 @@
 
 package com.gelakinetic.mtgfam.fragments;
 
+import android.animation.Animator;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gelakinetic.mtgfam.R;
@@ -41,8 +45,8 @@ public class ManaPoolFragment extends FamiliarFragment {
 
     private class ManaPoolItem {
 
-        private final View mPlus;
-        private final View mMinus;
+        private final ImageView mPlus;
+        private final ImageView mMinus;
         private int mCount;
         private final TextView mReadout;
         @StringRes
@@ -63,12 +67,13 @@ public class ManaPoolFragment extends FamiliarFragment {
             mReadout = parent.findViewById(readoutResId);
             mKeyResId = keyResId;
             mPlus = parent.findViewById(plusResId);
+            mMinus = parent.findViewById(minusResId);
             mPlus.setOnClickListener((View v) -> {
                 mCount++;
                 updateReadout();
                 updateVisibility();
+                showAddAnimation(mPlus, mMinus);
             });
-            mMinus = parent.findViewById(minusResId);
             mMinus.setOnClickListener((View v) -> {
                 mCount--;
                 if (mCount < 0) {
@@ -101,7 +106,14 @@ public class ManaPoolFragment extends FamiliarFragment {
         }
 
         private void updateVisibility() {
-            mMinus.setVisibility( mCount == 0 ? View.GONE : View.VISIBLE);
+            if (mCount == 0) {
+                mMinus.setColorFilter(ContextCompat.getColor(getContext(),
+                        R.color.empty_color_tint),
+                        PorterDuff.Mode.SRC_ATOP);
+            }
+            else {
+                mMinus.clearColorFilter();
+            }
         }
 
         /**
@@ -122,6 +134,7 @@ public class ManaPoolFragment extends FamiliarFragment {
     }
 
     private final ArrayList<ManaPoolItem> mManaPoolItems = new ArrayList<>();
+    private ViewGroup parentView;
 
     /**
      * Create the view and set up the buttons
@@ -136,30 +149,65 @@ public class ManaPoolFragment extends FamiliarFragment {
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View myFragmentView = inflater.inflate(R.layout.mana_pool_frag2, container, false);
+        parentView = (ViewGroup) inflater.inflate(R.layout.mana_pool_frag2, container, false);
 
         /* Clear out the mana pool items, just in case */
         mManaPoolItems.clear();
 
         /* Create and save all the mana pool items */
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.white_plus, R.id.white_minus,
+        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.white_plus, R.id.white_minus,
                 R.id.white_readout, R.string.key_whiteMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.blue_plus, R.id.blue_minus,
+        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.blue_plus, R.id.blue_minus,
                 R.id.blue_readout, R.string.key_blueMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.black_plus, R.id.black_minus,
+        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.black_plus, R.id.black_minus,
                 R.id.black_readout, R.string.key_blackMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.red_plus, R.id.red_minus,
+        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.red_plus, R.id.red_minus,
                 R.id.red_readout, R.string.key_redMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.green_plus, R.id.green_minus,
+        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.green_plus, R.id.green_minus,
                 R.id.green_readout, R.string.key_greenMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.colorless_plus, R.id.colorless_minus,
+        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.colorless_plus, R.id.colorless_minus,
                 R.id.colorless_readout, R.string.key_colorlessMana));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.energy_plus, R.id.energy_minus,
+        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.energy_plus, R.id.energy_minus,
                 R.id.energy_readout, R.string.key_energy));
-        mManaPoolItems.add(new ManaPoolItem(myFragmentView, R.id.spell_plus, R.id.spell_minus,
+        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.spell_plus, R.id.spell_minus,
                 R.id.spell_readout, R.string.key_spellCount));
 
-        return myFragmentView;
+        return parentView;
+    }
+
+    void showAddAnimation(ImageView from, View to) {
+        ImageView imageView = new ImageView(getContext());
+        parentView.addView(imageView);
+        imageView.setImageDrawable(from.getDrawable());
+
+        imageView.animate()
+                .x(from.getLeft())
+                .y(from.getTop())
+                .translationX(to.getLeft())
+                .translationY(to.getTop())
+                .setDuration(250)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(final Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(final Animator animation) {
+                        parentView.removeView(imageView);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(final Animator animation) {
+                        onAnimationEnd(animation);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(final Animator animation) {
+
+                    }
+                })
+                .start();
     }
 
     /**

@@ -30,11 +30,11 @@
         app:flexWrap="wrap">
 
         <FrameLayout
-            android:id="@+id/white_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/white_minus"
                 style="@style/mana_image_large"
                 app:srcCompat="@drawable/glyph_w"/>
 
@@ -45,108 +45,108 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/blue_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/blue_minus"
                 style="@style/mana_image_large"
                 app:srcCompat="@drawable/glyph_u"/>
 
             <TextView
                 android:id="@+id/blue_readout"
                 style="@style/mana_pool_text"
-                tools:text="10"/>
+                tools:text="11"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/black_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/black_minus"
                 style="@style/mana_image_large"
                 app:srcCompat="@drawable/glyph_b"/>
 
             <TextView
                 android:id="@+id/black_readout"
                 style="@style/mana_pool_text"
-                tools:text="10"/>
+                tools:text="12"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/red_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/red_minus"
                 style="@style/mana_image_large"
                 app:srcCompat="@drawable/glyph_r"/>
 
             <TextView
                 android:id="@+id/red_readout"
                 style="@style/mana_pool_text"
-                tools:text="10"/>
+                tools:text="13"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/green_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/green_minus"
                 style="@style/mana_image_large"
                 app:srcCompat="@drawable/glyph_g"/>
 
             <TextView
                 android:id="@+id/green_readout"
                 style="@style/mana_pool_text"
-                tools:text="10"/>
+                tools:text="14"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/colorless_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/colorless_minus"
                 style="@style/mana_image_large"
                 app:srcCompat="@drawable/glyph_c"/>
 
             <TextView
                 android:id="@+id/colorless_readout"
                 style="@style/mana_pool_text"
-                tools:text="10"/>
+                tools:text="15"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/energy_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/energy_minus"
                 style="@style/mana_image_large"
                 app:srcCompat="@drawable/glyph_e"/>
 
             <TextView
                 android:id="@+id/energy_readout"
                 style="@style/mana_pool_text"
-                tools:text="10"/>
+                tools:text="16"/>
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/spell_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/spell_minus"
                 style="@style/mana_image_large"
                 app:srcCompat="@drawable/glyph_spell2"/>
 
             <TextView
                 android:id="@+id/spell_readout"
                 style="@style/mana_pool_text"
-                tools:text="10"/>
+                tools:text="17"/>
         </FrameLayout>
 
     </com.google.android.flexbox.FlexboxLayout>
