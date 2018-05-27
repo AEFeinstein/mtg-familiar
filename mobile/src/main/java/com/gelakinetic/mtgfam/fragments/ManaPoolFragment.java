@@ -92,7 +92,12 @@ public class ManaPoolFragment extends FamiliarFragment {
          * Update the readout with the current count
          */
         void updateReadout() {
-            mReadout.setText(String.format(Locale.getDefault(), "%d", mCount));
+            if (mCount == 0 || mCount == 1) {
+                mReadout.setText("");
+            }
+            else {
+                mReadout.setText(String.format(Locale.getDefault(), "%d", mCount));
+            }
         }
 
         private void updateVisibility() {
