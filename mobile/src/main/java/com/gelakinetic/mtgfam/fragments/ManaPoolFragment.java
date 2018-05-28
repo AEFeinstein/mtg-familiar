@@ -20,6 +20,7 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -49,9 +50,9 @@ public class ManaPoolFragment extends FamiliarFragment {
         private final ImageView mPlus;
         private final ImageView mMinus;
         private final TextView mReadout;
-        private int mCount;
         @StringRes
         private final int mKeyResId;
+        private int mCount;
 
         /**
          * Create a mana pool item
@@ -79,9 +80,8 @@ public class ManaPoolFragment extends FamiliarFragment {
 
         private void increaseCount() {
             mCount++;
-            updateReadout();
             updateVisibility();
-            showMovingManaAnimation(mPlus, mMinus, mPlus.getDrawable(), true);
+            startMovingManaAnimation(this, mPlus, mMinus, mPlus.getDrawable(), true);
         }
 
         private void decreaseCount() {
@@ -90,9 +90,9 @@ public class ManaPoolFragment extends FamiliarFragment {
                 mCount = 0;
                 return;
             }
-            updateReadout();
             updateVisibility();
-            showMovingManaAnimation(mMinus, mPlus, mPlus.getDrawable(), false);
+            updateReadout();
+            startMovingManaAnimation(this, mMinus, mPlus, mPlus.getDrawable(), false);
         }
 
         /**
@@ -139,7 +139,7 @@ public class ManaPoolFragment extends FamiliarFragment {
 
     private final ArrayList<ManaPoolItem> mManaPoolItems = new ArrayList<>();
     private final Stack<ImageView> mMovingMana = new Stack<>();
-    private ViewGroup parentView;
+    private ViewGroup mParentView;
 
     /**
      * Create the view and set up the buttons
@@ -154,93 +154,109 @@ public class ManaPoolFragment extends FamiliarFragment {
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        parentView = (ViewGroup) inflater.inflate(R.layout.mana_pool_frag, container, false);
+        mParentView = (ViewGroup) inflater.inflate(R.layout.mana_pool_frag, container, false);
 
         /* Clear out the mana pool items, just in case */
         mManaPoolItems.clear();
 
         /* Create and save all the mana pool items */
-        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.white_plus, R.id.white_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.white_plus, R.id.white_minus,
                 R.id.white_readout, R.string.key_whiteMana));
-        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.blue_plus, R.id.blue_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.blue_plus, R.id.blue_minus,
                 R.id.blue_readout, R.string.key_blueMana));
-        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.black_plus, R.id.black_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.black_plus, R.id.black_minus,
                 R.id.black_readout, R.string.key_blackMana));
-        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.red_plus, R.id.red_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.red_plus, R.id.red_minus,
                 R.id.red_readout, R.string.key_redMana));
-        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.green_plus, R.id.green_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.green_plus, R.id.green_minus,
                 R.id.green_readout, R.string.key_greenMana));
-        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.colorless_plus, R.id.colorless_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.colorless_plus, R.id.colorless_minus,
                 R.id.colorless_readout, R.string.key_colorlessMana));
-        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.energy_plus, R.id.energy_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.energy_plus, R.id.energy_minus,
                 R.id.energy_readout, R.string.key_energy));
-        mManaPoolItems.add(new ManaPoolItem(parentView, R.id.spell_plus, R.id.spell_minus,
+        mManaPoolItems.add(new ManaPoolItem(mParentView, R.id.spell_plus, R.id.spell_minus,
                 R.id.spell_readout, R.string.key_spellCount));
 
-        return parentView;
+        return mParentView;
     }
 
-    void showMovingManaAnimation(ImageView from,
-                                 ImageView to,
-                                 Drawable drawable,
-                                 boolean grow) {
+    /**
+     *
+     * Show an animation of mana moving into or out of the pool.
+     *
+     * @param from
+     * @param to
+     * @param drawable
+     * @param grow
+     */
+    private void startMovingManaAnimation(ManaPoolItem item,
+                                          ImageView from,
+                                          ImageView to,
+                                          Drawable drawable,
+                                          boolean grow) {
 
-        ImageView imageView;
-        if (mMovingMana.isEmpty()) {
-            imageView = new ImageView(getContext());
-        }
-        else {
-            imageView = mMovingMana.pop();
-        }
+        ImageView imageView = getMovingManaImageView();
 
-        parentView.addView(imageView);
+        mParentView.addView(imageView);
         imageView.setImageDrawable(drawable);
 
-        Rect fromBounds = new Rect();
-        from.getDrawingRect(fromBounds);
-        parentView.offsetDescendantRectToMyCoords(from, fromBounds);
-
-        Rect toBounds = new Rect();
-        to.getDrawingRect(toBounds);
-        parentView.offsetDescendantRectToMyCoords(to, toBounds);
-
+        Rect fromBounds = getRectForView(from);
+        Rect toBounds = getRectForView(to);
         float startingScale = grow ? 1.0f : 2.0f;
         float endingScale = grow ? 2.0f : 0.75f;
+        final int halfWidth = drawable.getIntrinsicWidth() / 2;
+        final int halfHeight = drawable.getIntrinsicHeight() / 2;
 
-        imageView.setX(fromBounds.centerX() - drawable.getIntrinsicWidth() / 2);
-        imageView.setY(fromBounds.centerY() - drawable.getIntrinsicHeight() / 2);
+        imageView.setX(fromBounds.centerX() - halfWidth);
+        imageView.setY(fromBounds.centerY() - halfHeight);
         imageView.setScaleX(startingScale);
         imageView.setScaleY(startingScale);
         imageView.setAlpha(1.0f);
         imageView.animate()
-                .x(toBounds.centerX() - drawable.getIntrinsicWidth() / 2)
-                .y(toBounds.centerY() - drawable.getIntrinsicHeight() / 2)
+                .x(toBounds.centerX() - halfWidth)
+                .y(toBounds.centerY() - halfHeight)
                 .scaleX(endingScale)
                 .scaleY(endingScale)
                 .alpha(0.5f)
                 .setDuration(450)
-                .setListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(final Animator animation) {
-
-                    }
-
+                .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(final Animator animation) {
-                        parentView.removeView(imageView);
+                        mParentView.removeView(imageView);
                         mMovingMana.push(imageView);
+                        item.updateReadout();
                     }
 
                     @Override
                     public void onAnimationCancel(final Animator animation) {
                         onAnimationEnd(animation);
                     }
-
-                    @Override
-                    public void onAnimationRepeat(final Animator animation) {
-
-                    }
                 });
+    }
+
+    @NonNull
+    /**
+     * Returns the Bounds of the view relative to the root view of the Fragment.
+     * https://stackoverflow.com/a/36740277
+     */
+    private Rect getRectForView(final View view) {
+        Rect fromBounds = new Rect();
+        view.getDrawingRect(fromBounds);
+        mParentView.offsetDescendantRectToMyCoords(view, fromBounds);
+        return fromBounds;
+    }
+
+    /**
+     *
+     * @return An ImageView from the Stack or a new ImageView if the Stack is empty.
+     */
+    private ImageView getMovingManaImageView() {
+        if (mMovingMana.isEmpty()) {
+            return new ImageView(getContext());
+        }
+        else {
+            return mMovingMana.pop();
+        }
     }
 
     /**
