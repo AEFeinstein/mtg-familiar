@@ -41,7 +41,7 @@
             <TextView
                 android:id="@+id/white_readout"
                 style="@style/mana_pool_text"
-                tools:text="10"/>
+                tools:text="7"/>
         </FrameLayout>
 
         <FrameLayout
@@ -56,7 +56,7 @@
             <TextView
                 android:id="@+id/blue_readout"
                 style="@style/mana_pool_text"
-                tools:text="11"/>
+                tools:text="8"/>
         </FrameLayout>
 
         <FrameLayout
@@ -71,7 +71,7 @@
             <TextView
                 android:id="@+id/black_readout"
                 style="@style/mana_pool_text"
-                tools:text="12"/>
+                tools:text="9"/>
         </FrameLayout>
 
         <FrameLayout
@@ -86,7 +86,7 @@
             <TextView
                 android:id="@+id/red_readout"
                 style="@style/mana_pool_text"
-                tools:text="13"/>
+                tools:text="10"/>
         </FrameLayout>
 
         <FrameLayout
@@ -101,7 +101,7 @@
             <TextView
                 android:id="@+id/green_readout"
                 style="@style/mana_pool_text"
-                tools:text="14"/>
+                tools:text="11"/>
         </FrameLayout>
 
         <FrameLayout
@@ -116,7 +116,7 @@
             <TextView
                 android:id="@+id/colorless_readout"
                 style="@style/mana_pool_text"
-                tools:text="15"/>
+                tools:text="12"/>
         </FrameLayout>
 
         <FrameLayout
@@ -131,7 +131,7 @@
             <TextView
                 android:id="@+id/energy_readout"
                 style="@style/mana_pool_text"
-                tools:text="16"/>
+                tools:text="13"/>
         </FrameLayout>
 
         <FrameLayout
@@ -146,7 +146,7 @@
             <TextView
                 android:id="@+id/spell_readout"
                 style="@style/mana_pool_text"
-                tools:text="17"/>
+                tools:text="14"/>
         </FrameLayout>
 
     </com.google.android.flexbox.FlexboxLayout>

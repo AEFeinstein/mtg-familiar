@@ -51,8 +51,8 @@ public class ManaPoolFragment extends FamiliarFragment {
 
         private final ImageView mPlus;
         private final ImageView mMinus;
-        private int mCount;
         private final TextView mReadout;
+        private int mCount;
         @StringRes
         private final int mKeyResId;
 
@@ -76,7 +76,7 @@ public class ManaPoolFragment extends FamiliarFragment {
                 mCount++;
                 updateReadout();
                 updateVisibility();
-                showMovingManaAnimation(mPlus, mMinus, mPlus.getDrawable());
+                showMovingManaAnimation(mPlus, mMinus, mPlus.getDrawable(), true);
             });
             mMinus.setOnClickListener((View v) -> {
                 mCount--;
@@ -86,7 +86,7 @@ public class ManaPoolFragment extends FamiliarFragment {
                 }
                 updateReadout();
                 updateVisibility();
-                showMovingManaAnimation(mMinus, mPlus, mPlus.getDrawable());
+                showMovingManaAnimation(mMinus, mPlus, mPlus.getDrawable(), false);
             });
         }
 
@@ -175,7 +175,7 @@ public class ManaPoolFragment extends FamiliarFragment {
         return parentView;
     }
 
-    void showMovingManaAnimation(ImageView from, View to, Drawable drawable) {
+    void showMovingManaAnimation(ImageView from, ImageView to, Drawable drawable, boolean grow) {
 
         ImageView imageView;
         if (mMovingMana.isEmpty()) {
@@ -189,15 +189,27 @@ public class ManaPoolFragment extends FamiliarFragment {
         imageView.setImageDrawable(drawable);
 
         int fromCoords[] = new int[2];
-        from.getLocationInWindow(fromCoords);
+        from.getLocationOnScreen(fromCoords);
         int toCoords[] = new int[2];
-        to.getLocationInWindow(toCoords);
+        to.getLocationOnScreen(toCoords);
+
+        Rect fromRect = new Rect();
+        from.getLocalVisibleRect(fromRect);
+
+        float startingScale = grow ? 1.0f : 2.0f;
+        float endingScale = grow ? 2.0f : 0.75f;
 
         imageView.setX(fromCoords[0]);
         imageView.setY(fromCoords[1]);
+        imageView.setScaleX(startingScale);
+        imageView.setScaleY(startingScale);
+        imageView.setAlpha(1.0f);
         imageView.animate()
                 .x(toCoords[0])
                 .y(toCoords[1])
+                .scaleX(endingScale)
+                .scaleY(endingScale)
+                .alpha(0.5f)
                 .setDuration(450)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
@@ -220,8 +232,7 @@ public class ManaPoolFragment extends FamiliarFragment {
                     public void onAnimationRepeat(final Animator animation) {
 
                     }
-                })
-                .start();
+                });
     }
 
     /**

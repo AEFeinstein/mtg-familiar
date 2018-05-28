@@ -18,6 +18,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:adjustViewBounds">true</item>
+        <!-- for some reason I don't see ripples here -->
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:clickable">true</item>
     </style>
