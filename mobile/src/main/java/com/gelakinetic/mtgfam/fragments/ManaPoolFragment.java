@@ -20,21 +20,18 @@
 package com.gelakinetic.mtgfam.fragments;
 
 import android.animation.Animator;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -157,7 +154,7 @@ public class ManaPoolFragment extends FamiliarFragment {
      */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        parentView = (ViewGroup) inflater.inflate(R.layout.mana_pool_frag2, container, false);
+        parentView = (ViewGroup) inflater.inflate(R.layout.mana_pool_frag, container, false);
 
         /* Clear out the mana pool items, just in case */
         mManaPoolItems.clear();
