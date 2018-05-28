@@ -73,21 +73,29 @@ public class ManaPoolFragment extends FamiliarFragment {
             mPlus = parent.findViewById(plusResId);
             mMinus = parent.findViewById(minusResId);
             mPlus.setOnClickListener((View v) -> {
-                mCount++;
-                updateReadout();
-                updateVisibility();
-                showMovingManaAnimation(mPlus, mMinus, mPlus.getDrawable(), true);
+                increaseCount();
             });
             mMinus.setOnClickListener((View v) -> {
-                mCount--;
-                if (mCount < 0) {
-                    mCount = 0;
-                    return;
-                }
-                updateReadout();
-                updateVisibility();
-                showMovingManaAnimation(mMinus, mPlus, mPlus.getDrawable(), false);
+                decreaseCount();
             });
+        }
+
+        private void increaseCount() {
+            mCount++;
+            updateReadout();
+            updateVisibility();
+            showMovingManaAnimation(mPlus, mMinus, mPlus.getDrawable(), true);
+        }
+
+        private void decreaseCount() {
+            mCount--;
+            if (mCount < 0) {
+                mCount = 0;
+                return;
+            }
+            updateReadout();
+            updateVisibility();
+            showMovingManaAnimation(mMinus, mPlus, mPlus.getDrawable(), false);
         }
 
         /**
