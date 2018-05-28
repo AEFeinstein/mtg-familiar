@@ -183,7 +183,10 @@ public class ManaPoolFragment extends FamiliarFragment {
         return parentView;
     }
 
-    void showMovingManaAnimation(ImageView from, ImageView to, Drawable drawable, boolean grow) {
+    void showMovingManaAnimation(ImageView from,
+                                 ImageView to,
+                                 Drawable drawable,
+                                 boolean grow) {
 
         ImageView imageView;
         if (mMovingMana.isEmpty()) {
@@ -196,25 +199,25 @@ public class ManaPoolFragment extends FamiliarFragment {
         parentView.addView(imageView);
         imageView.setImageDrawable(drawable);
 
-        int fromCoords[] = new int[2];
-        from.getLocationOnScreen(fromCoords);
-        int toCoords[] = new int[2];
-        to.getLocationOnScreen(toCoords);
+        Rect fromBounds = new Rect();
+        from.getDrawingRect(fromBounds);
+        parentView.offsetDescendantRectToMyCoords(from, fromBounds);
 
-        Rect fromRect = new Rect();
-        from.getLocalVisibleRect(fromRect);
+        Rect toBounds = new Rect();
+        to.getDrawingRect(toBounds);
+        parentView.offsetDescendantRectToMyCoords(to, toBounds);
 
         float startingScale = grow ? 1.0f : 2.0f;
         float endingScale = grow ? 2.0f : 0.75f;
 
-        imageView.setX(fromCoords[0]);
-        imageView.setY(fromCoords[1]);
+        imageView.setX(fromBounds.centerX() - drawable.getIntrinsicWidth() / 2);
+        imageView.setY(fromBounds.centerY() - drawable.getIntrinsicHeight() / 2);
         imageView.setScaleX(startingScale);
         imageView.setScaleY(startingScale);
         imageView.setAlpha(1.0f);
         imageView.animate()
-                .x(toCoords[0])
-                .y(toCoords[1])
+                .x(toBounds.centerX() - drawable.getIntrinsicWidth() / 2)
+                .y(toBounds.centerY() - drawable.getIntrinsicHeight() / 2)
                 .scaleX(endingScale)
                 .scaleY(endingScale)
                 .alpha(0.5f)
