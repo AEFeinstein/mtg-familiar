@@ -21,6 +21,8 @@ package com.gelakinetic.mtgfam.fragments;
 
 import android.animation.Animator;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -32,6 +34,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +43,7 @@ import com.gelakinetic.mtgfam.helpers.PreferenceAdapter;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Stack;
 
 public class ManaPoolFragment extends FamiliarFragment {
 
@@ -72,15 +76,17 @@ public class ManaPoolFragment extends FamiliarFragment {
                 mCount++;
                 updateReadout();
                 updateVisibility();
-                showAddAnimation(mPlus, mMinus);
+                showMovingManaAnimation(mPlus, mMinus, mPlus.getDrawable());
             });
             mMinus.setOnClickListener((View v) -> {
                 mCount--;
                 if (mCount < 0) {
                     mCount = 0;
+                    return;
                 }
                 updateReadout();
                 updateVisibility();
+                showMovingManaAnimation(mMinus, mPlus, mPlus.getDrawable());
             });
         }
 
@@ -106,14 +112,7 @@ public class ManaPoolFragment extends FamiliarFragment {
         }
 
         private void updateVisibility() {
-            if (mCount == 0) {
-                mMinus.setColorFilter(ContextCompat.getColor(getContext(),
-                        R.color.empty_color_tint),
-                        PorterDuff.Mode.SRC_ATOP);
-            }
-            else {
-                mMinus.clearColorFilter();
-            }
+            mMinus.animate().alpha(mCount == 0 ? 0.1f : 1.0f);
         }
 
         /**
@@ -134,6 +133,7 @@ public class ManaPoolFragment extends FamiliarFragment {
     }
 
     private final ArrayList<ManaPoolItem> mManaPoolItems = new ArrayList<>();
+    private final Stack<ImageView> mMovingMana = new Stack<>();
     private ViewGroup parentView;
 
     /**
@@ -175,17 +175,30 @@ public class ManaPoolFragment extends FamiliarFragment {
         return parentView;
     }
 
-    void showAddAnimation(ImageView from, View to) {
-        ImageView imageView = new ImageView(getContext());
-        parentView.addView(imageView);
-        imageView.setImageDrawable(from.getDrawable());
+    void showMovingManaAnimation(ImageView from, View to, Drawable drawable) {
 
+        ImageView imageView;
+        if (mMovingMana.isEmpty()) {
+            imageView = new ImageView(getContext());
+        }
+        else {
+            imageView = mMovingMana.pop();
+        }
+
+        parentView.addView(imageView);
+        imageView.setImageDrawable(drawable);
+
+        int fromCoords[] = new int[2];
+        from.getLocationInWindow(fromCoords);
+        int toCoords[] = new int[2];
+        to.getLocationInWindow(toCoords);
+
+        imageView.setX(fromCoords[0]);
+        imageView.setY(fromCoords[1]);
         imageView.animate()
-                .x(from.getLeft())
-                .y(from.getTop())
-                .translationX(to.getLeft())
-                .translationY(to.getTop())
-                .setDuration(250)
+                .x(toCoords[0])
+                .y(toCoords[1])
+                .setDuration(450)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(final Animator animation) {
@@ -195,6 +208,7 @@ public class ManaPoolFragment extends FamiliarFragment {
                     @Override
                     public void onAnimationEnd(final Animator animation) {
                         parentView.removeView(imageView);
+                        mMovingMana.push(imageView);
                     }
 
                     @Override
