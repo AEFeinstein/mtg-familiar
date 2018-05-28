@@ -2,5 +2,5 @@
 <resources>
     <dimen name="mana_pool_text_size">48sp</dimen>
     <dimen name="mana_pool_large_image_width">110dp</dimen>
-    <dimen name="mana_pool_add_mana_width">320dp</dimen>
+    <dimen name="mana_pool_add_mana_width">380dp</dimen>
 </resources>
