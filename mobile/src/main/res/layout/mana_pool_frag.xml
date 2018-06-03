@@ -151,62 +151,65 @@
 
     </com.google.android.flexbox.FlexboxLayout>
 
-    <LinearLayout
+    <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/add_mana"
-        android:layout_width="@dimen/mana_pool_add_mana_width"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:paddingTop="20dp">
+        android:animateLayoutChanges="true"
+        app:alignContent="center"
+        app:alignItems="center"
+        app:justifyContent="center"
+        app:flexWrap="wrap">
 
         <ImageView
             android:id="@+id/white_plus"
             style="@style/mana_image_small"
+            android:layout_marginLeft="2dp"
             app:srcCompat="@drawable/glyph_w"/>
 
         <ImageView
             android:id="@+id/blue_plus"
             style="@style/mana_image_small"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="2dp"
             app:srcCompat="@drawable/glyph_u"/>
 
         <ImageView
             android:id="@+id/black_plus"
             style="@style/mana_image_small"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="2dp"
             app:srcCompat="@drawable/glyph_b"/>
 
         <ImageView
             android:id="@+id/red_plus"
             style="@style/mana_image_small"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="2dp"
             app:srcCompat="@drawable/glyph_r"/>
 
         <ImageView
             android:id="@+id/green_plus"
             style="@style/mana_image_small"
-            android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/glyph_g"/>
 
         <ImageView
             android:id="@+id/colorless_plus"
             style="@style/mana_image_small"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="2dp"
             app:srcCompat="@drawable/glyph_c"/>
 
         <ImageView
             android:id="@+id/energy_plus"
             style="@style/mana_image_small"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="2dp"
             app:srcCompat="@drawable/glyph_e"/>
 
         <ImageView
             android:id="@+id/spell_plus"
             style="@style/mana_image_small"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="2dp"
             app:srcCompat="@drawable/glyph_spell2"/>
 
-    </LinearLayout>
+    </com.google.android.flexbox.FlexboxLayout>
 
 </RelativeLayout>
