@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/white_readout"
-                style="@style/mana_pool_text"
+                style="@style/contrast_mana_pool_text"
                 tools:text="7"/>
         </FrameLayout>
 
@@ -114,7 +114,7 @@
 
             <TextView
                 android:id="@+id/colorless_readout"
-                style="@style/mana_pool_text"
+                style="@style/contrast_mana_pool_text"
                 tools:text="12"/>
         </FrameLayout>
 
@@ -129,7 +129,7 @@
 
             <TextView
                 android:id="@+id/energy_readout"
-                style="@style/mana_pool_text"
+                style="@style/contrast_mana_pool_text"
                 tools:text="13"/>
         </FrameLayout>
 
@@ -144,7 +144,7 @@
 
             <TextView
                 android:id="@+id/spell_readout"
-                style="@style/mana_pool_text"
+                style="@style/contrast_mana_pool_text"
                 tools:text="14"/>
         </FrameLayout>
 

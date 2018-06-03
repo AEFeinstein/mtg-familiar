@@ -30,6 +30,10 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- mana_pool_text with a background that makes the text easier to read on top of light icons -->
+    <style name="contrast_mana_pool_text" parent="mana_pool_text">
         <item name="android:background">@drawable/rounded_rectangle</item>
     </style>
 
