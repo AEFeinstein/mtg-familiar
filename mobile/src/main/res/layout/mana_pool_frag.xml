@@ -23,11 +23,10 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/add_mana"
         android:layout_centerInParent="true"
-        android:animateLayoutChanges="true"
         app:alignContent="center"
         app:alignItems="center"
-        app:justifyContent="center"
-        app:flexWrap="wrap">
+        app:flexWrap="wrap"
+        app:justifyContent="center">
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -160,8 +159,8 @@
         android:animateLayoutChanges="true"
         app:alignContent="center"
         app:alignItems="center"
-        app:justifyContent="center"
-        app:flexWrap="wrap">
+        app:flexWrap="wrap"
+        app:justifyContent="center">
 
         <ImageView
             android:id="@+id/white_plus"
