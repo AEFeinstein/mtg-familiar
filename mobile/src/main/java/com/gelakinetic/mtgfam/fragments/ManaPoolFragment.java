@@ -108,7 +108,7 @@ public class ManaPoolFragment extends FamiliarFragment {
          * Update the readout with the current count
          */
         void updateReadout() {
-            if (mCount == 0 || mCount == 1) {
+            if (mCount == 0) {
                 mReadout.setText("");
             }
             else {
