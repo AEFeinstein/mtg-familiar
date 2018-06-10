@@ -289,7 +289,7 @@ public class TradeFragment extends FamiliarListFragment {
                             } else if (card.mSide == RIGHT) {
                                 mListRight.add(card);
                             }
-                        } catch (NumberFormatException | IndexOutOfBoundsException | java.lang.InstantiationException e) {
+                        } catch (NumberFormatException | IndexOutOfBoundsException e) {
                             // This card line is junk, ignore it
                         }
                     }

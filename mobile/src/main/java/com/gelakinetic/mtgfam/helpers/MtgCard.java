@@ -197,48 +197,7 @@ public class MtgCard extends Card {
                 throw new InstantiationException();
             }
 
-            /* Don't rely on the user's given name, get it from the DB just to be sure */
-            this.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
-            this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
-            this.mSetName = CardDbAdapter.getSetNameFromCode(this.mExpansion, database);
-            this.mSetNameMtgi = CardDbAdapter.getCodeMtgi(this.mExpansion, database);
-            this.mNumber = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_NUMBER));
-            this.mCmc = cardCursor.getInt((cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_CMC)));
-            this.mColor = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_COLOR));
-            this.mType = CardDbAdapter.getTypeLine(cardCursor);
-            this.mRarity = (char) cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_RARITY));
-            this.mManaCost = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_MANACOST));
-            this.mPower = cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_POWER));
-            this.mToughness = cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
-            this.mLoyalty = cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_LOYALTY));
-            this.mText = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_ABILITY));
-            this.mFlavor = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
-            this.mMultiverseId = cardCursor.getInt(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
-            this.mArtist = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_ARTIST));
-            this.mWatermark = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_WATERMARK));
-            this.mColorIdentity = cardCursor.getString(cardCursor
-                    .getColumnIndex(CardDbAdapter.KEY_COLOR_IDENTITY));
-
-            this.mPrice = 0; /* In cents */
-            this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
-            this.mSide = 0;
-            this.mPriceInfo = null;
-            this.mIndex = 0;
-            this.mIsSelected = false;
-            this.mIsSideboard = false;
+            initializeCardFromCursor(database, cardCursor);
 
             /* Override choice is the card can't be foil */
             if (!CardDbAdapter.canBeFoil(this.mExpansion, database)) {
@@ -255,6 +214,58 @@ public class MtgCard extends Card {
     }
 
     /**
+     * Initialize all the database variables for this MtgCard from a Cursor
+     *
+     * @param database   The database the Cursor comes from
+     * @param cardCursor A cursor pointing to a row of card information
+     * @throws FamiliarDbException If there's a database error
+     */
+    private void initializeCardFromCursor(SQLiteDatabase database, Cursor cardCursor) throws FamiliarDbException {
+        /* Don't rely on the user's given name, get it from the DB just to be sure */
+        this.mName = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_NAME));
+        this.mExpansion = cardCursor.getString(cardCursor.getColumnIndex(CardDbAdapter.KEY_SET));
+        this.mSetName = CardDbAdapter.getSetNameFromCode(this.mExpansion, database);
+        this.mSetNameMtgi = CardDbAdapter.getCodeMtgi(this.mExpansion, database);
+        this.mNumber = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_NUMBER));
+        this.mCmc = cardCursor.getInt((cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_CMC)));
+        this.mColor = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_COLOR));
+        this.mType = CardDbAdapter.getTypeLine(cardCursor);
+        this.mRarity = (char) cardCursor.getInt(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_RARITY));
+        this.mManaCost = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_MANACOST));
+        this.mPower = cardCursor.getInt(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_POWER));
+        this.mToughness = cardCursor.getInt(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_TOUGHNESS));
+        this.mLoyalty = cardCursor.getInt(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_LOYALTY));
+        this.mText = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_ABILITY));
+        this.mFlavor = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_FLAVOR));
+        this.mMultiverseId = cardCursor.getInt(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_MULTIVERSEID));
+        this.mArtist = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_ARTIST));
+        this.mWatermark = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_WATERMARK));
+        this.mColorIdentity = cardCursor.getString(cardCursor
+                .getColumnIndex(CardDbAdapter.KEY_COLOR_IDENTITY));
+
+        this.mPrice = 0; /* In cents */
+        this.mIsCustomPrice = false; /* default is false as all cards should first grab internet prices. */
+        this.mSide = 0;
+        this.mPriceInfo = null;
+        this.mIndex = 0;
+        this.mIsSelected = false;
+        this.mIsSideboard = false;
+    }
+
+    /**
      * Construct a MtgCard based on the given parameters. initFromCursor() really should be called
      * for this MtgCard later
      *
@@ -268,7 +279,7 @@ public class MtgCard extends Card {
             String cardSet,
             boolean isFoil,
             int numberOf,
-            boolean isSideboard) throws InstantiationException {
+            boolean isSideboard) {
 
         // Fill in safe empty values
         this();
@@ -282,6 +293,21 @@ public class MtgCard extends Card {
     }
 
     /**
+     * Constructor to initialize a card from the data in a Cursor. Also sets default values for
+     * variables.
+     *
+     * @param database   The database the Cursor comes from
+     * @param cardCursor A cursor pointing to a row of card information
+     */
+    public MtgCard(SQLiteDatabase database, Cursor cardCursor) throws FamiliarDbException {
+        // Fill in safe empty values
+        this();
+
+        // Initialize from the cursor
+        initializeCardFromCursor(database, cardCursor);
+    }
+
+    /**
      * Given a list of cards with partial data, perform a single database operation to retrieve
      * the missing data, then add it to the cards in the list
      *
@@ -290,7 +316,7 @@ public class MtgCard extends Card {
      */
     public static void initCardListFromDb(Context mCtx, ArrayList<MtgCard> cards) throws FamiliarDbException {
         // First make sure there are cards to load data for
-        if(cards.isEmpty()) {
+        if (cards.isEmpty()) {
             return;
         }
 
@@ -430,7 +456,7 @@ public class MtgCard extends Card {
      * @param activity The activity for database access
      * @return An initialized MtgCard
      */
-    public static MtgCard fromTradeString(String line, Activity activity) throws InstantiationException {
+    public static MtgCard fromTradeString(String line, Activity activity) {
 
         /* Parse these parts out of the string */
         String[] parts = line.split(DELIMITER);
@@ -517,7 +543,7 @@ public class MtgCard extends Card {
      * @param line     Information about this card, in the form of what toWishlistString() prints
      * @param activity A context used for getting localized strings
      */
-    public static MtgCard fromWishlistString(String line, boolean isSideboard, Activity activity) throws InstantiationException {
+    public static MtgCard fromWishlistString(String line, boolean isSideboard, Activity activity) {
 
         String[] parts = line.split(MtgCard.DELIMITER);
 

@@ -155,13 +155,9 @@ public class WishlistHelpers {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(activity.openFileInput(WISHLIST_NAME)))) {
                 /* Read each line as a card, and add them to the ArrayList */
                 while ((line = br.readLine()) != null) {
-                    try {
-                        MtgCard card = MtgCard.fromWishlistString(line, false, activity);
-                        card.setIndex(orderAddedIdx++);
-                        lWishlist.add(card);
-                    } catch (InstantiationException e) {
-                        /* Eat it */
-                    }
+                    MtgCard card = MtgCard.fromWishlistString(line, false, activity);
+                    card.setIndex(orderAddedIdx++);
+                    lWishlist.add(card);
                 }
             }
         } catch (NumberFormatException e) {

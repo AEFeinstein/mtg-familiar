@@ -222,31 +222,27 @@ public class CardHelpers {
                 } catch (NumberFormatException e) {
                     numberOf = 0;
                 }
-                try {
-                    MtgCard card = new MtgCard(mCardName, potentialSetCodes.get(i), isFoil, numberOf, isSideboard);
+                MtgCard card = new MtgCard(mCardName, potentialSetCodes.get(i), isFoil, numberOf, isSideboard);
 
-                    /* Look through the wishlist for each card, set the numberOf or remove
-                     * it if it exists, or add the card if it doesn't */
-                    boolean added = false;
-                    for (int j = 0; j < list.size(); j++) {
-                        if (card.getName().equals(list.get(j).getName())
-                                && card.isSideboard() == list.get(j).isSideboard()
-                                && card.getExpansion().equals(list.get(j).getExpansion())
-                                && card.mIsFoil == list.get(j).mIsFoil) {
-                            if (card.mNumberOf == 0) {
-                                list.remove(j);
-                                j--;
-                            } else {
-                                list.get(j).mNumberOf = card.mNumberOf;
-                            }
-                            added = true;
+                /* Look through the wishlist for each card, set the numberOf or remove
+                 * it if it exists, or add the card if it doesn't */
+                boolean added = false;
+                for (int j = 0; j < list.size(); j++) {
+                    if (card.getName().equals(list.get(j).getName())
+                            && card.isSideboard() == list.get(j).isSideboard()
+                            && card.getExpansion().equals(list.get(j).getExpansion())
+                            && card.mIsFoil == list.get(j).mIsFoil) {
+                        if (card.mNumberOf == 0) {
+                            list.remove(j);
+                            j--;
+                        } else {
+                            list.get(j).mNumberOf = card.mNumberOf;
                         }
+                        added = true;
                     }
-                    if (!added && card.mNumberOf > 0) {
-                        list.add(card);
-                    }
-                } catch (InstantiationException e) {
-                    /* Eat it */
+                }
+                if (!added && card.mNumberOf > 0) {
+                    list.add(card);
                 }
             }
 

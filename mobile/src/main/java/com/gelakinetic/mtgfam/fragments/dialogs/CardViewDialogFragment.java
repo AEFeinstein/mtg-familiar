@@ -304,11 +304,7 @@ public class CardViewDialogFragment extends FamiliarDialogFragment {
                                 }
                                 if (!entryIncremented) {
                                     // Add a new card to the deck
-                                    try {
-                                        decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
-                                    } catch (java.lang.InstantiationException e) {
-                                        /* Eat it */
-                                    }
+                                    decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
                                 }
 
                                 // Write the decklist back

@@ -73,13 +73,9 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                         .title(cardName)
                         .positiveText(R.string.result_list_Add_to_wishlist)
                         .onPositive((dialog, which) -> {
-                            try {
-                                WishlistHelpers.addItemToWishlist(getActivity(),
-                                        new WishlistHelpers.CompressedWishlistInfo(
-                                                new MtgCard(cardName, cardSet, false, 1, false), 0));
-                            } catch (java.lang.InstantiationException e) {
-                                /* Eat it */
-                            }
+                            WishlistHelpers.addItemToWishlist(getActivity(),
+                                    new WishlistHelpers.CompressedWishlistInfo(
+                                            new MtgCard(cardName, cardSet, false, 1, false), 0));
                         })
                         .negativeText(R.string.result_list_Add_to_decklist)
                         .onNegative((dialog, which) -> {
@@ -128,11 +124,7 @@ public class ResultListDialogFragment extends FamiliarDialogFragment {
                                 }
                                 if (!entryIncremented) {
                                     // Add a new card to the deck
-                                    try {
-                                        decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
-                                    } catch (java.lang.InstantiationException e) {
-                                        /* Eat it */
-                                    }
+                                    decklist.add(new MtgCard(cardName, cardSet, false, 1, false));
                                 }
 
                                 // Write the decklist back

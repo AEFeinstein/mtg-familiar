@@ -380,10 +380,7 @@ public class CardViewFragment extends FamiliarFragment {
             cCardById = CardDbAdapter.fetchCards(new long[]{id}, null, database);
 
             /* http://magiccards.info/scans/en/mt/55.jpg */
-            mCard = new MtgCard(getActivity(),
-                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_NAME)),
-                    cCardById.getString(cCardById.getColumnIndex(CardDbAdapter.KEY_SET)),
-                    false, 0);
+            mCard = new MtgCard(database, cCardById);
 
             switch (mCard.getRarity()) {
                 case 'C':
@@ -567,7 +564,7 @@ public class CardViewFragment extends FamiliarFragment {
                 }
                 cCardByName.moveToNext();
             }
-        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException | java.lang.InstantiationException e) {
+        } catch (SQLiteException | FamiliarDbException | CursorIndexOutOfBoundsException e) {
             handleFamiliarDbException(true);
         } finally {
             if (null != cCardById) {
