@@ -1314,6 +1314,30 @@ public class CardDbAdapter {
     }
 
     /**
+     * Given a card name, find the ID for that card in the database
+     *
+     * @param name The name of the card to search for
+     * @return The ID in the database
+     */
+    public static long getIdFromName(String name, SQLiteDatabase mDb) throws FamiliarDbException {
+        String statement = "(" + KEY_NAME + " = " + sanitizeString(name, false) + ")";
+        Cursor c = null;
+        try {
+            c = mDb.query(true, DATABASE_TABLE_CARDS,
+                    new String[]{KEY_ID}, statement, null, null, null,
+                    KEY_NAME, null);
+            c.moveToFirst();
+            return c.getLong(c.getColumnIndex(KEY_ID));
+        } catch (SQLiteException | IllegalStateException e) {
+            throw new FamiliarDbException(e);
+        } finally {
+            if (null != c) {
+                c.close();
+            }
+        }
+    }
+
+    /**
      * Returns a Cursor positioned at the word specified by rowId.
      *
      * @param rowId   id of word to retrieve
