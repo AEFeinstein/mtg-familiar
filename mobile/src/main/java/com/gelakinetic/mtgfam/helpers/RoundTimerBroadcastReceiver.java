@@ -269,10 +269,14 @@ public class RoundTimerBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void PlayNotificationSoundOrTTS(final Context context, Boolean useSound, String soundURI, int textID) {
-        if (useSound) {
-            PlayNotificationSound(context, soundURI);
-        } else {
-            context.startService(new Intent(context, TtsService.class).putExtra(TEXT_TO_SPEAK, textID));
+        try {
+            if (useSound) {
+                PlayNotificationSound(context, soundURI);
+            } else {
+                context.startService(new Intent(context, TtsService.class).putExtra(TEXT_TO_SPEAK, textID));
+            }
+        } catch (IllegalStateException e) {
+            /* Eat it */
         }
     }
 
