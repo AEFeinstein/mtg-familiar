@@ -96,12 +96,10 @@ public class ResultListAdapter extends SimpleCursorAdapter {
     public void bindView(@NotNull View view, Context context, @NotNull Cursor cursor) {
 
         boolean hideCost = true;
-        boolean hideSet = true;
         boolean hideType = true;
         boolean hideAbility = true;
         boolean hidePT = true;
         boolean hideLoyalty = true;
-        boolean hideRarity = true;
 
         /* make sure these elements are showing (views get recycled) */
         view.findViewById(R.id.cardp).setVisibility(View.VISIBLE);
@@ -129,7 +127,6 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                 case CardDbAdapter.KEY_SET: {
                     char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
                     String name = cursor.getString(cursor.getColumnIndex(mFrom[i]));
-                    hideSet = false;
                     textField.setText(name);
                     switch (rarity) {
                         case 'c':
@@ -158,7 +155,6 @@ public class ResultListAdapter extends SimpleCursorAdapter {
                 case CardDbAdapter.KEY_RARITY: {
                     char rarity = (char) cursor.getInt(cursor.getColumnIndex(CardDbAdapter.KEY_RARITY));
                     textField.setText("(" + rarity + ")");
-                    hideRarity = false;
                     break;
                 }
                 case CardDbAdapter.KEY_SUPERTYPE: {
@@ -211,8 +207,12 @@ public class ResultListAdapter extends SimpleCursorAdapter {
         if (hideCost) {
             view.findViewById(R.id.cardcost).setVisibility(View.GONE);
         }
-        if (hideSet) {
+        if (PreferenceAdapter.getSetPref(context)) {
+            view.findViewById(R.id.cardset).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.rarity).setVisibility(View.VISIBLE);
+        } else {
             view.findViewById(R.id.cardset).setVisibility(View.GONE);
+            view.findViewById(R.id.rarity).setVisibility(View.GONE);
         }
         if (hideType) {
             view.findViewById(R.id.cardtype).setVisibility(View.GONE);
@@ -227,9 +227,6 @@ public class ResultListAdapter extends SimpleCursorAdapter {
             view.findViewById(R.id.cardp).setVisibility(View.GONE);
             view.findViewById(R.id.cardslash).setVisibility(View.GONE);
             view.findViewById(R.id.cardt).setVisibility(View.GONE);
-        }
-        if (hideRarity) {
-            view.findViewById(R.id.rarity).setVisibility(View.GONE);
         }
     }
 

@@ -284,10 +284,7 @@ public class ResultListFragment extends FamiliarFragment {
 
         mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
             String cardName = ((TextView) view.findViewById(R.id.card_name)).getText().toString();
-            String cardSet = null;
-            if (view.findViewById(R.id.cardset).getVisibility() == View.VISIBLE) {
-                cardSet = ((TextView) view.findViewById(R.id.cardset)).getText().toString();
-            }
+            String cardSet = ((TextView) view.findViewById(R.id.cardset)).getText().toString();
             showDialog(ResultListDialogFragment.QUICK_ADD, cardName, cardSet);
             return true;
         });
@@ -364,14 +361,13 @@ public class ResultListFragment extends FamiliarFragment {
         if (mCursor != null) {
             ArrayList<String> fromList = new ArrayList<>();
             ArrayList<Integer> toList = new ArrayList<>();
+            // Always get name, set, and rarity. This is for the wishlist quick add
             fromList.add(CardDbAdapter.KEY_NAME);
             toList.add(R.id.card_name);
-            if (PreferenceAdapter.getSetPref(getContext())) {
-                fromList.add(CardDbAdapter.KEY_SET);
-                toList.add(R.id.cardset);
-                fromList.add(CardDbAdapter.KEY_RARITY);
-                toList.add(R.id.rarity);
-            }
+            fromList.add(CardDbAdapter.KEY_SET);
+            toList.add(R.id.cardset);
+            fromList.add(CardDbAdapter.KEY_RARITY);
+            toList.add(R.id.rarity);
             if (PreferenceAdapter.getManaCostPref(getContext())) {
                 fromList.add(CardDbAdapter.KEY_MANACOST);
                 toList.add(R.id.cardcost);
