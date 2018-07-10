@@ -798,28 +798,28 @@ public abstract class TokenCompleteTextView<T> extends AppCompatMultiAutoComplet
                             (int) getTextSize(), (int) maxTextWidth());
                     try {
                         text.insert(lastPosition, cs.text);
+                        float newWidth = Layout.getDesiredWidth(text, 0,
+                                lastPosition + cs.text.length(), lastLayout.getPaint()); // this statement
+                        //If the +x span will be moved off screen, move it one token in
+                        if (newWidth > maxTextWidth()) {
+                            text.delete(lastPosition, lastPosition + cs.text.length());
+
+                            if (tokens.length > 0) {
+                                TokenImageSpan token = tokens[tokens.length - 1];
+                                lastPosition = text.getSpanStart(token);
+                                cs.setCount(count + 1);
+                            } else {
+                                lastPosition = prefix.length();
+                            }
+
+                            try {
+                                text.insert(lastPosition, cs.text);
+                            } catch (IndexOutOfBoundsException ignored) {
+                                Log.d(TAG, "performCollapse hit IndexOutOfBoundsException. This may be normal.", ignored);
+                            }
+                        }
                     } catch (IndexOutOfBoundsException ignored) {
                         Log.d(TAG, "performCollapse hit IndexOutOfBoundsException. This may be normal.", ignored);
-                    }
-                    float newWidth = Layout.getDesiredWidth(text, 0,
-                            lastPosition + cs.text.length(), lastLayout.getPaint());
-                    //If the +x span will be moved off screen, move it one token in
-                    if (newWidth > maxTextWidth()) {
-                        text.delete(lastPosition, lastPosition + cs.text.length());
-
-                        if (tokens.length > 0) {
-                            TokenImageSpan token = tokens[tokens.length - 1];
-                            lastPosition = text.getSpanStart(token);
-                            cs.setCount(count + 1);
-                        } else {
-                            lastPosition = prefix.length();
-                        }
-
-                        try {
-                            text.insert(lastPosition, cs.text);
-                        } catch (IndexOutOfBoundsException ignored) {
-                            Log.d(TAG, "performCollapse hit IndexOutOfBoundsException. This may be normal.", ignored);
-                        }
                     }
 
                     text.setSpan(cs, lastPosition, lastPosition + cs.text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
